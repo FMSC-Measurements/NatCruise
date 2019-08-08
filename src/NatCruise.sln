@@ -1,0 +1,36 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NatCruise.Wpf", "NatCruise.Wpf\NatCruise.Wpf.csproj", "{5ECD0664-39BD-425D-AB54-594FF7B33C11}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{C8B80343-DC83-473D-BE8A-56575806BD9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5ECD0664-39BD-425D-AB54-594FF7B33C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ECD0664-39BD-425D-AB54-594FF7B33C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ECD0664-39BD-425D-AB54-594FF7B33C11}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5ECD0664-39BD-425D-AB54-594FF7B33C11}.Debug|x86.Build.0 = Debug|Any CPU
+		{5ECD0664-39BD-425D-AB54-594FF7B33C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ECD0664-39BD-425D-AB54-594FF7B33C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ECD0664-39BD-425D-AB54-594FF7B33C11}.Release|x86.ActiveCfg = Release|Any CPU
+		{5ECD0664-39BD-425D-AB54-594FF7B33C11}.Release|x86.Build.0 = Release|Any CPU
+		{C8B80343-DC83-473D-BE8A-56575806BD9D}.Debug|Any CPU.ActiveCfg = Debug
+		{C8B80343-DC83-473D-BE8A-56575806BD9D}.Debug|x86.ActiveCfg = Debug
+		{C8B80343-DC83-473D-BE8A-56575806BD9D}.Release|Any CPU.ActiveCfg = Release
+		{C8B80343-DC83-473D-BE8A-56575806BD9D}.Release|x86.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C152AC2-B1C8-47CC-98C6-B566DD992425}
+	EndGlobalSection
+EndGlobal

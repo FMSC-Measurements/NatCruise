@@ -1,0 +1,65 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:Class="NatCruise.Wpf.Colors">
+
+    <Color x:Key="color_background">White</Color>
+    <Color x:Key="color_accent">#1E90FF</Color><!--dodger blue-->
+    <Color x:Key="color_foreground">Black</Color>
+    <Color x:Key="color_addItem">SpringGreen</Color>
+    <Color x:Key="color_removeItem">Tomato</Color>
+    <Color x:Key="color_fs_brown">#312418</Color>
+    <Color x:Key="color_fs_green">#345E36</Color>
+    <Color x:Key="color_text_light">White</Color>
+    <Color x:Key="color_text_dark">Black</Color>
+
+    <Color x:Key="shade_white_90">#E1ffffff</Color>
+    <Color x:Key="shade_white_50">#7FFFFFFF</Color>
+    <Color x:Key="shade_white_38">#60FFFFFF</Color>
+    <Color x:Key="shade_white_12">#1EFFFFFF</Color>
+    <Color x:Key="shade_black_90">#E5000000</Color>
+    <Color x:Key="shade_black_70">#B2000000</Color>
+    <Color x:Key="shade_black_30">#4C000000</Color>
+    <Color x:Key="shade_black_12">#1E000000</Color>
+
+
+    <SolidColorBrush x:Key="brush_background"
+                     Color="{StaticResource color_background}" />
+
+    <SolidColorBrush x:Key="brush_accent"
+                     Color="{StaticResource color_accent}" />
+
+    <SolidColorBrush x:Key="brush_foreground"
+                     Color="{StaticResource color_foreground}" />
+
+    <SolidColorBrush x:Key="brush_addItem"
+                     Color="{StaticResource color_addItem}" />
+
+    <SolidColorBrush x:Key="brush_removeItem"
+                     Color="{StaticResource color_removeItem}" />
+    
+    <SolidColorBrush x:Key="brush_fs_brown"
+                     Color="{StaticResource color_fs_brown}" />
+
+    <SolidColorBrush x:Key="brush_text_light"
+                     Color="{StaticResource color_text_light}" />
+    <SolidColorBrush x:Key="brush_text_dark"
+                     Color="{StaticResource color_text_dark}" />
+
+    <SolidColorBrush x:Key="brush_shade_white_90"
+                     Color="{StaticResource shade_white_90}" />
+    <SolidColorBrush x:Key="brush_shade_white_50"
+                     Color="{StaticResource shade_white_50}" />
+    <SolidColorBrush x:Key="brush_shade_white_38"
+                     Color="{StaticResource shade_white_38}" />
+    <SolidColorBrush x:Key="brush_shade_white_12"
+                     Color="{StaticResource shade_white_12}" />
+    <SolidColorBrush x:Key="brush_shade_black_90"
+                     Color="{StaticResource shade_black_90}" />
+    <SolidColorBrush x:Key="brush_shade_black_70"
+                     Color="{StaticResource shade_black_70}" />
+    <SolidColorBrush x:Key="brush_shade_black_30"
+                     Color="{StaticResource shade_black_30}" />
+    <SolidColorBrush x:Key="brush_shade_black_12"
+                     Color="{StaticResource shade_black_12}" />
+
+</ResourceDictionary>
