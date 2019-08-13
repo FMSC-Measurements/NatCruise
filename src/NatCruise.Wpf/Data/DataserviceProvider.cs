@@ -22,7 +22,7 @@ namespace NatCruise.Wpf.Data
         {
             if (type == typeof(ICruiseDataservice))
             {
-                return new CruiseDataservice();
+                return new CruiseDataservice(CruiseFilePath);
             }
             else if (type == typeof(ISetupInfoDataservice))
             {

@@ -7,6 +7,11 @@ namespace NatCruise.Wpf.Data
 {
     public class CruiseDataservice : ICruiseDataservice
     {
+        public CruiseDataservice(string path)
+        {
+            Database = new CruiseDatastore(path);
+        }
+
         private CruiseDatastore Database { get; }
 
         public IEnumerable<Forest> GetForests(string regionCode)

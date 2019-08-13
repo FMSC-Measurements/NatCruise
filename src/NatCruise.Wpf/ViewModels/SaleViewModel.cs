@@ -16,20 +16,31 @@ namespace NatCruise.Wpf.ViewModels
         public SaleViewModel(IDataserviceProvider dataserviceProvider)
         {
             CruiseDataservice = dataserviceProvider.GetDataservice<ICruiseDataservice>();
+            SetupinfoDataservice = dataserviceProvider.GetDataservice<ISetupInfoDataservice>();
         }
 
         ICruiseDataservice CruiseDataservice { get; }
-
+        public ISetupInfoDataservice SetupinfoDataservice { get; }
         public Sale Sale
         {
             get => _sale;
             set => SetProperty(ref _sale, value);
-        } 
+        }
+
+        public IEnumerable<Purpose> PurposeOptions => SetupinfoDataservice.GetPurposes();
+
+        public IEnumerable<Region> RegionOptions => SetupinfoDataservice.GetRegions();
+
+        public IEnumerable<Forest> ForestOptions
+        {
+            get => SetupinfoDataservice.GetForests(Sale?.Region ?? "");
+        }
 
 
         protected override void Load()
         {
             Sale = CruiseDataservice.GetSale();
+            RaisePropertyChanged(nameof(ForestOptions));
         }
     }
 }
