@@ -48,7 +48,7 @@ namespace NatCruise.Wpf.ViewModels
 
 
 
-        public string Title => "Cruise Manager";
+        public string Title => "National Cruise System";
 
         public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles();
 
