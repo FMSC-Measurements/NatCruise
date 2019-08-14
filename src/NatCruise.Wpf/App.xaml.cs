@@ -34,6 +34,7 @@ namespace NatCruise.Wpf
             var container = Container;
             var regionManager = container.Resolve<IRegionManager>();
             //regionManager.RegisterViewWithRegion(Regions.ContentRegion, typeof(CruiseMasterPage));
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SalePage));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListPage));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListPage));
             regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailPage));
@@ -51,6 +52,7 @@ namespace NatCruise.Wpf
         {
             base.ConfigureViewModelLocator();
 
+            ViewModelLocationProvider.Register<SalePage, SaleViewModel>();
             ViewModelLocationProvider.Register<CuttingUnitListPage, CuttingUnitListViewModel>();
             ViewModelLocationProvider.Register<CuttingUnitDetailPage, CuttingUnitDetailViewModel>();
             ViewModelLocationProvider.Register<StratumListPage, StratumListViewModel>();
