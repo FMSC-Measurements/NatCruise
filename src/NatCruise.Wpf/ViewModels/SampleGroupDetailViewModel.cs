@@ -16,6 +16,7 @@ namespace NatCruise.Wpf.ViewModels
         {
             var sampleGroupDataservice = dataserviceProvider.GetDataservice<ISampleGroupDataservice>();
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
+            ProductOptions = sampleGroupDataservice.GetProducts();
         }
 
         public ISampleGroupDataservice SampleGroupDataservice { get; }

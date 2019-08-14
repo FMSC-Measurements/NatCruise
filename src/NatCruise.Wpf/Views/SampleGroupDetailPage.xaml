@@ -91,8 +91,7 @@
                       Grid.Column="1"
                       ToolTip="Primary Product"
                       ItemsSource="{Binding ProductOptions}"
-                      SelectedValuePath="@Code"
-                      DisplayMemberPath="@FriendlyName"
+                      SelectedValuePath="ProductCode"
                       SelectedValue="{Binding SampleGroup.PrimaryProduct}"/>
             <Label Content="Secondary Product"
                    Grid.Column="0"
@@ -102,8 +101,7 @@
                       Grid.Column="1"
                       ToolTip="Secondary Product"
                       ItemsSource="{Binding ProductOptions}"
-                      SelectedValuePath="@Code"
-                      DisplayMemberPath="@FriendlyName"
+                      SelectedValuePath="ProductCode"
                       SelectedValue="{Binding SampleGroup.SecondaryProduct}"/>
             <Label Content="Biomas Product"
                    Grid.Row="4" />
@@ -112,8 +110,7 @@
                       Grid.Column="1"
                       ToolTip="Biomas Product"
                       ItemsSource="{Binding ProductOptions}"
-                      SelectedValuePath="@Code"
-                      DisplayMemberPath="@FriendlyName"
+                      SelectedValuePath="ProductCode"
                       SelectedValue="{Binding SampleGroup.BiomassProduct}"/>
             <Label Content="Live/Dead Default"
                    Grid.Row="5"
