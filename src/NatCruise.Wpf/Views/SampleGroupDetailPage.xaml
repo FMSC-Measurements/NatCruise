@@ -28,21 +28,21 @@
                             Value="Right" />
                 </Style>
 
-                <Style TargetType="TextBox">
+                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                     <Setter Property="Width"
                             Value="98" />
                 </Style>
 
-                <Style TargetType="ComboBox">
+                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                     <Setter Property="Width"
                             Value="98" />
                 </Style>
 
-                <Style TargetType="CheckBox">
+                <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                 </Style>

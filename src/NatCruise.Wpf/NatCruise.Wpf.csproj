@@ -315,6 +315,9 @@
     <PackageReference Include="FMSC.ORM">
       <Version>2.4.2</Version>
     </PackageReference>
+    <PackageReference Include="MahApps.Metro">
+      <Version>1.6.5</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AppCenter">
       <Version>2.2.1-preview</Version>
     </PackageReference>
