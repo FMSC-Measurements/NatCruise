@@ -137,6 +137,7 @@
     <Compile Include="Services\LoggingService.cs" />
     <Compile Include="Services\RecentFilesDataservice.cs" />
     <Compile Include="Services\WpfLoggingService.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Triggers\ClearAutoCompleteBoxAction.cs" />
     <Compile Include="Triggers\ClearTextBoxAction.cs" />
     <Compile Include="Util\IDictionaryExtentions.cs" />
@@ -203,7 +204,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Secrets.local.csx">

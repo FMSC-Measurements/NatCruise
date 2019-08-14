@@ -9,8 +9,8 @@ namespace NatCruise.Wpf.Services
 {
     public interface IRecentFilesDataservice
     {
-        IEnumerable<FileInfo> GetRecentFiles();
+        IEnumerable<string> GetRecentFiles();
 
-        void AddRecentFile(string path);
+        void AddRecentFile(string filePath);
     }
 }

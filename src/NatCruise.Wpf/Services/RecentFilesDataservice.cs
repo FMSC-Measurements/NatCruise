@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Wpf.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,22 +12,26 @@ namespace NatCruise.Wpf.Services
     {
         public RecentFilesDataservice()
         {
-            LoadRecentFiles();
+            Settings = Settings.Default;
         }
 
-        protected void LoadRecentFiles()
-        {
+        Settings Settings { get; }
 
+        public void AddRecentFile(string filePath)
+        {
+            filePath = Path.GetFullPath(filePath);
+
+            var recentFiles = GetRecentFiles().Select(x => Path.GetFullPath(x));
+            recentFiles = recentFiles.Union(new[] { filePath });
+            Settings.RecentFiles = String.Join(",", recentFiles.ToArray());
+            Settings.Save();
         }
 
-        public IEnumerable<FileInfo> GetRecentFiles()
+        public IEnumerable<string> GetRecentFiles()
         {
-            return new FileInfo[0];
-        }
-
-        public void AddRecentFile(string path)
-        {
-
+            return Settings.RecentFiles
+                ?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                ?? Enumerable.Empty<string>();
         }
     }
 }

@@ -2,7 +2,6 @@
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Services;
 using NatCruise.Wpf.Views;
-using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -10,8 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
@@ -22,9 +19,9 @@ namespace NatCruise.Wpf.ViewModels
         private ICommand _selectFileCommand;
         private ICommand _createNewFileCommand;
 
-        public MainWindowViewModel(IRegionManager regionManager, 
-            IFileDialogService fileDialogService, 
-            IRecentFilesDataservice recentFilesDataservice, 
+        public MainWindowViewModel(IRegionManager regionManager,
+            IFileDialogService fileDialogService,
+            IRecentFilesDataservice recentFilesDataservice,
             IDataserviceProvider dataserviceProvider,
             IDialogService dialogService)
         {
@@ -45,16 +42,11 @@ namespace NatCruise.Wpf.ViewModels
 
         //protected IRegionNavigationService RegionNavigationService => RegionManager?.Regions[Regions.ContentRegion].NavigationService;
 
-
-
-
         public string Title => "National Cruise System";
 
-        public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles();
+        public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles().Select(x => new FileInfo(x));
 
         public ICommand CreateNewFileCommand => _createNewFileCommand ?? (_createNewFileCommand = new DelegateCommand(CreateNewFile));
-
-        
 
         public ICommand OpenFileCommand => _openFileCommand ?? (_openFileCommand = new DelegateCommand<string>(OpenFile));
 
@@ -66,7 +58,7 @@ namespace NatCruise.Wpf.ViewModels
         {
             DialogService.Show("NewCruise", (IDialogParameters)null, r =>
             {
-                if(r.Result == ButtonResult.OK)
+                if (r.Result == ButtonResult.OK)
                 {
                     var filePath = DataserviceProvider.CruiseFilePath;
                     var fileExtention = Path.GetExtension(filePath).ToLower();
@@ -74,9 +66,11 @@ namespace NatCruise.Wpf.ViewModels
                     {
                         RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
                     }
+
+                    RecentFilesDataservice.AddRecentFile(filePath);
+                    RaisePropertyChanged(nameof(RecentFiles));
                 }
             });
-
         }
 
         public void OpenFile(string path)
@@ -89,28 +83,25 @@ namespace NatCruise.Wpf.ViewModels
             DataserviceProvider.OpenFile(file.FullName);
 
             RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
+            RecentFilesDataservice.AddRecentFile(file.FullName);
+            RaisePropertyChanged(nameof(RecentFiles));
         }
 
         public void SelectFile()
         {
             var path = FileDialogService.SelectCruiseFile();
-            if(path != null)
+            if (path != null)
             {
                 OpenFile(path);
             }
-
         }
-
-
 
         public void Exit()
         {
-
         }
 
         protected override void Load()
         {
-            
         }
     }
 }
