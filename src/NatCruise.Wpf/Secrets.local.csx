@@ -5,7 +5,7 @@ namespace NatCruise.Wpf
     {{
 		static Secrets()
 		{{
-			APPCENTER_KEY_WINDOWS = ""{System.Environment.GetEnvironmentVariable("cruisemanager_appcenter_key_windows") ?? ""}"";
+			APPCENTER_KEY_WINDOWS = ""{System.Environment.GetEnvironmentVariable("natcruise_appcenterr_key_windows") ?? ""}"";
 		}}
     }}
 }}
