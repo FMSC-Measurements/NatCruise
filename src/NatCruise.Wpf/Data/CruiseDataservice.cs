@@ -41,6 +41,8 @@ namespace NatCruise.Wpf.Data
 
         public void UpdateSale(Sale sale)
         {
+            Database.Update(sale);
+
         }
     }
 }
