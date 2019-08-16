@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace NatCruise.Wpf.ViewModels
 {
@@ -24,7 +25,35 @@ namespace NatCruise.Wpf.ViewModels
         public Sale Sale
         {
             get => _sale;
-            set => SetProperty(ref _sale, value);
+            set
+            {
+                OnSaleChanging(_sale, value);
+                SetProperty(ref _sale, value);
+                OnSaleChanged(value);
+            }
+        }
+
+        private void OnSaleChanged(Sale newValue)
+        {
+            if(newValue != null)
+            {
+                newValue.PropertyChanged += Sale_PropertyChanged;
+            }
+        }
+
+        private void OnSaleChanging(Sale oldValue, Sale newValue)
+        {
+            if(oldValue != null)
+            {
+                oldValue.PropertyChanged -= Sale_PropertyChanged;
+            }
+        }
+
+        private void Sale_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var sale = sender as Sale;
+
+            CruiseDataservice.UpdateSale(sale);
         }
 
         public IEnumerable<Purpose> PurposeOptions => SetupinfoDataservice.GetPurposes();
