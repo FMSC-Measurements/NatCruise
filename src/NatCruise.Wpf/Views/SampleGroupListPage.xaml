@@ -5,14 +5,15 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:local="clr-namespace:NatCruise.Wpf.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Wpf.Views.SampleGroupListPage"
              prism:ViewModelLocator.AutoWireViewModel="True"
              ToolTip="Sample Groups"
              mc:Ignorable="d"
-             d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignHeight="448.881"
+             d:DesignWidth="788.806">
     <ScrollViewer>
         <Grid Background="{StaticResource brush_background}"
               Margin="0,0,10,0"
@@ -102,7 +103,7 @@
 
             <TabControl Grid.Column="1"
                         Margin="5,5,0,0"
-                        prism:RegionManager.RegionName="SampleGroupDetailsRegion"
+                        prism:RegionManager.RegionName="{x:Static nav:Regions.SampleGroupDetailsRegion}"
                         prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_sampleGroupListView}">
                 <TabControl.Resources>
                     <Style TargetType="{x:Type TabItem}"

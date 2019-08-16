@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Wpf.Views"
+             xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
 
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d"
@@ -48,7 +49,9 @@
             <Button x:Name="_strataButton" Click="_strataButton_Click">Strata</Button>
         </StackPanel>
 
-        <ContentControl x:Name="_cruiseContentPanel" prism:RegionManager.RegionName="CruiseContentRegion" Margin="5,5,0,0">
+        <ContentControl x:Name="_cruiseContentPanel"
+                        prism:RegionManager.RegionName="{x:Static nav:Regions.CruiseContentRegion}"
+                        Margin="5,5,0,0">
 
         </ContentControl>
 

@@ -1,9 +1,12 @@
 ﻿<prism:PrismApplication x:Class="NatCruise.Wpf.App"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:prism="http://prismlibrary.com/">
+                    xmlns:prism="http://prismlibrary.com/"
+                        xmlns:converters="clr-namespace:NatCruise.Wpf.Converters">
     <Application.Resources>
         <ResourceDictionary >
+            <converters:IsNullConverter x:Key="NotNullConverter" Invert="True" />
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Colors.xaml" />
                 <ResourceDictionary Source="Images.xaml" />
