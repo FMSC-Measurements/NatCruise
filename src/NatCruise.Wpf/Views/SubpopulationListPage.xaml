@@ -13,7 +13,8 @@
              ToolTip="Subpopulations"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             Width="200">
+             Width="200"
+             IsEnabled="{Binding SampleGroup, Converter={StaticResource NotNullConverter}}">
     <Grid Background="{StaticResource brush_background}">
         <Grid.RowDefinitions>
             <RowDefinition />

@@ -5,6 +5,7 @@
              xmlns:local="clr-namespace:NatCruise.Wpf.Views"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Wpf.Views.StratumListPage"
@@ -107,7 +108,7 @@
         </Border>
 
         <TabControl Grid.Column="1"
-                    prism:RegionManager.RegionName="StratumDetailsRegion"
+                    prism:RegionManager.RegionName="{x:Static nav:Regions.StratumDetailsRegion}"
                     prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_stratumListView}"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch">

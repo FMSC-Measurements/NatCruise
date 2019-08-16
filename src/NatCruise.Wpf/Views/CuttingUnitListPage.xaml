@@ -8,6 +8,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Class="NatCruise.Wpf.Views.CuttingUnitListPage"
+             xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -102,7 +103,7 @@
             </Grid>
             </Border>
 
-            <ContentControl prism:RegionManager.RegionName="CuttingUnitDetailsRegion"
+            <ContentControl prism:RegionManager.RegionName="{x:Static nav:Regions.CuttingUnitDetailsRegion}"
                             prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_cuttingUnitListView}"
                             VerticalAlignment="Stretch" />
 

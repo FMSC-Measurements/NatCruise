@@ -87,6 +87,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Converters\ColorToSolidColorBrushValueConverter.cs" />
+    <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Data\Abstractions\ISetupInfoDataservice.cs" />
     <Compile Include="Data\CruiseDataservice.cs" />
     <Compile Include="Data\CuttingUnitDataservice.cs" />
