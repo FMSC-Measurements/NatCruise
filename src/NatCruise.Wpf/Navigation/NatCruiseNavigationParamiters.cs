@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Wpf.Navigation
 {
-    public class CruiseManagerNavigationParamiters : Prism.Regions.NavigationParameters
+    public class NatCruiseNavigationParamiters : Prism.Regions.NavigationParameters
     {
         public string CuttingUnitCode
         {
