@@ -10,6 +10,7 @@ using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
+using System.IO;
 using System.Windows;
 
 namespace NatCruise.Wpf
@@ -19,9 +20,18 @@ namespace NatCruise.Wpf
     /// </summary>
     public partial class App : PrismApplication
     {
+        string[] StartupArgs { get; set; }
+
         protected override Window CreateShell()
         {
             return Container.Resolve<MainWindow>();
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            StartupArgs = e.Args;
+
+            base.OnStartup(e);
         }
 
         protected override void OnInitialized()
@@ -46,6 +56,26 @@ namespace NatCruise.Wpf
             regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SubpopulationListPage));
 
             base.OnInitialized();
+
+            var startupArgs = StartupArgs;
+
+            if (startupArgs.Length > 0)
+            {
+                var arg1 = startupArgs[0];
+                try
+                {
+                    var path = Path.GetFullPath(arg1);
+                    if (File.Exists(path))
+                    {
+                        var mainWindowVM = base.MainWindow?.DataContext as MainWindowViewModel;
+                        mainWindowVM.OpenFile(path);
+                    }
+                }
+                catch
+                { }
+            }
+
+
         }
 
         protected override void ConfigureViewModelLocator()
