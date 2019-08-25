@@ -20,45 +20,59 @@ namespace NatCruise.Wpf.Data
 
         public object GetDataservice(Type type)
         {
-            if (type == typeof(ICruiseDataservice))
+            var cruiseFilePath = CruiseFilePath;
+            try
             {
-                return new CruiseDataservice(CruiseFilePath);
-            }
-            else if (type == typeof(ISetupInfoDataservice))
-            {
-                return new SetupInfoDataservice();
-            }
-            else if (type == typeof(ICuttingUnitDataservice))
-            {
-                return new CuttingUnitDataservice(CruiseFilePath);
-            }
-            else if (type == typeof(ISampleGroupDataservice))
-            {
-                return new SampleGroupDataservice(CruiseFilePath);
-            }
-            else if (type == typeof(ISpeciesCodeDataservice))
-            {
-                return new SpeciesCodeDataservice(CruiseFilePath);
-            }
-            else if (type == typeof(IStratumDataservice))
-            {
-                return new StratumDataservice(CruiseFilePath);
-            }
-            else if (type == typeof(ISubpopulationDataservice))
-            {
-                return new SubpopulationDataservice(CruiseFilePath);
-            }
-            else if (type == typeof(ITallyPopulationDataservice))
-            {
-            }
-            else if (type == typeof(ITallySettingsDataservice))
-            {
-            }
-            else if (type == typeof(ITreeFieldDataservice))
-            {
-            }
 
-            return null;
+
+                //if(type == typeof(IRecentFilesDataservice))
+                //{
+                //    return new RecentFilesDataservice();
+                //}
+                if (type == typeof(ICruiseDataservice))
+                {
+                    return new CruiseDataservice(cruiseFilePath);
+                }
+                else if (type == typeof(ISetupInfoDataservice))
+                {
+                    return new SetupInfoDataservice();
+                }
+                else if (type == typeof(ICuttingUnitDataservice))
+                {
+                    return new CuttingUnitDataservice(cruiseFilePath);
+                }
+                else if (type == typeof(ISampleGroupDataservice))
+                {
+                    return new SampleGroupDataservice(cruiseFilePath);
+                }
+                else if (type == typeof(ISpeciesCodeDataservice))
+                {
+                    return new SpeciesCodeDataservice(cruiseFilePath);
+                }
+                else if (type == typeof(IStratumDataservice))
+                {
+                    return new StratumDataservice(cruiseFilePath);
+                }
+                else if (type == typeof(ISubpopulationDataservice))
+                {
+                    return new SubpopulationDataservice(cruiseFilePath);
+                }
+                else if (type == typeof(ITallyPopulationDataservice))
+                {
+                }
+                else if (type == typeof(ITallySettingsDataservice))
+                {
+                }
+                else if (type == typeof(ITreeFieldDataservice))
+                {
+                }
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public T GetDataservice<T>()
