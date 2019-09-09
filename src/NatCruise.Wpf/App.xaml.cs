@@ -1,14 +1,10 @@
-﻿using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using NatCruise.Wpf.Data;
+﻿using NatCruise.Wpf.Data;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Services;
 using NatCruise.Wpf.ViewModels;
 using NatCruise.Wpf.Views;
 using Prism.DryIoc;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using System.IO;
 using System.Windows;
@@ -20,7 +16,7 @@ namespace NatCruise.Wpf
     /// </summary>
     public partial class App : PrismApplication
     {
-        string[] StartupArgs { get; set; }
+        private string[] StartupArgs { get; set; }
 
         protected override Window CreateShell()
         {
@@ -29,6 +25,7 @@ namespace NatCruise.Wpf
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            // store our start up args for use later
             StartupArgs = e.Args;
 
             base.OnStartup(e);
@@ -48,7 +45,6 @@ namespace NatCruise.Wpf
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListPage));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListPage));
             regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailPage));
-
 
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumDetailPage));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(CuttingUnitStrataPage));
@@ -76,8 +72,6 @@ namespace NatCruise.Wpf
                 catch
                 { }
             }
-
-
         }
 
         protected override void ConfigureViewModelLocator()
