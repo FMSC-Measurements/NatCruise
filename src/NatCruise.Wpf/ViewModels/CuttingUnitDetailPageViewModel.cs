@@ -7,11 +7,11 @@ using System.ComponentModel;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class CuttingUnitDetailViewModel : BindableBase
+    public class CuttingUnitDetailPageViewModel : BindableBase
     {
         private CuttingUnit _cuttingUnit;
 
-        public CuttingUnitDetailViewModel(IDataserviceProvider dataserviceProvider, ILoggingService loggingService)
+        public CuttingUnitDetailPageViewModel(IDataserviceProvider dataserviceProvider, ILoggingService loggingService)
         {
             LoggingService = loggingService;
             var unitDataservice = dataserviceProvider.GetDataservice<ICuttingUnitDataservice>();

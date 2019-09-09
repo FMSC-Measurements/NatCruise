@@ -84,20 +84,20 @@ namespace NatCruise.Wpf
         {
             base.ConfigureViewModelLocator();
 
-            ViewModelLocationProvider.Register<SalePage, SaleViewModel>();
-            ViewModelLocationProvider.Register<CuttingUnitListPage, CuttingUnitListViewModel>();
-            ViewModelLocationProvider.Register<CuttingUnitDetailPage, CuttingUnitDetailViewModel>();
-            ViewModelLocationProvider.Register<CuttingUnitStrataPage, CuttingUnitStrataViewModel>();
-            ViewModelLocationProvider.Register<StratumListPage, StratumListViewModel>();
-            ViewModelLocationProvider.Register<StratumDetailPage, StratumDetailViewModel>();
-            ViewModelLocationProvider.Register<SampleGroupListPage, SampleGroupListViewModel>();
-            ViewModelLocationProvider.Register<SampleGroupDetailPage, SampleGroupDetailViewModel>();
-            ViewModelLocationProvider.Register<SubpopulationListPage, SubpopulationListViewModel>();
+            //ViewModelLocationProvider.Register<SalePage, SalePageViewModel>();
+            //ViewModelLocationProvider.Register<CuttingUnitListPage, CuttingUnitListPageViewModel>();
+            //ViewModelLocationProvider.Register<CuttingUnitDetailPage, CuttingUnitDetailPageViewModel>();
+            //ViewModelLocationProvider.Register<CuttingUnitStrataPage, CuttingUnitStrataPageViewModel>();
+            //ViewModelLocationProvider.Register<StratumListPage, StratumListPageViewModel>();
+            //ViewModelLocationProvider.Register<StratumDetailPage, StratumDetailPageViewModel>();
+            //ViewModelLocationProvider.Register<SampleGroupListPage, SampleGroupListPageViewModel>();
+            //ViewModelLocationProvider.Register<SampleGroupDetailPage, SampleGroupDetailPageViewModel>();
+            //ViewModelLocationProvider.Register<SubpopulationListPage, SubpopulationListPageViewModel>();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterDialog<NewCruisePage, NewCruiseViewModel>("NewCruise");
+            containerRegistry.RegisterDialog<NewCruisePage, NewCruisePageViewModel>("NewCruise");
 
             containerRegistry.RegisterForNavigation<CruiseMasterPage>();
             containerRegistry.RegisterForNavigation<CuttingUnitListPage>();

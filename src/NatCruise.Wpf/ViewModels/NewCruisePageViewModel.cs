@@ -12,12 +12,12 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class NewCruiseViewModel : BindableBase, IDialogAware
+    public class NewCruisePageViewModel : BindableBase, IDialogAware
     {
         private ICommand _createCruiseCommand;
         private ICommand _cancelCommand;
 
-        public NewCruiseViewModel(IDataserviceProvider dataserviceProvider, IFileDialogService fileDialogService)
+        public NewCruisePageViewModel(IDataserviceProvider dataserviceProvider, IFileDialogService fileDialogService)
         {
             DataserviceProvider = dataserviceProvider;
             SetupinfoDataservice = dataserviceProvider.GetDataservice<ISetupInfoDataservice>();

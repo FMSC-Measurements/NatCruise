@@ -8,14 +8,14 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class SampleGroupListViewModel : ViewModelBase
+    public class SampleGroupListPageViewModel : ViewModelBase
     {
         private DelegateCommand<string> _addSampleGroupCommand;
         private DelegateCommand<SampleGroup> _removeSampleGroupCommand;
         private ObservableCollection<SampleGroup> _sampleGroups;
         private Stratum _stratum;
 
-        public SampleGroupListViewModel(IDataserviceProvider datastoreProvider)
+        public SampleGroupListPageViewModel(IDataserviceProvider datastoreProvider)
         {
             var sampleGroupDataservice = datastoreProvider.GetDataservice<ISampleGroupDataservice>();
 

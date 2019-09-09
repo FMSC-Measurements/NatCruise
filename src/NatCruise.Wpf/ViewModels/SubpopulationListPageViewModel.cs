@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class SubpopulationListViewModel : ViewModelBase
+    public class SubpopulationListPageViewModel : ViewModelBase
     {
         private DelegateCommand<string> _addSubpopulationCommand;
         private SampleGroup _sampleGroup;
@@ -17,7 +17,7 @@ namespace NatCruise.Wpf.ViewModels
         private ObservableCollection<Subpopulation> _subPopulations;
         private IEnumerable<SpeciesListItem> _speciesOptions;
 
-        public SubpopulationListViewModel(IDataserviceProvider dataserviceProvider)
+        public SubpopulationListPageViewModel(IDataserviceProvider dataserviceProvider)
         {
             SubpopulationDataservice = dataserviceProvider.GetDataservice<ISubpopulationDataservice>() ?? throw new ArgumentNullException(nameof(SubpopulationDataservice));
             SpeciesCodeDataservice = dataserviceProvider.GetDataservice<ISpeciesCodeDataservice>() ?? throw new ArgumentNullException(nameof(SpeciesCodeDataservice));

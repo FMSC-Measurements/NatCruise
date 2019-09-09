@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class StratumDetailViewModel : BindableBase
+    public class StratumDetailPageViewModel : BindableBase
     {
         private Stratum _stratum;
         private IEnumerable<Method> _methods;
         private IEnumerable<string> _hotKeyOptions;
 
-        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider)
+        public StratumDetailPageViewModel(IDataserviceProvider dataserviceProvider)
         {
             var stratumDataservice = dataserviceProvider.GetDataservice<IStratumDataservice>();
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));

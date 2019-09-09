@@ -12,13 +12,13 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class StratumListViewModel : ViewModelBase
+    public class StratumListPageViewModel : ViewModelBase
     {
         private ICommand _addStratumCommand;
         private ICommand _removeStratumCommand;
         private ObservableCollection<Stratum> _strata;
 
-        public StratumListViewModel(IDataserviceProvider dataserviceProvider)
+        public StratumListPageViewModel(IDataserviceProvider dataserviceProvider)
         {
             StratumDataservice = dataserviceProvider.GetDataservice<IStratumDataservice>();
         }

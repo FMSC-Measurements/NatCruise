@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class TallySettingsViewModel : ViewModelBase
+    public class TallySettingsPageViewModel : ViewModelBase
     {
         readonly string[] HOTKEY_OPTIONS = new[] {  "A","B","C","D","E","F",
                                                     "G","H","I","J","K","L",

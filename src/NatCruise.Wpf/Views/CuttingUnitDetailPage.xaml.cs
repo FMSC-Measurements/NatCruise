@@ -35,7 +35,7 @@ namespace NatCruise.Wpf.Views
         {
             var context = (ObservableObject<object>)sender;
             var selectedUnit = (CuttingUnit)context.Value;
-            (DataContext as CuttingUnitDetailViewModel).CuttingUnit = selectedUnit;
+            (DataContext as CuttingUnitDetailPageViewModel).CuttingUnit = selectedUnit;
         }
     }
 }
