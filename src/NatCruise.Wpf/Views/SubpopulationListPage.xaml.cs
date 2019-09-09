@@ -35,7 +35,7 @@ namespace NatCruise.Wpf.Views
         {
             var context = (ObservableObject<object>)sender;
             var selectedSampleGroup = (SampleGroup)context.Value;
-            (DataContext as SubpopulationListViewModel).SampleGroup = selectedSampleGroup;
+            (DataContext as SubpopulationListPageViewModel).SampleGroup = selectedSampleGroup;
         }
     }
 }

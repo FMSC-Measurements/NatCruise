@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class CuttingUnitStrataViewModel : ViewModelBase
+    public class CuttingUnitStrataPageViewModel : ViewModelBase
     {
         private Stratum _stratum;
         private IEnumerable<string> _selectedUnitCodes;
@@ -29,7 +29,7 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        public CuttingUnitStrataViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
+        public CuttingUnitStrataPageViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
         {
             StratumDataservice = dataserviceProvider.GetDataservice<IStratumDataservice>();
             CuttingUnitDataservice = dataserviceProvider.GetDataservice<ICuttingUnitDataservice>();
@@ -143,13 +143,13 @@ namespace NatCruise.Wpf.ViewModels
 
         public class CuttingUnitItem : BindableBase
         {
-            public CuttingUnitItem(CuttingUnit unit, CuttingUnitStrataViewModel viewModel)
+            public CuttingUnitItem(CuttingUnit unit, CuttingUnitStrataPageViewModel viewModel)
             {
                 Unit = unit ?? throw new ArgumentNullException(nameof(unit));
                 ParentViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
             }
 
-            public CuttingUnitStrataViewModel ParentViewModel { get; }
+            public CuttingUnitStrataPageViewModel ParentViewModel { get; }
 
             public CuttingUnit Unit { get; }
 

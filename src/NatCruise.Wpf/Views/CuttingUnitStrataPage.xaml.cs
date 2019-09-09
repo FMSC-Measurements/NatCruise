@@ -22,7 +22,7 @@ namespace NatCruise.Wpf.Views
         {
             var context = (ObservableObject<object>)sender;
             var selectedStratum = (Stratum)context.Value;
-            (DataContext as CuttingUnitStrataViewModel).Stratum = selectedStratum;
+            (DataContext as CuttingUnitStrataPageViewModel).Stratum = selectedStratum;
         }
     }
 }

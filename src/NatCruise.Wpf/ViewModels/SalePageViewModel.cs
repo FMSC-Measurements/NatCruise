@@ -10,11 +10,11 @@ using System.ComponentModel;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class SaleViewModel : ViewModelBase
+    public class SalePageViewModel : ViewModelBase
     {
         private Sale _sale;
 
-        public SaleViewModel(IDataserviceProvider dataserviceProvider)
+        public SalePageViewModel(IDataserviceProvider dataserviceProvider)
         {
             CruiseDataservice = dataserviceProvider.GetDataservice<ICruiseDataservice>();
             SetupinfoDataservice = dataserviceProvider.GetDataservice<ISetupInfoDataservice>();

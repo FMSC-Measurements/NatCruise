@@ -35,7 +35,7 @@ namespace NatCruise.Wpf.Views
         {
             var context = (ObservableObject<object>)sender;
             var selectedStratum = (Stratum)context.Value;
-            (DataContext as SampleGroupListViewModel).Stratum = selectedStratum;
+            (DataContext as SampleGroupListPageViewModel).Stratum = selectedStratum;
         }
     }
 }

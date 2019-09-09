@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class CuttingUnitListViewModel : ViewModelBase
+    public class CuttingUnitListPageViewModel : ViewModelBase
     {
         private DelegateCommand<CuttingUnit> _removeCuttingUnitCommand;
         private DelegateCommand<string> _addCuttingUnitCommand;
@@ -18,7 +18,7 @@ namespace NatCruise.Wpf.ViewModels
 
         
 
-        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider)
+        public CuttingUnitListPageViewModel(IDataserviceProvider datastoreProvider)
         {
             //NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
 

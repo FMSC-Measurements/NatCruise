@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class SampleGroupDetailViewModel : ViewModelBase
+    public class SampleGroupDetailPageViewModel : ViewModelBase
     {
         private SampleGroup _sampleGroup;
         private string _method;
 
-        public SampleGroupDetailViewModel(IDataserviceProvider dataserviceProvider)
+        public SampleGroupDetailPageViewModel(IDataserviceProvider dataserviceProvider)
         {
             var sampleGroupDataservice = dataserviceProvider.GetDataservice<ISampleGroupDataservice>();
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
