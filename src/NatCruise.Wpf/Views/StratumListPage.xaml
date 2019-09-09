@@ -116,7 +116,7 @@
                 <Style TargetType="{x:Type TabItem}"
                        BasedOn="{StaticResource {x:Type TabItem}}">
                     <Setter Property="Header"
-                            Value="{Binding ToolTip}" />
+                            Value="{Binding Tag}" />
                     <Setter Property="HorizontalContentAlignment"
                             Value="Left" />
                 </Style>
