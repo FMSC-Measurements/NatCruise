@@ -10,7 +10,7 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Wpf.Views.SampleGroupListPage"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             ToolTip="Sample Groups"
+             Tag="Sample Groups"
              mc:Ignorable="d"
              d:DesignHeight="448.881"
              d:DesignWidth="788.806">

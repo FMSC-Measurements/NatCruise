@@ -49,7 +49,9 @@ namespace NatCruise.Wpf
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListPage));
             regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailPage));
 
+
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumDetailPage));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(CuttingUnitStrataPage));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(SampleGroupListPage));
 
             regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SampleGroupDetailPage));
@@ -85,6 +87,7 @@ namespace NatCruise.Wpf
             ViewModelLocationProvider.Register<SalePage, SaleViewModel>();
             ViewModelLocationProvider.Register<CuttingUnitListPage, CuttingUnitListViewModel>();
             ViewModelLocationProvider.Register<CuttingUnitDetailPage, CuttingUnitDetailViewModel>();
+            ViewModelLocationProvider.Register<CuttingUnitStrataPage, CuttingUnitStrataViewModel>();
             ViewModelLocationProvider.Register<StratumListPage, StratumListViewModel>();
             ViewModelLocationProvider.Register<StratumDetailPage, StratumDetailViewModel>();
             ViewModelLocationProvider.Register<SampleGroupListPage, SampleGroupListViewModel>();

@@ -22,7 +22,7 @@ namespace NatCruise.Wpf.Data
 
         public void AddStratumToCuttingUnit(string cuttingUnitCode, string stratumCode)
         {
-            Database.Execute("INSERT INTO CuttingUnit_Stratum (CuttingUnitCode, StratumCode) VALUES (@p1, @p2);",
+            Database.Execute("INSERT OR IGNORE INTO CuttingUnit_Stratum (CuttingUnitCode, StratumCode) VALUES (@p1, @p2);",
                 cuttingUnitCode, stratumCode);
         }
 
@@ -39,12 +39,12 @@ namespace NatCruise.Wpf.Data
         public IEnumerable<string> GetCuttingUnitCodesByStratum(string stratumCode)
         {
             return Database.QueryGeneric2(
-                "SELECT cu.Code AS Code " +
+                "SELECT cu.Code AS CuCode " +
                 "FROM CuttingUnit AS cu " +
                 "JOIN CuttingUnit_Stratum AS cust ON cu.Code = cust.CuttingUnitCode " +
                 "WHERE StratumCode = @stratumCode;",
                 new { stratumCode })
-                .Select(x => x["Code"] as String);
+                .Select(x => x["CuCode"] as String);
         }
 
         public IEnumerable<Method> GetMethods()
@@ -59,12 +59,28 @@ namespace NatCruise.Wpf.Data
 
         public void RemoveStratumFromCuttingUnit(string cuttingUnitCode, string stratumCode)
         {
-            Database.Execute("DELETE FROM CuttingUnit_Stratum WHERE CuttingUnitCode = @p1 AND StratumCode = @p2;", cuttingUnitCode, stratumCode);
+            bool force = false;
+
+            if (force || !HasTreeCounts(cuttingUnitCode, stratumCode))
+            {
+                Database.Execute("DELETE FROM CuttingUnit_Stratum WHERE CuttingUnitCode = @p1 AND StratumCode = @p2;", cuttingUnitCode, stratumCode);
+            }
         }
 
         public void UpdateStratum(Stratum stratum)
         {
             Database.Update(stratum);
+        }
+
+        public bool HasTreeCounts(string unitCode, string stratum)
+        {
+            var treecount = Database.ExecuteScalar<int>("SELECT sum(TreeCount) FROM TallyLedger WHERE CuttingUnitCode = @p1 AND StratumCode = @p2;"
+                , unitCode, stratum);
+
+            var numTrees = Database.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3 WHERE CuttingUnitCode = @p1 AND StratumCode = @p2;"
+                , unitCode, stratum);
+
+            return numTrees > 0;
         }
     }
 }

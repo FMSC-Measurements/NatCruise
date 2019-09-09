@@ -9,10 +9,6 @@ namespace NatCruise.Wpf.Data
 
         IEnumerable<string> GetCuttingUnitCodes();
 
-        IEnumerable<CuttingUnit> GetCuttingUnitsByStratum(string stratumCode);
-
-        IEnumerable<string> GetCuttingUnitCodesByStratum(string stratumCode);
-
         void AddCuttingUnit(CuttingUnit unit);
 
         void UpdateCuttingUnit(CuttingUnit unit);

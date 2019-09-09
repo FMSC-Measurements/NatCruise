@@ -129,6 +129,7 @@
     <Compile Include="Models\TreeFieldSetup.cs" />
     <Compile Include="Models\UOM.cs" />
     <Compile Include="Navigation\NatCruiseNavigationParamiters.cs" />
+    <Compile Include="Navigation\NotificationDialogParamiters.cs" />
     <Compile Include="Navigation\Regions.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -138,6 +139,7 @@
     <Compile Include="Secrets.cs" />
     <Compile Include="Secrets.local.cs" />
     <Compile Include="Services\FileDialogService.cs" />
+    <Compile Include="Services\IDialogServiceExtentions.cs" />
     <Compile Include="Services\IFileDialogService.cs" />
     <Compile Include="Services\ILoggingService.cs" />
     <Compile Include="Services\IRecentFilesDataservice.cs" />
@@ -148,10 +150,14 @@
     <Compile Include="Triggers\ClearAutoCompleteBoxAction.cs" />
     <Compile Include="Triggers\ClearTextBoxAction.cs" />
     <Compile Include="Util\IDictionaryExtentions.cs" />
+    <Compile Include="Util\IEnumerableExtentions.cs" />
     <Compile Include="ViewModels\CuttingUnitDetailViewModel.cs" />
     <Compile Include="ViewModels\CuttingUnitListViewModel.cs" />
+    <Compile Include="ViewModels\CuttingUnitStrataViewModel.cs" />
+    <Compile Include="ViewModels\DialogViewModelBase.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\NewCruiseViewModel.cs" />
+    <Compile Include="ViewModels\NotificationDialogViewModel.cs" />
     <Compile Include="ViewModels\SaleViewModel.cs" />
     <Compile Include="ViewModels\SampleGroupDetailViewModel.cs" />
     <Compile Include="ViewModels\SampleGroupListViewModel.cs" />
@@ -168,6 +174,9 @@
     </Compile>
     <Compile Include="Views\CuttingUnitListPage.xaml.cs">
       <DependentUpon>CuttingUnitListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CuttingUnitStrataPage.xaml.cs">
+      <DependentUpon>CuttingUnitStrataPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -241,6 +250,10 @@
     <Page Include="Views\CuttingUnitListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\CuttingUnitStrataPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
