@@ -1,4 +1,7 @@
-﻿using NatCruise.Wpf.Data;
+﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using NatCruise.Wpf.Data;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Services;
 using NatCruise.Wpf.ViewModels;
