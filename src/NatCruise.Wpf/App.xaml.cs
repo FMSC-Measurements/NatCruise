@@ -1,4 +1,5 @@
-﻿using Microsoft.AppCenter;
+﻿using MahApps.Metro;
+using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using NatCruise.Wpf.Data;
@@ -30,6 +31,10 @@ namespace NatCruise.Wpf
         {
             // store our start up args for use later
             StartupArgs = e.Args;
+
+            //ThemeManager.ChangeAppStyle(Application.Current,
+            //    ThemeManager.GetAccent("Orange"),
+            //    ThemeManager.GetAppTheme("BaseLight"));
 
             base.OnStartup(e);
         }
