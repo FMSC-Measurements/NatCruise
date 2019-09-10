@@ -3847,15 +3847,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:National Cruise System"
-        "ProductCode" = "8:{B553C903-2688-420C-9742-41B2F9EEC050}"
-        "PackageCode" = "8:{AF4A3F47-7C90-418B-8888-CBBB4B0D5C9F}"
+        "ProductCode" = "8:{6F608F18-4773-4760-94AB-E4557362E1C5}"
+        "PackageCode" = "8:{0BC216E8-E623-424E-A7D5-30236015C3B1}"
         "UpgradeCode" = "8:{2E5ECA89-A27F-44E3-B2FA-623F1EDDE143}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.1.0"
+        "ProductVersion" = "8:0.2.0"
         "Manufacturer" = "8:FMSC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -4397,7 +4397,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_15A114C734D1479AAC23F4BCFF2414F6"
             {
-            "SourcePath" = "8:..\\NatCruise.Wpf\\obj\\Release\\NatCruise.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_396ED465E2BB4469A23E49F08E45E7CE"
