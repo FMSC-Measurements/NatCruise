@@ -42,7 +42,7 @@ namespace NatCruise.Wpf.ViewModels
 
         //protected IRegionNavigationService RegionNavigationService => RegionManager?.Regions[Regions.ContentRegion].NavigationService;
 
-        public string Title => "National Cruise System (0.2-Alpha)";
+        public string Title => "National Cruise System (0.2.1-Alpha)";
 
         public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles().Select(x => new FileInfo(x));
 
