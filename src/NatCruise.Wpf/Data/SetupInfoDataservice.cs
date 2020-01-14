@@ -201,28 +201,10 @@ namespace NatCruise.Wpf.Data
         {
             return new[]
             {
-                new Purpose { PurposeCode = "01", FriendlyName = "Sawtimber"},
-                new Purpose { PurposeCode = "02", FriendlyName = "Pulpwood"},
-                new Purpose { PurposeCode = "03", FriendlyName = "Poles"},
-                new Purpose { PurposeCode = "04", FriendlyName = "Pilings"},
-                new Purpose { PurposeCode = "05", FriendlyName = "Mine Props"},
-                new Purpose { PurposeCode = "06", FriendlyName = "Posts"},
-                new Purpose { PurposeCode = "07", FriendlyName = "Fuelwood"},
-                new Purpose { PurposeCode = "08", FriendlyName = "Non-sawtimber"},
-                new Purpose { PurposeCode = "09", FriendlyName = "Ties"},
-                new Purpose { PurposeCode = "10", FriendlyName = "Coop Bolts"},
-                new Purpose { PurposeCode = "11", FriendlyName = "Acid/Dist."},
-                new Purpose { PurposeCode = "12", FriendlyName = "Float Logs"},
-                new Purpose { PurposeCode = "13", FriendlyName = "Trap Float"},
-                new Purpose { PurposeCode = "14", FriendlyName = "Misc-Conv."},
-                new Purpose { PurposeCode = "15", FriendlyName = "Christmas Trees"},
-                new Purpose { PurposeCode = "16", FriendlyName = "Nav Stores"},
-                new Purpose { PurposeCode = "17", FriendlyName = "Non Conv."},
-                new Purpose { PurposeCode = "18", FriendlyName = "Cull Logs"},
-                new Purpose { PurposeCode = "19", FriendlyName = "Sm Rnd Wd"},
-                new Purpose { PurposeCode = "20", FriendlyName = "Grn Bio Cv"},
-                new Purpose { PurposeCode = "21", FriendlyName = "Dry Bio Cv"},
-                new Purpose { PurposeCode = "26", FriendlyName = "Sp Wood Pr"},
+                new Purpose { PurposeCode = "TS", FriendlyName = "Timber Sale"},
+                new Purpose { PurposeCode = "Check", FriendlyName = "Check Cruise"},
+                new Purpose { PurposeCode = "RoW", FriendlyName = "Right of Way"},
+                new Purpose { PurposeCode = "Recon", FriendlyName = "Recon"},
             };
         }
 
