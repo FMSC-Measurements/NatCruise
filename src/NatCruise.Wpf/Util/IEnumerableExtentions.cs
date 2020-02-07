@@ -16,11 +16,15 @@ namespace NatCruise.Wpf.Util
             return new ObservableCollection<T>(@this);
         }
 
+        // ToHashSet requires in netcore 2.0, net472 or netstd21
+#if !NETCOREAPP3_1
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> @this)
         {
             if(@this is HashSet<T> c) { return c; }
 
             return new HashSet<T>(@this);
         }
+#endif
+
     }
 }
