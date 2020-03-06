@@ -1,11 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Models;
-using FScruiser.Util;
+using NatCruise.Models;
 using System;
 
 namespace FScruiser.Models
 {
-    public class TreeFieldValue : INPC_Base, IHasTreeID
+    public class TreeFieldValue : Model_Base, IHasTreeID
     {
         private string _dbType;
         private string _field;

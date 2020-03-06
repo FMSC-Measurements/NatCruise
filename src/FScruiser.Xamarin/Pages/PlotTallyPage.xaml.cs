@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using FScruiser.Util;
+using NatCruise.Util;
 
 namespace FScruiser.XF.Pages
 {

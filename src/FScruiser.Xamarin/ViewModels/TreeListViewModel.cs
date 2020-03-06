@@ -4,6 +4,7 @@ using FScruiser.Util;
 using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using Microsoft.AppCenter.Crashes;
+using NatCruise.Util;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;

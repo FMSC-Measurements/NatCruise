@@ -1,11 +1,11 @@
 ﻿using CruiseDAL.Schema;
 using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Util;
+using NatCruise.Models;
 using System.Linq;
 
 namespace FScruiser.Models
 {
-    public class TallyPopulation_Base : INPC_Base
+    public class TallyPopulation_Base : Model_Base
     {
         [Field("Description")]
         public string TallyDescription { get; set; }

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace FScruiser.Util
+namespace NatCruise.Models
 {
-    public class INPC_Base : INotifyPropertyChanged
+    public class Model_Base
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

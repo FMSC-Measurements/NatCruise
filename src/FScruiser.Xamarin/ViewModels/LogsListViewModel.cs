@@ -2,6 +2,7 @@
 using FScruiser.Services;
 using FScruiser.Util;
 using FScruiser.XF.Services;
+using NatCruise.Util;
 using Prism.Navigation;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

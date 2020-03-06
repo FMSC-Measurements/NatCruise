@@ -15,7 +15,7 @@ namespace FScruiser.Models
 
         protected TallyAction(TallyPopulation population)
         {
-            if(population == null) { throw new ArgumentNullException(nameof(population)); }
+            if (population == null) { throw new ArgumentNullException(nameof(population)); }
 
             StratumCode = population.StratumCode;
             SampleGroupCode = population.SampleGroupCode;

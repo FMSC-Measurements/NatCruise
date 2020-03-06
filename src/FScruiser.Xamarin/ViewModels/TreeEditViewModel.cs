@@ -1,9 +1,8 @@
 ﻿using FScruiser.Models;
-using FScruiser.Models.Validators;
 using FScruiser.Services;
-using FScruiser.Util;
 using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Util;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;

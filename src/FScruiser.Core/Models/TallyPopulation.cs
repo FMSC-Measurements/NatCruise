@@ -1,15 +1,9 @@
-﻿using CruiseDAL.Schema;
-using FMSC.ORM.EntityModel.Attributes;
-using FMSC.Sampling;
-using FScruiser.Util;
-using System.Linq;
-
-namespace FScruiser.Models
+﻿namespace FScruiser.Models
 {
     public class TallyPopulation : TallyPopulation_Base
     {
-        int _treeCount;
-        int _sumKPI;
+        private int _treeCount;
+        private int _sumKPI;
 
         public int TreeCount
         {

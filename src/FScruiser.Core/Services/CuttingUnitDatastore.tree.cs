@@ -286,6 +286,7 @@ namespace FScruiser.Services
                 new
                 {
                     tree.TreeID,
+                    tree.TreeNumber,
                     tree.StratumCode,
                     tree.SampleGroupCode,
                     tree.Species,

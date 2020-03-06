@@ -11,8 +11,8 @@ namespace NatCruise.Data
 
         void OpenFile(string filePath);
 
-        object GetDataservice(Type type);
+        IDataservice GetDataservice(Type type);
 
-        T GetDataservice<T>();
+        T GetDataservice<T>() where T : IDataservice; //, new;
     }
 }

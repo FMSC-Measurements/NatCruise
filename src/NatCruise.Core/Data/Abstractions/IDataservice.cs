@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FScruiser
+namespace NatCruise.Data
 {
-    public interface ICruiseFolderService
+    public interface IDataservice
     {
-        IEnumerable<string> CruiseFolders { get; }
+        
     }
 }

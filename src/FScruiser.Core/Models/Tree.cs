@@ -1,11 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Models;
-using FScruiser.Util;
+using NatCruise.Models;
 
 namespace FScruiser.Models
 {
     [Table("Tree_V3")]
-    public class Tree : INPC_Base, IHasTreeID
+    public class Tree : Model_Base, IHasTreeID
     {
         #region table fields
 

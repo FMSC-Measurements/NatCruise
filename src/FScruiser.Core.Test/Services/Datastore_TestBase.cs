@@ -1,8 +1,8 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Models;
-using FScruiser.Util;
 using System.Linq;
 using Xunit.Abstractions;
+using NatCruise.Util;
 
 namespace FScruiser.Core.Test.Services
 {
