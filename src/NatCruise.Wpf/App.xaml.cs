@@ -2,6 +2,9 @@
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using NatCruise.Data;
+using NatCruise.Design.Views;
+using NatCruise.Services;
 using NatCruise.Wpf.Data;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Services;
@@ -9,8 +12,12 @@ using NatCruise.Wpf.ViewModels;
 using NatCruise.Wpf.Views;
 using Prism.DryIoc;
 using Prism.Ioc;
+using Prism.Mvvm;
 using Prism.Regions;
+using System;
+using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 
 namespace NatCruise.Wpf
@@ -86,15 +93,33 @@ namespace NatCruise.Wpf
         {
             base.ConfigureViewModelLocator();
 
-            //ViewModelLocationProvider.Register<SalePage, SalePageViewModel>();
-            //ViewModelLocationProvider.Register<CuttingUnitListPage, CuttingUnitListPageViewModel>();
-            //ViewModelLocationProvider.Register<CuttingUnitDetailPage, CuttingUnitDetailPageViewModel>();
-            //ViewModelLocationProvider.Register<CuttingUnitStrataPage, CuttingUnitStrataPageViewModel>();
-            //ViewModelLocationProvider.Register<StratumListPage, StratumListPageViewModel>();
-            //ViewModelLocationProvider.Register<StratumDetailPage, StratumDetailPageViewModel>();
-            //ViewModelLocationProvider.Register<SampleGroupListPage, SampleGroupListPageViewModel>();
-            //ViewModelLocationProvider.Register<SampleGroupDetailPage, SampleGroupDetailPageViewModel>();
-            //ViewModelLocationProvider.Register<SubpopulationListPage, SubpopulationListPageViewModel>();
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
+            {
+
+                var viewName = viewType.FullName;
+                viewName = viewName.Replace(".Views.", ".ViewModels.");
+
+                string viewAssemblyName = null;
+                if(viewName.StartsWith("NatCruise.Design"))
+                {
+                    var assemblyName = Assembly.GetAssembly(typeof(CuttingUnitDetailPage)).FullName;
+                    viewAssemblyName = "NatCruise.Design";
+                }
+                else
+                {
+                    viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
+                }
+
+                var suffix = viewName.EndsWith("View") ? "Model" : "ViewModel";
+                var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);
+
+                return Type.GetType(viewModelName);
+            });
+
+            //ViewModelLocationProvider.SetDefaultViewModelFactory((viewType) =>
+            //{
+            //    var viewName = 
+            //})
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

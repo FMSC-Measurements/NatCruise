@@ -23,9 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CruiseDAL.V3" PrivateAssets="none" >
-      <Version>3.0.2.55</Version>
-    </PackageReference>
     <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.0.77" />
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
@@ -51,6 +48,43 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NatCruise.Design\NatCruise.Design.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Design\Views\CuttingUnitDetailPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\Views\CuttingUnitListPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\Views\CuttingUnitStrataPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\Views\SalePage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\Views\SampleGroupDetailPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\Views\SampleGroupListPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\Views\StratumDetailPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\Views\StratumListPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\Views\SubpopulationListPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\Views\TallySettingsPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

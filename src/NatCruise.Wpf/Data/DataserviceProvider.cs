@@ -1,4 +1,5 @@
-﻿using NatCruise.Wpf.Data;
+﻿using NatCruise.Data;
+using NatCruise.Design.Data;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -71,7 +72,8 @@ namespace NatCruise.Wpf.Data
             }
             catch (Exception e)
             {
-                return null;
+                throw;
+                //return null;
             }
         }
 

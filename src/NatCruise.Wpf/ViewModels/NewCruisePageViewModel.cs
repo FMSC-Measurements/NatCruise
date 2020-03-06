@@ -1,6 +1,7 @@
 ﻿using CruiseDAL;
-using NatCruise.Wpf.Data;
-using NatCruise.Wpf.Models;
+using NatCruise.Data;
+using NatCruise.Design.Data;
+using NatCruise.Design.Models;
 using NatCruise.Wpf.Services;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -65,7 +66,7 @@ namespace NatCruise.Wpf.ViewModels
         private void CreateCruise()
         {
             var isSaleValid = ValidateSale();
-            if(isSaleValid == false) { return; }
+            if (isSaleValid == false) { return; }
 
             var defaultFileName = $"{Sale.SaleNumber} {Sale.Name}.crz3";
 
@@ -97,11 +98,11 @@ namespace NatCruise.Wpf.ViewModels
         {
         }
 
-        bool ValidateSale()
+        private bool ValidateSale()
         {
             var sale = Sale;
-            if(string.IsNullOrWhiteSpace(sale.Name)) { return false; }
-            if(string.IsNullOrWhiteSpace(sale.SaleNumber)) { return false; }
+            if (string.IsNullOrWhiteSpace(sale.Name)) { return false; }
+            if (string.IsNullOrWhiteSpace(sale.SaleNumber)) { return false; }
 
             return true;
         }

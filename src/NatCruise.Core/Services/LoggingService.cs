@@ -1,8 +1,7 @@
-﻿using NatCruise.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace NatCruise.Wpf.Services
+namespace NatCruise.Services
 {
     public abstract class LoggingService : ILoggingService
     {
