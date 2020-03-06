@@ -1,4 +1,4 @@
-﻿using NatCruise.Wpf.Data;
+﻿using NatCruise.Data;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Services;
 using NatCruise.Wpf.Views;

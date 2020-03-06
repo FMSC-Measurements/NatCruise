@@ -1,10 +1,9 @@
-﻿using NatCruise.Wpf.Properties;
+﻿using NatCruise.Data;
+using NatCruise.Wpf.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Wpf.Services
 {
@@ -15,7 +14,7 @@ namespace NatCruise.Wpf.Services
             Settings = Settings.Default;
         }
 
-        Settings Settings { get; }
+        private Settings Settings { get; }
 
         public void AddRecentFile(string filePath)
         {
