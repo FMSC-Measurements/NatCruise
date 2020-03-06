@@ -1,5 +1,4 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Models;
 using System;
 
 namespace FScruiser.Models

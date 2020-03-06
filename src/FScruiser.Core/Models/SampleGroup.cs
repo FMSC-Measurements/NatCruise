@@ -1,7 +1,4 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using FMSC.Sampling;
-using System;
-using System.Xml.Serialization;
 
 namespace FScruiser.Models
 {

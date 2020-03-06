@@ -7,7 +7,7 @@ using System;
 
 namespace FScruiser.Droid
 {
-    public class AndroidPlatformInitializer : FScruiser.XF.BasePlatformInitializer
+    public class AndroidPlatformInitializer : FScruiser.XF.XamarinPlatformInitializer
     {
         public AndroidPlatformInitializer(Activity hostActivity)
         {

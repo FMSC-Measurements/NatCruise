@@ -1,17 +1,10 @@
-﻿using FMSC.ORM.EntityModel;
-using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using FMSC.ORM.EntityModel.Attributes;
+using NatCruise.Models;
 
 namespace FScruiser.Models
 {
     [Table("CuttingUnit")]
-    public class CuttingUnit : INPC_Base
+    public class CuttingUnit : Model_Base
     {
         [Field("Code")]
         public string Code { get; set; }

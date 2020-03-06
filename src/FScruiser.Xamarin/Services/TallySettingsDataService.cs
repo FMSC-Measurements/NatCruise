@@ -1,5 +1,7 @@
 ﻿using FScruiser.Services;
 using FScruiser.Util;
+using NatCruise.Models;
+using NatCruise.Util;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -14,7 +16,7 @@ namespace FScruiser.XF.Services
         public List<string> Cruisers { get; set; } = new List<string>();
     }
 
-    public class TallySettingsDataService : INPC_Base, ITallySettingsDataService
+    public class TallySettingsDataService : Model_Base, ITallySettingsDataService
     {
         protected TallySettings Data { get; set; }
         protected object DataSyncLock { get; } = new object();

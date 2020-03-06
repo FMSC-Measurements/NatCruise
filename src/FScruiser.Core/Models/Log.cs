@@ -1,11 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Models;
-using FScruiser.Util;
+using NatCruise.Models;
 
 namespace FScruiser.Models
 {
     [Table("Log_V3")]
-    public class Log : INPC_Base, IHasTreeID
+    public class Log : Model_Base, IHasTreeID
     {
         [Field("LogID")]
         public string LogID { get; set; }

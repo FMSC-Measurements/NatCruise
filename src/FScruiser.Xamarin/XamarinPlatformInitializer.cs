@@ -2,15 +2,10 @@
 using FScruiser.XF.Services;
 using Prism;
 using Prism.Ioc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FScruiser.XF
 {
-    public class BasePlatformInitializer : IPlatformInitializer
+    public class XamarinPlatformInitializer : IPlatformInitializer
     {
         public virtual void RegisterTypes(IContainerRegistry containerRegistry)
         {

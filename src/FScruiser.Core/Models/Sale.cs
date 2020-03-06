@@ -1,10 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Util;
+using NatCruise.Models;
 
 namespace FScruiser.Models
 {
     [Table("Sale")]
-    public class Sale : INPC_Base
+    public class Sale : Model_Base
     {
         private string _remarks;
 

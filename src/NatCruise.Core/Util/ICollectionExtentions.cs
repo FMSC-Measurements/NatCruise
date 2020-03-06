@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FScruiser.Util
+namespace NatCruise.Util
 {
     public static class ICollectionExtentions
     {

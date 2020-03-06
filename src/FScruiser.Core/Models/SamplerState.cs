@@ -42,7 +42,6 @@ namespace FScruiser.Models
             }
         }
 
-
         public string StratumCode { get; set; }
         public string SampleGroupCode { get; set; }
 

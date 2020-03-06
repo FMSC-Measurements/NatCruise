@@ -1,7 +1,7 @@
 ﻿using CruiseDAL;
 using FScruiser.Data;
 using FScruiser.Services;
-using FScruiser.Util;
+using NatCruise.Util;
 using FScruiser.XF.Events;
 using FScruiser.XF.Pages;
 using FScruiser.XF.Services;
@@ -24,7 +24,7 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class App : Prism.Autofac.PrismApplication
+    public partial class App : Prism.DryIoc.PrismApplication
     {
         public const string CURRENT_NAV_PATH = "current_nav_path";
         public const string CURRENT_NAV_PARAMS = "current_nav_params";
@@ -44,7 +44,7 @@ namespace FScruiser.XF
 
         public IApplicationSettings Settings { get; } = new ApplicationSettings();
 
-        public App() : this(new BasePlatformInitializer(), (string)null)
+        public App() : this(new XamarinPlatformInitializer(), (string)null)
         {
         }
 

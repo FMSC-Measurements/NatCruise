@@ -1,10 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Util;
+using NatCruise.Models;
 
 namespace FScruiser.Models
 {
     [Table("TreeMeasurment")]
-    public class TreeMeasurment : INPC_Base
+    public class TreeMeasurment : Model_Base
     {
         private static readonly string DEFAULT_GRADE = "00";
         private static readonly string DEFAULT_CLEAR_FACE = "";

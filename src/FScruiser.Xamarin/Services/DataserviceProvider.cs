@@ -1,7 +1,7 @@
 ﻿using CruiseDAL;
 using FScruiser.Data;
 using FScruiser.Services;
-using Prism.Autofac;
+using Prism.DryIoc;
 using System;
 using Xamarin.Forms;
 

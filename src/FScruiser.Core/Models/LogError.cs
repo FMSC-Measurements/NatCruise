@@ -1,13 +1,9 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NatCruise.Models;
 
 namespace FScruiser.Models
 {
-    public class LogError : Error_Base
+    public class LogError : Model_Base
     {
         [Field("LogID")]
         public string LogID { get; set; }

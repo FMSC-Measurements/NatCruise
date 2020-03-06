@@ -1,13 +1,9 @@
-﻿using FScruiser.Util;
+﻿using NatCruise.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FScruiser.Models
 {
-    public class FixCNTTallyBucket : INPC_Base
+    public class FixCNTTallyBucket : Model_Base
     {
         private int _treeCount;
 

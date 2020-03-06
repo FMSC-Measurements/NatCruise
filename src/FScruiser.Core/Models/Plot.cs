@@ -1,10 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Util;
+using NatCruise.Models;
 
 namespace FScruiser.Models
 {
     [Table("Plot_V3")]
-    public class Plot : INPC_Base
+    public class Plot : Model_Base
     {
         private double _slope;
         private double _aspect;

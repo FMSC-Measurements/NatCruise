@@ -1,10 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using FScruiser.Util;
+using NatCruise.Models;
 
 namespace FScruiser.Models
 {
     [Table("Plot_Stratum")]
-    public class Plot_Stratum : INPC_Base
+    public class Plot_Stratum : Model_Base
     {
         private int _plotNumber;
         private bool _inCruise;
@@ -46,7 +46,6 @@ namespace FScruiser.Models
         [Field(Alias = "FPS", PersistanceFlags = PersistanceFlags.Never)]
         public double FPS { get; set; }
 
-        
         [Field("IsEmpty")]
         public bool IsEmpty
         {
@@ -66,7 +65,5 @@ namespace FScruiser.Models
 
         [Field("ThreePRandomValue")]
         public int ThreePRandomValue { get; set; }
-
-
     }
 }
