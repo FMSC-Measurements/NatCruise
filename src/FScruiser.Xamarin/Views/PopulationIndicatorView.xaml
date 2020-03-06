@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Views.PopulationIndicatorView"
+             x:Name="_view">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="BoxView">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="WidthRequest" Value="2" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <ContentView.Content>
+
+        <Frame BorderColor="Transparent" 
+               BackgroundColor="Black" 
+               Padding="5,2,5,2" 
+               CornerRadius="10">
+            
+            <StackLayout Orientation="Horizontal">
+                <Label x:Name="_stratumLabel"/>
+                <BoxView/>
+                <Label x:Name="_sgLabel"/>
+                <BoxView x:Name="_spLableSplitter" IsVisible="False" />
+                <Label x:Name="_spLabel"/>
+                <BoxView x:Name="_ldLableSplitter" IsVisible="False" />
+                <Label x:Name="_ldLabel"/>
+            </StackLayout>
+        </Frame>
+    </ContentView.Content>
+</ContentView>

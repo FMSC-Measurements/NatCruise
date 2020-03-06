@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <style name="MyTheme" parent="android:Theme.Material.Light.DarkActionBar">
+  </style>
+
+  <style name="MyTheme.Splash" parent ="MyTheme">
+    <!--<item name="android:background">@drawable/fscruiser_24dp</item>-->
+    <item name="android:windowBackground">@drawable/splash_icon</item>
+    <item name="android:windowNoTitle">true</item>
+  </style>
+</resources>

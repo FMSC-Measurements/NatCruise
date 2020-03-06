@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Pages.TreeErrorEditPage"
+             Title="{Binding TreeNumber}">
+    <ContentPage.Content>
+
+        <Grid>
+            <Grid.Resources>
+                
+
+                <Style TargetType="Label">
+                    <Setter Property="Margin"
+                            Value="10,0,10,0" />
+                    <Setter Property="VerticalTextAlignment"
+                            Value="Center" />
+                </Style>
+            </Grid.Resources>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="Auto" />
+
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   Text="{Binding Message}"
+                   FontSize="Large"
+                   BackgroundColor="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}"
+                   VerticalOptions="Start"
+                   HorizontalOptions="FillAndExpand"
+                   HorizontalTextAlignment="Center"
+                   Margin="0" />
+
+            <Switch Grid.Row="1"
+                    Grid.Column="1"
+                    IsToggled="{Binding IsResolved}" />
+
+            <Label Grid.Row="1"
+                   Grid.Column="0"
+                   Text="Supress" />
+
+            <Label Grid.Row="2"
+                   Grid.Column="0"
+                   Text="Remarks" />
+
+            <Editor Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    BackgroundColor="LightGray"
+                    Text="{Binding Resolution}"
+                    IsEnabled="{Binding IsResolved}"/>
+
+            <Label Grid.Row="4"
+                   Grid.Column="0"
+                   Text="Initials*" />
+
+            <Entry Grid.Row="4"
+                   Grid.Column="1"
+                   Text="{Binding Initials}"
+                   HorizontalOptions="Start"
+                   WidthRequest="100"
+                   IsEnabled="{Binding IsResolved}" />
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>

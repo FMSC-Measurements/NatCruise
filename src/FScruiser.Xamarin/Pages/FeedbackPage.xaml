@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Pages.FeedbackPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="VerticalTextAlignment" Value="Center"/>
+                </Style>
+                <Style TargetType="Entry">
+                    <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+                </Style>
+            </StackLayout.Resources>
+            <Label Text="Feedback" FontSize="Large" />
+            <StackLayout>
+                <Label Text="Name (optional)"/>
+                <Entry x:Name="_nameEntry"/>
+            </StackLayout>
+            <StackLayout>
+                <Label Text="Email (optional)"/>
+                <Entry x:Name="_emailEntry"/>
+            </StackLayout>
+            <Entry x:Name="_feedbackEntry" HeightRequest="150" />
+            <Button x:Name="_submitButton" Text="Submit" BackgroundColor="Orange" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

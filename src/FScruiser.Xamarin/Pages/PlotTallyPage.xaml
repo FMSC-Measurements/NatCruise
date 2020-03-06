@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
+             xmlns:flow="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+             xmlns:tk_conv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+             xmlns:my_behv="clr-namespace:FScruiser.XF.Behaviors"
+             xmlns:local_views="clr-namespace:FScruiser.XF.Views"
+             x:Class="FScruiser.XF.Pages.PlotTallyPage"
+             BackgroundColor="White"
+             x:Name="_page"
+             Title="{Binding PlotNumber, StringFormat='{}Plot Number {0}'}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="tallyIncruiseColor"></Color>
+
+            <tk_conv:BooleanToObjectConverter x:Key="tallyIncruiseBackgroundColorConverter"
+                                              x:TypeArguments="Color"
+                                              TrueObject="{StaticResource primary_500}"
+                                              FalseObject="DimGray" />
+
+            <tk_conv:HasDataConverter x:Key="hasDataConverter" />
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Edit"
+                     Icon="ic_edit_white_24dp.png"
+                     Command="{Binding EditPlotCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="7*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ListView Grid.Row="0"
+                      x:Name="_tallyFeedListView"
+                      HasUnevenRows="True"
+                      ItemsSource="{Binding Trees}"
+                      ItemSelected="TallyFeedListView_ItemSelected"
+                      CachingStrategy="RetainElement"
+                      SeparatorColor="Silver">
+                <ListView.Behaviors>
+                    <my_behv:ScrollOnLoadBehavior />
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <cells:PlotTreeViewCell EditTreeCommand="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
+                                                UntallyCommand="{Binding BindingContext.DeleteTreeCommand, Source={Reference _page}}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <flow:FlowListView Grid.Row="1"
+                               x:Name="TallyListView"
+                               IsVisible="{Binding TalliesFiltered, Converter={StaticResource hasDataConverter}}"
+                               FlowItemsSource="{Binding TalliesFiltered}"
+                               FlowItemTappedCommand="{Binding TallyCommand}"
+                               FlowColumnCount="3"
+                               SeparatorVisibility="None"
+                               HasUnevenRows="True"
+                               BackgroundColor="White"
+                               VerticalOptions="CenterAndExpand">
+                <flow:FlowListView.FlowColumnTemplate>
+                    <DataTemplate>
+                        <Frame CornerRadius="5"
+                               Margin="3"
+                               BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}">
+
+                            <StackLayout HorizontalOptions="Fill"
+                                         VerticalOptions="Fill"
+                                         Padding="3">
+
+                                <local_views:PopulationIndicatorView HorizontalOptions="Center"
+                                                                     VerticalOptions="Center"
+                                                                     StratumCode="{Binding StratumCode}"
+                                                                     SampleGroupCode="{Binding SampleGroupCode}"
+                                                                     Species="{Binding Species}"
+                                                                     LiveDead="{Binding LiveDead}"
+                                                                     Margin="5"
+                                                                     HeightRequest="20"
+                                                                     FontSize="Micro" />
+
+                            </StackLayout>
+
+                        </Frame>
+                    </DataTemplate>
+                </flow:FlowListView.FlowColumnTemplate>
+            </flow:FlowListView>
+
+            <flow:FlowListView Grid.Row="2"
+                               x:Name="StratumFilterListView"
+                               FlowColumnCount="6"
+                               SeparatorVisibility="None"
+                               HasUnevenRows="False"
+                               VerticalOptions="End"
+                               HeightRequest="44"
+                               FlowItemsSource="{Binding StrataFilterOptions}">
+                <flow:FlowListView.FlowColumnTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding .}"
+                                TextColor="{StaticResource white_90}"
+                                BackgroundColor="{StaticResource primary_500}"
+                                Margin="2"
+                                HeightRequest="40"
+                                Clicked="_stratumFilterButton_Clicked" />
+                    </DataTemplate>
+                </flow:FlowListView.FlowColumnTemplate>
+            </flow:FlowListView>
+
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>

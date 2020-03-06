@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
+             xmlns:flow="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+             xmlns:my_behv="clr-namespace:FScruiser.XF.Behaviors"
+             xmlns:local_views="clr-namespace:FScruiser.XF.Views"
+             x:Class="FScruiser.XF.Pages.UnitTreeTallyPage"
+             BackgroundColor="White"
+             Title="{Binding Title}"
+             x:Name="_page">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="tallyButtonBgColor">Green</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="7*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- tally feed -->
+            <ListView Grid.Row="0"
+                      Grid.Column="0"
+                      x:Name="_tallyFeedListView"
+                      HasUnevenRows="True"
+                      ItemsSource="{Binding TallyFeed}"
+                      CachingStrategy="RetainElement"
+                      SeparatorColor="Silver">
+                <ListView.Behaviors>
+                    <my_behv:ScrollOnLoadBehavior />
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <cells:TreeDataTemplateSelector>
+
+                        <cells:TreeDataTemplateSelector.TallyEditTemplate>
+                            <DataTemplate>
+                                <cells:TallyEditViewCell />
+                            </DataTemplate>
+                        </cells:TreeDataTemplateSelector.TallyEditTemplate>
+
+                        <cells:TreeDataTemplateSelector.TreeItemTemplate>
+                            <DataTemplate>
+                                <cells:TallyEntryTreeViewCell EditTreeCommand="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
+                                                              UntallyCommand="{Binding BindingContext.UntallyCommand, Source={Reference _page}}" />
+                            </DataTemplate>
+                        </cells:TreeDataTemplateSelector.TreeItemTemplate>
+
+                        <cells:TreeDataTemplateSelector.BasicTemplate>
+
+                            <DataTemplate>
+                                <cells:TallyEntryViewCell UntallyCommand="{Binding BindingContext.UntallyCommand, Source={Reference _page}}" />
+                            </DataTemplate>
+                        </cells:TreeDataTemplateSelector.BasicTemplate>
+                    </cells:TreeDataTemplateSelector>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- tally buttons -->
+            <flow:FlowListView Grid.Row="1"
+                               Grid.Column="0"
+                               x:Name="TallyListView"
+                               FlowItemsSource="{Binding TalliesFiltered}"
+                               FlowItemTappedCommand="{Binding TallyCommand}"
+                               FlowColumnCount="3"
+                               SeparatorVisibility="None"
+                               HasUnevenRows="True"
+                               BackgroundColor="Gray"
+                               VerticalOptions="CenterAndExpand">
+                <flow:FlowListView.FlowColumnTemplate>
+
+                    <cells:TallyDataTemplateSelector>
+                        <cells:TallyDataTemplateSelector.TallyTemplate>
+                            <DataTemplate>
+
+                                <Frame CornerRadius="5"
+                                       BackgroundColor="Green"
+                                       Margin="3"
+                                       HeightRequest="100"
+                                       Padding="0">
+
+                                    <Grid Padding="0">
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <!-- population info and menu button -->
+                                            <RowDefinition Height="*" />
+                                            <!-- spacer -->
+                                            <RowDefinition Height="Auto" />
+                                            <!-- tree count -->
+                                            <RowDefinition Height="Auto" />
+                                            <!-- hotkey -->
+                                            <RowDefinition Height="*" />
+                                            <!-- bottom spacer -->
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <ImageButton    x:Name="_showTallyMenuButton"
+                                                        Grid.Column="1"
+                                                        Grid.Row="0"
+                                                        Padding="0,3,3,0"
+                                                        Command="{Binding BindingContext.ShowTallyMenuCommand, Source={Reference _page}}"
+                                                        Source="ic_more_vert_black_24dp.png"
+                                                        CommandParameter="{Binding .}" />
+
+                                        <local_views:PopulationIndicatorView Grid.Column="0"
+                                                                             Grid.Row="0"
+                                                                             StratumCode="{Binding StratumCode}"
+                                                                             SampleGroupCode="{Binding SampleGroupCode}"
+                                                                             Species="{Binding Species}"
+                                                                             LiveDead="{Binding LiveDead}"
+                                                                             Margin="5,5,0,0"
+                                                                             HeightRequest="20"
+                                                                             FontSize="Micro"
+                                                                             HorizontalOptions="Start" />
+
+                                        <Frame  Grid.Column="0"
+                                                Grid.Row="2"
+                                                Grid.ColumnSpan="2"
+                                                Padding="11,0,11,0"
+                                                Margin="0"
+                                                HorizontalOptions="Center"
+                                                BackgroundColor="White"
+                                                CornerRadius="10">
+
+                                            <Label Text="{Binding TreeCount}"
+                                                   HorizontalTextAlignment="Center"
+                                                   BackgroundColor="Transparent"
+                                                   TextColor="Black"
+                                                   WidthRequest="50" />
+                                        </Frame>
+
+                                        <Label  Grid.Column="0"
+                                                Grid.Row="3"
+                                                Grid.ColumnSpan="2"
+                                                IsVisible="False"
+                                                Text="{Binding TallyHotKey}"
+                                                HorizontalTextAlignment="Center" />
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </cells:TallyDataTemplateSelector.TallyTemplate>
+                    </cells:TallyDataTemplateSelector>
+                </flow:FlowListView.FlowColumnTemplate>
+            </flow:FlowListView>
+
+            <!-- stratum selection -->
+            <flow:FlowListView Grid.Row="2"
+                               Grid.Column="0"
+                               x:Name="StratumFilterListView"
+                               FlowColumnCount="6"
+                               SeparatorVisibility="None"
+                               HasUnevenRows="False"
+                               VerticalOptions="End"
+                               HeightRequest="44"
+                               FlowItemsSource="{Binding StrataFilterOptions}">
+                <flow:FlowListView.FlowColumnTemplate>
+
+                    <DataTemplate>
+                        <Button Text="{Binding .}"
+                                TextColor="{StaticResource white_90}"
+                                BackgroundColor="{StaticResource primary_500}"
+                                Margin="2"
+                                HeightRequest="40"
+                                Command="{Binding BindingContext.StratumSelectedCommand, Source={x:Reference StratumFilterListView}}"
+                                CommandParameter="{Binding .}" />
+                    </DataTemplate>
+                </flow:FlowListView.FlowColumnTemplate>
+            </flow:FlowListView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

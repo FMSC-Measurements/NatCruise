@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:prism="clr-namespace:Prism.Autofac;assembly=Prism.Autofac.Forms"
+                        xmlns:tc_conv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+                        xmlns:converters="clr-namespace:FScruiser.XF.Converters"
+                        x:Class="FScruiser.XF.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- colors -->
+            <Color x:Key="fs_brown">#312418</Color>
+            <Color x:Key="primary_500">#345E36</Color>
+            <Color x:Key="fs_green">#345E36</Color>
+            <Color x:Key="color_action">Orange</Color>
+
+            <!-- Dodger blue -->
+            <Color x:Key="accent">#1E90FF</Color>
+            <Color x:Key="accentText">Blue</Color>
+            <Color x:Key="darkText">Black</Color>
+            <Color x:Key="lightText">White</Color>
+
+            <!-- these colors provide semi transparent pigments to be used as background coulors or text color. 
+            using a semi trasparent color as a font or background color is a good alternative to using greys
+            as these semi transparent pigments will play well with any other colors lower down in the visual stack-->
+            <Color x:Key="white_90">#E1ffffff</Color>
+            <Color x:Key="white_50">#7FFFFFFF</Color>
+            <Color x:Key="white_38">#60FFFFFF</Color>
+            <Color x:Key="white_12">#1EFFFFFF</Color>
+            <Color x:Key="black_90">#E5000000</Color>
+            <Color x:Key="black_70">#B2000000</Color>
+            <Color x:Key="black_30">#4C000000</Color>
+            <Color x:Key="black_12">#1E000000</Color>
+
+            <Color x:Key="error">Red</Color>
+            <Color x:Key="warning">Gold</Color>
+            <Color x:Key="error_suppressed">LightGray</Color>
+            
+            
+
+            <!-- converters -->
+            <tc_conv:HasDataConverter x:Key="hasDataConverter" />
+
+            <converters:ErrorLevelToColorConverter x:Key="errorLevelToColorConverter"
+                                                   Default="White"
+                                                   Error="Red"
+                                                   Warning="Gold" />
+            
+            <!-- base styles -->
+            <Style x:Key="button_base"
+                   TargetType="Button">
+                <Setter Property="CornerRadius"
+                        Value="10" />
+            </Style>
+
+            <Style x:Key="editor_base"
+                   TargetType="Editor">
+                <Setter Property="BackgroundColor"
+                        Value="{StaticResource black_30}" />
+            </Style>
+
+            
+
+            
+
+
+        </ResourceDictionary>
+    </Application.Resources>
+</prism:PrismApplication>

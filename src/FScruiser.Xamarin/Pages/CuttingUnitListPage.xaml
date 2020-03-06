@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Pages.CuttingUnitListPage"
+             BackgroundColor="White">
+    <ContentPage.Resources>
+        <!--<ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource primary_500}"/>
+            </Style>
+        </ResourceDictionary>-->
+    </ContentPage.Resources>
+    <AbsoluteLayout>
+
+        <StackLayout AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+            <Label Text="Cutting Units" 
+               VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
+               HeightRequest="50"
+               BackgroundColor="{StaticResource fs_brown}"
+               TextColor="{StaticResource white_90}"/>
+            <ListView x:Name="UnitListView" 
+                      ItemsSource="{Binding Units}" 
+                      HasUnevenRows="True"
+                      SeparatorVisibility="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Margin="5" RowSpacing="0" ColumnSpacing="0" >
+                                <Grid.Resources>
+                                    <ResourceDictionary>
+                                        <Style TargetType="Label">
+                                            <Setter Property="TextColor" Value="Black"/>
+                                            <Setter Property="Margin" Value="5,0,5,0"/>
+                                        </Style>
+                                    </ResourceDictionary>
+                                </Grid.Resources>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto"/>
+
+                                    <!--bottom boarder-->
+                                    <RowDefinition Height="3" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <!--left boarder-->
+                                    <ColumnDefinition  Width="3" />
+
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <!--boarder elements-->
+                                <BoxView Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Color="{StaticResource black_12}"/>
+                                <BoxView Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Color="{StaticResource black_12}"/>
+
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Code}" FontSize="24" TextColor="Black" />
+                                <Label x:Name="_unitDiscriptionLabel" Grid.Column="1" Grid.Row="1" Text="{Binding Description}" TextColor="{StaticResource black_70}"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <!--<Button BackgroundColor="Orange" TextColor="{StaticResource black_70}" Text="Select File" Command="{Binding OpenFileCommand}" HorizontalOptions="Fill" />-->
+        </StackLayout>
+        <!--no file selected layover-->
+        <Label AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All"  
+               Text="No File Selected" 
+               IsVisible="{Binding IsFileNotOpen}"  
+               BackgroundColor="{StaticResource black_12}" TextColor="Black" 
+               VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+    </AbsoluteLayout>
+</ContentPage>

@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<local:TallyEntryTreeViewCell_Base xmlns="http://xamarin.com/schemas/2014/forms"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                   xmlns:local="clr-namespace:FScruiser.XF.ViewCells"
+                                   xmlns:local_views="clr-namespace:FScruiser.XF.Views"
+                                   x:Class="FScruiser.XF.ViewCells.PlotTreeViewCell"
+                                   xmlns:prismxaml="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms">
+    <ViewCell.View>
+        <ContentView BackgroundColor="Silver">
+            <Frame BackgroundColor="#30C1BC"
+                   CornerRadius="5"
+                   Margin="2,5,2,0"
+                   Padding="0">
+
+                <Frame.Triggers>
+
+                    <DataTrigger TargetType="Frame"
+                                 Binding="{Binding CountOrMeasure}"
+                                 Value="M">
+                        <Setter Property="BackgroundColor"
+                                Value="{StaticResource accent}" />
+                    </DataTrigger>
+
+                    <DataTrigger TargetType="Frame"
+                                 Binding="{Binding CountOrMeasure}"
+                                 Value="I">
+                        <Setter Property="BackgroundColor"
+                                Value="Silver" />
+                    </DataTrigger>
+
+                    <DataTrigger TargetType="Frame"
+                                 Binding="{Binding CountOrMeasure}"
+                                 Value="C">
+                        <Setter Property="BackgroundColor"
+                                Value="White" />
+                    </DataTrigger>
+
+                </Frame.Triggers>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <local_views:PopulationIndicatorView Grid.Row="0"
+                                                         Grid.Column="0"
+                                                         StratumCode="{Binding StratumCode}"
+                                                         SampleGroupCode="{Binding SampleGroupCode}"
+                                                         Species="{Binding Species}"
+                                                         LiveDead="{Binding LiveDead}"
+                                                         Margin="5"
+                                                         HeightRequest="30"
+                                                         VerticalOptions="Center"
+                                                         HorizontalOptions="Start"
+                                                         FontSize="Small" />
+
+                    <Label Grid.Row="0"
+                           Grid.Column="1"
+                           Text="{Binding CountOrMeasure}"
+                           FontSize="30"
+                           VerticalTextAlignment="Center" />
+
+                    <Label Grid.Row="0"
+                           Grid.Column="2"
+                           Text="{Binding TreeNumber, StringFormat='{}#{0}'}"
+                           TextColor="{StaticResource accentText}"
+                           FontSize="30"
+                           VerticalTextAlignment="Center"
+                           HorizontalOptions="Start" />
+
+                    <Grid Grid.Row="1"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="3"
+                          x:Name="_treeEditPanel"
+                          IsVisible="False">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <ScrollView x:Name="_treeEditScrollView"
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="4">
+
+                        </ScrollView>
+
+                        <Button Grid.Row="1"
+                                Grid.Column="1"
+                                x:Name="_logsButton"
+                                Text="Logs"
+                                Command="{prismxaml:NavigateTo Name='Logs'}"
+                                CommandParameter="{Binding TreeID}" />
+                        
+                        <Button Grid.Row="1"
+                                Grid.Column="2"
+                                x:Name="_editButton"
+                                Text="Edit" />
+                        <Button Grid.Row="1"
+                                Grid.Column="3"
+                                x:Name="_deleteButton"
+                                Text="Delete" />
+                    </Grid>
+
+                </Grid>
+
+            </Frame>
+        </ContentView>
+    </ViewCell.View>
+</local:TallyEntryTreeViewCell_Base>

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Pages.FixCntTallyPage"
+             xmlns:tk_conv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+             x:Name="Page">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackLayout Grid.Column="1"
+                         Grid.Row="1"
+                         Orientation="Horizontal">
+                <Label Text="Untally"
+                       VerticalTextAlignment="Center" />
+                <Switch x:Name="_enableUntallySwitch"
+                        IsToggled="{Binding IsUntallyEnabled}" />
+            </StackLayout>
+
+            <StackLayout x:Name="_tallyPopulationsView"
+                         Grid.Column="0"
+                         Grid.Row="0"
+                         Grid.ColumnSpan="2"
+                         Grid.RowSpan="1"
+                         BindableLayout.ItemsSource="{Binding TallyPopulations}">
+
+                <BindableLayout.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <StackLayout Orientation="Horizontal">
+
+                            <Frame BackgroundColor="{StaticResource accent}"
+                                   CornerRadius="5">
+
+                                <Label Text="{Binding Species}"
+                                       HorizontalTextAlignment="Center" />
+
+                            </Frame >
+
+
+                            <CollectionView ItemsSource="{Binding Buckets}"
+                                            HeightRequest="80">
+                                <CollectionView.ItemsLayout>
+                                    <GridItemsLayout Orientation="Horizontal" />
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+
+                                    <DataTemplate>
+
+                                        <Frame BorderColor="Black"
+                                               HeightRequest="75"
+                                               WidthRequest="75"
+                                               Margin="4"
+                                               BackgroundColor="LightGray">
+
+                                            <StackLayout>
+                                                <StackLayout.GestureRecognizers>
+
+                                                    <TapGestureRecognizer Command="{Binding BindingContext.ProcessTallyCommand, Source={Reference Page}}"
+                                                                          CommandParameter="{Binding .}" />
+
+                                                </StackLayout.GestureRecognizers>
+
+                                                <Label Text="{Binding Value, StringFormat='{}{0}&quot;'}"
+                                                       FontAttributes="Bold"
+                                                       HorizontalTextAlignment="Center"
+                                                       VerticalOptions="Center" />
+
+                                                <Label Text="{Binding TreeCount}"
+                                                       HorizontalTextAlignment="Center"
+                                                       VerticalOptions="Center" />
+
+                                            </StackLayout>
+
+                                        </Frame>
+
+                                    </DataTemplate>
+
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                        </StackLayout>
+
+                    </DataTemplate>
+
+                </BindableLayout.ItemTemplate>
+
+            </StackLayout>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

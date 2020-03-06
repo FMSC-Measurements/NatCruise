@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="FScruiser.XF.Pages.SalePage">
+    <ContentPage.Content>
+        <StackLayout Spacing="3"
+                     BackgroundColor="LightGray"
+                     BindingContext="{Binding Sale}"
+                     Orientation="Vertical">
+            <StackLayout.Resources>
+                <Style TargetType="StackLayout">
+                    <Setter Property="BackgroundColor"
+                            Value="White" />
+                    <Setter Property="Orientation"
+                            Value="Horizontal" />
+                </Style>
+                <Style TargetType="Label"
+                       x:Key="propName">
+                    <Setter Property="WidthRequest"
+                            Value="100" />
+                    <Setter Property="HorizontalOptions"
+                            Value="Start" />
+                </Style>
+                <Style TargetType="Label"
+                       x:Key="propValue">
+                    <Setter Property="HorizontalOptions"
+                            Value="FillAndExpand" />
+                </Style>
+            </StackLayout.Resources>
+            <StackLayout>
+                <Label Style="{StaticResource propName}">Sale Name</Label>
+                <Label Style="{StaticResource propValue}"
+                       Text="{Binding Name}" />
+            </StackLayout>
+
+            <StackLayout>
+                <Label Style="{StaticResource propName}">Sale Number</Label>
+                <Label Style="{StaticResource propValue}"
+                       Text="{Binding SaleNumber}" />
+            </StackLayout>
+
+            <StackLayout>
+                <Label Style="{StaticResource propName}">Purpose</Label>
+                <Label Style="{StaticResource propValue}"
+                       Text="{Binding Purpose}" />
+            </StackLayout>
+
+            <StackLayout>
+                <Label Style="{StaticResource propName}">Region</Label>
+                <Label Style="{StaticResource propValue}"
+                       Text="{Binding Region}" />
+            </StackLayout>
+
+            <StackLayout>
+                <Label Style="{StaticResource propName}">Forest</Label>
+                <Label Style="{StaticResource propValue}"
+                       Text="{Binding Forest}" />
+            </StackLayout>
+
+            <StackLayout>
+                <Label Style="{StaticResource propName}">District</Label>
+                <Label Style="{StaticResource propValue}"
+                       Text="{Binding District}" />
+            </StackLayout>
+
+            <StackLayout Orientation="Vertical">
+                <Label Style="{StaticResource propName}">Remarks</Label>
+                <Entry Style="{StaticResource propValue}"
+                       HeightRequest="200"
+                       Text="{Binding Remarks}" />
+            </StackLayout>
+
+        </StackLayout>
+
+        <!--<Grid>
+            <Grid BindingContext="{Binding Sale}">
+                <Grid.RowDefinitions>
+                    -->
+        <!-- sale name -->
+        <!--
+                    <RowDefinition Height="Auto" />
+                    -->
+        <!-- sale number -->
+        <!--
+                    <RowDefinition Height="Auto" />
+                    -->
+        <!-- purpose -->
+        <!--
+                    <RowDefinition Height="Auto" />
+                    -->
+        <!-- region -->
+        <!--
+                    <RowDefinition Height="Auto" />
+                    -->
+        <!-- Forest -->
+        <!--
+                    <RowDefinition Height="Auto" />
+                    -->
+        <!-- district -->
+        <!--
+                    <RowDefinition Height="Auto" />
+                    -->
+        <!-- remarks -->
+        <!--
+                    <RowDefinition Height="Auto" />
+                    -->
+        <!-- remarks -->
+        <!--
+                    <RowDefinition Height="150" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0">Sale Name</Label>
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       Text="{Binding Name}" />
+
+                <Label Grid.Row="1"
+                       Grid.Column="0">Sale Number</Label>
+                <Label Grid.Row="1"
+                       Grid.Column="1"
+                       Text="{Binding SaleNumber}" />
+
+                <Label Grid.Row="2"
+                       Grid.Column="0">Purpose</Label>
+                <Label Grid.Row="2"
+                       Grid.Column="1"
+                       Text="{Binding Purpose}" />
+
+                <Label Grid.Row="3"
+                       Grid.Column="0">Region</Label>
+                <Label Grid.Row="3"
+                       Grid.Column="1"
+                       Text="{Binding Region}" />
+
+                <Label Grid.Row="4"
+                       Grid.Column="0">Forest</Label>
+                <Label Grid.Row="4"
+                       Grid.Column="1"
+                       Text="{Binding Forest}" />
+
+                <Label Grid.Row="5"
+                       Grid.Column="0">District</Label>
+                <Label Grid.Row="5"
+                       Grid.Column="1"
+                       Text="{Binding District}" />
+
+                <Label Grid.Row="6"
+                       Grid.Column="0">Remarks</Label>
+                <Entry Grid.Row="7"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Text="{Binding Remarks}" />
+
+            </Grid>
+        </Grid>-->
+    </ContentPage.Content>
+</ContentPage>
