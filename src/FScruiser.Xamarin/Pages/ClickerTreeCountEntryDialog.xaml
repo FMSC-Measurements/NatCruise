@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:DialogPage
+            xmlns:pages="clr-namespace:FScruiser.XF.Pages"
+            xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="FScruiser.XF.Pages.ClickerTreeCountEntryDialog">
+    
+    <ContentPage.Content>
+        <Grid HorizontalOptions="Center" VerticalOptions="Center">
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <x:Int32 x:Key="grid_rowHeight">40</x:Int32>
+
+                    <Style TargetType="Button">
+                        <Setter Property="HeightRequest" Value="{StaticResource grid_rowHeight}"/>
+                        <Setter Property="WidthRequest" Value="65"/>
+                        <Setter Property="VerticalOptions" Value="Center"/>
+                    </Style>
+
+                    <Style TargetType="Label">
+                        <Setter Property="VerticalTextAlignment" Value="Center"/>
+                    </Style>
+                </ResourceDictionary>
+            </Grid.Resources>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{StaticResource grid_rowHeight}"/>
+                <!--<RowDefinition Height="{StaticResource grid_rowHeight}"/>-->
+                <RowDefinition Height="{StaticResource grid_rowHeight}"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" >Tree Count</Label>
+            <Entry x:Name="_treeCountEntry" 
+                   Grid.Row="0" Grid.Column="1" 
+                   TextChanged="_treeCountEntry_TextChanged" />
+
+            <!--<Label Grid.Row="1" Grid.Column="0" >Cruiser</Label>
+            <Picker x:Name="_cruiserPicker" 
+                    Grid.Row="1" Grid.Column="1" 
+                    SelectedIndexChanged="_cruiserPicker_SelectedIndexChanged"/>-->
+
+            <StackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+
+                <Button x:Name="_okButton" 
+                        BackgroundColor="Green" 
+                        Text="OK" 
+                        HorizontalOptions="Start"
+                        Clicked="_okButton_Clicked"/>
+                <Button x:Name="_cancelButton" 
+                        BackgroundColor="Gray" 
+                        Text="Cancel" 
+                        HorizontalOptions="EndAndExpand"
+                        Clicked="_cancelButton_Clicked"/>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</pages:DialogPage>

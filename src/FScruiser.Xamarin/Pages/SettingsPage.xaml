@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Pages.SettingsPage"
+             Title="Settings">
+    <ContentPage.Content>
+        <StackLayout Padding="5">
+            <StackLayout>
+                <StackLayout
+                    Orientation="Horizontal">
+                    
+                    <Label 
+                        Text="Analitics" 
+                        VerticalTextAlignment="Center"/>
+                    
+                    <Switch IsToggled="{Binding AppSettings.EnableAnalitics}"/>
+                    
+                </StackLayout>
+                <StackLayout
+                    Orientation="Horizontal">
+                    
+                    <Label 
+                        Text="Crash/Error Reports" 
+                        VerticalTextAlignment="Center"/>
+                    
+                    <Switch IsToggled="{Binding AppSettings.EnableCrashReports}"/>
+                    
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Pages.PlotListPage"
+             x:Name="_page"
+             Title="Plots">
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView x:Name="_plotListView"
+                      ItemsSource="{Binding Plots}"
+                      RowHeight="75">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Delete"
+                                          Command="{Binding BindingContext.DeletePlotCommand, Source={Reference _page}}"
+                                          CommandParameter="{Binding .}" /> 
+                            </ViewCell.ContextActions>
+
+                                    <Grid Margin="0,10,0,10"
+                                          Padding="2">
+                                        <Grid.Resources>
+                                            <ResourceDictionary>
+                                                <Style x:Key="HeadingText"
+                                                       TargetType="Label">
+                                                    <Setter Property="FontSize"
+                                                            Value="10" />
+                                                    <Setter Property="TextColor"
+                                                            Value="{StaticResource black_70}" />
+                                                </Style>
+                                                <Style x:Key="ValueText"
+                                                       TargetType="Label">
+                                                    <Setter Property="FontSize"
+                                                            Value="Large" />
+                                                    <Setter Property="TextColor"
+                                                            Value="Black" />
+                                                </Style>
+                                            </ResourceDictionary>
+                                        </Grid.Resources>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--plot number-->
+                                        <Label Grid.Column="0"
+                                               Grid.Row="0"
+                                               Text="Plot #"
+                                               Style="{StaticResource HeadingText}" />
+                                        <Label Grid.Column="0"
+                                               Grid.Row="1"
+                                               Text="{Binding PlotNumber}"
+                                               Style="{StaticResource ValueText}" />
+
+                                        <!--edit button-->
+                                        <Button Grid.Column="2"
+                                                Grid.Row="1"
+                                                Image="ic_edit_white_24dp.png"
+                                                Command="{Binding BindingContext.EditPlotCommand, Source={Reference _plotListView}}"
+                                                CommandParameter="{Binding .}"
+                                                WidthRequest="50"
+                                                BackgroundColor="Orange" />
+                                    </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Orientation="Horizontal"
+                         VerticalOptions="End">
+                <StackLayout.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Button"
+                               BasedOn="{StaticResource button_base}">
+                            <Setter Property="BackgroundColor"
+                                    Value="{StaticResource primary_500}" />
+                            <Setter Property="HeightRequest"
+                                    Value="60" />
+                        </Style>
+                    </ResourceDictionary>
+                </StackLayout.Resources>
+                <Button x:Name="_goToEndButton"
+                        Image="ic_chevron_double_down_white_24dp.png" />
+                <Button x:Name="_addTreeButton"
+                        Image="ic_plus_white_24dp.png"
+                        Command="{Binding AddPlotCommand}"
+                        FontSize="30"
+                        BackgroundColor="Orange"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="FillAndExpand" />
+                <Button x:Name="_goToStartButton"
+                        Image="ic_chevron_double_up_white_24dp.png"
+                        HorizontalOptions="End" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

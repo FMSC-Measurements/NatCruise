@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  x:Class="FScruiser.XF.Pages.MainPage"
+                  xmlns:pages="clr-namespace:FScruiser.XF.Pages"
+                  xmlns:local="clr-namespace:FScruiser;assembly=FScruiser.Core"
+                  xmlns:local_converters="clr-namespace:FScruiser.XF.Converters"
+                  xmlns:prism="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms"
+                  IsPresented="True">
+    <MasterDetailPage.Master>
+        <ContentPage x:Name="MasterPage" Title="Master" Icon="ic_menu_white_18dp.png"
+                     BackgroundColor="{StaticResource fs_brown}">
+            <StackLayout>
+                <!--file select button-->
+                <Frame BackgroundColor="White" Padding="2" Margin="10" CornerRadius="0">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectFileCommand}" Tapped="_selectFile_Tapped" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                 Padding="3"
+                                 BackgroundColor="{StaticResource fs_brown}">
+                        <ContentView  BackgroundColor="Orange" HeightRequest="40">
+                            <Image Source="ic_folder_open_black_36dp.png" />
+                        </ContentView>
+                        <Label x:Name="_currentFileLable" 
+                               Text="{Binding CurrentFilePath}" 
+                               TextColor="White" 
+                               VerticalOptions="Fill" 
+                               HorizontalOptions="Fill" 
+                               VerticalTextAlignment="Center"/>
+                    </StackLayout>
+                </Frame>
+                <!--navigation list view-->
+                <ListView x:Name="MenuItemsListView"
+                          SeparatorVisibility="None"
+                          HasUnevenRows="true"
+                          ItemsSource="{Binding NavigationListItems}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <!--<TextCell Text="{Binding Title}"
+                                      TextColor="{StaticResource lightText}" />-->
+
+
+                            <ViewCell>
+                                <Label  HorizontalOptions="Start"
+                                        Margin="15,7"
+                                        VerticalTextAlignment="Center"
+                                        Text="{Binding Title}"
+                                        FontSize="24"
+                                        TextColor="{StaticResource lightText}" />
+
+                                <!--<StackLayout Padding="15,10" HorizontalOptions="FillAndExpand" IsEnabled="{Binding CanShow}">
+                                    
+                                </StackLayout>-->
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <FlexLayout
+                    VerticalOptions="End"
+                    HorizontalOptions="CenterAndExpand"
+                    Wrap="Wrap"
+                    JustifyContent="Center">
+                    <FlexLayout.Resources>
+                        <ResourceDictionary>
+                            <Style TargetType="Label">
+                                <Setter Property="TextColor"
+                                        Value="{StaticResource lightText}" />
+                                <Setter Property="Margin"
+                                        Value="5" />
+                            </Style>
+                        </ResourceDictionary>
+                    </FlexLayout.Resources>
+                    <Label Text="{Binding DeviceInfo.DeviceName}" />
+                    <Label Text="{Binding AppInfo.Version, StringFormat='{}v{0}'}"/>
+                </FlexLayout>
+                
+                <StackLayout 
+                    Orientation="Horizontal" 
+                    VerticalOptions="End"
+                    HorizontalOptions="Center">
+                    <Button 
+                        BackgroundColor="Transparent" 
+                        Image="ic_settings_white_24dp.png"  
+                        Command="{Binding ShowSettingsCommand}"/>
+                    <Button 
+                        BackgroundColor="Transparent" 
+                        Image="ic_feedback_white_24dp.png"  
+                        Command="{Binding ShowFeedbackCommand}"/>
+                </StackLayout>
+            </StackLayout>
+        </ContentPage>
+    </MasterDetailPage.Master>
+    <!--<MasterDetailPage.Detail>
+        <NavigationPage BarBackgroundColor="{StaticResource primary_500}" BarTextColor="{StaticResource white_90}">
+            -->
+    <!--<x:Arguments>
+                <pages:CuttingUnitListPage NavigationPage.HasBackButton="False" />
+            </x:Arguments>-->
+    <!--
+        </NavigationPage>
+    </MasterDetailPage.Detail>-->
+</MasterDetailPage>

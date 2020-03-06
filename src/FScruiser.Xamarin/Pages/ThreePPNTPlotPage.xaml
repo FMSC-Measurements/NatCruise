@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tk_ef="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
+             x:Class="FScruiser.XF.Pages.ThreePPNTPlotPage"
+             BackgroundColor="White">
+    
+    
+    <ContentPage.Content>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition />
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+            <StackLayout Grid.Column="1" Grid.Row="1">
+
+                <StackLayout.Resources>
+                    <Style TargetType="Label" >
+                        <Setter Property="FontSize" Value="Small" />
+                        <Setter Property="VerticalOptions" Value="Start" />
+                        <Setter Property="Margin" Value="5,0,0,0" />
+                        <Setter Property="TextColor" Value="Black" />
+                    </Style>
+                    <Style TargetType="Entry" >
+                        <Setter Property="BackgroundColor" Value="LightGray"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Keyboard" Value="Numeric" />
+                    </Style>
+                </StackLayout.Resources>
+
+                <Label  Text="Average Height"/>
+                <Entry Text="{Binding AverageHeight}"
+                       WidthRequest="40"
+                       >
+                    <Entry.Effects>
+                        <tk_ef:EntrySelectAllText />
+                    </Entry.Effects>
+                </Entry>
+                
+                <Label Text="Tree Count" />
+                <Entry Text="{Binding TreeCount}"
+                       VerticalOptions="Start"
+                       WidthRequest="40"
+                       >
+                    <Entry.Effects>
+                        <tk_ef:EntrySelectAllText />
+                    </Entry.Effects>
+                </Entry>
+                
+                <Label Text="Volume Factor"/>
+                <Entry Text="{Binding VolumeFactor}"
+                       IsEnabled="False"
+                       >
+                    <Entry.Effects>
+                        <tk_ef:EntrySelectAllText />
+                    </Entry.Effects>
+                </Entry>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" 
+                            Grid.Row="0" 
+                            Text="Add Plot" 
+                            BackgroundColor="{StaticResource primary_500}" 
+                            Command="{Binding AddPlotCommand}"
+                            />
+                    <Button Grid.Column="1" 
+                            Grid.Row="0" 
+                            Text="Cancel"
+                            BackgroundColor="DimGray"
+                            Command="{Binding CancelCommand}"
+                            />
+
+                </Grid>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
