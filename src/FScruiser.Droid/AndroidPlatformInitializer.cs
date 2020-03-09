@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using FScruiser.Droid.Services;
-using FScruiser.Services;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Services;
 using Prism.Ioc;
 using System;
 
