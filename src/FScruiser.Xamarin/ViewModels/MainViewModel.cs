@@ -1,6 +1,6 @@
-﻿using FScruiser.Data;
-using FScruiser.Models;
-using FScruiser.Services;
+﻿using NatCruise.Cruise.Data;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
 using FScruiser.XF.Services;
 using Microsoft.AppCenter.Crashes;
 using Prism.Navigation;

@@ -1,6 +1,6 @@
 ﻿using CruiseDAL;
-using FScruiser.Data;
-using FScruiser.Services;
+using NatCruise.Cruise.Data;
+using NatCruise.Cruise.Services;
 using Prism.DryIoc;
 using System;
 using Xamarin.Forms;

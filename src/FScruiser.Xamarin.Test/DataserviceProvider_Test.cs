@@ -1,6 +1,6 @@
 ﻿using CruiseDAL;
 using FluentAssertions;
-using FScruiser.Services;
+using NatCruise.Cruise.Services;
 using FScruiser.XF.Services;
 using FScruiser.XF.Test;
 using System;

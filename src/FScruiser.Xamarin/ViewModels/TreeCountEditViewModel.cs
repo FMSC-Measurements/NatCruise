@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using FScruiser.Data;
-using FScruiser.Models;
-using FScruiser.Services;
+using NatCruise.Cruise.Data;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
 using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using Prism.Navigation;
 using Xamarin.Forms;
-using static FScruiser.Constants;
+using static NatCruise.Cruise.Constants;
 
 namespace FScruiser.XF.ViewModels
 {

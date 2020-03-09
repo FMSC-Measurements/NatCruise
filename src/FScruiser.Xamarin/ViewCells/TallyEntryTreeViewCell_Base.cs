@@ -1,6 +1,6 @@
 ﻿using Backpack.XF.WidgiWhats;
 using CSharpForMarkup;
-using FScruiser.Models;
+using NatCruise.Cruise.Models;
 using FScruiser.XF.Constants;
 using FScruiser.XF.ViewModels;
 using Prism.Ioc;

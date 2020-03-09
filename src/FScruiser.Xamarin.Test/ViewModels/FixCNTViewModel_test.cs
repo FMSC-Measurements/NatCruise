@@ -1,6 +1,6 @@
 ﻿using CruiseDAL;
 using FluentAssertions;
-using FScruiser.Services;
+using NatCruise.Cruise.Services;
 using FScruiser.XF.Constants;
 using FScruiser.XF.Test;
 using Prism.Navigation;
@@ -27,7 +27,7 @@ namespace FScruiser.XF.ViewModels
                 Area = 0,
             });
 
-            var stratum = new Models.Stratum()
+            var stratum = new NatCruise.Cruise.Models.Stratum()
             {
                 Code = "fixCnt1",
                 Method = CruiseDAL.Schema.CruiseMethods.FIXCNT

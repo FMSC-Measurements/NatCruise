@@ -1,4 +1,4 @@
-﻿using FScruiser.Services;
+﻿using NatCruise.Cruise.Services;
 using FScruiser.XF.Pages;
 using Prism.Common;
 using Prism.Ioc;

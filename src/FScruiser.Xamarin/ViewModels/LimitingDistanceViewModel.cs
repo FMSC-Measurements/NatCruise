@@ -1,10 +1,11 @@
-﻿using FScruiser.Models;
-using FScruiser.Services;
+﻿using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
 using FScruiser.XF.Services;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NatCruise.Cruise.Logic;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -209,12 +210,12 @@ namespace FScruiser.XF.ViewModels
                 return;
             }
 
-            var limitingDistance = LimitingDistance = Logic.CalculateLimitingDistance.Calculate(BafOrFps, DBH, SlopePCT, IsVariableRadius, IsToFace);
+            var limitingDistance = LimitingDistance = CalculateLimitingDistance.Calculate(BafOrFps, DBH, SlopePCT, IsVariableRadius, IsToFace);
             var slopeDistance = SlopeDistance;
 
             if (slopeDistance.HasValue)
             {
-                IsTreeIn = Logic.CalculateLimitingDistance.DeterminTreeInOrOut(slopeDistance.Value, limitingDistance);
+                IsTreeIn = CalculateLimitingDistance.DeterminTreeInOrOut(slopeDistance.Value, limitingDistance);
             }
             else
             {
@@ -228,7 +229,7 @@ namespace FScruiser.XF.ViewModels
 
             if (IsTreeIn.HasValue)
             {
-                return Logic.CalculateLimitingDistance.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
+                return CalculateLimitingDistance.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
                     SlopePCT, Azimuth, BafOrFps, DBH, SlopePCT, IsVariableRadius, IsToFace, Plot.StratumCode);
             }
             else { return null; }
