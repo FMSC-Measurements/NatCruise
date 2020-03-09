@@ -34,7 +34,6 @@ namespace FScruiser.XF.Services
         protected Prism.Ioc.IContainerProvider Container => Application.Container;
         protected IDeviceInfoService DeviceInfoService => (IDeviceInfoService)Container.Resolve(typeof(IDeviceInfoService));
 
-        public ICuttingUnitDatastore CuttingUnitDatastore { get; set; }
         public ISampleSelectorDataService SampleSelectorDataService { get; set; }
 
         public ICruisersDataservice CruisersDataService { get; set; }
