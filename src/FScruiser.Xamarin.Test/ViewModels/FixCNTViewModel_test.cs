@@ -98,10 +98,8 @@ namespace FScruiser.XF.ViewModels
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
-
                 var viewModel = new FixCNTViewModel((INavigationService)null,
-                    new Services.DataserviceProvider(App) { CuttingUnitDatastore = datastore });
+                    new Services.DataserviceProvider(App) { CruiseDatastore = database });
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
 
@@ -128,7 +126,7 @@ namespace FScruiser.XF.ViewModels
                 var datastore = new CuttingUnitDatastore(database);
 
                 var viewModel = new FixCNTViewModel((INavigationService)null,
-                    new Services.DataserviceProvider(App) { CuttingUnitDatastore = datastore });
+                    new Services.DataserviceProvider(App) { CruiseDatastore = database });
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
                 viewModel.OnNavigatedTo(navParams);

@@ -36,7 +36,7 @@ namespace FScruiser.XF.ViewModels
 
         public FixCNTViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider) : base(navigationService)
         {
-            FixCNTDataservice = datastoreProvider.Get<IFixCNTDataservice>();
+            FixCNTDataservice = datastoreProvider.Get<IFixCNTDataservice>() ?? throw new ArgumentNullException(nameof(FixCNTDataservice));
         }
 
         public void Tally(FixCNTTallyBucket tallyBucket)
