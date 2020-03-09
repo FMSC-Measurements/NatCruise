@@ -1,6 +1,6 @@
 ﻿using CruiseDAL;
-using FScruiser.Data;
-using FScruiser.Services;
+using NatCruise.Cruise.Data;
+using NatCruise.Cruise.Services;
 using NatCruise.Util;
 using FScruiser.XF.Events;
 using FScruiser.XF.Pages;

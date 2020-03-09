@@ -1,4 +1,4 @@
-﻿using FScruiser.Models;
+﻿using NatCruise.Cruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

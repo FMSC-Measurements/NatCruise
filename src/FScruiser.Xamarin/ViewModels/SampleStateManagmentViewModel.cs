@@ -1,4 +1,4 @@
-﻿using FScruiser.Data;
+﻿using NatCruise.Cruise.Data;
 using FScruiser.XF.Services;
 using Microsoft.AppCenter.Crashes;
 using Prism.Navigation;
@@ -11,9 +11,9 @@ namespace FScruiser.XF.ViewModels
 {
     public class SampleStateManagmentViewModel : ViewModelBase
     {
-        private Models.Device _currentDevice;
+        private NatCruise.Cruise.Models.Device _currentDevice;
         private Command<string> _copyDeviceStateCommand;
-        private IEnumerable<Models.Device> _devices;
+        private IEnumerable<NatCruise.Cruise.Models.Device> _devices;
 
         protected ISampleInfoDataservice SampleInfoDataservice { get; }
 
@@ -24,13 +24,13 @@ namespace FScruiser.XF.ViewModels
             SampleInfoDataservice = dataserviceProvider.Get<ISampleInfoDataservice>();
         }
 
-        public Models.Device CurrentDevice
+        public NatCruise.Cruise.Models.Device CurrentDevice
         {
             get => _currentDevice;
             protected set => SetValue(ref _currentDevice, value);
         }
 
-        public IEnumerable<Models.Device> OtherDevices
+        public IEnumerable<NatCruise.Cruise.Models.Device> OtherDevices
         {
             get => _devices;
             protected set => SetValue(ref _devices, value);

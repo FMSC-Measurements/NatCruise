@@ -1,4 +1,4 @@
-﻿using FScruiser.Logic;
+﻿using NatCruise.Cruise.Logic;
 using FScruiser.XF.ViewModels;
 using System;
 using System.Collections.Generic;

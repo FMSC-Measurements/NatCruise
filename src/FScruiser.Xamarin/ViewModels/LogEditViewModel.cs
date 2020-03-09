@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FScruiser.Models;
-using FScruiser.Services;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
 using FScruiser.XF.Services;
 using Prism.Navigation;
 

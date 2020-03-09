@@ -1,4 +1,4 @@
-﻿using FScruiser.Services;
+﻿using NatCruise.Cruise.Services;
 using FScruiser.XF.Services;
 using Prism.Navigation;
 using System.Collections.Generic;

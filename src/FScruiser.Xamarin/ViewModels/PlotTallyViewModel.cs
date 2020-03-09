@@ -1,7 +1,7 @@
-﻿using FScruiser.Logic;
-using FScruiser.Models;
-using FScruiser.Services;
-using FScruiser.Util;
+﻿using NatCruise.Cruise.Logic;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
+using NatCruise.Cruise.Util;
 using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using NatCruise.Util;

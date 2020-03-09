@@ -1,4 +1,4 @@
-﻿using FScruiser.Services;
+﻿using NatCruise.Cruise.Services;
 using System;
 
 using Xamarin.Forms;

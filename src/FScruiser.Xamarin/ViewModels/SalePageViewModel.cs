@@ -1,5 +1,5 @@
-﻿using FScruiser.Data;
-using FScruiser.Models;
+﻿using NatCruise.Cruise.Data;
+using NatCruise.Cruise.Models;
 using FScruiser.XF.Services;
 using Prism.Navigation;
 

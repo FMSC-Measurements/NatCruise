@@ -1,5 +1,5 @@
-﻿using FScruiser.Services;
-using FScruiser.Util;
+﻿using NatCruise.Cruise.Services;
+using NatCruise.Cruise.Util;
 using NatCruise.Util;
 using System;
 using System.Collections.Generic;

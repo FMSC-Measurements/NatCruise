@@ -1,4 +1,4 @@
-﻿using FScruiser.Services;
+﻿using NatCruise.Cruise.Services;
 using Microsoft.AppCenter.Crashes;
 using Prism.Navigation;
 using System;

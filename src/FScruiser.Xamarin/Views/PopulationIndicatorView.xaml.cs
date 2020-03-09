@@ -1,5 +1,5 @@
 ﻿using System;
-using FScruiser.Models;
+using NatCruise.Cruise.Models;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
