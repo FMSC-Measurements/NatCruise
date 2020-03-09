@@ -112,6 +112,10 @@
       <Project>{34fee276-8fcc-46c2-93ef-45e8f03ff269}</Project>
       <Name>FScruiser.Xamarin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj">
+      <Project>{8952022F-DFB0-4A55-B588-6D34CD12C0AF}</Project>
+      <Name>NatCruise.Cruise</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Plugin.CurrentActivity">
