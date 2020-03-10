@@ -1,9 +1,10 @@
 ﻿using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System.Collections.Generic;
 
 namespace NatCruise.Cruise.Data
 {
-    public interface ITallyPopulationDataservice
+    public interface ITallyPopulationDataservice : IDataservice
     {
         IEnumerable<TallyPopulation> GetTallyPopulationsByUnitCode(string unitCode);
 

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -47,7 +48,7 @@ namespace FScruiser.XF.ViewModels
 
         public LogsListViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider) : base(navigationService)
         {
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
         protected override void Refresh(INavigationParameters parameters)

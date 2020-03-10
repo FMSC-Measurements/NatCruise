@@ -1,8 +1,9 @@
-﻿using NatCruise.Design.Models;
+﻿using NatCruise.Data;
+using NatCruise.Design.Models;
 
 namespace NatCruise.Design.Data
 {
-    public interface ICruiseDataservice
+    public interface ICruiseDataservice : IDataservice
     {
         Sale GetSale();
 

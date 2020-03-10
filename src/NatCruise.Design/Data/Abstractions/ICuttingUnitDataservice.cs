@@ -1,9 +1,10 @@
-﻿using NatCruise.Design.Models;
+﻿using NatCruise.Data;
+using NatCruise.Design.Models;
 using System.Collections.Generic;
 
 namespace NatCruise.Design.Data
 {
-    public interface ICuttingUnitDataservice
+    public interface ICuttingUnitDataservice : IDataservice
     {
         IEnumerable<CuttingUnit> GetCuttingUnits();
 

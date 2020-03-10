@@ -1,9 +1,10 @@
 ﻿using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System.Collections.Generic;
 
 namespace NatCruise.Cruise.Data
 {
-    public interface IFixCNTDataservice
+    public interface IFixCNTDataservice : IDataservice
     {
         IEnumerable<FixCntTallyPopulation> GetFixCNTTallyPopulations(string stratumCode);
 

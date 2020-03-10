@@ -6,6 +6,7 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -42,7 +43,7 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Refresh(INavigationParameters parameters)
         {
-            var datastore = DatastoreProvider.Get<ICuttingUnitDatastore>();
+            var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDatastore>();
             if (datastore != null)
             {
                 Units = datastore.GetUnits();

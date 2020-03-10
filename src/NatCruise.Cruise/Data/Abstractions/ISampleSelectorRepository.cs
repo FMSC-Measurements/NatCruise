@@ -1,8 +1,9 @@
 ﻿using FMSC.Sampling;
+using NatCruise.Data;
 
 namespace NatCruise.Cruise.Services
 {
-    public interface ISampleSelectorDataService
+    public interface ISampleSelectorDataService : IDataservice
     {
         ISampleSelector GetSamplerBySampleGroupCode(string stratumCode, string sgCode);
 

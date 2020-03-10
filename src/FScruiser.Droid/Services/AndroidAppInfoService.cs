@@ -1,4 +1,4 @@
-﻿using NatCruise.Cruise.Services;
+﻿using NatCruise.Services;
 
 namespace FScruiser.Droid.Services
 {

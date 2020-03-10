@@ -9,7 +9,7 @@ namespace FScruiser.XF
     {
         public virtual void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IDialogService, XamarinDialogService>();
+            containerRegistry.RegisterSingleton<ICruiseDialogService, XamarinCruiseDialogService>();
             containerRegistry.RegisterInstance<Prism.Logging.ILoggerFacade>(new AppCenterLoggerService());
         }
     }

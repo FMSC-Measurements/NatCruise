@@ -4,6 +4,7 @@ using Prism.Navigation;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -28,7 +29,7 @@ namespace FScruiser.XF.ViewModels
 
         public ManageCruisersViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider) : base(navigationService)
         {
-            CruisersDataservice = datastoreProvider.Get<ICruisersDataservice>();
+            CruisersDataservice = datastoreProvider.GetDataservice<ICruisersDataservice>();
         }
 
         public void AddCruiser(string cruiser)

@@ -90,7 +90,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AndroidAppInfoService.cs" />
     <Compile Include="Services\AndroidDeviceInfoService.cs" />
-    <Compile Include="Services\AndroidFilePickerService.cs" />
+    <Compile Include="Services\AndroidFileDialogService.cs" />
     <Compile Include="Services\AndroidSoundService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +111,10 @@
     <ProjectReference Include="..\FScruiser.Xamarin\FScruiser.Xamarin.csproj">
       <Project>{34fee276-8fcc-46c2-93ef-45e8f03ff269}</Project>
       <Name>FScruiser.Xamarin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NatCruise.Core\NatCruise.Core.csproj">
+      <Project>{B9C8A3D2-BEA7-4FFE-AB87-0BBF10CD4A98}</Project>
+      <Name>NatCruise.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj">
       <Project>{8952022F-DFB0-4A55-B588-6D34CD12C0AF}</Project>

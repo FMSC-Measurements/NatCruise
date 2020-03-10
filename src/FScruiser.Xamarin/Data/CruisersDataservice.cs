@@ -1,28 +1,22 @@
 ﻿using NatCruise.Cruise.Services;
-using NatCruise.Cruise.Util;
 using NatCruise.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace FScruiser.XF.Services
+namespace FScruiser.XF.Data
 {
     public class CruisersDataservice : ICruisersDataservice
     {
-
-        const string CRUISERS_PROP_KEY = "cruisers";
-        const string PROMPT_CRUISERS_ON_SAMPLE_KEY = "prompt_cruisers_on_sample";
+        private const string CRUISERS_PROP_KEY = "cruisers";
+        private const string PROMPT_CRUISERS_ON_SAMPLE_KEY = "prompt_cruisers_on_sample";
         private string[] _cruisers;
 
         public CruisersDataservice(Application application)
         {
             Application = application ?? throw new ArgumentNullException(nameof(application));
         }
-
-
 
         public Xamarin.Forms.Application Application { get; set; }
 
@@ -44,9 +38,9 @@ namespace FScruiser.XF.Services
             var app = Application;
             var props = Application.Properties;
 
-            if(props.ContainsKey(CRUISERS_PROP_KEY))
+            if (props.ContainsKey(CRUISERS_PROP_KEY))
             {
-                var cruisersPropValue = (string)props[CRUISERS_PROP_KEY] ;
+                var cruisersPropValue = (string)props[CRUISERS_PROP_KEY];
                 _cruisers = cruisersPropValue.Split(',');
             }
             else
@@ -61,8 +55,7 @@ namespace FScruiser.XF.Services
 
             var props = Application.Properties;
             props.SetValue(CRUISERS_PROP_KEY, string.Join(",", cruisers));
-            Application.SavePropertiesAsync(); 
-
+            Application.SavePropertiesAsync();
         }
 
         public void AddCruiser(string cruiser)

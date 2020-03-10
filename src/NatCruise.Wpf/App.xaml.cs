@@ -5,7 +5,6 @@ using Microsoft.AppCenter.Crashes;
 using NatCruise.Data;
 using NatCruise.Design.Views;
 using NatCruise.Services;
-using NatCruise.Wpf.Data;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Services;
 using NatCruise.Wpf.ViewModels;
@@ -132,7 +131,7 @@ namespace NatCruise.Wpf
 
             containerRegistry.RegisterInstance<ILoggingService>(new WpfLoggingService());
             containerRegistry.RegisterInstance<IDataserviceProvider>(new DataserviceProvider());
-            containerRegistry.RegisterInstance<IFileDialogService>(new FileDialogService());
+            containerRegistry.RegisterInstance<IFileDialogService>(new WpfFileDialogService());
             containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
         }
     }

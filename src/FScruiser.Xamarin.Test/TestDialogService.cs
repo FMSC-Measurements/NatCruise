@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace FScruiser.XF
 {
-    public class TestDialogService : IDialogService
+    public class TestDialogService : ICruiseDialogService
     {
         public TestDialogService(ITestOutputHelper output)
         {

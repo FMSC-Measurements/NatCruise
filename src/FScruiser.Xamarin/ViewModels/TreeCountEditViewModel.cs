@@ -12,6 +12,7 @@ using FScruiser.XF.Services;
 using Prism.Navigation;
 using Xamarin.Forms;
 using static NatCruise.Cruise.Constants;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -25,17 +26,17 @@ namespace FScruiser.XF.ViewModels
         private ICommand _saveTreeCountEditCommand;
         private string _cruiseMethod;
 
-        public TreeCountEditViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider, IDialogService dialogService) : base(navigationService)
+        public TreeCountEditViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider, ICruiseDialogService dialogService) : base(navigationService)
         {
-            TallyDataservice = datastoreProvider.Get<ITallyDataservice>();
-            TallyPopulationDataservice = datastoreProvider.Get<ITallyPopulationDataservice>();
+            TallyDataservice = datastoreProvider.GetDataservice<ITallyDataservice>();
+            TallyPopulationDataservice = datastoreProvider.GetDataservice<ITallyPopulationDataservice>();
             DialogService = dialogService;
         }
 
         protected ITallyPopulationDataservice TallyPopulationDataservice { get; }
         protected ITallyDataservice TallyDataservice { get; }
 
-        protected IDialogService DialogService { get; }
+        protected ICruiseDialogService DialogService { get; }
 
         public ICommand SaveTreeCountEditCommand => _saveTreeCountEditCommand ?? (_saveTreeCountEditCommand = new Command(SaveEdit));
 

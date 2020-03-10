@@ -1,6 +1,6 @@
 ﻿using NatCruise.Data;
+using NatCruise.Services;
 using NatCruise.Wpf.Navigation;
-using NatCruise.Wpf.Services;
 using NatCruise.Wpf.Views;
 using Prism.Commands;
 using Prism.Regions;
@@ -23,7 +23,7 @@ namespace NatCruise.Wpf.ViewModels
             IFileDialogService fileDialogService,
             IRecentFilesDataservice recentFilesDataservice,
             IDataserviceProvider dataserviceProvider,
-            IDialogService dialogService)
+            Prism.Services.Dialogs.IDialogService dialogService)
         {
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             RegionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
@@ -36,7 +36,7 @@ namespace NatCruise.Wpf.ViewModels
         protected IDataserviceProvider DataserviceProvider { get; }
 
         protected IRecentFilesDataservice RecentFilesDataservice { get; }
-        public IDialogService DialogService { get; }
+        public Prism.Services.Dialogs.IDialogService DialogService { get; }
         public IRegionManager RegionManager { get; }
         protected IFileDialogService FileDialogService { get; }
 
@@ -87,9 +87,9 @@ namespace NatCruise.Wpf.ViewModels
             RaisePropertyChanged(nameof(RecentFiles));
         }
 
-        public void SelectFile()
+        public async void SelectFile()
         {
-            var path = FileDialogService.SelectCruiseFile();
+            var path = await FileDialogService.SelectCruiseFileAsync();
             if (path != null)
             {
                 OpenFile(path);

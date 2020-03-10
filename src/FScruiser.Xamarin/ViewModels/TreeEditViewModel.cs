@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -37,7 +38,7 @@ namespace FScruiser.XF.ViewModels
 
         protected ICuttingUnitDatastore Datastore { get; set; }
         public ICruisersDataservice CruisersDataservice { get; }
-        protected IDialogService DialogService { get; set; }
+        protected ICruiseDialogService DialogService { get; set; }
 
         public bool UseSimplifiedTreeFields { get; set; } = false;
 
@@ -445,18 +446,18 @@ namespace FScruiser.XF.ViewModels
         }
 
         public TreeEditViewModel(IDataserviceProvider datastoreProvider
-            , IDialogService dialogService)
+            , ICruiseDialogService dialogService)
         {
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
-            CruisersDataservice = datastoreProvider.Get<ICruisersDataservice>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            CruisersDataservice = datastoreProvider.GetDataservice<ICruisersDataservice>();
             DialogService = dialogService;
         }
 
         public TreeEditViewModel(IDataserviceProvider datastoreProvider
-            , IDialogService dialogService, INavigationService navigationService) : base(navigationService)
+            , ICruiseDialogService dialogService, INavigationService navigationService) : base(navigationService)
         {
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
-            CruisersDataservice = datastoreProvider.Get<ICruisersDataservice>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            CruisersDataservice = datastoreProvider.GetDataservice<ICruisersDataservice>();
             DialogService = dialogService;
         }
 

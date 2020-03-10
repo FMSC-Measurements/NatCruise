@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using Prism.Navigation;
 

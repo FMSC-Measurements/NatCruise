@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -34,19 +35,19 @@ namespace FScruiser.XF.ViewModels
         public event EventHandler TreeAdded;
 
         protected ICuttingUnitDatastore Datastore { get; }
-        public IDialogService DialogService { get; }
+        public ICruiseDialogService DialogService { get; }
         public ISampleSelectorDataService SampleSelectorDataService { get; private set; }
         public ITallySettingsDataService TallySettings { get; private set; }
         public ISoundService SoundService { get; private set; }
 
         public PlotTallyViewModel(INavigationService navigationService
-            , IDialogService dialogService
+            , ICruiseDialogService dialogService
             , IDataserviceProvider datastoreProvider
             , ISoundService soundService
             , ITallySettingsDataService tallySettings) : base(navigationService)
         {
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
-            SampleSelectorDataService = datastoreProvider.Get<ISampleSelectorDataService>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            SampleSelectorDataService = datastoreProvider.GetDataservice<ISampleSelectorDataService>();
             DialogService = dialogService;
             TallySettings = tallySettings;
             SoundService = soundService;
@@ -178,7 +179,7 @@ namespace FScruiser.XF.ViewModels
         {
             if (pop.InCruise == false) { return; }
 
-            IDialogService dialogService = DialogService;
+            ICruiseDialogService dialogService = DialogService;
 
             if (pop.IsEmpty)
             {
@@ -212,7 +213,7 @@ namespace FScruiser.XF.ViewModels
         public static async Task HandleTally(TallyPopulation_Plot population,
            TreeStub_Plot tree,
            ISoundService soundService,
-           IDialogService dialogService,
+           ICruiseDialogService dialogService,
            ITallySettingsDataService tallySettings)
         {
             if (tree == null) { throw new ArgumentNullException(nameof(tree)); }

@@ -7,6 +7,7 @@ using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using FScruiser.XF.Services;
 using Prism.Navigation;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -31,7 +32,7 @@ namespace FScruiser.XF.ViewModels
 
         public LogEditViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider) : base(navigationService)
         {
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
         protected override void Refresh(INavigationParameters parameters)

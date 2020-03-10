@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
 
 namespace NatCruise.Cruise.Data
 {
-    public interface ISampleInfoDataservice
+    public interface ISampleInfoDataservice : IDataservice
     {
         Device CurrentDevice { get; }
 

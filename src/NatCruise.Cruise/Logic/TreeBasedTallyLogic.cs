@@ -27,7 +27,7 @@ namespace NatCruise.Cruise.Logic
         public static async Task<TallyAction> TallyAsync(string unitCode,
             TallyPopulation pop,
             ISampleSelectorDataService samplerService,
-            IDialogService dialogService)
+            ICruiseDialogService dialogService)
         {
             if (pop.IsClickerTally)
             {
@@ -74,7 +74,7 @@ namespace NatCruise.Cruise.Logic
 
         public static async Task<TallyAction> TallyS3P(string unitCode, TallyPopulation pop,
             ISampleSelectorDataService samplerService,
-            IDialogService dialogService)
+            ICruiseDialogService dialogService)
         {
             var sampler = samplerService.GetSamplerBySampleGroupCode(pop.StratumCode, pop.SampleGroupCode) as S3PSelector;
 

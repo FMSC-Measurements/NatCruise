@@ -1,10 +1,11 @@
 ﻿using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
 {
-    public interface ICuttingUnitDatastore : IPlotDatastore, ITreeDatastore, ILogDatastore
+    public interface ICuttingUnitDatastore : IPlotDatastore, ITreeDatastore, ILogDatastore, IDataservice
     {
         string GetCruisePurpose();
 

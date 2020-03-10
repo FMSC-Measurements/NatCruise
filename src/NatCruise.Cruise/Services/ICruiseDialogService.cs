@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
 {
-    public interface IDialogService
+    public interface ICruiseDialogService
     {
         Task<bool> AskCancelAsync(String message, String caption, bool defaultCancel);
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -39,7 +40,7 @@ namespace FScruiser.XF.ViewModels
             , IDataserviceProvider datastoreProvider) : base(navigationService)
         {
             DialogService = dialogService;
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
         protected override void Refresh(INavigationParameters parameters)

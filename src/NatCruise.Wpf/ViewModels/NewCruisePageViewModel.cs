@@ -2,6 +2,7 @@
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Services;
 using NatCruise.Wpf.Services;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -63,14 +64,14 @@ namespace NatCruise.Wpf.ViewModels
             RaiseRequestClose(new DialogResult(ButtonResult.Cancel));
         }
 
-        private void CreateCruise()
+        private async void CreateCruise()
         {
             var isSaleValid = ValidateSale();
             if (isSaleValid == false) { return; }
 
             var defaultFileName = $"{Sale.SaleNumber} {Sale.Name}.crz3";
 
-            var filePath = FileDialogService.SelectCruiseFileDestination(defaultFileName: defaultFileName);
+            var filePath = await FileDialogService.SelectCruiseFileDestinationAsync(defaultFileName: defaultFileName);
             if (filePath != null)
             {
                 var fileInfo = new FileInfo(filePath);

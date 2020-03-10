@@ -6,6 +6,7 @@ using Prism.Navigation;
 using System;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -41,14 +42,14 @@ namespace FScruiser.XF.ViewModels
         public ICommand CancelCommand => _cancelCommand ?? (_cancelCommand = new Command(Cancel));
 
         protected ICuttingUnitDatastore Datastore { get; set; }
-        protected IDialogService DialogService { get; set; }
+        protected ICruiseDialogService DialogService { get; set; }
 
         public Plot_Stratum StratumPlot { get; protected set; }
 
-        public ThreePPNTPlotViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider, IDialogService dialogService)
+        public ThreePPNTPlotViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider, ICruiseDialogService dialogService)
             : base(navigationService)
         {
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
             DialogService = dialogService;
         }
 

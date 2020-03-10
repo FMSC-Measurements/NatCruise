@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
+using NatCruise.Services;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -58,7 +60,7 @@ namespace FScruiser.XF.ViewModels
         {
             get
             {
-                var filePath = DatastoreProvider.CruisePath;
+                var filePath = DatastoreProvider.CruiseFilePath;
                 if (string.IsNullOrWhiteSpace(filePath))
                 {
                     return "Open File";
@@ -72,22 +74,22 @@ namespace FScruiser.XF.ViewModels
 
         public IDataserviceProvider DatastoreProvider { get; }
         public IAppInfoService AppInfo { get; }
-        protected IDialogService DialogService { get; set; }
+        protected ICruiseDialogService DialogService { get; set; }
 
-        protected IFilePickerService FilePickerService { get; }
+        protected IFileDialogService FileDialogService { get; }
         public IDeviceInfoService DeviceInfo { get; }
 
         public MainViewModel(INavigationService navigationService
-            , IDialogService dialogService
+            , ICruiseDialogService dialogService
             , IDataserviceProvider datastoreProvider
             , IDeviceInfoService deviceInfoService
             , IAppInfoService appInfo
-            , IFilePickerService filePickerService) : base(navigationService)
+            , IFileDialogService fileDialogService) : base(navigationService)
         {
             AppInfo = appInfo ?? throw new ArgumentNullException(nameof(appInfo));
             DialogService = dialogService;
             DatastoreProvider = datastoreProvider;
-            FilePickerService = filePickerService ?? throw new ArgumentNullException(nameof(filePickerService));
+            FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             DeviceInfo = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
 
             RefreshNavigation(null);
@@ -95,7 +97,7 @@ namespace FScruiser.XF.ViewModels
 
         public void RefreshNavigation(CuttingUnit_Ex cuttingUnit)
         {
-            var datastore = DatastoreProvider.Get<ICuttingUnitDatastore>();
+            var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDatastore>();
 
             var navigationItems = new List<NavigationListItem>();
 
@@ -199,7 +201,7 @@ namespace FScruiser.XF.ViewModels
         {
             try
             {
-                var filePath = await FilePickerService.PickCruiseFileAsync();
+                var filePath = await FileDialogService.SelectCruiseFileAsync();
                 if (filePath == null) { return; }
 
                 //var fileData = await CrossFilePicker.Current.PickFile(new string[] { ".cruise", ".crz3" });
@@ -245,7 +247,7 @@ namespace FScruiser.XF.ViewModels
 
         private void MessagingCenter_CuttingUnitSelected(string unit)
         {
-            var datastore = DatastoreProvider.Get<ICuttingUnitDatastore>();
+            var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDatastore>();
             var cuttingUnit = datastore.GetUnit(unit);
 
             RefreshNavigation(cuttingUnit);

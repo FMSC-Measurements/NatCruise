@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using FScruiser.Droid.Services;
-using FScruiser.XF.Services;
 using NatCruise.Cruise.Services;
+using NatCruise.Services;
 using Prism.Ioc;
 using System;
 
@@ -21,7 +21,7 @@ namespace FScruiser.Droid
             base.RegisterTypes(containerRegistry);
 
             containerRegistry.RegisterInstance<ISoundService>(new AndroidSoundService(HostActivity.ApplicationContext));
-            containerRegistry.RegisterInstance<IFilePickerService>(new AndroidFilePickerService(HostActivity));
+            containerRegistry.RegisterInstance<IFileDialogService>(new AndroidFileDialogService(HostActivity));
             containerRegistry.RegisterInstance<IDeviceInfoService>(new AndroidDeviceInfoService());
             containerRegistry.RegisterInstance<IAppInfoService>(new AndroidAppInfoService());
         }
