@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -36,7 +37,7 @@ namespace FScruiser.XF.ViewModels
 
         public FixCNTViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider) : base(navigationService)
         {
-            FixCNTDataservice = datastoreProvider.Get<IFixCNTDataservice>() ?? throw new ArgumentNullException(nameof(FixCNTDataservice));
+            FixCNTDataservice = datastoreProvider.GetDataservice<IFixCNTDataservice>() ?? throw new ArgumentNullException(nameof(FixCNTDataservice));
         }
 
         public void Tally(FixCNTTallyBucket tallyBucket)

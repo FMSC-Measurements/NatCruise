@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -47,16 +48,16 @@ namespace FScruiser.XF.ViewModels
 
         public ICuttingUnitDatastore Datastore { get; set; }
 
-        public IDialogService DialogService { get; set; }
+        public ICruiseDialogService DialogService { get; set; }
 
         public event EventHandler TreeAdded;
 
-        public TreeListViewModel(IDialogService dialogService
+        public TreeListViewModel(ICruiseDialogService dialogService
             , INavigationService navigationService
             , IDataserviceProvider datastoreProvider) : base(navigationService)
         {
             DialogService = dialogService;
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
         protected override void Refresh(INavigationParameters parameters)

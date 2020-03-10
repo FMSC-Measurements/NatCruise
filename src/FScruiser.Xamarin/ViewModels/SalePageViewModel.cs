@@ -2,6 +2,7 @@
 using NatCruise.Cruise.Models;
 using FScruiser.XF.Services;
 using Prism.Navigation;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -13,7 +14,7 @@ namespace FScruiser.XF.ViewModels
 
         public SalePageViewModel(IDataserviceProvider datastoreProvider)
         {
-            Dataservice = datastoreProvider.Get<ISaleDataservice>();
+            Dataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
         }
 
         public Sale Sale

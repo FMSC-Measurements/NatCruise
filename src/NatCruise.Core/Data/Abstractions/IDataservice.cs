@@ -8,6 +8,6 @@ namespace NatCruise.Data
 {
     public interface IDataservice
     {
-        
+        //string DeviceID { get; set; };
     }
 }

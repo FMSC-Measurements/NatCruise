@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -21,7 +22,7 @@ namespace FScruiser.XF.ViewModels
 
         public SampleStateManagmentViewModel(INavigationService navigationService, IDataserviceProvider dataserviceProvider) : base(navigationService)
         {
-            SampleInfoDataservice = dataserviceProvider.Get<ISampleInfoDataservice>();
+            SampleInfoDataservice = dataserviceProvider.GetDataservice<ISampleInfoDataservice>();
         }
 
         public NatCruise.Cruise.Models.Device CurrentDevice

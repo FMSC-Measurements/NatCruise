@@ -36,7 +36,7 @@ namespace NatCruise.Cruise.Logic
         public static async Task<TreeStub_Plot> TallyAsync(TallyPopulation_Plot pop,
             string unitCode, int plot,
             ISampleSelectorDataService sampleSelectorRepo,
-            IDialogService dialogService)
+            ICruiseDialogService dialogService)
         {
             if(SINGLE_STAGE_PLOT.Contains(pop.Method))
             {

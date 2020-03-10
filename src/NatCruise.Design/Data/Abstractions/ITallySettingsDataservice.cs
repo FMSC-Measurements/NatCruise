@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using NatCruise.Data;
+using System.Collections.Generic;
 
 namespace NatCruise.Design.Data
 {
-    public interface ITallySettingsDataservice
+    public interface ITallySettingsDataservice : IDataservice
     {
         string GetHotKey(string stratumCode, string sampleGroupCode);
 

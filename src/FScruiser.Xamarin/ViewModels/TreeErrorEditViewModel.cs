@@ -4,6 +4,7 @@ using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using Prism.Navigation;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -15,7 +16,7 @@ namespace FScruiser.XF.ViewModels
 
         public TreeErrorEditViewModel(IDataserviceProvider datastoreProvider)
         {
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
         private ICuttingUnitDatastore Datastore { get; set; }

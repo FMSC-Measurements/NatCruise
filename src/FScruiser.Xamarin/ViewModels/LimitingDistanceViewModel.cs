@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NatCruise.Cruise.Logic;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -163,7 +164,7 @@ namespace FScruiser.XF.ViewModels
 
         public LimitingDistanceViewModel(IDataserviceProvider datastoreProvider)
         {
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
         public override void OnNavigatedFrom(INavigationParameters parameters)

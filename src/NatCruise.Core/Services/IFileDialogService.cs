@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace NatCruise.Wpf.Services
+namespace NatCruise.Services
 {
     public interface IFileDialogService
     {
-        string SelectCruiseFile();
+        Task<string> SelectCruiseFileAsync();
 
-        string SelectCruiseFileDestination(string defaultDir = null, string defaultFileName = null);
+        Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null);
     }
 }

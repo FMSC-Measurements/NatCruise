@@ -20,6 +20,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using NatCruise.Data;
+using FScruiser.XF.Data;
 
 namespace FScruiser.XF
 {
@@ -38,7 +40,7 @@ namespace FScruiser.XF
 
         protected IPageDialogService DialogService => Container?.Resolve<IPageDialogService>();
 
-        protected IDialogService DialogService2 => Container?.Resolve<IDialogService>();
+        protected ICruiseDialogService DialogService2 => Container?.Resolve<ICruiseDialogService>();
 
         public IDataserviceProvider DataserviceProvider => _dataserviceProvider;
 
@@ -146,11 +148,11 @@ namespace FScruiser.XF
                             path = convertedPath;
                         }
 
-                        DataserviceProvider.CruisePath = path;
+                        DataserviceProvider.OpenFile(path);
 
                         Properties.SetValue("cruise_path", path);
 
-                        var sampleInfoDS = DataserviceProvider.Get<ISampleInfoDataservice>();
+                        var sampleInfoDS = DataserviceProvider.GetDataservice<ISampleInfoDataservice>();
                         if (sampleInfoDS.HasSampleStates() == false
                             && sampleInfoDS.HasSampleStateEnvy()
                             && await DialogService2.AskYesNoAsync("This file doesn't have any samplers associated with this device. Would you to continue by copying a state from another device?", "Copy samplers from another device?"))

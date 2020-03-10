@@ -21,10 +21,10 @@ namespace FScruiser.XF
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             var mockSoundService = new Mock<ISoundService>();
-            var mockDialogService = new Mock<IDialogService>();
+            var mockDialogService = new Mock<ICruiseDialogService>();
 
             containerRegistry.RegisterInstance<ISoundService>(mockSoundService.Object);
-            containerRegistry.RegisterInstance<IDialogService>(mockDialogService.Object);
+            containerRegistry.RegisterInstance<ICruiseDialogService>(mockDialogService.Object);
             containerRegistry.RegisterInstance<Prism.Logging.ILoggerFacade>(new TestLogger(TestOutput));
         }
     }

@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -125,22 +126,22 @@ namespace FScruiser.XF.ViewModels
         public ITallyDataservice TallyDataservice { get; }
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
 
-        public IDialogService DialogService { get; }
+        public ICruiseDialogService DialogService { get; }
         public ISampleSelectorDataService SampleSelectorService { get; }
         public ICruisersDataservice CruisersDataService { get; }
         public ISoundService SoundService { get; }
 
         public UnitTreeTallyViewModel(INavigationService navigationService,
             IDataserviceProvider dataserviceProvider,
-            IDialogService dialogService,
+            ICruiseDialogService dialogService,
             ITallySettingsDataService tallySettings,
             ISoundService soundService) : base(navigationService)
         {
-            TallyDataservice = dataserviceProvider.Get<ITallyDataservice>();
-            TallyPopulationDataservice = dataserviceProvider.Get<ITallyPopulationDataservice>();
-            SampleSelectorService = dataserviceProvider.Get<ISampleSelectorDataService>();
+            TallyDataservice = dataserviceProvider.GetDataservice<ITallyDataservice>();
+            TallyPopulationDataservice = dataserviceProvider.GetDataservice<ITallyPopulationDataservice>();
+            SampleSelectorService = dataserviceProvider.GetDataservice<ISampleSelectorDataService>();
             DialogService = dialogService;
-            CruisersDataService = dataserviceProvider.Get<ICruisersDataservice>();
+            CruisersDataService = dataserviceProvider.GetDataservice<ICruisersDataservice>();
             SoundService = soundService;
         }
 

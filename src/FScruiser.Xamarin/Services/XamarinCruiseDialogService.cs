@@ -6,36 +6,37 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.Services
 {
-    public class XamarinDialogService : IDialogService
+    public class XamarinCruiseDialogService : ICruiseDialogService
     {
         private TaskCompletionSource<int?> _askKpiTcs;
         private TaskCompletionSource<AskTreeCountResult> _askTreeCountTcs;
-        private IDataserviceProvider _datastoreProvider;
-        private IApplicationProvider _applicationProvider;
-        private IContainerExtension _container;
+        private IDataserviceProvider DatastoreProvider { get; }
+        private IApplicationProvider ApplicationProvider { get; }
+        //private IContainerExtension Container { get; }
 
-        public XamarinDialogService(IApplicationProvider applicationProvider,
-            IContainerExtension container,
+        public XamarinCruiseDialogService(IApplicationProvider applicationProvider,
+            //IContainerExtension container,
             IDataserviceProvider datastoreProvider )
         {
-            _datastoreProvider = datastoreProvider;
-            _applicationProvider = applicationProvider;
-            _container = container;
+            DatastoreProvider = datastoreProvider;
+            ApplicationProvider = applicationProvider;
+            //Container = container;
         }
 
         private Page GetCurrentPage()
         {
             Page page = null;
-            if (_applicationProvider.MainPage.Navigation.ModalStack.Count > 0)
-                page = _applicationProvider.MainPage.Navigation.ModalStack.LastOrDefault();
+            if (ApplicationProvider.MainPage.Navigation.ModalStack.Count > 0)
+                page = ApplicationProvider.MainPage.Navigation.ModalStack.LastOrDefault();
             else
-                page = _applicationProvider.MainPage.Navigation.NavigationStack.LastOrDefault();
+                page = ApplicationProvider.MainPage.Navigation.NavigationStack.LastOrDefault();
 
             if (page == null)
-                page = _applicationProvider.MainPage;
+                page = ApplicationProvider.MainPage;
 
             return page;
         }
@@ -148,7 +149,7 @@ namespace FScruiser.XF.Services
 
         private string[] GetCruisers()
         {
-            var cruisers = _datastoreProvider.Get<ICruisersDataservice>();
+            var cruisers = DatastoreProvider.GetDataservice<ICruisersDataservice>();
             return cruisers.GetCruisers().ToArray();
         }
 

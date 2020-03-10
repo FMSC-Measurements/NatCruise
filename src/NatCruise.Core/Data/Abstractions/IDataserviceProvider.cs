@@ -13,6 +13,6 @@ namespace NatCruise.Data
 
         IDataservice GetDataservice(Type type);
 
-        T GetDataservice<T>() where T : IDataservice; //, new;
+        T GetDataservice<T>() where T : IDataservice;
     }
 }

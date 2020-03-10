@@ -1,12 +1,9 @@
-﻿using System;
+﻿using NatCruise.Data;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
 {
-    public interface ICruisersDataservice
+    public interface ICruisersDataservice : IDataservice
     {
         bool PromptCruiserOnSample { get; set; }
 

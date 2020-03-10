@@ -1,9 +1,16 @@
 ﻿using Microsoft.Win32;
+using NatCruise.Services;
+using System.Threading.Tasks;
 
 namespace NatCruise.Wpf.Services
 {
-    public class FileDialogService : IFileDialogService
+    public class WpfFileDialogService : IFileDialogService
     {
+        public Task<string> SelectCruiseFileAsync()
+        {
+            return Task.Run(SelectCruiseFile);
+        }
+
         public string SelectCruiseFile()
         {
             var dialog = new OpenFileDialog()
@@ -23,10 +30,10 @@ namespace NatCruise.Wpf.Services
             { return null; }
         }
 
-        //public string SelectCruiseFileDestination()
-        //{
-        //    return SelectCruiseFileDestination((string)null);
-        //}
+        public Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        {
+            return Task.Run(() => SelectCruiseFileDestination(defaultDir, defaultFileName));
+        }
 
         public string SelectCruiseFileDestination(string defaultDir = null, string defaultFileName = null)
         {

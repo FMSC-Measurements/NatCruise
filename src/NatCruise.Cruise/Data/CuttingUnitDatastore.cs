@@ -3,6 +3,7 @@ using CruiseDAL.Schema;
 using FMSC.ORM.Core.SQL.QueryBuilder;
 using FMSC.ORM.EntityModel.Attributes;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
 {
-    public partial class CuttingUnitDatastore : ICuttingUnitDatastore
+    public partial class CuttingUnitDatastore : DataserviceBase, ICuttingUnitDatastore
     {
         private const int NUMBER_OF_TALLY_ENTRIES_PERPAGE = 20;
 
@@ -19,39 +20,14 @@ namespace NatCruise.Cruise.Services
             .Append(CruiseMethods.FIXCNT)
             .Select(x => "'" + x + "'").ToArray());
 
-        private CruiseDatastore_V3 _database;
-
-        public CruiseDatastore_V3 Database
-        {
-            get { return _database; }
-            set
-            {
-                _database = value;
-                OnDatabaseChanged();
-            }
-        }
-
-        protected string CurrentTimeStamp => DateTime.Now.ToString();
         protected string UserName => "AndroidUser";
 
-        public CuttingUnitDatastore(string path)
+        public CuttingUnitDatastore(string path) : base (path)
         {
-            var database = new CruiseDatastore_V3(path ?? throw new ArgumentNullException(nameof(path)));
-
-            Database = database;
         }
 
-        public CuttingUnitDatastore(CruiseDatastore_V3 database)
+        public CuttingUnitDatastore(CruiseDatastore_V3 database) : base(database)
         {
-            Database = database;
-        }
-
-        private void OnDatabaseChanged()
-        {
-            var database = Database;
-            if (database == null) { return; }
-
-            //DatabaseUpdater.Update(database);
         }
 
         public string GetCruisePurpose()

@@ -1,24 +1,24 @@
 ﻿using Android.Content;
 using Com.Obsez.Android.Lib.Filechooser;
-using FScruiser.XF.Services;
+using NatCruise.Services;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FScruiser.Droid.Services
 {
-    public class AndroidFilePickerService : IFilePickerService
+    public class AndroidFileDialogService : IFileDialogService
     {
         private TaskCompletionSource<string> _tcs;
 
         private Context Context { get; }
 
-        public AndroidFilePickerService(Context context)
+        public AndroidFileDialogService(Context context)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task<string> PickCruiseFileAsync()
+        public Task<string> SelectCruiseFileAsync()
         {
             var newTcs = new TaskCompletionSource<string>();
             var existingTcs = Interlocked.Exchange(ref _tcs, newTcs);
@@ -56,6 +56,11 @@ namespace FScruiser.Droid.Services
             chooserDialog.Build().Show();
 
             return _tcs.Task;
+        }
+
+        public Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        {
+            throw new NotSupportedException();
         }
     }
 }

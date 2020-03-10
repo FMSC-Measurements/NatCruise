@@ -1,31 +1,16 @@
 ﻿using NatCruise.Data;
 using NatCruise.Design.Data;
 using System;
-using System.IO;
-using System.Threading.Tasks;
 
-namespace NatCruise.Wpf.Data
+namespace NatCruise.Data
 {
-    public class DataserviceProvider : IDataserviceProvider
+    public class DataserviceProvider : DataserviceProviderBase
     {
-        private string _cruiseFilePath;
-
-        public string CruiseFilePath
-        {
-            get => _cruiseFilePath;
-            set
-            {
-                _cruiseFilePath = value;
-            }
-        }
-
-        public object GetDataservice(Type type)
+        public override IDataservice GetDataservice(Type type)
         {
             var cruiseFilePath = CruiseFilePath;
             try
             {
-
-
                 //if(type == typeof(IRecentFilesDataservice))
                 //{
                 //    return new RecentFilesDataservice();
@@ -75,30 +60,6 @@ namespace NatCruise.Wpf.Data
                 throw;
                 //return null;
             }
-        }
-
-        public T GetDataservice<T>()
-        {
-            return (T)GetDataservice(typeof(T));
-        }
-
-        public void OpenFile(string filePath)
-        {
-            var fileExtention = Path.GetExtension(filePath).ToLower();
-            if (fileExtention == ".cruise")
-            {
-                var convertedPath = CruiseDAL.Migrator.GetConvertedPath(filePath);
-                CruiseDAL.Migrator.MigrateFromV2ToV3(filePath, convertedPath);
-
-                filePath = convertedPath;
-            }
-
-            _cruiseFilePath = filePath;
-        }
-
-        public Task OpenFileAsync(string filePath)
-        {
-            throw new NotImplementedException();
         }
     }
 }

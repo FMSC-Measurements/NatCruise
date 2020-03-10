@@ -1,4 +1,4 @@
-﻿namespace FScruiser.XF.Services
+﻿namespace FScruiser.XF.Data
 {
     public interface IApplicationSettings
     {

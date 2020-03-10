@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -169,13 +170,13 @@ namespace FScruiser.XF.ViewModels
         }
 
         public IPlotDatastore Datastore { get; set; }
-        public IDialogService DialogService { get; set; }
+        public ICruiseDialogService DialogService { get; set; }
 
         public PlotEditViewModel(IDataserviceProvider datastoreProvider
-            , IDialogService dialogService
+            , ICruiseDialogService dialogService
             , INavigationService navigationService) : base(navigationService)
         {
-            Datastore = datastoreProvider.Get<ICuttingUnitDatastore>();
+            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
             DialogService = dialogService;
         }
 

@@ -5,12 +5,15 @@ using System.Linq;
 
 namespace NatCruise.Data
 {
-    public class DataserviceBase : IDataservice
+    public abstract class DataserviceBase : IDataservice
     {
         protected readonly string PLOT_METHODS = String.Join(", ", CruiseMethods.PLOT_METHODS
             .Append(CruiseMethods.THREEPPNT)
             .Append(CruiseMethods.FIXCNT)
             .Select(x => "'" + x + "'").ToArray());
+
+        protected string DeviceID { get; set; }
+        //private string DeviceName { get; set; }
 
         private CruiseDatastore_V3 _database;
 
@@ -24,7 +27,7 @@ namespace NatCruise.Data
             }
         }
 
-        private void OnDatabaseChanged()
+        protected virtual void OnDatabaseChanged()
         {
             var database = Database;
             if (database == null) { return; }
