@@ -3,7 +3,6 @@ using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
 using NatCruise.Util;
 using FScruiser.XF.Events;
-using FScruiser.XF.Pages;
 using FScruiser.XF.Services;
 using FScruiser.XF.Util;
 using Microsoft.AppCenter.Crashes;
@@ -22,6 +21,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using NatCruise.Data;
 using FScruiser.XF.Data;
+using FScruiser.XF.Views;
+using FScruiser.XF.ViewModels;
 
 namespace FScruiser.XF
 {
@@ -81,6 +82,7 @@ namespace FScruiser.XF
                 await LoadCruiseFileAsync(path);
             });
 
+            //await NavigationService.NavigateAsync("/MainView");
             await NavigationService.NavigateAsync("/Main/Navigation/CuttingUnits");
         }
 
@@ -235,36 +237,7 @@ namespace FScruiser.XF
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //See BasePlatformInitializer class for other type regestration
-
-            containerRegistry.RegisterSingleton<ITallySettingsDataService, TallySettingsDataService>();
-            //containerRegistry.RegisterInstance<ICuttingUnitDatastore>(null);
-
             containerRegistry.RegisterInstance<IDataserviceProvider>(_dataserviceProvider = new DataserviceProvider(this));
-
-            containerRegistry.RegisterForNavigation<MyNavigationPage>("Navigation");
-            containerRegistry.RegisterForNavigation<MainPage, ViewModels.MainViewModel>("Main");
-            containerRegistry.RegisterForNavigation<SalePage, ViewModels.SalePageViewModel>("Sale");
-            containerRegistry.RegisterForNavigation<CuttingUnitListPage, ViewModels.CuttingUnitListViewModel>("CuttingUnits");
-            containerRegistry.RegisterForNavigation<UnitTreeTallyPage, ViewModels.UnitTreeTallyViewModel>("Tally");
-            containerRegistry.RegisterForNavigation<TreeListPage, ViewModels.TreeListViewModel>("Trees");
-            containerRegistry.RegisterForNavigation<TreeEditPage2, ViewModels.TreeEditViewModel>("Tree");
-            containerRegistry.RegisterForNavigation<Pages.PlotListPage, ViewModels.PlotListViewModel>("Plots");
-            containerRegistry.RegisterForNavigation<Pages.PlotTallyPage, ViewModels.PlotTallyViewModel>("PlotTally");
-            containerRegistry.RegisterForNavigation<Pages.FixCntTallyPage, ViewModels.FixCNTViewModel>("FixCNTTally");
-            containerRegistry.RegisterForNavigation<Pages.PlotEditPage, ViewModels.PlotEditViewModel>("PlotEdit");
-            containerRegistry.RegisterForNavigation<Pages.TreeCountEditPage, ViewModels.TreeCountEditViewModel>("TreeCountEdit");
-            containerRegistry.RegisterForNavigation<Pages.TreeErrorEditPage, ViewModels.TreeErrorEditViewModel>("TreeErrorEdit");
-            containerRegistry.RegisterForNavigation<Pages.SampleStateManagmentPage, ViewModels.SampleStateManagmentViewModel>("SampleStateManagment");
-            containerRegistry.RegisterForNavigation<Pages.SampleStateManagmentOtherDevicesPage, ViewModels.SampleStateManagmentViewModel>("SampleStateManagmentOther");
-
-            containerRegistry.RegisterForNavigation<Pages.ThreePPNTPlotPage, ViewModels.ThreePPNTPlotViewModel>("ThreePPNTPlot");
-            containerRegistry.RegisterForNavigation<Pages.ManageCruisersPage, ViewModels.ManageCruisersViewModel>("Cruisers");
-            containerRegistry.RegisterForNavigation<Pages.SettingsPage, ViewModels.SettingsViewModel>("Settings");
-            containerRegistry.RegisterForNavigation<Pages.LimitingDistancePage, ViewModels.LimitingDistanceViewModel>("LimitingDistance");
-            containerRegistry.RegisterForNavigation<Pages.LogsListPage, ViewModels.LogsListViewModel>("Logs");
-            containerRegistry.RegisterForNavigation<Pages.LogEditPage, ViewModels.LogEditViewModel>("Log");
-            containerRegistry.RegisterForNavigation<Pages.FeedbackPage>("Feedback");
         }
 
         public static void LogException(string catigory, string message, Exception ex, IDictionary<string, string> data = null)

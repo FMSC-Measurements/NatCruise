@@ -3,7 +3,7 @@
                                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                                x:Class="FScruiser.XF.ViewCells.TallyEntryViewCell"
                                xmlns:local="clr-namespace:FScruiser.XF.ViewCells"
-                               xmlns:local_views="clr-namespace:FScruiser.XF.Views">
+                               xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls">
     <ViewCell.View>
         <ContentView BackgroundColor="Silver">
             <Frame BackgroundColor="White"
@@ -24,8 +24,8 @@
                     <Image Grid.Row="0"
                            Grid.Column="0"
                            Source="ic_tally_box_black_24dp.png" />
-                    
-                    <local_views:PopulationIndicatorView Grid.Row="0"
+
+                    <local_ctrls:PopulationIndicator Grid.Row="0"
                                                          Grid.Column="1"
                                                          StratumCode="{Binding StratumCode}"
                                                          SampleGroupCode="{Binding SampleGroupCode}"

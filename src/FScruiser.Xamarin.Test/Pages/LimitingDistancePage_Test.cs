@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Test;
+using FScruiser.XF.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,7 @@ namespace FScruiser.XF.Pages
         {
             try
             {
-                var instance = new LimitingDistancePage();
+                var instance = new LimitingDistanceView();
             }
             catch(Exception e)
             {

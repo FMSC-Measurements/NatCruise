@@ -11,12 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Pages\obj\**" />
-    <EmbeddedResource Remove="Pages\obj\**" />
-    <None Remove="Pages\obj\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="**\*~" />
   </ItemGroup>
   
@@ -46,23 +40,86 @@
     <Compile Update="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Controls\PopulationIndicator.xaml.cs">
+      <DependentUpon>PopulationIndicator.xaml</DependentUpon>
+    </Compile>
     <Compile Update="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Pages\AskKpiPage.xaml.cs">
-      <DependentUpon>AskKpiPage.xaml</DependentUpon>
+    <Compile Update="Views\AskKpiView.xaml.cs">
+      <DependentUpon>AskKpiView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Pages\CuttingUnitListPage.xaml.cs">
-      <DependentUpon>CuttingUnitListPage.xaml</DependentUpon>
+    <Compile Update="Views\CuttingUnitListView.xaml.cs">
+      <DependentUpon>CuttingUnitListView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Pages\TreeCountEditPage.xaml.cs">
-      <DependentUpon>TreeCountEditPage.xaml</DependentUpon>
+    <Compile Update="Views\FeedbackView.xaml.cs">
+      <DependentUpon>FeedbackView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Pages\MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Update="Views\FixCntTallyView.xaml.cs">
+      <DependentUpon>FixCntTallyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LimitingDistanceView.xaml.cs">
+      <DependentUpon>LimitingDistanceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LogEditView.xaml.cs">
+      <DependentUpon>LogEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LogsListView.xaml.cs">
+      <DependentUpon>LogsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ManageCruisersView.xaml.cs">
+      <DependentUpon>ManageCruisersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MyNavigationView.xaml.cs">
+      <DependentUpon>MyNavigationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PlotEditView.xaml.cs">
+      <DependentUpon>PlotEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PlotListView.xaml.cs">
+      <DependentUpon>PlotListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PlotTallyView.xaml.cs">
+      <DependentUpon>PlotTallyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SaleView.xaml.cs">
+      <DependentUpon>SaleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SampleStateManagmentCurrentDeviceView.xaml.cs">
+      <DependentUpon>SampleStateManagmentCurrentDeviceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SampleStateManagmentOtherDevicesView.xaml.cs">
+      <DependentUpon>SampleStateManagmentOtherDevicesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SampleStateManagmentView.xaml.cs">
+      <DependentUpon>SampleStateManagmentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ThreePPNTPlotView.xaml.cs">
+      <DependentUpon>ThreePPNTPlotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TreeCountEditView.xaml.cs">
+      <DependentUpon>TreeCountEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Update="ViewCells\TallyEntryTreeViewCell.xaml.cs">
       <DependentUpon>TallyEntryTreeViewCell.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TreeEditView.xaml.cs">
+      <DependentUpon>TreeEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TreeErrorEditView.xaml.cs">
+      <DependentUpon>TreeErrorEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TreeListView.xaml.cs">
+      <DependentUpon>TreeListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TallyView.xaml.cs">
+      <DependentUpon>TallyView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -70,67 +127,67 @@
     <EmbeddedResource Update="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\AskKpiPage.xaml">
+    <EmbeddedResource Update="Views\AskKpiView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\ClickerTreeCountEntryDialog.xaml">
+    <EmbeddedResource Update="Views\ClickerTreeCountEntryDialog.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\SalePage.xaml">
+    <EmbeddedResource Update="Views\SaleView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\SampleStateManagmentCurrentDevicePage.xaml">
+    <EmbeddedResource Update="Views\SampleStateManagmentCurrentDeviceView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\SampleStateManagmentOtherDevicesPage.xaml">
+    <EmbeddedResource Update="Views\SampleStateManagmentOtherDevicesView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\SampleStateManagmentPage.xaml">
+    <EmbeddedResource Update="Views\SampleStateManagmentView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\TreeCountEditPage.xaml">
+    <EmbeddedResource Update="Views\TreeCountEditView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\FeedbackPage.xaml">
+    <EmbeddedResource Update="Views\FeedbackView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\FixCntTallyPage.xaml">
+    <EmbeddedResource Update="Views\FixCntTallyView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\LimitingDistancePage.xaml">
+    <EmbeddedResource Update="Views\LimitingDistanceView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\LogEditPage.xaml">
+    <EmbeddedResource Update="Views\LogEditView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\LogsListPage.xaml">
+    <EmbeddedResource Update="Views\LogsListView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\ManageCruisersPage.xaml">
+    <EmbeddedResource Update="Views\ManageCruisersView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\MyNavigationPage.xaml">
+    <EmbeddedResource Update="Views\MyNavigationView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\PlotListPage.xaml">
+    <EmbeddedResource Update="Views\PlotListView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\PlotTallyPage.xaml">
+    <EmbeddedResource Update="Views\PlotTallyView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\SettingsPage.xaml">
+    <EmbeddedResource Update="Views\SettingsView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\ThreePPNTPlotPage.xaml">
+    <EmbeddedResource Update="Views\ThreePPNTPlotView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\TreeEditPage2.xaml">
+    <EmbeddedResource Update="Views\TreeEditView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\MainPage.xaml">
+    <EmbeddedResource Update="Views\MainView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\UnitTreeTallyPage.xaml">
+    <EmbeddedResource Update="Views\TallyView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="ViewCells\PlotTreeViewCell.xaml">
@@ -145,10 +202,7 @@
     <EmbeddedResource Update="ViewCells\TallyEntryViewCell.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\PlotEditView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\PopulationIndicatorView.xaml">
+    <EmbeddedResource Update="Controls\PopulationIndicator.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
@@ -159,72 +213,6 @@
 
   <ItemGroup>
     <None Update="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\AskKpiPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\ClickerTreeCountEntryDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\CuttingUnitListPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\FeedbackPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\FixCntTallyPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\LimitingDistancePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\LogEditPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\LogsListPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\ManageCruisersPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\MyNavigationPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\PlotEditPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\PlotListPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\PlotTallyPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\SettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\ThreePPNTPlotPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\TreeCountEditPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\TreeEditPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\TreeEditPage2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\TreeErrorEditPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\TreeListPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Pages\UnitTreeTallyPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Secrets.local.csx">
@@ -243,9 +231,6 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Views\PlotEditView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\PopulationIndicatorView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>
