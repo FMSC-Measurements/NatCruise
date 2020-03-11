@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FScruiser.XF.Test;
+using FScruiser.XF.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,10 @@ namespace FScruiser.XF.Pages
         {
             get
             {
-                var assembly = Assembly.GetAssembly(typeof(MainPage));
+                var assembly = Assembly.GetAssembly(typeof(MainView));
 
                 var pageTypes = assembly.GetTypes()
-                .Where(t => t.Namespace == "FScruiser.XF.Pages" && t.IsSubclassOf(typeof(Xamarin.Forms.Page)))
+                .Where(t => t.Namespace == "FScruiser.XF.Views" && t.IsSubclassOf(typeof(Xamarin.Forms.Page)) && t.IsAbstract == false)
                 .Select(x => new object[] { x });
 
                 return  pageTypes;
@@ -37,7 +38,7 @@ namespace FScruiser.XF.Pages
         [MemberData(nameof(PageTypes))]
         public void CreatePage(Type pageType)
         {
-            if(pageType.IsAbstract) { return; }
+            Xunit.Assert.False(pageType.IsAbstract);
 
             var page = Activator.CreateInstance(pageType) as Xamarin.Forms.Page;
 

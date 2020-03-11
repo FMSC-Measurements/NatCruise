@@ -4,6 +4,7 @@ using Moq;
 using Prism.Ioc;
 using System;
 using Xunit.Abstractions;
+using Prism.Navigation;
 
 namespace FScruiser.XF
 {
@@ -22,10 +23,12 @@ namespace FScruiser.XF
         {
             var mockSoundService = new Mock<ISoundService>();
             var mockDialogService = new Mock<ICruiseDialogService>();
+            //var mockNavService = new Mock<TestNavigationService>();
 
             containerRegistry.RegisterInstance<ISoundService>(mockSoundService.Object);
             containerRegistry.RegisterInstance<ICruiseDialogService>(mockDialogService.Object);
             containerRegistry.RegisterInstance<Prism.Logging.ILoggerFacade>(new TestLogger(TestOutput));
+            containerRegistry.RegisterInstance<PageNavigationService>(new TestNavigationService());
         }
     }
 }

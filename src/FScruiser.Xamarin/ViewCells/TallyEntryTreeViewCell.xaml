@@ -4,7 +4,7 @@
                                    x:Class="FScruiser.XF.ViewCells.TallyEntryTreeViewCell"
                                    xmlns:local="clr-namespace:FScruiser.XF.ViewCells"
                                    xmlns:local_commands="clr-namespace:FScruiser.XF.Commands"
-                                   xmlns:local_views="clr-namespace:FScruiser.XF.Views"
+                                   xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
                                    xmlns:converters="clr-namespace:Backpack.XF.Converters;assembly=Backpack.XF.Converters"
                                    xmlns:prismxaml="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms">
 
@@ -54,7 +54,7 @@
                            FontSize="16"
                            VerticalTextAlignment="Center" />
 
-                    <local_views:PopulationIndicatorView Grid.Row="0"
+                    <local_ctrls:PopulationIndicator Grid.Row="0"
                                                          Grid.Column="2"
                                                          StratumCode="{Binding StratumCode}"
                                                          SampleGroupCode="{Binding SampleGroupCode}"

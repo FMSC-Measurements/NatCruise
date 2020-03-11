@@ -1,5 +1,4 @@
 ﻿using NatCruise.Cruise.Services;
-using FScruiser.XF.Pages;
 using Prism.Common;
 using Prism.Ioc;
 using System;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using NatCruise.Data;
+using FScruiser.XF.Views;
 
 namespace FScruiser.XF.Services
 {
@@ -76,7 +76,7 @@ namespace FScruiser.XF.Services
                 throw new InvalidOperationException("only one dialog can be active at a time");
             }
 
-            var view = new AskKpiPage() { MinKPI = min, MaxKPI = max };
+            var view = new AskKpiView() { MinKPI = min, MaxKPI = max };
 
             void handelClose(object sender, object output)
             {

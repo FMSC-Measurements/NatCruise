@@ -2,7 +2,7 @@
 <local:TallyEntryTreeViewCell_Base xmlns="http://xamarin.com/schemas/2014/forms"
                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                                    xmlns:local="clr-namespace:FScruiser.XF.ViewCells"
-                                   xmlns:local_views="clr-namespace:FScruiser.XF.Views"
+                                   xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
                                    x:Class="FScruiser.XF.ViewCells.PlotTreeViewCell"
                                    xmlns:prismxaml="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms">
     <ViewCell.View>
@@ -49,7 +49,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <local_views:PopulationIndicatorView Grid.Row="0"
+                    <local_ctrls:PopulationIndicator Grid.Row="0"
                                                          Grid.Column="0"
                                                          StratumCode="{Binding StratumCode}"
                                                          SampleGroupCode="{Binding SampleGroupCode}"

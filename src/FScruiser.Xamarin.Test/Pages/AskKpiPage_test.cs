@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FScruiser.XF.Test;
+using FScruiser.XF.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace FScruiser.XF.Pages
         [InlineData("101", 100, 10, 101, null)]//ignore max if less than min
         public void CheckInput_test(string input, int minKPI, int maxKPI, int? expectedKpi, string expectedErrorMessage)
         {
-            var result = AskKpiPage.CheckInput(input, minKPI, maxKPI, out var errormessage);
+            var result = AskKpiView.CheckInput(input, minKPI, maxKPI, out var errormessage);
             
             if(expectedErrorMessage != null)
             {
@@ -55,7 +56,7 @@ namespace FScruiser.XF.Pages
         [Fact]
         public void CheckInput_test_stm()
         {
-            var result = AskKpiPage.CheckInput("STM", null, null, out var errormessage);
+            var result = AskKpiView.CheckInput("STM", null, null, out var errormessage);
             result.IsSTM.Should().BeTrue();
 
         }
