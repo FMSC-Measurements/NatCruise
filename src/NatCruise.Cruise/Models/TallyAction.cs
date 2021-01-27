@@ -19,7 +19,7 @@ namespace NatCruise.Cruise.Models
 
             StratumCode = population.StratumCode;
             SampleGroupCode = population.SampleGroupCode;
-            Species = population.Species;
+            SpeciesCode = population.SpeciesCode;
             LiveDead = population.LiveDead;
         }
 
@@ -44,7 +44,7 @@ namespace NatCruise.Cruise.Models
 
         public string SampleGroupCode { get; set; }
 
-        public string Species { get; set; }
+        public string SpeciesCode { get; set; }
 
         public string LiveDead { get; set; }
 

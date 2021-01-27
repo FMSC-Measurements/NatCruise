@@ -3,18 +3,14 @@ using NatCruise.Models;
 
 namespace NatCruise.Cruise.Models
 {
-    [Table("Log_V3")]
+    [Table("Log")]
     public class Log : Model_Base, IHasTreeID
     {
-        [Field("LogID")]
         public string LogID { get; set; }
 
-        [Field("TreeID")]
         public string TreeID { get; set; }
 
         private int _logNumber;
-
-        [Field("LogNumber")]
         public int LogNumber
         {
             get { return _logNumber; }
@@ -22,8 +18,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private string _grade;
-
-        [Field("Grade")]
         public string Grade
         {
             get { return _grade; }
@@ -31,8 +25,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _seenDefect;
-
-        [Field("SeenDefect")]
         public double SeenDefect
         {
             get { return _seenDefect; }
@@ -40,8 +32,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _percentRecoverable;
-
-        [Field("PercentRecoverable")]
         public double PercentRecoverable
         {
             get { return _percentRecoverable; }
@@ -49,8 +39,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private int _length;
-
-        [Field("Length")]
         public int Length
         {
             get { return _length; }
@@ -58,8 +46,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private string _exportGrade;
-
-        [Field("ExportGrade")]
         public string ExportGrade
         {
             get { return _exportGrade; }
@@ -67,8 +53,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _smallEndDiameter;
-
-        [Field("SmallEndDiameter")]
         public double SmallEndDiameter
         {
             get { return _smallEndDiameter; }
@@ -76,8 +60,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _largeEndDiameter;
-
-        [Field("LargeEndDiameter")]
         public double LargeEndDiameter
         {
             get { return _largeEndDiameter; }
@@ -85,8 +67,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _grossCubicFoot;
-
-        [Field("GrossCubicFoot")]
         public double GrossCubicFoot
         {
             get { return _grossCubicFoot; }
@@ -94,8 +74,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _netBoardFoot;
-
-        [Field("NetBoardFoot")]
         public double NetBoardFoot
         {
             get { return _netBoardFoot; }
@@ -103,8 +81,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _grossBoardFoot;
-
-        [Field("GrossBoardFoot")]
         public double GrossBoardFoot
         {
             get { return _grossBoardFoot; }
@@ -112,8 +88,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _netCubicFoot;
-
-        [Field("NetCubicFoot")]
         public double NetCubicFoot
         {
             get { return _netCubicFoot; }
@@ -121,8 +95,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _boardFootRemoved;
-
-        [Field("BoardFootRemoved")]
         public double BoardFootRemoved
         {
             get { return _boardFootRemoved; }
@@ -130,8 +102,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _cubicFootRemoved;
-
-        [Field("CubicFootRemoved")]
         public double CubicFootRemoved
         {
             get { return _cubicFootRemoved; }
@@ -139,8 +109,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _dibClass;
-
-        [Field("DIBClass")]
         public double DIBClass
         {
             get { return _dibClass; }
@@ -148,8 +116,6 @@ namespace NatCruise.Cruise.Models
         }
 
         private double _barkThickness;
-
-        [Field("BarkThickness")]
         public double BarkThickness
         {
             get { return _barkThickness; }
@@ -157,15 +123,12 @@ namespace NatCruise.Cruise.Models
         }
 
         private string _createdBy;
-
-        [Field("CreatedBy")]
         public string CreatedBy
         {
             get { return _createdBy; }
             set { _createdBy = value; }
         }
 
-        [Field("ErrorCount")]
         public int ErrorCount { get; set; }
     }
 }

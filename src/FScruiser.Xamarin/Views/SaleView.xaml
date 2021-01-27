@@ -42,11 +42,11 @@
                        Text="{Binding SaleNumber}" />
             </StackLayout>
 
-            <StackLayout>
+            <!--<StackLayout>
                 <Label Style="{StaticResource propName}">Purpose</Label>
                 <Label Style="{StaticResource propValue}"
                        Text="{Binding Purpose}" />
-            </StackLayout>
+            </StackLayout>-->
 
             <StackLayout>
                 <Label Style="{StaticResource propName}">Region</Label>

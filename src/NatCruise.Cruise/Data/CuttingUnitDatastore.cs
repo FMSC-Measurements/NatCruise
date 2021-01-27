@@ -11,57 +11,59 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
 {
-    public partial class CuttingUnitDatastore : DataserviceBase, ICuttingUnitDatastore
+    public partial class CuttingUnitDatastore : CruiseDataserviceBase, ICuttingUnitDatastore
     {
         private const int NUMBER_OF_TALLY_ENTRIES_PERPAGE = 20;
 
-        protected readonly string PLOT_METHODS = String.Join(", ", CruiseMethods.PLOT_METHODS
-            .Append(CruiseMethods.THREEPPNT)
-            .Append(CruiseMethods.FIXCNT)
-            .Select(x => "'" + x + "'").ToArray());
+        //protected readonly string PLOT_METHODS = String.Join(", ", CruiseMethods.PLOT_METHODS
+        //    .Append(CruiseMethods.THREEPPNT)
+        //    .Append(CruiseMethods.FIXCNT)
+        //    .Select(x => "'" + x + "'").ToArray());
 
         protected string UserName => "AndroidUser";
 
-        public CuttingUnitDatastore(string path) : base (path)
+        public CuttingUnitDatastore(string path, string cruiseID) : base (path, cruiseID)
         {
         }
 
-        public CuttingUnitDatastore(CruiseDatastore_V3 database) : base(database)
+        public CuttingUnitDatastore(CruiseDatastore_V3 database, string cruiseID) : base(database, cruiseID)
         {
         }
 
         public string GetCruisePurpose()
         {
-            return Database.ExecuteScalar<string>("SELECT Purpose FROM Sale LIMIT 1;");
+            return Database.ExecuteScalar<string>("SELECT Purpose FROM Sale WHERE CruiseID = @p1 LIMIT 1;", CruiseID);
         }
 
         #region units
 
         public CuttingUnit_Ex GetUnit(string code)
         {
+            var cruiseID = CruiseID;
+
             var unit = Database.From<CuttingUnit_Ex>()
-                .Where("Code = @p1")
-                .Query(code).FirstOrDefault();
+                .Where("CuttingUnitCode = @p1 AND CruiseID = @p2")
+                .Query(code, cruiseID).FirstOrDefault();
 
             unit.HasPlotStrata = Database.ExecuteScalar<int>("SELECT count(*) FROM CuttingUnit_Stratum AS cust " +
-                "JOIN Stratum AS st ON cust.StratumCode = st.Code " +
-                "JOIN CuttingUnit AS cu ON cust.CuttingUnitCode = cu.Code " +
-                "WHERE cust.CuttingUnitCode = @p1 " +
-                $"AND st.Method IN ({PLOT_METHODS});", code) > 0;
+                "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
+                "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
+                "WHERE cust.CruiseID = @p1 AND cust.CuttingUnitCode = @p2 " +
+                $"AND st.Method IN ({PLOT_METHODS});", cruiseID, code) > 0;
 
             unit.HasTreeStrata = Database.ExecuteScalar<int>("SELECT count(*) FROM CuttingUnit_Stratum AS [cust] " +
-                "JOIN Stratum AS st ON cust.StratumCode = st.Code " +
-                "JOIN CuttingUnit AS cu ON cust.CuttingUnitCode = cu.Code " +
-                "WHERE cust.CuttingUnitCode = @p1 " +
-                $"AND st.Method NOT IN ({PLOT_METHODS});", code) > 0;
+                "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
+                "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
+                "WHERE cust.CruiseID = @p1 AND cust.CuttingUnitCode = @p2 " +
+                $"AND st.Method NOT IN ({PLOT_METHODS});", cruiseID, code) > 0;
 
             return unit;
         }
 
         public IEnumerable<CuttingUnit> GetUnits()
         {
-            return Database.From<CuttingUnit>()
-                .Query().ToArray();
+            return Database.From<CuttingUnit>().Where("CruiseID = @p1")
+                .Query(CruiseID).ToArray();
         }
 
         #endregion units
@@ -70,16 +72,14 @@ namespace NatCruise.Cruise.Services
 
         public string GetCruiseMethod(string stratumCode)
         {
-            return Database.ExecuteScalar<string>("SELECT Method FROM Stratum WHERE Code = @p1;", stratumCode);
+            return Database.ExecuteScalar<string>("SELECT Method FROM Stratum WHERE StratumCode = @p1 AND CruiseID = @p2;", stratumCode, CruiseID);
         }
 
         public IEnumerable<string> GetStratumCodesByUnit(string unitCode)
         {
-            var stratumCodes = Database.ExecuteScalar<string>(
-                "SELECT group_concat(StratumCode, ',') FROM CuttingUnit_Stratum " +
-                "WHERE CuttingUnitCode = @p1;", unitCode);
-
-            return stratumCodes.Split(',');
+            return Database.QueryScalar<string>(
+                "SELECT StratumCode FROM CuttingUnit_Stratum " +
+                "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2;", unitCode, CruiseID);
         }
 
         public IEnumerable<Stratum> GetStrataByUnitCode(string unitCode)
@@ -88,9 +88,9 @@ namespace NatCruise.Cruise.Services
                 "SELECT " +
                 "st.* " +
                 "FROM Stratum AS st " +
-                "JOIN CuttingUnit_Stratum AS cust ON st.Code = cust.StratumCode " +
-                $"WHERE CuttingUnitCode = @p1 AND st.Method NOT IN ({PLOT_METHODS})",
-                new object[] { unitCode })
+                "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
+                $"WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method NOT IN ({PLOT_METHODS})",
+                new object[] { unitCode, CruiseID })
                 .ToArray();
         }
 
@@ -100,9 +100,9 @@ namespace NatCruise.Cruise.Services
                 "SELECT " +
                 "st.* " +
                 "FROM Stratum AS st " +
-                "JOIN CuttingUnit_Stratum AS cust ON st.Code = cust.StratumCode " +
-                $"WHERE CuttingUnitCode = @p1 AND st.Method NOT IN ({PLOT_METHODS})",
-                new object[] { unitCode })
+                "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
+                $"WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method NOT IN ({PLOT_METHODS})",
+                new object[] { unitCode, CruiseID })
                 .ToArray();
         }
 
@@ -112,9 +112,9 @@ namespace NatCruise.Cruise.Services
                 "SELECT " +
                 "st.* " +
                 "FROM Stratum AS st " +
-                "JOIN CuttingUnit_Stratum AS cust ON st.Code = cust.StratumCode " +
-                $"WHERE CuttingUnitCode = @p1 AND st.Method IN ({PLOT_METHODS})",
-                new object[] { unitCode })
+                "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
+                $"WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN ({PLOT_METHODS})",
+                new object[] { unitCode, CruiseID })
                 .ToArray();
         }
 
@@ -133,10 +133,8 @@ namespace NatCruise.Cruise.Services
 
         public IEnumerable<string> GetSampleGroupCodes(string stratumCode)
         {
-            var sgCode = Database.ExecuteScalar<string>("SELECT group_concat(SampleGroupCode,',') FROM SampleGroup_V3 " +
-                "WHERE StratumCode = @p1;", stratumCode);
-
-            return sgCode.Split(',');
+            return Database.QueryScalar<string>("SELECT SampleGroupCode FROM SampleGroup " +
+                "WHERE StratumCode = @p1 AND CruiseID = @p2;", stratumCode, CruiseID);
         }
 
         public IEnumerable<SampleGroupProxy> GetSampleGroupProxiesByUnit(string unitCode)
@@ -150,25 +148,25 @@ namespace NatCruise.Cruise.Services
                 "SELECT " +
                     "sg.*, " +
                     "st.Method AS StratumMethod " +
-                "FROM SampleGroup_V3 AS sg " +
-                "JOIN Stratum AS st ON sg.StratumCode = st.Code " +
-                "WHERE sg.StratumCode = @p1 AND sg.SampleGroupCode = @p2;",
-                new object[] { stratumCode, sgCode })
+                "FROM SampleGroup AS sg " +
+                "JOIN Stratum AS st USING (StratumCode) " +
+                "WHERE sg.StratumCode = @p1 AND sg.SampleGroupCode = @p2 AND sg.CruiseID = @p3;",
+                new object[] { stratumCode, sgCode, CruiseID })
                 .FirstOrDefault();
         }
 
         public IEnumerable<SampleGroupProxy> GetSampleGroupProxies(string stratumCode)
         {
             return Database.From<SampleGroupProxy>()
-                .Where("StratumCode = @p1")
-                .Query(stratumCode);
+                .Where("StratumCode = @p1 AND CruiseID = @p2")
+                .Query(stratumCode, CruiseID);
         }
 
         public SampleGroupProxy GetSampleGroupProxy(string stratumCode, string sampleGroupCode)
         {
             return Database.From<SampleGroupProxy>()
-                .Where("StratumCode = @p1 AND SampleGroupCode = @p2")
-                .Query(stratumCode, sampleGroupCode).FirstOrDefault();
+                .Where("StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID =  @p3")
+                .Query(stratumCode, sampleGroupCode, CruiseID).FirstOrDefault();
         }
 
         public SamplerInfo GetSamplerState(string stratumCode, string sampleGroupCode)
@@ -183,33 +181,37 @@ namespace NatCruise.Cruise.Services
                     "sg.KZ, " +
                     "ss.SampleSelectorState, " +
                     "ss.SampleSelectorType " +
-                "FROM SampleGroup_V3 AS sg " +
-                "JOIN Stratum AS st ON sg.StratumCode = st.Code " +
-                "LEFT JOIN SamplerState AS ss USING (StratumCode, SampleGroupCode) " +
+                "FROM SampleGroup AS sg " +
+                "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
+                "LEFT JOIN SamplerState AS ss USING (StratumCode, SampleGroupCode, CruiseID) " +
                 "WHERE sg.StratumCode = @p1 " +
-                "AND sg.SampleGroupCode = @p2;",
-                new object[] { stratumCode, sampleGroupCode }).FirstOrDefault();
+                "AND sg.SampleGroupCode = @p2" +
+                "AND sg.CruiseID =  @p3;",
+                new object[] { stratumCode, sampleGroupCode, CruiseID }).FirstOrDefault();
         }
 
         public void UpdateSamplerState(SamplerInfo samplerState)
         {
             Database.Execute2(
                 "INSERT INTO SamplerState ( " +
+                    "CruiseID, " +
                     "StratumCode, " +
                     "SampleGroupCode, " +
                     "SampleSelectorType, " +
                     "SampleSelectorState " +
-                ") VALUES ( " +
+                ") VALUES (" +
+                    "@CruiseID, " +
                     "@StratumCode, " +
                     "@SampleGroupCode, " +
                     "@SampleSelectorType, " +
                     "@SampleSelectorState" +
-                ") ON CONFLICT (StratumCode, SampleGroupCode) " +
+                ") ON CONFLICT (StratumCode, SampleGroupCode, CruiseID) " +
                 "DO UPDATE SET " +
                     "SampleSelectorType = @SampleSelectorType, " +
                     "SampleSelectorState = @SampleSelectorState " +
                 "WHERE StratumCode = @StratumCode " +
-                "AND SampleGroupCode = @SampleGroupCode;",
+                "AND SampleGroupCode = @SampleGroupCode" +
+                "AND CruiseID = @CruiseID;",
                 samplerState);
         }
 
@@ -343,7 +345,7 @@ namespace NatCruise.Cruise.Services
         public IEnumerable<SubPopulation> GetSubPopulations(string stratumCode, string sampleGroupCode)
         {
             return Database.Query<SubPopulation>("SELECT * FROM SubPopulation " +
-                "WHERE StratumCode = @p1 AND SampleGroupCode = @p2;", stratumCode, sampleGroupCode).ToArray();
+                "WHERE StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID = @p3;", stratumCode, sampleGroupCode, CruiseID).ToArray();
         }
 
         #endregion subpopulation
@@ -365,18 +367,22 @@ namespace NatCruise.Cruise.Services
         //        new object[] { unitCode }).ToArray();
         //}
 
-        public IEnumerable<TreeFieldSetup> GetTreeFieldsByStratumCode(string stratumCode)
+
+        // TODO come back to this
+        public IEnumerable<TreeFieldSetup> GetTreeFieldsBySampleGroup(string stratumCode, string sampleGroup)
         {
             return Database.Query<TreeFieldSetup>(
                 "SELECT " +
                 "Field, " +
                 "Heading, " +
-                "FieldOrder " +
-                "FROM TreeFieldSetup_V3 AS tfs " +
-                "WHERE StratumCode = @p1 AND FieldOrder >= 0 " +
+                "FieldOrder, " +
+                "CAST ( (CASE tf.DbType WHEN 'REAL' THEN tfs.DefaultValueReal WHEN 'TEXT' THEN tfs.DefaultValueText WHEN 'BOOLEAN' THEN tfs.DefaultValueBool WHEN 'INTEGER' THEN tfs.DefaultValueInt ELSE NULL END) AS TEXT)" +
+                "FROM TreeFieldSetup AS tfs " +
+                "JOIN TreeField AS tf USING (Field)" +
+                "WHERE StratumCode = @p1 AND (SampleGroupCode IS NULL OR SampleGroupCode = p2) AND CruiseID =  @p3 AND FieldOrder >= 0 " +
                 "GROUP BY Field " +
-                "ORDER BY FieldOrder;",
-                new object[] { stratumCode }).ToArray();
+                "ORDER BY FieldOrder, SampleGroupCode IS NOT NULL;", // make sure field setup with SampleGroupCode has priority
+                new object[] { stratumCode, sampleGroup, CruiseID }).ToArray();
         }
 
         #endregion TreeFields
@@ -388,29 +394,25 @@ namespace NatCruise.Cruise.Services
             return Database.Query<Tree_Ex>(
                 "SELECT t.*, tm.* FROM Tree AS t " +
                 "LEFT JOIN TreeMeasurment AS tm USING (TreeID) " +
-                "JOIN CuttingUnit AS cu ON cu.Code = t.CuttingUnitCode " +
-                "WHERE CuttingUnit.Code = @p1 AND PlotNumber IS NULL",
-                unitCode).ToArray();
+                "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
+                "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL",
+                unitCode, CruiseID).ToArray();
         }
 
         public TreeStub GetTreeStub(string treeID)
         {
-            return QueryTreeStub()
+            return Database.From<TreeStub>()
+                .LeftJoin("TreeMeasurment", "USING (TreeID)")
                 .Where("TreeID = @p1")
                 .Query(treeID).FirstOrDefault();
         }
 
-        private IQuerryAcceptsJoin<TreeStub> QueryTreeStub()
-        {
-            return Database.From<TreeStub>()
-                .LeftJoin("TreeMeasurment", "USING (TreeID)");
-        }
-
         public IEnumerable<TreeStub> GetTreeStubsByUnitCode(string unitCode)
         {
-            return QueryTreeStub()
-                .Where("CuttingUnitCode = @p1 AND PlotNumber IS NULL")
-                .Query(unitCode);
+            return Database.From<TreeStub>()
+                .LeftJoin("TreeMeasurment", "USING (TreeID)")
+                .Where("CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL")
+                .Query(unitCode, CruiseID);
         }
 
         //private Guid CreateTree(IDbConnection conn, IDbTransaction trans, string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead, string countMeasure, int treeCount = 1, int kpi = 0, bool stm = false)
@@ -462,15 +464,15 @@ namespace NatCruise.Cruise.Services
                 "te.Resolution " +
                 "FROM TreeError AS te " +
                 "JOIN Tree_V3 AS t USING (TreeID) " +
-                "WHERE t.CuttingUnitCode = @p1;",
-                new object[] { cuttingUnitCode }).ToArray();
+                "WHERE t.CuttingUnitCode = @p1 AND t.CruiseID = @p2;",
+                new object[] { cuttingUnitCode, CruiseID }).ToArray();
         }
 
         public IEnumerable<PlotError> GetPlotErrorsByUnit(string cuttingUnitCode)
         {
             return Database.Query<PlotError>("SELECT * FROM PlotError AS pe " +
-                "WHERE pe.CuttingUnitCode = @p1;",
-                cuttingUnitCode).ToArray();
+                "WHERE pe.CuttingUnitCode = @p1 AND pe.CruiseID = @p2;",
+                cuttingUnitCode, CruiseID).ToArray();
         }
 
        
@@ -844,9 +846,6 @@ namespace NatCruise.Cruise.Services
         public void LogMessage(string message, string level)
         {
             Database.LogMessage(message, level);
-
-            //Database.Execute2("INSERT INTO MessageLog (Message, Level) VALUES (@message, @level);",
-            //    new { Message = message, Level = level });
         }
     }
 }

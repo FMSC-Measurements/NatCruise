@@ -50,7 +50,7 @@ namespace FScruiser.XF.ViewModels
                 PlotNumber,
                 tallyPop.StratumCode,
                 tallyPop.SampleGroupCode,
-                tallyPop.Species,
+                tallyPop.SpeciesCode,
                 tallyPop.LiveDead,
                 tallyPop.FieldName,
                 tallyBucket.Value);
@@ -76,7 +76,7 @@ namespace FScruiser.XF.ViewModels
                 PlotNumber,
                 tallyPop.StratumCode,
                 tallyPop.SampleGroupCode,
-                tallyPop.Species,
+                tallyPop.SpeciesCode,
                 tallyPop.LiveDead,
                 tallyPop.FieldName,
                 tallyBucket.Value);
@@ -115,7 +115,7 @@ namespace FScruiser.XF.ViewModels
                 //foreach interval value try to read a tree
                 do
                 {
-                    var treeCount = FixCNTDataservice.GetTreeCount(unit, plotNumber, stratumCode, tp.SampleGroupCode, tp.Species, tp.LiveDead, tp.FieldName, interval);
+                    var treeCount = FixCNTDataservice.GetTreeCount(unit, plotNumber, stratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead, tp.FieldName, interval);
 
                     buckets.Add(new FixCNTTallyBucket(tp, interval, treeCount));
 

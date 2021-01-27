@@ -8,15 +8,13 @@ namespace NatCruise.Cruise.Models
         //[Field(Name = "Stratum_CN")]
         //public string Stratum_CN { get; set; }
 
-        [Field(Name = "Code")]
-        public string Code { get; set; }
+        public string StratumCode { get; set; }
 
-        [Field(Name = "Method")]
         public string Method { get; set; }
 
         public override string ToString()
         {
-            return Code;
+            return StratumCode;
         }
     }
 }

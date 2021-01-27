@@ -28,14 +28,14 @@ namespace NatCruise.Cruise.Test.Data
             var subpop = Subpops[0];
             var stratum = subpop.StratumCode;
             var sampleGroup = subpop.SampleGroupCode;
-            var species = subpop.Species;
+            var species = subpop.SpeciesCode;
             var liveDead = subpop.LiveDead;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new TallyDataservice(database, new TestDeviceInfoService());
-                var tpds = new TallyPopulationDataservice(database);
-                var cuds = new CuttingUnitDatastore(database);
+                var datastore = new TallyDataservice(database, CruiseID, new TestDeviceInfoService());
+                var tpds = new TallyPopulationDataservice(database, CruiseID);
+                var cuds = new CuttingUnitDatastore(database, CruiseID);
 
                 var pop = tpds.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead);
 
@@ -73,9 +73,9 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var datastore = new TallyDataservice(database, new TestDeviceInfoService());
-                var tpds = new TallyPopulationDataservice(database);
-                var cuds = new CuttingUnitDatastore(database);
+                var datastore = new TallyDataservice(database, CruiseID, new TestDeviceInfoService());
+                var tpds = new TallyPopulationDataservice(database, CruiseID);
+                var cuds = new CuttingUnitDatastore(database, CruiseID);
 
                 var tallyPops = database.QueryGeneric($"Select * from TallyPopulation WHERE StratumCode = '{stratumCode}';")
                     .ToArray();
@@ -111,12 +111,12 @@ namespace NatCruise.Cruise.Test.Data
                     tree.TreeID.Should().Be(entry.TreeID);
                     tree.StratumCode.Should().Be(stratumCode);
                     tree.SampleGroupCode.Should().Be(sgCode);
-                    tree.Species.Should().Be(pop.Species);
+                    tree.SpeciesCode.Should().Be(pop.SpeciesCode);
                     tree.LiveDead.Should().Be(pop.LiveDead);
                     tree.CountOrMeasure.Should().Be(sampleResult.ToString());
                 }
 
-                var tallyPopulate = tpds.GetTallyPopulationsByUnitCode(unitCode).Where(x => (x.Species ?? "") == (species ?? "")).Single();
+                var tallyPopulate = tpds.GetTallyPopulationsByUnitCode(unitCode).Where(x => (x.SpeciesCode ?? "") == (species ?? "")).Single();
 
                 tallyPopulate.TreeCount.Should().Be(treeCount);
             }
@@ -145,7 +145,7 @@ namespace NatCruise.Cruise.Test.Data
             string unitCode = UnitStrata[0].CuttingUnitCode;
             string stratum = UnitStrata[0].StratumCode;
             string sampleGroup = Subpops[0].SampleGroupCode;
-            string species = Subpops[0].Species;
+            string species = Subpops[0].SpeciesCode;
             string liveDead = Subpops[0].LiveDead;
 
             int treeCountDiff = 1;
@@ -153,8 +153,8 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var datastore = new TallyDataservice(database, new TestDeviceInfoService());
-                var tpds = new TallyPopulationDataservice(database);
+                var datastore = new TallyDataservice(database, CruiseID, new TestDeviceInfoService());
+                var tpds = new TallyPopulationDataservice(database, CruiseID);
 
                 var pop = tpds.GetTallyPopulation(unitCode, stratum, sampleGroup, species, liveDead);
                 pop.Should().NotBeNull();
@@ -181,7 +181,7 @@ namespace NatCruise.Cruise.Test.Data
         {
             if (species != null)
             {
-                result.Species.Should().Be(species);
+                result.SpeciesCode.Should().Be(species);
             }
 
             result.SampleGroupCode.Should().NotBeNullOrEmpty();
@@ -201,11 +201,12 @@ namespace NatCruise.Cruise.Test.Data
             var tree_guid = Guid.NewGuid().ToString();
             var tallyLedgerID = Guid.NewGuid().ToString();
             var treeCount = 1;
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new TallyDataservice(database, new TestDeviceInfoService());
-                var tpds = new TallyPopulationDataservice(database);
+                var datastore = new TallyDataservice(database, cruiseID, new TestDeviceInfoService());
+                var tpds = new TallyPopulationDataservice(database, cruiseID);
 
                 var tallyPop = tpds.GetTallyPopulation(unitCode, stratumCode, sgCode, species, liveDead);
 
@@ -223,12 +224,12 @@ namespace NatCruise.Cruise.Test.Data
                 var tallyPopAgain = tpds.GetTallyPopulationsByUnitCode(unitCode)
                     .Where(x => x.StratumCode == stratumCode
                         && x.SampleGroupCode == sgCode
-                        && x.Species == species).Single();
+                        && x.SpeciesCode == species).Single();
 
                 tallyPopAgain.TreeCount.Should().Be(0, "TreeCount");
                 tallyPopAgain.SumKPI.Should().Be(0, "SumKPI");
 
-                database.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3 WHERE TreeID = @p1", entry.TreeID).Should().Be(0, "tree should be deleted");
+                database.ExecuteScalar<int>("SELECT count(*) FROM Tree WHERE TreeID = @p1", entry.TreeID).Should().Be(0, "tree should be deleted");
             }
         }
     }

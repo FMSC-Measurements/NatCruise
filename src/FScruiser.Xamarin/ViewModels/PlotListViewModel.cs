@@ -91,11 +91,11 @@ namespace FScruiser.XF.ViewModels
                 string stratum = null;
                 if(fixCNTstrata.Count() == 1)
                 {
-                    stratum = fixCNTstrata.Single().Code;
+                    stratum = fixCNTstrata.Single().StratumCode;
                 }
                 else
                 {
-                    stratum = await DialogService.DisplayActionSheetAsync("Select Stratum", "Cancel", "", fixCNTstrata.Select(x => x.Code).ToArray());
+                    stratum = await DialogService.DisplayActionSheetAsync("Select Stratum", "Cancel", "", fixCNTstrata.Select(x => x.StratumCode).ToArray());
                 }
 
                 if(stratum == null || stratum == "Cancel") { return; }

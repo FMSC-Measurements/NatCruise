@@ -13,10 +13,7 @@ namespace NatCruise.Cruise.Models
         private bool? _valueBool;
         private string _valueText;
 
-        [Field("TreeID")]
         public string TreeID { get; set; }
-
-        [Field("Field")]
         public string Field
         {
             get => _field;
@@ -26,7 +23,6 @@ namespace NatCruise.Cruise.Models
             }
         }
 
-        [Field("DbType")]
         public string DBType
         {
             get => _dbType;
@@ -36,31 +32,26 @@ namespace NatCruise.Cruise.Models
             }
         }
 
-        [Field("Heading")]
         public string Heading { get; set; }
 
-        [Field("ValueReal")]
         public double? ValueReal
         {
             get => _valueReal;
             set => SetValue(ref _valueReal, value);
         }
 
-        [Field("ValueInt")]
         public int? ValueInt
         {
             get => _valueInt;
             set => SetValue(ref _valueInt, value);
         }
 
-        [Field("ValueBool")]
         public bool? ValueBool
         {
             get => _valueBool;
             set => SetValue(ref _valueBool, value);
         }
 
-        [Field("ValueText")]
         public string ValueText
         {
             get => _valueText;

@@ -13,7 +13,6 @@ namespace NatCruise.Cruise.Models
         [Field("HotKey")]
         public string TallyHotKey { get; set; }
 
-        [Field("StratumCode")]
         public string StratumCode { get; set; }
 
         [Field("StratumMethod")]
@@ -21,7 +20,6 @@ namespace NatCruise.Cruise.Models
 
         public bool Is3P => CruiseMethods.THREE_P_METHODS.Contains(Method);
 
-        [Field("SampleGroupCode")]
         public string SampleGroupCode { get; set; }
 
         [Field("sgMinKPI")]
@@ -30,10 +28,7 @@ namespace NatCruise.Cruise.Models
         [Field("sgMaxKPI")]
         public int MaxKPI { get; set; }
 
-        [Field("Species")]
-        public string Species { get; set; }
-
-        [Field("LiveDead")]
+        public string SpeciesCode { get; set; }
         public string LiveDead { get; set; }
     }
 }

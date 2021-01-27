@@ -2,8 +2,11 @@
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.Data.Abstractions;
+using NatCruise.Models;
 using Prism.Ioc;
 using System;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace FScruiser.XF.Data
@@ -12,14 +15,11 @@ namespace FScruiser.XF.Data
     {
         ICruisersDataservice _cruisersDataservice;
 
-        public DataserviceProvider(App application)
+        public DataserviceProvider(IContainerProvider container, string databasePath) : base(databasePath)
         {
-            IContainerProvider container = application.Container;
-            Application = application ?? throw new ArgumentNullException(nameof(application));
             Container = container ?? throw new ArgumentNullException(nameof(container));
         }
 
-        protected Application Application { get; }
         protected Prism.Ioc.IContainerProvider Container { get; }
         protected IDeviceInfoService DeviceInfoService => (IDeviceInfoService)Container.Resolve(typeof(IDeviceInfoService));
 
@@ -44,12 +44,13 @@ namespace FScruiser.XF.Data
         //    }
         //}
 
-        public override void OpenFile(string filePath)
+        public override void OpenDatabase(string filePath)
         {
-            base.OpenFile(filePath);
+            base.OpenDatabase(filePath);
 
-            var datastore = new CruiseDatastore_V3(CruiseFilePath);
+            var datastore = new CruiseDatastore_V3(DatabasePath);
             CruiseDatastore = datastore;
+
             SampleSelectorDataService = new SampleSelectorRepository((ISampleInfoDataservice)GetDataservice(typeof(ISampleInfoDataservice), datastore));
         }
 
@@ -60,9 +61,9 @@ namespace FScruiser.XF.Data
 
         private IDataservice GetDataservice(Type type, CruiseDatastore_V3 cruiseDatastore)
         {
-            // non cruise file dependant dataservices
-            if (type.IsAssignableFrom(typeof(ICruisersDataservice)))
-            { return _cruisersDataservice ?? (_cruisersDataservice = new CruisersDataservice(Application)); }
+            var cruiseID = CruiseID;
+
+
 
             // all dataservices below should return null if cruiseDatastore is null
             // note: I am skeptical about wheather this method should return null at all
@@ -74,26 +75,26 @@ namespace FScruiser.XF.Data
             if(cruiseDatastore == null) { return null; }
 
             if (typeof(ICuttingUnitDatastore).IsAssignableFrom(type))
-            { return new CuttingUnitDatastore(cruiseDatastore); }
+            { return new CuttingUnitDatastore(cruiseDatastore, cruiseID); }
 
             if (typeof(ISampleSelectorDataService).IsAssignableFrom(type))
             { return SampleSelectorDataService; }
 
             if (typeof(ISaleDataservice).IsAssignableFrom(type))
-            { return new SaleDataservice(cruiseDatastore); }
+            { return new SaleDataservice(cruiseDatastore, cruiseID); }
 
             if (typeof(IFixCNTDataservice).IsAssignableFrom(type))
-            { return new FixCNTDataservice(cruiseDatastore); }
+            { return new FixCNTDataservice(cruiseDatastore, cruiseID); }
 
             if (typeof(ITallyDataservice).IsAssignableFrom(type)
                 || typeof(ISampleInfoDataservice).IsAssignableFrom(type))
-            { return new TallyDataservice(cruiseDatastore, DeviceInfoService); }
+            { return new TallyDataservice(cruiseDatastore, cruiseID, DeviceInfoService); }
 
             if (typeof(ITallyPopulationDataservice).IsAssignableFrom(type))
-            { return new TallyPopulationDataservice(cruiseDatastore); }
+            { return new TallyPopulationDataservice(cruiseDatastore, cruiseID); }
 
             if (typeof(ISampleInfoDataservice).IsAssignableFrom(type))
-            { return new SamplerInfoDataservice(cruiseDatastore, DeviceInfoService); }
+            { return new SamplerInfoDataservice(cruiseDatastore, cruiseID, DeviceInfoService); }
 
             else
             { return null; }

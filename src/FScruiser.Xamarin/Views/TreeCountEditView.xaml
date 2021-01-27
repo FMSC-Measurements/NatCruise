@@ -140,7 +140,7 @@
                                    Grid.Column="4"
                                    x:Name="_speciesLabel"
                                    Style="{StaticResource tallyInfo_label_value}"
-                                   Text="{Binding TallyPopulation.Species, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}" />
+                                   Text="{Binding TallyPopulation.SpeciesCode, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}" />
 
                             <!-- live dead -->
                             <Label Grid.Row="0"

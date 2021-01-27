@@ -355,22 +355,22 @@ namespace FScruiser.XF.ViewModels
                 var tree = Tree;
 
                 return _subPopulations.OrEmpty()
-                  .Select(x => x.Species)
+                  .Select(x => x.SpeciesCode)
                   .ToArray();
             }
         }
 
         public string Species
         {
-            get => Tree?.Species;
+            get => Tree?.SpeciesCode;
             set
             {
                 var tree = Tree;
                 if (tree == null) { return; }
-                var oldValue = tree.Species;
+                var oldValue = tree.SpeciesCode;
                 if (OnSpeciesChanging(oldValue, value))
                 {
-                    tree.Species = value;
+                    tree.SpeciesCode = value;
                     OnSpeciesChanged(tree, value);
                 }
             }
@@ -446,18 +446,18 @@ namespace FScruiser.XF.ViewModels
         }
 
         public TreeEditViewModel(IDataserviceProvider datastoreProvider
-            , ICruiseDialogService dialogService)
+            , ICruiseDialogService dialogService, ICruisersDataservice cruisersDataservice)
         {
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
-            CruisersDataservice = datastoreProvider.GetDataservice<ICruisersDataservice>();
+            CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             DialogService = dialogService;
         }
 
         public TreeEditViewModel(IDataserviceProvider datastoreProvider
-            , ICruiseDialogService dialogService, INavigationService navigationService) : base(navigationService)
+            , ICruiseDialogService dialogService, INavigationService navigationService, ICruisersDataservice cruisersDataservice) : base(navigationService)
         {
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
-            CruisersDataservice = datastoreProvider.GetDataservice<ICruisersDataservice>();
+            CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             DialogService = dialogService;
         }
 
@@ -555,7 +555,7 @@ namespace FScruiser.XF.ViewModels
             if (tree != null)
             {
                 if (ValidateSampleGroupCode(tree.SampleGroupCode)
-                    && ValidateSpecies(tree.Species))
+                    && ValidateSpecies(tree.SpeciesCode))
                 {
                     try
                     {

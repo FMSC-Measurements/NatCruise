@@ -1,7 +1,6 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using NatCruise.Models;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
     [Table("Sale")]
     public class Sale : Model_Base
@@ -12,11 +11,13 @@ namespace NatCruise.Cruise.Models
         {
         }
 
+        public string SaleID { get; set; }
+
         public string Name { get; set; }
 
         public int SaleNumber { get; set; }
 
-        public string Purpose { get; set; }
+        //public string Purpose { get; set; }
 
         public string Region { get; set; }
 

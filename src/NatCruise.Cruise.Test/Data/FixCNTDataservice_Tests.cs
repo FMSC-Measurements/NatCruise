@@ -52,16 +52,16 @@ namespace NatCruise.Cruise.Core.Test.Data
 
             var sgCode = subpop.SampleGroupCode;
             var stCode = subpop.StratumCode;
-            var sp = subpop.Species;
+            var sp = subpop.SpeciesCode;
             var ld = subpop.LiveDead;
 
             using (var database = CreateDatabase())
             {
-                var plotds = new CuttingUnitDatastore(database);
+                var plotds = new CuttingUnitDatastore(database, CruiseID);
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
-                var ds = new FixCNTDataservice(database);
+                var ds = new FixCNTDataservice(database, CruiseID);
 
                 ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
                     .Should().Be(0);
@@ -71,7 +71,7 @@ namespace NatCruise.Cruise.Core.Test.Data
                 ds.IncrementFixCNTTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value);
                 ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
                     .Should().Be(1);
-                database.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3;").Should().Be(1);
+                database.ExecuteScalar<int>("SELECT count(*) FROM Tree;").Should().Be(1);
 
                 // after incrementing a second time, tree count should be 2
                 // and there shold still only be one tree in the tree table
@@ -79,7 +79,7 @@ namespace NatCruise.Cruise.Core.Test.Data
                 ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
                     .Should().Be(2);
 
-                database.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3;").Should().Be(1);
+                database.ExecuteScalar<int>("SELECT count(*) FROM Tree;").Should().Be(1);
 
                 var plotTrees = plotds.GetPlotTreeProxies(unitCode, plotNumber);
                 plotTrees.Should().HaveCount(1);
@@ -98,16 +98,16 @@ namespace NatCruise.Cruise.Core.Test.Data
 
             var sgCode = subpop.SampleGroupCode;
             var stCode = subpop.StratumCode;
-            var sp = subpop.Species;
+            var sp = subpop.SpeciesCode;
             var ld = subpop.LiveDead;
 
             using (var database = CreateDatabase())
             {
-                var plotds = new CuttingUnitDatastore(database);
+                var plotds = new CuttingUnitDatastore(database, CruiseID);
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
-                var ds = new FixCNTDataservice(database);
+                var ds = new FixCNTDataservice(database, CruiseID);
 
                 // check initial state
                 ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)

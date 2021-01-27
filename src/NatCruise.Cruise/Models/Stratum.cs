@@ -7,18 +7,15 @@ namespace NatCruise.Cruise.Models
     [Table("Stratum")]
     public class Stratum
     {
-        [Field(Name = "Code")]
-        public string Code { get; set; }
+        public string StratumCode { get; set; }
 
-        [Field(Name = "Description")]
         public string Description { get; set; }
 
-        [Field(Name = "Method")]
         public string Method { get; set; }
 
-        [Field(Name = "Hotkey")]
         public string Hotkey { get; set; }
 
+        // TODO use CruiseMethods Look up table to get this value from the db?
         public bool Is3P => CruiseMethods.THREE_P_METHODS.Contains(Method);
     }
 }

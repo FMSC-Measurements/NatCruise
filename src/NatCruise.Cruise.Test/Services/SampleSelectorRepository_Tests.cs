@@ -32,18 +32,23 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = new CruiseDatastore_V3())
             {
+                var saleID = SaleID;
+                var cruiseID = CruiseID;
+
                 base.InitializeDatabase(database,
+                    cruiseID,
+                    saleID,
                     new[] { unitCode },
                     new CruiseDAL.V3.Models.Stratum[]
                     {
-                        new CruiseDAL.V3.Models.Stratum() {Code = stratumCode, Method = method},
+                        new CruiseDAL.V3.Models.Stratum() {StratumCode = stratumCode, Method = method},
 
                     },
                     new CruiseDAL.V3.Models.CuttingUnit_Stratum[] {
                         new CruiseDAL.V3.Models.CuttingUnit_Stratum() {CuttingUnitCode = unitCode, StratumCode = stratumCode},
                     },
-                    new CruiseDAL.V3.Models.SampleGroup_V3[] {
-                        new CruiseDAL.V3.Models.SampleGroup_V3() {
+                    new CruiseDAL.V3.Models.SampleGroup[] {
+                        new CruiseDAL.V3.Models.SampleGroup() {
                             StratumCode = stratumCode,
                             SampleGroupCode = sampleGroupCode,
                             SamplingFrequency = samplingFrequency,
@@ -54,7 +59,7 @@ namespace NatCruise.Cruise.Test.Services
                     null, null
                     );
 
-                var ds = new SamplerInfoDataservice(database, new TestDeviceInfoService());
+                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
                 var repo = new SampleSelectorRepository(ds);
 
                 var sampler = repo.GetSamplerBySampleGroupCode(stratumCode, sampleGroupCode);

@@ -108,7 +108,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public ICollection<string> StrataFilterOptions => Strata.OrEmpty().Select(x => x.Code).Append(STRATUM_FILTER_ALL).ToArray();
+        public ICollection<string> StrataFilterOptions => Strata.OrEmpty().Select(x => x.StratumCode).Append(STRATUM_FILTER_ALL).ToArray();
 
         public string StratumFilter
         {

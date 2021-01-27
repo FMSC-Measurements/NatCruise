@@ -1,15 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using NatCruise.Models;
+using System;
 
 namespace NatCruise.Data
 {
     public interface IDataserviceProvider
     {
-        string CruiseFilePath { get; }
+        string DatabasePath { get; }
 
-        Task OpenFileAsync(string filePath);
+        Cruise Cruise { get; }
 
-        void OpenFile(string filePath);
+        string CruiseID { get; }
+
+        void OpenDatabase(string filePath);
 
         IDataservice GetDataservice(Type type);
 
