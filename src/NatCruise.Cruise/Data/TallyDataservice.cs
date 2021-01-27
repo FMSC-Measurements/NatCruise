@@ -12,42 +12,48 @@ namespace NatCruise.Cruise.Data
     public class TallyDataservice : SamplerInfoDataservice, ITallyDataservice
     {
 
-        public TallyDataservice(string path, IDeviceInfoService deviceInfo)
-            : base(path, deviceInfo)
+        public TallyDataservice(string path, string cruiseID, IDeviceInfoService deviceInfo)
+            : base(path, cruiseID, deviceInfo)
         {
         }
 
-        public TallyDataservice(CruiseDatastore_V3 database, IDeviceInfoService deviceInfo)
-            : base(database, deviceInfo)
+        public TallyDataservice(CruiseDatastore_V3 database, string cruiseID, IDeviceInfoService deviceInfo)
+            : base(database, cruiseID, deviceInfo)
         {
         }
 
         const string QUERY_TALLYENTRY_BASE =
-            "SELECT " +
-                    "tl.TreeID, " +
-                    "tl.TallyLedgerID, " +
-                    "tl.CuttingUnitCode, " +
-                    "tl.StratumCode, " +
-                    "tl.SampleGroupCode, " +
-                    "tl.Species, " +
-                    "tl.LiveDead, " +
-                    "tl.TreeCount, " +
-                    "tl.Reason, " +
-                    "tl.KPI, " +
-                    "tl.EntryType, " +
-                    "tl.Remarks, " +
-                    "tl.Signature, " +
-                    "tl.CreatedDate, " +
-                    "t.TreeNumber, " +
-                    "t.CountOrMeasure, " +
-                    "tl.STM, " +
-                    "(SELECT count(*) FROM TreeError AS te WHERE tl.TreeID IS NOT NULL AND Level = 'E' AND te.TreeID = tl.TreeID AND Resolution IS NULL) AS ErrorCount, " +
-                    "(SELECT count(*) FROM TreeError AS te WHERE tl.TreeID IS NOT NULL AND Level = 'W' AND te.TreeID = tl.TreeID AND Resolution IS NULL) AS WarningCount " +
-                "FROM TallyLedger AS tl " +
-                "LEFT JOIN Tree_V3 AS t USING (TreeID) ";
+@"SELECT 
+        tl.TreeID,
+        tl.TallyLedgerID,
+        tl.CuttingUnitCode,
+        tl.StratumCode,
+        tl.SampleGroupCode,
+        tl.SpeciesCode,
+        tl.LiveDead,
+        tl.TreeCount,
+        tl.Reason,
+        tl.KPI,
+        tl.EntryType,
+        tl.Remarks,
+        tl.Signature,
+        tl.Created_TS,
+        t.TreeNumber,
+        t.CountOrMeasure,
+        tl.STM,
+        (CASE WHEN tl.TreeID IS NULL THEN 0 ELSE
+            (SELECT count(*) FROM TreeError AS te WHERE Level = 'E' AND te.TreeID = tl.TreeID AND Resolution IS NULL)
+        END) AS ErrorCount,
+        (CASE WHEN tl.TreeID IS NULL THEN 0 ELSE
+            (SELECT count(*) FROM TreeError AS te WHERE Level = 'W' AND te.TreeID = tl.TreeID AND Resolution IS NULL)
+        END) AS WarningCount
+    FROM TallyLedger AS tl
+    LEFT JOIN Tree AS t USING (TreeID) ";
 
         public TallyEntry GetTallyEntry(string tallyLedgerID)
         {
+            if (string.IsNullOrEmpty(tallyLedgerID)) { throw new ArgumentException($"'{nameof(tallyLedgerID)}' cannot be null or empty", nameof(tallyLedgerID)); }
+
             return Database.Query<TallyEntry>(
                 QUERY_TALLYENTRY_BASE +
                 "WHERE tl.TallyLedgerID = @p1;",
@@ -59,9 +65,9 @@ namespace NatCruise.Cruise.Data
         {
             return Database.Query<TallyEntry>(
                 QUERY_TALLYENTRY_BASE +
-                "WHERE tl.CuttingUnitCode = @p1 AND tl.PlotNumber IS NULL " +
-                "ORDER BY tl.CreatedDate DESC;",
-                new object[] { unitCode })
+                "WHERE tl.CuttingUnitCode = @p1 AND tl.CruiseID = @p2 AND tl.PlotNumber IS NULL " +
+                "ORDER BY tl.Created_TS DESC;",
+                new object[] { unitCode, CruiseID })
                 .ToArray();
 
             //From<TallyEntry>()
@@ -77,8 +83,9 @@ namespace NatCruise.Cruise.Data
             return Database.Query<TallyEntry>(
                 QUERY_TALLYENTRY_BASE +
                 "WHERE tl.CuttingUnitCode = @p1" +
-                "AND tl.PolotNumber = @p2;",
-                new object[] { unitCode, plotNumber })
+                "AND tl.CruiseID = @p2 " +
+                "AND tl.PolotNumber = @p3;",
+                new object[] { unitCode, CruiseID, plotNumber })
                 .ToArray();
 
             //return Database.From<TallyEntry>()
@@ -93,49 +100,52 @@ namespace NatCruise.Cruise.Data
             var tallyLedgerID = tallyLedger.TallyLedgerID ?? Guid.NewGuid().ToString();
 
             Database.Execute2(
-                "INSERT INTO TallyLedger (" +
-                    "TallyLedgerID, " +
-                    "CuttingUnitCode, " +
-                    "StratumCode, " +
-                    "SampleGroupCode, " +
-                    "PlotNumber, " +
-                    "Species, " +
-                    "LiveDead," +
-                    "TreeCount, " +
-                    "KPI, " +
-                    "ThreePRandomValue, " +
-                    "TreeID, " +
-                    "CreatedBy, " +
-                    "Reason, " +
-                    "Signature, " +
-                    "Remarks, " +
-                    "EntryType" +
-                ") VALUES ( " +
-                    "@TallyLedgerID, " +
-                    "@CuttingUnitCode, " +
-                    "@StratumCode, " +
-                    "@SampleGroupCode, " +
-                    "@PlotNumber, " +
-                    "@Species, " +
-                    "@LiveDead, " +
-                    "@TreeCount, " +
-                    "@KPI, " +
-                    "@ThreePRandomValue, " +
-                    "@TreeID, " +
-                    "@CreatedBy, " +
-                    "@Reason, " +
-                    "@Signature, " +
-                    "@Remarks, " +
-                    "@EntryType" +
-                ");",
+@"INSERT INTO TallyLedger (
+    TallyLedgerID,
+    CruiseID,
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    PlotNumber,
+    SpeciesCode,
+    LiveDead,
+    TreeCount,
+    KPI,
+    ThreePRandomValue,
+    TreeID,
+    CreatedBy,
+    Reason,
+    Signature,
+    Remarks,
+    EntryType
+) VALUES (
+    @TallyLedgerID,
+    @CruiseID,
+    @CuttingUnitCode,
+    @StratumCode,
+    @SampleGroupCode,
+    @PlotNumber,
+    @SpeciesCode,
+    @LiveDead,
+    @TreeCount,
+    @KPI,
+    @ThreePRandomValue,
+    @TreeID,
+    @CreatedBy,
+    @Reason,
+    @Signature,
+    @Remarks,
+    @EntryType
+);",
                 new
                 {
+                    CruiseID,
                     TallyLedgerID = tallyLedgerID,
                     tallyLedger.CuttingUnitCode,
                     tallyLedger.StratumCode,
                     tallyLedger.SampleGroupCode,
                     tallyLedger.PlotNumber,
-                    tallyLedger.Species,
+                    tallyLedger.SpeciesCode,
                     tallyLedger.LiveDead,
                     tallyLedger.TreeCount,
                     tallyLedger.KPI,
@@ -174,49 +184,52 @@ namespace NatCruise.Cruise.Data
                     tallyEntry.TreeNumber = Database.ExecuteScalar2<int>(
                         "SELECT " +
                         "ifnull(max(TreeNumber), 0) + 1 " +
-                        "FROM Tree_V3 " +
-                        "WHERE CuttingUnitCode = @CuttingUnitCode " +
+                        "FROM Tree " +
+                        "WHERE CuttingUnitCode = @CuttingUnitCode AND CruiseID = @CruiseID " +
                         "AND ifnull(PlotNumber, -1) = ifnull(@PlotNumber, -1)",
-                        new { atn.CuttingUnitCode, atn.PlotNumber });
+                        new { CruiseID, atn.CuttingUnitCode, atn.PlotNumber });
 
                     Database.Execute2(
-                        "INSERT INTO Tree_V3 ( " +
-                            "TreeID, " +
-                            "CuttingUnitCode, " +
-                            "PlotNumber, " +
-                            "StratumCode, " +
-                            "SampleGroupCode, " +
-                            "Species, " +
-                            "LiveDead, " +
-                            "TreeNumber, " +
-                            "CountOrMeasure, " +
-                            "CreatedBy " +
-                        ") VALUES ( " +
-                            "@TreeID, " +
-                            "@CuttingUnitCode, " +
-                            "@PlotNumber, " +
-                            "@StratumCode, " +
-                            "@SampleGroupCode, " +
-                            "@Species, " +
-                            "@LiveDead, " +
-                            "@TreeNumber," +
-                            "@CountOrMeasure," +
-                            "@CreatedBy " +
-                        ");" +
-                        "INSERT INTO TreeMeasurment (" +
-                            "TreeID" +
-                        ") VALUES ( " +
-                            "@TreeID" +
-                        ");",
+@"INSERT INTO Tree (
+    TreeID,
+    CruiseID,
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    TreeNumber,
+    CountOrMeasure,
+    CreatedBy
+) VALUES (
+    @TreeID,
+    @CruiseID,
+    @CuttingUnitCode,
+    @PlotNumber,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    @TreeNumber,
+    @CountOrMeasure,
+    @CreatedBy
+);
+INSERT INTO TreeMeasurment (
+    TreeID
+) VALUES (
+    @TreeID
+);",
                         new
                         {
+                            CruiseID,
                             tallyEntry.TreeID,
                             tallyEntry.TreeNumber,
                             atn.CuttingUnitCode,
                             atn.PlotNumber,
                             atn.StratumCode,
                             atn.SampleGroupCode,
-                            atn.Species,
+                            atn.SpeciesCode,
                             atn.LiveDead,
                             tallyEntry.CountOrMeasure,
                             CreatedBy = DeviceInfo.DeviceID,
@@ -224,46 +237,49 @@ namespace NatCruise.Cruise.Data
                 }
 
                 Database.Execute2(
-                    "INSERT INTO TallyLedger ( " +
-                        "TreeID, " +
-                        "TallyLedgerID, " +
-                        "CuttingUnitCode, " +
-                        "PlotNumber, " +
-                        "StratumCode, " +
-                        "SampleGroupCode, " +
-                        "Species, " +
-                        "LiveDead, " +
-                        "TreeCount, " +
-                        "KPI, " +
-                        "STM, " +
-                        "ThreePRandomValue, " +
-                        "EntryType, " +
-                        "CreatedBy" +
-                    ") VALUES ( " +
-                        "@TreeID, " +
-                        "@TallyLedgerID, " +
-                        "@CuttingUnitCode, " +
-                        "@PlotNumber, " +
-                        "@StratumCode, " +
-                        "@SampleGroupCode, " +
-                        "@Species, " +
-                        "@LiveDead, " +
-                        "@TreeCount, " +
-                        "@KPI, " +
-                        "@STM, " +
-                        "@ThreePRandomValue," +
-                        "@EntryType," +
-                        "@CreatedBy" +
-                    ");",
+@"INSERT INTO TallyLedger (
+    TreeID,
+    TallyLedgerID,
+    CruiseID,
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    TreeCount,
+    KPI,
+    STM,
+    ThreePRandomValue,
+    EntryType,
+    CreatedBy
+) VALUES (
+    @TreeID,
+    @TallyLedgerID,
+    @CruiseID,
+    @CuttingUnitCode,
+    @PlotNumber,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    @TreeCount,
+    @KPI,
+    @STM,
+    @ThreePRandomValue,
+    @EntryType,
+    @CreatedBy
+);",
                     new
                     {
+                        CruiseID,
                         tallyEntry.TreeID,
                         tallyEntry.TallyLedgerID,
                         atn.CuttingUnitCode,
                         atn.PlotNumber,
                         atn.StratumCode,
                         atn.SampleGroupCode,
-                        atn.Species,
+                        atn.SpeciesCode,
                         atn.LiveDead,
                         atn.TreeCount,
                         atn.KPI,
@@ -297,7 +313,7 @@ namespace NatCruise.Cruise.Data
             Database.BeginTransaction();
             try
             {
-                Database.Execute("DELETE FROM TREE_V3 WHERE TreeID IN (SELECT TreeID FROM TallyLedger WHERE TallyLedgerID = @p1);", tallyLedgerID);
+                Database.Execute("DELETE FROM Tree WHERE TreeID IN (SELECT TreeID FROM TallyLedger WHERE TallyLedgerID = @p1);", tallyLedgerID);
                 Database.Execute("DELETE FROM TallyLedger WHERE TallyLedgerID = @p1;", tallyLedgerID);
 
                 Database.CommitTransaction();

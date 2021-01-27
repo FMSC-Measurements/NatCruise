@@ -54,7 +54,7 @@
                             <Label Grid.Column="2" Grid.Row="1" Text="{Binding SampleGroupCode}" Style="{StaticResource ValueText}" />
                             <!--col 4-->
                             <Label Grid.Column="3" Grid.Row="0" Text="Species" Style="{StaticResource HeadingText}" />
-                            <Label Grid.Column="3" Grid.Row="1" Text="{Binding Species}" Style="{StaticResource ValueText}" />
+                            <Label Grid.Column="3" Grid.Row="1" Text="{Binding SpeciesCode}" Style="{StaticResource ValueText}" />
                             <!--col 5-->
                             <Label Grid.Column="4" Grid.Row="0" Text="Diameter" Style="{StaticResource HeadingText}" />
                             <Label Grid.Column="4" Grid.Row="1" Text="{Binding Diameter}" Style="{StaticResource ValueText}" />

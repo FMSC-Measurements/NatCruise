@@ -3,20 +3,20 @@ using System;
 
 namespace NatCruise.Cruise.Models
 {
-    [Table("TreeFieldSetup_V3")]
+    [Table("TreeFieldSetup")]
     public class TreeFieldSetup
     {
-        [Field("Field")]
         public string Field { get; set; }
 
-        [Field("Heading")]
         public string Heading { get; set; }
 
-        [Field("FieldOrder")]
         public int FieldOrder { get; set; }
 
-        [Obsolete]
-        [IgnoreField]
-        public string ColumnType { get; set; }
+        // used to display default value to user
+        public string DefaultValueAsString { get; set; } 
+
+        public bool IsHidden { get; set; }
+
+        public bool IsLocked { get; set; }
     }
 }

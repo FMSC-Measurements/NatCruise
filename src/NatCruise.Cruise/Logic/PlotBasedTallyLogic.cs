@@ -22,7 +22,7 @@ namespace NatCruise.Cruise.Logic
                 CuttingUnitCode = unitCode,
                 StratumCode = population.StratumCode,
                 SampleGroupCode = population.SampleGroupCode,
-                Species = population.Species,
+                SpeciesCode = population.SpeciesCode,
                 LiveDead = population.LiveDead,
                 PlotNumber = plotNumber,
                 CountOrMeasure = countOrMeasure,

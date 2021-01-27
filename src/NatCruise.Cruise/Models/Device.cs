@@ -4,6 +4,7 @@ namespace NatCruise.Cruise.Models
 {
     public class Device
     {
+        public string CruiseID { get; set; }
         public string DeviceID { get; set; }
         public string Name { get; set; }
 

@@ -1,5 +1,6 @@
 <Project>
   <PropertyGroup Label="Build Config">
+    <LangVersion>8.0</LangVersion>
     <VersionSuffix>alpha</VersionSuffix>
   </PropertyGroup>
   

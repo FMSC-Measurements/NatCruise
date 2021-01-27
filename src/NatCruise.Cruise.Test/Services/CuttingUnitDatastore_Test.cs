@@ -21,7 +21,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var strata = database.Query<Stratum>
                     ("select * from stratum;").ToArray();
@@ -30,7 +30,7 @@ namespace NatCruise.Cruise.Test.Services
 
                 var results = datastore.GetStrataByUnitCode(unitCode);
 
-                var strata_codes = results.Select(x => x.Code);
+                var strata_codes = results.Select(x => x.StratumCode);
                 strata_codes.Should().Contain(expectedStrataCodes);
                 strata_codes.Should().HaveSameCount(expectedStrataCodes);
             }

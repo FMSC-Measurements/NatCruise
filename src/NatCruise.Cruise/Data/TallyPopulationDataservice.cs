@@ -9,67 +9,71 @@ using NatCruise.Data;
 
 namespace NatCruise.Cruise.Data
 {
-    public class TallyPopulationDataservice : DataserviceBase, ITallyPopulationDataservice
+    public class TallyPopulationDataservice : CruiseDataserviceBase, ITallyPopulationDataservice
     {
-        public TallyPopulationDataservice(string path) : base(path)
+        public TallyPopulationDataservice(string path, string cruiseID) : base(path, cruiseID)
         {
         }
 
-        public TallyPopulationDataservice(CruiseDatastore_V3 database) : base(database)
+        public TallyPopulationDataservice(CruiseDatastore_V3 database, string cruiseID) : base(database, cruiseID)
         {
         }
 
         private string SELECT_TALLYPOPULATION_CORE =
-    "WITH tallyPopTreeCounts AS (" +
-        "SELECT CuttingUnitCode, " +
-            "StratumCode, " +
-            "SampleGroupCode, " +
-            "Species, " +
-            "LiveDead, " +
-            "sum(TreeCount) AS TreeCount, " +
-            "sum(KPI) AS SumKPI " +
-        "FROM TallyLedger AS tl " +
-        "GROUP BY " +
-            "CuttingUnitCode, " +
-            "StratumCode, " +
-            "SampleGroupCode, " +
-            "ifnull(Species, ''), " +
-            "ifnull(LiveDead, ''))\r\n" +
+@"WITH tallyPopTreeCounts AS (
+    SELECT CruiseID,
+        CuttingUnitCode,
+        StratumCode,
+        SampleGroupCode,
+        SpeciesCode,
+        LiveDead,
+        sum(TreeCount) AS TreeCount,
+        sum(KPI) AS SumKPI
+    FROM TallyLedger AS tl
+    WHERE CuttingUnitCode = @p1 AND CruiseID = @p2
+    GROUP BY
+        CruiseID,
+        CuttingUnitCode,
+        StratumCode,
+        SampleGroupCode,
+        ifnull(SpeciesCode, ''),
+        ifnull(LiveDead, ''))
 
-        "SELECT " +
-            "tp.Description, " +
-            "tp.StratumCode, " +
-            "st.Method AS StratumMethod, " +
-            "tp.SampleGroupCode, " +
-            "tp.Species, " +
-            "tp.LiveDead, " +
-            "tp.HotKey, " +
-            "ifnull(tl.TreeCount, 0) AS TreeCount, " +
-            "ifnull(tl.SumKPI, 0) AS SumKPI, " +
-            //"sum(tl.KPI) SumKPI, " +
-            "sg.SamplingFrequency AS Frequency, " +
-            "sg.MinKPI AS sgMinKPI, " +
-            "sg.MaxKPI AS sgMaxKPI, " +
-            "sg.UseExternalSampler " +
-        //$"ss.SampleSelectorType == '{CruiseMethods.CLICKER_SAMPLER_TYPE}' AS IsClickerTally " +
-        "FROM TallyPopulation AS tp " +
-        "JOIN SampleGroup_V3 AS sg USING (StratumCode, SampleGroupCode) " +
-        //"Left JOIN SamplerState ss USING (StratumCode, SampleGroupCode) " +
-        "JOIN Stratum AS st ON tp.StratumCode = st.Code " +
-        "JOIN CuttingUnit_Stratum AS cust ON tp.StratumCode = cust.StratumCode AND cust.CuttingUnitCode = @p1 " +
-        "LEFT JOIN tallyPopTreeCounts AS tl " +
-            "ON tl.CuttingUnitCode = @p1 " +
-            "AND tp.StratumCode = tl.StratumCode " +
-            "AND tp.SampleGroupCode = tl.SampleGroupCode " +
-            "AND ifnull(tp.Species, '') = ifnull(tl.Species, '') " +
-            "AND ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, '') ";
+    SELECT
+        tp.Description,
+        tp.StratumCode,
+        st.Method AS StratumMethod,
+        tp.SampleGroupCode,
+        tp.SpeciesCode,
+        tp.LiveDead,
+        tp.HotKey,
+        ifnull(tl.TreeCount, 0) AS TreeCount,
+        ifnull(tl.SumKPI, 0) AS SumKPI,
+        -- sum(tl.KPI) SumKPI,
+        sg.SamplingFrequency AS Frequency,
+        sg.MinKPI AS sgMinKPI,
+        sg.MaxKPI AS sgMaxKPI,
+        sg.UseExternalSampler
+    -- ss.SampleSelectorType == '{CruiseMethods.CLICKER_SAMPLER_TYPE}' AS IsClickerTally
+    FROM TallyPopulation AS tp
+    JOIN SampleGroup AS sg USING (CruiseID, StratumCode, SampleGroupCode)
+    -- Left JOIN SamplerState ss USING (CruiseID, StratumCode, SampleGroupCode)
+    JOIN Stratum AS st USING (CruiseID, StratumCode)
+    JOIN CuttingUnit_Stratum AS cust ON tp.StratumCode = cust.StratumCode AND cust.CuttingUnitCode = @p1
+    LEFT JOIN tallyPopTreeCounts AS tl
+        ON tl.CuttingUnitCode = @p1
+        AND tl.CruiseID =  @p2
+        AND tp.StratumCode = tl.StratumCode
+        AND tp.SampleGroupCode = tl.SampleGroupCode
+        AND ifnull(tp.SpeciesCode, '') = ifnull(tl.SpeciesCode, '')
+        AND ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, '') ";
 
         public IEnumerable<TallyPopulation> GetTallyPopulationsByUnitCode(string unitCode)
         {
             return Database.Query<TallyPopulation>(
                 SELECT_TALLYPOPULATION_CORE +
                 $"WHERE st.Method NOT IN ({PLOT_METHODS})"
-                , new object[] { unitCode }).ToArray();
+                , new object[] { unitCode, CruiseID }).ToArray();
 
             //return Database.From<TallyPopulation>()
             //    .Join("Tally", "USING (Tally_CN)")
@@ -93,11 +97,11 @@ namespace NatCruise.Cruise.Data
 
             return Database.Query<TallyPopulation>(
                 SELECT_TALLYPOPULATION_CORE +
-                "WHERE tp.StratumCode = @p2 " +
-                    "AND tp.SampleGroupCode = @p3 " +
-                    "AND ifNull(tp.Species, '') = ifNull(@p4,'') " +
-                    "AND ifNull(tp.LiveDead, '') = ifNull(@p5,'')"
-                , new object[] { unitCode, stratumCode, sampleGroupCode, species, liveDead }).FirstOrDefault();
+                "WHERE tp.StratumCode = @p3 " +
+                    "AND tp.SampleGroupCode = @p4 " +
+                    "AND ifNull(tp.SpeciesCode, '') = ifNull(@p5,'') " +
+                    "AND ifNull(tp.LiveDead, '') = ifNull(@p6,'')"
+                , new object[] { unitCode, CruiseID, stratumCode, sampleGroupCode, species, liveDead }).FirstOrDefault();
         }
 
         public IEnumerable<TallyPopulation_Plot> GetPlotTallyPopulationsByUnitCode(string unitCode, int plotNumber)
@@ -105,14 +109,14 @@ namespace NatCruise.Cruise.Data
             var tallyPops = Database.Query<TallyPopulation_Plot>(
                 SELECT_TALLYPOPULATION_CORE +
                 $"WHERE st.Method IN ({PLOT_METHODS})"
-                , new object[] { unitCode }).ToArray();
+                , new object[] { unitCode, CruiseID }).ToArray();
 
             foreach (var pop in tallyPops)
             {
                 pop.InCruise = GetIsTallyPopInCruise(unitCode, plotNumber, pop.StratumCode);
                 pop.IsEmpty = Database.ExecuteScalar<int>("SELECT ifnull(IsEmpty, 0) FROM Plot_Stratum " +
-                    "WHERE CuttingUnitCode = @p1 AND PlotNumber = @p2 AND StratumCode = @p3;",
-                    unitCode, plotNumber, pop.StratumCode) == 1;
+                    "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3 AND StratumCode = @p4;",
+                    unitCode, CruiseID, plotNumber, pop.StratumCode) == 1;
             }
 
             return tallyPops;
@@ -125,9 +129,10 @@ namespace NatCruise.Cruise.Data
                     "SELECT * " +
                     "FROM Plot_Stratum " +
                     "WHERE StratumCode = @p1 " +
-                        "AND CuttingUnitCode = @p2 " +
-                        "AND PlotNumber = @p3);",
-                stratumCode, unitCode, plotNumber) ?? false;
+                        "AND CruiseID = @p2 " +
+                        "AND CuttingUnitCode = @p3 " +
+                        "AND PlotNumber = @p4);",
+                stratumCode, CruiseID, unitCode, plotNumber) ?? false;
         }
     }
 }

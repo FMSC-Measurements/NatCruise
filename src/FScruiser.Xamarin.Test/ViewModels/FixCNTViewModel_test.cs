@@ -30,7 +30,7 @@ namespace FScruiser.XF.ViewModels
 
             var stratum = new NatCruise.Cruise.Models.Stratum()
             {
-                Code = "fixCnt1",
+                StratumCode = "fixCnt1",
                 Method = CruiseDAL.Schema.CruiseMethods.FIXCNT
             };
             database.Insert(stratum);
@@ -41,7 +41,7 @@ namespace FScruiser.XF.ViewModels
                 CutLeave = "C",
                 UOM = "01",
                 PrimaryProduct = "01",
-                StratumCode = stratum.Code
+                StratumCode = stratum.StratumCode
             };
             database.Insert(sg);
 
@@ -67,14 +67,14 @@ namespace FScruiser.XF.ViewModels
             var fixCntTallyClass = new CruiseDAL.V3.Models.FixCNTTallyClass_V3()
             {
                 Field = "DBH",
-                StratumCode = stratum.Code
+                StratumCode = stratum.StratumCode
             };
             database.Insert(fixCntTallyClass);
             //database.Execute($"Update FixCNTTallyClass set FieldName = 'DBH';");
 
             var fixCntTallyPop = new CruiseDAL.V3.Models.FixCNTTallyPopulation_V3()
             {
-                StratumCode = stratum.Code,
+                StratumCode = stratum.StratumCode,
                 SampleGroupCode = sg.SampleGroupCode,
                 Species = tdv.Species,
                 LiveDead = tdv.LiveDead,

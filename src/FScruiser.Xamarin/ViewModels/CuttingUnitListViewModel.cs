@@ -38,7 +38,7 @@ namespace FScruiser.XF.ViewModels
         {
             if (unit == null) { throw new ArgumentNullException(nameof(unit)); }
 
-            MessagingCenter.Send<string>(unit.Code, Messages.CUTTING_UNIT_SELECTED);
+            MessagingCenter.Send<string>(unit.CuttingUnitCode, Messages.CUTTING_UNIT_SELECTED);
         }
 
         protected override void Refresh(INavigationParameters parameters)

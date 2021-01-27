@@ -66,7 +66,7 @@ namespace FScruiser.XF.ViewModels
 
             Trees = Datastore.GetTreeStubsByUnitCode(unitCode).ToObservableCollection();
 
-            StratumCodes = Datastore.GetStrataProxiesByUnitCode(UnitCode).Select(x => x.Code).ToArray();
+            StratumCodes = Datastore.GetStrataProxiesByUnitCode(UnitCode).Select(x => x.StratumCode).ToArray();
         }
 
         public async void AddTreeAsync()

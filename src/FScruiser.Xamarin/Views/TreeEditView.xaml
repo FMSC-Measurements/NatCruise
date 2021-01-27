@@ -124,7 +124,7 @@
 
                 <Label Text="Species" />
                 <widgiwhats:ValuePicker x:Name="_speciesEntry"
-                                        SelectedValue="{Binding Species}"
+                                        SelectedValue="{Binding SpeciesCode}"
                                         ValueSource="{Binding SpeciesOptions}"
                                         WidthRequest="40">
                 </widgiwhats:ValuePicker>

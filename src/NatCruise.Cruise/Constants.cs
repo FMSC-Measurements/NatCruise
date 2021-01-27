@@ -14,7 +14,7 @@ namespace NatCruise.Cruise
             new TreeFieldSetup() {
                 Field = "SampleGroup", Heading = "SG", FieldOrder = 3 },
             new TreeFieldSetup() {
-                Field = nameof(Tree_Ex.Species), Heading = "Sp", FieldOrder = 4 },
+                Field = nameof(Tree_Ex.SpeciesCode), Heading = "Sp", FieldOrder = 4 },
             new TreeFieldSetup() {
                 Field = nameof(Tree_Ex.DBH), Heading = "DBH", FieldOrder = 5 },
             new TreeFieldSetup() {

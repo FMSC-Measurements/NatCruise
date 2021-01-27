@@ -4,23 +4,20 @@ namespace NatCruise.Cruise.Models
 {
     public class SubPopulation
     {
-        [Field("Species")]
-        public string Species { get; set; }
-
-        [Field("LiveDead")]
+        public string SpeciesCode { get; set; }
         public string LiveDead { get; set; }
 
         public override string ToString()
         {
             var liveDead = LiveDead;
 
-            if (liveDead.ToUpper() != "L")
+            if (liveDead != null && liveDead.ToUpper() != "L")
             {
-                return $"{Species} - {liveDead}";
+                return $"{SpeciesCode} - {liveDead}";
             }
             else
             {
-                return Species;
+                return SpeciesCode;
             }
         }
     }

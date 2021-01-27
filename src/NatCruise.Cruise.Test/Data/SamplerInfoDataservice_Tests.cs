@@ -24,7 +24,7 @@ namespace NatCruise.Cruise.Test.Data
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, new TestDeviceInfoService());
+                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
 
 
                 ds.GetSamplerInfo(stratumCode, sampleGroupCode);
@@ -39,7 +39,7 @@ namespace NatCruise.Cruise.Test.Data
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, new TestDeviceInfoService());
+                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
 
 
                 ds.GetSamplerState(stratumCode, sampleGroupCode);
@@ -52,7 +52,7 @@ namespace NatCruise.Cruise.Test.Data
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, new TestDeviceInfoService());
+                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
 
 
                 var ss = new SamplerState()
@@ -78,10 +78,11 @@ namespace NatCruise.Cruise.Test.Data
 
             var stratum = "st1";
             var sampleGroup = "sg1";
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database,
+                var ds = new SamplerInfoDataservice(database, cruiseID,
                     new TestDeviceInfoService(fromDeviceID, "fromDeviceName"));
 
                 var ss = new SamplerState()
@@ -95,6 +96,7 @@ namespace NatCruise.Cruise.Test.Data
 
                 var toDevice = new Device
                 {
+                    CruiseID = cruiseID,
                     DeviceID = toDeviceID,
                     Name = "toDeviceName",
                 };

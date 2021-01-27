@@ -10,119 +10,119 @@ namespace NatCruise.Cruise.Services
     public partial class CuttingUnitDatastore : ITreeDatastore
     {
         private const string UPSERT_TREEMEASURMENT_COMMAND =
-            "INSERT INTO TreeMeasurment ( " +
-                "TreeID, " +
+@"INSERT INTO TreeMeasurment (
+    TreeID,
 
-                "SeenDefectPrimary," +
-                "SeenDefectSecondary, " +
-                "RecoverablePrimary, " +
-                "HiddenPrimary, " +
-                "Grade, " +
+    SeenDefectPrimary,
+    SeenDefectSecondary,
+    RecoverablePrimary,
+    HiddenPrimary,
+    Grade,
 
-                "HeightToFirstLiveLimb, " +
-                "PoleLength, " +
-                "ClearFace, " +
-                "CrownRatio, " +
-                "DBH, " +
+    HeightToFirstLiveLimb,
+    PoleLength,
+    ClearFace,
+    CrownRatio,
+    DBH,
 
-                "DRC, " +
-                "TotalHeight, " +
-                "MerchHeightPrimary, " +
-                "MerchHeightSecondary, " +
-                "FormClass, " +
+    DRC,
+    TotalHeight,
+    MerchHeightPrimary,
+    MerchHeightSecondary,
+    FormClass,
 
-                "UpperStemDiameter, " +
-                "UpperStemHeight, " +
-                "DBHDoubleBarkThickness, " +
-                "TopDIBPrimary, " +
-                "TopDIBSecondary, " +
+    UpperStemDiameter,
+    UpperStemHeight,
+    DBHDoubleBarkThickness,
+    TopDIBPrimary,
+    TopDIBSecondary,
 
-                "DefectCode, " +
-                "DiameterAtDefect, " +
-                "VoidPercent, " +
-                "Slope, " +
-                "Aspect, " +
+    DefectCode,
+    DiameterAtDefect,
+    VoidPercent,
+    Slope,
+    Aspect,
 
-                "Remarks, " +
-                "IsFallBuckScale, " +
-                "Initials, " +
-                "CreatedBy" +
+    Remarks,
+    IsFallBuckScale,
+    Initials,
+    CreatedBy
 
-            ") VALUES ( " +
-                "@TreeID, " +
+) VALUES (
+    @TreeID,
 
-                "@SeenDefectPrimary, " +
-                "@SeenDefectSecondary, " +
-                "@RecoverablePrimary, " +
-                "@HiddenPrimary, " +
-                "@Grade, " +
+    @SeenDefectPrimary,
+    @SeenDefectSecondary,
+    @RecoverablePrimary,
+    @HiddenPrimary,
+    @Grade,
 
-                "@HeightToFirstLiveLimb, " +
-                "@PoleLength, " +
-                "@ClearFace, " +
-                "@CrownRatio, " +
-                "@DBH, " +
+    @HeightToFirstLiveLimb,
+    @PoleLength,
+    @ClearFace,
+    @CrownRatio,
+    @DBH,
 
-                "@DRC, " +
-                "@TotalHeight, " +
-                "@MerchHeightPrimary, " +
-                "@MerchHeightSecondary, " +
-                "@FormClass, " +
+    @DRC,
+    @TotalHeight,
+    @MerchHeightPrimary,
+    @MerchHeightSecondary,
+    @FormClass,
 
-                "@UpperStemDiameter, " +
-                "@UpperStemHeight, " +
-                "@DBHDoubleBarkThickness, " +
-                "@TopDIBPrimary, " +
-                "@TopDIBSecondary, " +
+    @UpperStemDiameter,
+    @UpperStemHeight,
+    @DBHDoubleBarkThickness,
+    @TopDIBPrimary,
+    @TopDIBSecondary,
 
-                "@DefectCode, " +
-                "@DiameterAtDefect, " +
-                "@VoidPercent, " +
-                "@Slope, " +
-                "@Aspect, " +
+    @DefectCode,
+    @DiameterAtDefect,
+    @VoidPercent,
+    @Slope,
+    @Aspect,
 
-                "@Remarks, " +
-                "@IsFallBuckScale, " +
-                "@Initials, " +
-                "@UserName ) " +
-            "ON CONFLICT (TreeID) DO UPDATE SET " +
+    @Remarks,
+    @IsFallBuckScale,
+    @Initials,
+    @UserName )
+ON CONFLICT (TreeID) DO UPDATE SET
 
-                "SeenDefectPrimary = @SeenDefectPrimary, " +
-                "SeenDefectSecondary = @SeenDefectSecondary, " +
-                "RecoverablePrimary = @RecoverablePrimary, " +
-                "HiddenPrimary = @HiddenPrimary, " +
-                "Grade = @Grade, " +
+    SeenDefectPrimary = @SeenDefectPrimary,
+    SeenDefectSecondary = @SeenDefectSecondary,
+    RecoverablePrimary = @RecoverablePrimary,
+    HiddenPrimary = @HiddenPrimary,
+    Grade = @Grade,
 
-                "HeightToFirstLiveLimb = @HeightToFirstLiveLimb, " +
-                "PoleLength = @PoleLength, " +
-                "ClearFace = @ClearFace, " +
-                "CrownRatio = @CrownRatio, " +
-                "DBH = @DBH, " +
+    HeightToFirstLiveLimb = @HeightToFirstLiveLimb,
+    PoleLength = @PoleLength,
+    ClearFace = @ClearFace,
+    CrownRatio = @CrownRatio,
+    DBH = @DBH,
 
-                "DRC = @DRC, " +
-                "TotalHeight = @TotalHeight, " +
-                "MerchHeightPrimary = @MerchHeightPrimary, " +
-                "MerchHeightSecondary = @MerchHeightSecondary, " +
-                "FormClass = @FormClass, " +
+    DRC = @DRC,
+    TotalHeight = @TotalHeight,
+    MerchHeightPrimary = @MerchHeightPrimary,
+    MerchHeightSecondary = @MerchHeightSecondary,
+    FormClass = @FormClass,
 
-                "UpperStemDiameter = @UpperStemDiameter, " +
-                "UpperStemHeight = @UpperStemHeight, " +
-                "DBHDoubleBarkThickness = @DBHDoubleBarkThickness, " +
-                "TopDIBPrimary = @TopDIBPrimary, " +
-                "TopDIBSecondary = @TopDIBSecondary, " +
+    UpperStemDiameter = @UpperStemDiameter,
+    UpperStemHeight = @UpperStemHeight,
+    DBHDoubleBarkThickness = @DBHDoubleBarkThickness,
+    TopDIBPrimary = @TopDIBPrimary,
+    TopDIBSecondary = @TopDIBSecondary,
 
-                "DefectCode = @DefectCode, " +
-                "DiameterAtDefect = @DiameterAtDefect, " +
-                "VoidPercent = @VoidPercent, " +
-                "Slope = @Slope, " +
-                "Aspect = @Aspect, " +
+    DefectCode = @DefectCode,
+    DiameterAtDefect = @DiameterAtDefect,
+    VoidPercent = @VoidPercent,
+    Slope = @Slope,
+    Aspect = @Aspect,
 
-                "Remarks = @Remarks, " +
-                "IsFallBuckScale = @IsFallBuckScale, " +
-                "Initials = @Initials, " +
+    Remarks = @Remarks,
+    IsFallBuckScale = @IsFallBuckScale,
+    Initials = @Initials,
 
-                "ModifiedBy = @UserName " +
-            "WHERE TreeID = @TreeID;";
+    ModifiedBy = @UserName
+WHERE TreeID = @TreeID;";
 
         public string CreateMeasureTree(string unitCode, string stratumCode,
             string sampleGroupCode = null, string species = null, string liveDead = "L",
@@ -142,59 +142,65 @@ namespace NatCruise.Cruise.Services
             var tallyLedgerID = treeID;
 
             Database.Execute2(
-                "INSERT INTO Tree_V3 (" +
-                    "TreeID, " +
-                    "TreeNumber, " +
-                    "CuttingUnitCode, " +
-                    "StratumCode, " +
-                    "SampleGroupCode, " +
-                    "Species, " +
-                    "LiveDead, " +
-                    "CountOrMeasure " +
-                ") VALUES ( " +
-                    "@TreeID, " +
-                    "(SELECT ifnull(max(TreeNumber), 0) +1 " +
-                        "FROM Tree_V3 " +
-                        "WHERE CuttingUnitCode = @CuttingUnitCode " +
-                        "AND PlotNumber IS NULL), " +
-                    "@CuttingUnitCode, " +
-                    "@StratumCode, " +
-                    "@SampleGroupCode, " +
-                    "@Species, " +
-                    "@LiveDead, " +
-                    "'M'" +
-                "); " +
-                "INSERT INTO TallyLedger ( " +
-                    "TallyLedgerID, " +
-                    "TreeID, " +
-                    "CuttingUnitCode, " +
-                    "StratumCode, " +
-                    "SampleGroupCode," +
-                    "Species, " +
-                    "LiveDead, " +
-                    "TreeCount, " +
-                    "KPI, " +
-                    "STM " +
-                ") VALUES ( " +
-                    "@TallyLedgerID, " +
-                    "@TreeID, " +
-                    "@CuttingUnitCode, " +
-                    "@StratumCode, " +
-                    "@SampleGroupCode, " +
-                    "@Species, " +
-                    "@LiveDead, " +
-                    "@TreeCount, " +
-                    "@KPI, " +
-                    "@STM" +
-                ");",
+@"INSERT INTO Tree (
+    TreeID,
+    TreeNumber,
+    CruiseID,
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    CountOrMeasure
+) VALUES (
+    @TreeID,
+    (SELECT ifnull(max(TreeNumber), 0) +1
+        FROM Tree
+        WHERE CuttingUnitCode = @CuttingUnitCode AND CruiseID = @CruiseID
+        AND PlotNumber IS NULL),
+    @CruiseID,
+    @CuttingUnitCode,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    'M'
+);
+INSERT INTO TallyLedger (
+    TallyLedgerID,
+    TreeID,
+    CruiseID,
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    TreeCount,
+    KPI,
+    STM
+) VALUES (
+    @TallyLedgerID,
+    @TreeID,
+    @CruiseID,
+    @CuttingUnitCode,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    @TreeCount,
+    @KPI,
+    @STM
+);"
+,
                 new
                 {
                     TallyLedgerID = tallyLedgerID,
                     TreeID = treeID,
+                    CruiseID,
                     CuttingUnitCode = unitCode,
                     StratumCode = stratumCode,
                     SampleGroupCode = sampleGroupCode,
-                    Species = species,
+                    SpeciesCode = species,
                     LiveDead = liveDead,
                     TreeCount = treeCount,
                     KPI = kpi,
@@ -204,14 +210,14 @@ namespace NatCruise.Cruise.Services
 
         public string GetDefaultLiveDead(string stratumCode, string sampleGroupCode)
         {
-            return Database.ExecuteScalar<string>("SELECT DefaultLiveDead FROM SampleGroup_V3 WHERE StratumCode = @p1 AND SampleGroupCode = @p2;"
-                , stratumCode, sampleGroupCode);
+            return Database.ExecuteScalar<string>("SELECT DefaultLiveDead FROM SampleGroup WHERE StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID = @p3;"
+                , stratumCode, sampleGroupCode, CruiseID);
         }
 
         public Tree_Ex GetTree(string treeID)
         {
             return Database.Query<Tree_Ex>(
-                "SELECT t.*, tm.* FROM Tree_V3 AS t " +
+                "SELECT t.*, tm.* FROM Tree AS t " +
                 "LEFT JOIN TreeMeasurment AS tm USING (TreeID) " +
                 "WHERE t.TreeID = @p1;", treeID).FirstOrDefault();
         }
@@ -220,16 +226,16 @@ namespace NatCruise.Cruise.Services
         {
             return Database.Query<TreeFieldValue>(
                 "SELECT " +
-                "t.TreeID, " +
-                "tf.Field, " +
-                "tfs.Heading, " +
-                "tf.DbType, " +
-                "tfv.ValueReal, " +
-                "tfv.ValueBool, " +
-                "tfv.ValueText, " +
-                "tfv.ValueInt " +
-                "FROM Tree_V3 AS t " +
-                "JOIN TreeFieldSetup_V3 AS tfs USING (StratumCode) " +
+                    "t.TreeID, " +
+                    "tf.Field, " +
+                    "tfs.Heading, " +
+                    "tf.DbType, " +
+                    "tfv.ValueReal, " +
+                    "tfv.ValueBool, " +
+                    "tfv.ValueText, " +
+                    "tfv.ValueInt " +
+                "FROM Tree AS t " +
+                "JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID) " +
                 "JOIN TreeField AS tf USING (Field) " +
                 "LEFT JOIN TreeFieldValue_TreeMeasurment AS tfv USING (TreeID, Field) " +
                 "WHERE t.TreeID = @p1 " +
@@ -238,15 +244,17 @@ namespace NatCruise.Cruise.Services
 
         public void UpdateTree(Tree tree)
         {
+            if (tree is null) { throw new ArgumentNullException(nameof(tree)); }
+
             //if (tree.IsPersisted == false) { throw new InvalidOperationException("tree is not persisted before calling update"); }
             //Database.Update(tree);
 
             Database.Execute2(
-                "UPDATE Tree_V3 SET \r\n " +
+                "UPDATE Tree SET \r\n " +
                     "TreeNumber = @TreeNumber, " +
                     "StratumCode = @StratumCode, " +
                     "SampleGroupCode = @SampleGroupCode, " +
-                    "Species = @Species," +
+                    "SpeciesCode = @SpeciesCode," +
                     "LiveDead = @LiveDead, " +
                     "CountOrMeasure = @CountOrMeasure, " +
                     "ModifiedBy = @UserName " +
@@ -257,7 +265,7 @@ namespace NatCruise.Cruise.Services
                     tree.TreeNumber,
                     tree.StratumCode,
                     tree.SampleGroupCode,
-                    tree.Species,
+                    tree.SpeciesCode,
                     tree.LiveDead,
                     tree.CountOrMeasure,
 
@@ -273,23 +281,24 @@ namespace NatCruise.Cruise.Services
             //Database.Update(tree);
 
             Database.Execute2(
-                "UPDATE Tree_V3 SET \r\n " +
-                    "TreeNumber = @TreeNumber, " +
-                    "StratumCode = @StratumCode, " +
-                    "SampleGroupCode = @SampleGroupCode, " +
-                    "Species = @Species," +
-                    "LiveDead = @LiveDead, " +
-                    "CountOrMeasure = @CountOrMeasure, " +
-                    "ModifiedBy = @UserName " +
-                "WHERE TreeID = @TreeID; " +
-                UPSERT_TREEMEASURMENT_COMMAND,
+@"UPDATE Tree SET
+    TreeNumber = @TreeNumber,
+    StratumCode = @StratumCode,
+    SampleGroupCode = @SampleGroupCode,
+    SpeciesCode = @SpeciesCode,
+    LiveDead = @LiveDead,
+    CountOrMeasure = @CountOrMeasure,
+    ModifiedBy = @UserName
+WHERE TreeID = @TreeID;
+" +
+UPSERT_TREEMEASURMENT_COMMAND,
                 new
                 {
                     tree.TreeID,
                     tree.TreeNumber,
                     tree.StratumCode,
                     tree.SampleGroupCode,
-                    tree.Species,
+                    tree.SpeciesCode,
                     tree.LiveDead,
                     CountOrMeasure = tree.CountOrMeasure ?? "",
 
@@ -332,6 +341,8 @@ namespace NatCruise.Cruise.Services
 
         public void UpsertTreeMeasurments(TreeMeasurment mes)
         {
+            if (mes is null) { throw new ArgumentNullException(nameof(mes)); }
+
             Database.Execute2(
                 UPSERT_TREEMEASURMENT_COMMAND,
                 new
@@ -406,18 +417,20 @@ namespace NatCruise.Cruise.Services
 
         public void UpdateTreeFieldValue(TreeFieldValue treeFieldValue)
         {
+            if (treeFieldValue is null) { throw new ArgumentNullException(nameof(treeFieldValue)); }
+
             Database.Execute(
                 "INSERT INTO TreeMeasurment " +
-                $"(TreeID, {treeFieldValue.Field})" +
-                $"VALUES (@p1, @p2)" +
+                $"(TreeID, {treeFieldValue.Field}, CreatedBy)" +
+                $"VALUES (@p1, @p2, @p3)" +
                 $"ON CONFLICT (TreeID) DO " +
-                $"UPDATE SET {treeFieldValue.Field} = @p2 WHERE TreeID = @p1;",
-                treeFieldValue.TreeID, treeFieldValue.Value);
+                $"UPDATE SET {treeFieldValue.Field} = @p2 ModifiedBy = @p3 WHERE TreeID = @p1;",
+                treeFieldValue.TreeID, treeFieldValue.Value, UserName);
         }
 
         public void DeleteTree(string tree_guid)
         {
-            Database.Execute("Delete FROM Tree_V3 WHERE TreeID = @p1", tree_guid);
+            Database.Execute("Delete FROM Tree WHERE TreeID = @p1", tree_guid);
         }
 
         #region util

@@ -53,7 +53,7 @@
                                 <BoxView Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Color="{StaticResource black_12}"/>
                                 <BoxView Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Color="{StaticResource black_12}"/>
 
-                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Code}" FontSize="24" TextColor="Black" />
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding CuttingUnitCode}" FontSize="24" TextColor="Black" />
                                 <Label x:Name="_unitDiscriptionLabel" Grid.Column="1" Grid.Row="1" Text="{Binding Description}" TextColor="{StaticResource black_70}"/>
                             </Grid>
                         </ViewCell>

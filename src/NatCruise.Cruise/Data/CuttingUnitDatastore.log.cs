@@ -15,7 +15,7 @@ namespace NatCruise.Cruise.Services
                 "SELECT " +
                 "l.*, " +
                 "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount " +
-                "FROM Log_v3 AS l " +
+                "FROM Log AS l " +
                 "WHERE l.TreeID = @p1;", treeID).ToArray();
         }
 
@@ -25,7 +25,7 @@ namespace NatCruise.Cruise.Services
                 "SELECT " +
                 "l.*, " +
                 "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount " +
-                "FROM Log_v3 AS l " +
+                "FROM Log AS l " +
                 "WHERE l.LogID = @p1;", logID).FirstOrDefault();
         }
 
@@ -35,7 +35,7 @@ namespace NatCruise.Cruise.Services
                 "SELECT " +
                 "l.*, " +
                 "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount " +
-                "FROM Log_v3 AS l " +
+                "FROM Log AS l " +
                 "WHERE l.TreeID = @p1 AND LogNumber = @p2;", treeID, logNumber).FirstOrDefault();
         }
 
@@ -43,10 +43,10 @@ namespace NatCruise.Cruise.Services
         {
             var logID = Guid.NewGuid().ToString();
 
-            var logNumber = Database.ExecuteScalar<int>("SELECT ifnull(max(LogNumber), 0) + 1 FROM Log_V3 WHERE TreeID = @p1", log.TreeID);
+            var logNumber = Database.ExecuteScalar<int>("SELECT ifnull(max(LogNumber), 0) + 1 FROM Log WHERE TreeID = @p1", log.TreeID);
 
             Database.Execute2(
-                "INSERT INTO Log_V3 ( " +
+                "INSERT INTO Log ( " +
                     "LogID , " +
                     "TreeID, " +
                     "LogNumber, " +
@@ -128,7 +128,7 @@ namespace NatCruise.Cruise.Services
 
         public void UpdateLog(Log log)
         {
-            Database.Execute("UPDATE Log_V3 SET " +
+            Database.Execute("UPDATE Log SET " +
                 "LogNumber = @p1, " +
                 "Grade = @p2, " +
                 "SeenDefect = @p3, " +
@@ -169,7 +169,7 @@ namespace NatCruise.Cruise.Services
 
         public void DeleteLog(string logID)
         {
-            Database.Execute("DELETE FROM Log_V3 WHERE LogID = @p1;", logID);
+            Database.Execute("DELETE FROM Log WHERE LogID = @p1;", logID);
         }
 
         private static readonly LogFieldSetup[] DEFAULT_LOG_FIELDS = new LogFieldSetup[]{
@@ -184,7 +184,7 @@ namespace NatCruise.Cruise.Services
         public IEnumerable<LogFieldSetup> GetLogFields(string treeID)
         {
             var fields = Database.From<LogFieldSetup>()
-                .Where("StratumCode = (SELECT StratumCode FROM Tree_V3 WHERE TreeID = @p1)")
+                .Where("StratumCode = (SELECT StratumCode FROM Tree WHERE TreeID = @p1) AND CruiseID = (SELECT CruiseID FROM Tree WHERE TreeID = @p1)")
                 .OrderBy("FieldOrder")
                 .Query(treeID).ToArray();
 
@@ -201,13 +201,13 @@ namespace NatCruise.Cruise.Services
         public IEnumerable<LogError> GetLogErrorsByLog(string logID)
         {
             return Database.Query<LogError>(
-                "SELECT " +
-                "lge.LogID, " +
-                "l.LogNumber, " +
-                "lge.Message " +
-                "FROM LogGradeError AS lge " +
-                "JOIN Log_V3 AS l USING (LogID) " +
-                "WHERE lge.LogID = @p1;",
+@"SELECT
+    lge.LogID,
+    l.LogNumber,
+    lge.Message
+FROM LogGradeError AS lge
+JOIN Log AS l USING (LogID)
+WHERE lge.LogID = @p1;",
                 new object[] { logID })
                 .ToArray();
         }
@@ -215,13 +215,13 @@ namespace NatCruise.Cruise.Services
         public IEnumerable<LogError> GetLogErrorsByTree(string treeID)
         {
             return Database.Query<LogError>(
-                "SELECT " +
-                "LogID, " +
-                "l.LogNumber, " +
-                "Message " +
-                "FROM LogGradeError " +
-                "JOIN Log_V3 AS l USING (LogID) " +
-                "WHERE l.TreeID  = @p1;",
+@"SELECT
+    LogID,
+    l.LogNumber,
+    Message
+FROM LogGradeError
+JOIN Log AS l USING (LogID)
+WHERE l.TreeID  = @p1;",
                 new object[] { treeID })
                 .ToArray();
         }

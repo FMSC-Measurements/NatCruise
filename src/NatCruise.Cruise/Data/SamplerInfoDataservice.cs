@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace NatCruise.Cruise.Data
 {
-    public class SamplerInfoDataservice : DataserviceBase, ISampleInfoDataservice
+    public class SamplerInfoDataservice : CruiseDataserviceBase, ISampleInfoDataservice
     {
         protected IDeviceInfoService DeviceInfo { get; }
         //protected Func<string> GetCurrentDeviceID { get; }
@@ -15,14 +15,14 @@ namespace NatCruise.Cruise.Data
 
         public Device CurrentDevice { get; }
 
-        public SamplerInfoDataservice(string path, IDeviceInfoService deviceInfoService) : base(path)
+        public SamplerInfoDataservice(string path, string cruiseID, IDeviceInfoService deviceInfoService) : base(path, cruiseID)
         {
             DeviceInfo = deviceInfoService;
 
             CurrentDevice = GetCurrentDevice();
         }
 
-        public SamplerInfoDataservice(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService) : base(database)
+        public SamplerInfoDataservice(CruiseDatastore_V3 database, string cruiseID, IDeviceInfoService deviceInfoService) : base(database, cruiseID)
         {
             DeviceInfo = deviceInfoService;
 
@@ -31,30 +31,41 @@ namespace NatCruise.Cruise.Data
 
         public SamplerInfo GetSamplerInfo(string stratumCode, string sampleGroupCode)
         {
+            if (string.IsNullOrEmpty(stratumCode)) { throw new System.ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }
+            if (string.IsNullOrEmpty(sampleGroupCode)) { throw new System.ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or empty", nameof(sampleGroupCode)); }
+
             return Database.Query<SamplerInfo>(
 @"SELECT
     sg.*,
     st.Method
-FROM SampleGroup_V3 AS sg
-    JOIN Stratum AS st ON st.Code = sg.StratumCode
+FROM SampleGroup AS sg
+    JOIN Stratum AS st USING (StratumCode, CruiseID)
 WHERE sg.StratumCode = @p1
     AND sg.SampleGroupCode = @p2
-;", stratumCode, sampleGroupCode).FirstOrDefault();
+    AND sg.CruiseID = @p3;", stratumCode, sampleGroupCode, CruiseID).FirstOrDefault();
         }
 
         public SamplerState GetSamplerState(string stratumCode, string sampleGroupCode, string deviceID)
         {
+            if (string.IsNullOrEmpty(stratumCode)) { throw new System.ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }
+            if (string.IsNullOrEmpty(sampleGroupCode)) { throw new System.ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or empty", nameof(sampleGroupCode)); }
+            if (string.IsNullOrEmpty(deviceID)) { throw new System.ArgumentException($"'{nameof(deviceID)}' cannot be null or empty", nameof(deviceID)); }
+
             return Database.Query<SamplerState>(
 @"SELECT
     ss.*
 FROM SamplerState AS ss
 WHERE ss.StratumCode = @p1
     AND ss.SampleGroupCode = @p2
-    AND ss.DeviceID = @p3;", stratumCode, sampleGroupCode, deviceID).FirstOrDefault();
+    AND ss.DeviceID = @p3
+    AND ss.CruiseID =  @p4;", stratumCode, sampleGroupCode, deviceID, CruiseID).FirstOrDefault();
         }
 
         public SamplerState GetSamplerState(string stratumCode, string sampleGroupCode)
         {
+            if (string.IsNullOrEmpty(stratumCode)) { throw new System.ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }
+            if (string.IsNullOrEmpty(sampleGroupCode)) { throw new System.ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or empty", nameof(sampleGroupCode)); }
+
             var deviceID = DeviceInfo.DeviceID;
 
             return GetSamplerState(stratumCode, sampleGroupCode, deviceID);
@@ -62,10 +73,13 @@ WHERE ss.StratumCode = @p1
 
         public void UpsertSamplerState(SamplerState samplerState)
         {
+            if (samplerState is null) { throw new System.ArgumentNullException(nameof(samplerState)); }
+
             var deviceID = DeviceInfo.DeviceID;
 
             Database.Execute2(
 @"INSERT INTO SamplerState (
+    CruiseID,
     DeviceID,
     StratumCode,
     SampleGroupCode,
@@ -76,6 +90,7 @@ WHERE ss.StratumCode = @p1
     InsuranceIndex,
     InsuranceCounter
 ) VALUES (
+    @CruiseID,
     @DeviceID,
     @StratumCode,
     @SampleGroupCode,
@@ -86,16 +101,17 @@ WHERE ss.StratumCode = @p1
     @InsuranceIndex,
     @InsuranceCounter
 )
-ON CONFLICT (DeviceID, StratumCode, SampleGroupCode) DO
+ON CONFLICT (CruiseID, DeviceID, StratumCode, SampleGroupCode) DO
 UPDATE SET
         BlockState = @BlockState,
         SystematicIndex = @SystematicIndex,
         Counter = @Counter,
         InsuranceIndex = @InsuranceIndex,
         InsuranceCounter = @InsuranceCounter
-    WHERE DeviceID = @DeviceID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode;",
+    WHERE CruiseID = @CruiseID AND DeviceID = @DeviceID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode;",
                 new
                 {
+                    CruiseID,
                     DeviceID = deviceID,
                     samplerState.BlockState,
                     samplerState.Counter,
@@ -113,37 +129,42 @@ UPDATE SET
         {
             return Database.Query<Device>(
 @"WITH ssModifiedDate AS (
-SELECT max(ss.ModifiedDate) AS LastModified, DeviceID
+SELECT max(ss.ModifiedDate) AS LastModified, DeviceID, CruiseID
 FROM SamplerState AS ss
-GROUP BY ss.DeviceID )
+    WHERE CruiseID = @p1
+GROUP BY ss.DeviceID, CruiseID )
 
 SELECT d.*, ss.LastModified FROM DEVICE AS d
-LEFT JOIN ssModifiedDate AS ss USING (DeviceID);").ToArray();
+LEFT JOIN ssModifiedDate AS ss USING (DeviceID, CruiseID)
+WHERE d.CruiseID = @p1;", CruiseID).ToArray();
         }
 
         public IEnumerable<Device> GetOtherDevices()
         {
             return Database.Query<Device>(
 @"WITH ssModifiedDate AS (
-SELECT max(ss.ModifiedDate) AS LastModified, DeviceID
+SELECT max(ss.ModifiedDate) AS LastModified, DeviceID, CruiseID
 FROM SamplerState AS ss
+WHERE CruiseID =  @p2
 GROUP BY ss.DeviceID )
 
 SELECT d.*, ss.LastModified FROM DEVICE AS d
 LEFT JOIN ssModifiedDate AS ss USING (DeviceID)
-WHERE d.DeviceID != @p1;", CurrentDevice.DeviceID).ToArray();
+WHERE d.DeviceID != @p1 AND CruiseID = @p2;", CurrentDevice.DeviceID, CruiseID).ToArray();
         }
 
         protected Device GetCurrentDevice()
         {
             var deviceID = DeviceInfo.DeviceID;
+            var cruiseID = CruiseID;
 
-            var device = Database.Query<Device>("SELECT * FROM Device WHERE DeviceID = @p1;", deviceID).FirstOrDefault();
+            var device = Database.Query<Device>("SELECT * FROM Device WHERE DeviceID = @p1 AND CruiseID = @p2;", deviceID, cruiseID).FirstOrDefault();
 
             if (device == null)
             {
                 device = new Device
                 {
+                    CruiseID = cruiseID,
                     DeviceID = deviceID,
                     Name = DeviceInfo.DeviceName,
                 };
@@ -156,8 +177,12 @@ WHERE d.DeviceID != @p1;", CurrentDevice.DeviceID).ToArray();
 
         public void CopySamplerStates(string deviceFrom, string deviceTo)
         {
+            if (string.IsNullOrEmpty(deviceFrom)) { throw new System.ArgumentException($"'{nameof(deviceFrom)}' cannot be null or empty", nameof(deviceFrom)); }
+            if (string.IsNullOrEmpty(deviceTo)) { throw new System.ArgumentException($"'{nameof(deviceTo)}' cannot be null or empty", nameof(deviceTo)); }
+
             Database.Execute(
 @"INSERT OR Replace INTO SamplerState (
+    CruiseID,
     DeviceID,
     StratumCode,
     SampleGroupCode,
@@ -167,7 +192,9 @@ WHERE d.DeviceID != @p1;", CurrentDevice.DeviceID).ToArray();
     Counter,
     InsuranceIndex,
     InsuranceCounter
-) SELECT @p2,
+) SELECT
+    @p3,
+    @p2,
     ss.StratumCode,
     ss.SampleGroupCode,
     ss.SampleSelectorType,
@@ -177,7 +204,7 @@ WHERE d.DeviceID != @p1;", CurrentDevice.DeviceID).ToArray();
     ss.InsuranceIndex,
     ss.InsuranceCounter
     FROM SamplerState AS ss
-    WHERE ss.DeviceID = @p1;", deviceFrom, deviceTo);
+    WHERE ss.DeviceID = @p1 AND CruiseID = @p3;", deviceFrom, deviceTo, CruiseID);
         }
 
         public bool HasSampleStates()
@@ -188,7 +215,7 @@ WHERE d.DeviceID != @p1;", CurrentDevice.DeviceID).ToArray();
         public bool HasSampleStates(string currentDeviceID)
         {
             var result = Database.ExecuteScalar<int>(
-                @"SELECT count(*) FROM SamplerState WHERE DeviceID = @p1;", currentDeviceID);
+                @"SELECT count(*) FROM SamplerState WHERE DeviceID = @p1 AND CruiseID = @p2;", currentDeviceID, CruiseID);
             return result > 0;
         }
 
@@ -199,15 +226,17 @@ WHERE d.DeviceID != @p1;", CurrentDevice.DeviceID).ToArray();
 
         public bool HasSampleStateEnvy(string currentDeviceID)
         {
+            if (string.IsNullOrEmpty(currentDeviceID)) { throw new System.ArgumentException($"'{nameof(currentDeviceID)}' cannot be null or empty", nameof(currentDeviceID)); }
+
             var result = Database.ExecuteScalar<int>(
 @"SELECT count(*)
 FROM (
     SELECT StratumCode, SampleGroupCode FROM SamplerState
-        WHERE DeviceID != @p1
+        WHERE DeviceID != @p1 AND CruiseID = @p2
     EXCEPT
     SELECT StratumCode, SampleGroupCode FROM SamplerState
-        WHERE DeviceID = @p1
-);", currentDeviceID);
+        WHERE DeviceID = @p1 AND CruiseID = @p2
+);", currentDeviceID, CruiseID);
             return result > 0;
         }
 

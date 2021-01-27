@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,15 +10,23 @@ namespace NatCruise.Data
 {
     public abstract class DataserviceProviderBase : IDataserviceProvider
     {
-        private string _cruiseFilePath;
+        private string _databasePath;
 
-        public string CruiseFilePath
+        public string DatabasePath
         {
-            get => _cruiseFilePath;
+            get => _databasePath;
             set
             {
-                _cruiseFilePath = value;
+                _databasePath = value;
             }
+        }
+
+        public Cruise Cruise { get; set; }
+        public string CruiseID => Cruise?.CruiseID;
+
+        public DataserviceProviderBase(string databasePath)
+        {
+            OpenDatabase(databasePath);
         }
 
         public abstract IDataservice GetDataservice(Type type);
@@ -27,28 +36,14 @@ namespace NatCruise.Data
             return (T)GetDataservice(typeof(T));
         }
 
-        public virtual void OpenFile(string filePath)
+        public virtual void OpenDatabase(string databasePath)
         {
-            var fileExtention = Path.GetExtension(filePath).ToLower();
-            if (fileExtention == ".cruise")
+            if(System.IO.File.Exists(databasePath) == false)
             {
-                var convertedPath = CruiseDAL.Migrator.GetConvertedPath(filePath);
-                CruiseDAL.Migrator.MigrateFromV2ToV3(filePath, convertedPath);
-
-                filePath = convertedPath;
+                throw new FileNotFoundException("Cruise Database File Not Found", databasePath);
             }
 
-            if(System.IO.File.Exists(filePath) == false)
-            {
-                throw new FileNotFoundException("File Not Found", filePath);
-            }
-
-            CruiseFilePath = filePath;
-        }
-
-        public Task OpenFileAsync(string filePath)
-        {
-            throw new NotImplementedException();
+            DatabasePath = databasePath;
         }
     }
 }

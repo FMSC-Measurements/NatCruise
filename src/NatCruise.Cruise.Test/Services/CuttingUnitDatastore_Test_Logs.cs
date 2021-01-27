@@ -25,7 +25,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var tree_guid = datastore.CreateMeasureTree("u1", "st1", "sg1");
 
@@ -64,7 +64,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var tree_guid = datastore.CreateMeasureTree("u1", "st1", "sg1");
 
@@ -107,7 +107,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var treeID = datastore.CreateMeasureTree("u1", "st1", "sg1");
 

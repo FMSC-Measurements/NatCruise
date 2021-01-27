@@ -26,7 +26,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var plotID = datastore.AddNewPlot(unitCode);
 
@@ -46,7 +46,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var plotID = datastore.AddNewPlot(unitCode);
 
@@ -56,7 +56,7 @@ namespace NatCruise.Cruise.Test.Services
 
                 datastore.AddPlotRemark(plot.CuttingUnitCode, plot.PlotNumber, remarks);
 
-                var stuff = database.QueryGeneric("select * from plot_V3").ToArray();
+                var stuff = database.QueryGeneric("select * from plot").ToArray();
 
                 var plotAgain = datastore.GetPlot(plotID);
                 plotAgain.Remarks.Should().Be(remarks);
@@ -94,18 +94,19 @@ namespace NatCruise.Cruise.Test.Services
             var countMeasure = "C";
             var treeCount = 1;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
                 database.Execute(
-                    $"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES ('{plotID}', '{unitCode}', {plotNumber});" +
-                    $"INSERT INTO Plot_Stratum (CuttingUnitCode, PlotNumber, StratumCode) VALUES ('{unitCode}', {plotNumber}, '{stratumCode}');");
+                    $"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES ('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber});" +
+                    $"INSERT INTO Plot_Stratum (CruiseID, CuttingUnitCode, PlotNumber, StratumCode) VALUES ('{cruiseID}', '{unitCode}', {plotNumber}, '{stratumCode}');");
 
                 var treeID = datastore.CreatePlotTree(unitCode, plotNumber, stratumCode, sgCode, species, liveDead, countMeasure, treeCount);
 
-                database.ExecuteScalar<int>("SELECT count(*) from Tree_V3;").Should().Be(1);
+                database.ExecuteScalar<int>("SELECT count(*) from Tree;").Should().Be(1);
 
                 //var mytree = database.QueryGeneric("SELECT * FROM Tree_V3;").ToArray();
 
@@ -115,7 +116,7 @@ namespace NatCruise.Cruise.Test.Services
                 tree.TreeID.Should().Be(treeID);
                 tree.StratumCode.Should().Be(stratumCode);
                 tree.SampleGroupCode.Should().Be(sgCode);
-                tree.Species.Should().Be(species);
+                tree.SpeciesCode.Should().Be(species);
                 tree.LiveDead.Should().Be(liveDead);
                 tree.CountOrMeasure.Should().Be(countMeasure);
                 //tree.TreeCount.Should().Be(treeCount);
@@ -130,14 +131,15 @@ namespace NatCruise.Cruise.Test.Services
             var unitCode = "u1";
             var plotNumber = 1;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
                 datastore.GetNextPlotNumber(unitCode).Should().Be(1, "unit with no plots, should return 1 for first plot number");
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES ('{plotID}', '{unitCode}', {plotNumber});");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES ('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber});");
 
                 datastore.GetNextPlotNumber(unitCode).Should().Be(plotNumber + 1, "unit with a plot, should return max plot number + 1");
             }
@@ -149,14 +151,15 @@ namespace NatCruise.Cruise.Test.Services
             var unitCode = "u1";
             var plotNumber = 1;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
                 datastore.IsPlotNumberAvalible(unitCode, plotNumber).Should().BeTrue("no plots in unit yet");
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES ('{plotID}', '{unitCode}', {plotNumber});");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES ('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber});");
 
                 datastore.IsPlotNumberAvalible(unitCode, plotNumber).Should().BeFalse("we just inserted a plot");
             }
@@ -168,14 +171,15 @@ namespace NatCruise.Cruise.Test.Services
             var unitCode = "u1";
             var plotNumber = 1;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
                 datastore.GetPlotsByUnitCode(unitCode).Should().BeEmpty("we havn't added any plots yet");
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES ('{plotID}', '{unitCode}', {plotNumber});");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES ('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber});");
 
                 datastore.GetPlotsByUnitCode(unitCode).Should().ContainSingle();
             }
@@ -188,7 +192,7 @@ namespace NatCruise.Cruise.Test.Services
             var plotNumber = 1;
             using(var db = CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db);
+                var ds = new CuttingUnitDatastore(db, CruiseID);
                 var plotid = ds.AddNewPlot(unitCode);
 
                 var plot_stratum = ds.GetPlot_Strata(unitCode, plotNumber).First();
@@ -203,7 +207,7 @@ namespace NatCruise.Cruise.Test.Services
                 trees.Should().HaveCount(2);
                 trees.Select(x => x.TreeNumber).Should().BeInAscendingOrder();
 
-                db.Execute("UPDATE Tree_V3 SET TreeNumber = 3 WHERE TreeNumber = 1;");
+                db.Execute("UPDATE Tree SET TreeNumber = 3 WHERE TreeNumber = 1;");
 
                 var treesAgain = ds.GetPlotTreeProxies(unitCode, plotNumber).ToArray();
                 treesAgain.Select(x => x.TreeNumber).Should().BeInAscendingOrder();
@@ -217,19 +221,21 @@ namespace NatCruise.Cruise.Test.Services
             var strata = new string[] { "st1", "st2" };
             var plotNumber = 1;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
                 datastore.GetPlotsByUnitCode(unitCode).Should().BeEmpty("we havn't added any plots yet");
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES ('{plotID}', '{unitCode}', {plotNumber});");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
+                    $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
 
                 foreach (var st in strata)
                 {
-                    database.Execute($"INSERT INTO Plot_Stratum (CuttingUnitCode, PlotNumber, StratumCode) VALUES " +
-                        $"('{unitCode}', {plotNumber}, '{st}');");
+                    database.Execute($"INSERT INTO Plot_Stratum (CruiseID, CuttingUnitCode, PlotNumber, StratumCode) VALUES " +
+                        $"('{cruiseID}', '{unitCode}', {plotNumber}, '{st}');");
                 }
 
                 var stPlots = datastore.GetPlot_Strata(unitCode, plotNumber);
@@ -249,9 +255,9 @@ namespace NatCruise.Cruise.Test.Services
             var units = new string[] { "u1" };
             var strata = new[]
             {
-                new dbModels.Stratum {Code = "st1", Method = "" },
-                new dbModels.Stratum {Code = "st2", Method = "" },
-                new dbModels.Stratum {Code = "st3", Method = "" },
+                new dbModels.Stratum {StratumCode = "st1", Method = "FIX" },
+                new dbModels.Stratum {StratumCode = "st2", Method = "FIX" },
+                new dbModels.Stratum {StratumCode = "st3", Method = "FIX" },
             };
             var unit_strata = new[]
             {
@@ -265,26 +271,29 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = new CruiseDatastore_V3())
             {
-                InitializeDatabase(database, units, strata, unit_strata, null, null, null, null);
+                var saleID = SaleID;
+                var cruiseID = CruiseID;
+                InitializeDatabase(database, cruiseID, saleID, units, strata, unit_strata, null, null, null, null);
 
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
                 datastore.GetPlotsByUnitCode(units[0]).Should().BeEmpty("we havn't added any plots yet");
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES ('{plotID}', '{units[0]}', {plotNumber});");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
+                    $"('{cruiseID}', '{plotID}', '{units[0]}', {plotNumber})");
 
                 foreach (var st in strata)
                 {
-                    if (st.Code == "st3") { continue; }
+                    if (st.StratumCode == "st3") { continue; }
 
-                    database.Execute($"INSERT INTO Plot_Stratum (CuttingUnitCode, PlotNumber, StratumCode) VALUES " +
-                        $"('{units[0]}', {plotNumber}, '{st.Code}');");
+                    database.Execute($"INSERT INTO Plot_Stratum (CruiseID, CuttingUnitCode, PlotNumber, StratumCode) VALUES " +
+                        $"('{cruiseID}', '{units[0]}', {plotNumber}, '{st.StratumCode}');");
                 }
 
                 foreach (var st in strata)
                 {
-                    var plotStratum = datastore.GetPlot_Stratum(units[0], st.Code, plotNumber);
-                    ValidatePlot_Stratum(plotStratum, st.Code != "st3");
+                    var plotStratum = datastore.GetPlot_Stratum(units[0], st.StratumCode, plotNumber);
+                    ValidatePlot_Stratum(plotStratum, st.StratumCode != "st3");
                 }
 
                 var nonExistantPS = datastore.GetPlot_Stratum(units[0], "st3", plotNumber);
@@ -306,13 +315,14 @@ namespace NatCruise.Cruise.Test.Services
             var unitCode = "u1";
             var plotNumber = 1;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES " +
-                    $"('{plotID}', '{unitCode}', {plotNumber})");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
+                    $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
 
                 var plot = datastore.GetPlot(plotID);
 
@@ -326,13 +336,14 @@ namespace NatCruise.Cruise.Test.Services
             var unitCode = "u1";
             var plotNumber = 1;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES " +
-                    $"('{plotID}', '{unitCode}', {plotNumber})");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
+                    $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
 
                 var plot = datastore.GetPlot(unitCode, plotNumber);
 
@@ -355,13 +366,17 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = new CruiseDatastore_V3())
             {
-                var datastore = new CuttingUnitDatastore(database);
-                InitializeDatabase(database, units, null, null, null, null, null, null);
+                var saleID = SaleID;
+                var cruiseID = CruiseID;
+
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                InitializeDatabase(database, cruiseID, saleID, units, null, null, null, null, null, null);
 
                 datastore.GetPlotStrataProxies(unit).Should().HaveCount(0);
 
-                database.Execute($"INSERT INTO Stratum (Code, Method) VALUES ('{newStratumCode}', '{method}');");
-                database.Execute($"INSERT INTO CuttingUnit_Stratum (CuttingUnitCode, StratumCode) VALUES ('{unit}', '{newStratumCode}')");
+                var stratumID = Guid.NewGuid().ToString();
+                database.Execute($"INSERT INTO Stratum (CruiseID, StratumID, StratumCode, Method) VALUES ('{cruiseID}', '{stratumID}', '{newStratumCode}', '{method}');");
+                database.Execute($"INSERT INTO CuttingUnit_Stratum (CruiseID, CuttingUnitCode, StratumCode) VALUES ('{cruiseID}', '{unit}', '{newStratumCode}')");
 
                 var result = datastore.GetPlotStrataProxies(unit).ToArray();
 
@@ -378,11 +393,12 @@ namespace NatCruise.Cruise.Test.Services
             var isEmpty = true;
             var kpi = 101;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
             //var remarks = "something";
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
                 var stratumPlot = new Plot_Stratum()
                 {
@@ -394,8 +410,8 @@ namespace NatCruise.Cruise.Test.Services
                     //Remarks = remarks
                 };
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES " +
-                    $"('{plotID}', '{unitCode}', {plotNumber})");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
+                    $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
 
                 datastore.InsertPlot_Stratum(stratumPlot);
 
@@ -419,10 +435,11 @@ namespace NatCruise.Cruise.Test.Services
             var stratumCode = "st1";
             var plotNumber = 1;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
                 var stratumPlot = new Plot_Stratum()
                 {
@@ -432,8 +449,8 @@ namespace NatCruise.Cruise.Test.Services
                     IsEmpty = false,
                 };
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES " +
-                    $"('{plotID}', '{unitCode}', {plotNumber})");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
+                    $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
 
                 var plot = datastore.GetPlot(unitCode, plotNumber);
 
@@ -464,7 +481,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var plotID = datastore.AddNewPlot(unitCode);
 
@@ -489,10 +506,11 @@ namespace NatCruise.Cruise.Test.Services
             var stratumCode = "st1";
             var plotNumber = 1;
             var plotID = Guid.NewGuid().ToString();
+            var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
                 var stratumPlot = new Plot_Stratum()
                 {
@@ -502,8 +520,8 @@ namespace NatCruise.Cruise.Test.Services
                     IsEmpty = false,
                 };
 
-                database.Execute($"INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES " +
-                    $"('{plotID}', '{unitCode}', {plotNumber})");
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
+                    $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
 
                 datastore.InsertPlot_Stratum(stratumPlot);
 
@@ -526,7 +544,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var stratumPlot = new Plot_Stratum()
                 {
@@ -535,8 +553,8 @@ namespace NatCruise.Cruise.Test.Services
                     StratumCode = stratumCode,
                 };
 
-                database.Execute("INSERT INTO Plot_V3 (PlotID, CuttingUnitCode, PlotNumber) VALUES " +
-                    $"('{plotID}', '{unitCode}', {plotNumber});");
+                database.Execute("INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
+                    $"('{CruiseID}', '{plotID}', '{unitCode}', {plotNumber});");
 
                 datastore.InsertPlot_Stratum(stratumPlot);
 
@@ -560,14 +578,19 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var saleID = SaleID;
+                var cruiseID = CruiseID;
+
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 InitializeDatabase(
                     database,
+                    cruiseID,
+                    saleID,
                     new[] { unitCode },
                     new[]
                     {
-                        new dbModels.Stratum {Code = stCode, Method = method},
+                        new dbModels.Stratum {StratumCode = stCode, Method = method},
                     },
                     new[]
                     {
@@ -575,19 +598,18 @@ namespace NatCruise.Cruise.Test.Services
                     },
                     new[]
                     {
-                        new dbModels.SampleGroup_V3 {StratumCode = stCode, SampleGroupCode = sgCode, SamplingFrequency = 101, TallyBySubPop = tallyBySp}
+                        new dbModels.SampleGroup {StratumCode = stCode, SampleGroupCode = sgCode, SamplingFrequency = 101, TallyBySubPop = tallyBySp}
                     },
                     // species
                     new[] { "sp4" },
                     new[]
                     {
-                        new dbModels.TreeDefaultValue {Species ="sp4", LiveDead = "L", PrimaryProduct = "01"},
-                        new dbModels.TreeDefaultValue {Species = "sp4", LiveDead = "D", PrimaryProduct = "01"},
+                        new dbModels.TreeDefaultValue {SpeciesCode ="sp4", PrimaryProduct = "01"},
                     },
                     new[]
                     {
-                        new dbModels.Subpopulation {StratumCode = stCode, SampleGroupCode = sgCode, Species = "sp4", LiveDead = "L" },
-                        new dbModels.Subpopulation {StratumCode = stCode, SampleGroupCode = sgCode, Species = "sp4", LiveDead = "D" },
+                        new dbModels.SubPopulation {StratumCode = stCode, SampleGroupCode = sgCode, SpeciesCode = "sp4", LiveDead = "L" },
+                        new dbModels.SubPopulation {StratumCode = stCode, SampleGroupCode = sgCode, SpeciesCode = "sp4", LiveDead = "D" },
                     }
                 );
 
@@ -602,7 +624,7 @@ namespace NatCruise.Cruise.Test.Services
                         unit3tallyPops.Should().HaveCount(1);
 
                         var tp = unit3tallyPops.Single();
-                        tp.Species.Should().BeNull("Species");
+                        tp.SpeciesCode.Should().BeNull("Species");
                         tp.LiveDead.Should().BeNull("liveDead");
 
                         ValidateTallyPop(tp);
@@ -613,7 +635,7 @@ namespace NatCruise.Cruise.Test.Services
 
                         foreach (var tp in unit3tallyPops)
                         {
-                            tp.Species.Should().NotBeNullOrWhiteSpace();
+                            tp.SpeciesCode.Should().NotBeNullOrWhiteSpace();
                             tp.LiveDead.Should().NotBeNullOrWhiteSpace();
                         }
                     }
@@ -632,7 +654,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
             }
         }
 

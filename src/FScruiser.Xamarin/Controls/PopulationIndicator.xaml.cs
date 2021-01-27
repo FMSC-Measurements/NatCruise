@@ -91,7 +91,7 @@ namespace FScruiser.XF.Controls
                 {
                     StratumCode = value.StratumCode;
                     SampleGroupCode = value.SampleGroupCode;
-                    Species = value.Species;
+                    Species = value.SpeciesCode;
                     LiveDead = value.LiveDead;
                 }
             }

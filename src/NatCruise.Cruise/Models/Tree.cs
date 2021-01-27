@@ -3,64 +3,55 @@ using NatCruise.Models;
 
 namespace NatCruise.Cruise.Models
 {
-    [Table("Tree_V3")]
+    [Table("Tree")]
     public class Tree : Model_Base, IHasTreeID
     {
         #region table fields
 
-        [Field(Name = "TreeID")]
         public string TreeID { get; set; }
 
-        [Field("CuttingUnitCode")]
         public string CuttingUnitCode
         {
             get { return _unitCode; }
             set { SetValue(ref _unitCode, value); }
         }
 
-        [Field("StratumCode")]
         public string StratumCode
         {
             get { return _stratumCode; }
             set { SetValue(ref _stratumCode, value); }
         }
 
-        [Field("SampleGroupCode")]
         public string SampleGroupCode
         {
             get { return _sampleGroupCode; }
             set { SetValue(ref _sampleGroupCode, value); }
         }
 
-        [Field("PlotNumber")]
         public int? PlotNumber
         {
             get { return _plotNumber; }
             set { SetValue(ref _plotNumber, value); }
         }
 
-        [Field("TreeNumber")]
         public int TreeNumber
         {
             get { return _treeNumber; }
             set { SetValue(ref _treeNumber, value); }
         }
 
-        [Field(Name = "Species")]
-        public string Species
+        public string SpeciesCode
         {
             get { return _species; }
             set { SetValue(ref _species, value); }
         }
 
-        [Field(Name = "CountOrMeasure")]
         public string CountOrMeasure
         {
             get { return _countOrMeasure; }
             set { SetValue(ref _countOrMeasure, value); }
         }
 
-        [Field(Name = "LiveDead")]
         public string LiveDead
         {
             get { return _liveDead; }

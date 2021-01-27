@@ -25,7 +25,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var tree_GUID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead);
 
@@ -35,7 +35,7 @@ namespace NatCruise.Cruise.Test.Services
                 tree.TreeID.Should().Be(tree_GUID);
                 tree.StratumCode.Should().Be(stratumCode);
                 tree.SampleGroupCode.Should().Be(sgCode);
-                tree.Species.Should().Be(species);
+                tree.SpeciesCode.Should().Be(species);
                 //tree.CountOrMeasure.Should().Be(countMeasure);
             }
         }
@@ -53,7 +53,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
@@ -64,12 +64,12 @@ namespace NatCruise.Cruise.Test.Services
                 tree.TreeID.Should().Be(treeID);
                 tree.StratumCode.Should().Be(stratumCode);
                 tree.SampleGroupCode.Should().Be(sgCode);
-                tree.Species.Should().Be(species);
+                tree.SpeciesCode.Should().Be(species);
                 tree.LiveDead.Should().Be(liveDead);
                 //tree.CountOrMeasure.Should().Be(countMeasure);
                 //tree.TreeCount.Should().Be(treeCount);
 
-                var tds = new TallyDataservice(database, new TestDeviceInfoService());
+                var tds = new TallyDataservice(database, CruiseID, new TestDeviceInfoService());
 
                 var tallyLedger = tds.GetTallyEntry(treeID);
                 tallyLedger.Should().NotBeNull();
@@ -91,7 +91,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
@@ -100,7 +100,7 @@ namespace NatCruise.Cruise.Test.Services
                 tree.CuttingUnitCode.Should().Be(unitCode);
                 tree.StratumCode.Should().Be(stratumCode);
                 tree.SampleGroupCode.Should().Be(sgCode);
-                tree.Species.Should().Be(species);
+                tree.SpeciesCode.Should().Be(species);
                 tree.LiveDead.Should().Be(liveDead);
                 tree.TreeNumber.Should().Be(1);
                 tree.TreeID.Should().Be(treeID);
@@ -115,7 +115,7 @@ namespace NatCruise.Cruise.Test.Services
                 tree.CuttingUnitCode = unitCode;
                 tree.StratumCode = stratumCode;
                 tree.SampleGroupCode = sgCode;
-                tree.Species = species;
+                tree.SpeciesCode = species;
                 tree.LiveDead = liveDead;
 
                 datastore.UpdateTree(tree);
@@ -125,7 +125,7 @@ namespace NatCruise.Cruise.Test.Services
                 treeAgain.CuttingUnitCode.Should().Be(unitCode);
                 treeAgain.StratumCode.Should().Be(stratumCode);
                 treeAgain.SampleGroupCode.Should().Be(sgCode);
-                treeAgain.Species.Should().Be(species);
+                treeAgain.SpeciesCode.Should().Be(species);
                 treeAgain.LiveDead.Should().Be(liveDead);
             }
         }
@@ -142,7 +142,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
 
                 var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
@@ -170,7 +170,7 @@ namespace NatCruise.Cruise.Test.Services
             using (var database = CreateDatabase())
             {
 
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, CruiseID);
                 
 
 
@@ -182,7 +182,7 @@ namespace NatCruise.Cruise.Test.Services
 
                 var speciesError = treeErrors.First();
                 speciesError.Level.Should().Be("E");
-                speciesError.Field.Should().Be(nameof(Models.Tree.Species));
+                speciesError.Field.Should().Be(nameof(Models.Tree.SpeciesCode));
             }
         }
     }

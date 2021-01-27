@@ -135,13 +135,14 @@ namespace FScruiser.XF.ViewModels
             IDataserviceProvider dataserviceProvider,
             ICruiseDialogService dialogService,
             ITallySettingsDataService tallySettings,
-            ISoundService soundService) : base(navigationService)
+            ISoundService soundService,
+            ICruisersDataservice cruisersDataservice) : base(navigationService)
         {
             TallyDataservice = dataserviceProvider.GetDataservice<ITallyDataservice>();
             TallyPopulationDataservice = dataserviceProvider.GetDataservice<ITallyPopulationDataservice>();
             SampleSelectorService = dataserviceProvider.GetDataservice<ISampleSelectorDataService>();
             DialogService = dialogService;
-            CruisersDataService = dataserviceProvider.GetDataservice<ICruisersDataservice>();
+            CruisersDataService = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             SoundService = soundService;
         }
 
@@ -171,7 +172,7 @@ namespace FScruiser.XF.ViewModels
 
         private void ShowTallyMenu(TallyPopulation obj)
         {
-            NavigationService.NavigateAsync($"TreeCountEdit?{NavParams.UNIT}={UnitCode}&{NavParams.STRATUM}={obj.StratumCode}&{NavParams.SAMPLE_GROUP}={obj.SampleGroupCode}&{NavParams.SPECIES}={obj.Species}&{NavParams.LIVE_DEAD}={obj.LiveDead}",
+            NavigationService.NavigateAsync($"TreeCountEdit?{NavParams.UNIT}={UnitCode}&{NavParams.STRATUM}={obj.StratumCode}&{NavParams.SAMPLE_GROUP}={obj.SampleGroupCode}&{NavParams.SPECIES}={obj.SpeciesCode}&{NavParams.LIVE_DEAD}={obj.LiveDead}",
                 useModalNavigation: true);
         }
 
@@ -255,7 +256,7 @@ namespace FScruiser.XF.ViewModels
             var tallyEntry = TallyFeed.First(x => x.TallyLedgerID == tallyLedgerID);
             var tallyPopulation = Tallies.First(x => x.StratumCode == tallyEntry.StratumCode
             && x.SampleGroupCode == tallyEntry.SampleGroupCode
-            && x.Species == tallyEntry.Species
+            && x.SpeciesCode == tallyEntry.SpeciesCode
             && x.LiveDead == tallyEntry.LiveDead);
 
             tallyPopulation.TreeCount -= tallyEntry.TreeCount;
