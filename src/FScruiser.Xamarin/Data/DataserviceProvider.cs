@@ -15,13 +15,17 @@ namespace FScruiser.XF.Data
     {
         ICruisersDataservice _cruisersDataservice;
 
-        public DataserviceProvider(IContainerProvider container, string databasePath) : base(databasePath)
+        public DataserviceProvider(IDeviceInfoService deviceInfo, string databasePath) : base(databasePath)
         {
-            Container = container ?? throw new ArgumentNullException(nameof(container));
+            DeviceInfoService = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
         }
 
-        protected Prism.Ioc.IContainerProvider Container { get; }
-        protected IDeviceInfoService DeviceInfoService => (IDeviceInfoService)Container.Resolve(typeof(IDeviceInfoService));
+        public DataserviceProvider(IDeviceInfoService deviceInfo, CruiseDatastore_V3 datastore) : base(datastore)
+        {
+            DeviceInfoService = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
+        }
+
+        protected IDeviceInfoService DeviceInfoService { get; }
 
         public ISampleSelectorDataService SampleSelectorDataService { get; set; }
 
@@ -48,15 +52,21 @@ namespace FScruiser.XF.Data
         {
             base.OpenDatabase(filePath);
 
-            var datastore = new CruiseDatastore_V3(DatabasePath);
+            var datastore = GetDatabase();
             CruiseDatastore = datastore;
+        }
 
-            SampleSelectorDataService = new SampleSelectorRepository((ISampleInfoDataservice)GetDataservice(typeof(ISampleInfoDataservice), datastore));
+        protected override void OnCruiseIDChanged(string value)
+        {
+            base.OnCruiseIDChanged(value);
+            var database = GetDatabase();
+            SampleSelectorDataService = new SampleSelectorRepository((ISampleInfoDataservice)GetDataservice(typeof(ISampleInfoDataservice), database));
         }
 
         public override IDataservice GetDataservice(Type type)
         {
-            return GetDataservice(type, CruiseDatastore);
+            var database = GetDatabase();
+            return GetDataservice(type, database);
         }
 
         private IDataservice GetDataservice(Type type, CruiseDatastore_V3 cruiseDatastore)
@@ -72,7 +82,6 @@ namespace FScruiser.XF.Data
             //      on the classes that relie on the dataservice provider to determin if the dataservice they requested
             //      is esential and throw if null, or allow for null to be returned and check for it. 
 
-            if(cruiseDatastore == null) { return null; }
 
             if (typeof(ICuttingUnitDatastore).IsAssignableFrom(type))
             { return new CuttingUnitDatastore(cruiseDatastore, cruiseID); }
@@ -97,7 +106,11 @@ namespace FScruiser.XF.Data
             { return new SamplerInfoDataservice(cruiseDatastore, cruiseID, DeviceInfoService); }
 
             else
-            { return null; }
+            {
+                throw new InvalidOperationException("no dataservice found for type " + type.FullName);
+
+                //return null;
+            }
         }
     }
 }

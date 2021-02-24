@@ -11,7 +11,7 @@ namespace NatCruise.Cruise.Services
 
         CuttingUnit_Ex GetUnit(string code);
 
-        IEnumerable<CuttingUnit> GetUnits();
+        IEnumerable<CuttingUnit_Ex> GetUnits();
 
         #region stratra
         string GetCruiseMethod(string stratumCode);

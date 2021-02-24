@@ -60,7 +60,7 @@ namespace NatCruise.Wpf.ViewModels
             {
                 if (r.Result == ButtonResult.OK)
                 {
-                    var filePath = DataserviceProvider.CruiseFilePath;
+                    var filePath = DataserviceProvider.DatabasePath;
                     var fileExtention = Path.GetExtension(filePath).ToLower();
                     if (fileExtention == ".crz3")
                     {
@@ -80,7 +80,7 @@ namespace NatCruise.Wpf.ViewModels
 
         public void OpenFile(FileInfo file)
         {
-            DataserviceProvider.OpenFile(file.FullName);
+            DataserviceProvider.OpenDatabase(file.FullName);
 
             RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
             RecentFilesDataservice.AddRecentFile(file.FullName);

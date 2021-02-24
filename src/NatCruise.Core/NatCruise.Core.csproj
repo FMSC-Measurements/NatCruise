@@ -6,9 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CruiseDAL.V3" Version="3.0.3.77" />
-    <PackageReference Include="CruiseDAL.V3.Sync" Version="3.0.3.76" />
-    <PackageReference Include="Prism.Core" Version="7.2.0.1422" />
+    <PackageReference Include="Prism.Core" Version="8.0.0.1909" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
+    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
   </ItemGroup>
 
 </Project>

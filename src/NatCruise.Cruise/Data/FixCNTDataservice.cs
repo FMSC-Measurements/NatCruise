@@ -194,14 +194,12 @@ INSERT INTO TreeMeasurment
             string stratumCode, string sgCode, string species, string liveDead,
             string fieldName, double value)
         {
-            var fieldNameStr = fieldName.ToString();
-
             return Database.ExecuteScalar<string>(
 $@"SELECT
     t.TreeID
 FROM Tree AS t
 JOIN TreeMeasurment AS tm USING (TreeID)
-WHERE tm.{fieldNameStr} = @p1
+WHERE tm.{fieldName} = @p1
     AND t.PlotNumber = @p2
     AND t.CuttingUnitCode = @p3
     AND t.StratumCode = @p4

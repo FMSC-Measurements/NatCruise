@@ -6,9 +6,13 @@ namespace NatCruise.Data
 {
     public class DataserviceProvider : DataserviceProviderBase
     {
+        public DataserviceProvider(string databasePath) : base(databasePath)
+        {
+        }
+
         public override IDataservice GetDataservice(Type type)
         {
-            var cruiseFilePath = CruiseFilePath;
+            var cruiseFilePath = DatabasePath;
             try
             {
                 //if(type == typeof(IRecentFilesDataservice))

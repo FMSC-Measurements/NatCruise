@@ -13,10 +13,14 @@ namespace NatCruise.Models
 
         public string Remarks { get; set; }
 
-        [Field(SQLExpression = "Sale.Name", Alias = "SaleName")]
+        [Field(SQLExpression = "s.Name", Alias = "SaleName")]
         public string SaleName { get; set; }
 
+        [Field(SQLExpression = "s.SaleNumber", Alias = "SaleNumber")]
         public string SaleNumber { get; set; }
+
+        [Field(Alias = "HasPlotStrata", SQLExpression = "(SELECT count(*) > 0 FROM Stratum JOIN LK_CruiseMethod USING (Method) WHERE Stratum.CruiseID = Cruise.CruiseID AND LK_CruiseMethod.IsPlotMethod = 1)")]
+        public bool HasPlotStrata { get; set; }
 
         public override string ToString()
         {
