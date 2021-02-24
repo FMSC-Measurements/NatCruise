@@ -18,12 +18,15 @@ namespace FScruiser.Droid
 
         public override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            base.RegisterTypes(containerRegistry);
+            var context = HostActivity.ApplicationContext;
 
-            containerRegistry.RegisterInstance<ISoundService>(new AndroidSoundService(HostActivity.ApplicationContext));
-            containerRegistry.RegisterInstance<IFileDialogService>(new AndroidFileDialogService(HostActivity));
+            containerRegistry.RegisterInstance<IFileSystemService>(new AndroidFileSystemService(context));
+            containerRegistry.RegisterInstance<ISoundService>(new AndroidSoundService(context));
+            //containerRegistry.RegisterInstance<IFileDialogService>(new AndroidFileDialogService(HostActivity));
             containerRegistry.RegisterInstance<IDeviceInfoService>(new AndroidDeviceInfoService());
             containerRegistry.RegisterInstance<IAppInfoService>(new AndroidAppInfoService());
+
+            base.RegisterTypes(containerRegistry);
         }
     }
 }
