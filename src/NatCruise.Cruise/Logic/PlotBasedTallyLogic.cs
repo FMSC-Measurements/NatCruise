@@ -10,13 +10,15 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Logic
 {
-    public class PlotBasedTallyLogic
+    public static class PlotBasedTallyLogic
     {
         static readonly string[] SINGLE_STAGE_PLOT = new string[] { CruiseMethods.PNT, CruiseMethods.FIX };
 
 
         public static TreeStub_Plot CreateTree(string unitCode, int plotNumber, TallyPopulation_Plot population, string countOrMeasure, int treeCount = 1, int kpi = 0, bool stm = false)
         {
+            if (population is null) { throw new ArgumentNullException(nameof(population)); }
+
             return new TreeStub_Plot
             {
                 CuttingUnitCode = unitCode,
@@ -38,7 +40,11 @@ namespace NatCruise.Cruise.Logic
             ISampleSelectorDataService sampleSelectorRepo,
             ICruiseDialogService dialogService)
         {
-            if(SINGLE_STAGE_PLOT.Contains(pop.Method))
+            if (pop is null) { throw new ArgumentNullException(nameof(pop)); }
+            if (sampleSelectorRepo is null) { throw new ArgumentNullException(nameof(sampleSelectorRepo)); }
+            if (dialogService is null) { throw new ArgumentNullException(nameof(dialogService)); }
+
+            if (SINGLE_STAGE_PLOT.Contains(pop.Method))
             {
                 return CreateTree(unitCode, plot, pop, "M");
             }
@@ -65,6 +71,9 @@ namespace NatCruise.Cruise.Logic
             string unitCode, int plot,
             ISampleSelectorDataService sampleSelectorRepo)
         {
+            if (pop is null) { throw new ArgumentNullException(nameof(pop)); }
+            if (sampleSelectorRepo is null) { throw new ArgumentNullException(nameof(sampleSelectorRepo)); }
+
             var sampler = sampleSelectorRepo.GetSamplerBySampleGroupCode(pop.StratumCode, pop.SampleGroupCode) as IThreePSelector;
 
             if (kpi == -1)  //user entered sure to measure
@@ -83,6 +92,9 @@ namespace NatCruise.Cruise.Logic
         public static TreeStub_Plot TallyStandard(TallyPopulation_Plot pop, string unitCode, int plot,
             ISampleSelectorDataService sampleSelectorRepo)
         {
+            if (pop is null) { throw new ArgumentNullException(nameof(pop)); }
+            if (sampleSelectorRepo is null) { throw new ArgumentNullException(nameof(sampleSelectorRepo)); }
+
             var sampler = sampleSelectorRepo.GetSamplerBySampleGroupCode(pop.StratumCode, pop.SampleGroupCode) as IFrequencyBasedSelecter;
             var result = sampler.Sample();
 
