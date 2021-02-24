@@ -17,11 +17,12 @@ namespace FScruiser.Droid
           : base(handle, transer)
         {
         }
-
+         
         public override void OnCreate()
         {
             base.OnCreate();
             CrossCurrentActivity.Current.Init(this);
+            Xamarin.Essentials.Platform.Init(this); // used for FilePicker
         }
     }
 }
