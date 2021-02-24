@@ -12,7 +12,7 @@ namespace FScruiser.XF
         {
             containerRegistry.RegisterSingleton<ITallySettingsDataService, TallySettingsDataService>();
             containerRegistry.RegisterSingleton<ICruiseDialogService, XamarinCruiseDialogService>();
-            containerRegistry.RegisterInstance<Prism.Logging.ILoggerFacade>(new AppCenterLoggerService());
+            containerRegistry.RegisterInstance<ILoggingService>(new AppCenterLoggerService());
 
             RegisterViews(containerRegistry);
         }
