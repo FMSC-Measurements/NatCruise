@@ -9,6 +9,12 @@ namespace NatCruise.Wpf.Navigation
 {
     public class NatCruiseNavigationParamiters : Dictionary<string, object>
     {
+        public string SaleID
+        {
+            get => GetValueInternal<string>();
+            set => SetValue(value);
+        }
+
         public string CuttingUnitCode
         {
             get => GetValueInternal<string>();
