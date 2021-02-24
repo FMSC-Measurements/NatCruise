@@ -26,7 +26,7 @@ namespace NatCruise.Cruise.Services
 
         void UpdateTreeFieldValue(TreeFieldValue treeFieldValue);
 
-        void DeleteTree(string tree_guid);
+        void DeleteTree(string treeGuid);
 
         #region util
 
@@ -42,7 +42,7 @@ namespace NatCruise.Cruise.Services
 
         bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null);
 
-        void UpdateTreeInitials(string tree_guid, string value);
+        void UpdateTreeInitials(string treeGuid, string value);
 
         #endregion util
     }

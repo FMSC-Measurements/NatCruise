@@ -13,8 +13,6 @@ namespace NatCruise.Cruise.Services
 {
     public partial class CuttingUnitDatastore : CruiseDataserviceBase, ICuttingUnitDatastore
     {
-        private const int NUMBER_OF_TALLY_ENTRIES_PERPAGE = 20;
-
         //protected readonly string PLOT_METHODS = String.Join(", ", CruiseMethods.PLOT_METHODS
         //    .Append(CruiseMethods.THREEPPNT)
         //    .Append(CruiseMethods.FIXCNT)
@@ -32,7 +30,7 @@ namespace NatCruise.Cruise.Services
 
         public string GetCruisePurpose()
         {
-            return Database.ExecuteScalar<string>("SELECT Purpose FROM Sale WHERE CruiseID = @p1 LIMIT 1;", CruiseID);
+            return Database.ExecuteScalar<string>("SELECT Purpose FROM Cruise WHERE CruiseID = @p1 LIMIT 1;", CruiseID);
         }
 
         #region units
@@ -45,24 +43,25 @@ namespace NatCruise.Cruise.Services
                 .Where("CuttingUnitCode = @p1 AND CruiseID = @p2")
                 .Query(code, cruiseID).FirstOrDefault();
 
-            unit.HasPlotStrata = Database.ExecuteScalar<int>("SELECT count(*) FROM CuttingUnit_Stratum AS cust " +
-                "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
-                "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
-                "WHERE cust.CruiseID = @p1 AND cust.CuttingUnitCode = @p2 " +
-                $"AND st.Method IN ({PLOT_METHODS});", cruiseID, code) > 0;
+            //unit.HasPlotStrata = Database.ExecuteScalar<int>("SELECT count(*) FROM CuttingUnit_Stratum AS cust " +
+            //    "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
+            //    "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
+            //    "WHERE cust.CruiseID = @p1 AND cust.CuttingUnitCode = @p2 " +
+            //    $"AND st.Method IN ({PLOT_METHODS});", cruiseID, code) > 0;
 
-            unit.HasTreeStrata = Database.ExecuteScalar<int>("SELECT count(*) FROM CuttingUnit_Stratum AS [cust] " +
-                "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
-                "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
-                "WHERE cust.CruiseID = @p1 AND cust.CuttingUnitCode = @p2 " +
-                $"AND st.Method NOT IN ({PLOT_METHODS});", cruiseID, code) > 0;
+            //unit.HasTreeStrata = Database.ExecuteScalar<int>("SELECT count(*) FROM CuttingUnit_Stratum AS [cust] " +
+            //    "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
+            //    "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
+            //    "WHERE cust.CruiseID = @p1 AND cust.CuttingUnitCode = @p2 " +
+            //    $"AND st.Method NOT IN ({PLOT_METHODS});", cruiseID, code) > 0;
 
             return unit;
         }
 
-        public IEnumerable<CuttingUnit> GetUnits()
+        public IEnumerable<CuttingUnit_Ex> GetUnits()
         {
-            return Database.From<CuttingUnit>().Where("CruiseID = @p1")
+            return Database.From<CuttingUnit_Ex>()
+                .Where("CuttingUnit.CruiseID = @p1")
                 .Query(CruiseID).ToArray();
         }
 

@@ -19,11 +19,26 @@ namespace NatCruise.Data
         {
         }
 
+        public IEnumerable<SaleCruises> GetSaleCruises()
+        {
+            var sales = GetSales();
+            var saleCruises = sales.Select(x => new SaleCruises() { Sale = x }).ToArray();
+
+            foreach(var sc in saleCruises)
+            {
+                var saleID = sc.Sale.SaleID;
+                sc.Cruises = GetCruises(saleID);
+            }
+
+            return saleCruises;
+        }
+
+
         public IEnumerable<Cruise> GetCruises()
         {
             return Database.From<Cruise>()
                 .Join("Sale AS s", "USING (SaleID)")
-                .Query();
+                .Query().ToArray();
         }
 
         public IEnumerable<Cruise> GetCruises(int saleNumber)
@@ -32,6 +47,22 @@ namespace NatCruise.Data
                 .Join("Sale AS s", "USING (SaleID)")
                 .Where("s.SaleNumber = @p1")
                 .Query(saleNumber).ToArray();
+        }
+
+        public IEnumerable<Cruise> GetCruises(string saleID)
+        {
+            return Database.From<Cruise>()
+                .Join("Sale AS s", "USING (SaleID)")
+                .Where("SaleID = @p1")
+                .Query(saleID).ToArray();
+        }
+
+        public Cruise GetCruise(string cruiseID)
+        {
+            return Database.From<Cruise>()
+                .Join("Sale AS s", "USING (SaleID)")
+                .Where("CruiseID = @p1")
+                .Query(cruiseID).First();
         }
 
         public Sale GetSale(int saleNumber)

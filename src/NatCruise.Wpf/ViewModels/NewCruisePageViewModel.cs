@@ -84,7 +84,7 @@ namespace NatCruise.Wpf.ViewModels
                         database.Insert(Sale);
                     }
 
-                    DataserviceProvider.OpenFile(fileInfo.FullName);
+                    DataserviceProvider.OpenDatabase(fileInfo.FullName);
 
                     RaiseRequestClose(new DialogResult(ButtonResult.OK));
                 }

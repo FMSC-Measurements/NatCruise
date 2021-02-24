@@ -17,9 +17,15 @@ namespace NatCruise.Data.Abstractions
 
         void UpdateSale(Sale sale);
 
+        IEnumerable<SaleCruises> GetSaleCruises();
+
         IEnumerable<Cruise> GetCruises();
 
         IEnumerable<Cruise> GetCruises(int saleNumber);
+
+        IEnumerable<Cruise> GetCruises(string saleID);
+
+        Cruise GetCruise(string cruiseID);
 
         void UpdateCruise(Cruise cruise);
     }

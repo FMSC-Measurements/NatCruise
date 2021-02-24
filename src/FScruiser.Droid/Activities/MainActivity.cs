@@ -63,25 +63,14 @@ namespace FScruiser.Droid
 
             base.OnCreate(savedInstanceState);
 
+            
+
             global::Xamarin.Forms.Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental" });
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Xamarin.Toolkit.Effects.Droid.Effects.Init();
             DLToolkit.Forms.Controls.FlowListView.Init();
 
-            string cruisePath = null;
-
-            //var intent = Intent;
-            //if (intent != null && intent.Action == Intent.ActionView)
-            //{
-            //    var filePath = intent.DataString;
-            //    if(string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
-            //    {
-            //        cruisePath = filePath;
-            //    }
-
-            //}
-
-            var app = new App(new AndroidPlatformInitializer(this), cruisePath);
+            var app = new App(new AndroidPlatformInitializer(this));
 
             LoadApplication(app);
         }
