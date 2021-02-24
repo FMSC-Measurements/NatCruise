@@ -137,6 +137,8 @@ namespace NatCruise.Cruise.Services
 
         public void UpdatePlot(Plot plot)
         {
+            if (plot is null) { throw new ArgumentNullException(nameof(plot)); }
+
             Database.Execute2(
                 "UPDATE Plot SET " +
                     "PlotNumber = @PlotNumber, " +
@@ -352,6 +354,8 @@ AND p.PlotNumber = @p4; ",
 
         public void InsertTree(TreeStub_Plot tree)
         {
+            if (tree is null) { throw new ArgumentNullException(nameof(tree)); }
+
             var treeID = tree.TreeID ?? Guid.NewGuid().ToString();
 
             Database.Execute2(

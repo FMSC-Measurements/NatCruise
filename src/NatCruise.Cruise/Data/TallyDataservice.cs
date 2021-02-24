@@ -63,6 +63,8 @@ namespace NatCruise.Cruise.Data
 
         public IEnumerable<TallyEntry> GetTallyEntriesByUnitCode(string unitCode)
         {
+            if (string.IsNullOrEmpty(unitCode)) { throw new ArgumentException($"'{nameof(unitCode)}' cannot be null or empty", nameof(unitCode)); }
+
             return Database.Query<TallyEntry>(
                 QUERY_TALLYENTRY_BASE +
                 "WHERE tl.CuttingUnitCode = @p1 AND tl.CruiseID = @p2 AND tl.PlotNumber IS NULL " +
@@ -80,6 +82,8 @@ namespace NatCruise.Cruise.Data
 
         public IEnumerable<TallyEntry> GetTallyEntries(string unitCode, int plotNumber)
         {
+            if (string.IsNullOrEmpty(unitCode)) { throw new ArgumentException($"'{nameof(unitCode)}' cannot be null or empty", nameof(unitCode)); }
+
             return Database.Query<TallyEntry>(
                 QUERY_TALLYENTRY_BASE +
                 "WHERE tl.CuttingUnitCode = @p1" +
@@ -97,6 +101,8 @@ namespace NatCruise.Cruise.Data
 
         public void InsertTallyLedger(TallyLedger tallyLedger)
         {
+            if (tallyLedger is null) { throw new ArgumentNullException(nameof(tallyLedger)); }
+
             var tallyLedgerID = tallyLedger.TallyLedgerID ?? Guid.NewGuid().ToString();
 
             Database.Execute2(
@@ -163,11 +169,14 @@ namespace NatCruise.Cruise.Data
 
         public Task<TallyEntry> InsertTallyActionAsync(TallyAction tallyAction)
         {
-            return Task.Factory.StartNew(() => InsertTallyAction(tallyAction));
+            return Task.Run(() => InsertTallyAction(tallyAction));
+            //return Task.Factory.StartNew(() => InsertTallyAction(tallyAction));
         }
 
         public TallyEntry InsertTallyAction(TallyAction atn)
         {
+            if (atn is null) { throw new ArgumentNullException(nameof(atn)); }
+
             if (atn.IsInsuranceSample == true && atn.IsSample == false) { throw new InvalidOperationException("If action is insurance sample it must be sample aswell"); }
 
             Database.BeginTransaction();

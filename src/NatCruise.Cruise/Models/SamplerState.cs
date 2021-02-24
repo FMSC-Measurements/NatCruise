@@ -11,6 +11,8 @@ namespace NatCruise.Cruise.Models
 
         public SamplerState(ISampleSelector sampler)
         {
+            if (sampler is null) { throw new System.ArgumentNullException(nameof(sampler)); }
+
             SampleSelectorType = sampler.GetType().Name;
             StratumCode = sampler.StratumCode;
             SampleGroupCode = sampler.SampleGroupCode;

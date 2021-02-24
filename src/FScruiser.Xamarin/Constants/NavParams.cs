@@ -8,6 +8,10 @@ namespace FScruiser.XF.Constants
 {
     public static class NavParams
     {
+        public const string SaleID = "SaleID";
+
+        public const string CruiseID = "CruiseID";
+
         public const string UNIT = "Unit";
 
         public const string STRATUM = "St";
@@ -23,6 +27,10 @@ namespace FScruiser.XF.Constants
         public const string TreeID = "TreeID";
 
         public const string PlotID = "PlotID";
+
+        public const string LogID = "LogID";
+
+        public const string LogEdit_CreateNew = "CreateNew";
 
         public const string TreeAuditRuleID = "TreeAuditRuleID";
 

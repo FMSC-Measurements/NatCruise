@@ -30,5 +30,10 @@ namespace NatCruise.Models
             get => _remarks;
             set => SetValue(ref _remarks, value);
         }
+
+        public override string ToString()
+        {
+            return $"{SaleNumber} {Name}";
+        }
     }
 }

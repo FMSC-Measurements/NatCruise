@@ -30,5 +30,10 @@ namespace NatCruise.Cruise.Models
 
         public string SpeciesCode { get; set; }
         public string LiveDead { get; set; }
+
+        public override string ToString()
+        {
+            return $"St:{StratumCode} Sg:{SampleGroupCode} Sp:{SpeciesCode} LD:{LiveDead}";
+        }
     }
 }

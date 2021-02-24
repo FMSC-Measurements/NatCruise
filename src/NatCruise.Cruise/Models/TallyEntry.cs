@@ -52,5 +52,12 @@ namespace NatCruise.Cruise.Models
         public string CountOrMeasure { get; set; }
 
         public string TallyLedgerID { get; set; }
+
+        public override string ToString()
+        {
+            var treeNum = (TreeNumber != null) ? $"Tree#:{TreeNumber}" : "";
+
+            return $"St:{StratumCode} Sg:{SampleGroupCode} Sp:{SpeciesCode} LD:{LiveDead} {treeNum}";
+        }
     }
 }

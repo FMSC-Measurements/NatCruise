@@ -6,7 +6,7 @@ namespace NatCruise.Cruise.Models
     [Table("TallyLedger")]
     public class TallyLedger : IHasTreeID
     {
-        public class EntryTypeValues
+        public static class EntryTypeValues
         {
             public const string TALLY = "tally";
             public const string UTILITY = "utility";
@@ -16,6 +16,9 @@ namespace NatCruise.Cruise.Models
 
         public TallyLedger(string unitCode, TallyPopulation tallyPopulation)
         {
+            if (string.IsNullOrEmpty(unitCode)) { throw new ArgumentException($"'{nameof(unitCode)}' cannot be null or empty", nameof(unitCode)); }
+            if (tallyPopulation is null) { throw new ArgumentNullException(nameof(tallyPopulation)); }
+
             CuttingUnitCode = unitCode;
             StratumCode = tallyPopulation.StratumCode;
             SampleGroupCode = tallyPopulation.SampleGroupCode;

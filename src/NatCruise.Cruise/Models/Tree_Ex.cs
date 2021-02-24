@@ -4,9 +4,9 @@ namespace NatCruise.Cruise.Models
 {
     public class Tree_Ex : Tree, IHasTreeID
     {
-        private static readonly string DEFAULT_GRADE = "00";
-        private static readonly string DEFAULT_CLEAR_FACE = "";
-        private static readonly string DEFAULT_DEFECT_CODE = "";
+        private const string DEFAULT_GRADE = "00";
+        private const string DEFAULT_CLEAR_FACE = "";
+        private const string DEFAULT_DEFECT_CODE = "";
 
         private double _seenDefectSecondary;
         private double _recoverablePrimary;

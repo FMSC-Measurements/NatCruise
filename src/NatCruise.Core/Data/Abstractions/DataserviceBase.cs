@@ -46,5 +46,19 @@ namespace NatCruise.Data
         {
             Database = database ?? throw new ArgumentNullException(nameof(database));
         }
+
+
+        //public void ImportCruise(string path, string cruiseID)
+        //{
+        //    using (var sourceDatabase = new CruiseDatastore_V3(path))
+        //    {
+        //        try
+        //        {
+
+        //        }
+
+        //    }
+
+        //}
     }
 }

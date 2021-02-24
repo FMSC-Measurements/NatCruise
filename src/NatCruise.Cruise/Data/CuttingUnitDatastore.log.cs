@@ -41,6 +41,8 @@ namespace NatCruise.Cruise.Services
 
         public void InsertLog(Log log)
         {
+            if (log is null) { throw new ArgumentNullException(nameof(log)); }
+
             var logID = Guid.NewGuid().ToString();
 
             var logNumber = Database.ExecuteScalar<int>("SELECT ifnull(max(LogNumber), 0) + 1 FROM Log WHERE TreeID = @p1", log.TreeID);
@@ -128,6 +130,8 @@ namespace NatCruise.Cruise.Services
 
         public void UpdateLog(Log log)
         {
+            if (log is null) { throw new ArgumentNullException(nameof(log)); }
+
             Database.Execute("UPDATE Log SET " +
                 "LogNumber = @p1, " +
                 "Grade = @p2, " +

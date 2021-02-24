@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Logic
 {
-    public class CalculateLimitingDistance
+    public static class CalculateLimitingDistance
     {
-        public static int DECIMALS = 2;
-
+        public const int DECIMALS = 2;
 
         public enum MeasureToType { Face, Center };
+
         public enum PlotType { Fixed, Variable };
-        public enum LimitingDistanceResultType { Unknown = 0, In, Out};
+
+        public enum LimitingDistanceResultType { Unknown = 0, In, Out };
 
         public const string TREE_STATUS_IN = "IN";
         public const string TREE_STATUS_OUT = "OUT";
@@ -57,21 +54,13 @@ namespace NatCruise.Cruise.Logic
         }
 
         public static string GenerateReport(string treeStatus, double limitingDistance, double slopeDistance, double slopePCT, double azimuth,
-            double bafORfps, double dbh, int slopPct, bool isVariableRadius, bool isToFace, string stratumCode)
+            double bafORfps, double dbh, bool isVariableRadius, bool isToFace, string stratumCode)
         {
             var azimuthStr = (azimuth > 0) ? "Azimuth:" + azimuth.ToString() : String.Empty;
+            var isToFaceStr = (isToFace) ? "Face" : "Center";
+            var isVariableRadiusStr = (isVariableRadius) ? "BAF" : "FPS";
 
-            return String.Format("Tree was {0} (St:{9}, DBH:{1}, slope:{2}%, slope distance:{3:F2}', limiting distance:{4:F2}' to {5} of tree, {6}:{7}) {8}\r\n",
-                    treeStatus,
-                    dbh,
-                    slopePCT,
-                    slopeDistance,
-                    limitingDistance,
-                    (isToFace) ? "Face" : "Center",
-                    (isVariableRadius) ? "BAF" : "FPS",
-                    bafORfps,
-                    azimuthStr,
-                    stratumCode);
+            return $"Tree was {treeStatus} (St:{stratumCode}, DBH:{dbh}, slope:{slopePCT}%, slope distance:{slopeDistance:F2}', limiting distance:{limitingDistance:F2}' to {isToFaceStr} of tree, {isVariableRadiusStr}:{bafORfps}) {azimuthStr}\r\n";
         }
     }
 }

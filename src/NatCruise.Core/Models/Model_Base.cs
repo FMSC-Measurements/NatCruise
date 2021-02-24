@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace NatCruise.Models
 {
-    public class Model_Base
+    public class Model_Base : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
