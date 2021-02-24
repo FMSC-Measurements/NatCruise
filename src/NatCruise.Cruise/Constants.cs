@@ -2,7 +2,7 @@
 
 namespace NatCruise.Cruise
 {
-    public class Constants
+    public static class Constants
     {
         public enum TallyLedger_EntryType { unknown = 0, Utility, TreeCountEdit, Tally };
 

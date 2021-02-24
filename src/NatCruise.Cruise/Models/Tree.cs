@@ -70,8 +70,8 @@ namespace NatCruise.Cruise.Models
 
         private int? _plotNumber;
         private string _unitCode;
-        private static readonly string DEFAULT_STM = "N";
-        private static readonly string DEFAULT_COUNT_MEASURE = "C";
-        private static readonly string DEFAULT_LIVE_DEAD = "L";
+        private const string DEFAULT_STM = "N";
+        private const string DEFAULT_COUNT_MEASURE = "C";
+        private const string DEFAULT_LIVE_DEAD = "L";
     }
 }

@@ -21,6 +21,9 @@ namespace NatCruise.Cruise.Services
 
         public ISampleSelector GetSamplerBySampleGroupCode(string stratumCode, string sgCode)
         {
+            if (string.IsNullOrEmpty(stratumCode)) { throw new ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }
+            if (string.IsNullOrEmpty(sgCode)) { throw new ArgumentException($"'{nameof(sgCode)}' cannot be null or empty", nameof(sgCode)); }
+
             var key = stratumCode + "/" + sgCode;
 
             if (_sampleSelectors.ContainsKey(key) == false)
@@ -39,6 +42,8 @@ namespace NatCruise.Cruise.Services
 
         public ISampleSelector MakeSampleSelecter(SamplerInfo samplerInfo)
         {
+            if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
+
             var method = samplerInfo.Method;
 
             //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
@@ -84,6 +89,8 @@ namespace NatCruise.Cruise.Services
 
         public ISampleSelector MakeS3PSampleSelector(SamplerInfo samplerState)
         {
+            if (samplerState is null) { throw new ArgumentNullException(nameof(samplerState)); }
+
             var state = Dataservice.GetSamplerState(samplerState.StratumCode, samplerState.SampleGroupCode);
 
             if (state != null)
@@ -99,6 +106,8 @@ namespace NatCruise.Cruise.Services
 
         public ISampleSelector MakeThreePSampleSelector(SamplerInfo samplerInfo)
         {
+            if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
+
             var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
 
             if (state != null)
@@ -119,6 +128,8 @@ namespace NatCruise.Cruise.Services
 
         public ISampleSelector MakeSystematicSampleSelector(SamplerInfo samplerInfo)
         {
+            if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
+
             var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
 
             var freq = samplerInfo.SamplingFrequency;
@@ -144,6 +155,8 @@ namespace NatCruise.Cruise.Services
 
         public ISampleSelector MakeBlockSampleSelector(SamplerInfo samplerInfo)
         {
+            if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
+
             var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
 
             var freq = samplerInfo.SamplingFrequency;
@@ -175,6 +188,8 @@ namespace NatCruise.Cruise.Services
 
         public void SaveSampler(ISampleSelector sampler)
         {
+            if (sampler is null) { throw new ArgumentNullException(nameof(sampler)); }
+
             var state = new SamplerState(sampler);
             Dataservice.UpsertSamplerState(state);
         }
