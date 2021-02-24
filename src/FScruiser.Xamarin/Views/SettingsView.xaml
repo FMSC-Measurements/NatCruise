@@ -27,6 +27,7 @@
                     
                 </StackLayout>
             </StackLayout>
+            <Button Text="Reset Database" Command="{Binding ResetDatabaseCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
