@@ -1,31 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
-using Prism.Logging;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using NatCruise.Services;
+using NatCruise.Util;
+//using Prism.Logging;
 
 namespace FScruiser.XF.Services
 {
-    public class AppCenterLoggerService : Prism.Logging.ILoggerFacade
+    public class AppCenterLoggerService : LoggingService //, Prism.Logging.ILoggerFacade
     {
-        public void Log(string message, Category category, Priority priority)
+        //void Prism.Logging.ILoggerFacade.Log(string message, Category category, Priority priority)
+        //{
+        //    var categoryStr = category.ToString();
+        //    var data = new Dictionary<string, string>
+        //    {
+        //        { "message", message },
+        //        { "prisim_priority", priority.ToString() }
+        //    };
+
+        //    LogEvent($"Prisim_Log_{categoryStr}", data: data);
+
+
+        //}
+
+        public override void LogException(string catigory, string message, Exception ex, IDictionary<string, string> data = null)
         {
-            System.Diagnostics.Debug.WriteLine($"{category.ToString().ToUpper()}::::{message}");
+            Debug.WriteLine($"Error:::{catigory}::::{message}::::{ex.Message}::::");
+            Debug.WriteLine(ex.StackTrace);
 
-            //switch (category)
-            //{
-            //    case Category.Exception:
-            //    case Category.Warn:
-            //    case Category.Info:
-            //    case Category.Debug:
-            //        {
-            var categoryStr = category.ToString();
-            Microsoft.AppCenter.Analytics.Analytics.TrackEvent($"Prisim_Log_{categoryStr}",
-                new Dictionary<string, string> { { "message", message }, { "priority", priority.ToString() } });
-            //            break;
-            //        }
-            //}
+            if (data == null) { data = new Dictionary<string, string>(); }
 
+            data.SetValue("error_catigory", catigory);
+            data.SetValue("error_message", message);
 
+            Crashes.TrackError(ex, data);
+        }
+
+        public override void LogEvent(string name, IDictionary<string, string> data = null)
+        {
+            Debug.WriteLine($"Event:::{name}::::");
+
+            foreach (var item in data)
+            {
+                Debug.WriteLine($"Eventdata:::{item.Key}::::{item.Value.ToString()}::::");
+            }
+
+            Analytics.TrackEvent(name, data);
         }
     }
 }

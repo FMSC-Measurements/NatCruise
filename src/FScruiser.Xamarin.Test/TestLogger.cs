@@ -1,12 +1,11 @@
-﻿using System;
+﻿using NatCruise.Services;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using Prism.Logging;
 using Xunit.Abstractions;
 
 namespace FScruiser.XF
 {
-    class TestLogger : Prism.Logging.ILoggerFacade
+    internal class TestLogger : LoggingService
     {
         public TestLogger(ITestOutputHelper testOutput)
         {
@@ -15,19 +14,15 @@ namespace FScruiser.XF
 
         public Xunit.Abstractions.ITestOutputHelper TestOutput { get; set; }
 
-        public void Log(string message, Category category, Priority priority)
+        public override void LogException(string catigory, string message, Exception ex, IDictionary<string, string> data = null)
         {
-            switch (priority)
-            {
-                case Priority.High:
-                case Priority.Medium:
-                case Priority.Low:
-                case Priority.None:
-                    {
-                        TestOutput.WriteLine($"{category.ToString().ToUpper()}::::{message}");
-                        break;
-                    }
-            }
+            TestOutput.WriteLine($"Error:::{catigory}::::{message}::::{ex.Message}::::");
+            TestOutput.WriteLine(ex.StackTrace);
+        }
+
+        public override void LogEvent(string name, IDictionary<string, string> data = null)
+        {
+            TestOutput.WriteLine($"Event:::{name}::::");
         }
     }
 }
