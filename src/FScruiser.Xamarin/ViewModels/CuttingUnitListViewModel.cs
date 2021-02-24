@@ -19,12 +19,12 @@ namespace FScruiser.XF.ViewModels
         public IEnumerable<CuttingUnit> Units
         {
             get { return _units; }
-            set { SetValue(ref _units, value); }
+            set { SetProperty(ref _units, value); }
         }
 
         public IDataserviceProvider DatastoreProvider { get; }
 
-        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider, INavigationService navigationService) : base(navigationService)
+        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider)
         {
             DatastoreProvider = datastoreProvider ?? throw new ArgumentNullException(nameof(datastoreProvider));
 

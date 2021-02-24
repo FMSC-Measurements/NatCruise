@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using NatCruise.Data;
+using NatCruise.Services;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -23,10 +24,12 @@ namespace FScruiser.XF.ViewModels
         private IEnumerable<PlotError> _errorsAndWarnings;
         private ICommand _updatePlotNumberCommand;
 
+        protected ICruiseNavigationService NavigationService { get; }
+
         public IEnumerable<PlotError> ErrorsAndWarnings
         {
             get => _errorsAndWarnings;
-            set => SetValue(ref _errorsAndWarnings, value);
+            set => SetProperty(ref _errorsAndWarnings, value);
         }
 
         public Plot Plot
@@ -40,7 +43,7 @@ namespace FScruiser.XF.ViewModels
                     oldValue.PropertyChanged -= Plot_PropertyChanged;
                 }
 
-                SetValue(ref _plot, value);
+                SetProperty(ref _plot, value);
                 RaisePropertyChanged(nameof(PlotNumber));
 
                 if (value != null)
@@ -95,7 +98,7 @@ namespace FScruiser.XF.ViewModels
             }
             else
             {
-                DialogService.ShowMessageAsync("Plot Number Already Takend");
+                DialogService.ShowNotification("Plot Number Already Takend");
                 return false;
             }
         }
@@ -157,7 +160,7 @@ namespace FScruiser.XF.ViewModels
                     }
                 }
 
-                SetValue(ref _stratumPlots, value);
+                SetProperty(ref _stratumPlots, value);
 
                 if (value != null)
                 {
@@ -170,14 +173,17 @@ namespace FScruiser.XF.ViewModels
         }
 
         public IPlotDatastore Datastore { get; set; }
-        public ICruiseDialogService DialogService { get; set; }
+        public IDialogService DialogService { get; set; }
 
         public PlotEditViewModel(IDataserviceProvider datastoreProvider
-            , ICruiseDialogService dialogService
-            , INavigationService navigationService) : base(navigationService)
+            , IDialogService dialogService
+            , ICruiseNavigationService navigationService)
         {
+            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
+
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
-            DialogService = dialogService;
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         public async Task ToggleInCruiseAsync(Plot_Stratum stratumPlot)
@@ -208,10 +214,12 @@ namespace FScruiser.XF.ViewModels
             {
                 if (stratumPlot.CruiseMethod == CruiseDAL.Schema.CruiseMethods.THREEPPNT)
                 {
-                    var query = $"{NavParams.UNIT}={stratumPlot.CuttingUnitCode}&{NavParams.PLOT_NUMBER}={plotNumber}&{NavParams.STRATUM}={stratumCode}";
+                    //var query = $"{NavParams.UNIT}={stratumPlot.CuttingUnitCode}&{NavParams.PLOT_NUMBER}={plotNumber}&{NavParams.STRATUM}={stratumCode}";
 
-                    await NavigationService.NavigateAsync("ThreePPNTPlot",
-                        new NavigationParameters(query));
+                    //await NavigationService.NavigateAsync("ThreePPNTPlot",
+                    //    new NavigationParameters(query));
+
+                    await NavigationService.ShowThreePPNTPlot(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
                 }
                 else
                 {
@@ -290,7 +298,9 @@ namespace FScruiser.XF.ViewModels
         {
             try
             {
-                var navResult = await NavigationService.NavigateAsync("LimitingDistance", new NavigationParameters($"UnitCode={UnitCode}&PlotNumber={stratumPlot.PlotNumber}&StratumCode={stratumPlot.StratumCode}"));
+                //var navResult = await NavigationService.NavigateAsync("LimitingDistance", new NavigationParameters($"{NavParams.UNIT}={UnitCode}&{NavParams.PLOT_NUMBER}={stratumPlot.PlotNumber}&{NavParams.STRATUM}={stratumPlot.StratumCode}"));
+
+                var navResult = await NavigationService.ShowLimitingDistance(UnitCode, stratumPlot.StratumCode, stratumPlot.PlotNumber);
 
                 if (navResult != null)
                 {

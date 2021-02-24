@@ -8,6 +8,7 @@ using NatCruise.Cruise.Services;
 using FScruiser.XF.Services;
 using Prism.Navigation;
 using NatCruise.Data;
+using FScruiser.XF.Constants;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -21,23 +22,23 @@ namespace FScruiser.XF.ViewModels
         public Log Log
         {
             get => _log;
-            set => SetValue(ref _log, value);
+            set => SetProperty(ref _log, value);
         }
 
         public ICuttingUnitDatastore Datastore { get; set; }
 
-        public IEnumerable<LogFieldSetup> LogFields { get => _logFields; set => SetValue(ref _logFields, value); }
+        public IEnumerable<LogFieldSetup> LogFields { get => _logFields; set => SetProperty(ref _logFields, value); }
 
-        public IEnumerable<LogError> Errors { get => _errors; set => SetValue(ref _errors, value); }
+        public IEnumerable<LogError> Errors { get => _errors; set => SetProperty(ref _errors, value); }
 
-        public LogEditViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider) : base(navigationService)
+        public LogEditViewModel(IDataserviceProvider datastoreProvider)
         {
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
         protected override void Refresh(INavigationParameters parameters)
         {
-            var log_guid = parameters.GetValue<string>("Log_Guid");
+            var log_guid = parameters.GetValue<string>(NavParams.LogID);
 
             var log = Datastore.GetLog(log_guid);
 

@@ -21,14 +21,14 @@ namespace FScruiser.XF.ViewModels
 
         private ICuttingUnitDatastore Datastore { get; set; }
 
-        public int TreeNumber { get => _treeNumber; set => SetValue(ref _treeNumber, value); }
+        public int TreeNumber { get => _treeNumber; set => SetProperty(ref _treeNumber, value); }
 
         protected TreeError TreeError
         {
             get => _treeError;
             set
             {
-                SetValue(ref _treeError, value);
+                SetProperty(ref _treeError, value);
                 RaisePropertyChanged(nameof(IsResolved));
                 RaisePropertyChanged(nameof(Message));
                 RaisePropertyChanged(nameof(Level));
@@ -84,7 +84,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public string TreeAuditRuleID { get => _treeAuditRuleID; set => SetValue(ref _treeAuditRuleID, value); }
+        public string TreeAuditRuleID { get => _treeAuditRuleID; set => SetProperty(ref _treeAuditRuleID, value); }
 
         //private bool ValidateForm()
         //{

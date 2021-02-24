@@ -15,21 +15,11 @@ namespace FScruiser.XF.ViewModels
     {
         private bool _isFirstNavigatedTo = true;
 
-        protected INavigationService NavigationService { get; }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public INavigationParameters Parameters { get; private set; }
 
         //public abstract Task InitAsync();
-
-        protected ViewModelBase()
-        { }
-
-        protected ViewModelBase(INavigationService navigationService)
-        {
-            NavigationService = navigationService;
-        }
 
         protected virtual void RaisePropertyChanged(string propName)
         {
@@ -41,7 +31,7 @@ namespace FScruiser.XF.ViewModels
             PropertyChanged?.Invoke(this, e);
         }
 
-        public void SetValue<tTarget>(ref tTarget target, tTarget value, [CallerMemberName] string propName = null)
+        public void SetProperty<tTarget>(ref tTarget target, tTarget value, [CallerMemberName] string propName = null)
         {
             target = value;
             if (propName != null) { RaisePropertyChanged(propName); }

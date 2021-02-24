@@ -26,24 +26,27 @@ namespace FScruiser.XF.ViewModels
         private ICommand _saveTreeCountEditCommand;
         private string _cruiseMethod;
 
-        public TreeCountEditViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider, ICruiseDialogService dialogService) : base(navigationService)
+        public TreeCountEditViewModel(ICruiseNavigationService navigationService, IDataserviceProvider datastoreProvider, ICruiseDialogService dialogService)
         {
+            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
+
             TallyDataservice = datastoreProvider.GetDataservice<ITallyDataservice>();
             TallyPopulationDataservice = datastoreProvider.GetDataservice<ITallyPopulationDataservice>();
-            DialogService = dialogService;
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
-        protected ITallyPopulationDataservice TallyPopulationDataservice { get; }
-        protected ITallyDataservice TallyDataservice { get; }
-
-        protected ICruiseDialogService DialogService { get; }
+        public ITallyPopulationDataservice TallyPopulationDataservice { get; }
+        public ITallyDataservice TallyDataservice { get; }
+        public ICruiseNavigationService NavigationService { get; }
+        public ICruiseDialogService DialogService { get; }
 
         public ICommand SaveTreeCountEditCommand => _saveTreeCountEditCommand ?? (_saveTreeCountEditCommand = new Command(SaveEdit));
 
         public string UnitCode
         {
             get { return _unitCode; }
-            set { SetValue(ref _unitCode, value); }
+            set { SetProperty(ref _unitCode, value); }
         }
 
         public TallyPopulation TallyPopulation
@@ -52,7 +55,7 @@ namespace FScruiser.XF.ViewModels
 
             set
             {
-                SetValue(ref _tallyPopulation, value);
+                SetProperty(ref _tallyPopulation, value);
                 RaisePropertyChanged(nameof(StratumCode));
                 RaisePropertyChanged(nameof(TallyPopulationDescription));
                 RaisePropertyChanged(nameof(TreeCount));
@@ -70,7 +73,7 @@ namespace FScruiser.XF.ViewModels
             get { return _treeCountDelta; }
             set
             {
-                SetValue(ref _treeCountDelta, value);
+                SetProperty(ref _treeCountDelta, value);
                 RaisePropertyChanged(nameof(AdjustedTreeCount));
             }
         }
@@ -80,7 +83,7 @@ namespace FScruiser.XF.ViewModels
             get => _cruiseMethod;
             set
             {
-                SetValue(ref _cruiseMethod, value);
+                SetProperty(ref _cruiseMethod, value);
                 RaisePropertyChanged(nameof(IsSTR));
             }
         }
@@ -97,13 +100,13 @@ namespace FScruiser.XF.ViewModels
         public string EditReason
         {
             get => _editReason;
-            set => SetValue(ref _editReason, value);
+            set => SetProperty(ref _editReason, value);
         }
 
         public string Remarks
         {
             get => _remarks;
-            set => SetValue(ref _remarks, value);
+            set => SetProperty(ref _remarks, value);
         }
         
 
@@ -138,7 +141,7 @@ namespace FScruiser.XF.ViewModels
 
             TallyDataservice.InsertTallyLedger(tallyLedger);
 
-            base.NavigationService.GoBackAsync();
+            NavigationService.GoBackAsync();
         }
 
     }

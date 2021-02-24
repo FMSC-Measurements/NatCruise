@@ -27,7 +27,7 @@ namespace FScruiser.XF.Pages
                 .Where(t => t.Namespace == "FScruiser.XF.Views" && t.IsSubclassOf(typeof(Xamarin.Forms.Page)) && t.IsAbstract == false)
                 .Select(x => new object[] { x });
 
-                return  pageTypes;
+                return pageTypes;
             }
         }
 
@@ -53,6 +53,7 @@ namespace FScruiser.XF.Pages
 
             //get our page
             var page = Activator.CreateInstance(pageType) as Xamarin.Forms.Page;
+            page.Should().NotBeNull();
 
             //call this method that causes Prism to resolve the viewmodel for our view
             Prism.Mvvm.ViewModelLocationProvider.AutoWireViewModelChanged(page, (p, vm) =>

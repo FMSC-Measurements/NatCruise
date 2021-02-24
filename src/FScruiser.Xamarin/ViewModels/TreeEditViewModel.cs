@@ -36,22 +36,23 @@ namespace FScruiser.XF.ViewModels
         private IEnumerable<string> _cruisers;
         private string _initials;
 
-        protected ICuttingUnitDatastore Datastore { get; set; }
+        protected ICuttingUnitDatastore Datastore { get; }
         public ICruisersDataservice CruisersDataservice { get; }
-        protected ICruiseDialogService DialogService { get; set; }
+        protected ICruiseDialogService DialogService { get; }
+        protected ICruiseNavigationService NavigationService { get; }
 
         public bool UseSimplifiedTreeFields { get; set; } = false;
 
         public IEnumerable<string> Cruisers
         {
             get => _cruisers;
-            set => SetValue(ref _cruisers, value);
+            set => SetProperty(ref _cruisers, value);
         }
 
         public IEnumerable<TreeError> ErrorsAndWarnings
         {
             get => _errorsAndWarnings;
-            set => SetValue(ref _errorsAndWarnings, value);
+            set => SetProperty(ref _errorsAndWarnings, value);
         }
 
         public IDictionary<string, string> Errors { get; set; }
@@ -59,7 +60,7 @@ namespace FScruiser.XF.ViewModels
         public IEnumerable<TreeFieldValue> TreeFieldValues
         {
             get => _treeFieldValues;
-            set => SetValue(ref _treeFieldValues, value);
+            set => SetProperty(ref _treeFieldValues, value);
         }
 
         public Tree_Ex Tree
@@ -67,7 +68,7 @@ namespace FScruiser.XF.ViewModels
             get { return _tree; }
             protected set
             {
-                SetValue(ref _tree, value);
+                SetProperty(ref _tree, value);
                 RaisePropertyChanged(nameof(TreeNumber));
                 RaisePropertyChanged(nameof(StratumCode));
                 RaisePropertyChanged(nameof(SampleGroupCode));
@@ -81,7 +82,7 @@ namespace FScruiser.XF.ViewModels
         public string Initials
         {
             get => _initials;
-            set => SetValue(ref _initials, value);
+            set => SetProperty(ref _initials, value);
         }
 
         public string Remarks
@@ -99,9 +100,9 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public bool HasSampleGroupError { get => _hasSampleGroupError; set => SetValue(ref _hasSampleGroupError, value); }
+        public bool HasSampleGroupError { get => _hasSampleGroupError; set => SetProperty(ref _hasSampleGroupError, value); }
 
-        public bool HasSpeciesError { get => _hasSpeciesError; set => SetValue(ref _hasSpeciesError, value); }
+        public bool HasSpeciesError { get => _hasSpeciesError; set => SetProperty(ref _hasSpeciesError, value); }
 
         #region TreeNumber
 
@@ -151,7 +152,7 @@ namespace FScruiser.XF.ViewModels
         public IEnumerable<string> StratumCodes
         {
             get => _stratumCodes;
-            set => SetValue(ref _stratumCodes, value);
+            set => SetProperty(ref _stratumCodes, value);
         }
 
         public string StratumCode
@@ -227,7 +228,7 @@ namespace FScruiser.XF.ViewModels
             }
             set
             {
-                SetValue(ref _sampleGroupCodes, value);
+                SetProperty(ref _sampleGroupCodes, value);
             }
         }
 
@@ -301,7 +302,7 @@ namespace FScruiser.XF.ViewModels
             get => _subPopulations;
             set
             {
-                SetValue(ref _subPopulations, value);
+                SetProperty(ref _subPopulations, value);
                 //RaisePropertyChanged(nameof(SubPopulation));
                 RaisePropertyChanged(nameof(SpeciesOptions));
             }
@@ -440,25 +441,22 @@ namespace FScruiser.XF.ViewModels
             else
             {
 
-                NavigationService.NavigateAsync("TreeErrorEdit",
-                    new Prism.Navigation.NavigationParameters($"{NavParams.TreeID}={treeError.TreeID}&{NavParams.TreeAuditRuleID}={treeError.TreeAuditRuleID}"));
+                //NavigationService.NavigateAsync("TreeErrorEdit",
+                //    new Prism.Navigation.NavigationParameters($"{NavParams.TreeID}={treeError.TreeID}&{NavParams.TreeAuditRuleID}={treeError.TreeAuditRuleID}"));
+
+                NavigationService.ShowTreeErrorEdit(treeError.TreeID, treeError.TreeAuditRuleID);
             }
         }
 
         public TreeEditViewModel(IDataserviceProvider datastoreProvider
-            , ICruiseDialogService dialogService, ICruisersDataservice cruisersDataservice)
+            , ICruiseDialogService dialogService, ICruiseNavigationService navigationService, ICruisersDataservice cruisersDataservice)
         {
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
-            CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
-            DialogService = dialogService;
-        }
+            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
 
-        public TreeEditViewModel(IDataserviceProvider datastoreProvider
-            , ICruiseDialogService dialogService, INavigationService navigationService, ICruisersDataservice cruisersDataservice) : base(navigationService)
-        {
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
             CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
-            DialogService = dialogService;
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         public override void OnNavigatedFrom(INavigationParameters parameters)
@@ -539,7 +537,9 @@ namespace FScruiser.XF.ViewModels
 
         public void ShowLogs()
         {
-            NavigationService.NavigateAsync("Logs", new NavigationParameters($"Tree_Guid={Tree.TreeID}"));
+            //NavigationService.NavigateAsync("Logs", new NavigationParameters($"{NavParams.TreeID}={Tree.TreeID}"));
+
+            NavigationService.ShowLogsList(Tree.TreeID);
         }
 
         protected void SaveTree()

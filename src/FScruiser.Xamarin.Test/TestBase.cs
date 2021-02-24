@@ -20,7 +20,7 @@ namespace FScruiser.XF.Test
             Output = output;
             Xamarin.Forms.Mocks.MockForms.Init();
 
-            App = new App(PlatformInitializer, null);
+            App = new App(PlatformInitializer);
         }
     }
 }

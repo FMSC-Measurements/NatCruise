@@ -34,23 +34,28 @@ namespace FScruiser.XF.ViewModels
 
         public event EventHandler TreeAdded;
 
-        protected ICuttingUnitDatastore Datastore { get; }
+        public ICuttingUnitDatastore Datastore { get; }
         public ICruiseDialogService DialogService { get; }
+        public ICruiseNavigationService NavigationService { get; }
+
         public ISampleSelectorDataService SampleSelectorDataService { get; private set; }
         public ITallySettingsDataService TallySettings { get; private set; }
         public ISoundService SoundService { get; private set; }
 
-        public PlotTallyViewModel(INavigationService navigationService
+        public PlotTallyViewModel(ICruiseNavigationService navigationService
             , ICruiseDialogService dialogService
             , IDataserviceProvider datastoreProvider
             , ISoundService soundService
-            , ITallySettingsDataService tallySettings) : base(navigationService)
+            , ITallySettingsDataService tallySettings)
         {
+            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
+
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
             SampleSelectorDataService = datastoreProvider.GetDataservice<ISampleSelectorDataService>();
-            DialogService = dialogService;
-            TallySettings = tallySettings;
-            SoundService = soundService;
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            TallySettings = tallySettings ?? throw new ArgumentNullException(nameof(tallySettings));
+            SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
         }
 
         public ICommand EditTreeCommand => _editTreeCommand
@@ -68,19 +73,19 @@ namespace FScruiser.XF.ViewModels
         public Plot Plot
         {
             get => _plot;
-            set => SetValue(ref _plot, value);
+            set => SetProperty(ref _plot, value);
         }
 
         public int PlotNumber
         {
             get { return _plotNumber; }
-            set { SetValue(ref _plotNumber, value); }
+            set { SetProperty(ref _plotNumber, value); }
         }
 
         public string UnitCode
         {
             get { return _unitCode; }
-            set { SetValue(ref _unitCode, value); }
+            set { SetProperty(ref _unitCode, value); }
         }
 
         public bool IsRecon { get; private set; }
@@ -90,7 +95,7 @@ namespace FScruiser.XF.ViewModels
             get { return _tallyPopulations; }
             set
             {
-                SetValue(ref _tallyPopulations, value);
+                SetProperty(ref _tallyPopulations, value);
                 RaisePropertyChanged(nameof(TalliesFiltered));
             }
         }
@@ -103,7 +108,7 @@ namespace FScruiser.XF.ViewModels
             get { return _strata; }
             set
             {
-                SetValue(ref _strata, value);
+                SetProperty(ref _strata, value);
                 RaisePropertyChanged(nameof(StrataFilterOptions));
             }
         }
@@ -115,7 +120,7 @@ namespace FScruiser.XF.ViewModels
             get { return _stratumFilter; }
             set
             {
-                SetValue(ref _stratumFilter, value);
+                SetProperty(ref _stratumFilter, value);
                 RaisePropertyChanged(nameof(TalliesFiltered));
             }
         }
@@ -123,7 +128,7 @@ namespace FScruiser.XF.ViewModels
         public ICollection<TreeStub_Plot> Trees
         {
             get { return _trees; }
-            set { SetValue(ref _trees, value); }
+            set { SetProperty(ref _trees, value); }
         }
 
         protected void OnTreeAdded()
@@ -207,7 +212,8 @@ namespace FScruiser.XF.ViewModels
 
         public void ShowEditTree(string treeID)
         {
-            NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, treeID } });
+            //NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, treeID } });
+            NavigationService.ShowTreeEdit(treeID);
         }
 
         public static async Task HandleTally(TallyPopulation_Plot population,
@@ -236,7 +242,8 @@ namespace FScruiser.XF.ViewModels
 
         public void ShowEditPlot()
         {
-            NavigationService.NavigateAsync("PlotEdit", new NavigationParameters($"{NavParams.PlotID}={Plot.PlotID}"));
+            //NavigationService.NavigateAsync("PlotEdit", new NavigationParameters($"{NavParams.PlotID}={Plot.PlotID}"));
+            NavigationService.ShowPlotEdit(Plot.PlotID);
         }
 
         public void DeleteTree(string tree_guid)

@@ -26,6 +26,7 @@ namespace FScruiser.XF.ViewModels
         public IEnumerable<Plot> Plots { get; protected set; }
         public IPageDialogService DialogService { get; }
         public ICuttingUnitDatastore Datastore { get; set; }
+        protected ICruiseNavigationService NavigationService { get; }
 
         public ICommand AddPlotCommand => _addPlotCommand ?? (_addPlotCommand = new Command(AddPlot));
 
@@ -35,17 +36,20 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand EditPlotCommand => _editPlotCommand ?? (_editPlotCommand = new Command<Plot>(ShowEditPlot));
 
-        public PlotListViewModel(INavigationService navigationService
+        public PlotListViewModel(ICruiseNavigationService navigationService
             , IPageDialogService dialogService
-            , IDataserviceProvider datastoreProvider) : base(navigationService)
+            , IDataserviceProvider datastoreProvider)
         {
-            DialogService = dialogService;
+            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
+
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         protected override void Refresh(INavigationParameters parameters)
         {
-            var unitCode = UnitCode = parameters.GetValue<string>("UnitCode");
+            var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
             RefreshPlots();
         }
 
@@ -63,7 +67,8 @@ namespace FScruiser.XF.ViewModels
         public void AddPlot(object obj)
         {
             var plotID = Datastore.AddNewPlot(UnitCode);
-            NavigationService.NavigateAsync($"PlotEdit?{NavParams.PlotID}={plotID}");
+            //NavigationService.NavigateAsync($"PlotEdit?{NavParams.PlotID}={plotID}");
+            NavigationService.ShowPlotEdit(plotID);
         }
 
         private void DeletePlot(Plot plot)
@@ -78,7 +83,8 @@ namespace FScruiser.XF.ViewModels
 
         public void ShowEditPlot(Plot plot)
         {
-            NavigationService.NavigateAsync($"PlotEdit?{NavParams.PlotID}={plot.PlotID}");
+            //NavigationService.NavigateAsync($"PlotEdit?{NavParams.PlotID}={plot.PlotID}");
+            NavigationService.ShowPlotEdit(plot.PlotID);
         }
 
         public async void ShowTallyPlot(Plot plot)
@@ -100,11 +106,15 @@ namespace FScruiser.XF.ViewModels
 
                 if(stratum == null || stratum == "Cancel") { return; }
 
-                await NavigationService.NavigateAsync($"FixCNTTally?{NavParams.UNIT}={UnitCode}&{NavParams.STRATUM}={stratum}&{NavParams.PLOT_NUMBER}={plot.PlotNumber}");
+                //await NavigationService.NavigateAsync($"FixCNTTally?{NavParams.UNIT}={UnitCode}&{NavParams.STRATUM}={stratum}&{NavParams.PLOT_NUMBER}={plot.PlotNumber}");
+
+                await NavigationService.ShowFixCNT(UnitCode, plot.PlotNumber, stratum);
             }
             else
             {
-                await NavigationService.NavigateAsync($"PlotTally?{NavParams.PlotID}={plot.PlotID}");
+                //await NavigationService.NavigateAsync($"PlotTally?{NavParams.PlotID}={plot.PlotID}");
+
+                await NavigationService.ShowPlotTally(plot.PlotID);
             }
         }
 

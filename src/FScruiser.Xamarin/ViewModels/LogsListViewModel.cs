@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 using NatCruise.Data;
+using FScruiser.XF.Constants;
+using System;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -23,22 +25,23 @@ namespace FScruiser.XF.ViewModels
         public int? TreeNumber
         {
             get { return _treeNumber; }
-            set { SetValue(ref _treeNumber, value); }
+            set { SetProperty(ref _treeNumber, value); }
         }
 
         public ObservableCollection<Log> Logs
         {
             get => _logs;
-            protected set => SetValue(ref _logs, value);
+            protected set => SetProperty(ref _logs, value);
         }
 
         public IEnumerable<LogFieldSetup> LogFields
         {
             get => _logFields;
-            protected set => SetValue(ref _logFields, value);
+            protected set => SetProperty(ref _logFields, value);
         }
 
-        protected ICuttingUnitDatastore Datastore { get; set; }
+        protected ICuttingUnitDatastore Datastore { get; }
+        protected ICruiseNavigationService NavigationService { get; }
 
         public ICommand AddLogCommand => _addLogCommand ?? (_addLogCommand = new Command(ShowAddLogPage));
 
@@ -46,14 +49,19 @@ namespace FScruiser.XF.ViewModels
 
         public string Tree_GUID { get; private set; }
 
-        public LogsListViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider) : base(navigationService)
+        public LogsListViewModel(
+            ICruiseNavigationService navigationService,
+            IDataserviceProvider datastoreProvider)
         {
+            if (datastoreProvider is null) { throw new System.ArgumentNullException(nameof(datastoreProvider)); }
+
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         protected override void Refresh(INavigationParameters parameters)
         {
-            var tree_guid = Tree_GUID = parameters.GetValue<string>("Tree_Guid")
+            var tree_guid = Tree_GUID = parameters.GetValue<string>(NavParams.TreeID)
                 ?? parameters.GetValue<string>(KnownNavigationParameters.XamlParam);
 
             TreeNumber = Datastore.GetTreeStub(tree_guid)?.TreeNumber;
@@ -78,7 +86,9 @@ namespace FScruiser.XF.ViewModels
 
         public void ShowEditLogPage(Log log)
         {
-            NavigationService.NavigateAsync("Log", new NavigationParameters($"CreateNew=false&Log_Guid={log.LogID}"));
+            NavigationService.ShowLogEdit(log.LogID);
+
+            //NavigationService.NavigateAsync("Log", new NavigationParameters($"{NavParams.LogEdit_CreateNew}=false&{NavParams.LogID}={log.LogID}"));
         }
     }
 }
