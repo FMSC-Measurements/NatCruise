@@ -108,11 +108,6 @@ namespace FScruiser.XF.Services
             return _askKpiTcs.Task;
         }
 
-        public Task<bool> AskYesNoAsync(string message, string caption, bool defaultNo = false)
-        {
-            return App.Current.MainPage.DisplayAlert(caption, message, "Yes", "No");
-        }
-
         public Task<AskTreeCountResult> AskTreeCount(int? defaultTreeCount)
         {
             var newTcs = new TaskCompletionSource<AskTreeCountResult>();
