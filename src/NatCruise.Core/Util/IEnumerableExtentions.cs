@@ -38,7 +38,7 @@ namespace NatCruise.Util
 
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> e)
         {
-            return e == null || e.Count() == 0;
+            return e == null || e.Any() == false;
         }
 
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> @this)
