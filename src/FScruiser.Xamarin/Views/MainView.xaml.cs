@@ -14,64 +14,15 @@ namespace FScruiser.XF.Views
 
         public MainView()
         {
-            try
-            {
-                InitializeComponent();
-
-                MenuItemsListView.ItemSelected += ListView_ItemSelected;
-
-                MessagingCenter.Subscribe<object, string>(this, Messages.CRUISE_FILE_OPENED, (sender, path) =>
-                {
-                    IsPresented = false;
-                });
-
-                MessagingCenter.Subscribe<string>(this, Messages.CUTTING_UNIT_SELECTED, (o) =>
-                {
-                    IsPresented = true;
-                });
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-            }
+            InitializeComponent();
         }
 
-        private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private void _cuttingUnitPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (e.SelectedItem is NavigationListItem item && item != null
-              && Master.BindingContext is MainViewModel vm && vm != null)
-            {
-                var task = vm.NavigateToAsync(item);
-            }
-
-            MenuItemsListView.SelectedItem = null;
+            //var vm = BindingContext as MainViewModel;
+            //var selectedIndex = _cuttingUnitPicker.SelectedIndex;
+            //var selectedItem = _cuttingUnitPicker.ItemsSource[selectedIndex] as CuttingUnit_Ex;
+            //vm.SelectedCuttingUnit = selectedItem;
         }
-
-        private void _selectFile_Tapped(object sender, EventArgs ea)
-        {
-            IsPresented = false;
-        }
-
-        //private async System.Threading.Tasks.Task ShowPageFromNavigationListItemAsync(NavigationListItem item)
-        //{
-        //    if (item.CanShow == false) { return; }
-
-        //    var navigation = Detail.Navigation;
-        //    if (item.ResetsNavigation)
-        //    {
-        //        await navigation.PopToRootAsync();
-        //    }
-        //    else
-        //    {
-        //        var page = item.MakePage();
-        //        page.Title = item.Title;
-
-        //        page.SetValue(NavigationPage.HasBackButtonProperty, false);
-
-        //        await Detail.Navigation.PushAsync(page);
-        //    }
-
-        //    IsPresented = false;
-        //}
     }
 }

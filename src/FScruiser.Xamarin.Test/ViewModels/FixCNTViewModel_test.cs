@@ -18,25 +18,38 @@ namespace FScruiser.XF.ViewModels
         {
         }
 
-        private CruiseDatastore_V3 CreateDatabase()
+        private CruiseDatastore_V3 CreateDatabase(out string cruiseID)
         {
+            var saleID = Guid.NewGuid().ToString();
+            cruiseID = Guid.NewGuid().ToString();
             var database = new CruiseDatastore_V3();
+
+            var cruise = new CruiseDAL.V3.Models.Cruise
+            {
+                CruiseID = cruiseID,
+                SaleID = saleID,
+            };
+            database.Insert(cruise);
 
             database.Insert(new CruiseDAL.V3.Models.CuttingUnit
             {
-                Code = "u1",
+                CruiseID = cruiseID,
+                CuttingUnitCode = "u1",
                 Area = 0,
             });
 
-            var stratum = new NatCruise.Cruise.Models.Stratum()
+            var stratum = new CruiseDAL.V3.Models.Stratum()
             {
+                CruiseID = cruiseID,
                 StratumCode = "fixCnt1",
-                Method = CruiseDAL.Schema.CruiseMethods.FIXCNT
+                Method = CruiseDAL.Schema.CruiseMethods.FIXCNT,
+                FixCNTField = "DBH",
             };
             database.Insert(stratum);
 
-            var sg = new CruiseDAL.V3.Models.SampleGroup_V3()
+            var sg = new CruiseDAL.V3.Models.SampleGroup()
             {
+                CruiseID = cruiseID,
                 SampleGroupCode = "sgFixCnt",
                 CutLeave = "C",
                 UOM = "01",
@@ -49,43 +62,38 @@ namespace FScruiser.XF.ViewModels
 
             var tdv = new CruiseDAL.V3.Models.TreeDefaultValue()
             {
-                Species = "someSpecies",
-                LiveDead = "L",
+                CruiseID = cruiseID,
+                SpeciesCode = "someSpecies",
                 PrimaryProduct = "01"
             };
             database.Insert(tdv);
 
-            var sgTdv = new CruiseDAL.V3.Models.Subpopulation()
+            var sgTdv = new CruiseDAL.V3.Models.SubPopulation()
             {
+                CruiseID = cruiseID,
                 StratumCode = sg.StratumCode,
                 SampleGroupCode = sg.SampleGroupCode,
-                Species = tdv.Species,
-                LiveDead = tdv.LiveDead,
+                SpeciesCode = tdv.SpeciesCode,
+                LiveDead = "L",
             };
             database.Insert(sgTdv);
 
-            var fixCntTallyClass = new CruiseDAL.V3.Models.FixCNTTallyClass_V3()
+            var fixCntTallyPop = new CruiseDAL.V3.Models.FixCNTTallyPopulation()
             {
-                Field = "DBH",
-                StratumCode = stratum.StratumCode
-            };
-            database.Insert(fixCntTallyClass);
-            //database.Execute($"Update FixCNTTallyClass set FieldName = 'DBH';");
-
-            var fixCntTallyPop = new CruiseDAL.V3.Models.FixCNTTallyPopulation_V3()
-            {
+                CruiseID = cruiseID,
                 StratumCode = stratum.StratumCode,
                 SampleGroupCode = sg.SampleGroupCode,
-                Species = tdv.Species,
-                LiveDead = tdv.LiveDead,
+                SpeciesCode = tdv.SpeciesCode,
+                LiveDead = "L",
                 IntervalSize = 101,
                 Min = 102,
                 Max = 103
             };
             database.Insert(fixCntTallyPop);
 
-            database.Insert(new CruiseDAL.V3.Models.Plot_V3
+            database.Insert(new CruiseDAL.V3.Models.Plot
             {
+                CruiseID = cruiseID,
                 PlotID = Guid.NewGuid().ToString(),
                 CuttingUnitCode = "u1",
                 PlotNumber = 1
@@ -97,10 +105,14 @@ namespace FScruiser.XF.ViewModels
         [Fact]
         public void Refresh_test()
         {
-            using (var database = CreateDatabase())
+            using (var database = CreateDatabase(out var cruiseID))
             {
-                var viewModel = new FixCNTViewModel((INavigationService)null,
-                    new DataserviceProvider(App) { CruiseDatastore = database });
+                var viewModel = new FixCNTViewModel(
+                    new DataserviceProvider(new TestDeviceInfoService(), database)
+                    {
+                        CruiseDatastore = database,
+                        CruiseID = cruiseID
+                    });
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
 
@@ -122,12 +134,16 @@ namespace FScruiser.XF.ViewModels
         [Fact]
         public void Tally()
         {
-            using (var database = CreateDatabase())
+            using (var database = CreateDatabase(out var cruiseID))
             {
-                var datastore = new CuttingUnitDatastore(database);
+                var datastore = new CuttingUnitDatastore(database, cruiseID);
 
-                var viewModel = new FixCNTViewModel((INavigationService)null,
-                    new DataserviceProvider(App) { CruiseDatastore = database });
+                var viewModel = new FixCNTViewModel(
+                    new DataserviceProvider(new TestDeviceInfoService(), database)
+                    {
+                        CruiseDatastore = database,
+                        CruiseID = cruiseID
+                    });
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
                 viewModel.OnNavigatedTo(navParams);

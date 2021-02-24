@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NatCruise.Cruise.Logic;
 using NatCruise.Data;
+using FScruiser.XF.Constants;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -104,7 +105,7 @@ namespace FScruiser.XF.ViewModels
             get { return _isToFace; }
             set
             {
-                SetValue(ref _isToFace, value);
+                SetProperty(ref _isToFace, value);
                 Calculate();
                 RaisePropertyChanged(nameof(MeasureToSelection));
             }
@@ -115,7 +116,7 @@ namespace FScruiser.XF.ViewModels
             get { return _isVariableRadius; }
             set
             {
-                SetValue(ref _isVariableRadius, value);
+                SetProperty(ref _isVariableRadius, value);
                 Calculate();
             }
         }
@@ -139,7 +140,7 @@ namespace FScruiser.XF.ViewModels
         public double LimitingDistance
         {
             get { return _limitingDistance; }
-            set { SetValue(ref _limitingDistance, value); }
+            set { SetProperty(ref _limitingDistance, value); }
         }
 
         public bool? IsTreeIn
@@ -147,7 +148,7 @@ namespace FScruiser.XF.ViewModels
             get { return _isTreeIn; }
             set
             {
-                SetValue(ref _isTreeIn, value);
+                SetProperty(ref _isTreeIn, value);
                 RaisePropertyChanged(nameof(TreeStatus));
             }
         }
@@ -179,9 +180,9 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Refresh(INavigationParameters parameters)
         {
-            var unitCode = parameters.GetValue<string>("UnitCode");
-            var stratumCode = parameters.GetValue<string>("StratumCode");
-            var plotNumber = parameters.GetValue<int>("PlotNumber");
+            var unitCode = parameters.GetValue<string>(NavParams.UNIT);
+            var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
+            var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
             var plot = Datastore.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
 
@@ -231,7 +232,7 @@ namespace FScruiser.XF.ViewModels
             if (IsTreeIn.HasValue)
             {
                 return CalculateLimitingDistance.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
-                    SlopePCT, Azimuth, BafOrFps, DBH, SlopePCT, IsVariableRadius, IsToFace, Plot.StratumCode);
+                    SlopePCT, Azimuth, BafOrFps, DBH, IsVariableRadius, IsToFace, Plot.StratumCode);
             }
             else { return null; }
         }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using Xamarin.Forms;
 using NatCruise.Data;
+using System;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -27,9 +28,9 @@ namespace FScruiser.XF.ViewModels
             set { CruisersDataservice.PromptCruiserOnSample = value; }
         }
 
-        public ManageCruisersViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider) : base(navigationService)
+        public ManageCruisersViewModel(ICruisersDataservice cruisersDataservice)
         {
-            CruisersDataservice = datastoreProvider.GetDataservice<ICruisersDataservice>();
+            CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
         }
 
         public void AddCruiser(string cruiser)

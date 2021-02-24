@@ -27,7 +27,7 @@ namespace FScruiser.XF.ViewModels
         public bool IsUntallyEnabled
         {
             get { return _isUntallyEnabled; }
-            set { SetValue(ref _isUntallyEnabled, value); }
+            set { SetProperty(ref _isUntallyEnabled, value); }
         }
 
         public string Unit { get; private set; }
@@ -35,8 +35,10 @@ namespace FScruiser.XF.ViewModels
 
         protected FixCNTViewModel() { }
 
-        public FixCNTViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider) : base(navigationService)
+        public FixCNTViewModel(IDataserviceProvider datastoreProvider)
         {
+            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
+
             FixCNTDataservice = datastoreProvider.GetDataservice<IFixCNTDataservice>() ?? throw new ArgumentNullException(nameof(FixCNTDataservice));
         }
 

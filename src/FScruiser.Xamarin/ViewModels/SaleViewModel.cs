@@ -1,8 +1,7 @@
-﻿using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
-using FScruiser.XF.Services;
-using Prism.Navigation;
+﻿using Prism.Navigation;
 using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Data.Abstractions;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -23,7 +22,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 OnSaleChanging(_sale);
-                SetValue(ref _sale, value);
+                SetProperty(ref _sale, value);
                 OnSaleChanged(_sale);
             }
         }
@@ -56,7 +55,7 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Refresh(INavigationParameters parameters)
         {
-            Sale = Dataservice.GetSale();
+            //Sale = Dataservice.GetSale();
         }
     }
 }

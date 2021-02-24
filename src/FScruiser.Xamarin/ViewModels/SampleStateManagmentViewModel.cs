@@ -20,7 +20,7 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand CopyDeviceStateCommand => _copyDeviceStateCommand ?? (_copyDeviceStateCommand = new Command<string>(CopyDeviceState));
 
-        public SampleStateManagmentViewModel(INavigationService navigationService, IDataserviceProvider dataserviceProvider) : base(navigationService)
+        public SampleStateManagmentViewModel( IDataserviceProvider dataserviceProvider)
         {
             SampleInfoDataservice = dataserviceProvider.GetDataservice<ISampleInfoDataservice>();
         }
@@ -28,13 +28,13 @@ namespace FScruiser.XF.ViewModels
         public NatCruise.Cruise.Models.Device CurrentDevice
         {
             get => _currentDevice;
-            protected set => SetValue(ref _currentDevice, value);
+            protected set => SetProperty(ref _currentDevice, value);
         }
 
         public IEnumerable<NatCruise.Cruise.Models.Device> OtherDevices
         {
             get => _devices;
-            protected set => SetValue(ref _devices, value);
+            protected set => SetProperty(ref _devices, value);
         }
 
         protected override void Refresh(INavigationParameters parameters)

@@ -23,13 +23,13 @@ namespace FScruiser.XF.ViewModels
         public int AverageHeight
         {
             get => _averageHeight;
-            set => SetValue(ref _averageHeight, value);
+            set => SetProperty(ref _averageHeight, value);
         }
 
         public int TreeCount
         {
             get => _treeCount;
-            set => SetValue(ref _treeCount, value);
+            set => SetProperty(ref _treeCount, value);
         }
 
         public double VolumeFactor
@@ -41,16 +41,21 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand CancelCommand => _cancelCommand ?? (_cancelCommand = new Command(Cancel));
 
-        protected ICuttingUnitDatastore Datastore { get; set; }
-        protected ICruiseDialogService DialogService { get; set; }
+        protected ICruiseNavigationService NavigationService { get; }
+        protected ICuttingUnitDatastore Datastore { get; }
+        protected ICruiseDialogService DialogService { get; }
 
         public Plot_Stratum StratumPlot { get; protected set; }
 
-        public ThreePPNTPlotViewModel(INavigationService navigationService, IDataserviceProvider datastoreProvider, ICruiseDialogService dialogService)
-            : base(navigationService)
+        public ThreePPNTPlotViewModel(ICruiseNavigationService navigationService,
+            IDataserviceProvider datastoreProvider,
+            ICruiseDialogService dialogService)
         {
+            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
+
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
-            DialogService = dialogService;
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         protected override void Refresh(INavigationParameters parameters)

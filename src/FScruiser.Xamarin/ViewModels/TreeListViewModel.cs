@@ -30,7 +30,7 @@ namespace FScruiser.XF.ViewModels
             get { return _trees; }
             protected set
             {
-                SetValue(ref _trees, value);
+                SetProperty(ref _trees, value);
             }
         }
 
@@ -49,20 +49,25 @@ namespace FScruiser.XF.ViewModels
         public ICuttingUnitDatastore Datastore { get; set; }
 
         public ICruiseDialogService DialogService { get; set; }
+        public ICruiseNavigationService NavigationService { get; protected set; }
 
         public event EventHandler TreeAdded;
 
-        public TreeListViewModel(ICruiseDialogService dialogService
-            , INavigationService navigationService
-            , IDataserviceProvider datastoreProvider) : base(navigationService)
+        public TreeListViewModel(
+            ICruiseDialogService dialogService,
+            ICruiseNavigationService navigationService,
+            IDataserviceProvider datastoreProvider)
         {
-            DialogService = dialogService;
+            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
+
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         protected override void Refresh(INavigationParameters parameters)
         {
-            var unitCode = UnitCode = parameters.GetValue<string>("UnitCode");
+            var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
 
             Trees = Datastore.GetTreeStubsByUnitCode(unitCode).ToObservableCollection();
 
@@ -102,7 +107,8 @@ namespace FScruiser.XF.ViewModels
         {
             try
             {
-                var result = await NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, tree.TreeID } });
+                //var result = await NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, tree.TreeID } });
+                var result = await NavigationService.ShowTreeEdit(tree.TreeID);
                 var ex = result.Exception;
                 if(ex != null)
                 {
@@ -128,9 +134,10 @@ namespace FScruiser.XF.ViewModels
         {
             try
             {
-                var result = await NavigationService.NavigateAsync("Logs", new NavigationParameters() { { NavParams.TreeID, tree.TreeID } });
+                //var result = await NavigationService.NavigateAsync("Logs", new NavigationParameters() { { NavParams.TreeID, tree.TreeID } });
+                var result = await NavigationService.ShowLogsList(tree.TreeID);
 
-                if(result?.Exception != null)
+                if (result?.Exception != null)
                 {
                     Debug.WriteLine("ERROR::::" + result?.Exception);
                     Crashes.TrackError(result?.Exception, new Dictionary<string, string>() { { "nav_path", "/Main/Navigation/CuttingUnits" } });
