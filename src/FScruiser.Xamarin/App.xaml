@@ -58,11 +58,6 @@
                         Value="{StaticResource black_30}" />
             </Style>
 
-            
-
-            
-
-
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

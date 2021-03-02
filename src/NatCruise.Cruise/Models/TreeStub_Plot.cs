@@ -9,15 +9,15 @@ namespace NatCruise.Cruise.Models
         public int PlotNumber { get; set; }
         public string LiveDead { get; set; }
         public int TreeCount { get; set; }
-        public string STM { get; set; }
+        public bool STM { get; set; }
         public int KPI { get; set; }
         public string Initials { get; set; }
 
         [IgnoreField]
-        public bool IsSTM
+        public string STMstr
         {
-            get { return STM == "Y"; }
-            set { STM = (value) ? "Y" : "N"; }
+            get { return  (STM) ? "Y" : "N";  }
+            set { STM = value == "Y";  }
         }
     }
 }

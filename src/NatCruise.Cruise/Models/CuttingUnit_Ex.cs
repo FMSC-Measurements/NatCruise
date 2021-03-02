@@ -14,7 +14,7 @@ namespace NatCruise.Cruise.Models
         AND cust.CruiseID = CuttingUnit.CruiseID)")]
         public bool HasPlotStrata { get; set; }
 
-        [Field(Alias = "HasPlotStrata", SQLExpression =
+        [Field(Alias = "HasTreeStrata", SQLExpression =
         @"(SELECT count(*) > 0
     FROM CuttingUnit_Stratum AS cust
     JOIN Stratum USING (StratumCode, CruiseID)

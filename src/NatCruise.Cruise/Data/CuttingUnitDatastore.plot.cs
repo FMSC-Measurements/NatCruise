@@ -67,37 +67,37 @@ namespace NatCruise.Cruise.Services
             var plotNumber = GetNextPlotNumber(cuttingUnitCode);
 
             Database.Execute2(
-                "INSERT INTO Plot (" +
-                    "PlotID, " +
-                    "CruiseID, " +
-                    "PlotNumber, " +
-                    "CuttingUnitCode, " +
-                    "CreatedBy" +
-                ") VALUES ( " +
-                    "@PlotID," +
-                    "@CruiseID, " +
-                    "@PlotNumber, " +
-                    "@CuttingUnitCode, " +
-                    "@CreatedBy " +
-                ");" +
-                "INSERT INTO Plot_Stratum (" +
-                    "CruiseID, " +
-                    "CuttingUnitCode, " +
-                    "PlotNumber, " +
-                    "StratumCode, " +
-                    "CreatedBy " +
-                ")" +
-                "SELECT " +
-                    "p.CruiseID, " +
-                    "p.CuttingUnitCode, " +
-                    "p.PlotNumber, " +
-                    "st.StratumCode, " +
-                    "@CreatedBy AS CreatedBy " +
-                "FROM Plot AS p " +
-                "JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID) " +
-                "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
-                $"WHERE p.PlotID = @PlotID AND st.Method IN ({PLOT_METHODS}) " +
-                $"AND st.Method != '{CruiseMethods.THREEPPNT}';",
+@$"INSERT INTO Plot (
+    PlotID,
+    CruiseID,
+    PlotNumber,
+    CuttingUnitCode,
+    CreatedBy
+) VALUES (
+    @PlotID,
+    @CruiseID,
+    @PlotNumber,
+    @CuttingUnitCode,
+    @CreatedBy
+);
+INSERT INTO Plot_Stratum (
+    CruiseID,
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    CreatedBy
+)
+SELECT
+    p.CruiseID,
+    p.CuttingUnitCode,
+    p.PlotNumber,
+    st.StratumCode,
+    @CreatedBy AS CreatedBy
+FROM Plot AS p
+JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID)
+JOIN Stratum AS st USING (StratumCode, CruiseID)
+WHERE p.PlotID = @PlotID AND st.Method IN ({PLOT_METHODS})
+AND st.Method != '{CruiseMethods.THREEPPNT}';",
                 new { CruiseID, CuttingUnitCode = cuttingUnitCode, PlotID = plotID, PlotNumber = plotNumber, CreatedBy = UserName }); // dont automaticly add plot_stratum for 3ppnt methods
 
             return plotID;
@@ -359,56 +359,56 @@ AND p.PlotNumber = @p4; ",
             var treeID = tree.TreeID ?? Guid.NewGuid().ToString();
 
             Database.Execute2(
-                "INSERT INTO Tree ( " +
-                    "CruiseID, " +
-                    "TreeID, " +
-                    "TreeNumber, " +
-                    "CuttingUnitCode, " +
-                    "PlotNumber, " +
-                    "StratumCode, " +
-                    "SampleGroupCode, " +
-                    "SpeciesCode, " +
-                    "LiveDead, " +
-                    "CountOrMeasure " +
-                ") VALUES ( " +
-                    "@CruiseID," +
-                    "@TreeID,\r\n " +
-                    "@TreeNumber,\r\n " +
-                    "@CuttingUnitCode,\r\n " +
-                    "@PlotNumber,\r\n " +
-                    "@StratumCode,\r\n " +
-                    "@SampleGroupCode,\r\n " +
-                    "@SpeciesCode,\r\n" + // species
-                    "@LiveDead,\r\n" + // liveDead
-                    "@CountOrMeasure " + // countMeasure
-                "); " +
-                "INSERT INTO TallyLedger ( " +
-                    "CruiseID, " +
-                    "TallyLedgerID, " +
-                    "TreeID, " +
-                    "CuttingUnitCode, " +
-                    "PlotNumber, " +
-                    "StratumCode, " +
-                    "SampleGroupCode, " +
-                    "SpeciesCode, " +
-                    "LiveDead, " +
-                    "TreeCount, " +
-                    "KPI, " +
-                    "STM " +
-                ") VALUES ( " +
-                    "@CruiseID, " +
-                    "@TreeID, " +
-                    "@TreeID, " +
-                    "@CuttingUnitCode, " +
-                    "@PlotNumber, " +
-                    "@StratumCode, " +
-                    "@SampleGroupCode, " +
-                    "@SpeciesCode, " +
-                    "@LiveDead, " +
-                    "@TreeCount, " +
-                    "@KPI, " +
-                    "@STM " +
-                "); "
+@"INSERT INTO Tree (
+    CruiseID,
+    TreeID,
+    TreeNumber,
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    CountOrMeasure
+) VALUES (
+    @CruiseID,
+    @TreeID,
+    @TreeNumber,
+    @CuttingUnitCode,
+    @PlotNumber,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    @CountOrMeasure
+);
+INSERT INTO TallyLedger (
+    CruiseID,
+    TallyLedgerID,
+    TreeID,
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    TreeCount,
+    KPI,
+    STM
+) VALUES (
+    @CruiseID,
+    @TreeID,
+    @TreeID,
+    @CuttingUnitCode,
+    @PlotNumber,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    @TreeCount,
+    @KPI,
+    @STM
+); "
                 , new
                 {
                     CruiseID,

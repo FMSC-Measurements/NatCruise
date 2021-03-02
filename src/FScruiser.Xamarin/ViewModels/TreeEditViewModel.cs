@@ -104,6 +104,8 @@ namespace FScruiser.XF.ViewModels
 
         public bool HasSpeciesError { get => _hasSpeciesError; set => SetProperty(ref _hasSpeciesError, value); }
 
+        public string TreeID => Tree?.TreeID;
+
         #region TreeNumber
 
         public int TreeNumber

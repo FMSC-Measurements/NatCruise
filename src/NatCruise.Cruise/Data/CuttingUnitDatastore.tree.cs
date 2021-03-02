@@ -424,7 +424,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
                 $"(TreeID, {treeFieldValue.Field}, CreatedBy)" +
                 $"VALUES (@p1, @p2, @p3)" +
                 $"ON CONFLICT (TreeID) DO " +
-                $"UPDATE SET {treeFieldValue.Field} = @p2 ModifiedBy = @p3 WHERE TreeID = @p1;",
+                $"UPDATE SET {treeFieldValue.Field} = @p2, ModifiedBy = @p3 WHERE TreeID = @p1;",
                 treeFieldValue.TreeID, treeFieldValue.Value, UserName);
         }
 

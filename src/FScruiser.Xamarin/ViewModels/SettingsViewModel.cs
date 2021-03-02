@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,10 @@ namespace FScruiser.XF.ViewModels
             if (await DialogService.AskYesNoAsync("This will delete all cruise data do you want to continue", "Warning", defaultNo: true))
             {
                 var databasePath = FileSystemService.DefaultCruiseDatabasePath;
+                File.Delete(databasePath);
+                Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Database Reset");
                 var newDatabase = new CruiseDatastore_V3(databasePath, true);
+                
             }
         }
 
