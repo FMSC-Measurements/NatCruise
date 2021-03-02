@@ -50,6 +50,9 @@
     <Compile Update="Views\AskKpiView.xaml.cs">
       <DependentUpon>AskKpiView.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\CuttingUnitInfoView.xaml.cs">
+      <DependentUpon>CuttingUnitInfoView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\CuttingUnitListView.xaml.cs">
       <DependentUpon>CuttingUnitListView.xaml</DependentUpon>
     </Compile>
@@ -131,10 +134,16 @@
     <EmbeddedResource Update="Views\AskKpiView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\BlankView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\ClickerTreeCountEntryDialog.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\CruiseSelectView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\CuttingUnitInfoView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ImportView.xaml">
