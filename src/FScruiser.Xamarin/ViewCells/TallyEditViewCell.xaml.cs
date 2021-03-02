@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.ViewCells
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class TallyEditViewCell : ViewCell
+	public partial class TallyEditViewCell : ContentView
 	{
 		public TallyEditViewCell ()
 		{

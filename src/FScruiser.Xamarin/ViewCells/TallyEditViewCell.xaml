@@ -1,38 +1,36 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ViewCell xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
           x:Class="FScruiser.XF.ViewCells.TallyEditViewCell"
-          xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls">
-    <ViewCell.View>
-        <ContentView BackgroundColor="Silver">
-
-            <Frame BackgroundColor="Orange"
+          xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
+          BackgroundColor="Silver">
+    <Frame BackgroundColor="Orange"
                    CornerRadius="5"
                    BorderColor="White"
                    Margin="2,5,2,0"
                    Padding="0">
 
-                <Grid HeightRequest="50">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50" />
-                    </Grid.RowDefinitions>
+        <Grid HeightRequest="50">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="40" />
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-                    <Image Grid.Row="0"
+            <Image Grid.Row="0"
                            Grid.Column="0"
                            Source="ic_counts_box_black_24dp.png" />
 
-                    <local_ctrls:PopulationIndicator Grid.Row="0"
+            <local_ctrls:PopulationIndicator Grid.Row="0"
                                                          Grid.Column="1"
                                                          StratumCode="{Binding StratumCode}"
                                                          SampleGroupCode="{Binding SampleGroupCode}"
-                                                         Species="{Binding Species}"
+                                                         Species="{Binding SpeciesCode}"
                                                          LiveDead="{Binding LiveDead}"
                                                          Margin="5"
                                                          HeightRequest="30"
@@ -40,22 +38,20 @@
                                                          HorizontalOptions="Start"
                                                          FontSize="Small" />
 
-                    <Label Grid.Row="0"
+            <Label Grid.Row="0"
                            Grid.Column="2"
                            Text="{Binding TreeCount, StringFormat='{}Tree Counts{0}'}"
                            FontSize="Large"
                            VerticalTextAlignment="Center" />
 
-                    <Label Grid.Row="0"
+            <Label Grid.Row="0"
                            Grid.Column="3"
                            Text="{Binding Reason}"
                            FontSize="Large"
                            VerticalTextAlignment="Center" />
 
 
-                </Grid>
+        </Grid>
 
-            </Frame>
-        </ContentView>
-    </ViewCell.View>
-</ViewCell>
+    </Frame>
+</ContentView>
