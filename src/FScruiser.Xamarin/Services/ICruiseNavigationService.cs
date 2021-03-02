@@ -8,11 +8,15 @@ namespace FScruiser.XF.Services
     {
         Task ShowImport();
 
+        Task ShowManageCruisers();
+
         Task ShowCruiseLandingLayout();
 
         Task ShowCruiseSelect(string saleID);
 
         Task ShowCuttingUnitList();
+
+        Task ShowCuttingUnitInfo(string unitCode);
 
         Task ShowFixCNT(string unitCode, int plotNumber, string stratumCode);
 
@@ -34,7 +38,7 @@ namespace FScruiser.XF.Services
 
         Task ShowSaleSelect();
 
-        Task ShowSale();
+        Task ShowSale(string cruiseID);
 
         Task ShowTally(string unitCode);
 

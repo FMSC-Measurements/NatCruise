@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Views.CuttingUnitInfoView">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Cutting Unit Code"
+                           VerticalOptions="Center" />
+                    <Entry Text="{Binding CuttingUnit.CuttingUnitCode}"
+                           WidthRequest="50"
+                           IsReadOnly="True" />
+                </StackLayout>
+
+                <StackLayout>
+                    <Label Text="Description" />
+                    <Entry Text="{Binding CuttingUnit.Description}"/>
+                </StackLayout>
+
+                <StackLayout>
+                    <Label Text="Remarks" />
+                    <Entry Text="{Binding CuttingUnit.Remarks}"/>
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
