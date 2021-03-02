@@ -29,6 +29,10 @@ namespace NatCruise.Cruise.Logic
             ISampleSelectorDataService samplerService,
             ICruiseDialogService dialogService)
         {
+            if (pop is null) { throw new System.ArgumentNullException(nameof(pop)); }
+            if (samplerService is null) { throw new System.ArgumentNullException(nameof(samplerService)); }
+            if (dialogService is null) { throw new System.ArgumentNullException(nameof(dialogService)); }
+
             if (pop.IsClickerTally)
             {
                 var clickerTallyResult = await dialogService.AskTreeCount(pop.Frequency);
@@ -76,6 +80,10 @@ namespace NatCruise.Cruise.Logic
             ISampleSelectorDataService samplerService,
             ICruiseDialogService dialogService)
         {
+            if (pop is null) { throw new System.ArgumentNullException(nameof(pop)); }
+            if (samplerService is null) { throw new System.ArgumentNullException(nameof(samplerService)); }
+            if (dialogService is null) { throw new System.ArgumentNullException(nameof(dialogService)); }
+
             var sampler = samplerService.GetSamplerBySampleGroupCode(pop.StratumCode, pop.SampleGroupCode) as S3PSelector;
 
             //If we receive nothing from the sampler, we don't have a sample
@@ -114,6 +122,9 @@ namespace NatCruise.Cruise.Logic
             int kpi,
             IThreePSelector sampler)
         {
+            if (pop is null) { throw new System.ArgumentNullException(nameof(pop)); }
+            if (sampler is null) { throw new System.ArgumentNullException(nameof(sampler)); }
+
             if (kpi == -1)  //user entered sure to measure
             {
                 return CreateTally(unitCode, pop, SampleResult.M, stm: true);
@@ -124,6 +135,8 @@ namespace NatCruise.Cruise.Logic
                 return CreateTally(unitCode, pop, result,
                         kpi: kpi, threePRandomeValue: rand);
             }
+
+
         }
     }
 }
