@@ -2,11 +2,13 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FScruiser.XF.Views.ImportView"
-             x:Name="_page">
+             x:Name="_page"
+             IsBusy="{Binding IsWorking}">
     <ContentPage.Content>
         <StackLayout>
             <Entry Placeholder="Select Cruise File"
-                   Text="{Binding SelectedCruiseFile}" />
+                   Text="{Binding ImportPath}"
+                   IsReadOnly="True"/>
             <Button Text="Browse"
                     Command="{Binding BrowseFileCommand}" />
             <ListView ItemsSource="{Binding Cruises}"

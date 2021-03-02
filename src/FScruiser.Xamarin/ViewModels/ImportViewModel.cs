@@ -21,13 +21,27 @@ namespace FScruiser.XF.ViewModels
         private IEnumerable<Cruise> _cruises;
         private string _selectedCruiseFile;
         private Cruise _selectedCruise;
+        private bool _isWorking;
+        private string _importPath;
 
         public ILoggingService Log { get; }
         public IDataserviceProvider DataserviceProvider { get; }
         public IFileDialogService FileDialogService { get; }
         public IFileSystemService FileSystemService { get; }
         public IDialogService DialogService { get; }
-        public string ImportPath { get; protected set; }
+        public INavigationService NavigationService { get; }
+
+        public string ImportPath
+        {
+            get => _importPath;
+            protected set => SetProperty(ref _importPath, value);
+        }
+
+        public bool IsWorking
+        {
+            get => _isWorking;
+            protected set => SetProperty(ref _isWorking, value);
+        }
 
         public string SelectedCruiseFile
         {
@@ -58,13 +72,15 @@ namespace FScruiser.XF.ViewModels
             IFileDialogService fileDialogService,
             IFileSystemService fileSystemService,
             IDialogService dialogService,
-            ILoggingService loggingService)
+            ILoggingService loggingService,
+            INavigationService navigationService)
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             Log = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         public async Task BrowseCruiseFileAsync()
@@ -191,7 +207,7 @@ namespace FScruiser.XF.ViewModels
             ImportCruise(cruise);
         }
 
-        public void ImportCruise(Cruise cruise)
+        public async void ImportCruise(Cruise cruise)
         {
             var cruiseID = cruise.CruiseID;
             var importPath = ImportPath ?? throw new NullReferenceException("ImportPath was null");
@@ -202,12 +218,20 @@ namespace FScruiser.XF.ViewModels
                 var srcConn = srcDb.OpenConnection();
                 var destConn = destDb.OpenConnection();
 
-                ImportCruise(cruiseID, srcConn, destConn);
+                if(await ImportCruise(cruiseID, srcConn, destConn) == true)
+                {
+                    DialogService.ShowNotification("Done");
+                    await NavigationService.GoBackAsync();
+                }
+                else
+                {
+                    DialogService.ShowNotification("Import Failed");
+                }
             }
-            DialogService.ShowNotification("Done");
+            
         }
 
-        public void ImportCruise(string cruiseID, DbConnection fromConn, DbConnection toConn, CruiseSyncOptions options = null)
+        public async Task<bool> ImportCruise(string cruiseID, DbConnection fromConn, DbConnection toConn, CruiseSyncOptions options = null)
         {
             options ??= new CruiseSyncOptions()
             {
@@ -219,13 +243,20 @@ namespace FScruiser.XF.ViewModels
 
             try
             {
+                IsWorking = true;
                 var syncer = new CruiseSyncer();
-                syncer.Sync(cruiseID, fromConn, toConn, options);
+                await syncer.SyncAsync(cruiseID, fromConn, toConn, options);
+                return true;
             }
             catch(Exception e)
             {
                 Log.LogException("Import", "Import Failed", e);
-                DialogService.ShowNotification("Import Failed");
+                
+                return false;
+            }
+            finally
+            {
+                IsWorking = false;
             }
 
         }
