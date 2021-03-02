@@ -65,6 +65,21 @@ namespace NatCruise.Cruise.Services
                 .Query(CruiseID).ToArray();
         }
 
+        public void UpdateCuttingUnit(CuttingUnit_Ex cuttingUnit)
+        {
+            if (cuttingUnit is null) { throw new ArgumentNullException(nameof(cuttingUnit)); }
+
+            Database.Execute(
+@"UPDATE CuttingUnit SET
+    Description = @p1,
+    Remarks = @p2
+WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
+            cuttingUnit.Description,
+            cuttingUnit.Remarks,
+            CruiseID,
+            cuttingUnit.CuttingUnitCode);
+        }
+
         #endregion units
 
         #region strata

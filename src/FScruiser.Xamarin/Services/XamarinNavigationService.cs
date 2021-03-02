@@ -27,9 +27,14 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync(path, navparams);
         }
 
+        public Task ShowManageCruisers()
+        {
+            return NavigationService.NavigateAsync("/Main/Navigation/Cruisers");
+        }
+
         public Task ShowCruiseLandingLayout()
         {
-            return NavigationService.NavigateAsync("/Main/Navigation/Sale");
+            return NavigationService.NavigateAsync("/Main/Navigation/Blank");
         }
 
         public Task ShowCruiseSelect(string saleID)
@@ -38,9 +43,16 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.SaleID}={saleID}"));
         }
 
+        public Task ShowCuttingUnitInfo(string unitCode)
+        {
+            return NavigationService.NavigateAsync("/Main/Navigation/CuttingUnitInfo",
+                new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
+        }
+
+
         public Task ShowCuttingUnitList()
         {
-            return NavigationService.NavigateAsync("CuttingUnitList");
+            return NavigationService.NavigateAsync("/Main/Navigation/CuttingUnitList");
         }
 
         public Task ShowFeedback()
@@ -91,7 +103,7 @@ namespace FScruiser.XF.Services
 
         public Task ShowPlotList(string unitCode)
         {
-            return NavigationService.NavigateAsync("PlotList",
+            return NavigationService.NavigateAsync("/Main/Navigation/PlotList",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
 
@@ -107,14 +119,15 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.PLOT_NUMBER}={plotNumber}"));
         }
 
-        public Task ShowSale()
+        public Task ShowSale(string cruiseID)
         {
-            return NavigationService.NavigateAsync("Sale");
+            return NavigationService.NavigateAsync("/Main/Navigation/Sale",
+                new NavigationParameters($"{NavParams.CruiseID}={cruiseID}"));
         }
 
         public Task ShowSaleSelect()
         {
-            return NavigationService.NavigateAsync("SaleSelect");
+            return NavigationService.NavigateAsync("/Main/Navigation/SaleSelect");
         }
 
         public Task ShowSampleStateManagment()
@@ -124,12 +137,12 @@ namespace FScruiser.XF.Services
 
         public Task ShowSettings()
         {
-            return NavigationService.NavigateAsync("Settings");
+            return NavigationService.NavigateAsync("/Main/Navigation/Settings");
         }
 
         public Task ShowTally(string unitCode)
         {
-            return NavigationService.NavigateAsync("Tally",
+            return NavigationService.NavigateAsync("/Main/Navigation/Tally",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
 
@@ -159,7 +172,7 @@ namespace FScruiser.XF.Services
 
         public Task ShowTreeList(string unitCode)
         {
-            return NavigationService.NavigateAsync("TreeList",
+            return NavigationService.NavigateAsync("/Main/Navigation/TreeList",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
     }
