@@ -2,6 +2,7 @@
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Data.Abstractions;
+using FScruiser.XF.Constants;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -55,7 +56,9 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Refresh(INavigationParameters parameters)
         {
-            //Sale = Dataservice.GetSale();
+            var cruiseID = parameters.GetValue<string>(NavParams.CruiseID);
+
+            Sale = Dataservice.GetSale(cruiseID);
         }
     }
 }
