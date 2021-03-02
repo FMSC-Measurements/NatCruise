@@ -6,6 +6,9 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using NatCruise.Util;
+using System.Collections.Generic;
+using CSharpForMarkup;
+using Backpack.XF.WidgiWhats;
 
 namespace FScruiser.XF.Views
 {
@@ -21,63 +24,17 @@ namespace FScruiser.XF.Views
             InitializeComponent();
         }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
+        //protected override void OnAppearing()
+        //{
+        //    base.OnAppearing();
 
-            if (BindingContext is PlotTallyViewModel vm)
-            {
-                vm.TreeAdded += TallyFeed_CollectionChanged;
-                TallyFeed_CollectionChanged(null, null);//Scroll to the bottom of the tally feed when page appears
-            }
+        //    if (BindingContext is PlotTallyViewModel vm)
+        //    {
+        //        vm.TreeAdded += TallyFeed_CollectionChanged;
+        //        TallyFeed_CollectionChanged(null, null);//Scroll to the bottom of the tally feed when page appears
+        //    }
+        //}
 
-            
-            MessagingCenter.Subscribe<object, bool>(this, Messages.TREECELL_ISELECTED_CHANGED, _plotTreeViewCell_IsSelectedChanged);
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            if (BindingContext is PlotTallyViewModel vm)
-            {
-                vm.TreeAdded -= TallyFeed_CollectionChanged;
-            }
-
-            MessagingCenter.Unsubscribe<object, string>(this, Messages.EDIT_TREE_CLICKED);
-            MessagingCenter.Unsubscribe<object, string>(this, Messages.DELETE_TREE_CLICKED);
-            MessagingCenter.Unsubscribe<object, bool>(this, Messages.TREECELL_ISELECTED_CHANGED);
-        }
-
-        private void TallyFeed_CollectionChanged(object sender, EventArgs e)
-        {
-            if (_treeCellIsSelected) { return; } //dont scroll down it tree entry is in edit mode
-
-            var lastItem = _tallyFeedListView.ItemsSource.OrEmpty().OfType<object>().LastOrDefault();
-            if (lastItem != null)
-            {
-                _tallyFeedListView.ScrollTo(lastItem, ScrollToPosition.End, false);
-            }
-        }
-
-        public void TallyFeedListView_ItemSelected(object sender, SelectedItemChangedEventArgs eventArgs)
-        {
-            var selectedItem = (TreeStub_Plot)eventArgs.SelectedItem;
-
-            if (selectedItem != null)
-            {
-                var viewModel = ViewModel;
-                //viewModel.ShowTree(selectedItem.Tree);
-            }
-
-            var view = (ListView)sender;
-            //view.SelectedItem = null;//disable selection so that selection acts as a click
-        }
-
-        private void _plotTreeViewCell_IsSelectedChanged(object sender, bool isSelected)
-        {
-            _treeCellIsSelected = isSelected;
-        }
 
         private void _stratumFilterButton_Clicked(object sender, EventArgs e)
         {
@@ -86,6 +43,110 @@ namespace FScruiser.XF.Views
                 && BindingContext is PlotTallyViewModel viewModel)
             {
                 viewModel.StratumFilter = stratumFilter;
+            }
+        }
+
+        private void _treeCellTappedGesture_Tapped(object sender, EventArgs e)
+        {
+            _treeEditPanel.IsVisible = true;
+        }
+
+        private void _hideTreeEditPanelButton_Clicked(object sender, EventArgs e)
+        {
+            _treeEditPanel.IsVisible = false;
+        }
+
+
+        private void _treeEditPanel_BindingContextChanged(object sender, EventArgs e)
+        {
+            var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
+            if (vm != null)
+            {
+                _treeEditControlGrid.Children.Clear();
+                var editControls = MakeEditControls(vm.TreeFieldValues);
+                _treeEditControlGrid.Children.AddRange(editControls);
+            }
+            else
+            {
+                _treeEditControlGrid.Children.Clear();
+            }
+        }
+
+
+        private IEnumerable<View> MakeEditControls(IEnumerable<TreeFieldValue> treeFieldValues)
+        {
+            var controls = new List<View>();
+
+            controls.Add(new Label
+            { Text = "Spcies" }
+            .Col(0)
+            .Row(0));
+
+            var speciesPicker = new ValuePicker();
+            AjustEditView(speciesPicker);
+
+            controls.Add(speciesPicker
+                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Species))
+                .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.SpeciesOptions))
+                .Col(0)
+                .Row(1));
+
+            controls.Add(new Label
+            { Text = "L/D" }
+            .Col(1)
+            .Row(0));
+
+            var ldPicker = new ValuePicker();
+            AjustEditView(ldPicker);
+
+            controls.Add(ldPicker
+                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.LiveDead))
+                .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.LiveDeadOptions))
+                .Col(1)
+                .Row(1));
+
+            int counter = 2;
+            foreach (var field in treeFieldValues)
+            {
+                var fieldLabel = new Label()
+                {
+                    Text = field.Heading
+                }
+                .Col(counter)
+                .Row(0);
+
+                var editControl = Util.TreeEditControlFactory.MakeEditView(field)
+                    .Col(counter)
+                    .Row(1);
+                AjustEditView(editControl);
+
+                if (editControl is Entry entry)
+                {
+                    entry.Completed += _entry_Completed;
+                }
+
+                controls.Add(fieldLabel);
+                controls.Add(editControl);
+                counter++;
+            }
+
+            return controls;
+        }
+
+        private static void AjustEditView(View view)
+        {
+            //view.Margin = new Thickness(5,0);
+        }
+
+        private void _entry_Completed(object sender, EventArgs e)
+        {
+            if (sender != null && sender is View view)
+            {
+                var layout = (Grid)view.Parent;
+
+                var indexOfChild = layout.Children.IndexOf(view);
+                var nextChild = layout.Children.Skip(indexOfChild + 1).Where(x => x is Entry || x is Picker).FirstOrDefault();
+                nextChild?.Focus();
             }
         }
     }
