@@ -1,6 +1,8 @@
 ﻿using CruiseDAL;
-using NatCruise.Wpf.Data;
-using NatCruise.Wpf.Models;
+using NatCruise.Data;
+using NatCruise.Design.Data;
+using NatCruise.Design.Models;
+using NatCruise.Services;
 using NatCruise.Wpf.Services;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -62,14 +64,14 @@ namespace NatCruise.Wpf.ViewModels
             RaiseRequestClose(new DialogResult(ButtonResult.Cancel));
         }
 
-        private void CreateCruise()
+        private async void CreateCruise()
         {
             var isSaleValid = ValidateSale();
-            if(isSaleValid == false) { return; }
+            if (isSaleValid == false) { return; }
 
             var defaultFileName = $"{Sale.SaleNumber} {Sale.Name}.crz3";
 
-            var filePath = FileDialogService.SelectCruiseFileDestination(defaultFileName: defaultFileName);
+            var filePath = await FileDialogService.SelectCruiseFileDestinationAsync(defaultFileName: defaultFileName);
             if (filePath != null)
             {
                 var fileInfo = new FileInfo(filePath);
@@ -82,7 +84,7 @@ namespace NatCruise.Wpf.ViewModels
                         database.Insert(Sale);
                     }
 
-                    DataserviceProvider.OpenFile(fileInfo.FullName);
+                    DataserviceProvider.OpenDatabase(fileInfo.FullName);
 
                     RaiseRequestClose(new DialogResult(ButtonResult.OK));
                 }
@@ -97,11 +99,11 @@ namespace NatCruise.Wpf.ViewModels
         {
         }
 
-        bool ValidateSale()
+        private bool ValidateSale()
         {
             var sale = Sale;
-            if(string.IsNullOrWhiteSpace(sale.Name)) { return false; }
-            if(string.IsNullOrWhiteSpace(sale.SaleNumber)) { return false; }
+            if (string.IsNullOrWhiteSpace(sale.Name)) { return false; }
+            if (string.IsNullOrWhiteSpace(sale.SaleNumber)) { return false; }
 
             return true;
         }

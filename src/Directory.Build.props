@@ -1,0 +1,20 @@
+<Project>
+  <PropertyGroup Label="Build Config">
+    <LangVersion>8.0</LangVersion>
+    <VersionSuffix>alpha</VersionSuffix>
+  </PropertyGroup>
+  
+ <PropertyGroup Label="Custom Properties">
+   <FScruiserVersion>0.21.0.0</FScruiserVersion>
+ </PropertyGroup>
+  
+  <PropertyGroup Label="Dependancy Versions">
+    <CruiseDALVersion>3.0.3.78</CruiseDALVersion>
+  </PropertyGroup>
+
+  <!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 becuase of xunit's shadow coppy feature
+  see https://github.com/reactiveui/Akavache/pull/496 and https://github.com/xunit/xunit/issues/1198 -->
+  <ItemGroup Condition="$(IsTestProject) == 'true' AND $(TargetFramework) == 'net461'">
+    <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

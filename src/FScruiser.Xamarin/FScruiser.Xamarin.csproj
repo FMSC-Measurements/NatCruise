@@ -1,0 +1,256 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <!--<PackageTargetFallback>$(PackageTargetFallback);portable-win+net45+wp8+win81+wpa8</PackageTargetFallback>-->
+    <RootNamespace>FScruiser.XF</RootNamespace>
+    <AssemblyName>FScruiser.XF</AssemblyName>
+    <Version>$(FScruiserVersion)</Version>
+    <!--<Configurations>Debug;Release;Profile</Configurations>-->
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="**\*~" />
+  </ItemGroup>
+  
+
+  <ItemGroup>
+    <PackageReference Include="Backpack.XF.Converters" Version="1.0.1.2" />
+    <PackageReference Include="Backpack.XF.WidgiWhats" Version="1.0.2" />
+    <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.10" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.1.0" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
+    <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
+    <PackageReference Include="Scripty.MsBuild" Version="0.7.4" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1931" />
+    <PackageReference Include="Xamarin.Toolkit.Behaviors" Version="0.0.1.34-preview" />
+    <PackageReference Include="Xamarin.Toolkit.Converters" Version="0.0.1.34-preview" />
+    <PackageReference Include="Xamarin.Toolkit.Effects" Version="1.0.0" />
+  </ItemGroup>
+  
+
+  <ItemGroup>
+    <ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\PopulationIndicator.xaml.cs">
+      <DependentUpon>PopulationIndicator.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\AskKpiView.xaml.cs">
+      <DependentUpon>AskKpiView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CuttingUnitInfoView.xaml.cs">
+      <DependentUpon>CuttingUnitInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CuttingUnitListView.xaml.cs">
+      <DependentUpon>CuttingUnitListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\FeedbackView.xaml.cs">
+      <DependentUpon>FeedbackView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\FixCntTallyView.xaml.cs">
+      <DependentUpon>FixCntTallyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LimitingDistanceView.xaml.cs">
+      <DependentUpon>LimitingDistanceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LogEditView.xaml.cs">
+      <DependentUpon>LogEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LogsListView.xaml.cs">
+      <DependentUpon>LogsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ManageCruisersView.xaml.cs">
+      <DependentUpon>ManageCruisersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MyNavigationView.xaml.cs">
+      <DependentUpon>MyNavigationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PlotEditView.xaml.cs">
+      <DependentUpon>PlotEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PlotListView.xaml.cs">
+      <DependentUpon>PlotListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PlotTallyView.xaml.cs">
+      <DependentUpon>PlotTallyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SaleView.xaml.cs">
+      <DependentUpon>SaleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SampleStateManagmentCurrentDeviceView.xaml.cs">
+      <DependentUpon>SampleStateManagmentCurrentDeviceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SampleStateManagmentOtherDevicesView.xaml.cs">
+      <DependentUpon>SampleStateManagmentOtherDevicesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SampleStateManagmentView.xaml.cs">
+      <DependentUpon>SampleStateManagmentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ThreePPNTPlotView.xaml.cs">
+      <DependentUpon>ThreePPNTPlotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TreeCountEditView.xaml.cs">
+      <DependentUpon>TreeCountEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ViewCells\TallyEntryTreeViewCell.xaml.cs">
+      <DependentUpon>TallyEntryTreeViewCell.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TreeEditView.xaml.cs">
+      <DependentUpon>TreeEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TreeErrorEditView.xaml.cs">
+      <DependentUpon>TreeErrorEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TreeListView.xaml.cs">
+      <DependentUpon>TreeListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TallyView.xaml.cs">
+      <DependentUpon>TallyView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\AskKpiView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\BlankView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ClickerTreeCountEntryDialog.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\CruiseSelectView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\CuttingUnitInfoView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ImportView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SaleSelectView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SaleView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SampleStateManagmentCurrentDeviceView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SampleStateManagmentOtherDevicesView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SampleStateManagmentView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\TreeCountEditView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FeedbackView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FixCntTallyView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\LimitingDistanceView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\LogEditView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\LogsListView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ManageCruisersView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MyNavigationView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PlotListView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PlotTallyView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SettingsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ThreePPNTPlotView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\TreeEditView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MainView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\TallyView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ViewCells\PlotTreeViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ViewCells\TallyEditViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ViewCells\TallyEntryTreeViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ViewCells\TallyEntryViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Controls\PopulationIndicator.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Secrets.local.csx">
+      <Generator>ScriptyGenerator</Generator>
+    </None>
+    <None Update="ViewCells\PlotTreeViewCell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ViewCells\TallyEditViewCell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ViewCells\TallyEntryTreeViewCell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ViewCells\TallyEntryViewCell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\PlotEditView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+</Project>

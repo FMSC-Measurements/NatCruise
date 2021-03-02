@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:effects="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
+             xmlns:tk_converters="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+             xmlns:widgiwhats="clr-namespace:Backpack.XF.WidgiWhats;assembly=Backpack.XF.WidgiWhats"
+             xmlns:converters="clr-namespace:FScruiser.XF.Converters"
+             x:Class="FScruiser.XF.Views.TreeEditView"
+             x:Name="_page"
+             Title="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
+             BackgroundColor="White"
+             TreeNumber="{Binding TreeNumber}"
+             TreeFieldValues="{Binding TreeFieldValues}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Logs"
+                     Command="{Binding ShowLogsCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <converters:ErrorToColorConverter x:Key="errorToColorConverter"
+                                          Default="White"
+                                          Error="{StaticResource error}"
+                                          Warning="{StaticResource warning}"
+                                          SuppressedColor="{StaticResource error_suppressed}" />
+
+        <Style x:Key="errorWarningButton"
+               TargetType="Button">
+            <Setter Property="TextColor"
+                    Value="Black" />
+
+            <Setter Property="FontSize"
+                    Value="Large" />
+
+            <Setter Property="Margin"
+                    Value="0,0,0,7" />
+
+            <Setter Property="BackgroundColor"
+                    Value="{Binding ., Converter={StaticResource errorToColorConverter}}" />
+
+            <Setter Property="Text"
+                    Value="{Binding Message}" />
+        </Style>
+
+        <tk_converters:BooleanToObjectConverter x:Key="hasErrorConverter"
+                                                x:TypeArguments="Color"
+                                                TrueObject="Red"
+                                                FalseObject="Transparent" />
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <!--main fields-->
+        <FlexLayout Grid.Row="0"
+                    Wrap="Wrap"
+                    AlignContent="Start"
+                    JustifyContent="SpaceAround"
+                    HeightRequest="80">
+            <FlexLayout.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="VerticalTextAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalTextAlignment"
+                            Value="End" />
+                </Style>
+                <Style TargetType="Picker">
+                    <Setter Property="WidthRequest"
+                            Value="50" />
+                </Style>
+
+                <Style TargetType="StackLayout">
+                    <Setter Property="HeightRequest"
+                            Value="40" />
+                    <Setter Property="Margin"
+                            Value="7,0,0,3" />
+                </Style>
+
+                <Style TargetType="Entry">
+                    <Setter Property="WidthRequest"
+                            Value="50" />
+                </Style>
+            </FlexLayout.Resources>
+
+            <StackLayout Orientation="Horizontal">
+
+                <Label Text="Tree #" />
+                <Entry x:Name="_treeNumberEntry">
+                    <Entry.Effects>
+                        <effects:EntrySelectAllText />
+                    </Entry.Effects>
+                </Entry>
+
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+
+                <Label Text="Stratum" />
+                <widgiwhats:ValuePicker x:Name="_stratumCodeEntry"
+                                        SelectedValue="{Binding StratumCode}"
+                                        ValueSource="{Binding StratumCodes}"
+                                        WidthRequest="40">
+                </widgiwhats:ValuePicker>
+
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal"
+                         BackgroundColor="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}">
+
+                <Label Text="Sample Group" />
+                <widgiwhats:ValuePicker x:Name="_sampleGroupEntry"
+                                        SelectedValue="{Binding SampleGroupCode}"
+                                        ValueSource="{Binding SampleGroupCodes}"
+                                        WidthRequest="40">
+                </widgiwhats:ValuePicker>
+
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal"
+                         BackgroundColor="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}">
+
+                <Label Text="Species" />
+                <widgiwhats:ValuePicker x:Name="_speciesEntry"
+                                        SelectedValue="{Binding SpeciesCode}"
+                                        ValueSource="{Binding SpeciesOptions}"
+                                        WidthRequest="40">
+                </widgiwhats:ValuePicker>
+
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+
+                <Label Text="Live/Dead" />
+                <widgiwhats:ValuePicker x:Name="_liveDeadPicker"
+                                        SelectedValue="{Binding LiveDead}"
+                                        WidthRequest="40">
+                    <widgiwhats:ValuePicker.ValueSource>
+                        <Array Type="{x:Type x:String}">
+                            <x:String>L</x:String>
+                            <x:String>D</x:String>
+                        </Array>
+                    </widgiwhats:ValuePicker.ValueSource>
+                </widgiwhats:ValuePicker>
+
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Initials" />
+                <Picker x:Name="_initialsPicker"
+                        WidthRequest="40"
+                        SelectedItem="{Binding Initials}"
+                        ItemsSource="{Binding Cruisers}" />
+            </StackLayout>
+
+        </FlexLayout>
+
+        <ScrollView x:Name="_editViewsHost"
+                    Grid.Row="1"
+                    VerticalOptions="FillAndExpand">
+            <ScrollView.Resources>
+                <ResourceDictionary>
+                    <Style TargetType="Label">
+                        <Setter Property="TextColor"
+                                Value="Black" />
+                        <Setter Property="VerticalTextAlignment"
+                                Value="Center" />
+                    </Style>
+                    <Style TargetType="Entry">
+                        <Setter Property="TextColor"
+                                Value="Black" />
+                    </Style>
+                    <Style TargetType="Picker">
+                        <Setter Property="TextColor"
+                                Value="Black" />
+                    </Style>
+                    <!--<Style TargetType="Switch">
+                <Setter Property="TextColor" Value="Black"/>
+            </Style>-->
+                </ResourceDictionary>
+            </ScrollView.Resources>
+        </ScrollView>
+
+        <StackLayout Grid.Row="2">
+            <Label>Remarks</Label>
+            <Editor HeightRequest="80" Text="{Binding Remarks}" />
+        </StackLayout>
+
+        <StackLayout Grid.Row="3"
+                     BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
+                     VerticalOptions="End">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Button Style="{StaticResource errorWarningButton}"
+                            FontSize="Medium"
+                            Command="{Binding BindingContext.ShowEditTreeErrorCommand, Source={Reference _page}}"
+                            CommandParameter="{Binding .}" />
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
+    </Grid>
+</ContentPage>

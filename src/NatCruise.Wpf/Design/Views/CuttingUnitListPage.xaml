@@ -1,0 +1,114 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             x:Class="NatCruise.Design.Views.CuttingUnitListPage"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <ScrollViewer>
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,0,10,0"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <Border BorderBrush="{DynamicResource brush_shade_black_30}"
+                    BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type Button}"
+                                   BasedOn="{StaticResource MetroFlatButton}">
+                                <Setter Property="FontWeight"
+                                        Value="Bold" />
+                                <Setter Property="FontSize"
+                                        Value="16" />
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="32" />
+                            <ColumnDefinition Width="32" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="_unitCodeTextBox"
+                                 Grid.Column="0"
+                                 mah:TextBoxHelper.Watermark="Code" />
+                        <Button Grid.Column="1"
+                                Content="+"
+                                Background="{StaticResource brush_addItem}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding AddCuttingUnitCommand}"
+                                                           CommandParameter="{Binding Text, Source={x:Reference _unitCodeTextBox}}" />
+                                    <triggers:ClearTextBoxAction TargetName="_unitCodeTextBox" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button  Grid.Column="2"
+                                 Content="-"
+                                 Background="{StaticResource brush_removeItem}"
+                                 Command="{Binding RemoveCuttingUnitCommand}"
+                                 CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}" />
+                    </Grid>
+
+                    <!--<DataGrid x:Name="_cuttingUnitListView"  Width="200"
+                           MinHeight="300"
+                           Background="White"
+                          CanUserAddRows="False"
+                          AutoGenerateColumns="False"
+                          ItemsSource="{Binding CuttingUnits}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Code"
+                                            Binding="{Binding CuttingUnitCode}" />
+                        <DataGridTextColumn Header="Description"
+                                            Binding="{Binding Description}" />
+                    </DataGrid.Columns>
+                </DataGrid>-->
+
+                    <ListView Grid.Row="1"
+                              x:Name="_cuttingUnitListView"
+                              ItemsSource="{Binding CuttingUnits}"
+                              SelectionMode="Single">
+                        <!--<ListView.Resources>
+                        <Style TargetType="ListViewItem">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter Property="Background"
+                                            Value="{StaticResource brush_accent}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Resources>-->
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False"
+                                      ColumnHeaderToolTip="Cutting Units">
+                                <GridViewColumn Header="Code"
+                                                DisplayMemberBinding="{Binding CuttingUnitCode}"
+                                                Width="60" />
+                                <GridViewColumn Header=" Description"
+                                                DisplayMemberBinding="{Binding Description}"
+                                                Width="150" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </Grid>
+            </Border>
+
+            <ContentControl prism:RegionManager.RegionName="{x:Static nav:Regions.CuttingUnitDetailsRegion}"
+                            prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_cuttingUnitListView}"
+                            VerticalAlignment="Stretch" />
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

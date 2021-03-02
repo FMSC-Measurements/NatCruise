@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:conv="clr-namespace:FScruiser.XF.Converters"
+             xmlns:tk_effects="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
+             x:Class="FScruiser.XF.Views.LimitingDistanceView">
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="VerticalTextAlignment"
+                    Value="Center" />
+        </Style>
+        <Style TargetType="Frame">
+            <Setter Property="CornerRadius"
+                    Value="10" />
+            <Setter Property="BorderColor"
+                    Value="Transparent" />
+            <Setter Property="Padding"
+                    Value="5" />
+        </Style>
+        <Style TargetType="Entry">
+            <Setter Property="WidthRequest"
+                    Value="50" />
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout>
+            
+            <!-- the order that the entries appear on the screen is significant as this is the order that 
+            users typicaly enter in their measurments Dbh, then slope, then slope distance-->
+            
+            <Frame BackgroundColor="LightBlue">
+                <StackLayout Orientation="Horizontal">
+                    <StackLayout Orientation="Horizontal">
+                        <Label>Variable Radious</Label>
+                        <Switch IsToggled="{Binding IsVariableRadius}" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label>BAF/FPS</Label>
+                        <Entry x:Name="_bafOrFpsEntry"
+                               Text="{Binding BafOrFps}"
+                               Keyboard="Numeric">
+                            <Entry.Effects>
+                                <tk_effects:EntrySelectAllText />
+                            </Entry.Effects>
+                        </Entry>
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+            <StackLayout Orientation="Horizontal">
+                <StackLayout>
+
+                    <Frame BackgroundColor="Yellow">
+                        <StackLayout Orientation="Horizontal">
+                            <Label>DBH</Label>
+                            <Entry x:Name="_dbhEntry"
+                                   Text="{Binding DBH}"
+                                   Keyboard="Numeric">
+                                <Entry.Effects>
+                                    <tk_effects:EntrySelectAllText />
+                                </Entry.Effects>
+                            </Entry>
+                        </StackLayout>
+                    </Frame>
+
+                    <Frame BackgroundColor="Yellow">
+                        <StackLayout Orientation="Horizontal">
+                            <Label>Slope (%)</Label>
+                            <Entry x:Name="_slopePctEntry"
+                                   Text="{Binding SlopePCT}"
+                                   Keyboard="Numeric">
+                                <Entry.Effects>
+                                    <tk_effects:EntrySelectAllText />
+                                </Entry.Effects>
+                            </Entry>
+                        </StackLayout>
+                    </Frame>
+
+                    <Frame BackgroundColor="Yellow">
+                        <StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label>Slope Distance</Label>
+                                <Entry x:Name="_slopeDistanceEntry"
+                                       Text="{Binding SlopeDistanceStr}"
+                                       Keyboard="Numeric">
+                                    <Entry.Effects>
+                                        <tk_effects:EntrySelectAllText />
+                                    </Entry.Effects>
+                                </Entry>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label>Measureing To</Label>
+                                <Picker SelectedItem="{Binding MeasureToSelection}"
+                                        ItemsSource="{Binding MeasureToOptions}" />
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+
+                    <Frame BackgroundColor="Yellow">
+                        <StackLayout Orientation="Horizontal">
+                            <Label>Azimuth</Label>
+                            <Entry x:Name="_azimuthEntry"
+                                   Text="{Binding Azimuth}"
+                                   Keyboard="Numeric">
+                                <Entry.Effects>
+                                    <tk_effects:EntrySelectAllText />
+                                </Entry.Effects>
+                            </Entry>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+                <Frame BackgroundColor="Orange">
+                    <StackLayout Orientation="Vertical">
+                        <Label>Limiting Distance</Label>
+                        <Label Text="{Binding LimitingDistance, StringFormat='{}{0:f2}'}" />
+                        <Label x:Name="_treeInOutLabel"
+                               Text="{Binding TreeStatus, StringFormat='{}Tree is {0}'}"
+                               IsVisible="{Binding TreeStatus, Converter={StaticResource hasDataConverter}}" />
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
