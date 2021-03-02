@@ -60,7 +60,14 @@ namespace FScruiser.XF.Data
         {
             base.OnCruiseIDChanged(value);
             var database = GetDatabase();
-            SampleSelectorDataService = new SampleSelectorRepository((ISampleInfoDataservice)GetDataservice(typeof(ISampleInfoDataservice), database));
+            if (value != null)
+            {
+                SampleSelectorDataService = new SampleSelectorRepository((ISampleInfoDataservice)GetDataservice(typeof(ISampleInfoDataservice), database));
+            }
+            else
+            {
+                SampleSelectorDataService = null;
+            }
         }
 
         public override IDataservice GetDataservice(Type type)
