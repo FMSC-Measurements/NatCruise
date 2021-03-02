@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>FScruiser.XF</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release;Profile</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CruiseDAL.V3.Models" Version="$(CruiseDALVersion)" />
+    <PackageReference Include="FluentAssertions" Version="5.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Moq" Version="4.8.2" />
+    <PackageReference Include="Xamarin.Forms.Mocks" Version="4.7.0.1" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FScruiser.Xamarin\FScruiser.Xamarin.csproj" />
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>-->
+
+</Project>

@@ -1,4 +1,4 @@
-﻿using NatCruise.Wpf.Util;
+﻿using NatCruise.Util;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using System;

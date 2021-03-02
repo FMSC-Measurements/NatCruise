@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  x:Class="FScruiser.XF.Views.MainView"
+                  xmlns:views="clr-namespace:FScruiser.XF.Views"
+                  xmlns:local_converters="clr-namespace:FScruiser.XF.Converters"
+                  xmlns:prism="http://prismlibrary.com"
+                  xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  mc:Ignorable="d"
+                  IsPresented="True">
+    <MasterDetailPage.Master>
+        <ContentPage x:Name="MasterPage"
+                     Title="Master"
+                     Icon="ic_menu_white_18dp.png"
+                     BackgroundColor="{StaticResource fs_brown}">
+            <StackLayout>
+                <!--select cruise button-->
+                <Frame BackgroundColor="White"
+                       Padding="2"
+                       Margin="10"
+                       CornerRadius="0">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowSelectSale}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout BackgroundColor="{StaticResource fs_brown}">
+                        <StackLayout Orientation="Horizontal"
+                                     VerticalOptions="FillAndExpand"
+                                     HorizontalOptions="FillAndExpand"
+                                     Padding="3"
+                                     BackgroundColor="{StaticResource fs_brown}">
+                            <ContentView  BackgroundColor="Orange"
+                                          HeightRequest="40">
+                                <Image Source="ic_folder_open_black_36dp.png" />
+                            </ContentView>
+                            <Label x:Name="_currentCruiseLable"
+                                   Text="{Binding CurrentCruiseName}"
+                                   d:Text="Select Cruise"
+                                   TextColor="{StaticResource lightText}"
+                                   VerticalOptions="Fill"
+                                   HorizontalOptions="Fill"
+                                   VerticalTextAlignment="Center" />
+                        </StackLayout>
+                        <Picker x:Name="_cuttingUnitPicker"
+                                Title="Select Cutting Unit"
+                                TextColor="{StaticResource lightText}"
+                                TitleColor="{StaticResource white_50}"
+                                BackgroundColor="{StaticResource white_12}"
+                                ItemsSource="{Binding CuttingUnits}"
+                                SelectedItem="{Binding SelectedCuttingUnit}"
+                                IsVisible="{Binding IsCruiseSelected}"
+                                SelectedIndexChanged="_cuttingUnitPicker_SelectedIndexChanged" />
+                    </StackLayout>
+                </Frame>
+
+                <ScrollView>
+                    <StackLayout VerticalOptions="StartAndExpand">
+                        <StackLayout.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="Button">
+                                    <Setter Property="BackgroundColor"
+                                            Value="Transparent" />
+                                    <Setter Property="TextColor"
+                                            Value="{StaticResource lightText}" />
+                                </Style>
+                            </ResourceDictionary>
+                        </StackLayout.Resources>
+
+                        <Button Text="Sale"
+                                IsVisible="{Binding IsCruiseSelected}"
+                                Command="{Binding ShowSaleCommand}" />
+                        <Button Text="Cutting Unit Info"
+                                IsVisible="{Binding IsCuttingUnitSelected}"
+                                Command="{Binding ShowUnitInfoCommand}" />
+                        <Button Text="Trees"
+                                IsVisible="{Binding IsCuttingUnitSelected}"
+                                Command="{Binding ShowTreesCommand}" />
+                        <Button Text="Plots"
+                                IsVisible="{Binding HasPlotStrata}"
+                                Command="{Binding ShowPlotsCommand}" />
+                        <Button Text="Tally"
+                                IsVisible="{Binding HasTreeStrata}"
+                                Command="{Binding ShowTallyCommand}" />
+                        <Button Text="Cruisers"
+                                Command="{Binding ShowCruisersCommand}" />
+                    </StackLayout>
+                </ScrollView>
+
+                <!--navigation list view-->
+                <!--<ListView x:Name="MenuItemsListView"
+                          SeparatorVisibility="None"
+                          HasUnevenRows="true"
+                          ItemsSource="{Binding NavigationListItems}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            -->
+                <!--<TextCell Text="{Binding Title}"
+                                      TextColor="{StaticResource lightText}" />-->
+                <!--
+
+
+                            <ViewCell>
+                                <Label  HorizontalOptions="Start"
+                                        Margin="15,7"
+                                        VerticalTextAlignment="Center"
+                                        Text="{Binding Title}"
+                                        FontSize="24"
+                                        TextColor="{StaticResource lightText}" />
+
+                                -->
+                <!--<StackLayout Padding="15,10" HorizontalOptions="FillAndExpand" IsEnabled="{Binding CanShow}">
+                                    
+                                </StackLayout>-->
+                <!--
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>-->
+
+                <FlexLayout VerticalOptions="End"
+                            HorizontalOptions="CenterAndExpand"
+                            Wrap="Wrap"
+                            JustifyContent="Center">
+                    <FlexLayout.Resources>
+                        <ResourceDictionary>
+                            <Style TargetType="Label">
+                                <Setter Property="TextColor"
+                                        Value="{StaticResource lightText}" />
+                                <Setter Property="Margin"
+                                        Value="5" />
+                            </Style>
+                        </ResourceDictionary>
+                    </FlexLayout.Resources>
+                    <Label Text="{Binding DeviceInfo.DeviceName}"
+                           d:Text="DevceID" />
+                    <Label Text="{Binding AppInfo.Version, StringFormat='{}v{0}'}"
+                           d:Text="v0.00" />
+                </FlexLayout>
+
+                <StackLayout Orientation="Horizontal"
+                             VerticalOptions="End"
+                             HorizontalOptions="Center">
+                    <Button BackgroundColor="Transparent"
+                            Image="ic_settings_white_24dp.png"
+                            Command="{Binding ShowSettingsCommand}" />
+                    <Button BackgroundColor="Transparent"
+                            Image="ic_feedback_white_24dp.png"
+                            Command="{Binding ShowFeedbackCommand}" />
+                </StackLayout>
+            </StackLayout>
+        </ContentPage>
+    </MasterDetailPage.Master>
+    <MasterDetailPage.Detail>
+        <NavigationPage BarBackgroundColor="{StaticResource primary_500}"
+                        BarTextColor="{StaticResource white_90}">
+
+            <x:Arguments>
+                <views:BlankView NavigationPage.HasBackButton="False" />
+            </x:Arguments>
+
+        </NavigationPage>
+    </MasterDetailPage.Detail>
+</MasterDetailPage>

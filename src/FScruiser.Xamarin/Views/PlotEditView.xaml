@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tkConv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+             xmlns:tkBehv="clr-namespace:Xamarin.Toolkit.Behaviors;assembly=Xamarin.Toolkit.Behaviors"
+             xmlns:effects="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
+             xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
+             x:Class="FScruiser.XF.Views.PlotEditView"
+             x:Name="_page">
+
+    <ContentPage.Resources>
+        <Style x:Key="errorWarningLabel"
+                   TargetType="Label">
+            <Setter Property="TextColor"
+              Value="Black" />
+
+            <Setter Property="FontSize"
+              Value="Large" />
+
+            <Setter Property="Margin"
+              Value="0,0,0,7" />
+
+            <Setter Property="BackgroundColor"
+              Value="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}" />
+
+            <Setter Property="Text"
+              Value="{Binding Message}" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition  Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <FlexLayout Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Direction="Row"
+                    Wrap="Wrap"
+                    JustifyContent="Start">
+
+            <Grid RowSpacing="0"
+                  ColumnSpacing="0"
+                  WidthRequest="250"
+                  FlexLayout.Grow="1">
+                <Grid.RowDefinitions>
+                    <!--plot number-->
+                    <RowDefinition Height="Auto" />
+                    <!--slope-->
+                    <RowDefinition Height="Auto" />
+                    <!--Aspect-->
+                    <RowDefinition Height="Auto" />
+                    <!-- remarks header -->
+                    <RowDefinition Height="Auto" />
+                    <!-- remarks editor -->
+                    <RowDefinition Height="150" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="Margin"
+                                Value="10,0,10,0" />
+                        <Setter Property="VerticalTextAlignment"
+                                Value="Center" />
+                    </Style>
+                </Grid.Resources>
+
+                <!--plot number-->
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Text="Plot " />
+                <Entry Grid.Row="0"
+                       Grid.Column="1"
+                       x:Name="_plotNumberEntry"
+                       Text="{Binding PlotNumber, Mode=OneWay}"
+                       WidthRequest="50"
+                       Keyboard="Numeric"
+                       ReturnCommand="{Binding UpdatePlotNumberCommand}"
+                       ReturnCommandParameter="{Binding Text, Source={Reference _plotNumberEntry}}"
+                       ReturnType="Default">
+                    <Entry.Effects>
+                        <effects:EntrySelectAllText />
+                    </Entry.Effects>
+                    <Entry.Behaviors>
+                        <behaviors:SendCompletedOnLostFocusBehavior />
+                    </Entry.Behaviors>
+                </Entry>
+                <!--slope-->
+
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Text="Slope" />
+                <Entry Grid.Row="1"
+                       Grid.Column="1"
+                       Text="{Binding Plot.Slope}"
+                       WidthRequest="50"
+                       Keyboard="Numeric" />
+
+                <!--aspect-->
+
+                <Label Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Aspect" />
+                <Entry Grid.Row="2"
+                       Grid.Column="1"
+                       Text="{Binding Plot.Aspect}"
+                       WidthRequest="50"
+                       Keyboard="Numeric" />
+
+                <!-- remarks -->
+                <Label Grid.Row="3"
+                       Grid.Column="0"
+                       Text="Remarks"
+                       VerticalTextAlignment="End" />
+
+                <Editor Grid.Row="4"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="7"
+                        Text="{Binding Plot.Remarks}"
+                        IsSpellCheckEnabled="False"
+                        HorizontalOptions="Fill"
+                        BackgroundColor="LightGray" />
+            </Grid>
+
+            <ListView x:Name="_plotListView"
+                      ItemsSource="{Binding StratumPlots}"
+                      SeparatorVisibility="None"
+                      HasUnevenRows="True"
+                      SelectionMode="None"
+                      WidthRequest="300">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+
+                            <Frame HasShadow="True"
+                                   Margin="7"
+                                   Padding="3,0,3,5"
+                                   CornerRadius="0"
+                                   BackgroundColor="{StaticResource accent}">
+
+                                <StackLayout>
+
+                                    <!-- stratum code and add/remove button-->
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
+                                               Margin="10,0,30,0"
+                                               VerticalTextAlignment="Center"
+                                               HorizontalOptions="StartAndExpand" />
+
+                                        <Button Text=" Add/Remove "
+                                                Command="{Binding BindingContext.ToggleInCruiseCommand, Source={Reference _page }}"
+                                                CommandParameter="{Binding .}"
+                                                HorizontalOptions="End" />
+                                    </StackLayout>
+
+                                    <!--this panel hides if plot is not in cruise-->
+                                    <StackLayout IsVisible="{Binding InCruise, Mode=OneWay}">
+                                        <!--horizontal spacer-->
+                                        <BoxView HeightRequest="1"
+                                                 VerticalOptions="Fill"
+                                                 Margin="0"
+                                                 Color="{StaticResource black_70}" />
+
+                                        <!--slope, aspect, empty plot-->
+                                        <StackLayout Orientation="Horizontal"
+                                                     Margin="10,0,10,0">
+
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Empty Plot"
+                                                       VerticalTextAlignment="Center"
+                                                       Margin="10,0,30,0" />
+                                                <Switch IsToggled="{Binding IsEmpty}" />
+                                            </StackLayout>
+                                        </StackLayout>
+
+                                        <!--horizontal spacer-->
+                                        <BoxView HeightRequest="1"
+                                                 VerticalOptions="Fill"
+                                                 Margin="0"
+                                                 Color="{StaticResource black_70}" />
+
+                                        <Button Text="Calculate Limiting Distances"
+                                                VerticalOptions="FillAndExpand"
+                                                Command="{Binding BindingContext.ShowLimitingDistanceCommand, Source={Reference _page }}"
+                                                CommandParameter="{Binding .}" />
+                                    </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </FlexLayout>
+
+        <StackLayout Grid.Row="1"
+                     BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
+                     VerticalOptions="End">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Label Style="{StaticResource errorWarningLabel}" />
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
+    </Grid>
+</ContentPage>
