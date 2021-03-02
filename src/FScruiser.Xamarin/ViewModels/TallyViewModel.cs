@@ -16,6 +16,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using NatCruise.Data;
 using Prism.Commands;
+using Prism.Ioc;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -88,6 +89,9 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
+        public ICommand SelectTallyEntryCommand => new Command<object>(SelectTallyEntry);
+        //public ICommand ChangeSelectedTallyEntryCommand => new Command(ChangeSelectedTallyEntry);
+
         public string UnitCode
         {
             get => _unitCode;
@@ -97,7 +101,14 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public event EventHandler<TallyPopulation> OnTallyCountChanged;
+        public TreeEditViewModel SelectedTreeViewModel
+        {
+            get => _selectedTreeViewModel;
+            protected set
+            {
+                SetProperty(ref _selectedTreeViewModel, value);
+            }
+        }
 
         #region Commands
 
@@ -108,6 +119,7 @@ namespace FScruiser.XF.ViewModels
         private ICommand _untallyCommand;
         private string _title;
         private string _unitCode;
+        private TreeEditViewModel _selectedTreeViewModel;
 
         public ICommand ShowTallyMenuCommand => _showTallyMenuCommand
             ?? (_showTallyMenuCommand = new Command<TallyPopulation>(ShowTallyMenu));
@@ -134,12 +146,14 @@ namespace FScruiser.XF.ViewModels
         public ISampleSelectorDataService SampleSelectorService { get; }
         public ICruisersDataservice CruisersDataService { get; }
         public ISoundService SoundService { get; }
+        public IContainerProvider ContainerProvider { get; }
 
         public TallyViewModel(ICruiseNavigationService navigationService,
             IDataserviceProvider dataserviceProvider,
             ICruiseDialogService dialogService,
             ISoundService soundService,
-            ICruisersDataservice cruisersDataservice)
+            ICruisersDataservice cruisersDataservice,
+            IContainerProvider containerProvider)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
 
@@ -150,6 +164,28 @@ namespace FScruiser.XF.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             CruisersDataService = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
+            ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
+
+        }
+
+
+        public void SelectTallyEntry(object obj)
+        {
+            var tallyEntry = obj as TallyEntry;
+            if(tallyEntry == null) { return; }
+            var treeID = tallyEntry?.TreeID;
+            if (treeID != null)
+            {
+                var treeVM = ContainerProvider.Resolve<TreeEditViewModel>();
+                treeVM.UseSimplifiedTreeFields = true;
+                treeVM.OnNavigatedTo(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
+
+                SelectedTreeViewModel = treeVM;
+            }
+            else
+            {
+                SelectedTreeViewModel = null;
+            }
         }
 
         protected override void Refresh(INavigationParameters parameters)
@@ -174,6 +210,10 @@ namespace FScruiser.XF.ViewModels
             Tallies = tallyPopulations;
 
             TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse().ToObservableCollection();
+
+            // refresh selected tree incase coming back from TreeEdit page
+            SelectedTreeViewModel?.Refresh();
+            RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
 
         private void ShowTallyMenu(TallyPopulation tp)
