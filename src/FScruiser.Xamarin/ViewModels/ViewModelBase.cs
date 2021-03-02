@@ -68,7 +68,7 @@ namespace FScruiser.XF.ViewModels
             //MessagingCenter.Send<object, string>(this, Messages.PAGE_NAVIGATED_TO, parameters.ToString());
         }
 
-        protected void Refresh()
+        public void Refresh()
         {
             Refresh(Parameters);
         }

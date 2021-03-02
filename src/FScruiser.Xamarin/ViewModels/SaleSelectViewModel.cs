@@ -42,7 +42,7 @@ namespace FScruiser.XF.ViewModels
 
         public void ShowCruiseSelect(string saleID)
         {
-            NavigationService.ShowCruiseSelect(saleID).FireAndForget();
+            NavigationService.ShowCruiseSelect(saleID);
         }
 
         protected override void Refresh(INavigationParameters parameters)

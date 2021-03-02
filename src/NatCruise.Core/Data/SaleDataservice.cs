@@ -104,12 +104,11 @@ namespace NatCruise.Data
 @"UPDATE Sale SET
     Name = @Name,
     SaleNumber = @SaleNumber,
-    Purpose = @Purpose,
     Region = @Region,
     Forest = @Forest,
     District = @District,
     Remarks = @Remarks
-WHERE Sale_CN = @Sale_CN;", sale);
+WHERE SaleID = @SaleID;", sale);
         }
 
         public void UpdateSaleRemarks(long sale_CN, string remarks)
