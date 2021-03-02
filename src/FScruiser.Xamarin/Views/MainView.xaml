@@ -21,57 +21,70 @@
                        Margin="10"
                        CornerRadius="0">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowSelectSale}"/>
+                        <TapGestureRecognizer Command="{Binding ShowSelectSale}" />
                     </Frame.GestureRecognizers>
                     <StackLayout BackgroundColor="{StaticResource fs_brown}">
                         <StackLayout Orientation="Horizontal"
-                                 VerticalOptions="FillAndExpand"
-                                 HorizontalOptions="FillAndExpand"
-                                 Padding="3"
-                                 BackgroundColor="{StaticResource fs_brown}">
+                                     VerticalOptions="FillAndExpand"
+                                     HorizontalOptions="FillAndExpand"
+                                     Padding="3"
+                                     BackgroundColor="{StaticResource fs_brown}">
                             <ContentView  BackgroundColor="Orange"
-                                      HeightRequest="40">
+                                          HeightRequest="40">
                                 <Image Source="ic_folder_open_black_36dp.png" />
                             </ContentView>
                             <Label x:Name="_currentCruiseLable"
-                               Text="{Binding CurrentCruiseName}"
-                               d:Text="Select Cruise"
-                               TextColor="{StaticResource lightText}"
-                               VerticalOptions="Fill"
-                               HorizontalOptions="Fill"
-                               VerticalTextAlignment="Center" />
+                                   Text="{Binding CurrentCruiseName}"
+                                   d:Text="Select Cruise"
+                                   TextColor="{StaticResource lightText}"
+                                   VerticalOptions="Fill"
+                                   HorizontalOptions="Fill"
+                                   VerticalTextAlignment="Center" />
                         </StackLayout>
-                        <Picker x:Name="_cuttingUnitPicker" 
-                                Title="Select Cutting Unit" 
+                        <Picker x:Name="_cuttingUnitPicker"
+                                Title="Select Cutting Unit"
                                 TextColor="{StaticResource lightText}"
                                 TitleColor="{StaticResource white_50}"
                                 BackgroundColor="{StaticResource white_12}"
-                                ItemsSource="{Binding CuttingUnits}" 
-                                SelectedItem="{Binding SelectedCuttingUnit}" 
+                                ItemsSource="{Binding CuttingUnits}"
+                                SelectedItem="{Binding SelectedCuttingUnit}"
                                 IsVisible="{Binding IsCruiseSelected}"
-                                SelectedIndexChanged="_cuttingUnitPicker_SelectedIndexChanged"  />
+                                SelectedIndexChanged="_cuttingUnitPicker_SelectedIndexChanged" />
                     </StackLayout>
                 </Frame>
 
-                <StackLayout VerticalOptions="StartAndExpand">
-                    <StackLayout.Resources>
-                        <ResourceDictionary>
-                            <Style TargetType="Button">
-                                <Setter Property="BackgroundColor"
-                                        Value= "Transparent"/>
-                                <Setter Property="TextColor"
-                                        Value="{StaticResource lightText}"/>
-                            </Style>
-                        </ResourceDictionary>
-                    </StackLayout.Resources>
-                    
-                    <Button Text="Sale" IsVisible="{Binding IsCruiseSelected}" Command="{Binding ShowSaleCommand}"/>
-                    <Button Text="Cutting Units" IsVisible="{Binding IsCruiseSelected}" Command="{Binding ShowUnitsCommand}"/>
-                    <Button Text="Trees" IsVisible="{Binding IsCuttingUnitSelected}" Command="{Binding ShowTreesCommand}"/>
-                    <Button Text="Plots" IsVisible="{Binding IsCuttingUnitSelectedAndHasPlotStrata}" Command="{Binding ShowPlotsCommand}"/>
-                    <Button Text="Tally" IsVisible="{Binding IsCuttingUnitSelected}" Command="{Binding ShowTallyCommand}"/>
-                    <Button Text="Crew" Command="{Binding ShowCruisersCommand}"/>
-                </StackLayout>
+                <ScrollView>
+                    <StackLayout VerticalOptions="StartAndExpand">
+                        <StackLayout.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="Button">
+                                    <Setter Property="BackgroundColor"
+                                            Value="Transparent" />
+                                    <Setter Property="TextColor"
+                                            Value="{StaticResource lightText}" />
+                                </Style>
+                            </ResourceDictionary>
+                        </StackLayout.Resources>
+
+                        <Button Text="Sale"
+                                IsVisible="{Binding IsCruiseSelected}"
+                                Command="{Binding ShowSaleCommand}" />
+                        <Button Text="Cutting Unit Info"
+                                IsVisible="{Binding IsCuttingUnitSelected}"
+                                Command="{Binding ShowUnitInfoCommand}" />
+                        <Button Text="Trees"
+                                IsVisible="{Binding IsCuttingUnitSelected}"
+                                Command="{Binding ShowTreesCommand}" />
+                        <Button Text="Plots"
+                                IsVisible="{Binding HasPlotStrata}"
+                                Command="{Binding ShowPlotsCommand}" />
+                        <Button Text="Tally"
+                                IsVisible="{Binding HasTreeStrata}"
+                                Command="{Binding ShowTallyCommand}" />
+                        <Button Text="Cruisers"
+                                Command="{Binding ShowCruisersCommand}" />
+                    </StackLayout>
+                </ScrollView>
 
                 <!--navigation list view-->
                 <!--<ListView x:Name="MenuItemsListView"
@@ -118,8 +131,10 @@
                             </Style>
                         </ResourceDictionary>
                     </FlexLayout.Resources>
-                    <Label Text="{Binding DeviceInfo.DeviceName}" d:Text ="DevceID"/>
-                    <Label Text="{Binding AppInfo.Version, StringFormat='{}v{0}'}" d:Text ="v0.00" />
+                    <Label Text="{Binding DeviceInfo.DeviceName}"
+                           d:Text="DevceID" />
+                    <Label Text="{Binding AppInfo.Version, StringFormat='{}v{0}'}"
+                           d:Text="v0.00" />
                 </FlexLayout>
 
                 <StackLayout Orientation="Horizontal"
@@ -140,7 +155,7 @@
                         BarTextColor="{StaticResource white_90}">
 
             <x:Arguments>
-                <views:SaleView NavigationPage.HasBackButton="False" />
+                <views:BlankView NavigationPage.HasBackButton="False" />
             </x:Arguments>
 
         </NavigationPage>
