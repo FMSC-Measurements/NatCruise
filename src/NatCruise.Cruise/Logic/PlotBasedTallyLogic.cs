@@ -30,7 +30,7 @@ namespace NatCruise.Cruise.Logic
                 CountOrMeasure = countOrMeasure,
                 TreeCount = treeCount,
                 KPI = kpi,
-                STM = (stm) ? "Y" : "N",
+                STM = stm,
                 TreeID = Guid.NewGuid().ToString()
             };
         }
