@@ -28,10 +28,11 @@ namespace FScruiser.XF.ViewModels
         protected ICruiseNavigationService NavigationService { get; }
         protected IDataserviceProvider DataserviceProvider { get; }
         protected IFileSystemService FileSystemService { get; }
+        protected IDialogService DialogService { get; }
 
         public ICommand OpenSelectedCruiseCommand => new Command(OpenSelectedCruise);
         public ICommand ExportSelectedCruiseCommand => new Command(ExportSelectedCruise);
-        //public ICommand SelectCruiseCommand => new Command<Cruise>((cruise) => SelectCruise(cruise));
+        public ICommand DeleteSelectedCruiseCommand => new Command(DeleteSelectedCruise);
 
         public Cruise SelectedCruise
         {
@@ -51,13 +52,13 @@ namespace FScruiser.XF.ViewModels
             set => SetProperty(ref _cruises, value);
         }
 
-        public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService)
+        public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, IDialogService dialogService)
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
-            
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         public void OpenSelectedCruise()
@@ -102,7 +103,26 @@ namespace FScruiser.XF.ViewModels
             });
         }
 
+        public void DeleteSelectedCruise()
+        {
+            var selectedCruise = SelectedCruise;
+            if (selectedCruise == null) { return; }
+            DeleteSelectedCruise(selectedCruise);
+        }
 
+        public async void DeleteSelectedCruise(Cruise cruise)
+        {
+            if (await DialogService.AskYesNoAsync("Do you want to delete the cruise", "Warning", true) == true)
+            {
+                var cruiseID = cruise.CruiseID;
+                SaleDataservice.DeleteCruise(cruiseID);
+                Refresh();
+                if(DataserviceProvider.CruiseID == cruiseID)
+                {
+                    DataserviceProvider.CruiseID = null;
+                }
+            }
+        }
 
         protected override void Refresh(INavigationParameters parameters)
         {

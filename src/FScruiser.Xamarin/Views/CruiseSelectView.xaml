@@ -24,6 +24,9 @@
             <Button Text="Export"
                     Command="{Binding ExportSelectedCruiseCommand}"
                     IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}"/>
+            <Button Text="Delete"
+                    Command="{Binding DeleteSelectedCruiseCommand}"
+                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

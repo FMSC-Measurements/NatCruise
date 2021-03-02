@@ -19,6 +19,8 @@ namespace NatCruise.Data.Abstractions
 
         IEnumerable<SaleCruises> GetSaleCruises();
 
+        void DeleteCruise(string cruiseID);
+
         IEnumerable<Cruise> GetCruises();
 
         IEnumerable<Cruise> GetCruises(int saleNumber);
