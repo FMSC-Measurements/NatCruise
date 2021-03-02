@@ -37,80 +37,255 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <ListView Grid.Row="0"
-                      x:Name="_tallyFeedListView"
-                      HasUnevenRows="True"
-                      ItemsSource="{Binding Trees}"
-                      ItemSelected="TallyFeedListView_ItemSelected"
-                      CachingStrategy="RetainElement"
-                      SeparatorColor="Silver">
-                <ListView.Behaviors>
-                    <my_behv:ScrollOnLoadBehavior />
-                </ListView.Behaviors>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <cells:PlotTreeViewCell EditTreeCommand="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
-                                                UntallyCommand="{Binding BindingContext.DeleteTreeCommand, Source={Reference _page}}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <AbsoluteLayout Grid.Row="0">
 
-            <flow:FlowListView Grid.Row="1"
+                <CollectionView AbsoluteLayout.LayoutFlags="SizeProportional"
+                                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                x:Name="_tallyFeedListView"
+                                ItemsSource="{Binding Trees}"
+                                SelectionMode="None"
+                                ItemsUpdatingScrollMode="KeepLastItemInView">
+
+                    <CollectionView.Behaviors>
+                        <my_behv:ScrollOnLoadBehavior />
+                    </CollectionView.Behaviors>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItem Text="Delete"
+                                               Command="{Binding BindingContext.DeleteTreeCommand, Source={Reference _page}}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeView.LeftItems>
+
+                                <cells:PlotTreeViewCell>
+                                    <cells:PlotTreeViewCell.GestureRecognizers>
+                                        <TapGestureRecognizer x:Name="_treeCellTappedGesture"
+                                                              Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
+                                                              CommandParameter="{Binding .}"
+                                                              Tapped="_treeCellTappedGesture_Tapped" />
+                                    </cells:PlotTreeViewCell.GestureRecognizers>
+                                    
+                                </cells:PlotTreeViewCell>
+
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Grid x:Name="_treeEditPanel"
+                      AbsoluteLayout.LayoutFlags="WidthProportional"
+                      AbsoluteLayout.LayoutBounds="0,0,1,165"
+                      BackgroundColor="White"
+                      IsVisible="false"
+                      BindingContext="{Binding SelectedTreeViewModel}"
+                      BindingContextChanged="_treeEditPanel_BindingContextChanged">
+                    <!--default to not visable, when view cell expands visability will be set to true -->
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="2" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.ColumnSpan="3"
+                           Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
+                           TextColor="{StaticResource darkText}"
+                           FontSize="Large" />
+
+                    <ScrollView x:Name="_treeEditScrollView"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="4"
+                                Orientation="Horizontal">
+                        <Grid x:Name="_treeEditControlGrid">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="19" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                        </Grid>
+                    </ScrollView>
+
+                    <Button  x:Name="_hideTreeEditPanelButton"
+                             Grid.Row="2"
+                             Grid.Column="0"
+                             Text="Hide"
+                             HorizontalOptions="Start"
+                             Clicked="_hideTreeEditPanelButton_Clicked" />
+
+
+                    <Button Grid.Row="2"
+                            Grid.Column="1"
+                            x:Name="_logsButton"
+                            Text="Logs"
+                            Command="{Binding ShowLogsCommand}"/>
+
+                    <Button Grid.Row="2"
+                            Grid.Column="2"
+                            x:Name="_editButton"
+                            Text="Edit"
+                            Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
+                            CommandParameter="{Binding TreeID}"/>
+
+                    <!--<Button Grid.Row="2"
+                            Grid.Column="3"
+                            x:Name="_untallyButton"
+                            Text="Untally" />-->
+
+                    <BoxView Grid.Row="3"
+                             Grid.ColumnSpan="4"
+                             BackgroundColor="Black" />
+                </Grid>
+
+            </AbsoluteLayout>
+
+            <CollectionView Grid.Row="1"
                                x:Name="TallyListView"
                                IsVisible="{Binding TalliesFiltered, Converter={StaticResource hasDataConverter}}"
-                               FlowItemsSource="{Binding TalliesFiltered}"
-                               FlowItemTappedCommand="{Binding TallyCommand}"
-                               FlowColumnCount="3"
-                               SeparatorVisibility="None"
-                               HasUnevenRows="True"
+                               ItemsSource="{Binding TalliesFiltered}"
                                BackgroundColor="White"
                                VerticalOptions="CenterAndExpand">
-                <flow:FlowListView.FlowColumnTemplate>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="4"
+                                     HorizontalItemSpacing="3"
+                                     VerticalItemSpacing="3" />
+                </CollectionView.ItemsLayout>
+                
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame CornerRadius="5"
-                               Margin="3"
+                        <Frame Padding="0"
+                               HeightRequest="80"
                                BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}">
 
-                            <StackLayout HorizontalOptions="Fill"
-                                         VerticalOptions="Fill"
-                                         Padding="3">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
 
-                                <local_ctrls:PopulationIndicator HorizontalOptions="Center"
-                                                                     VerticalOptions="Center"
-                                                                     StratumCode="{Binding StratumCode}"
-                                                                     SampleGroupCode="{Binding SampleGroupCode}"
-                                                                     Species="{Binding Species}"
-                                                                     LiveDead="{Binding LiveDead}"
-                                                                     Margin="5"
-                                                                     HeightRequest="20"
-                                                                     FontSize="Micro" />
+                            <StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    VerticalOptions="CenterAndExpand"
+                                    HorizontalOptions="Center"
+                                    HeightRequest="20"
+                                             BackgroundColor="Black"
+                                             Padding="5,2,5,2">
+                                    <!--<Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="2" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="2" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="2" />
+                                        <ColumnDefinition Width="*" />
+                                        
+                                    </Grid.ColumnDefinitions>-->
+                                    <StackLayout.Resources>
+                                        <ResourceDictionary>
+                                            <Style TargetType="Label">
+                                                <Setter Property="TextColor"
+                                                        Value="White" />
+                                                <Setter Property="FontSize"
+                                                        Value="Micro" />
+                                                <Setter Property="VerticalTextAlignment"
+                                                        Value="Center" />
+                                            </Style>
+                                            <Style TargetType="BoxView">
+                                                <Setter Property="BackgroundColor"
+                                                        Value="White" />
+                                                <Setter Property="WidthRequest"
+                                                        Value="1" />
+                                            </Style>
+                                        </ResourceDictionary>
+                                    </StackLayout.Resources>
+                                    <Label x:Name="_stratumLabel"
+                                           Grid.Column="0"
+                                           Text="{Binding StratumCode}" />
+                                    <BoxView Grid.Column="1" />
+                                    <Label x:Name="_sgLabel"
+                                           Grid.Column="2"
+                                           Text="{Binding SampleGroupCode}" LineBreakMode="NoWrap"  />
+                                    <BoxView x:Name="_spLableSplitter"
+                                             Grid.Column="3"
+                                             IsVisible="{Binding SpeciesCode, Converter={StaticResource hasDataConverter}}" />
+                                    <Label x:Name="_spLabel"
+                                           Grid.Column="4"
+                                           Text="{Binding SpeciesCode}" />
+                                    <BoxView x:Name="_ldLableSplitter"
+                                             Grid.Column="5"
+                                             IsVisible="{Binding LiveDead, Converter={StaticResource hasDataConverter}}" />
+                                    <Label x:Name="_ldLabel"
+                                           Grid.Column="6"
+                                           Text="{Binding LiveDead}" />
+                                </StackLayout>
+                                <!--<local_ctrls:PopulationIndicator HorizontalOptions="CenterAndExpand"
+                                                                 VerticalOptions="CenterAndExpand"
+                                                                 StratumCode="{Binding StratumCode}"
+                                                                 SampleGroupCode="{Binding SampleGroupCode}"
+                                                                 Species="{Binding Species}"
+                                                                 LiveDead="{Binding LiveDead}"
+                                                                 HeightRequest="20"
+                                                                 FontSize="Micro" />-->
 
                             </StackLayout>
 
                         </Frame>
                     </DataTemplate>
-                </flow:FlowListView.FlowColumnTemplate>
-            </flow:FlowListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-            <flow:FlowListView Grid.Row="2"
-                               x:Name="StratumFilterListView"
-                               FlowColumnCount="6"
-                               SeparatorVisibility="None"
-                               HasUnevenRows="False"
-                               VerticalOptions="End"
-                               HeightRequest="44"
-                               FlowItemsSource="{Binding StrataFilterOptions}">
-                <flow:FlowListView.FlowColumnTemplate>
+            <!-- stratum selection -->
+            <CollectionView Grid.Row="2"
+                            Grid.Column="0"
+                            x:Name="StratumFilterListView"
+                            VerticalOptions="End"
+                            HeightRequest="44"
+                            Margin="2,1"
+                            SelectedItem="{Binding StratumFilter}"
+                            SelectionMode="Single"
+                            ItemsSource="{Binding StrataFilterOptions}"
+                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource hasDataConverter}}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal"
+                                       ItemSpacing="2" />
+                </CollectionView.ItemsLayout>
+
+                <!--<CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Any</x:String>
+                        <x:String>001</x:String>
+                        <x:String>002</x:String>
+                        <x:String>002</x:String>
+                        <x:String>002</x:String>
+                        <x:String>002</x:String>
+                        <x:String>002</x:String>
+                    </x:Array>
+                </CollectionView.ItemsSource>-->
+
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Button Text="{Binding .}"
                                 TextColor="{StaticResource white_90}"
                                 BackgroundColor="{StaticResource primary_500}"
                                 Margin="2"
+                                Padding="1"
                                 HeightRequest="40"
-                                Clicked="_stratumFilterButton_Clicked" />
+                                Command="{Binding BindingContext.StratumSelectedCommand, Source={x:Reference StratumFilterListView}}"
+                                CommandParameter="{Binding .}" />
                     </DataTemplate>
-                </flow:FlowListView.FlowColumnTemplate>
-            </flow:FlowListView>
+
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
         </Grid>
 

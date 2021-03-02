@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using NatCruise.Data;
+using Prism.Ioc;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -31,6 +32,7 @@ namespace FScruiser.XF.ViewModels
         private Plot _plot;
         private ICommand _editTreeCommand;
         private ICommand _deleteTreeCommand;
+        private TreeEditViewModel _selectedTreeViewModel;
 
         public event EventHandler TreeAdded;
 
@@ -41,12 +43,23 @@ namespace FScruiser.XF.ViewModels
         public ISampleSelectorDataService SampleSelectorDataService { get; private set; }
         public ITallySettingsDataService TallySettings { get; private set; }
         public ISoundService SoundService { get; private set; }
+        public IContainerProvider ContainerProvider { get; }
 
-        public PlotTallyViewModel(ICruiseNavigationService navigationService
-            , ICruiseDialogService dialogService
-            , IDataserviceProvider datastoreProvider
-            , ISoundService soundService
-            , ITallySettingsDataService tallySettings)
+        public TreeEditViewModel SelectedTreeViewModel
+        {
+            get => _selectedTreeViewModel;
+            protected set
+            {
+                SetProperty(ref _selectedTreeViewModel, value);
+            }
+        }
+
+        public PlotTallyViewModel(ICruiseNavigationService navigationService,
+            ICruiseDialogService dialogService,
+            IDataserviceProvider datastoreProvider,
+            ISoundService soundService,
+            ITallySettingsDataService tallySettings,
+            IContainerProvider containerProvider)
         {
             if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
 
@@ -56,7 +69,10 @@ namespace FScruiser.XF.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             TallySettings = tallySettings ?? throw new ArgumentNullException(nameof(tallySettings));
             SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
+            ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
         }
+
+        public ICommand SelectTreeCommand => new Command<object>(SelectTree);
 
         public ICommand EditTreeCommand => _editTreeCommand
     ?? (_editTreeCommand = new Command<string>(ShowEditTree));
@@ -136,6 +152,25 @@ namespace FScruiser.XF.ViewModels
             TreeAdded?.Invoke(this, null);
         }
 
+        public void SelectTree(object obj)
+        {
+            var tree = obj as TreeStub_Plot;
+            if (tree == null) { return; }
+            var treeID = tree?.TreeID;
+            if (treeID != null)
+            {
+                var treeVM = ContainerProvider.Resolve<TreeEditViewModel>();
+                treeVM.UseSimplifiedTreeFields = true;
+                treeVM.OnNavigatedTo(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
+
+                SelectedTreeViewModel = treeVM;
+            }
+            else
+            {
+                SelectedTreeViewModel = null;
+            }
+        }
+
         public override void OnNavigatedFrom(INavigationParameters parameters)
         {
             MessagingCenter.Unsubscribe<object>(this, Messages.EDIT_TREE_CLICKED);
@@ -177,6 +212,10 @@ namespace FScruiser.XF.ViewModels
             Plot = plot;
             PlotNumber = plot.PlotNumber;
             UnitCode = plot.CuttingUnitCode;
+
+            // refresh selected tree incase coming back from TreeEdit page
+            SelectedTreeViewModel?.Refresh();
+            RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
 
 

@@ -133,7 +133,7 @@ namespace FScruiser.XF.ViewModels
             }
             else
             {
-                DialogService.ShowMessageAsync("Plot Number Already Takend");
+                DialogService.ShowNotification("Plot Number Already Takend");
             }
 
             // refresh displayed value
@@ -254,6 +254,7 @@ namespace FScruiser.XF.ViewModels
             StratumPlots = stratumPlots;
 
             RefreshErrorsAndWarnings(plot);
+            
         }
 
         protected void RefreshErrorsAndWarnings(Plot plot)
