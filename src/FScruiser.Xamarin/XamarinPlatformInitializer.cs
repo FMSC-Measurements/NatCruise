@@ -24,12 +24,14 @@ namespace FScruiser.XF
         protected virtual void RegisterViews(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<MyNavigationView>("Navigation"); // override built in navigation page with custom one
+            containerRegistry.RegisterForNavigation<BlankView>("Blank");
             containerRegistry.RegisterForNavigation<ImportView>("Import");
             containerRegistry.RegisterForNavigation<SaleSelectView>("SaleSelect");
             containerRegistry.RegisterForNavigation<CruiseSelectView>("CruiseSelect");
             containerRegistry.RegisterForNavigation<MainView>("Main");
             containerRegistry.RegisterForNavigation<SaleView>("Sale");
             containerRegistry.RegisterForNavigation<CuttingUnitListView>("CuttingUnitList");
+            containerRegistry.RegisterForNavigation<CuttingUnitInfoView, CuttingUnitInfoViewModel>("CuttingUnitInfo");
             containerRegistry.RegisterForNavigation<TallyView>("Tally");
             containerRegistry.RegisterForNavigation<TreeListView>("TreeList");
             containerRegistry.RegisterForNavigation<TreeEditView>("Tree");
