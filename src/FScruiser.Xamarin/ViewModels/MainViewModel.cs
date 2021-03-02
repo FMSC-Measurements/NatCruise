@@ -45,9 +45,11 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand ShowSelectSale => new Command(async () => await NavigationService.ShowSaleSelect());
 
-        public ICommand ShowSaleCommand => new Command(() => NavigationService.ShowSale());
+        public ICommand ShowSaleCommand => new Command(() => NavigationService.ShowSale(DatastoreProvider?.CruiseID));
 
         public ICommand ShowUnitsCommand => new Command(() => NavigationService.ShowCuttingUnitList());
+
+        public ICommand ShowUnitInfoCommand => new Command(() => NavigationService.ShowCuttingUnitInfo(SelectedCuttingUnit?.CuttingUnitCode));
 
         public ICommand ShowTreesCommand => new Command(() => ShowTrees());
 
@@ -61,6 +63,8 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand ShowSampleStateManagmentCommand => new Command(async () => await NavigationService.ShowSampleStateManagment());
 
+        public ICommand ShowCruisersCommand => new Command(async () => await NavigationService.ShowManageCruisers());
+
         public CuttingUnit_Ex SelectedCuttingUnit
         {
             get => _selectedCuttingUnit;
@@ -68,7 +72,8 @@ namespace FScruiser.XF.ViewModels
             {
                 SetProperty(ref _selectedCuttingUnit, value);
                 RaisePropertyChanged(nameof(IsCuttingUnitSelected));
-                RaisePropertyChanged(nameof(IsCuttingUnitSelectedAndHasPlotStrata));
+                RaisePropertyChanged(nameof(HasPlotStrata));
+                RaisePropertyChanged(nameof(HasTreeStrata));
             }
         }
 
@@ -102,12 +107,10 @@ namespace FScruiser.XF.ViewModels
             get { return IsCruiseSelected && SelectedCuttingUnit != null; }
         }
 
-        public bool IsCuttingUnitSelectedAndHasPlotStrata
-        {
-            get { return IsCuttingUnitSelected && SelectedCuttingUnit.HasPlotStrata; } 
-        }
+        public bool HasPlotStrata => IsCuttingUnitSelected && SelectedCuttingUnit.HasPlotStrata;
 
-        public bool IsCruiseSelectedAndHasPlotStrata { get; protected set; }
+        public bool HasTreeStrata => IsCuttingUnitSelected && SelectedCuttingUnit.HasTreeStrata;
+
 
         public IDataserviceProvider DatastoreProvider { get; }
         public IAppInfoService AppInfo { get; }
