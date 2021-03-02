@@ -16,14 +16,17 @@ namespace FScruiser.XF.Services
         private TaskCompletionSource<AskTreeCountResult> _askTreeCountTcs;
         private IDataserviceProvider DatastoreProvider { get; }
         private IApplicationProvider ApplicationProvider { get; }
+        private ICruisersDataservice CruisersDataservice { get; }
         //private IContainerExtension Container { get; }
 
         public XamarinCruiseDialogService(IApplicationProvider applicationProvider,
             //IContainerExtension container,
-            IDataserviceProvider datastoreProvider )
+            IDataserviceProvider datastoreProvider,
+            ICruisersDataservice cruisersDataservice)
         {
             DatastoreProvider = datastoreProvider;
             ApplicationProvider = applicationProvider;
+            CruisersDataservice = cruisersDataservice;
             //Container = container;
         }
 
@@ -144,8 +147,7 @@ namespace FScruiser.XF.Services
 
         private string[] GetCruisers()
         {
-            var cruisers = DatastoreProvider.GetDataservice<ICruisersDataservice>();
-            return cruisers.GetCruisers().ToArray();
+            return CruisersDataservice.GetCruisers().ToArray();
         }
 
         public Task ShowMessageAsync(string message, string caption = null)

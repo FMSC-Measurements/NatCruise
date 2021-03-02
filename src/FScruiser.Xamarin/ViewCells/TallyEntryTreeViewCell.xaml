@@ -7,19 +7,17 @@
                                    xmlns:prismxaml="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms"
                                    BackgroundColor="Silver">
 
-    <ContentView.Resources>
-        <converters:ComparisonConverter x:Key="greaterThanZeroConverter"
-                                                x:TypeArguments="x:Int32"
-                                                Default="True"
-                                                GreaterThan="True"
-                                                CompareToValue="0" />
-
-    </ContentView.Resources>
-
     <Frame BackgroundColor="{StaticResource accent}"
                    CornerRadius="5"
                    Margin="2,5,2,0"
                    Padding="0">
+        <Frame.Resources>
+            <converters:ComparisonConverter x:Key="greaterThanZeroConverter"
+                                            x:TypeArguments="x:Int32"
+                                            Default="True"
+                                            GreaterThan="True"
+                                            CompareToValue="0" />
+        </Frame.Resources>
 
         <Grid x:Name="_contentHost">
             <Grid.RowDefinitions>

@@ -24,9 +24,9 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <!-- tally pop identifier -->
-                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
                         <!-- tally count -->
-                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!-- tally pop identifier -->
@@ -169,10 +169,10 @@
                         </Grid>
                     </Frame>
 
-                    <FlexLayout Grid.Row="1"
-                                AlignItems="Start">
+                    <StackLayout Orientation="Horizontal" 
+                                 Grid.Row="1">
 
-                        <FlexLayout.Resources>
+                        <StackLayout.Resources>
                             <ResourceDictionary>
                                 <Style TargetType="Label">
                                     <Setter Property="TextColor"
@@ -188,7 +188,7 @@
                                             Value="5" />
                                 </Style>
                             </ResourceDictionary>
-                        </FlexLayout.Resources>
+                        </StackLayout.Resources>
 
                         <Frame BackgroundColor="White">
 
@@ -209,7 +209,7 @@
                             </StackLayout>
                         </Frame>
 
-                    </FlexLayout >
+                    </StackLayout >
 
 
                 </Grid>
