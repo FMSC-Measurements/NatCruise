@@ -1,34 +1,16 @@
 ﻿using CruiseDAL;
-using NatCruise.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Data
 {
     public abstract class DataserviceProviderBase : IDataserviceProvider
     {
         private string _cruiseID;
-        private CruiseDatastore_V3 _datastore;
-        private string _databasePath;
 
-        protected CruiseDatastore_V3 Datastore
-        {
-            get => _datastore;
-            set => _datastore = value;
-        }
+        public string DatabasePath => Database.Path;
 
-        public string DatabasePath
-        {
-            get => _databasePath;
-            set
-            {
-                _databasePath = value;
-            }
-        }
+        public CruiseDatastore_V3 Database { get; protected set; }
 
         public string CruiseID
         {
@@ -42,22 +24,25 @@ namespace NatCruise.Data
 
         protected virtual void OnCruiseIDChanged(string value)
         {
-            
         }
 
-        public DataserviceProviderBase(CruiseDatastore_V3 datastore)
+        public DataserviceProviderBase(CruiseDatastore_V3 database)
         {
-            _datastore = datastore ?? throw new ArgumentNullException(nameof(datastore));
+            Database = database ?? throw new ArgumentNullException(nameof(database));
         }
 
         public DataserviceProviderBase(string databasePath)
         {
-            OpenDatabase(databasePath);
+            if (System.IO.File.Exists(databasePath) == false)
+            {
+                throw new FileNotFoundException("Cruise Database File Not Found", databasePath);
+            }
+            Database = new CruiseDatastore_V3(databasePath);
         }
 
         public CruiseDatastore_V3 GetDatabase()
         {
-            return _datastore ?? new CruiseDatastore_V3(DatabasePath);
+            return Database ?? new CruiseDatastore_V3(DatabasePath);
         }
 
         public abstract IDataservice GetDataservice(Type type);
@@ -65,16 +50,6 @@ namespace NatCruise.Data
         public T GetDataservice<T>() where T : class, IDataservice
         {
             return (T)GetDataservice(typeof(T));
-        }
-
-        public virtual void OpenDatabase(string databasePath)
-        {
-            if(System.IO.File.Exists(databasePath) == false)
-            {
-                throw new FileNotFoundException("Cruise Database File Not Found", databasePath);
-            }
-
-            DatabasePath = databasePath;
         }
     }
 }

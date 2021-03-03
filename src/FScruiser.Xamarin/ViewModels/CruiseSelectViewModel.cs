@@ -89,7 +89,7 @@ namespace FScruiser.XF.ViewModels
             var exportTempDir = FileSystemService.ExportTempDir;
             var fileToExport = Path.Combine(exportTempDir, defaultFileName);
 
-            using (var db = DataserviceProvider.GetDatabase())
+            using (var db = DataserviceProvider.Database)
             using (var destDb = new CruiseDatastore_V3(fileToExport, true)) 
             {
                 var cruiseCopier = new CruiseCopier();
