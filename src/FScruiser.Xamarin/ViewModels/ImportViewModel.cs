@@ -135,7 +135,7 @@ namespace FScruiser.XF.ViewModels
 
         public bool AnalizeCruise(string path, string cruiseID)
         {
-            using (var db = DataserviceProvider.GetDatabase())
+            using (var db = DataserviceProvider.Database)
             using (var importDb = new CruiseDatastore_V3(path))
             {
                 var cruiseChecker = new CruiseChecker();
@@ -212,7 +212,7 @@ namespace FScruiser.XF.ViewModels
             var cruiseID = cruise.CruiseID;
             var importPath = ImportPath ?? throw new NullReferenceException("ImportPath was null");
 
-            using (var destDb = DataserviceProvider.GetDatabase())
+            using (var destDb = DataserviceProvider.Database)
             using (var srcDb = new CruiseDatastore_V3(importPath))
             {
                 var srcConn = srcDb.OpenConnection();
