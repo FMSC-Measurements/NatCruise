@@ -2,6 +2,7 @@
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,24 +10,16 @@ namespace NatCruise.Cruise.Data
 {
     public class SamplerInfoDataservice : CruiseDataserviceBase, ISampleInfoDataservice
     {
-        protected IDeviceInfoService DeviceInfo { get; }
-        //protected Func<string> GetCurrentDeviceID { get; }
-        //protected Func<string> GetCurrentDeviceName { get; }
-
         public Device CurrentDevice { get; }
 
         public SamplerInfoDataservice(string path, string cruiseID, IDeviceInfoService deviceInfoService) : base(path, cruiseID)
         {
-            DeviceInfo = deviceInfoService;
-
-            CurrentDevice = GetCurrentDevice();
+            CurrentDevice = InitCurrentDevice(deviceInfoService.DeviceID, deviceInfoService.DeviceName);
         }
 
         public SamplerInfoDataservice(CruiseDatastore_V3 database, string cruiseID, IDeviceInfoService deviceInfoService) : base(database, cruiseID)
         {
-            DeviceInfo = deviceInfoService;
-
-            CurrentDevice = GetCurrentDevice();
+            CurrentDevice = InitCurrentDevice(deviceInfoService.DeviceID, deviceInfoService.DeviceName);
         }
 
         public SamplerInfo GetSamplerInfo(string stratumCode, string sampleGroupCode)
@@ -66,7 +59,7 @@ WHERE ss.StratumCode = @p1
             if (string.IsNullOrEmpty(stratumCode)) { throw new System.ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }
             if (string.IsNullOrEmpty(sampleGroupCode)) { throw new System.ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or empty", nameof(sampleGroupCode)); }
 
-            var deviceID = DeviceInfo.DeviceID;
+            var deviceID = CurrentDevice.DeviceID;
 
             return GetSamplerState(stratumCode, sampleGroupCode, deviceID);
         }
@@ -75,7 +68,7 @@ WHERE ss.StratumCode = @p1
         {
             if (samplerState is null) { throw new System.ArgumentNullException(nameof(samplerState)); }
 
-            var deviceID = DeviceInfo.DeviceID;
+            var deviceID = CurrentDevice.DeviceID;
 
             Database.Execute2(
 @"INSERT INTO SamplerState (
@@ -153,9 +146,11 @@ LEFT JOIN ssModifiedDate AS ss USING (DeviceID)
 WHERE d.DeviceID != @p1 AND CruiseID = @p2;", CurrentDevice.DeviceID, CruiseID).ToArray();
         }
 
-        protected Device GetCurrentDevice()
+        protected Device InitCurrentDevice(string deviceID, string deviceName)
         {
-            var deviceID = DeviceInfo.DeviceID;
+            if (string.IsNullOrEmpty(deviceID)) { throw new ArgumentException($"'{nameof(deviceID)}' cannot be null or empty", nameof(deviceID)); }
+            if (string.IsNullOrEmpty(deviceName)) { throw new ArgumentException($"'{nameof(deviceName)}' cannot be null or empty", nameof(deviceName)); }
+
             var cruiseID = CruiseID;
 
             var device = Database.Query<Device>("SELECT * FROM Device WHERE DeviceID = @p1 AND CruiseID = @p2;", deviceID, cruiseID).FirstOrDefault();
@@ -166,7 +161,7 @@ WHERE d.DeviceID != @p1 AND CruiseID = @p2;", CurrentDevice.DeviceID, CruiseID).
                 {
                     CruiseID = cruiseID,
                     DeviceID = deviceID,
-                    Name = DeviceInfo.DeviceName,
+                    Name = deviceName,
                 };
 
                 Database.Insert(device);

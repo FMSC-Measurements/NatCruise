@@ -17,8 +17,6 @@ namespace NatCruise.Data.Abstractions
 
         void UpdateSale(Sale sale);
 
-        IEnumerable<SaleCruises> GetSaleCruises();
-
         void DeleteCruise(string cruiseID);
 
         IEnumerable<Cruise> GetCruises();
