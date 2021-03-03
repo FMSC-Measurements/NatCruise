@@ -241,7 +241,7 @@ INSERT INTO TreeMeasurment (
                             atn.SpeciesCode,
                             atn.LiveDead,
                             tallyEntry.CountOrMeasure,
-                            CreatedBy = DeviceInfo.DeviceID,
+                            CreatedBy = CurrentDevice.DeviceID,
                         });
                 }
 
@@ -295,7 +295,7 @@ INSERT INTO TreeMeasurment (
                         atn.STM,
                         atn.ThreePRandomValue,
                         atn.EntryType,
-                        CreatedBy = DeviceInfo.DeviceID,
+                        CreatedBy = CurrentDevice.DeviceID,
                     });
 
                 var samplerState = atn.SamplerState;

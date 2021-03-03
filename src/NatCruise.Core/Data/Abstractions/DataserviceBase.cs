@@ -12,28 +12,9 @@ namespace NatCruise.Data
             .Append(CruiseMethods.FIXCNT)
             .Select(x => "'" + x + "'").ToArray());
 
-        protected string DeviceID { get; set; }
-        //private string DeviceName { get; set; }
+        public string DeviceID { get; protected set; }
 
-        private CruiseDatastore_V3 _database;
-
-        public CruiseDatastore_V3 Database
-        {
-            get { return _database; }
-            set
-            {
-                _database = value;
-                OnDatabaseChanged();
-            }
-        }
-
-        protected virtual void OnDatabaseChanged()
-        {
-            var database = Database;
-            if (database == null) { return; }
-
-            //DatabaseUpdater.Update(database);
-        }
+        public CruiseDatastore_V3 Database { get; }
 
         public DataserviceBase(string path)
         {
@@ -46,19 +27,5 @@ namespace NatCruise.Data
         {
             Database = database ?? throw new ArgumentNullException(nameof(database));
         }
-
-
-        //public void ImportCruise(string path, string cruiseID)
-        //{
-        //    using (var sourceDatabase = new CruiseDatastore_V3(path))
-        //    {
-        //        try
-        //        {
-
-        //        }
-
-        //    }
-
-        //}
     }
 }

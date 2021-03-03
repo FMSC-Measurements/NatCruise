@@ -19,21 +19,6 @@ namespace NatCruise.Data
         {
         }
 
-        public IEnumerable<SaleCruises> GetSaleCruises()
-        {
-            var sales = GetSales();
-            var saleCruises = sales.Select(x => new SaleCruises() { Sale = x }).ToArray();
-
-            foreach(var sc in saleCruises)
-            {
-                var saleID = sc.Sale.SaleID;
-                sc.Cruises = GetCruises(saleID);
-            }
-
-            return saleCruises;
-        }
-
-
         public void DeleteCruise(string cruiseID)
         {
             var database = Database;
