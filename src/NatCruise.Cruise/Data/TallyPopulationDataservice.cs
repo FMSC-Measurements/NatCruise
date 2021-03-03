@@ -72,7 +72,7 @@ namespace NatCruise.Cruise.Data
         {
             return Database.Query<TallyPopulation>(
                 SELECT_TALLYPOPULATION_CORE +
-                $"WHERE st.Method NOT IN ({PLOT_METHODS})"
+                "WHERE st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)"
                 , new object[] { unitCode, CruiseID }).ToArray();
 
             //return Database.From<TallyPopulation>()
@@ -108,7 +108,7 @@ namespace NatCruise.Cruise.Data
         {
             var tallyPops = Database.Query<TallyPopulation_Plot>(
                 SELECT_TALLYPOPULATION_CORE +
-                $"WHERE st.Method IN ({PLOT_METHODS})"
+                "WHERE st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)"
                 , new object[] { unitCode, CruiseID }).ToArray();
 
             foreach (var pop in tallyPops)

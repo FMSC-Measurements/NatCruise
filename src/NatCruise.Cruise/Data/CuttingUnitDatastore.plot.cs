@@ -67,7 +67,7 @@ namespace NatCruise.Cruise.Services
             var plotNumber = GetNextPlotNumber(cuttingUnitCode);
 
             Database.Execute2(
-@$"INSERT INTO Plot (
+$@"INSERT INTO Plot (
     PlotID,
     CruiseID,
     PlotNumber,
@@ -96,7 +96,7 @@ SELECT
 FROM Plot AS p
 JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID)
 JOIN Stratum AS st USING (StratumCode, CruiseID)
-WHERE p.PlotID = @PlotID AND st.Method IN ({PLOT_METHODS})
+WHERE p.PlotID = @PlotID AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)
 AND st.Method != '{CruiseMethods.THREEPPNT}';",
                 new { CruiseID, CuttingUnitCode = cuttingUnitCode, PlotID = plotID, PlotNumber = plotNumber, CreatedBy = UserName }); // dont automaticly add plot_stratum for 3ppnt methods
 
@@ -177,7 +177,7 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
 
             var tallyPops = Database.Query<TallyPopulation_Plot>(
                 SELECT_TALLYPOPULATION_CORE +
-                $"WHERE st.Method IN ({PLOT_METHODS})"
+                "WHERE st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)"
                 , new object[] { unitCode, cruiseID }).ToArray();
 
             foreach (var pop in tallyPops)
@@ -239,7 +239,7 @@ SELECT last_insert_rowid();",
         public IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber, bool insertIfNotExists = false)
         {
             return Database.Query<Plot_Stratum>(
-$@"SELECT
+@"SELECT
     ps.Plot_Stratum_CN,
     (CASE WHEN ps.Plot_Stratum_CN IS NOT NULL THEN 1 ELSE 0 END) AS InCruise,
     st.StratumCode,
@@ -256,7 +256,7 @@ FROM Plot AS p
 JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID)
 JOIN Stratum AS st USING (StratumCode, CruiseID)
 LEFT JOIN Plot_Stratum AS ps USING (CuttingUnitCode, StratumCode, CruiseID, PlotNumber)
-WHERE p.CuttingUnitCode = @p1 AND p.CruiseID = @p2 AND st.Method IN ({PLOT_METHODS})
+WHERE p.CuttingUnitCode = @p1 AND p.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)
 AND p.PlotNumber = @p3;",
                 new object[] { unitCode, CruiseID, plotNumber }).ToArray();
         }

@@ -103,7 +103,7 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 "st.* " +
                 "FROM Stratum AS st " +
                 "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
-                $"WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method NOT IN ({PLOT_METHODS})",
+                "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)",
                 new object[] { unitCode, CruiseID })
                 .ToArray();
         }
@@ -115,7 +115,7 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 "st.* " +
                 "FROM Stratum AS st " +
                 "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
-                $"WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method NOT IN ({PLOT_METHODS})",
+                "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)",
                 new object[] { unitCode, CruiseID })
                 .ToArray();
         }
@@ -127,7 +127,7 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 "st.* " +
                 "FROM Stratum AS st " +
                 "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
-                $"WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN ({PLOT_METHODS})",
+                "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)",
                 new object[] { unitCode, CruiseID })
                 .ToArray();
         }
