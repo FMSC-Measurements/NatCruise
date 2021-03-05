@@ -5,6 +5,7 @@ using NatCruise.Cruise.Services;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using NatCruise.Test;
 
 namespace NatCruise.Cruise.Core.Test.Data
 {
@@ -57,11 +58,11 @@ namespace NatCruise.Cruise.Core.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var plotds = new CuttingUnitDatastore(database, CruiseID);
+                var plotds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
-                var ds = new FixCNTDataservice(database, CruiseID);
+                var ds = new FixCNTDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
                     .Should().Be(0);
@@ -103,11 +104,11 @@ namespace NatCruise.Cruise.Core.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var plotds = new CuttingUnitDatastore(database, CruiseID);
+                var plotds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
-                var ds = new FixCNTDataservice(database, CruiseID);
+                var ds = new FixCNTDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 // check initial state
                 ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)

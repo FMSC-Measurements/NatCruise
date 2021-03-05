@@ -1,23 +1,22 @@
-﻿using Prism;
+﻿using NatCruise.Test;
+using Prism;
 using Xunit.Abstractions;
 
 namespace FScruiser.XF.Test
 {
-    public class TestBase
+    public class XFTestBase : TestBase
     {
         protected App App { get; }
-        protected ITestOutputHelper Output { get; }
         public IPlatformInitializer PlatformInitializer { get; }
 
         protected Prism.Ioc.IContainerExtension Container => (Prism.Ioc.IContainerExtension)App.Container;
 
-        public TestBase(ITestOutputHelper output) : this(output, null)
+        public XFTestBase(ITestOutputHelper output) : this(output, null)
         { }
 
-        public TestBase(ITestOutputHelper output, IPlatformInitializer platformInitializer)
+        public XFTestBase(ITestOutputHelper output, IPlatformInitializer platformInitializer) : base(output)
         {
             PlatformInitializer = platformInitializer ?? new TestPlatformInitializer(output);
-            Output = output;
             Xamarin.Forms.Mocks.MockForms.Init();
 
             App = new App(PlatformInitializer);

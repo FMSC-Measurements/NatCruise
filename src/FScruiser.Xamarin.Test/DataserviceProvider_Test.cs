@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace FScruiser.XF
 {
-    public class DatastoreProvider_Test : TestBase
+    public class DatastoreProvider_Test : XFTestBase
     {
         public DatastoreProvider_Test(ITestOutputHelper output) : base(output)
         {

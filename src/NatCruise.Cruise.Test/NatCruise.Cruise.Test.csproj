@@ -23,4 +23,6 @@
     <ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj" />
   </ItemGroup>
 
+  <Import Project="..\NatCruise.Test.Common\NatCruise.Test.Common.projitems" Label="Shared" />
+
 </Project>

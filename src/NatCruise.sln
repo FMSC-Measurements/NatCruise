@@ -47,8 +47,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CruiseDAL", "CruiseDAL", "{
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{7e28ebd8-47b9-4909-b748-aaffc085d35d}*SharedItemsImports = 5
 		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{a8f4a493-8361-4128-83b7-abd2dc7207f3}*SharedItemsImports = 5
 		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{c27d43f1-b37f-4488-a829-b0c2c499102d}*SharedItemsImports = 13
+		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{f2ce2051-a22b-46d0-86bb-b243a08854d0}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace FScruiser.XF.Pages
 {
-    public class LimitingDistancePage_Test : TestBase
+    public class LimitingDistancePage_Test : XFTestBase
     {
         public LimitingDistancePage_Test(ITestOutputHelper output) : base(output)
         {

@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
+using NatCruise.Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var tree_GUID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead);
 
@@ -53,7 +54,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
@@ -69,7 +70,7 @@ namespace NatCruise.Cruise.Test.Services
                 //tree.CountOrMeasure.Should().Be(countMeasure);
                 //tree.TreeCount.Should().Be(treeCount);
 
-                var tds = new TallyDataservice(database, CruiseID, new TestDeviceInfoService());
+                var tds = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var tallyLedger = tds.GetTallyEntry(treeID);
                 tallyLedger.Should().NotBeNull();
@@ -91,7 +92,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
@@ -142,7 +143,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
@@ -170,7 +171,7 @@ namespace NatCruise.Cruise.Test.Services
             using (var database = CreateDatabase())
             {
 
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
                 
 
 
