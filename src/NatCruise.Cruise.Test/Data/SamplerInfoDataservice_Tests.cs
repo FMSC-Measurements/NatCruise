@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using NatCruise.Test;
 
 namespace NatCruise.Cruise.Test.Data
 {
@@ -24,7 +25,7 @@ namespace NatCruise.Cruise.Test.Data
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
+                var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
 
                 ds.GetSamplerInfo(stratumCode, sampleGroupCode);
@@ -39,7 +40,7 @@ namespace NatCruise.Cruise.Test.Data
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
+                var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
 
                 ds.GetSamplerState(stratumCode, sampleGroupCode);
@@ -52,7 +53,7 @@ namespace NatCruise.Cruise.Test.Data
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
+                var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
 
                 var ss = new SamplerState()
@@ -83,7 +84,7 @@ namespace NatCruise.Cruise.Test.Data
             using (var database = CreateDatabase())
             {
                 var ds = new SamplerInfoDataservice(database, cruiseID,
-                    new TestDeviceInfoService(fromDeviceID, "fromDeviceName"));
+                    fromDeviceID);
 
                 var ss = new SamplerState()
                 {

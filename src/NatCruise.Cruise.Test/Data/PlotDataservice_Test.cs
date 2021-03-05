@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NatCruise.Cruise.Services;
+using NatCruise.Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,11 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void AddNewPlot()
         {
-            var init = new DatabaseInitializer();
+            var init = new DatastoreInitializer();
             var unit = init.Units[0];
             using(var db = init.CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db, init.CruiseID);
+                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 ds.AddNewPlot(unit);
 
@@ -34,11 +35,11 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void GetPlotTallyPopulationsByUnitCode()
         {
-            var init = new DatabaseInitializer();
+            var init = new DatastoreInitializer();
             var unit = init.Units[0];
             using (var db = init.CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db, init.CruiseID);
+                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 ds.AddNewPlot(unit);
 
@@ -57,11 +58,11 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void GetPlot_Strata()
         {
-            var init = new DatabaseInitializer();
+            var init = new DatastoreInitializer();
             var unit = init.Units[0];
             using (var db = init.CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db, init.CruiseID);
+                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 ds.AddNewPlot(unit);
 
@@ -77,11 +78,11 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void GetPlot_Strata_insertIfNotExists()
         {
-            var init = new DatabaseInitializer();
+            var init = new DatastoreInitializer();
             var unit = init.Units[0];
             using (var db = init.CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db, init.CruiseID);
+                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 ds.AddNewPlot(unit);
                 

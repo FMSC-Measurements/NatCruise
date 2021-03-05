@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace FScruiser.XF.Pages
 {
-    public class Pages_Common : TestBase
+    public class Pages_Common : XFTestBase
     {
         public Pages_Common(ITestOutputHelper output) : base(output)
         {

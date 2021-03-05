@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Xunit.Abstractions;
 
-namespace FScruiser.XF
+namespace NatCruise.Test
 {
     internal class TestLogger : LoggingService
     {

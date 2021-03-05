@@ -11,13 +11,13 @@ namespace NatCruise.Test
         public string CruiseID { get; }
         public string SaleID { get; }
 
-        protected string[] Units { get; }
-        protected Stratum[] Strata { get; }
-        protected CuttingUnit_Stratum[] UnitStrata { get; }
-        protected string[] Species { get; }
-        protected SampleGroup[] SampleGroups { get; }
-        protected TreeDefaultValue[] TreeDefaults { get; }
-        protected SubPopulation[] Subpops { get; }
+        public string[] Units { get; }
+        public Stratum[] Strata { get; }
+        public CuttingUnit_Stratum[] UnitStrata { get; }
+        public string[] Species { get; }
+        public SampleGroup[] SampleGroups { get; }
+        public TreeDefaultValue[] TreeDefaults { get; }
+        public SubPopulation[] Subpops { get; }
         public Stratum[] PlotStrata { get; }
         public Stratum[] NonPlotStrata { get; }
 

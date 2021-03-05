@@ -4,6 +4,7 @@ using System.Linq;
 using Xunit.Abstractions;
 using NatCruise.Util;
 using System;
+using NatCruise.Test;
 
 namespace NatCruise.Cruise.Test.Services
 {

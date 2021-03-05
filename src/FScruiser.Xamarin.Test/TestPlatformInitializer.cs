@@ -4,6 +4,7 @@ using Moq;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Services;
+using NatCruise.Test;
 using Prism.Ioc;
 using System;
 using Xunit.Abstractions;

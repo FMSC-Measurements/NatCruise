@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NatCruise.Cruise.Logic;
+using NatCruise.Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,9 @@ namespace NatCruise.Cruise.Test.Logic
         [InlineData(50.0, 10.0, 0, false, true, 16.236)]//to face
         [InlineData(50.0, 10.0, 50, false, true, 18.152)]//to face, w/ 50% slope
         [InlineData(50.0, 10.0, 0, false, false, 16.653)]//to center
+        // [InlineData(20.0, 18.3, 25, true, true, 35.85)]// due to rounding in plot coeficiant,
+         // hand calcualated limiting distances may be different from our calcualted values.
+         // But we are going to stick with the more precice calculated values
         public void TestCalculateLimitingDistance(double BAForFPS, double dbh, int slopePCT, bool isVar, bool isFace, double expected)
         {
             int sigDec = 3;
