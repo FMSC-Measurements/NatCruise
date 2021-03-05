@@ -10,16 +10,14 @@ namespace NatCruise.Cruise.Data
 {
     public class SamplerInfoDataservice : CruiseDataserviceBase, ISampleInfoDataservice
     {
-        public Device CurrentDevice { get; }
+        
 
-        public SamplerInfoDataservice(string path, string cruiseID, IDeviceInfoService deviceInfoService) : base(path, cruiseID)
+        public SamplerInfoDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
         {
-            CurrentDevice = InitCurrentDevice(deviceInfoService.DeviceID, deviceInfoService.DeviceName);
         }
 
-        public SamplerInfoDataservice(CruiseDatastore_V3 database, string cruiseID, IDeviceInfoService deviceInfoService) : base(database, cruiseID)
+        public SamplerInfoDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
-            CurrentDevice = InitCurrentDevice(deviceInfoService.DeviceID, deviceInfoService.DeviceName);
         }
 
         public SamplerInfo GetSamplerInfo(string stratumCode, string sampleGroupCode)
@@ -59,7 +57,7 @@ WHERE ss.StratumCode = @p1
             if (string.IsNullOrEmpty(stratumCode)) { throw new System.ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }
             if (string.IsNullOrEmpty(sampleGroupCode)) { throw new System.ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or empty", nameof(sampleGroupCode)); }
 
-            var deviceID = CurrentDevice.DeviceID;
+            var deviceID = DeviceID;
 
             return GetSamplerState(stratumCode, sampleGroupCode, deviceID);
         }
@@ -68,7 +66,7 @@ WHERE ss.StratumCode = @p1
         {
             if (samplerState is null) { throw new System.ArgumentNullException(nameof(samplerState)); }
 
-            var deviceID = CurrentDevice.DeviceID;
+            var deviceID = DeviceID;
 
             Database.Execute2(
 @"INSERT INTO SamplerState (
@@ -143,31 +141,7 @@ GROUP BY ss.DeviceID )
 
 SELECT d.*, ss.LastModified FROM DEVICE AS d
 LEFT JOIN ssModifiedDate AS ss USING (DeviceID)
-WHERE d.DeviceID != @p1 AND CruiseID = @p2;", CurrentDevice.DeviceID, CruiseID).ToArray();
-        }
-
-        protected Device InitCurrentDevice(string deviceID, string deviceName)
-        {
-            if (string.IsNullOrEmpty(deviceID)) { throw new ArgumentException($"'{nameof(deviceID)}' cannot be null or empty", nameof(deviceID)); }
-            if (string.IsNullOrEmpty(deviceName)) { throw new ArgumentException($"'{nameof(deviceName)}' cannot be null or empty", nameof(deviceName)); }
-
-            var cruiseID = CruiseID;
-
-            var device = Database.Query<Device>("SELECT * FROM Device WHERE DeviceID = @p1 AND CruiseID = @p2;", deviceID, cruiseID).FirstOrDefault();
-
-            if (device == null)
-            {
-                device = new Device
-                {
-                    CruiseID = cruiseID,
-                    DeviceID = deviceID,
-                    Name = deviceName,
-                };
-
-                Database.Insert(device);
-            }
-
-            return device;
+WHERE d.DeviceID != @p1 AND CruiseID = @p2;", DeviceID, CruiseID).ToArray();
         }
 
         public void CopySamplerStates(string deviceFrom, string deviceTo)
@@ -204,7 +178,7 @@ WHERE d.DeviceID != @p1 AND CruiseID = @p2;", CurrentDevice.DeviceID, CruiseID).
 
         public bool HasSampleStates()
         {
-            return HasSampleStates(CurrentDevice.DeviceID);
+            return HasSampleStates(DeviceID);
         }
 
         public bool HasSampleStates(string currentDeviceID)
@@ -216,7 +190,7 @@ WHERE d.DeviceID != @p1 AND CruiseID = @p2;", CurrentDevice.DeviceID, CruiseID).
 
         public bool HasSampleStateEnvy()
         {
-            return HasSampleStateEnvy(CurrentDevice.DeviceID);
+            return HasSampleStateEnvy(DeviceID);
         }
 
         public bool HasSampleStateEnvy(string currentDeviceID)
@@ -234,9 +208,5 @@ FROM (
 );", currentDeviceID, CruiseID);
             return result > 0;
         }
-
-        //public virtual string GetCurrentDeviceName();
-
-        //public virtual string GetCurrentDeviceID();
     }
 }

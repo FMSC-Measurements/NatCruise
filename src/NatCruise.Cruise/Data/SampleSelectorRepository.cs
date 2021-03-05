@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace NatCruise.Cruise.Services
 {
+    // TODO can this class be folded into ISampleInfoDataservie?
     public class SampleSelectorRepository : ISampleSelectorDataService
     {
         private Dictionary<string, ISampleSelector> _sampleSelectors = new Dictionary<string, ISampleSelector>();
@@ -18,6 +19,8 @@ namespace NatCruise.Cruise.Services
         }
 
         public ISampleInfoDataservice Dataservice { get; set; }
+
+        public string DeviceID => Dataservice.DeviceID;
 
         public ISampleSelector GetSamplerBySampleGroupCode(string stratumCode, string sgCode)
         {

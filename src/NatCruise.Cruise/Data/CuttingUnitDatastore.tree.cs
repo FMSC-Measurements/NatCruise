@@ -269,7 +269,7 @@ INSERT INTO TallyLedger (
                     tree.LiveDead,
                     tree.CountOrMeasure,
 
-                    UserName,
+                    DeviceID,
                 });
         }
 
@@ -335,7 +335,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
                     tree.Remarks,
                     tree.IsFallBuckScale,
                     tree.Initials,
-                    UserName,
+                    DeviceID,
                 });
         }
 
@@ -382,7 +382,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
                     mes.Remarks,
                     mes.IsFallBuckScale,
                     mes.Initials,
-                    UserName,
+                    DeviceID,
                 }
                 );
         }
@@ -425,7 +425,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
                 $"VALUES (@p1, @p2, @p3)" +
                 $"ON CONFLICT (TreeID) DO " +
                 $"UPDATE SET {treeFieldValue.Field} = @p2, ModifiedBy = @p3 WHERE TreeID = @p1;",
-                treeFieldValue.TreeID, treeFieldValue.Value, UserName);
+                treeFieldValue.TreeID, treeFieldValue.Value, DeviceID);
         }
 
         public void DeleteTree(string tree_guid)

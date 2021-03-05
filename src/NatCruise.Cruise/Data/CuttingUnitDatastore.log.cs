@@ -121,7 +121,7 @@ namespace NatCruise.Cruise.Services
                     log.DIBClass,
                     log.BarkThickness,
 
-                    CreatedBy = UserName,
+                    CreatedBy = DeviceID,
                 });
 
             log.LogNumber = logNumber;
@@ -167,7 +167,7 @@ namespace NatCruise.Cruise.Services
                 log.CubicFootRemoved,
                 log.DIBClass,
                 log.BarkThickness,
-                UserName,
+                DeviceID,
                 log.LogID);
         }
 

@@ -18,13 +18,13 @@ namespace NatCruise.Cruise.Services
         //    .Append(CruiseMethods.FIXCNT)
         //    .Select(x => "'" + x + "'").ToArray());
 
-        protected string UserName => "AndroidUser";
-
-        public CuttingUnitDatastore(string path, string cruiseID) : base (path, cruiseID)
+        public CuttingUnitDatastore(string path, string cruiseID, string deviceID)
+            : base (path, cruiseID, deviceID)
         {
         }
 
-        public CuttingUnitDatastore(CruiseDatastore_V3 database, string cruiseID) : base(database, cruiseID)
+        public CuttingUnitDatastore(CruiseDatastore_V3 database, string cruiseID, string deviceID)
+            : base(database, cruiseID, deviceID)
         {
         }
 
