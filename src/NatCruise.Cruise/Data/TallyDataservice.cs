@@ -12,13 +12,13 @@ namespace NatCruise.Cruise.Data
     public class TallyDataservice : SamplerInfoDataservice, ITallyDataservice
     {
 
-        public TallyDataservice(string path, string cruiseID, IDeviceInfoService deviceInfo)
-            : base(path, cruiseID, deviceInfo)
+        public TallyDataservice(string path, string cruiseID, string deviceID)
+            : base(path, cruiseID, deviceID)
         {
         }
 
-        public TallyDataservice(CruiseDatastore_V3 database, string cruiseID, IDeviceInfoService deviceInfo)
-            : base(database, cruiseID, deviceInfo)
+        public TallyDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID)
+            : base(database, cruiseID, deviceID)
         {
         }
 
@@ -241,7 +241,7 @@ INSERT INTO TreeMeasurment (
                             atn.SpeciesCode,
                             atn.LiveDead,
                             tallyEntry.CountOrMeasure,
-                            CreatedBy = CurrentDevice.DeviceID,
+                            CreatedBy = DeviceID,
                         });
                 }
 
@@ -295,7 +295,7 @@ INSERT INTO TreeMeasurment (
                         atn.STM,
                         atn.ThreePRandomValue,
                         atn.EntryType,
-                        CreatedBy = CurrentDevice.DeviceID,
+                        CreatedBy = DeviceID,
                     });
 
                 var samplerState = atn.SamplerState;

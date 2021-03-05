@@ -98,7 +98,7 @@ JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID)
 JOIN Stratum AS st USING (StratumCode, CruiseID)
 WHERE p.PlotID = @PlotID AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)
 AND st.Method != '{CruiseMethods.THREEPPNT}';",
-                new { CruiseID, CuttingUnitCode = cuttingUnitCode, PlotID = plotID, PlotNumber = plotNumber, CreatedBy = UserName }); // dont automaticly add plot_stratum for 3ppnt methods
+                new { CruiseID, CuttingUnitCode = cuttingUnitCode, PlotID = plotID, PlotNumber = plotNumber, CreatedBy = DeviceID }); // dont automaticly add plot_stratum for 3ppnt methods
 
             return plotID;
         }
@@ -153,7 +153,7 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
                         plot.Slope,
                         plot.Aspect,
                         plot.Remarks,
-                        UserName,
+                        DeviceID,
                         plot.PlotID,
                     });
         }
@@ -227,7 +227,7 @@ $@"INSERT INTO Plot_Stratum (
     @IsEmpty,
     @KPI,
     @ThreePRandomValue,
-    '{UserName}'
+    '{DeviceID}'
 );
 SELECT last_insert_rowid();",
                 plotStratum);

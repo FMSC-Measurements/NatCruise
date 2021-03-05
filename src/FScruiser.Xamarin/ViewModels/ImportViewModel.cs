@@ -1,5 +1,6 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Sync;
+using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Services;
@@ -30,6 +31,7 @@ namespace FScruiser.XF.ViewModels
         public IFileSystemService FileSystemService { get; }
         public IDialogService DialogService { get; }
         public INavigationService NavigationService { get; }
+        public IDeviceInfoService DeviceInfoService { get; }
 
         public string ImportPath
         {
@@ -65,7 +67,7 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand SelectCruiseCommand => new Command<Cruise>(async (cruise) => await SelectCruiseForImport(cruise));
 
-        public ICommand ImportCruiseCommand => new Command(ImportCruise);
+        public ICommand ImportCruiseCommand => new Command(async () => await ImportCruise());
 
         public ImportViewModel(
             IDataserviceProvider dataserviceProvider,
@@ -73,7 +75,8 @@ namespace FScruiser.XF.ViewModels
             IFileSystemService fileSystemService,
             IDialogService dialogService,
             ILoggingService loggingService,
-            INavigationService navigationService)
+            INavigationService navigationService,
+            IDeviceInfoService deviceInfoService)
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
@@ -81,6 +84,7 @@ namespace FScruiser.XF.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             Log = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            DeviceInfoService = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
         }
 
         public async Task BrowseCruiseFileAsync()
@@ -94,7 +98,7 @@ namespace FScruiser.XF.ViewModels
 
             using (var db = new CruiseDatastore_V3(importPath))
             {
-                var dataservice = new SaleDataservice(db, (string)null);
+                var dataservice = new SaleDataservice(db, (string)null, DeviceInfoService.DeviceID);
                 var cruises = dataservice.GetCruises();
 
                 if (cruises.Count() == 0)
@@ -135,7 +139,7 @@ namespace FScruiser.XF.ViewModels
 
         public bool AnalizeCruise(string path, string cruiseID)
         {
-            using (var db = DataserviceProvider.Database)
+            var db = DataserviceProvider.Database;
             using (var importDb = new CruiseDatastore_V3(path))
             {
                 var cruiseChecker = new CruiseChecker();
@@ -200,38 +204,31 @@ namespace FScruiser.XF.ViewModels
 
         }
 
-        public void ImportCruise()
+        public async Task ImportCruise()
         {
             var cruise = SelectedCruise;
             if(cruise == null) { return;}
-            ImportCruise(cruise);
+            await ImportCruise(cruise);
         }
 
-        public async void ImportCruise(Cruise cruise)
+        public async Task ImportCruise(Cruise cruise)
         {
             var cruiseID = cruise.CruiseID;
             var importPath = ImportPath ?? throw new NullReferenceException("ImportPath was null");
 
-            using (var destDb = DataserviceProvider.Database)
-            using (var srcDb = new CruiseDatastore_V3(importPath))
+            if (await ImportCruise(cruiseID, importPath) == true)
             {
-                var srcConn = srcDb.OpenConnection();
-                var destConn = destDb.OpenConnection();
-
-                if(await ImportCruise(cruiseID, srcConn, destConn) == true)
-                {
-                    DialogService.ShowNotification("Done");
-                    await NavigationService.GoBackAsync();
-                }
-                else
-                {
-                    DialogService.ShowNotification("Import Failed");
-                }
+                DialogService.ShowNotification("Done");
+                await NavigationService.GoBackAsync();
             }
-            
+            else
+            {
+                DialogService.ShowNotification("Import Failed");
+            }
+
         }
 
-        public async Task<bool> ImportCruise(string cruiseID, DbConnection fromConn, DbConnection toConn, CruiseSyncOptions options = null)
+        public async Task<bool> ImportCruise(string cruiseID, string importPath, CruiseSyncOptions options = null)
         {
             options ??= new CruiseSyncOptions()
             {
@@ -241,22 +238,28 @@ namespace FScruiser.XF.ViewModels
                 Validation = SyncFlags.Insert,
             };
 
-            try
+            var destDb = DataserviceProvider.Database;
+            using (var srcDb = new CruiseDatastore_V3(importPath))
             {
-                IsWorking = true;
-                var syncer = new CruiseSyncer();
-                await syncer.SyncAsync(cruiseID, fromConn, toConn, options);
-                return true;
-            }
-            catch(Exception e)
-            {
-                Log.LogException("Import", "Import Failed", e);
-                
-                return false;
-            }
-            finally
-            {
-                IsWorking = false;
+                var fromConn = srcDb.OpenConnection();
+                var toConn = destDb.OpenConnection();
+                try
+                {
+                    IsWorking = true;
+                    var syncer = new CruiseSyncer();
+                    await syncer.SyncAsync(cruiseID, fromConn, toConn, options);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Log.LogException("Import", "Import Failed", e);
+
+                    return false;
+                }
+                finally
+                {
+                    IsWorking = false;
+                }
             }
 
         }

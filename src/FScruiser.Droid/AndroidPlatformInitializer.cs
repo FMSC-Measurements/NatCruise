@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using FScruiser.Droid.Services;
+using NatCruise.Core.Services;
 using NatCruise.Cruise.Services;
 using NatCruise.Services;
 using Prism.Ioc;

@@ -24,6 +24,7 @@ using FScruiser.XF.Data;
 using FScruiser.XF.Views;
 using FScruiser.XF.ViewModels;
 using NatCruise.Services;
+using NatCruise.Core.Services;
 
 namespace FScruiser.XF
 {
@@ -250,7 +251,7 @@ namespace FScruiser.XF
                 }
 
 
-                containerRegistry.RegisterInstance<IDataserviceProvider>(_dataserviceProvider = new DataserviceProvider(deviceInfo, cruiseDbPath));
+                containerRegistry.RegisterInstance<IDataserviceProvider>(_dataserviceProvider = new DataserviceProvider(cruiseDbPath, deviceInfo));
             }
 
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)

@@ -1,4 +1,5 @@
 ﻿using CruiseDAL;
+using NatCruise.Core.Services;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
@@ -8,17 +9,13 @@ namespace NatCruise.Cruise.Data
 {
     public class DataserviceProvider : DataserviceProviderBase
     {
-        public DataserviceProvider(IDeviceInfoService deviceInfo, string databasePath) : base(databasePath)
+        public DataserviceProvider(string databasePath, IDeviceInfoService deviceInfo) : base(databasePath, deviceInfo)
         {
-            DeviceInfoService = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
         }
 
-        public DataserviceProvider(IDeviceInfoService deviceInfo, CruiseDatastore_V3 datastore) : base(datastore)
+        public DataserviceProvider(CruiseDatastore_V3 datastore, IDeviceInfoService deviceInfo) : base(datastore, deviceInfo)
         {
-            DeviceInfoService = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
         }
-
-        protected IDeviceInfoService DeviceInfoService { get; }
 
         public ISampleSelectorDataService SampleSelectorDataService { get; set; }
 
@@ -39,6 +36,7 @@ namespace NatCruise.Cruise.Data
         {
             var cruiseID = CruiseID;
             var database = Database;
+            var deviceID = DeviceID;
 
             // all dataservices below should return null if cruiseDatastore is null
             // note: I am skeptical about wheather this method should return null at all
@@ -48,26 +46,26 @@ namespace NatCruise.Cruise.Data
             //      is esential and throw if null, or allow for null to be returned and check for it.
 
             if (typeof(ICuttingUnitDatastore).IsAssignableFrom(type))
-            { return new CuttingUnitDatastore(database, cruiseID); }
+            { return new CuttingUnitDatastore(database, cruiseID, deviceID); }
 
             if (typeof(ISampleSelectorDataService).IsAssignableFrom(type))
             { return SampleSelectorDataService; }
 
             if (typeof(ISaleDataservice).IsAssignableFrom(type))
-            { return new SaleDataservice(database, cruiseID); }
+            { return new SaleDataservice(database, cruiseID, deviceID); }
 
             if (typeof(IFixCNTDataservice).IsAssignableFrom(type))
-            { return new FixCNTDataservice(database, cruiseID); }
+            { return new FixCNTDataservice(database, cruiseID, deviceID); }
 
             if (typeof(ITallyDataservice).IsAssignableFrom(type)
                 || typeof(ISampleInfoDataservice).IsAssignableFrom(type))
-            { return new TallyDataservice(database, cruiseID, DeviceInfoService); }
+            { return new TallyDataservice(database, cruiseID, deviceID); }
 
             if (typeof(ITallyPopulationDataservice).IsAssignableFrom(type))
-            { return new TallyPopulationDataservice(database, cruiseID); }
+            { return new TallyPopulationDataservice(database, cruiseID, deviceID); }
 
             if (typeof(ISampleInfoDataservice).IsAssignableFrom(type))
-            { return new SamplerInfoDataservice(database, cruiseID, DeviceInfoService); }
+            { return new SamplerInfoDataservice(database, cruiseID, deviceID); }
             else
             {
                 throw new InvalidOperationException("no dataservice found for type " + type.FullName);

@@ -14,6 +14,7 @@ using NatCruise.Data;
 using NatCruise.Services;
 using FScruiser.XF.Constants;
 using NatCruise.Data.Abstractions;
+using NatCruise.Core.Services;
 
 namespace FScruiser.XF.ViewModels
 {

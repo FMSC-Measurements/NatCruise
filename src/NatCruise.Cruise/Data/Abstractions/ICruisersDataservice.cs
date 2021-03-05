@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NatCruise.Cruise.Services
 {
-    public interface ICruisersDataservice : IDataservice
+    public interface ICruisersDataservice
     {
         bool PromptCruiserOnSample { get; set; }
 

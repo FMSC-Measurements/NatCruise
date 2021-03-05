@@ -11,11 +11,13 @@ namespace NatCruise.Cruise.Data
 {
     public class TallyPopulationDataservice : CruiseDataserviceBase, ITallyPopulationDataservice
     {
-        public TallyPopulationDataservice(string path, string cruiseID) : base(path, cruiseID)
+        public TallyPopulationDataservice(string path, string cruiseID, string deviceID)
+            : base(path, cruiseID, deviceID)
         {
         }
 
-        public TallyPopulationDataservice(CruiseDatastore_V3 database, string cruiseID) : base(database, cruiseID)
+        public TallyPopulationDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID)
+            : base(database, cruiseID, deviceID)
         {
         }
 
