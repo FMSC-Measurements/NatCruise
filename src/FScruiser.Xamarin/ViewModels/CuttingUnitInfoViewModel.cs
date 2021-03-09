@@ -2,17 +2,13 @@
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
-using Prism.Navigation;
+using Prism.Common;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class CuttingUnitInfoViewModel : ViewModelBase
+    public class CuttingUnitInfoViewModel : XamarinViewModelBase
     {
         private CuttingUnit_Ex _cuttingUnit;
 
@@ -23,7 +19,7 @@ namespace FScruiser.XF.ViewModels
             get => _cuttingUnit;
             set
             {
-                if(_cuttingUnit != null)
+                if (_cuttingUnit != null)
                 { _cuttingUnit.PropertyChanged -= cuttingUnit_PropertyChanged; }
                 SetProperty(ref _cuttingUnit, value);
                 value.PropertyChanged += cuttingUnit_PropertyChanged;
@@ -33,7 +29,7 @@ namespace FScruiser.XF.ViewModels
         private void cuttingUnit_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var cuttingUnit = CuttingUnit;
-            if(cuttingUnit == null) { return; }
+            if (cuttingUnit == null) { return; }
             CuttingUnitDataservice.UpdateCuttingUnit(cuttingUnit);
         }
 
@@ -44,7 +40,7 @@ namespace FScruiser.XF.ViewModels
             CuttingUnitDataservice = dataserviceProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var unit = CuttingUnitDataservice.GetUnit(unitCode);

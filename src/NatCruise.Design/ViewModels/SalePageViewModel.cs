@@ -62,7 +62,7 @@ namespace NatCruise.Design.ViewModels
             get => SetupinfoDataservice.GetForests(Sale?.Region ?? "");
         }
 
-        protected override void Load()
+        public override void Load()
         {
             Sale = CruiseDataservice.GetSale();
             RaisePropertyChanged(nameof(ForestOptions));

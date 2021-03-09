@@ -10,6 +10,7 @@ using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 using NatCruise.Data;
+using Prism.Common;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -21,7 +22,7 @@ namespace FScruiser.XF.ViewModels
     // also it would be nice if the view model had a Errors property that exposed a observable dictionary
     // which exposed all the errors rather than having properties to indecated if a property had an error
 
-    public class TreeEditViewModel : ViewModelBase
+    public class TreeEditViewModel : XamarinViewModelBase
     {
         private Command _showLogsCommand;
         private IEnumerable<string> _stratumCodes;
@@ -468,7 +469,7 @@ namespace FScruiser.XF.ViewModels
             Tree = null;//unwire tree
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var treeID = parameters.GetValue<string>(NavParams.TreeID);
 

@@ -137,10 +137,6 @@ namespace NatCruise.Design.ViewModels
             RefreshSelectedUnits();
         }
 
-        protected override void Load()
-        {
-        }
-
         public class CuttingUnitItem : BindableBase
         {
             public CuttingUnitItem(CuttingUnit unit, CuttingUnitStrataPageViewModel viewModel)

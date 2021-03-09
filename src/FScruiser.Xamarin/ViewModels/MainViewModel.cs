@@ -1,20 +1,15 @@
-﻿using NatCruise.Cruise.Data;
+﻿using FScruiser.XF.Services;
+using NatCruise.Core.Services;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using FScruiser.XF.Services;
-using Microsoft.AppCenter.Crashes;
-using Prism.Navigation;
+using NatCruise.Data;
+using NatCruise.Data.Abstractions;
+using NatCruise.Services;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using NatCruise.Services;
-using FScruiser.XF.Constants;
-using NatCruise.Data.Abstractions;
-using NatCruise.Core.Services;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -37,7 +32,7 @@ namespace FScruiser.XF.ViewModels
     //    public Func<bool> CanShowAction { get; set; }
     //}
 
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : XamarinViewModelBase
     {
         private IEnumerable<CuttingUnit_Ex> _cuttingUnits;
         private CuttingUnit_Ex _selectedCuttingUnit;
@@ -89,7 +84,7 @@ namespace FScruiser.XF.ViewModels
             get
             {
                 var cruiseID = DatastoreProvider?.CruiseID;
-                if(cruiseID != null)
+                if (cruiseID != null)
                 {
                     var cruise = SaleDataservice.GetCruise(cruiseID);
                     return cruise.ToString();
@@ -112,14 +107,12 @@ namespace FScruiser.XF.ViewModels
 
         public bool HasTreeStrata => IsCuttingUnitSelected && SelectedCuttingUnit.HasTreeStrata;
 
-
         public IDataserviceProvider DatastoreProvider { get; }
         public IAppInfoService AppInfo { get; }
         public ICruiseDialogService DialogService { get; }
         public IDeviceInfoService DeviceInfo { get; }
         public ICuttingUnitDatastore CuttingUnitDataservice { get; }
         public ISaleDataservice SaleDataservice { get; }
-
 
         public MainViewModel(
                 ICruiseNavigationService navigationService,
@@ -134,7 +127,7 @@ namespace FScruiser.XF.ViewModels
             DatastoreProvider = datastoreProvider;
             DeviceInfo = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
 
-            if(datastoreProvider.CruiseID != null)
+            if (datastoreProvider.CruiseID != null)
             {
                 CuttingUnitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
                 SaleDataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
@@ -142,7 +135,6 @@ namespace FScruiser.XF.ViewModels
 
             //RefreshNavigation(null);
         }
-
 
         private void ShowTrees()
         {
@@ -342,10 +334,10 @@ namespace FScruiser.XF.ViewModels
         //    RaisePropertyChanged(nameof(NavigationListItems));
         //}
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var cuttingUnitDataservice = CuttingUnitDataservice;
-            if(cuttingUnitDataservice != null)
+            if (cuttingUnitDataservice != null)
             {
                 CuttingUnits = cuttingUnitDataservice.GetUnits();
             }

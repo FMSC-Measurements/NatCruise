@@ -1,14 +1,13 @@
-﻿using NatCruise.Cruise.Models;
+﻿using FScruiser.XF.Constants;
+using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
-using Prism.Navigation;
-using Xamarin.Forms;
 using NatCruise.Data;
+using Prism.Common;
+using Prism.Navigation;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeErrorEditViewModel : ViewModelBase
+    public class TreeErrorEditViewModel : XamarinViewModelBase
     {
         private int _treeNumber;
         private TreeError _treeError;
@@ -50,7 +49,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 var treeError = TreeError;
-                if(treeError != null)
+                if (treeError != null)
                 {
                     treeError.IsResolved = value;
                     RaisePropertyChanged(nameof(IsResolved));
@@ -119,7 +118,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var treeID = parameters.GetValue<string>(NavParams.TreeID);
             var treeAuditRuleID = parameters.GetValue<string>(NavParams.TreeAuditRuleID);

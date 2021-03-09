@@ -1,20 +1,16 @@
-﻿using NatCruise.Cruise.Models;
+﻿using FScruiser.XF.Services;
+using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using FScruiser.XF.Services;
-using Prism.Ioc;
-using Prism.Navigation;
+using NatCruise.Data;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
-using Xamarin.Forms;
-using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class CuttingUnitListViewModel : ViewModelBase
+    public class CuttingUnitListViewModel : XamarinViewModelBase
     {
         private IEnumerable<CuttingUnit> _units;
-
-        public bool IsFileNotOpen => Units == null;
 
         public IEnumerable<CuttingUnit> Units
         {
@@ -23,31 +19,27 @@ namespace FScruiser.XF.ViewModels
         }
 
         public IDataserviceProvider DatastoreProvider { get; }
+        public ICruiseNavigationService NavigationService { get; }
 
-        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider)
+        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider, ICruiseNavigationService navigationService)
         {
             DatastoreProvider = datastoreProvider ?? throw new ArgumentNullException(nameof(datastoreProvider));
-
-            MessagingCenter.Subscribe<object, string>(this, Messages.CRUISE_FILE_OPENED, (sender, path) =>
-            {
-                Refresh();
-            });
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         public void SelectUnit(CuttingUnit unit)
         {
             if (unit == null) { throw new ArgumentNullException(nameof(unit)); }
 
-            MessagingCenter.Send<string>(unit.CuttingUnitCode, Messages.CUTTING_UNIT_SELECTED);
+            NavigationService.ShowCuttingUnitInfo(unit.CuttingUnitCode);
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDatastore>();
             if (datastore != null)
             {
                 Units = datastore.GetUnits();
-                base.RaisePropertyChanged(nameof(IsFileNotOpen));
             }
         }
     }

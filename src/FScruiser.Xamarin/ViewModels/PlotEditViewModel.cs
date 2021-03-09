@@ -1,8 +1,10 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
+﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
-using Prism.Navigation;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using NatCruise.Services;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,12 +12,10 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using NatCruise.Services;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class PlotEditViewModel : ViewModelBase
+    public class PlotEditViewModel : XamarinViewModelBase
     {
         private Plot _plot;
         private IEnumerable<Plot_Stratum> _stratumPlots;
@@ -67,7 +67,7 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 var plot = Plot;
-                if(plot != null)
+                if (plot != null)
                 {
                     plot.PlotNumber = value;
                 }
@@ -103,7 +103,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        void UpdatePlotNumber(string value)
+        private void UpdatePlotNumber(string value)
         {
             if (int.TryParse(value, out var plotNumber))
             {
@@ -116,20 +116,19 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        void UpdatePlotNumber(int newValue)
+        private void UpdatePlotNumber(int newValue)
         {
             var oldValue = Plot.PlotNumber;
             // HACK because UpdatePlotNumber may be called twice when the value changes,
             // i.e. once when the control loses focus and once when the ReturnCommand is fired
             // we need to assure that the old and new values are different
-            if(oldValue == newValue) { return; }
+            if (oldValue == newValue) { return; }
 
             if (Datastore.IsPlotNumberAvalible(UnitCode, newValue))
             {
                 Datastore.UpdatePlotNumber(Plot.PlotID, newValue);
 
                 PlotNumber = newValue;
-                
             }
             else
             {
@@ -231,7 +230,7 @@ namespace FScruiser.XF.ViewModels
             RefreshErrorsAndWarnings(plot);
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var plotID = parameters.GetValue<string>(NavParams.PlotID);
 
@@ -254,7 +253,6 @@ namespace FScruiser.XF.ViewModels
             StratumPlots = stratumPlots;
 
             RefreshErrorsAndWarnings(plot);
-            
         }
 
         protected void RefreshErrorsAndWarnings(Plot plot)

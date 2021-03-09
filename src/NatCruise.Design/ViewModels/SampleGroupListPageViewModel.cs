@@ -22,8 +22,8 @@ namespace NatCruise.Design.ViewModels
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
         }
 
-        public ICommand AddSampleGroupCommand => _addSampleGroupCommand ?? (_addSampleGroupCommand = new DelegateCommand<string>(AddSampleGroup));
-        public ICommand RemoveSampleGroupCommand => _removeSampleGroupCommand ?? (_removeSampleGroupCommand = new DelegateCommand<SampleGroup>(RemoveSampleGroup));
+        public ICommand AddSampleGroupCommand => _addSampleGroupCommand ??= new DelegateCommand<string>(AddSampleGroup);
+        public ICommand RemoveSampleGroupCommand => _removeSampleGroupCommand ??= new DelegateCommand<SampleGroup>(RemoveSampleGroup);
 
         public Stratum Stratum
         {

@@ -1,10 +1,12 @@
-﻿using NatCruise.Cruise.Logic;
+﻿using FScruiser.XF.Constants;
+using FScruiser.XF.Services;
+using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using NatCruise.Cruise.Util;
-using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+using NatCruise.Data;
 using NatCruise.Util;
+using Prism.Common;
+using Prism.Ioc;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
@@ -12,12 +14,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using Prism.Ioc;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class PlotTallyViewModel : ViewModelBase
+    public class PlotTallyViewModel : XamarinViewModelBase
     {
         private const string STRATUM_FILTER_ALL = "All";
 
@@ -161,7 +161,7 @@ namespace FScruiser.XF.ViewModels
             {
                 var treeVM = ContainerProvider.Resolve<TreeEditViewModel>();
                 treeVM.UseSimplifiedTreeFields = true;
-                treeVM.OnNavigatedTo(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
+                treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
 
                 SelectedTreeViewModel = treeVM;
             }
@@ -171,21 +171,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
-        {
-            MessagingCenter.Unsubscribe<object>(this, Messages.EDIT_TREE_CLICKED);
-            MessagingCenter.Unsubscribe<object>(this, Messages.DELETE_TREE_CLICKED);
-        }
-
-        public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-
-            MessagingCenter.Subscribe<object, string>(this, Messages.EDIT_TREE_CLICKED, (sender, tree_guid) => ShowEditTree(tree_guid));
-            MessagingCenter.Subscribe<object, string>(this, Messages.DELETE_TREE_CLICKED, (sender, tree_guid) => DeleteTree(tree_guid));
-        }
-
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var plotID = parameters.GetValue<string>(NavParams.PlotID);
 
@@ -214,10 +200,9 @@ namespace FScruiser.XF.ViewModels
             UnitCode = plot.CuttingUnitCode;
 
             // refresh selected tree incase coming back from TreeEdit page
-            SelectedTreeViewModel?.Refresh();
+            SelectedTreeViewModel?.Load();
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
-
 
         public async Task TallyAsync(TallyPopulation_Plot pop)
         {
@@ -239,7 +224,7 @@ namespace FScruiser.XF.ViewModels
             var nextTreeNumber = Datastore.GetNextPlotTreeNumber(UnitCode, pop.StratumCode, PlotNumber, IsRecon);
 
             var tree = await PlotBasedTallyLogic.TallyAsync(pop, UnitCode, PlotNumber, sampleSelectorRepository, dialogService);
-            if(tree == null) { return; }
+            if (tree == null) { return; }
 
             tree.TreeNumber = nextTreeNumber;
             Datastore.InsertTree(tree);
@@ -297,7 +282,5 @@ namespace FScruiser.XF.ViewModels
             Datastore.DeleteTree(tree.TreeID);
             Trees.Remove(tree);
         }
-
-        
     }
 }
