@@ -52,6 +52,6 @@ namespace FScruiser.XF.Services
 
         Task ShowTreeList(string unitCode);
 
-        Task<INavigationResult> GoBackAsync();
+        Task GoBackAsync();
     }
 }
