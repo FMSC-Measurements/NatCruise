@@ -1,16 +1,16 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
+﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
-using Prism.Navigation;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using Prism.Common;
 using System;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class ThreePPNTPlotViewModel : ViewModelBase
+    public class ThreePPNTPlotViewModel : XamarinViewModelBase
     {
         private const double DEFAULT_VOLUME_FACTOR = 0.333;
 
@@ -58,7 +58,7 @@ namespace FScruiser.XF.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
             var unit = parameters.GetValue<string>(NavParams.UNIT);

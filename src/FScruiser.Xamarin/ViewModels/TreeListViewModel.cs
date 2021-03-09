@@ -14,10 +14,11 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using NatCruise.Data;
+using Prism.Common;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeListViewModel : ViewModelBase, INavigatedAware
+    public class TreeListViewModel : XamarinViewModelBase, INavigatedAware
     {
         private ICommand _deleteTreeCommand;
         private Command<TreeStub> _editTreeCommand;
@@ -65,7 +66,7 @@ namespace FScruiser.XF.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
 

@@ -2,6 +2,7 @@
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Models;
+using Prism.Common;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class CruiseListViewModel : ViewModelBase
+    public class CruiseListViewModel : XamarinViewModelBase
     {
         private Sale _sale;
         private IEnumerable<Cruise> _cruises;
@@ -37,7 +38,7 @@ namespace FScruiser.XF.ViewModels
             SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var saleID = parameters.GetValue<string>(NavParams.SaleID);
             var saleDataservice = SaleDataservice;

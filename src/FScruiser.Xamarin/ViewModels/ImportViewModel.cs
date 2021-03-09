@@ -17,7 +17,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class ImportViewModel : ViewModelBase
+    public class ImportViewModel : XamarinViewModelBase
     {
         private IEnumerable<Cruise> _cruises;
         private string _selectedCruiseFile;
@@ -262,11 +262,6 @@ namespace FScruiser.XF.ViewModels
                 }
             }
 
-        }
-
-        protected override void Refresh(INavigationParameters parameters)
-        {
-            
         }
     }
 }

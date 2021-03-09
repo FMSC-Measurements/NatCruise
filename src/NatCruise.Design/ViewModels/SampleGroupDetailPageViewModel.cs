@@ -86,7 +86,7 @@ namespace NatCruise.Design.ViewModels
         //    RaisePropertyChanged(nameof(IsVariableRadious));
         //}
 
-        protected override void Load()
+        public override void Load()
         {
             var sampleGroup = SampleGroup;
             if (sampleGroup == null) { return; }

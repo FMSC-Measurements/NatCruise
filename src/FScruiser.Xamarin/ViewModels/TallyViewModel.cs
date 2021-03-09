@@ -1,26 +1,25 @@
 ﻿using CruiseDAL.Schema;
+using FScruiser.XF.Constants;
+using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using NatCruise.Cruise.Util;
-using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+using NatCruise.Data;
 using NatCruise.Util;
-using Prism.Navigation;
+using Prism.Commands;
+using Prism.Common;
+using Prism.Ioc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using Prism.Commands;
-using Prism.Ioc;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TallyViewModel : ViewModelBase
+    public class TallyViewModel : XamarinViewModelBase
     {
         public static readonly string STRATUM_FILTER_ALL = "All";
 
@@ -37,6 +36,7 @@ namespace FScruiser.XF.ViewModels
             get => _title;
             set => SetProperty(ref _title, value);
         }
+
         public IList<TallyEntry> TallyFeed
         {
             get { return _tallyFeed; }
@@ -165,20 +165,18 @@ namespace FScruiser.XF.ViewModels
             CruisersDataService = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
             ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
-
         }
-
 
         public void SelectTallyEntry(object obj)
         {
             var tallyEntry = obj as TallyEntry;
-            if(tallyEntry == null) { return; }
+            if (tallyEntry == null) { return; }
             var treeID = tallyEntry?.TreeID;
             if (treeID != null)
             {
                 var treeVM = ContainerProvider.Resolve<TreeEditViewModel>();
                 treeVM.UseSimplifiedTreeFields = true;
-                treeVM.OnNavigatedTo(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
+                treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
 
                 SelectedTreeViewModel = treeVM;
             }
@@ -188,7 +186,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
 
@@ -212,7 +210,7 @@ namespace FScruiser.XF.ViewModels
             TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse().ToObservableCollection();
 
             // refresh selected tree incase coming back from TreeEdit page
-            SelectedTreeViewModel?.Refresh();
+            SelectedTreeViewModel?.Load();
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
 

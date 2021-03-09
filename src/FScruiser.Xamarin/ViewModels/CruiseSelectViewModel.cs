@@ -6,7 +6,7 @@ using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Models;
 using NatCruise.Services;
-using Prism.Navigation;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,7 +16,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class CruiseSelectViewModel : ViewModelBase
+    public class CruiseSelectViewModel : XamarinViewModelBase
     {
         //public ICommand SelectCruiseCommand => new
 
@@ -64,7 +64,7 @@ namespace FScruiser.XF.ViewModels
         public void OpenSelectedCruise()
         {
             var selectedCruise = SelectedCruise;
-            if(selectedCruise == null) { return; }
+            if (selectedCruise == null) { return; }
             SelectCruise(selectedCruise);
         }
 
@@ -90,7 +90,7 @@ namespace FScruiser.XF.ViewModels
             var fileToExport = Path.Combine(exportTempDir, defaultFileName);
 
             var db = DataserviceProvider.Database;
-            using (var destDb = new CruiseDatastore_V3(fileToExport, true)) 
+            using (var destDb = new CruiseDatastore_V3(fileToExport, true))
             {
                 var cruiseCopier = new CruiseCopier();
                 cruiseCopier.Copy(db, destDb, cruise.CruiseID);
@@ -116,15 +116,15 @@ namespace FScruiser.XF.ViewModels
             {
                 var cruiseID = cruise.CruiseID;
                 SaleDataservice.DeleteCruise(cruiseID);
-                Refresh();
-                if(DataserviceProvider.CruiseID == cruiseID)
+                Load();
+                if (DataserviceProvider.CruiseID == cruiseID)
                 {
                     DataserviceProvider.CruiseID = null;
                 }
             }
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var saleID = parameters.GetValue<string>(NavParams.SaleID);
             var saleDataservice = SaleDataservice;

@@ -13,10 +13,11 @@ using Prism.Navigation;
 using Xamarin.Forms;
 using static NatCruise.Cruise.Constants;
 using NatCruise.Data;
+using Prism.Common;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeCountEditViewModel : ViewModelBase
+    public class TreeCountEditViewModel : XamarinViewModelBase
     {
         private string _unitCode;
         private int _treeCountDelta;
@@ -110,7 +111,7 @@ namespace FScruiser.XF.ViewModels
         }
         
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var unit = parameters.GetValue<string>(NavParams.UNIT);
             var stratum = parameters.GetValue<string>(NavParams.STRATUM);

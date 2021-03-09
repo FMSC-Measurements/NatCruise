@@ -15,7 +15,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : XamarinViewModelBase
     {
         public IApplicationSettings AppSettings { get; }
         public IDialogService DialogService { get; }
@@ -42,11 +42,6 @@ namespace FScruiser.XF.ViewModels
                 var newDatabase = new CruiseDatastore_V3(databasePath, true);
                 DataserviceProvider.CruiseID = null;
             }
-        }
-
-        protected override void Refresh(INavigationParameters parameters)
-        {
-            
         }
 
         public override void OnNavigatedFrom(INavigationParameters parameters)

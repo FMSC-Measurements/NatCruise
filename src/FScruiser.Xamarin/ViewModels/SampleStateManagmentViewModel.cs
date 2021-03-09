@@ -1,20 +1,19 @@
-﻿using NatCruise.Cruise.Data;
-using FScruiser.XF.Services;
-using Microsoft.AppCenter.Crashes;
-using Prism.Navigation;
+﻿using Microsoft.AppCenter.Crashes;
+using NatCruise.Cruise.Data;
+using NatCruise.Data;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using NatCruise.Core.Services;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SampleStateManagmentViewModel : ViewModelBase
+    public class SampleStateManagmentViewModel : XamarinViewModelBase
     {
         //private NatCruise.Cruise.Models.Device _currentDevice;
         private Command<string> _copyDeviceStateCommand;
+
         private IEnumerable<NatCruise.Cruise.Models.Device> _devices;
 
         protected ISampleInfoDataservice SampleInfoDataservice { get; }
@@ -22,7 +21,7 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand CopyDeviceStateCommand => _copyDeviceStateCommand ?? (_copyDeviceStateCommand = new Command<string>(CopyDeviceState));
 
-        public SampleStateManagmentViewModel( IDataserviceProvider dataserviceProvider)
+        public SampleStateManagmentViewModel(IDataserviceProvider dataserviceProvider)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
 
@@ -47,7 +46,7 @@ namespace FScruiser.XF.ViewModels
             protected set => SetProperty(ref _devices, value);
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             try
             {

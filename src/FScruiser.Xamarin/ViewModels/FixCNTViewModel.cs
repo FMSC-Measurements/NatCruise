@@ -1,19 +1,17 @@
-﻿using NatCruise.Cruise.Data;
+﻿using FScruiser.XF.Constants;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
-using Prism.Navigation;
+using NatCruise.Data;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class FixCNTViewModel : ViewModelBase
+    public class FixCNTViewModel : XamarinViewModelBase
     {
         private Command<FixCNTTallyBucket> _processTallyCommand;
         private bool _isUntallyEnabled;
@@ -33,7 +31,9 @@ namespace FScruiser.XF.ViewModels
         public string Unit { get; private set; }
         public int PlotNumber { get; private set; }
 
-        protected FixCNTViewModel() { }
+        protected FixCNTViewModel()
+        {
+        }
 
         public FixCNTViewModel(IDataserviceProvider datastoreProvider)
         {
@@ -44,7 +44,6 @@ namespace FScruiser.XF.ViewModels
 
         public void Tally(FixCNTTallyBucket tallyBucket)
         {
-
             var tallyPop = tallyBucket.TallyPopulation;
 
             FixCNTDataservice.IncrementFixCNTTreeCount(
@@ -98,12 +97,11 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var unit = Unit = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = PlotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
-
 
             //read fixcount tally populations
             var tallyPopulations = FixCNTDataservice.GetFixCNTTallyPopulations(stratumCode).ToArray();

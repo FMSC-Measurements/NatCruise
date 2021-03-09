@@ -9,7 +9,7 @@ using System;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class ManageCruisersViewModel : ViewModelBase
+    public class ManageCruisersViewModel : XamarinViewModelBase
     {
         private Command<string> _addCruiserCommand;
         private Command<string> _removeCruiserCommand;
@@ -43,11 +43,6 @@ namespace FScruiser.XF.ViewModels
         {
             CruisersDataservice.RemoveCruiser(cruiser);
             RaisePropertyChanged(nameof(Cruisers));
-        }
-
-        protected override void Refresh(INavigationParameters parameters)
-        {
-            
         }
     }
 }

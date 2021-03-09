@@ -2,19 +2,15 @@
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Models;
-using NatCruise.Util;
-using Prism.Navigation;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SaleSelectViewModel : ViewModelBase
+    public class SaleSelectViewModel : XamarinViewModelBase
     {
         private IEnumerable<Sale> _sales;
 
@@ -23,11 +19,12 @@ namespace FScruiser.XF.ViewModels
             get => _sales;
             set => SetProperty(ref _sales, value);
         }
+
         public ISaleDataservice SaleDataservice { get; }
 
         public ICruiseNavigationService NavigationService { get; }
 
-        public ICommand ShowCruiseSelectCommand => new Command<string>((saleID) => ShowCruiseSelect(saleID) );
+        public ICommand ShowCruiseSelectCommand => new Command<string>((saleID) => ShowCruiseSelect(saleID));
 
         public ICommand ShowImportCommand => new Command(() => NavigationService.ShowImport());
 
@@ -37,7 +34,6 @@ namespace FScruiser.XF.ViewModels
 
             SaleDataservice = dataServiceprovider.GetDataservice<ISaleDataservice>();
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-
         }
 
         public void ShowCruiseSelect(string saleID)
@@ -45,7 +41,7 @@ namespace FScruiser.XF.ViewModels
             NavigationService.ShowCruiseSelect(saleID);
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var sales = SaleDataservice.GetSales();
             Sales = sales;

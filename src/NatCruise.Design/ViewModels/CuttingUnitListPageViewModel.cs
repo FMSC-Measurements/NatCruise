@@ -44,7 +44,7 @@ namespace NatCruise.Design.ViewModels
 
         //public ICommand EditCuttingUnitCommand => _editCuttingUnitCommand ?? (_editCuttingUnitCommand = new DelegateCommand<CuttingUnit>(EditCuttingUnit));
 
-        protected override void Load()
+        public override void Load()
         {
             var units = UnitDataservice.GetCuttingUnits();
 

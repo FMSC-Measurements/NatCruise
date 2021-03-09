@@ -1,20 +1,20 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using NatCruise.Cruise.Util;
+﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
+using NatCruise.Data;
 using NatCruise.Util;
+using Prism.Common;
 using Prism.Navigation;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using FScruiser.XF.Constants;
-using System;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class LogsListViewModel : ViewModelBase
+    public class LogsListViewModel : XamarinViewModelBase
     {
         private ICommand _addLogCommand;
         private Command<Log> _editLogCommand;
@@ -59,7 +59,7 @@ namespace FScruiser.XF.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
             var tree_guid = Tree_GUID = parameters.GetValue<string>(NavParams.TreeID)
                 ?? parameters.GetValue<string>(KnownNavigationParameters.XamlParam);

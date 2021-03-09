@@ -1,10 +1,17 @@
-﻿using Prism;
+﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Prism;
+using Prism.Common;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NatCruise
 {
     public abstract class ViewModelBase : Prism.Mvvm.BindableBase, IActiveAware
     {
+        public IParameters Parameters { get; protected set; }
+
         private bool _isActive;
 
         public event EventHandler IsActiveChanged;
@@ -24,28 +31,37 @@ namespace NatCruise
             IsActiveChanged?.Invoke(this, EventArgs.Empty);
             if (isActivated)
             {
-                Load();
+                try
+                {
+                    var stopwatch = Stopwatch.StartNew();
+
+                    Load();
+
+                    stopwatch.Stop();
+                    Analytics.TrackEvent("view_model_load",
+                        new Dictionary<string, string> {
+                        { "time_ms", stopwatch.ElapsedMilliseconds.ToString() },
+                        { "view_model_type", this.GetType().Name },
+                        });
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("ERROR::::" + ex);
+                    Crashes.TrackError(ex, new Dictionary<string, string>() { { "view_model_type", this.GetType().Name } });
+                }
+
+                
             }
         }
 
-        //public bool IsNavigationTarget(NavigationContext navigationContext)
-        //{
-        //    return true;
-        //}
 
-        //public void OnNavigatedFrom(NavigationContext navigationContext)
-        //{
-        //}
+        public virtual void Load()
+        {
+            Load(Parameters);
+        }
 
-        //public void OnNavigatedTo(NavigationContext navigationContext)
-        //{
-        //    var navParams = navigationContext.Parameters as CruiseManagerNavigationParamiters;
-
-        //    Refresh(navParams);
-        //}
-
-        //protected abstract void Refresh(CruiseManagerNavigationParamiters navParams);
-
-        protected abstract void Load();
+        protected virtual void Load(IParameters parameters)
+        {
+        }
     }
 }
