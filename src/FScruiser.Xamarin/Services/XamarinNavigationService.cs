@@ -17,7 +17,7 @@ namespace FScruiser.XF.Services
 
         INavigationService NavigationService { get; }
 
-        public Task<INavigationResult> GoBackAsync()
+        public Task GoBackAsync()
         {
             return NavigationService.GoBackAsync();
         }
