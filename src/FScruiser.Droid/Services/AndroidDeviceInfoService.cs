@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.OS;
+using NatCruise.Core.Services;
 using NatCruise.Cruise.Util;
-using NatCruise.Cruise.Services;
 using System;
 
 namespace FScruiser.Droid.Services
@@ -19,7 +19,7 @@ namespace FScruiser.Droid.Services
         {
             var id = GetUniqueDeviceID();
             var idHash = id.GetHashCode();
-            idHash = Math.Abs(idHash) % (36*36*36); //we want three alpha numeric chars so 36*36*36
+            idHash = Math.Abs(idHash) % (36 * 36 * 36); //we want three alpha numeric chars so 36*36*36
 
             var deviceIDHashMod = idHash.ToAlphanumeric();
 
@@ -27,7 +27,7 @@ namespace FScruiser.Droid.Services
             if (string.IsNullOrWhiteSpace(name))
                 name = Build.Model;
 
-            return name +  "-" + deviceIDHashMod;
+            return name + "-" + deviceIDHashMod;
         }
 
         public static string GetUniqueDeviceID()
