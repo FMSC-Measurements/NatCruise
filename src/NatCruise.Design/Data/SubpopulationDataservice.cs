@@ -1,17 +1,19 @@
 ﻿using CruiseDAL;
+using NatCruise.Data;
 using NatCruise.Design.Models;
 using System.Collections.Generic;
 
 namespace NatCruise.Design.Data
 {
-    public class SubpopulationDataservice : ISubpopulationDataservice
+    public class SubpopulationDataservice : CruiseDataserviceBase, ISubpopulationDataservice
     {
-        public SubpopulationDataservice(string path)
+        public SubpopulationDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
-            Database = new CruiseDatastore(path);
         }
 
-        protected CruiseDatastore Database { get; }
+        public SubpopulationDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
 
         public void AddSubpopulation(Subpopulation subpopulation)
         {

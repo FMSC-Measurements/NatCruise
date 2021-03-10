@@ -1,4 +1,6 @@
-﻿using NatCruise.Data;
+﻿using CruiseDAL;
+using NatCruise.Core.Services;
+using NatCruise.Data;
 using NatCruise.Design.Data;
 using System;
 
@@ -6,13 +8,21 @@ namespace NatCruise.Data
 {
     public class DataserviceProvider : DataserviceProviderBase
     {
-        public DataserviceProvider(string databasePath) : base(databasePath)
+        public DataserviceProvider(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService) : base(database, deviceInfoService)
+        {
+        }
+
+        public DataserviceProvider(string databasePath, IDeviceInfoService deviceInfoService) : base(databasePath, deviceInfoService)
         {
         }
 
         public override IDataservice GetDataservice(Type type)
         {
-            var cruiseFilePath = DatabasePath;
+            var cruiseID = CruiseID;
+            var database = Database;
+            var deviceID = DeviceID;
+
+
             try
             {
                 //if(type == typeof(IRecentFilesDataservice))
@@ -21,31 +31,31 @@ namespace NatCruise.Data
                 //}
                 if (type == typeof(ICruiseDataservice))
                 {
-                    return new CruiseDataservice(cruiseFilePath);
+                    return new CruiseDataservice(database, cruiseID, deviceID);
                 }
                 else if (type == typeof(ISetupInfoDataservice))
                 {
-                    return new SetupInfoDataservice();
+                    return new SetupInfoDataservice(database, cruiseID, deviceID);
                 }
                 else if (type == typeof(ICuttingUnitDataservice))
                 {
-                    return new CuttingUnitDataservice(cruiseFilePath);
+                    return new CuttingUnitDataservice(database, cruiseID, deviceID);
                 }
                 else if (type == typeof(ISampleGroupDataservice))
                 {
-                    return new SampleGroupDataservice(cruiseFilePath);
+                    return new SampleGroupDataservice(database, cruiseID, deviceID);
                 }
                 else if (type == typeof(ISpeciesCodeDataservice))
                 {
-                    return new SpeciesCodeDataservice(cruiseFilePath);
+                    return new SpeciesCodeDataservice(database, cruiseID, deviceID);
                 }
                 else if (type == typeof(IStratumDataservice))
                 {
-                    return new StratumDataservice(cruiseFilePath);
+                    return new StratumDataservice(database, cruiseID, deviceID);
                 }
                 else if (type == typeof(ISubpopulationDataservice))
                 {
-                    return new SubpopulationDataservice(cruiseFilePath);
+                    return new SubpopulationDataservice(database, cruiseID, deviceID);
                 }
                 else if (type == typeof(ITallyPopulationDataservice))
                 {
