@@ -1,11 +1,21 @@
-﻿using NatCruise.Design.Models;
+﻿using CruiseDAL;
+using NatCruise.Data;
+using NatCruise.Design.Models;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NatCruise.Design.Data
 {
-    public class SetupInfoDataservice : ISetupInfoDataservice
+    public class SetupInfoDataservice : CruiseDataserviceBase, ISetupInfoDataservice
     {
+        public SetupInfoDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
+        {
+        }
+
+        public SetupInfoDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
+
         public IEnumerable<Region> Regions { get; } =
             new Region[]
             {

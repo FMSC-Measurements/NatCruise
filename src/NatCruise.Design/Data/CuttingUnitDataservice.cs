@@ -1,18 +1,20 @@
 ﻿using CruiseDAL;
+using NatCruise.Data;
 using NatCruise.Design.Models;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NatCruise.Design.Data
 {
-    public class CuttingUnitDataservice : ICuttingUnitDataservice
+    public class CuttingUnitDataservice : CruiseDataserviceBase, ICuttingUnitDataservice
     {
-        public CuttingUnitDataservice(string path)
+        public CuttingUnitDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
-            Database = new CruiseDatastore_V3(path);
         }
 
-        private CruiseDatastore Database { get; }
+        public CuttingUnitDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
 
         public void AddCuttingUnit(CuttingUnit unit)
         {

@@ -1,17 +1,19 @@
 ﻿using CruiseDAL;
+using NatCruise.Data;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NatCruise.Design.Data
 {
-    public class SpeciesCodeDataservice : ISpeciesCodeDataservice
+    public class SpeciesCodeDataservice : CruiseDataserviceBase, ISpeciesCodeDataservice
     {
-        public SpeciesCodeDataservice(string path)
+        public SpeciesCodeDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
-            Database = new CruiseDatastore(path);
         }
 
-        private CruiseDatastore Database { get; }
+        public SpeciesCodeDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
 
         public void AddSpeciesCode(string speciesCode)
         {

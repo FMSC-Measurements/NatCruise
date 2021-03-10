@@ -1,17 +1,19 @@
 ﻿using CruiseDAL;
+using NatCruise.Data;
 using NatCruise.Design.Models;
 using System;
 using System.Collections.Generic;
 
 namespace NatCruise.Design.Data
 {
-    public class SampleGroupDataservice : ISampleGroupDataservice
+    public class SampleGroupDataservice : CruiseDataserviceBase, ISampleGroupDataservice
     {
-        public CruiseDatastore Database { get; }
-
-        public SampleGroupDataservice(string path)
+        public SampleGroupDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
-            Database = new CruiseDatastore(path);
+        }
+
+        public SampleGroupDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
         }
 
         public void AddSampleGroup(SampleGroup sampleGroup)

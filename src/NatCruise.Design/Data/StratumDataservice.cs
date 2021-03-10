@@ -1,4 +1,5 @@
 ﻿using CruiseDAL;
+using NatCruise.Data;
 using NatCruise.Design.Models;
 using System;
 using System.Collections.Generic;
@@ -6,14 +7,15 @@ using System.Linq;
 
 namespace NatCruise.Design.Data
 {
-    public class StratumDataservice : IStratumDataservice
+    public class StratumDataservice : CruiseDataserviceBase, IStratumDataservice
     {
-        public StratumDataservice(string path)
+        public StratumDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
-            Database = new CruiseDatastore_V3(path);
         }
 
-        private CruiseDatastore Database { get; }
+        public StratumDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
 
         public void AddStratum(Stratum stratum)
         {
