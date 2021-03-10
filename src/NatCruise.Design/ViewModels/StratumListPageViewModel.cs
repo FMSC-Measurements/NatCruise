@@ -26,7 +26,7 @@ namespace NatCruise.Design.ViewModels
             protected set => SetProperty(ref _strata, value);
         }
 
-        protected override void Load()
+        public override void Load()
         {
             var strata = StratumDataservice.GetStrata();
             Strata = new ObservableCollection<Stratum>(strata);

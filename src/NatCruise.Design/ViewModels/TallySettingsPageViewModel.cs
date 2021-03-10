@@ -125,12 +125,12 @@ namespace NatCruise.Design.ViewModels
             TallyPopulations = TallyPopulationDataservice.GetTallyPopulations(sampleGroup.StratumCode, sampleGroup.SampleGroupCode);
         }
 
-        protected override void Load()
-        {
-            //var stratumCode = navParams.StratumCode;
-            //var sampleGroupCode = navParams.SampleGroupCode;
+        //protected override void Load()
+        //{
+        //    //var stratumCode = navParams.StratumCode;
+        //    //var sampleGroupCode = navParams.SampleGroupCode;
 
-            //var sampleGroup = SampleGroup = SampleGroupDataservice.GetSampleGroup(stratumCode, sampleGroupCode);
-        }
+        //    //var sampleGroup = SampleGroup = SampleGroupDataservice.GetSampleGroup(stratumCode, sampleGroupCode);
+        //}
     }
 }
