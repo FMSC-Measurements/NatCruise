@@ -12,7 +12,7 @@ namespace FScruiser.XF.Services
 
         Task ShowCruiseLandingLayout();
 
-        Task ShowCruiseSelect(string saleID);
+        //Task ShowCruiseSelect(string saleID);
 
         Task ShowCuttingUnitList();
 
@@ -20,11 +20,11 @@ namespace FScruiser.XF.Services
 
         Task ShowFixCNT(string unitCode, int plotNumber, string stratumCode);
 
-        Task<Prism.Navigation.INavigationResult> ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber);
+        Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber);
 
         Task ShowLogEdit(string logID);
 
-        Task<INavigationResult> ShowLogsList(string treeID);
+        Task ShowLogsList(string treeID);
 
         Task ShowPlotEdit(string plotID);
 
@@ -46,12 +46,10 @@ namespace FScruiser.XF.Services
 
         Task ShowTreeCountEdit(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead);
 
-        Task<INavigationResult> ShowTreeEdit(string treeID);
+        Task ShowTreeEdit(string treeID);
 
         Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID);
 
         Task ShowTreeList(string unitCode);
-
-        Task GoBackAsync();
     }
 }

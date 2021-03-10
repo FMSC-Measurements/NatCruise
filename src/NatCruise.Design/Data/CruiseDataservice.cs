@@ -1,18 +1,20 @@
 ﻿using CruiseDAL;
+using NatCruise.Data;
 using NatCruise.Design.Models;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NatCruise.Design.Data
 {
-    public class CruiseDataservice : ICruiseDataservice
+    public class CruiseDataservice : CruiseDataserviceBase, ICruiseDataservice
     {
-        public CruiseDataservice(string path)
+        public CruiseDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
-            Database = new CruiseDatastore(path);
         }
 
-        private CruiseDatastore Database { get; }
+        public CruiseDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
 
         public Sale GetSale()
         {

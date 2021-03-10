@@ -3,6 +3,7 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using NatCruise.Data;
+using NatCruise.Design.Services;
 using NatCruise.Design.Views;
 using NatCruise.Services;
 using NatCruise.Wpf.Navigation;
@@ -69,23 +70,39 @@ namespace NatCruise.Wpf
 
             base.OnInitialized();
 
-            var startupArgs = StartupArgs;
+            //var startupArgs = StartupArgs;
 
-            if (startupArgs.Length > 0)
-            {
-                var arg1 = startupArgs[0];
-                try
-                {
-                    var path = Path.GetFullPath(arg1);
-                    if (File.Exists(path))
-                    {
-                        var mainWindowVM = base.MainWindow?.DataContext as MainWindowViewModel;
-                        mainWindowVM.OpenFile(path);
-                    }
-                }
-                catch
-                { }
-            }
+            //if (startupArgs.Length > 0)
+            //{
+            //    var arg1 = startupArgs[0];
+            //    try
+            //    {
+            //        var path = Path.GetFullPath(arg1);
+            //        if (File.Exists(path))
+            //        {
+            //            var mainWindowVM = base.MainWindow?.DataContext as MainWindowViewModel;
+            //            mainWindowVM.OpenFile(path);
+            //        }
+            //    }
+            //    catch
+            //    { }
+            //}
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();
+
+            containerRegistry.RegisterDialog<NewCruisePage, NewCruisePageViewModel>("NewCruise");
+
+            containerRegistry.RegisterForNavigation<CruiseMasterPage>();
+            containerRegistry.RegisterForNavigation<CuttingUnitListPage>();
+            containerRegistry.RegisterForNavigation<CuttingUnitDetailPage>();
+
+            containerRegistry.RegisterInstance<ILoggingService>(new WpfLoggingService());
+            //containerRegistry.RegisterInstance<IDataserviceProvider>(new DataserviceProvider());
+            containerRegistry.RegisterInstance<IFileDialogService>(new WpfFileDialogService());
+            containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
         }
 
         protected override void ConfigureViewModelLocator()
@@ -121,18 +138,6 @@ namespace NatCruise.Wpf
             //})
         }
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterDialog<NewCruisePage, NewCruisePageViewModel>("NewCruise");
 
-            containerRegistry.RegisterForNavigation<CruiseMasterPage>();
-            containerRegistry.RegisterForNavigation<CuttingUnitListPage>();
-            containerRegistry.RegisterForNavigation<CuttingUnitDetailPage>();
-
-            containerRegistry.RegisterInstance<ILoggingService>(new WpfLoggingService());
-            containerRegistry.RegisterInstance<IDataserviceProvider>(new DataserviceProvider());
-            containerRegistry.RegisterInstance<IFileDialogService>(new WpfFileDialogService());
-            containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
-        }
     }
 }

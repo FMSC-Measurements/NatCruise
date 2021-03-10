@@ -5,19 +5,16 @@ using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Services;
 using Prism.Commands;
-using Prism.Navigation;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Forms;
 
-namespace FScruiser.XF.ViewModels
+namespace NatCruise.ViewModels
 {
-    public class ImportViewModel : XamarinViewModelBase
+    public class ImportViewModel : ViewModelBase
     {
         private IEnumerable<Cruise> _cruises;
         private string _selectedCruiseFile;
@@ -30,7 +27,7 @@ namespace FScruiser.XF.ViewModels
         public IFileDialogService FileDialogService { get; }
         public IFileSystemService FileSystemService { get; }
         public IDialogService DialogService { get; }
-        public INavigationService NavigationService { get; }
+        public ICoreNavigationService NavigationService { get; }
         public IDeviceInfoService DeviceInfoService { get; }
 
         public string ImportPath
@@ -63,11 +60,11 @@ namespace FScruiser.XF.ViewModels
             protected set => SetProperty(ref _selectedCruise, value);
         }
 
-        public ICommand BrowseFileCommand => new Command(async () => await BrowseCruiseFileAsync());
+        public ICommand BrowseFileCommand => new DelegateCommand(async () => await BrowseCruiseFileAsync());
 
-        public ICommand SelectCruiseCommand => new Command<Cruise>(async (cruise) => await SelectCruiseForImport(cruise));
+        public ICommand SelectCruiseCommand => new DelegateCommand<Cruise>(async (cruise) => await SelectCruiseForImport(cruise));
 
-        public ICommand ImportCruiseCommand => new Command(async () => await ImportCruise());
+        public ICommand ImportCruiseCommand => new DelegateCommand(async () => await ImportCruise());
 
         public ImportViewModel(
             IDataserviceProvider dataserviceProvider,
@@ -75,7 +72,7 @@ namespace FScruiser.XF.ViewModels
             IFileSystemService fileSystemService,
             IDialogService dialogService,
             ILoggingService loggingService,
-            INavigationService navigationService,
+            ICoreNavigationService navigationService,
             IDeviceInfoService deviceInfoService)
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
@@ -91,7 +88,7 @@ namespace FScruiser.XF.ViewModels
         {
             var cruisePath = await FileDialogService.SelectCruiseFileAsync();
 
-            if(cruisePath == null) { return; }
+            if (cruisePath == null) { return; }
 
             var importPath = GetPathForImport(cruisePath);
             ImportPath = importPath;
@@ -106,12 +103,9 @@ namespace FScruiser.XF.ViewModels
                     DialogService.ShowNotification("File Contains No Cruises");
                 }
 
-
-
                 Cruises = cruises;
                 if (cruises.Count() == 1)
                 {
-
                 }
             }
         }
@@ -150,7 +144,6 @@ namespace FScruiser.XF.ViewModels
                 var saleConflicts = cruiseChecker.GetSaleConflicts(importDb, db, cruiseID);
                 var isSaleInConflict = saleConflicts.Any();
 
-                
                 var plotConflicts = cruiseChecker.GetPlotConflicts(importDb, db, cruiseID);
                 var treeConflicts = cruiseChecker.GetTreeConflicts(importDb, db, cruiseID);
                 var logConflicts = cruiseChecker.GetLogConflicts(importDb, db, cruiseID);
@@ -163,7 +156,6 @@ namespace FScruiser.XF.ViewModels
                     && !isCruiseInConflict
                     && !isSaleInConflict;
             }
-
         }
 
         public string GetPathForImport(string path)
@@ -201,13 +193,12 @@ namespace FScruiser.XF.ViewModels
             }
 
             return importPath;
-
         }
 
         public async Task ImportCruise()
         {
             var cruise = SelectedCruise;
-            if(cruise == null) { return;}
+            if (cruise == null) { return; }
             await ImportCruise(cruise);
         }
 
@@ -225,7 +216,6 @@ namespace FScruiser.XF.ViewModels
             {
                 DialogService.ShowNotification("Import Failed");
             }
-
         }
 
         public async Task<bool> ImportCruise(string cruiseID, string importPath, CruiseSyncOptions options = null)
@@ -261,7 +251,6 @@ namespace FScruiser.XF.ViewModels
                     IsWorking = false;
                 }
             }
-
         }
     }
 }

@@ -1,8 +1,11 @@
-﻿using NatCruise.Data;
+﻿using NatCruise.Core.Services;
+using NatCruise.Data;
+using NatCruise.Design.Services;
 using NatCruise.Services;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Views;
 using Prism.Commands;
+using Prism.Ioc;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
@@ -19,26 +22,29 @@ namespace NatCruise.Wpf.ViewModels
         private ICommand _selectFileCommand;
         private ICommand _createNewFileCommand;
 
-        public MainWindowViewModel(IRegionManager regionManager,
+        public MainWindowViewModel(
+            IContainerRegistry container,
+            IDesignNavigationService navigationService,
             IFileDialogService fileDialogService,
             IRecentFilesDataservice recentFilesDataservice,
-            IDataserviceProvider dataserviceProvider,
-            Prism.Services.Dialogs.IDialogService dialogService)
+            Prism.Services.Dialogs.IDialogService dialogService,
+            IDeviceInfoService deviceInfo)
         {
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            RegionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
-            //RegionNavigationService = regionNavigationService ?? throw new ArgumentNullException(nameof(regionNavigationService));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             RecentFilesDataservice = recentFilesDataservice ?? throw new ArgumentNullException(nameof(recentFilesDataservice));
-            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            Container = container ?? throw new ArgumentNullException(nameof(container));
+            DeviceInfoService = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
         }
 
+        protected IContainerRegistry Container { get; }
         protected IDataserviceProvider DataserviceProvider { get; }
-
+        protected IDesignNavigationService NavigationService { get; }
         protected IRecentFilesDataservice RecentFilesDataservice { get; }
         public Prism.Services.Dialogs.IDialogService DialogService { get; }
-        public IRegionManager RegionManager { get; }
         protected IFileDialogService FileDialogService { get; }
+        protected IDeviceInfoService DeviceInfoService { get; }
 
         //protected IRegionNavigationService RegionNavigationService => RegionManager?.Regions[Regions.ContentRegion].NavigationService;
 
@@ -64,7 +70,8 @@ namespace NatCruise.Wpf.ViewModels
                     var fileExtention = Path.GetExtension(filePath).ToLower();
                     if (fileExtention == ".crz3")
                     {
-                        RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
+                        NavigationService.ShowCruiseLandingLayout();
+                        //RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
                     }
 
                     RecentFilesDataservice.AddRecentFile(filePath);
@@ -80,9 +87,15 @@ namespace NatCruise.Wpf.ViewModels
 
         public void OpenFile(FileInfo file)
         {
-            DataserviceProvider.OpenDatabase(file.FullName);
 
-            RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
+            var filePath = file.FullName;
+            //DataserviceProvider.OpenDatabase(file.FullName);
+            var newDataserviceProvider = new DataserviceProvider(filePath, DeviceInfoService);
+            Container.RegisterInstance<IDataserviceProvider>(newDataserviceProvider);
+
+
+            NavigationService.ShowCruiseLandingLayout();
+            //RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
             RecentFilesDataservice.AddRecentFile(file.FullName);
             RaisePropertyChanged(nameof(RecentFiles));
         }
@@ -97,10 +110,6 @@ namespace NatCruise.Wpf.ViewModels
         }
 
         public void Exit()
-        {
-        }
-
-        protected override void Load()
         {
         }
     }

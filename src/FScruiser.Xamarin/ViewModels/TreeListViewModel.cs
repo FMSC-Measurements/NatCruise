@@ -104,24 +104,9 @@ namespace FScruiser.XF.ViewModels
             TreeAdded?.Invoke(this, e);
         }
 
-        public async Task ShowEditTreeAsync(TreeStub tree)
+        public Task ShowEditTreeAsync(TreeStub tree)
         {
-            try
-            {
-                //var result = await NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, tree.TreeID } });
-                var result = await NavigationService.ShowTreeEdit(tree.TreeID);
-                var ex = result.Exception;
-                if(ex != null)
-                {
-                    Debug.WriteLine("ERROR::::" + ex);
-                    Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", "/Main/Navigation/CuttingUnits" } });
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("ERROR::::" + ex);
-                Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", "/Main/Navigation/CuttingUnits" } });
-            }
+            return NavigationService.ShowTreeEdit(tree.TreeID);
         }
 
         private void DeleteTree(TreeStub tree)
@@ -131,24 +116,9 @@ namespace FScruiser.XF.ViewModels
             Datastore.DeleteTree(tree.TreeID);
         }
 
-        public async System.Threading.Tasks.Task ShowLogsAsync(TreeStub tree)
+        public Task ShowLogsAsync(TreeStub tree)
         {
-            try
-            {
-                //var result = await NavigationService.NavigateAsync("Logs", new NavigationParameters() { { NavParams.TreeID, tree.TreeID } });
-                var result = await NavigationService.ShowLogsList(tree.TreeID);
-
-                if (result?.Exception != null)
-                {
-                    Debug.WriteLine("ERROR::::" + result?.Exception);
-                    Crashes.TrackError(result?.Exception, new Dictionary<string, string>() { { "nav_path", "/Main/Navigation/CuttingUnits" } });
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("ERROR::::" + ex);
-                Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", "/Main/Navigation/CuttingUnits" } });
-            }
+            return NavigationService.ShowLogsList(tree.TreeID);
         }
     }
 }
