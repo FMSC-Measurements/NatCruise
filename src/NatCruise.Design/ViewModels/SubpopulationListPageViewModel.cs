@@ -101,16 +101,16 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
-        protected override void Load()
-        {
-            //if (navParams != null)
-            //{
-            //    var stratumCode = navParams.StratumCode;
-            //    var sampleGroupCode = navParams.SampleGroupCode;
+        //protected override void Load()
+        //{
+        //    //if (navParams != null)
+        //    //{
+        //    //    var stratumCode = navParams.StratumCode;
+        //    //    var sampleGroupCode = navParams.SampleGroupCode;
 
-            //    SampleGroup = SampleGroupDataservice.GetSampleGroup(stratumCode, sampleGroupCode);
-            //}
-        }
+        //    //    SampleGroup = SampleGroupDataservice.GetSampleGroup(stratumCode, sampleGroupCode);
+        //    //}
+        //}
 
         private void OnSampleGroupChanged(SampleGroup value)
         {
