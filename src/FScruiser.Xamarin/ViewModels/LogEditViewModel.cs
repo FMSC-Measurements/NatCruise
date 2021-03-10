@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class LogEditViewModel : XamarinViewModelBase
+    public class LogEditViewModel : XamarinViewModelBase, INavigatedAware
     {
         private Log _log;
         private IEnumerable<LogFieldSetup> _logFields;
@@ -42,10 +42,13 @@ namespace FScruiser.XF.ViewModels
             Log = log;
         }
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
+        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
         {
-            base.OnNavigatedFrom(parameters);
+            // do nothing
+        }
 
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
             SaveLog();
         }
 
@@ -57,5 +60,7 @@ namespace FScruiser.XF.ViewModels
                 Datastore.UpdateLog(log);
             }
         }
+
+        
     }
 }

@@ -7,7 +7,7 @@ using Prism.Navigation;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeErrorEditViewModel : XamarinViewModelBase
+    public class TreeErrorEditViewModel : XamarinViewModelBase, INavigatedAware
     {
         private int _treeNumber;
         private TreeError _treeError;
@@ -94,10 +94,13 @@ namespace FScruiser.XF.ViewModels
         //    return true;
         //}
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
+        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
         {
-            base.OnNavigatedFrom(parameters);
+            // do nothing
+        }
 
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
             var isResolved = IsResolved;
             var treeError = TreeError;
             if (treeError == null) { return; }
@@ -130,5 +133,7 @@ namespace FScruiser.XF.ViewModels
             TreeError = treeError;
             TreeNumber = treeNumber.GetValueOrDefault();
         }
+
+
     }
 }

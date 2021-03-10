@@ -52,10 +52,6 @@ namespace NatCruise.Design.ViewModels
         //    SampleGroups = new ObservableCollection<SampleGroup>(SampleGroupDataservice.GetSampleGroups(stratum));
         //}
 
-        protected override void Load()
-        {
-        }
-
         private void OnStratumChanged(Stratum stratum)
         {
             if (stratum != null)

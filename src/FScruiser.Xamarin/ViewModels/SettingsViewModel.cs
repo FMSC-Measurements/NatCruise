@@ -15,7 +15,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SettingsViewModel : XamarinViewModelBase
+    public class SettingsViewModel : XamarinViewModelBase, INavigatedAware
     {
         public IApplicationSettings AppSettings { get; }
         public IDialogService DialogService { get; }
@@ -44,11 +44,14 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
+        public void OnNavigatedFrom(INavigationParameters parameters)
         {
-            base.OnNavigatedFrom(parameters);
-
             AppSettings.Save();
+        }
+
+        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
+        {
+            // do nothing
         }
     }
 }
