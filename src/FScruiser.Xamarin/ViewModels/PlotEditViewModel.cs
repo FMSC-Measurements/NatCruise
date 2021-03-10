@@ -293,27 +293,9 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public async Task ShowLimitingDistanceCalculatorAsync(Plot_Stratum stratumPlot)
+        public Task ShowLimitingDistanceCalculatorAsync(Plot_Stratum stratumPlot)
         {
-            try
-            {
-                //var navResult = await NavigationService.NavigateAsync("LimitingDistance", new NavigationParameters($"{NavParams.UNIT}={UnitCode}&{NavParams.PLOT_NUMBER}={stratumPlot.PlotNumber}&{NavParams.STRATUM}={stratumPlot.StratumCode}"));
-
-                var navResult = await NavigationService.ShowLimitingDistance(UnitCode, stratumPlot.StratumCode, stratumPlot.PlotNumber);
-
-                if (navResult != null)
-                {
-                    Debug.WriteLine(navResult.Success);
-                    if (navResult.Exception != null)
-                    {
-                        Debug.WriteLine(navResult.Exception);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                App.LogException("Navigation", $"Navigating to LimitingDistance", e);
-            }
+            return NavigationService.ShowLimitingDistance(UnitCode, stratumPlot.StratumCode, stratumPlot.PlotNumber);
         }
     }
 }

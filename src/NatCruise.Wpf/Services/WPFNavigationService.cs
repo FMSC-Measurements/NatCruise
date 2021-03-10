@@ -1,0 +1,72 @@
+﻿using NatCruise.Design.Services;
+using NatCruise.Design.Views;
+using NatCruise.Wpf.Navigation;
+using NatCruise.Wpf.Views;
+using Prism.Regions;
+using System;
+using System.Threading.Tasks;
+
+namespace NatCruise.Wpf.Services
+{
+    public class WPFNavigationService : IDesignNavigationService
+    {
+        public IRegionManager RegionManager { get; }
+        public IRegionNavigationService CurrentRegion { get; }
+
+        public WPFNavigationService(IRegionManager regionManager, IRegionNavigationService currentRegion)
+        {
+            RegionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
+            CurrentRegion = currentRegion ?? throw new ArgumentNullException(nameof(currentRegion));
+        }
+
+        public Task GoBackAsync()
+        {
+            CurrentRegion?.Journal.GoBack();
+            return Task.CompletedTask;
+        }
+
+        public Task ShowCruiseSelect(string saleID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowFeedback()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowSampleStateManagment()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowSettings()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowStrata()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumListPage));
+            return Task.CompletedTask;
+        }
+
+        public Task ShowCuttingUnitList()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(CuttingUnitListPage));
+            return Task.CompletedTask;
+        }
+
+        public Task ShowSale()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(SalePage));
+            return Task.CompletedTask;
+        }
+
+        public Task ShowCruiseLandingLayout()
+        {
+            RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
+            return Task.CompletedTask;
+        }
+    }
+}

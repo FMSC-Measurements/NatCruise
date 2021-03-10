@@ -1,6 +1,8 @@
-﻿using NatCruise.Design.Views;
+﻿using NatCruise.Design.Services;
+using NatCruise.Design.Views;
 using NatCruise.Wpf.Navigation;
 using Prism.Regions;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -16,26 +18,35 @@ namespace NatCruise.Wpf.Views
             InitializeComponent();
         }
 
-        public CruiseMasterPage(IRegionManager regionManager) : this()
+        IDesignNavigationService NavigationService { get; }
+
+        public CruiseMasterPage(IDesignNavigationService navigationService) : this()
         {
-            RegionManager = regionManager;
+            //RegionManager = regionManager;
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
-        public IRegionManager RegionManager { get; }
+        //public IRegionManager RegionManager { get; }
 
         private void _unitsButton_Click(object sender, RoutedEventArgs e)
         {
-            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(CuttingUnitListPage));
+            NavigationService.ShowCuttingUnitList();
+
+            //RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(CuttingUnitListPage));
         }
 
         private void _strataButton_Click(object sender, RoutedEventArgs e)
         {
-            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumListPage));
+            NavigationService.ShowStrata();
+
+            //RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumListPage));
         }
 
         private void _saleButton_Click(object sender, RoutedEventArgs e)
         {
-            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(SalePage));
+            NavigationService.ShowSale();
+
+            //RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(SalePage));
         }
     }
 }

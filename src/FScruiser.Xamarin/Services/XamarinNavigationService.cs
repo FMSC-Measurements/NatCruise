@@ -1,7 +1,9 @@
 ﻿using FScruiser.XF.Constants;
+using NatCruise.Services;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +12,12 @@ namespace FScruiser.XF.Services
 {
     public class XamarinNavigationService : ICruiseNavigationService
     {
-        public XamarinNavigationService(INavigationService navigationService)
+        ILoggingService Log { get; }
+
+        public XamarinNavigationService(INavigationService navigationService, ILoggingService loggingService)
         {
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            Log = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
         INavigationService NavigationService { get; }
@@ -71,10 +76,26 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync("Import");
         }
 
-        public Task<INavigationResult> ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber)
+        public async Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber)
         {
-            return NavigationService.NavigateAsync("LimitingDistance",
-                new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}&{NavParams.PLOT_NUMBER}={plotNumber}"));
+            try
+            {
+                var navResult = await NavigationService.NavigateAsync("LimitingDistance",
+                    new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}&{NavParams.PLOT_NUMBER}={plotNumber}"));
+
+                if (navResult != null)
+                {
+                    Debug.WriteLine(navResult.Success);
+                    if (navResult.Exception != null)
+                    {
+                        Log.LogException("limiting_distance", "", navResult.Exception);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.LogException("Navigation", $"Navigating to LimitingDistance", e);
+            }
         }
 
         public Task ShowLogEdit(string logID)
@@ -83,10 +104,23 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.LogID}={logID}"));
         }
 
-        public Task<INavigationResult> ShowLogsList(string treeID)
+        public async Task ShowLogsList(string treeID)
         {
-            return NavigationService.NavigateAsync("LogList",
+            try
+            {
+                var result = await NavigationService.NavigateAsync("LogList",
                 new NavigationParameters($"{NavParams.TreeID}={treeID}"));
+
+                var ex = result?.Exception;
+                if (ex != null)
+                {
+                    Log.LogException("navigation", "navigating to treeEdit", ex);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogException("navigation", "navigating to treeEdit", ex);
+            }
         }
 
         public Task ShowPlotEdit(string plotID)
@@ -158,10 +192,23 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}&{NavParams.SAMPLE_GROUP}={sampleGroupCode}&{NavParams.SPECIES}={species}&{NavParams.LIVE_DEAD}={liveDead}"));
         }
 
-        public Task<INavigationResult> ShowTreeEdit(string treeID)
+        public async Task ShowTreeEdit(string treeID)
         {
-            return NavigationService.NavigateAsync("Tree",
+            try
+            {
+                var result = await NavigationService.NavigateAsync("Tree",
                 new NavigationParameters($"{NavParams.TreeID}={treeID}"));
+
+                var ex = result.Exception;
+                if (ex != null)
+                {
+                    Log.LogException("navigation", "navigating to treeEdit", ex);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogException("navigation", "navigating to treeEdit", ex);
+            }
         }
 
         public Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID)
