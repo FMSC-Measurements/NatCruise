@@ -21,7 +21,7 @@ namespace FScruiser.Droid
         public override void OnCreate()
         {
             base.OnCreate();
-            CrossCurrentActivity.Current.Init(this);
+            //CrossCurrentActivity.Current.Init(this);
             Xamarin.Essentials.Platform.Init(this); // used for FilePicker
         }
     }
