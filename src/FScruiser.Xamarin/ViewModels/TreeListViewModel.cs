@@ -18,7 +18,7 @@ using Prism.Common;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeListViewModel : XamarinViewModelBase, INavigatedAware
+    public class TreeListViewModel : XamarinViewModelBase
     {
         private ICommand _deleteTreeCommand;
         private Command<TreeStub> _editTreeCommand;

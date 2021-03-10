@@ -22,7 +22,7 @@ namespace FScruiser.XF.ViewModels
     // also it would be nice if the view model had a Errors property that exposed a observable dictionary
     // which exposed all the errors rather than having properties to indecated if a property had an error
 
-    public class TreeEditViewModel : XamarinViewModelBase
+    public class TreeEditViewModel : XamarinViewModelBase, INavigatedAware
     {
         private Command _showLogsCommand;
         private IEnumerable<string> _stratumCodes;
@@ -462,11 +462,16 @@ namespace FScruiser.XF.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
+        public void OnNavigatedFrom(INavigationParameters parameters)
         {
-            base.OnNavigatedFrom(parameters);
+            // TODO is there another way we can unwire the tree? maybe using IActiveAware?
 
             Tree = null;//unwire tree
+        }
+
+        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
+        {
+            // do nothing
         }
 
         protected override void Load(IParameters parameters)
@@ -571,6 +576,8 @@ namespace FScruiser.XF.ViewModels
                 }
             }
         }
+
+
 
         //public static void SetTreeTDV(Tree tree, TreeDefaultValueDO tdv)
         //{

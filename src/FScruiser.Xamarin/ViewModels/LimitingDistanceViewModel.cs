@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class LimitingDistanceViewModel : XamarinViewModelBase
+    public class LimitingDistanceViewModel : XamarinViewModelBase, INavigatedAware
     {
         public const String MEASURE_TO_FACE = "Face";
         public const String MEASURE_TO_CENTER = "Center";
@@ -167,10 +167,13 @@ namespace FScruiser.XF.ViewModels
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
+        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
         {
-            base.OnNavigatedFrom(parameters);
+            // do nothing
+        }
 
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
             if (TreeStatus != null)
             {
                 SaveReport();
@@ -245,5 +248,7 @@ namespace FScruiser.XF.ViewModels
                 Datastore.AddPlotRemark(plot.CuttingUnitCode, plot.PlotNumber, report);
             }
         }
+
+        
     }
 }
