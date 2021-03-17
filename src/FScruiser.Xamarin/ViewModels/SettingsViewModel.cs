@@ -17,7 +17,7 @@ namespace FScruiser.XF.ViewModels
 {
     public class SettingsViewModel : XamarinViewModelBase, INavigatedAware
     {
-        public IApplicationSettings AppSettings { get; }
+        public IApplicationSettingService AppSettings { get; }
         public IDialogService DialogService { get; }
         public IFileSystemService FileSystemService { get; }
         public IDataserviceProvider DataserviceProvider { get; }
@@ -26,7 +26,7 @@ namespace FScruiser.XF.ViewModels
 
         public SettingsViewModel(IDialogService dialogService, IFileSystemService fileSystemService, IDataserviceProvider dataserviceProvider)
         {
-            AppSettings = new ApplicationSettings();
+            AppSettings = new XamarinApplicationSettingService();
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
