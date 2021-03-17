@@ -31,12 +31,6 @@ namespace NatCruise.Design.Models
             set => SetProperty(ref _name, value);
         }
 
-        public string Purpose
-        {
-            get => _purpose;
-            set => SetProperty(ref _purpose, value);
-        }
-
         public string Region
         {
             get => _region;
@@ -53,12 +47,6 @@ namespace NatCruise.Design.Models
         {
             get => _district;
             set => SetProperty(ref _district, value);
-        }
-
-        public string MeasurementYear
-        {
-            get => _measurmentYear;
-            set => SetProperty(ref _measurmentYear, value);
         }
 
         public int CalendarYear
