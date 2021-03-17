@@ -1,6 +1,5 @@
 ﻿using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using NatCruise.Cruise.Util;
 using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using Microsoft.AppCenter.Crashes;

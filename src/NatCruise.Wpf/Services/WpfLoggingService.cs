@@ -1,6 +1,7 @@
-﻿using NatCruise.Util;
-using Microsoft.AppCenter.Analytics;
+﻿using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using NatCruise.Services;
+using NatCruise.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,7 +27,7 @@ namespace NatCruise.Wpf.Services
         {
             Debug.WriteLine($"Event:::{name}::::");
 
-            foreach(var item in data)
+            foreach (var item in data)
             {
                 Debug.WriteLine($"Eventdata:::{item.Key}::::{item.Value.ToString()}::::");
             }
