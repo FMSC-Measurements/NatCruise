@@ -20,9 +20,12 @@ namespace NatCruise.Design.ViewModels
 
         public SubpopulationListPageViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
         {
-            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
+
             SubpopulationDataservice = dataserviceProvider.GetDataservice<ISubpopulationDataservice>() ?? throw new ArgumentNullException(nameof(SubpopulationDataservice));
             SpeciesCodeDataservice = dataserviceProvider.GetDataservice<ISpeciesCodeDataservice>() ?? throw new ArgumentNullException(nameof(SpeciesCodeDataservice));
+
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         protected ISubpopulationDataservice SubpopulationDataservice { get; }

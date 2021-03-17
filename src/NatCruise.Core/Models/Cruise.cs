@@ -7,11 +7,17 @@ namespace NatCruise.Models
         [PrimaryKeyField]
         public string Cruise_CN { get; set; }
 
+        [Field(PersistanceFlags = PersistanceFlags.OnInsert)]
+        public string SaleID { get; set; }
+
+        [Field(PersistanceFlags = PersistanceFlags.OnInsert)]
         public string CruiseID { get; set; }
 
         public string Purpose { get; set; }
 
         public string Remarks { get; set; }
+
+        public string CruiseNumber { get; set; }
 
         [Field(SQLExpression = "s.Name", Alias = "SaleName")]
         public string SaleName { get; set; }

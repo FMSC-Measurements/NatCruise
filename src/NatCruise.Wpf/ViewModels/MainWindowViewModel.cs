@@ -1,12 +1,10 @@
-﻿using NatCruise.Core.Services;
+﻿using CruiseDAL;
+using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Services;
 using NatCruise.Services;
-using NatCruise.Wpf.Navigation;
-using NatCruise.Wpf.Views;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -23,22 +21,21 @@ namespace NatCruise.Wpf.ViewModels
         private ICommand _createNewFileCommand;
 
         public MainWindowViewModel(
-            IContainerRegistry container,
+            IDataserviceProvider dataserviceProvider,
             IDesignNavigationService navigationService,
             IFileDialogService fileDialogService,
             IRecentFilesDataservice recentFilesDataservice,
             Prism.Services.Dialogs.IDialogService dialogService,
             IDeviceInfoService deviceInfo)
         {
+            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             RecentFilesDataservice = recentFilesDataservice ?? throw new ArgumentNullException(nameof(recentFilesDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-            Container = container ?? throw new ArgumentNullException(nameof(container));
             DeviceInfoService = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
         }
 
-        protected IContainerRegistry Container { get; }
         protected IDataserviceProvider DataserviceProvider { get; }
         protected IDesignNavigationService NavigationService { get; }
         protected IRecentFilesDataservice RecentFilesDataservice { get; }
@@ -64,40 +61,19 @@ namespace NatCruise.Wpf.ViewModels
         {
             DialogService.Show("NewCruise", (IDialogParameters)null, r =>
             {
-                if (r.Result == ButtonResult.OK)
+                if(r.Result == ButtonResult.OK)
                 {
                     var filePath = DataserviceProvider.DatabasePath;
                     var fileExtention = Path.GetExtension(filePath).ToLower();
+                    RecentFilesDataservice.AddRecentFile(filePath);
                     if (fileExtention == ".crz3")
                     {
                         NavigationService.ShowCruiseLandingLayout();
-                        //RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
                     }
 
-                    RecentFilesDataservice.AddRecentFile(filePath);
                     RaisePropertyChanged(nameof(RecentFiles));
                 }
             });
-        }
-
-        public void OpenFile(string path)
-        {
-            OpenFile(new FileInfo(path));
-        }
-
-        public void OpenFile(FileInfo file)
-        {
-
-            var filePath = file.FullName;
-            //DataserviceProvider.OpenDatabase(file.FullName);
-            var newDataserviceProvider = new DataserviceProvider(filePath, DeviceInfoService);
-            Container.RegisterInstance<IDataserviceProvider>(newDataserviceProvider);
-
-
-            NavigationService.ShowCruiseLandingLayout();
-            //RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
-            RecentFilesDataservice.AddRecentFile(file.FullName);
-            RaisePropertyChanged(nameof(RecentFiles));
         }
 
         public async void SelectFile()
@@ -109,8 +85,20 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        public void Exit()
+        public void OpenFile(string path)
         {
+            OpenFile(new FileInfo(path));
+        }
+
+        public void OpenFile(FileInfo file)
+        {
+            var filePath = file.FullName;
+            var database = new CruiseDatastore_V3(filePath);
+            DataserviceProvider.Database = database;
+
+            NavigationService.ShowCruiseLandingLayout();
+            RecentFilesDataservice.AddRecentFile(filePath);
+            RaisePropertyChanged(nameof(RecentFiles));
         }
     }
 }

@@ -3,6 +3,7 @@ using NatCruise.Design.Views;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Views;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using System;
 using System.Threading.Tasks;
 
@@ -12,11 +13,13 @@ namespace NatCruise.Wpf.Services
     {
         public IRegionManager RegionManager { get; }
         public IRegionNavigationService CurrentRegion { get; }
+        public Prism.Services.Dialogs.IDialogService DialogService { get; }
 
-        public WPFNavigationService(IRegionManager regionManager, IRegionNavigationService currentRegion)
+        public WPFNavigationService(IRegionManager regionManager, IRegionNavigationService currentRegion, Prism.Services.Dialogs.IDialogService dialogService)
         {
             RegionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
             CurrentRegion = currentRegion ?? throw new ArgumentNullException(nameof(currentRegion));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         public Task GoBackAsync()
@@ -68,5 +71,7 @@ namespace NatCruise.Wpf.Services
             RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
             return Task.CompletedTask;
         }
+
+        
     }
 }

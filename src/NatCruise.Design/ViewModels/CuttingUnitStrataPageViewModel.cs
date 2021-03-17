@@ -31,6 +31,8 @@ namespace NatCruise.Design.ViewModels
 
         public CuttingUnitStrataPageViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
         {
+            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
+
             StratumDataservice = dataserviceProvider.GetDataservice<IStratumDataservice>();
             CuttingUnitDataservice = dataserviceProvider.GetDataservice<ICuttingUnitDataservice>();
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));

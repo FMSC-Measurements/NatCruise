@@ -1,6 +1,7 @@
 ﻿using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -10,10 +11,10 @@ namespace NatCruise.Design.ViewModels
     {
         private Sale _sale;
 
-        public SalePageViewModel(IDataserviceProvider dataserviceProvider)
+        public SalePageViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo)
         {
             CruiseDataservice = dataserviceProvider.GetDataservice<ICruiseDataservice>();
-            SetupinfoDataservice = dataserviceProvider.GetDataservice<ISetupInfoDataservice>();
+            SetupinfoDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
         }
 
         private ICruiseDataservice CruiseDataservice { get; }
@@ -57,10 +58,7 @@ namespace NatCruise.Design.ViewModels
 
         public IEnumerable<Region> RegionOptions => SetupinfoDataservice.GetRegions();
 
-        public IEnumerable<Forest> ForestOptions
-        {
-            get => SetupinfoDataservice.GetForests(Sale?.Region ?? "");
-        }
+        public IEnumerable<Forest> ForestOptions => SetupinfoDataservice.GetForests(Sale?.Region ?? "");
 
         public override void Load()
         {

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Wpf.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:controls="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="350"
@@ -73,7 +74,7 @@
             <TextBox HorizontalAlignment="Left"
                      Height="23"
                      TextWrapping="Wrap"
-                     Text="{Binding Sale.Name}"
+                     Text="{Binding SaleName}"
                      VerticalAlignment="Top"
                      Width="120"
                      Grid.Column="2"
@@ -90,7 +91,7 @@
             <TextBox HorizontalAlignment="Left"
                      Height="23"
                      TextWrapping="Wrap"
-                     Text="{Binding Sale.SaleNumber}"
+                     Text="{Binding SaleNumber}"
                      VerticalAlignment="Top"
                      Width="120"
                      Grid.Column="2"
@@ -107,7 +108,7 @@
                       Height="22"
                       Grid.Row="8"
                       Margin="30,0,0,10"
-                      SelectedValue="{Binding Sale.Purpose}"
+                      SelectedValue="{Binding Purpose}"
                       SelectedValuePath="PurposeCode"
                       ItemsSource="{Binding PurposeOptions}" />
             <Label Content="Region"
@@ -125,7 +126,7 @@
                       Height="22"
                       Grid.Row="6"
                       Margin="0,1,0,10"
-                      SelectedValue="{Binding Sale.Region}"
+                      SelectedValue="{Binding Region}"
                       SelectedValuePath="RegionCode"
                       ItemsSource="{Binding RegionOptions}" />
             <Label Content="Forest"
@@ -142,7 +143,7 @@
                       Height="22"
                       Grid.Row="7"
                       Margin="0,4,0,10"
-                      SelectedValue="{Binding Sale.Forest}"
+                      SelectedValue="{Binding Forest}"
                       SelectedValuePath="ForestCode"
                       ItemsSource="{Binding ForestOptions}" />
             <Label Content="District"
@@ -152,19 +153,21 @@
                    Height="26"
                    Width="47"
                    Grid.Row="8" />
-            <TextBox HorizontalAlignment="Left"
-                     Height="23"
-                     TextWrapping="Wrap"
-                     Text="{Binding Sale.District}"
-                     VerticalAlignment="Top"
-                     Width="50"
-                     Grid.Column="5"
-                     Grid.Row="8"
-                     Margin="0,3,0,10" />
+            <controls:AutoCompleteBox HorizontalAlignment="Left"
+                                      Height="23"
+                                      ItemsSource="{Binding DistrictOptions}"
+                                      ValueMemberPath="FriendlyName"
+                                      Text="{Binding District}"
+                                      VerticalAlignment="Top"
+                                      Width="50"
+                                      Grid.Column="5"
+                                      Grid.Row="8"
+                                      Margin="0,3,0,10" />
 
         </Grid>
 
-        <Grid Grid.Row="1" Height="65">
+        <Grid Grid.Row="1"
+              Height="65">
             <Grid.Resources>
                 <Style TargetType="Button">
                     <Setter Property="Margin"
@@ -173,7 +176,7 @@
                             Value="75" />
                 </Style>
             </Grid.Resources>
-            
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />

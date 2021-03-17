@@ -1,10 +1,13 @@
 ﻿using CruiseDAL;
+using CruiseDAL.V3.Models;
+using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Services;
 using NatCruise.Wpf.Services;
 using Prism.Commands;
+using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
@@ -18,29 +21,78 @@ namespace NatCruise.Wpf.ViewModels
     {
         private ICommand _createCruiseCommand;
         private ICommand _cancelCommand;
+        private string _saleName;
+        private string _saleNumber;
+        private string _region;
+        private string _forest;
+        private string _district;
+        private string _purpose;
+        private string _uom;
 
-        public NewCruisePageViewModel(IDataserviceProvider dataserviceProvider, IFileDialogService fileDialogService)
+        public NewCruisePageViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
         {
-            DataserviceProvider = dataserviceProvider;
-            SetupinfoDataservice = dataserviceProvider.GetDataservice<ISetupInfoDataservice>();
-            FileDialogService = fileDialogService;
-
-            Sale.PropertyChanged += Sale_PropertyChanged;
+            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            SetupinfoDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
+            FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
+            DeviceInfo = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
         }
 
-        private void Sale_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        protected IDataserviceProvider DataserviceProvider { get; }
+        protected ISetupInfoDataservice SetupinfoDataservice { get; }
+        protected IFileDialogService FileDialogService { get; }
+        protected IDeviceInfoService DeviceInfo { get; set; }
+
+        public string SaleName
         {
-            var propName = e.PropertyName;
-            if (propName == nameof(Sale.Region))
+            get => _saleName;
+            set => SetProperty(ref _saleName, value);
+        }
+
+        public string SaleNumber
+        {
+            get => _saleNumber;
+            set => SetProperty(ref _saleNumber, value);
+        }
+
+        public string Region
+        {
+            get => _region;
+            set
             {
+                SetProperty(ref _region, value);
                 RaisePropertyChanged(nameof(ForestOptions));
             }
         }
 
-        public IDataserviceProvider DataserviceProvider { get; }
-        public ISetupInfoDataservice SetupinfoDataservice { get; }
-        public IFileDialogService FileDialogService { get; }
-        public Sale Sale { get; set; } = new Sale();
+        public string Forest
+        {
+            get => _forest;
+            set
+            {
+                SetProperty(ref _forest, value);
+                RaisePropertyChanged(nameof(DistrictOptions));
+            }
+        }
+
+
+
+        public string District
+        {
+            get => _district;
+            set => SetProperty(ref _district, value);
+        }
+
+        public string Purpose
+        {
+            get => _purpose;
+            set => SetProperty(ref _purpose, value);
+        }
+
+        public string UOM
+        {
+            get => _uom;
+            set => SetProperty(ref _uom, value);
+        }
 
         public string Title => "Create New Cruise";
 
@@ -54,10 +106,18 @@ namespace NatCruise.Wpf.ViewModels
 
         public IEnumerable<Region> RegionOptions => SetupinfoDataservice.GetRegions();
 
-        public IEnumerable<Forest> ForestOptions
+        public IEnumerable<Forest> ForestOptions => SetupinfoDataservice.GetForests(Region);
+
+        public IEnumerable<District> DistrictOptions
         {
-            get => SetupinfoDataservice.GetForests(Sale.Region);
+            get
+            {
+                var stuff = SetupinfoDataservice.GetDistricts(Region, Forest);
+                return stuff;
+            }
         }
+
+        public IEnumerable<UOM> UOMOptions => SetupinfoDataservice.GetUOMCodes();
 
         public void Cancel()
         {
@@ -69,7 +129,7 @@ namespace NatCruise.Wpf.ViewModels
             var isSaleValid = ValidateSale();
             if (isSaleValid == false) { return; }
 
-            var defaultFileName = $"{Sale.SaleNumber} {Sale.Name}.crz3";
+            var defaultFileName = $"{SaleNumber} {SaleName}.crz3";
 
             var filePath = await FileDialogService.SelectCruiseFileDestinationAsync(defaultFileName: defaultFileName);
             if (filePath != null)
@@ -79,12 +139,33 @@ namespace NatCruise.Wpf.ViewModels
                 var extension = fileInfo.Extension.ToLower();
                 if (extension == ".crz3")
                 {
-                    using (var database = new CruiseDatastore_V3(fileInfo.FullName, true))
+                    var saleID = Guid.NewGuid().ToString();
+                    var sale = new CruiseDAL.V3.Models.Sale()
                     {
-                        database.Insert(Sale);
-                    }
+                        SaleID = saleID,
+                        SaleNumber = SaleNumber,
+                        Name = SaleName,
+                        Region = Region,
+                        Forest = Forest,
+                        District = District,
+                    };
 
-                    DataserviceProvider.OpenDatabase(fileInfo.FullName);
+                    var purpose = Purpose;
+                    var cruiseNumber = (purpose == "TS") ? SaleNumber : SaleNumber + Purpose;
+                    var cruiseID = Guid.NewGuid().ToString();
+                    var cruise = new CruiseDAL.V3.Models.Cruise()
+                    {
+                        CruiseID = cruiseID,
+                        SaleID = saleID,
+                        CruiseNumber = cruiseNumber,
+                        Purpose = Purpose,
+                    };
+
+                    var database = new CruiseDatastore_V3(fileInfo.FullName, true);
+                    database.Insert(sale);
+                    database.Insert(cruise);
+
+                    DataserviceProvider.Database = database;
 
                     RaiseRequestClose(new DialogResult(ButtonResult.OK));
                 }
@@ -101,9 +182,8 @@ namespace NatCruise.Wpf.ViewModels
 
         private bool ValidateSale()
         {
-            var sale = Sale;
-            if (string.IsNullOrWhiteSpace(sale.Name)) { return false; }
-            if (string.IsNullOrWhiteSpace(sale.SaleNumber)) { return false; }
+            if (string.IsNullOrWhiteSpace(SaleName)) { return false; }
+            if (string.IsNullOrWhiteSpace(SaleNumber)) { return false; }
 
             return true;
         }
