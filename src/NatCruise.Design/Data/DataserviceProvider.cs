@@ -33,10 +33,6 @@ namespace NatCruise.Data
                 {
                     return new CruiseDataservice(database, cruiseID, deviceID);
                 }
-                else if (type == typeof(ISetupInfoDataservice))
-                {
-                    return new SetupInfoDataservice(database, cruiseID, deviceID);
-                }
                 else if (type == typeof(ICuttingUnitDataservice))
                 {
                     return new CuttingUnitDataservice(database, cruiseID, deviceID);
