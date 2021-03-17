@@ -53,17 +53,17 @@ namespace NatCruise.Wpf
             var container = Container;
             var regionManager = container.Resolve<IRegionManager>();
             //regionManager.RegisterViewWithRegion(Regions.ContentRegion, typeof(CruiseMasterPage));
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SalePage));
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListPage));
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListPage));
-            regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailPage));
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SaleView));
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListView));
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListView));
+            regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailView));
 
-            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumDetailPage));
-            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(CuttingUnitStrataPage));
-            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(SampleGroupListPage));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumDetailView));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(CuttingUnitStrataView));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(SampleGroupListView));
 
-            regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SampleGroupDetailPage));
-            regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SubpopulationListPage));
+            regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SampleGroupDetailView));
+            regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SubpopulationListView));
 
             base.OnInitialized();
 
@@ -91,7 +91,7 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterSingleton<IDataserviceProvider, WpfDataserviceProvider>();
 
             containerRegistry.Register<IApplicationSettingService, WpfApplicationSettingService>();
-            containerRegistry.Register<IDialogService, WPFDialogService>();
+            containerRegistry.Register<IDialogService, WpfDialogService>();
             containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();
             containerRegistry.Register<IDeviceInfoService, WpfDeviceInfoService>();
             containerRegistry.RegisterSingleton<ISetupInfoDataservice, SetupInfoDataservice>();
@@ -99,11 +99,11 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterInstance<IFileDialogService>(new WpfFileDialogService());
             containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
 
-            containerRegistry.RegisterDialog<NewCruisePage, NewCruisePageViewModel>("NewCruise");
+            containerRegistry.RegisterDialog<NewCruiseView, NewCruiseViewModel>("NewCruise");
 
-            containerRegistry.RegisterForNavigation<CruiseMasterPage>();
-            containerRegistry.RegisterForNavigation<CuttingUnitListPage>();
-            containerRegistry.RegisterForNavigation<CuttingUnitDetailPage>();
+            containerRegistry.RegisterForNavigation<CruiseMasterView>();
+            containerRegistry.RegisterForNavigation<CuttingUnitListView>();
+            containerRegistry.RegisterForNavigation<CuttingUnitDetailView>();
         }
 
         protected override void ConfigureViewModelLocator()
@@ -118,7 +118,7 @@ namespace NatCruise.Wpf
                 string viewAssemblyName = null;
                 if (viewName.StartsWith("NatCruise.Design"))
                 {
-                    var assemblyName = Assembly.GetAssembly(typeof(CuttingUnitDetailPage)).FullName;
+                    //var assemblyName = Assembly.GetAssembly(typeof(CuttingUnitDetailPage)).FullName;
                     viewAssemblyName = "NatCruise.Design";
                 }
                 else
