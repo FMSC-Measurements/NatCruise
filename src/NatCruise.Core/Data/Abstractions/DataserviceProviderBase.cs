@@ -13,7 +13,7 @@ namespace NatCruise.Data
 
         public string DatabasePath => Database.Path;
 
-        public CruiseDatastore_V3 Database { get; }
+        public CruiseDatastore_V3 Database { get; set; }
         public IDeviceInfoService DeviceInfoService { get; }
         public string DeviceID { get; }
 
@@ -54,9 +54,10 @@ namespace NatCruise.Data
             DeviceID = deviceInfoService.DeviceID;
         }
 
-        public CruiseDatastore_V3 GetDatabase()
+        public DataserviceProviderBase(IDeviceInfoService deviceInfoService)
         {
-            return Database ?? new CruiseDatastore_V3(DatabasePath);
+            DeviceInfoService = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
+            DeviceID = deviceInfoService.DeviceID;
         }
 
         public abstract IDataservice GetDataservice(Type type);
