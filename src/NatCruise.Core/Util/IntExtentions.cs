@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NatCruise.Cruise.Util
+namespace NatCruise.Util
 {
     public static class IntExtentions
     {

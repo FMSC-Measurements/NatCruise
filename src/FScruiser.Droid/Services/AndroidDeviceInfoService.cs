@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.OS;
 using NatCruise.Core.Services;
-using NatCruise.Cruise.Util;
+using NatCruise.Util;
 using System;
 
 namespace FScruiser.Droid.Services
