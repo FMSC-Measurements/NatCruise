@@ -11,7 +11,11 @@ namespace FScruiser.XF.TestServices
 
         public string CruiseID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public CruiseDatastore_V3 Database => throw new NotImplementedException();
+        public CruiseDatastore_V3 Database
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
 
         public IDataservice GetDataservice(Type type)
         {
