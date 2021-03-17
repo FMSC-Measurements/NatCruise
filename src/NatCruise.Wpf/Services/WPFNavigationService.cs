@@ -50,25 +50,25 @@ namespace NatCruise.Wpf.Services
 
         public Task ShowStrata()
         {
-            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumListPage));
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumListView));
             return Task.CompletedTask;
         }
 
         public Task ShowCuttingUnitList()
         {
-            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(CuttingUnitListPage));
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(CuttingUnitListView));
             return Task.CompletedTask;
         }
 
         public Task ShowSale()
         {
-            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(SalePage));
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(SaleView));
             return Task.CompletedTask;
         }
 
         public Task ShowCruiseLandingLayout()
         {
-            RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
+            RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterView));
             return Task.CompletedTask;
         }
 

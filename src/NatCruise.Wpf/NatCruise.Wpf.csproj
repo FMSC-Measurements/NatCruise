@@ -55,34 +55,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Design\Views\CuttingUnitDetailPage.xaml">
+    <Page Update="Design\Views\CuttingUnitDetailView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\CuttingUnitListPage.xaml">
+    <Page Update="Design\Views\CuttingUnitListView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\CuttingUnitStrataPage.xaml">
+    <Page Update="Design\Views\CuttingUnitStrataView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\SalePage.xaml">
+    <Page Update="Design\Views\SaleView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\SampleGroupDetailPage.xaml">
+    <Page Update="Design\Views\SampleGroupDetailView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\SampleGroupListPage.xaml">
+    <Page Update="Design\Views\SampleGroupListView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\StratumDetailPage.xaml">
+    <Page Update="Design\Views\StratumDetailView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\StratumListPage.xaml">
+    <Page Update="Design\Views\StratumListView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\SubpopulationListPage.xaml">
+    <Page Update="Design\Views\SubpopulationListView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\TallySettingsPage.xaml">
+    <Page Update="Design\Views\TallySettingsView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
