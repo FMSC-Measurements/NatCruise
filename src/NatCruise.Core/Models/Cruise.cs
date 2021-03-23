@@ -19,6 +19,8 @@ namespace NatCruise.Models
 
         public string CruiseNumber { get; set; }
 
+        public bool? UseCrossStrataPlotTreeNumbering { get; set; }
+
         [Field(SQLExpression = "s.Name", Alias = "SaleName")]
         public string SaleName { get; set; }
 

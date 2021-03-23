@@ -28,6 +28,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="170*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -163,6 +164,14 @@
                                       Grid.Column="5"
                                       Grid.Row="8"
                                       Margin="0,3,0,10" />
+
+            <CheckBox Content="Number Plot Trees Sequentialy Across Strata"
+                      IsChecked="{Binding UseCrossStrataPlotTreeNumbering}"
+                      Margin="0,3,0,10"
+                      Grid.Row="9"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="4"/>
+
 
         </Grid>
 
