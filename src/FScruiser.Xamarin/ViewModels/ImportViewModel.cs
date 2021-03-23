@@ -1,5 +1,7 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Sync;
+using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -12,9 +14,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace NatCruise.ViewModels
+namespace FScruiser.XF.ViewModels
 {
-    public class ImportViewModel : ViewModelBase
+    public class ImportViewModel : XamarinViewModelBase
     {
         private IEnumerable<Cruise> _cruises;
         private string _selectedCruiseFile;
@@ -27,7 +29,7 @@ namespace NatCruise.ViewModels
         public IFileDialogService FileDialogService { get; }
         public IFileSystemService FileSystemService { get; }
         public IDialogService DialogService { get; }
-        public ICoreNavigationService NavigationService { get; }
+        public ICruiseNavigationService NavigationService { get; }
         public IDeviceInfoService DeviceInfoService { get; }
 
         public string ImportPath
@@ -72,8 +74,9 @@ namespace NatCruise.ViewModels
             IFileSystemService fileSystemService,
             IDialogService dialogService,
             ILoggingService loggingService,
-            ICoreNavigationService navigationService,
-            IDeviceInfoService deviceInfoService)
+            ICruiseNavigationService navigationService,
+            IDeviceInfoService deviceInfoService
+            )
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
@@ -224,6 +227,8 @@ namespace NatCruise.ViewModels
             {
                 Design = SyncFlags.Insert,
                 FieldData = SyncFlags.Insert,
+                TreeDataFlags = SyncFlags.Insert,
+                TreeFlags = SyncFlags.Insert,
                 SamplerState = SyncFlags.Insert,
                 Validation = SyncFlags.Insert,
             };
