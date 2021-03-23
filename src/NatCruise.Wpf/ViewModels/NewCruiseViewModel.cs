@@ -28,6 +28,7 @@ namespace NatCruise.Wpf.ViewModels
         private string _district;
         private string _purpose;
         private string _uom;
+        private bool _useCrossStrataPlotTreeNumbering = true;
 
         public NewCruiseViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
         {
@@ -92,6 +93,12 @@ namespace NatCruise.Wpf.ViewModels
         {
             get => _uom;
             set => SetProperty(ref _uom, value);
+        }
+
+        public bool UseCrossStrataPlotTreeNumbering
+        {
+            get => _useCrossStrataPlotTreeNumbering;
+            set => SetProperty(ref _useCrossStrataPlotTreeNumbering, value);
         }
 
         public string Title => "Create New Cruise";
@@ -159,6 +166,7 @@ namespace NatCruise.Wpf.ViewModels
                         SaleID = saleID,
                         CruiseNumber = cruiseNumber,
                         Purpose = Purpose,
+                        UseCrossStrataPlotTreeNumbering = UseCrossStrataPlotTreeNumbering,
                     };
 
                     var database = new CruiseDatastore_V3(fileInfo.FullName, true);
