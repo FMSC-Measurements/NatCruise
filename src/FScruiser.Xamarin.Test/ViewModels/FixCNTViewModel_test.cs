@@ -9,6 +9,8 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using FScruiser.XF.Data;
+using NatCruise.Cruise.Data;
+using NatCruise.Test;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -108,15 +110,14 @@ namespace FScruiser.XF.ViewModels
             using (var database = CreateDatabase(out var cruiseID))
             {
                 var viewModel = new FixCNTViewModel(
-                    new DataserviceProvider(new TestDeviceInfoService(), database)
+                    new DataserviceProvider(database, new TestDeviceInfoService())
                     {
-                        CruiseDatastore = database,
                         CruiseID = cruiseID
                     });
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
 
-                viewModel.OnNavigatedTo(navParams);
+                viewModel.Initialize(navParams);
 
                 viewModel.TallyPopulations.Should().NotBeEmpty();
 
@@ -136,17 +137,17 @@ namespace FScruiser.XF.ViewModels
         {
             using (var database = CreateDatabase(out var cruiseID))
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var deviceInfo = new TestDeviceInfoService();
+                var datastore = new CuttingUnitDatastore(database, cruiseID, deviceInfo.DeviceID);
 
                 var viewModel = new FixCNTViewModel(
-                    new DataserviceProvider(new TestDeviceInfoService(), database)
+                    new DataserviceProvider(database, deviceInfo)
                     {
-                        CruiseDatastore = database,
                         CruiseID = cruiseID
                     });
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
-                viewModel.OnNavigatedTo(navParams);
+                viewModel.Initialize(navParams);
 
                 var tallyPop = viewModel.TallyPopulations.First();
 
@@ -159,7 +160,7 @@ namespace FScruiser.XF.ViewModels
 
                 bucket.TreeCount.Should().Be(1);
 
-                viewModel.OnNavigatedTo(navParams);
+                viewModel.Initialize(navParams);
 
                 bucket = tallyPop.Buckets.FirstOrDefault();
                 bucket.TreeCount.Should().Be(1);
