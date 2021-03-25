@@ -12,12 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
+    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
-    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>
