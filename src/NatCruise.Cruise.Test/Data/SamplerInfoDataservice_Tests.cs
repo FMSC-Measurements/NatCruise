@@ -74,11 +74,11 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void CopySamplerStates()
         {
-            var fromDeviceID = "fromDeviceID";
+            var fromDeviceID = Initializer.DeviceID;
             var toDeviceID = "toDeviceID";
 
-            var stratum = "st1";
-            var sampleGroup = "sg1";
+            var stratum = SampleGroups[0].StratumCode;
+            var sampleGroup = SampleGroups[0].SampleGroupCode;
             var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
