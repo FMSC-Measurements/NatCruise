@@ -5,6 +5,9 @@ namespace NatCruise.Design.Models
     [Table("LK_Forest")]
     public class Forest
     {
+        [Field("Region")]
+        public string RegionCode { get; set; }
+
         [Field("Forest")]
         public string ForestCode { get; set; }
 

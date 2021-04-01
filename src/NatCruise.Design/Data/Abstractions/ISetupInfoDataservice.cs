@@ -14,5 +14,7 @@ namespace NatCruise.Design.Data
         IEnumerable<UOM> GetUOMCodes();
 
         IEnumerable<District> GetDistricts(string region, string forest);
+
+        IEnumerable<FIASpecies> GetFIASpecies();
     }
 }
