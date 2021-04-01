@@ -1,4 +1,5 @@
-﻿using CruiseDAL;
+﻿using Bogus;
+using CruiseDAL;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -12,6 +13,7 @@ namespace NatCruise.Test
     {
         protected ITestOutputHelper Output { get; }
         protected DbProviderFactory DbProvider { get; private set; }
+        protected Randomizer Rand { get; } = new Randomizer(123456);
         protected Stopwatch _stopwatch;
         private string _testTempPath;
 

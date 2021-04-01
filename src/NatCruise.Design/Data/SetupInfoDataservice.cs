@@ -39,5 +39,10 @@ namespace NatCruise.Design.Data
         {
             return Database.From<District>().Where("Region = @p1 AND Forest = @p2").Query(region, forest).ToArray();
         }
+
+        public IEnumerable<FIASpecies> GetFIASpecies()
+        {
+            return Database.From<FIASpecies>().Query().ToArray();
+        }
     }
 }
