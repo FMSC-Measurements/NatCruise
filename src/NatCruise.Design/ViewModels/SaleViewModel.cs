@@ -1,6 +1,8 @@
 ﻿using NatCruise.Data;
+using NatCruise.Data.Abstractions;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,11 +15,13 @@ namespace NatCruise.Design.ViewModels
 
         public SaleViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo)
         {
-            CruiseDataservice = dataserviceProvider.GetDataservice<ICruiseDataservice>();
+            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
+
+            SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
             SetupinfoDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
         }
 
-        private ICruiseDataservice CruiseDataservice { get; }
+        protected ISaleDataservice SaleDataservice { get; }
         public ISetupInfoDataservice SetupinfoDataservice { get; }
 
         public Sale Sale
@@ -25,25 +29,13 @@ namespace NatCruise.Design.ViewModels
             get => _sale;
             set
             {
-                OnSaleChanging(_sale, value);
-                SetProperty(ref _sale, value);
-                OnSaleChanged(value);
-            }
-        }
-
-        private void OnSaleChanged(Sale newValue)
-        {
-            if (newValue != null)
-            {
-                newValue.PropertyChanged += Sale_PropertyChanged;
-            }
-        }
-
-        private void OnSaleChanging(Sale oldValue, Sale newValue)
-        {
-            if (oldValue != null)
-            {
-                oldValue.PropertyChanged -= Sale_PropertyChanged;
+                if(_sale != null) { _sale.PropertyChanged -= Sale_PropertyChanged; }
+                _sale = value;
+                // update forest options after seting _sale but before raising sale property changed
+                // otherwise it causes binding issues
+                RaisePropertyChanged(nameof(ForestOptions)); 
+                RaisePropertyChanged();
+                if(value != null) { _sale.PropertyChanged += Sale_PropertyChanged; }
             }
         }
 
@@ -51,7 +43,14 @@ namespace NatCruise.Design.ViewModels
         {
             var sale = sender as Sale;
 
-            CruiseDataservice.UpdateSale(sale);
+            if (ValidateSale(sale))
+            {
+                SaleDataservice.UpdateSale(sale);
+            }
+            if(e.PropertyName == nameof(Sale.Region))
+            {
+                RaisePropertyChanged(nameof(ForestOptions));
+            }
         }
 
         public IEnumerable<Purpose> PurposeOptions => SetupinfoDataservice.GetPurposes();
@@ -62,8 +61,15 @@ namespace NatCruise.Design.ViewModels
 
         public override void Load()
         {
-            Sale = CruiseDataservice.GetSale();
-            RaisePropertyChanged(nameof(ForestOptions));
+            base.Load();
+
+            Sale = SaleDataservice.GetSale();
+        }
+
+        public bool ValidateSale(Sale sale)
+        {
+            return string.IsNullOrWhiteSpace(sale.Name) == false
+                && string.IsNullOrWhiteSpace(sale.SaleNumber) == false;
         }
     }
 }
