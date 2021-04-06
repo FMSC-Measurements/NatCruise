@@ -57,7 +57,8 @@
                     <Button Grid.Row="0"
                             Grid.Column="1"
                             Content="+"
-                            Background="{StaticResource brush_addItem}">
+                            Background="{StaticResource brush_addItem}"
+                            IsEnabled="{Binding Text, ElementName=_stratumCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <i:InvokeCommandAction Command="{Binding AddStratumCommand}"
@@ -71,7 +72,8 @@
                             Content="-"
                             Background="{StaticResource brush_removeItem}"
                             Command="{Binding RemoveStratumCommand}"
-                            CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}" />
+                            CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}"
+                            IsEnabled="{Binding SelectedItem, ElementName=_stratumListView, Converter={StaticResource NotNullConverter}}"/>
 
 
                 </Grid>
