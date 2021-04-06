@@ -48,5 +48,10 @@ namespace NatCruise.Wpf.Views
 
             //RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(SalePage));
         }
+
+        private void _cruiseButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.ShowCruise();
+        }
     }
 }
