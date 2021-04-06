@@ -13,7 +13,8 @@
              Tag="Sample Groups"
              mc:Ignorable="d"
              d:DesignHeight="448.881"
-             d:DesignWidth="788.806">
+             d:DesignWidth="788.806"
+             IsEnabled="{Binding Stratum, Converter={StaticResource NotNullConverter}}">
     <ScrollViewer>
         <Grid Background="{StaticResource brush_background}"
               Margin="0,0,10,0"
