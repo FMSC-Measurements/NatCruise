@@ -48,6 +48,12 @@ namespace NatCruise.Wpf.Services
             throw new NotImplementedException();
         }
 
+        public Task ShowCruise()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(CruiseView));
+            return Task.CompletedTask;
+        }
+
         public Task ShowStrata()
         {
             RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumListView));

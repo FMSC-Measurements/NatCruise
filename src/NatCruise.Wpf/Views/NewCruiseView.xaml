@@ -9,7 +9,21 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="350"
-             d:DesignWidth="550">
+             d:DesignWidth="550"
+             Height="350"
+             Width="550">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="prism:Dialog.WindowStartupLocation"
+                    Value="CenterOwner" />
+            <!--<Setter Property="ResizeMode"
+                    Value="NoResize" />-->
+            <Setter Property="ShowInTaskbar"
+                    Value="False" />
+            <Setter Property="SizeToContent"
+                    Value="WidthAndHeight" />
+        </Style>
+    </prism:Dialog.WindowStyle>
     <Grid Background="{StaticResource brush_background}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -40,25 +54,31 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBox HorizontalAlignment="Stretch"
-                     TextWrapping="Wrap"
-                     Text="{Binding TemplatePath}"
-                     VerticalAlignment="Stretch"
-                     Grid.Column="1"
-                     Grid.Row="2"
-                     Grid.ColumnSpan="2" />
+            <DockPanel  Grid.Column="1"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="5">
+
+                <Button DockPanel.Dock="Right"
+                        Content="Browse"
+                        Command="{Binding SelectTemplateCommand}"
+                        HorizontalAlignment="Right"
+                        Height="20"
+                        Margin="7,0,0,0" />
+                <TextBox Width="339"
+                         IsReadOnly="True"
+                         Text="{Binding TemplatePath}"
+                         VerticalAlignment="Stretch"
+                         TextAlignment="Right" />
+            </DockPanel>
+
             <Label Content="Template"
                    Background="{StaticResource brush_accent}"
                    HorizontalAlignment="Stretch"
                    Grid.Column="1"
                    Grid.Row="1"
-                   Grid.ColumnSpan="3"
+                   Grid.ColumnSpan="5"
                    Margin="0,0,0,10" />
-            <Button Content="Browse"
-                    Grid.Column="3"
-                    Height="20"
-                    Grid.Row="2"
-                    Margin="7,0,0,0" />
+
             <Separator HorizontalAlignment="Left"
                        Height="5"
                        VerticalAlignment="Top"
@@ -154,10 +174,8 @@
                    Height="26"
                    Width="47"
                    Grid.Row="8" />
-            <controls:AutoCompleteBox HorizontalAlignment="Left"
+            <TextBox HorizontalAlignment="Left"
                                       Height="23"
-                                      ItemsSource="{Binding DistrictOptions}"
-                                      ValueMemberPath="FriendlyName"
                                       Text="{Binding District}"
                                       VerticalAlignment="Top"
                                       Width="50"
@@ -170,7 +188,7 @@
                       Margin="0,3,0,10"
                       Grid.Row="9"
                       Grid.Column="1"
-                      Grid.ColumnSpan="4"/>
+                      Grid.ColumnSpan="4" />
 
 
         </Grid>

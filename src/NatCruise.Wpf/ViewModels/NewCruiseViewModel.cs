@@ -1,13 +1,10 @@
 ﻿using CruiseDAL;
-using CruiseDAL.V3.Models;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Services;
-using NatCruise.Wpf.Services;
 using Prism.Commands;
-using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
@@ -29,6 +26,8 @@ namespace NatCruise.Wpf.ViewModels
         private string _purpose;
         private string _uom;
         private bool _useCrossStrataPlotTreeNumbering = true;
+        private string _templatePath;
+        private ICommand _selectTemplateCommand;
 
         public NewCruiseViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
         {
@@ -42,6 +41,7 @@ namespace NatCruise.Wpf.ViewModels
         protected ISetupInfoDataservice SetupinfoDataservice { get; }
         protected IFileDialogService FileDialogService { get; }
         protected IDeviceInfoService DeviceInfo { get; set; }
+        protected ITemplateDataservice TemplateDataservice { get; set; }
 
         public string SaleName
         {
@@ -75,8 +75,6 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-
-
         public string District
         {
             get => _district;
@@ -101,13 +99,21 @@ namespace NatCruise.Wpf.ViewModels
             set => SetProperty(ref _useCrossStrataPlotTreeNumbering, value);
         }
 
+        public string TemplatePath
+        {
+            get => _templatePath;
+            set => SetProperty(ref _templatePath, value);
+        }
+
         public string Title => "Create New Cruise";
 
         public event Action<IDialogResult> RequestClose;
 
-        public ICommand CreateCruiseCommand => _createCruiseCommand ?? (_createCruiseCommand = new DelegateCommand(CreateCruise));
+        public ICommand CreateCruiseCommand => _createCruiseCommand ??= new DelegateCommand(CreateCruise);
 
-        public ICommand CancelCommand => _cancelCommand ?? (_cancelCommand = new DelegateCommand(Cancel));
+        public ICommand SelectTemplateCommand => _selectTemplateCommand ??= new DelegateCommand(SelectTemplate);
+
+        public ICommand CancelCommand => _cancelCommand ??= new DelegateCommand(Cancel);
 
         public IEnumerable<Purpose> PurposeOptions => SetupinfoDataservice.GetPurposes();
 
@@ -173,19 +179,102 @@ namespace NatCruise.Wpf.ViewModels
                     database.Insert(sale);
                     database.Insert(cruise);
 
-                    DataserviceProvider.Database = database;
+                    var srcTemplateDataservice = TemplateDataservice;
+                    if (srcTemplateDataservice != null)
+                    {
+                        var newCruiseTemplateDataservice = new TemplateDataservice(database, cruiseID, DeviceInfo.DeviceID);
+                        database.BeginTransaction();
+                        try
+                        {
+                            CopyTemplateData(TemplateDataservice, newCruiseTemplateDataservice);
+                            database.CommitTransaction();
+                        }
+                        catch
+                        {
+                            database.RollbackTransaction();
+                            throw;
+                        }
+                    }
 
+                    DataserviceProvider.Database = database;
+                    DataserviceProvider.CruiseID = cruiseID;
                     RaiseRequestClose(new DialogResult(ButtonResult.OK));
                 }
             }
         }
 
-        public void SelectTemplate()
+        protected void CopyTemplateData(ITemplateDataservice src, ITemplateDataservice dest)
         {
+            var species = src.GetSpecies();
+            foreach (var sp in species)
+            {
+                dest.AddSpecies(sp);
+            }
+
+            var tars = src.GetTreeAuditRules();
+            foreach (var tar in tars)
+            {
+                dest.AddTreeAuditRule(tar);
+            }
+
+            var ruleSelectors = src.GetRuleSelectors();
+            foreach (var ruleSelector in ruleSelectors)
+            {
+                dest.AddRuleSelector(ruleSelector);
+            }
+
+            var tdvs = src.GetTreeDefaultValues();
+            foreach (var tdv in tdvs)
+            {
+                dest.AddTreeDefaultValue(tdv);
+            }
+
+            var stratumDefaults = src.GetStratumDefaults();
+
+            foreach (var sd in stratumDefaults)
+            {
+                dest.AddStratumDefault(sd);
+
+                var treeFieldSetupDefaults = src.GetTreeFieldSetupDefaults(sd.StratumDefaultID);
+                foreach (var tfsd in treeFieldSetupDefaults)
+                {
+                    dest.AddTreeFieldSetupDefault(tfsd);
+                }
+
+                var logFieldSetupDefaults = src.GetLogFieldSetupDefaults(sd.StratumDefaultID);
+                foreach (var lfsd in logFieldSetupDefaults)
+                {
+                    dest.AddLogFieldSetupDefault(lfsd);
+                }
+            }
+
+            var reports = src.GetReports();
+            foreach (var rpt in reports)
+            {
+                dest.AddReport(rpt);
+            }
+
+            var volumeEquations = src.GetVolumeEquations();
+            foreach (var ve in volumeEquations)
+            {
+                dest.AddVolumeEquation(ve);
+            }
         }
 
-        protected void LoadTemplate(string templatePath)
+        public void SelectTemplate()
         {
+            var templatePath = FileDialogService.SelectTemplateFileAsync().Result;
+
+            if (templatePath == null || File.Exists(templatePath) == false) { return; }
+
+            var v3TemplateDb = new CruiseDatastore_V3();
+            Migrator.MigrateFromV2ToV3(templatePath, v3TemplateDb, DeviceInfo.DeviceID);
+
+            var cruiseID = v3TemplateDb.ExecuteScalar<string>("SELECT CruiseID FROM Cruise LIMIT 1;");
+
+            var templateDataservice = new TemplateDataservice(v3TemplateDb, cruiseID, DeviceInfo.DeviceID);
+            TemplateDataservice = templateDataservice;
+            TemplatePath = templatePath;
         }
 
         private bool ValidateSale()
