@@ -50,6 +50,11 @@ namespace NatCruise.Data
                 .Query(saleID).ToArray();
         }
 
+        public Cruise GetCruise()
+        {
+            return GetCruise(CruiseID);
+        }
+
         public Cruise GetCruise(string cruiseID)
         {
             return Database.From<Cruise>()
@@ -65,8 +70,15 @@ namespace NatCruise.Data
                 .Query(saleNumber).FirstOrDefault();
         }
 
+        public Sale GetSale()
+        {
+            return GetSale(CruiseID);
+        }
+
         public Sale GetSale(string cruiseID)
         {
+            if (string.IsNullOrEmpty(cruiseID)) { throw new ArgumentException($"'{nameof(cruiseID)}' cannot be null or empty.", nameof(cruiseID)); }
+
             return Database.From<Sale>()
                 .Join("Cruise", "USING (SaleID)")
                 .Where("Cruise.CruiseID = @p1")
@@ -84,11 +96,15 @@ namespace NatCruise.Data
         {
             if (cruise is null) { throw new ArgumentNullException(nameof(cruise)); }
 
-            Database.Execute2("UPDATE Cruise SET " +
-                "Purpose = @Purpose, Remarks = @Remarks, ModifiedBy = @DeviceID " +
-                "WHERE Cruise_CN = @Cruise_CN",
+            Database.Execute2(
+@"UPDATE Cruise SET 
+    Purpose = @Purpose,
+    Remarks = @Remarks,
+    ModifiedBy = @DeviceID
+WHERE CruiseID = @CruiseID",
                 new
                 {
+                    cruise.CruiseID,
                     cruise.Purpose,
                     cruise.Remarks,
                     DeviceID,
@@ -107,7 +123,7 @@ namespace NatCruise.Data
     Forest = @Forest,
     District = @District,
     Remarks = @Remarks,
-    ModifiedBy = @DeviceID,
+    ModifiedBy = @DeviceID
 WHERE SaleID = @SaleID;",
 new
 {

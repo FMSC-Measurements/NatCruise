@@ -16,5 +16,9 @@ namespace NatCruise.Design.Data
         IEnumerable<District> GetDistricts(string region, string forest);
 
         IEnumerable<FIASpecies> GetFIASpecies();
+
+        IEnumerable<Product> GetProducts();
+
+        IEnumerable<CruiseMethod> GetCruiseMethods();
     }
 }

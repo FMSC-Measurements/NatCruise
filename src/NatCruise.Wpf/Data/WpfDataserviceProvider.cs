@@ -1,6 +1,7 @@
 ﻿using CruiseDAL;
 using NatCruise.Core.Services;
 using NatCruise.Data;
+using NatCruise.Data.Abstractions;
 using NatCruise.Design.Data;
 using System;
 
@@ -29,9 +30,9 @@ namespace NatCruise.Data
                 //{
                 //    return new RecentFilesDataservice();
                 //}
-                if (type == typeof(ICruiseDataservice))
+                if (type == typeof(ISaleDataservice))
                 {
-                    return new CruiseDataservice(database, cruiseID, deviceID);
+                    return new SaleDataservice(database, cruiseID, deviceID);
                 }
                 else if (type == typeof(ICuttingUnitDataservice))
                 {
@@ -61,6 +62,14 @@ namespace NatCruise.Data
                 }
                 else if (type == typeof(ITreeFieldDataservice))
                 {
+                }
+                else if (type == typeof(ITemplateDataservice))
+                {
+                    return new TemplateDataservice(database, cruiseID, deviceID);
+                }
+                else if (type == typeof(IFieldSetupDataservice))
+                {
+                    return new FieldSetupDataservice(database, cruiseID, deviceID);
                 }
 
                 return null;
