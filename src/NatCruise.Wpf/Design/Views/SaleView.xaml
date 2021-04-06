@@ -55,18 +55,7 @@
                  Grid.Row="3"
                  Width="100"
                  VerticalAlignment="Center" />
-        <Label Content="Purpose"
-               Grid.Row="4"
-               Grid.Column="1"
-               VerticalAlignment="Top" />
-        <ComboBox HorizontalAlignment="Left"
-                  SelectedValue="{Binding Sale.Purpose}"
-                  SelectedValuePath="PurposeCode"
-                  ItemsSource="{Binding PurposeOptions}"
-                  Grid.Column="2"
-                  Grid.Row="4"
-                  Width="100"
-                  VerticalAlignment="Center" />
+
         <ComboBox HorizontalAlignment="Left"
                   SelectedValue="{Binding Sale.Region}"
                   SelectedValuePath="RegionCode"
