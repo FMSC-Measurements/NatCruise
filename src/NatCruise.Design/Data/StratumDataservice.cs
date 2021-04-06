@@ -128,7 +128,18 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
         {
             if (stratum is null) { throw new ArgumentNullException(nameof(stratum)); }
 
-            Database.Update(stratum);
+            Database.Execute2(
+@"UPDATE Stratum SET
+    Description = @Description,
+    Method = @Method,
+    BasalAreaFactor = @BasalAreaFactor,
+    FixedPlotSize = @FixedPlotSize,
+    KZ3PPNT = @KZ3PPNT,
+    SamplingFrequency = @SamplingFrequency,
+    FBSCode = @FBSCode,
+    YieldComponent = @YieldComponent,
+    FixCNTField = @FixCNTField
+WHERE StratumID = @StratumID;", stratum);
         }
 
         public bool HasTreeCounts(string unitCode, string stratum)
