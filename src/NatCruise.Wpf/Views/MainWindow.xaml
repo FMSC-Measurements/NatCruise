@@ -35,6 +35,9 @@
             </MenuItem>
         </Menu>
         <Grid>
+            <Image StretchDirection="UpOnly"
+                   Stretch="UniformToFill"
+                   Source="{StaticResource image_wallpaper}" />
             <ContentControl prism:RegionManager.RegionName="{x:Static nav:Regions.ContentRegion}" />
         </Grid>
     </DockPanel>
