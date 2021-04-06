@@ -3,7 +3,7 @@ using Prism.Mvvm;
 
 namespace NatCruise.Design.Models
 {
-    [Table("Subpopulation")]
+    [Table("SubPopulation")]
     public class Subpopulation : BindableBase
     {
         private string _liveDead;
@@ -15,7 +15,7 @@ namespace NatCruise.Design.Models
 
         public string SampleGroupCode { get; set; }
 
-        public string Species { get; set; }
+        public string SpeciesCode { get; set; }
 
         public string LiveDead
         {

@@ -1,15 +1,13 @@
 ﻿using NatCruise.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Data.Abstractions
 {
     public interface ISaleDataservice : IDataservice
     {
         IEnumerable<Sale> GetSales();
+
+        Sale GetSale();
 
         Sale GetSale(int saleNumber);
 
@@ -24,6 +22,8 @@ namespace NatCruise.Data.Abstractions
         IEnumerable<Cruise> GetCruises(int saleNumber);
 
         IEnumerable<Cruise> GetCruises(string saleID);
+
+        Cruise GetCruise();
 
         Cruise GetCruise(string cruiseID);
 

@@ -1,0 +1,148 @@
+﻿using CruiseDAL;
+using NatCruise.Data;
+using NatCruise.Design.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NatCruise.Design.Data
+{
+    public class FieldSetupDataservice : CruiseDataserviceBase, IFieldSetupDataservice
+    {
+        public FieldSetupDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
+        {
+        }
+
+        public FieldSetupDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
+
+        protected TreeField GetTreeField(string field)
+        {
+            return Database.Query<TreeField>(
+@"SELECT
+    tf.Field,
+    tfh.Heading,
+    tf.DefaultHeading,
+    DbType,
+    IsTreeMeasurmentField
+FROM TreeField AS tf
+LEFT JOIN TreeFieldHeading AS tfh ON tf.Field = tfh.Field AND tfh.CruiseID = @p1
+WHERE tF.Field = @p2;", CruiseID, field).FirstOrDefault();
+        }
+
+        public IEnumerable<TreeFieldSetup> GetTreeFieldSetups(string stratumCode)
+        {
+            var fieldSetups = Database.From<CruiseDAL.V3.Models.TreeFieldSetup>()
+                .Where("StratumCode = @p1 AND SampleGroupCode IS NULL AND CruiseID = @p2")
+                .Query(stratumCode, CruiseID).Select(x =>
+                {
+                    return new TreeFieldSetup()
+                    {
+                        StratumCode = x.StratumCode,
+                        SampleGroupCode = x.SampleGroupCode,
+                        Field = GetTreeField(x.Field),
+                        FieldOrder = x.FieldOrder,
+                        IsHidden = x.IsHidden.GetValueOrDefault(),
+                        IsLocked = x.IsLocked.GetValueOrDefault(),
+                        DefaultValueInt = x.DefaultValueInt,
+                        DefaultValueReal = x.DefaultValueReal,
+                        DefaultValueText = x.DefaultValueText,
+                        DefaultValueBool = x.DefaultValueBool,
+                    };
+                }).ToArray();
+
+            return fieldSetups;
+        }
+
+        public IEnumerable<TreeFieldSetup> GetTreeFieldSetups(string stratumCode, string sampleGroupCode)
+        {
+            var fieldSetups = Database.From<CruiseDAL.V3.Models.TreeFieldSetup>()
+                .Where("StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID = @p3")
+                .Query(stratumCode, sampleGroupCode, CruiseID).Select(x =>
+                {
+                    return new TreeFieldSetup()
+                    {
+                        StratumCode = x.StratumCode,
+                        SampleGroupCode = x.SampleGroupCode,
+                        Field = GetTreeField(x.Field),
+                        FieldOrder = x.FieldOrder,
+                        IsHidden = x.IsHidden.GetValueOrDefault(),
+                        IsLocked = x.IsLocked.GetValueOrDefault(),
+                        DefaultValueInt = x.DefaultValueInt,
+                        DefaultValueReal = x.DefaultValueReal,
+                        DefaultValueText = x.DefaultValueText,
+                        DefaultValueBool = x.DefaultValueBool,
+                    };
+                }).ToArray();
+
+            return fieldSetups;
+        }
+
+        public void UpsertTreeFieldSetup(TreeFieldSetup tfs)
+        {
+            Database.Execute2(
+@"INSERT INTO TreeFieldSetup (
+    CruiseID,
+    StratumCode,
+    SampleGroupCode,
+    Field,
+    FieldOrder,
+    IsHidden,
+    IsLocked,
+    DefaultValueInt,
+    DefaultValueReal,
+    DefaultValueBool,
+    DefaultValueText
+) VALUES (
+    @CruiseID,
+    @StratumCode,
+    @SampleGroupCode,
+    @Field,
+    @FieldOrder,
+    @IsHidden,
+    @IsLocked,
+    @DefaultValueInt,
+    @DefaultValueReal,
+    @DefaultValueBool,
+    @DefaultValueText
+)
+ON CONFLICT (CruiseID, StratumCode, ifnull(SampleGroupCode, ''), Field) DO
+UPDATE SET
+    Field = @Field,
+    FieldOrder = @FieldOrder,
+    IsHidden = @IsHidden,
+    IsLocked = @IsLocked,
+    DefaultValueInt = @DefaultValueInt,
+    DefaultValueReal = @DefaultValueReal,
+    DefaultValueBool = @DefaultValueBool,
+    DefaultValueText = @DefaultValueText
+WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode;",
+            new
+            {
+                CruiseID,
+                tfs.StratumCode,
+                tfs.SampleGroupCode,
+                tfs.Field.Field,
+                tfs.FieldOrder,
+                tfs.IsHidden,
+                tfs.IsLocked,
+                tfs.DefaultValueInt,
+                tfs.DefaultValueReal,
+                tfs.DefaultValueText,
+                tfs.DefaultValueBool
+            });
+        }
+
+        public void DeleteTreeFieldSetup(TreeFieldSetup tfs)
+        {
+            if (tfs is null) { throw new ArgumentNullException(nameof(tfs)); }
+            if (tfs.Field is null) { throw new ArgumentNullException(nameof(TreeField.Field)); }
+
+            Database.Execute("DELETE FROM TreeFieldSetup WHERE CruiseID = @p1 AND StratumCode = @p2 AND ifnull(SampleGroup, '') = ifnull(@p3, '') AND Field = @p4;",
+                CruiseID, tfs.StratumCode, tfs.StratumCode, tfs.Field.Field);
+        }
+    }
+}

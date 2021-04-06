@@ -1,9 +1,15 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
+using Prism.Mvvm;
 
 namespace NatCruise.Models
 {
-    public class Cruise
+    public class Cruise : BindableBase
     {
+        private string _purpose;
+        private string _remarks;
+        private string _cruiseNumber;
+        private bool? _useCrossStrataPlotTreeNumbering;
+
         [PrimaryKeyField]
         public string Cruise_CN { get; set; }
 
@@ -13,13 +19,29 @@ namespace NatCruise.Models
         [Field(PersistanceFlags = PersistanceFlags.OnInsert)]
         public string CruiseID { get; set; }
 
-        public string Purpose { get; set; }
+        public string Purpose
+        {
+            get => _purpose;
+            set => SetProperty(ref _purpose, value);
+        }
 
-        public string Remarks { get; set; }
+        public string Remarks
+        {
+            get => _remarks;
+            set => SetProperty(ref _remarks, value);
+        }
 
-        public string CruiseNumber { get; set; }
+        public string CruiseNumber
+        {
+            get => _cruiseNumber;
+            set => SetProperty(ref _cruiseNumber, value);
+        }
 
-        public bool? UseCrossStrataPlotTreeNumbering { get; set; }
+        public bool? UseCrossStrataPlotTreeNumbering
+        {
+            get => _useCrossStrataPlotTreeNumbering;
+            set => SetProperty(ref _useCrossStrataPlotTreeNumbering, value);
+        }
 
         [Field(SQLExpression = "s.Name", Alias = "SaleName")]
         public string SaleName { get; set; }

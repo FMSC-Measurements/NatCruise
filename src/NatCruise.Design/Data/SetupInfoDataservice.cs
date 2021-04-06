@@ -44,5 +44,15 @@ namespace NatCruise.Design.Data
         {
             return Database.From<FIASpecies>().Query().ToArray();
         }
+
+        public IEnumerable<Product> GetProducts()
+        {
+            return Database.From<Product>().Query().ToArray();
+        }
+
+        public IEnumerable<CruiseMethod> GetCruiseMethods()
+        {
+            return Database.From<CruiseMethod>().Query().ToArray();
+        }
     }
 }

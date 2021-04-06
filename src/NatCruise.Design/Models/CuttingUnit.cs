@@ -12,9 +12,11 @@ namespace NatCruise.Design.Models
         private string _loggingMethod;
         private string _paymentUnit;
         private string _rx;
-
+        private string _remarks;
 
         public int CuttingUnit_CN { get; set; }
+
+        public string CuttingUnitID { get; set; }
 
         public string CuttingUnitCode
         {
@@ -44,6 +46,12 @@ namespace NatCruise.Design.Models
         {
             get => _paymentUnit;
             set => SetProperty(ref _paymentUnit, value);
+        }
+
+        public string Remarks
+        {
+            get => _remarks;
+            set => SetProperty(ref _remarks, value);
         }
 
         public string Rx

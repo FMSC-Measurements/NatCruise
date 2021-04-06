@@ -16,14 +16,13 @@ namespace NatCruise.Design.Models
         private int _samplingFrequency;
         private string _fbsCode;
         private string _yieldComponent;
-        private double _volumeFactor;
-        private int _month;
-        private int _year;
+        private string _fixCNTField;
 
         [PrimaryKeyField("Stratum_CN")]
         public int Stratum_CN { get; set; }
 
-        [Field("Code")]
+        public string StratumID { get; set; }
+
         public string StratumCode
         {
             get => _stratumCode;
@@ -34,12 +33,6 @@ namespace NatCruise.Design.Models
         {
             get => _description;
             set => SetProperty(ref _description, value);
-        }
-
-        public string HotKey
-        {
-            get => _hotKey;
-            set => SetProperty(ref _hotKey, value);
         }
 
         public string Method
@@ -72,6 +65,12 @@ namespace NatCruise.Design.Models
             set => SetProperty(ref _samplingFrequency, value);
         }
 
+        public string HotKey
+        {
+            get => _hotKey;
+            set => SetProperty(ref _hotKey, value);
+        }
+
         public string FBSCode
         {
             get => _fbsCode;
@@ -84,22 +83,10 @@ namespace NatCruise.Design.Models
             set => SetProperty(ref _yieldComponent, value);
         }
 
-        public double VolumeFactor
+        public string FixCNTField
         {
-            get => _volumeFactor;
-            set => SetProperty(ref _volumeFactor, value);
-        }
-
-        public int Month
-        {
-            get => _month;
-            set => SetProperty(ref _month, value);
-        }
-
-        public int Year
-        {
-            get => _year;
-            set => SetProperty(ref _year, value);
+            get => _fixCNTField;
+            set => SetProperty(ref _fixCNTField, value);
         }
     }
 }

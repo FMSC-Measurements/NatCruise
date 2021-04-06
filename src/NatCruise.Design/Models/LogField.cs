@@ -2,8 +2,8 @@
 
 namespace NatCruise.Design.Models
 {
-    [Table("TreeField")]
-    public class TreeField
+    [Table("LogField")]
+    public class LogField
     {
         public string Field { get; set; }
 
@@ -12,10 +12,5 @@ namespace NatCruise.Design.Models
         public string DefaultHeading { get; set; }
 
         public string DbType { get; set; }
-
-        public override string ToString()
-        {
-            return Heading ?? DefaultHeading;
-        }
     }
 }

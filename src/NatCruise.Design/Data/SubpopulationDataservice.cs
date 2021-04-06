@@ -17,20 +17,32 @@ namespace NatCruise.Design.Data
 
         public void AddSubpopulation(Subpopulation subpopulation)
         {
-            Database.Execute("INSERT OR IGNORE INTO SpeciesCode (Species) VALUES (@p1);", subpopulation.Species);
+            Database.Execute("INSERT OR IGNORE INTO SpeciesCode (Species) VALUES (@p1);", subpopulation.SpeciesCode);
 
             Database.Execute2(
                 "INSERT INTO Subpopulation (" +
-                "StratumCode, " +
-                "SampleGroupCode, " +
-                "Species, " +
-                "LiveDead" +
+                    "CruiseID," +
+                    "StratumCode, " +
+                    "SampleGroupCode, " +
+                    "SpeciesCode, " +
+                    "LiveDead," +
+                    "CreatedBy" +
                 ") VALUES ( " +
-                "@StratumCode, " +
-                "@SampleGroupCode, " +
-                "@Species, " +
-                "@LiveDead" +
-                ");", subpopulation);
+                    "@CruiseID," +
+                    "@StratumCode, " +
+                    "@SampleGroupCode, " +
+                    "@SpeciesCode, " +
+                    "@LiveDead," +
+                    "@DeviceID" +
+                ");", new
+                {
+                    CruiseID,
+                    subpopulation.StratumCode,
+                    subpopulation.SampleGroupCode,
+                    subpopulation.SpeciesCode,
+                    subpopulation.LiveDead,
+                    DeviceID,
+                });
         }
 
         public void DeleteSubpopulation(Subpopulation subpopulation)
@@ -43,21 +55,22 @@ namespace NatCruise.Design.Data
             return Database.ExecuteScalar<int>(
                 "SELECT count(*) FROM Subpopulation " +
                 "WHERE StratumCode = @p1 AND SampleGroupCode = @p2 " +
-                "AND ifNull(Species, '') = ifNull(@p3, '') " +
-                "AND ifNull(LiveDead, '') = ifNull(@p4, '');",
-                stratumCode, sampleGroupCode, species, livedead) > 0;
+                "AND ifNull(SpeciesCode, '') = ifNull(@p3, '') " +
+                "AND ifNull(LiveDead, '') = ifNull(@p4, '')" +
+                "AND CruiseID = @p5;",
+                stratumCode, sampleGroupCode, species, livedead, CruiseID) > 0;
         }
 
         public IEnumerable<Subpopulation> GetSubpopulations(string stratumCode, string sampleGroupCode)
         {
-            return Database.Query<Subpopulation>("SELECT sp.* FROM SubPopulation AS sp WHERE StratumCode = @p1 AND SampleGroupCode = @p2;",
-                stratumCode, sampleGroupCode);
+            return Database.Query<Subpopulation>("SELECT sp.* FROM SubPopulation AS sp WHERE StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID = @p3;",
+                stratumCode, sampleGroupCode, CruiseID);
         }
 
         public bool HasTreeCounts(string stratumCode, string sampleGroupCode, string species, string livedead)
         {
-            return Database.ExecuteScalar<int>("SELECT count(*) FROM TallyLedger WHERE StratumCode = @p1 AND SampleGroupCode = @p2 AND Species = @p3 AND LiveDead = @p4;",
-                stratumCode, sampleGroupCode, species, livedead) > 0;
+            return Database.ExecuteScalar<int>("SELECT count(*) FROM TallyLedger WHERE StratumCode = @p1 AND SampleGroupCode = @p2 AND SpeciesCode = @p3 AND LiveDead = @p4 AND CruiseID = @p4;",
+                stratumCode, sampleGroupCode, species, livedead, CruiseID) > 0;
         }
 
         public void UpdateSubpopulation(Subpopulation subpopulation)
