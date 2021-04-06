@@ -86,12 +86,12 @@
             </Grid.ColumnDefinitions>
 
             <Label Grid.Row="0"
-                   Grid.Column="0">Code:</Label>
+                   Grid.Column="0">Code*</Label>
             <TextBox Grid.Row="0"
                      Grid.Column="1"
                      Text="{Binding Stratum.StratumCode}" />
 
-            <Label Grid.Row="1">Description:</Label>
+            <Label Grid.Row="1">Description</Label>
 
             <TextBox Grid.Row="1"
                      Grid.Column="1"
@@ -99,52 +99,33 @@
                      Text="{Binding Stratum.Description}" />
 
             <Label Grid.Row="2"
-                   Grid.Column="0">Method:</Label>
+                   Grid.Column="0">Method*</Label>
 
             <ComboBox Grid.Row="2"
                       Grid.Column="1"
                       SelectedValue="{Binding Stratum.Method}"
-                      SelectedValuePath="MethodCode"
                       ItemsSource="{Binding Methods}" />
 
-            <Label Grid.Row="3">Month:</Label>
 
-            <TextBox Grid.Row="3"
-                     Grid.Column="1"
-                     ToolTip="Month"
-                     Text="{Binding Stratum.Month}" />
-
-            <Label Grid.Row="4">Year:</Label>
-
-            <TextBox Grid.Row="4"
-                     Grid.Column="1"
-                     ToolTip="Year"
-                     Text="{Binding Stratum.Year}" />
-
-            <Label Grid.Row="5">FBS Code:</Label>
+            <Label Grid.Row="5">FBS Code</Label>
 
             <TextBox Grid.Row="5"
                      Grid.Column="1"
                      ToolTip="FBS Code"
                      Text="{Binding Stratum.FBSCode}" />
 
-            <Label Grid.Row="6">Yield Component:</Label>
+            <Label Grid.Row="6">Yield Component</Label>
 
             <TextBox Grid.Row="6"
                      Grid.Column="1"
                      ToolTip="Yield Component"
                      Text="{Binding Stratum.YieldComponent}" />
 
-            <Label Grid.Row="7">Volume Factor:</Label>
-
-            <TextBox Grid.Row="7"
-                     Grid.Column="1"
-                     ToolTip="Volume Factor"
-                     Text="{Binding Stratum.VolumeFactor}" />
         </Grid>
 
         <GroupBox Header="Plot"
-                  IsEnabled="{Binding IsPlot}">
+                  Visibility="{Binding IsPlot, Converter={StaticResource IsVisableConverter}}"
+                  FontSize="12">
             <Grid>
                 <Grid.Resources>
                     <ResourceDictionary>
@@ -155,6 +136,8 @@
                                     Value="50" />
                             <Setter Property="HorizontalAlignment"
                                     Value="Left" />
+                            <Setter Property="VerticalContentAlignment"
+                                    Value="Center" />
                         </Style>
                         <Style TargetType="Label">
                             <Setter Property="HorizontalAlignment"
@@ -177,48 +160,42 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Row="0"
-                       Grid.Column="0">BAF:</Label>
+                       Grid.Column="0"
+                       Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
+                       Content="BAF*" />
                 <TextBox Grid.Row="0"
                          Grid.Column="1"
                          ToolTip="Basal Area Factor"
+                         Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
                          Text="{Binding Stratum.BasalAreaFactor}" />
 
                 <Label Grid.Row="1"
-                       Grid.Column="0">FPS:</Label>
+                       Grid.Column="0"
+                       Content="FPS:"
+                       Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"/>
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          ToolTip="Fixed Plot Size"
-                         Text="{Binding Stratum.FixedPlotSize}" />
+                         Text="{Binding Stratum.FixedPlotSize}"
+                         Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"/>
 
                 <Label Grid.Row="2"
-                       Grid.Column="0">KZ (3PPNT):</Label>
+                       Grid.Column="0"
+                       Content="KZ (3PPNT)"
+                       Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"/>
                 <TextBox Grid.Row="2"
                          Grid.Column="1"
                          ToolTip="KZ (3PPNT)"
-                         Text="{Binding Stratum.KZ3PPNT}" />
+                         Text="{Binding Stratum.KZ3PPNT}"
+                         Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"/>
             </Grid>
         </GroupBox>
-
-        <GroupBox Header="Tally">
-            <Grid>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <Label Grid.Row="0"
-                       Grid.Column="0">Hot Key:</Label>
-                <ComboBox Grid.Row="0"
-                          Grid.Column="1"
-                          ToolTip="HotKey"
-                          SelectedItem="{Binding Stratum.HotKey}"
-                          ItemsSource="{Binding HotKeyOptions}" />
-            </Grid>
-        </GroupBox>
+        <StackPanel Width="200"
+                    Height="36"
+                    Orientation="Horizontal"
+                    Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}">
+            <Label Content="FIXCNT Field" />
+            <ComboBox Width="100" ItemsSource="{Binding TreeFieldOptions}" SelectedValue="{Binding Stratum.FixCNTField}" SelectedValuePath="Field" />
+        </StackPanel>
     </WrapPanel>
 </UserControl>

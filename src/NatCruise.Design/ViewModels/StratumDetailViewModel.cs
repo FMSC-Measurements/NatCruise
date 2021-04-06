@@ -2,7 +2,6 @@
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
-using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,17 +9,37 @@ using System.Linq;
 
 namespace NatCruise.Design.ViewModels
 {
-    public class StratumDetailViewModel : BindableBase
+    public class StratumDetailViewModel : ViewModelBase
     {
         private Stratum _stratum;
-        private IEnumerable<Method> _methods;
-        private IEnumerable<string> _hotKeyOptions;
+        private IEnumerable<CruiseMethod> _methods;
+        private IEnumerable<TreeField> _treefieldOptions;
 
-        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider)
+        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupDataservice)
         {
+            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
+
             var stratumDataservice = dataserviceProvider.GetDataservice<IStratumDataservice>();
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
+            TemplateDataservice = dataserviceProvider.GetDataservice<ITemplateDataservice>() ?? throw new ArgumentNullException(nameof(TemplateDataservice));
+
+            SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
+
+            Methods = SetupDataservice.GetCruiseMethods();
+            TreeFieldOptions = TemplateDataservice.GetTreeFields();
+
+            //HotKeyOptions = new string[]
+            //{
+            //    "A", "B", "C", "D", "E", "F", "G", "H",
+            //    "I", "J", "K", "L", "M", "N", "O", "P",
+            //    "Q", "R", "S", "T", "U", "V", "X", "Y", "Z",
+            //    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
+            //};
         }
+
+        public ITemplateDataservice TemplateDataservice { get; }
+        public ISetupInfoDataservice SetupDataservice { get; }
+        protected IStratumDataservice StratumDataservice { get; }
 
         public Stratum Stratum
         {
@@ -38,16 +57,6 @@ namespace NatCruise.Design.ViewModels
         {
             if (stratum == null) { return; }
 
-            Methods = StratumDataservice.GetMethods();
-
-            HotKeyOptions = new string[]
-            {
-                "A", "B", "C", "D", "E", "F", "G", "H",
-                "I", "J", "K", "L", "M", "N", "O", "P",
-                "Q", "R", "S", "T", "U", "V", "X", "Y", "Z",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-            };
-
             var stratumCode = Stratum.StratumCode;
             CuttingUnits = StratumDataservice.GetCuttingUnitCodesByStratum(stratumCode);
             stratum.PropertyChanged += Stratum_PropertyChanged;
@@ -55,21 +64,34 @@ namespace NatCruise.Design.ViewModels
 
         public IEnumerable<string> CuttingUnits { get; set; }
 
-        public IEnumerable<Method> Methods
+        public IEnumerable<CruiseMethod> Methods
         {
             get => _methods;
             protected set => SetProperty(ref _methods, value);
         }
 
-        public IEnumerable<string> HotKeyOptions
+        public IEnumerable<TreeField> TreeFieldOptions
         {
-            get => _hotKeyOptions;
-            protected set => SetProperty(ref _hotKeyOptions, value);
+            get => _treefieldOptions;
+            protected set => SetProperty(ref _treefieldOptions, value);
         }
 
-        protected IStratumDataservice StratumDataservice { get; }
-
         public bool IsPlot => CruiseMethods.PLOT_METHODS.Contains(Stratum?.Method);
+
+        public bool IsVariableRariousePlot => CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(Stratum?.Method);
+
+        public bool IsFixedSizePlot
+        {
+            get
+            {
+                var method = Stratum?.Method;
+                return method == CruiseMethods.FIX || method == CruiseMethods.FCM || method == CruiseMethods.F3P;
+            }
+        }
+
+        public bool Is3PPNT => Stratum?.Method == CruiseMethods.THREEPPNT;
+
+        public bool IsFixCNT => Stratum?.Method == CruiseMethods.FIXCNT;
 
         private void Stratum_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -79,7 +101,13 @@ namespace NatCruise.Design.ViewModels
             StratumDataservice.UpdateStratum(stratum);
 
             if (e.PropertyName == nameof(Stratum.Method))
-            { RaisePropertyChanged(nameof(IsPlot)); }
+            {
+                RaisePropertyChanged(nameof(IsPlot));
+                RaisePropertyChanged(nameof(IsFixedSizePlot));
+                RaisePropertyChanged(nameof(IsVariableRariousePlot));
+                RaisePropertyChanged(nameof(Is3PPNT));
+                RaisePropertyChanged(nameof(IsFixCNT));
+            }
         }
     }
 }
