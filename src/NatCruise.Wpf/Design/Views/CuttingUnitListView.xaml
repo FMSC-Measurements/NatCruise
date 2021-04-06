@@ -8,6 +8,7 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Design.Views.CuttingUnitListView"
              xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              mc:Ignorable="d"
              d:DesignHeight="450"
