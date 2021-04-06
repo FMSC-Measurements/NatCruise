@@ -15,6 +15,8 @@ namespace NatCruise.Design.ViewModels
 
         public StratumListViewModel(IDataserviceProvider dataserviceProvider)
         {
+            if (dataserviceProvider is null) { throw new System.ArgumentNullException(nameof(dataserviceProvider)); }
+
             StratumDataservice = dataserviceProvider.GetDataservice<IStratumDataservice>();
         }
 
