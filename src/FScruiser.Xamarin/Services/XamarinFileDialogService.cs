@@ -1,8 +1,6 @@
 ﻿using NatCruise.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -17,7 +15,6 @@ namespace FScruiser.XF.Services
                     { DevicePlatform.Android, new string[] {"application/cruise", "application/crz3"}},
                 };
 
-
             var result = await FilePicker.PickAsync();
 
             return result?.FullPath;
@@ -25,7 +22,11 @@ namespace FScruiser.XF.Services
 
         public Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
         {
+            throw new NotImplementedException();
+        }
 
+        public Task<string> SelectTemplateFileAsync()
+        {
             throw new NotImplementedException();
         }
     }

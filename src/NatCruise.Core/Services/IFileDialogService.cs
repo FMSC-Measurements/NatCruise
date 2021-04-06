@@ -7,5 +7,7 @@ namespace NatCruise.Services
         Task<string> SelectCruiseFileAsync();
 
         Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null);
+
+        Task<string> SelectTemplateFileAsync();
     }
 }
