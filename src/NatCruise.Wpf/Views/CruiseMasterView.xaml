@@ -45,6 +45,9 @@
 
             <Button x:Name="_saleButton"
                     Click="_saleButton_Click">Sale</Button>
+            <Button x:Name="_cruiseButton"
+                    Content="Cruise"
+                    Click="_cruiseButton_Click" />
             <Button x:Name="_unitsButton" Click="_unitsButton_Click">Units</Button>
             <Button x:Name="_strataButton" Click="_strataButton_Click">Strata</Button>
         </StackPanel>

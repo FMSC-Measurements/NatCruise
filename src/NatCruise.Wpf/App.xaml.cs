@@ -54,6 +54,7 @@ namespace NatCruise.Wpf
             var regionManager = container.Resolve<IRegionManager>();
             //regionManager.RegisterViewWithRegion(Regions.ContentRegion, typeof(CruiseMasterPage));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SaleView));
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CruiseView));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListView));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListView));
             regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailView));

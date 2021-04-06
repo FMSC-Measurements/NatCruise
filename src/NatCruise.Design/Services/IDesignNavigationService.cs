@@ -9,6 +9,8 @@ namespace NatCruise.Design.Services
 {
     public interface IDesignNavigationService : ICoreNavigationService
     {
+        Task ShowCruise();
+
         Task ShowSale();
 
         Task ShowStrata();
