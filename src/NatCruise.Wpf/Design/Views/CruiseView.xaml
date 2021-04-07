@@ -54,7 +54,7 @@
         <Label Content="Number Plot Trees Sequentialy Across Strata"
                Grid.Column="1"
                Grid.Row="3" />
-        <CheckBox IsChecked="{Binding UseCrossStrataPlotTreeNumbering}"
+        <CheckBox IsChecked="{Binding Cruise.UseCrossStrataPlotTreeNumbering}"
                   Grid.Column="2"
                   Grid.Row="3" />
 
