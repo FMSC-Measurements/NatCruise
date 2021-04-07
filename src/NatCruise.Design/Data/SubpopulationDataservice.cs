@@ -1,6 +1,7 @@
 ﻿using CruiseDAL;
 using NatCruise.Data;
 using NatCruise.Design.Models;
+using System;
 using System.Collections.Generic;
 
 namespace NatCruise.Design.Data
@@ -17,26 +18,31 @@ namespace NatCruise.Design.Data
 
         public void AddSubpopulation(Subpopulation subpopulation)
         {
-            Database.Execute("INSERT OR IGNORE INTO SpeciesCode (Species) VALUES (@p1);", subpopulation.SpeciesCode);
+            subpopulation.SubpopulationID ??= Guid.NewGuid().ToString();
 
             Database.Execute2(
-                "INSERT INTO Subpopulation (" +
-                    "CruiseID," +
-                    "StratumCode, " +
-                    "SampleGroupCode, " +
-                    "SpeciesCode, " +
-                    "LiveDead," +
-                    "CreatedBy" +
-                ") VALUES ( " +
-                    "@CruiseID," +
-                    "@StratumCode, " +
-                    "@SampleGroupCode, " +
-                    "@SpeciesCode, " +
-                    "@LiveDead," +
-                    "@DeviceID" +
-                ");", new
+@"INSERT OR IGNORE INTO Species (SpeciesCode, CruiseID) VALUES (@SpeciesCode, @CruiseID);
+
+INSERT INTO Subpopulation (
+    CruiseID,
+    SubpopulationID,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    CreatedBy
+) VALUES (
+    @CruiseID,
+    @SubpopulationID,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    @DeviceID
+);", new
                 {
                     CruiseID,
+                    subpopulation.SubpopulationID,
                     subpopulation.StratumCode,
                     subpopulation.SampleGroupCode,
                     subpopulation.SpeciesCode,
@@ -75,7 +81,10 @@ namespace NatCruise.Design.Data
 
         public void UpdateSubpopulation(Subpopulation subpopulation)
         {
-            Database.Update(subpopulation);
+            Database.Execute2(
+@"UPDATE Subpopulation SET
+    LiveDead =  @LiveDead
+WHERE SubpopulationID = @SubpopulationID;", subpopulation);
         }
     }
 }

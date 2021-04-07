@@ -31,7 +31,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Species"
                                     IsReadOnly="True"
-                                    Binding="{Binding Species}" />
+                                    Binding="{Binding SpeciesCode}" />
                 <DataGridComboBoxColumn Header="Live/Dead"
                                         SelectedValueBinding="{Binding LiveDead}">
                     <DataGridComboBoxColumn.ItemsSource>
@@ -52,8 +52,7 @@
                 <ColumnDefinition Width="40" />
             </Grid.ColumnDefinitions>
             <controls:AutoCompleteBox x:Name="_speciesTextBox"
-                                      ItemsSource="{Binding SpeciesOptions}"
-                                      ValueMemberPath="Species" />
+                                      ItemsSource="{Binding SpeciesOptions}"/>
             <Button x:Name="_addSpeciesButton"
                     Background="{StaticResource brush_addItem}"
                     Grid.Column="1"

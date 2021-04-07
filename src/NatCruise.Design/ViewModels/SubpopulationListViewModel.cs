@@ -16,21 +16,21 @@ namespace NatCruise.Design.ViewModels
         private SampleGroup _sampleGroup;
         private DelegateCommand<Subpopulation> _removeSubpopulationCommand;
         private ObservableCollection<Subpopulation> _subPopulations;
-        private IEnumerable<SpeciesListItem> _speciesOptions;
+        private IEnumerable<string> _speciesOptions;
 
         public SubpopulationListViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
 
             SubpopulationDataservice = dataserviceProvider.GetDataservice<ISubpopulationDataservice>() ?? throw new ArgumentNullException(nameof(SubpopulationDataservice));
-            SpeciesCodeDataservice = dataserviceProvider.GetDataservice<ISpeciesCodeDataservice>() ?? throw new ArgumentNullException(nameof(SpeciesCodeDataservice));
+            TemplateDataservice = dataserviceProvider.GetDataservice<ITemplateDataservice>() ?? throw new ArgumentNullException(nameof(TemplateDataservice));
 
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
-        protected ISubpopulationDataservice SubpopulationDataservice { get; }
+        protected ITemplateDataservice TemplateDataservice { get; }
 
-        protected ISpeciesCodeDataservice SpeciesCodeDataservice { get; }
+        protected ISubpopulationDataservice SubpopulationDataservice { get; }
 
         protected IDialogService DialogService { get; }
 
@@ -62,7 +62,7 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
-        public IEnumerable<SpeciesListItem> SpeciesOptions
+        public IEnumerable<string> SpeciesOptions
         {
             get => _speciesOptions;
             set => SetProperty(ref _speciesOptions, value);
@@ -117,26 +117,25 @@ namespace NatCruise.Design.ViewModels
 
         private void OnSampleGroupChanged(SampleGroup value)
         {
-            if (value == null) { return; }
+            if (value == null)
+            {
+                Subpopulations = new ObservableCollection<Subpopulation>();
+            }
+            else
+            {
 
-            Subpopulations = new ObservableCollection<Subpopulation>(SubpopulationDataservice.GetSubpopulations(value.StratumCode, value.SampleGroupCode));
+                var subpopulations = SubpopulationDataservice.GetSubpopulations(value.StratumCode, value.SampleGroupCode);
+                Subpopulations = new ObservableCollection<Subpopulation>(subpopulations);
+            }
 
             RefreshSpeciesOptions();
         }
 
         protected void RefreshSpeciesOptions()
         {
-            var sampleGroup = SampleGroup;
-            var productSpecies = SpeciesCodeDataservice.GetSpeciesCodes(sampleGroup.PrimaryProduct).ToArray();
+            var speciesCodes = TemplateDataservice.GetSpeciesCodes();
 
-            var speciesCodes = SpeciesCodeDataservice.GetSpeciesCodes();
-
-            var species = SpeciesCodeDataservice.GetSpeciesCodes()
-                .Select(x => new SpeciesListItem { Species = x, HasTreeDefaultMatch = productSpecies.Contains(x) })
-                .OrderBy(x => x.HasTreeDefaultMatch)
-                .ToArray();
-
-            SpeciesOptions = species;
+            SpeciesOptions = speciesCodes;
         }
 
         public void AddSubpopulation(string species)
@@ -159,7 +158,7 @@ namespace NatCruise.Design.ViewModels
                 StratumCode = SampleGroup.StratumCode,
                 SampleGroupCode = SampleGroup.SampleGroupCode,
                 LiveDead = SampleGroup.DefaultLiveDead ?? "L",
-                Species = species,
+                SpeciesCode = species,
             };
 
             SubpopulationDataservice.AddSubpopulation(newSubpopulation);
@@ -171,9 +170,9 @@ namespace NatCruise.Design.ViewModels
 
         public void RemoveSubpopulation(Subpopulation subpopulation)
         {
-            if (SubpopulationDataservice.HasTreeCounts(subpopulation.StratumCode, subpopulation.SampleGroupCode, subpopulation.Species, subpopulation.LiveDead))
+            if (SubpopulationDataservice.HasTreeCounts(subpopulation.StratumCode, subpopulation.SampleGroupCode, subpopulation.SpeciesCode, subpopulation.LiveDead))
             {
-                DialogService.ShowNotification($"Subpopulation: {subpopulation.Species}|{subpopulation.LiveDead} has tally data can can't be removed");
+                DialogService.ShowNotification($"Subpopulation: {subpopulation.SpeciesCode}|{subpopulation.LiveDead} has tally data can can't be removed");
                 //NotificationRequest.Raise(new Notification { Content = $"Subpopulation: {subpopulation.Species}|{subpopulation.LiveDead} has tally data can can't be removed", Title = "!" });
                 return;
             }
@@ -186,18 +185,6 @@ namespace NatCruise.Design.ViewModels
         public void UpdateSubpopulation(Subpopulation subpopulation)
         {
             SubpopulationDataservice.UpdateSubpopulation(subpopulation);
-        }
-
-        public class SpeciesListItem
-        {
-            public string Species { get; set; }
-
-            public bool HasTreeDefaultMatch { get; set; }
-
-            public override string ToString()
-            {
-                return "* " + Species;
-            }
         }
     }
 }
