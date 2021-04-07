@@ -54,7 +54,8 @@
                                  mah:TextBoxHelper.Watermark="Code" />
                         <Button Grid.Column="1"
                                 Content="+"
-                                Background="{StaticResource brush_addItem}">
+                                Background="{StaticResource brush_addItem}"
+                                IsEnabled="{Binding Text, ElementName=_sampleGroupCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <i:InvokeCommandAction Command="{Binding AddSampleGroupCommand}"
@@ -67,7 +68,8 @@
                                  Content="-"
                                  Background="{StaticResource brush_removeItem}"
                                  Command="{Binding RemoveSampleGroupCommand}"
-                                 CommandParameter="{Binding SelectedItem, ElementName=_sampleGroupListView}" />
+                                 CommandParameter="{Binding SelectedItem, ElementName=_sampleGroupListView}"
+                                 IsEnabled="{Binding SelectedItem, ElementName=_sampleGroupListView, Converter={StaticResource NotNullConverter}}"/>
                     </Grid>
 
                     <!--<DataGrid x:Name="_sampleGroupListView"
