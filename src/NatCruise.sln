@@ -45,10 +45,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3.Sync", "..\..\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CruiseDAL", "CruiseDAL", "{355C4190-4178-41FA-89AE-EF202205545C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NatCruise.Design.Test", "NatCruise.Design.Test\NatCruise.Design.Test.csproj", "{B0192A57-3AF7-4127-A328-F2107C3DA18D}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{7e28ebd8-47b9-4909-b748-aaffc085d35d}*SharedItemsImports = 5
 		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{a8f4a493-8361-4128-83b7-abd2dc7207f3}*SharedItemsImports = 5
+		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{b0192a57-3af7-4127-a328-f2107c3da18d}*SharedItemsImports = 5
 		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{c27d43f1-b37f-4488-a829-b0c2c499102d}*SharedItemsImports = 13
 		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{f2ce2051-a22b-46d0-86bb-b243a08854d0}*SharedItemsImports = 5
 	EndGlobalSection
@@ -255,6 +258,18 @@ Global
 		{755588EE-2966-40B9-9B11-E273B9BDB828}.Release|Any CPU.Build.0 = Release|Any CPU
 		{755588EE-2966-40B9-9B11-E273B9BDB828}.Release|x86.ActiveCfg = Release|Any CPU
 		{755588EE-2966-40B9-9B11-E273B9BDB828}.Release|x86.Build.0 = Release|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Debug|x86.Build.0 = Debug|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Profile|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Profile|Any CPU.Build.0 = Debug|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Profile|x86.ActiveCfg = Debug|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Profile|x86.Build.0 = Debug|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Release|x86.ActiveCfg = Release|Any CPU
+		{B0192A57-3AF7-4127-A328-F2107C3DA18D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
