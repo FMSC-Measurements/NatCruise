@@ -10,5 +10,7 @@ namespace NatCruise.Design.Data
         IEnumerable<TreeFieldSetup> GetTreeFieldSetups(string stratumCode, string sampleGroupCode);
         void UpsertTreeFieldSetup(TreeFieldSetup tfs);
         void DeleteTreeFieldSetup(TreeFieldSetup tfs);
+
+        void SetTreeFieldsFromStratumDefault(string stratumCode, StratumDefault sd);
     }
 }

@@ -12,15 +12,17 @@ namespace NatCruise.Design.ViewModels
     {
         private SampleGroup _sampleGroup;
         private string _method;
+        private IEnumerable<string> _sampleSelectorTypeOptions;
 
-        public SampleGroupDetailViewModel(IDataserviceProvider dataserviceProvider)
+        public SampleGroupDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo)
         {
             var sampleGroupDataservice = dataserviceProvider.GetDataservice<ISampleGroupDataservice>();
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
-            ProductOptions = sampleGroupDataservice.GetProducts();
+            SetupDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
         }
 
         public ISampleGroupDataservice SampleGroupDataservice { get; }
+        public ISetupInfoDataservice SetupDataservice { get; }
 
         public IEnumerable<string> DefaultLiveDeadOptions { get; } = new[] { "L", "D" };
 
@@ -70,6 +72,11 @@ namespace NatCruise.Design.ViewModels
 
         public bool IsSTR => Method == CruiseMethods.STR;
         public bool Is3P => CruiseMethods.THREE_P_METHODS.Contains(Method);
+        public IEnumerable<string> SampleSelectorTypeOptions
+        {
+            get => _sampleSelectorTypeOptions;
+            set => SetProperty(ref _sampleSelectorTypeOptions, value);
+        }
 
         public bool IsVariableRadious => CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(Method);
 
@@ -91,7 +98,25 @@ namespace NatCruise.Design.ViewModels
             var sampleGroup = SampleGroup;
             if (sampleGroup == null) { return; }
 
-            Method = SampleGroupDataservice.GetMethod(sampleGroup.StratumCode);
+            ProductOptions = SetupDataservice.GetProducts();
+            var method = SampleGroupDataservice.GetMethod(sampleGroup.StratumCode);
+            Method = method;
+
+            switch(method)
+            {
+                case CruiseMethods.STR:
+                case CruiseMethods.PCM:
+                case CruiseMethods.FCM:
+                    {
+                        SampleSelectorTypeOptions = new[]
+                          {
+                            SampleGroupTableDefinition.SAMPLESELECTORTYPE_BLOCKSELECTER,
+                            SampleGroupTableDefinition.SAMPLESELECTORTYPE_SYSTEMATICSELECTER,
+                            SampleGroupTableDefinition.SAMPLESELECTORTYPE_CLICKERSELECTER
+                        };
+                        break;
+                    }
+            }
         }
     }
 }
