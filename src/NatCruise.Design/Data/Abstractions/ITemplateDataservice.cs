@@ -67,6 +67,8 @@ namespace NatCruise.Design.Data
         #region StratumDefault
         IEnumerable<StratumDefault> GetStratumDefaults();
 
+        IEnumerable<StratumDefault> GetTreeFieldSetupStratumDefaults();
+
         void AddStratumDefault(StratumDefault std);
         #endregion
 

@@ -37,6 +37,7 @@ WHERE tF.Field = @p2;", CruiseID, field).FirstOrDefault();
         {
             var fieldSetups = Database.From<CruiseDAL.V3.Models.TreeFieldSetup>()
                 .Where("StratumCode = @p1 AND SampleGroupCode IS NULL AND CruiseID = @p2")
+                .OrderBy("FieldOrder")
                 .Query(stratumCode, CruiseID).Select(x =>
                 {
                     return new TreeFieldSetup()
@@ -61,6 +62,7 @@ WHERE tF.Field = @p2;", CruiseID, field).FirstOrDefault();
         {
             var fieldSetups = Database.From<CruiseDAL.V3.Models.TreeFieldSetup>()
                 .Where("StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID = @p3")
+                .OrderBy("FieldOrder")
                 .Query(stratumCode, sampleGroupCode, CruiseID).Select(x =>
                 {
                     return new TreeFieldSetup()
@@ -111,7 +113,6 @@ WHERE tF.Field = @p2;", CruiseID, field).FirstOrDefault();
 )
 ON CONFLICT (CruiseID, StratumCode, ifnull(SampleGroupCode, ''), Field) DO
 UPDATE SET
-    Field = @Field,
     FieldOrder = @FieldOrder,
     IsHidden = @IsHidden,
     IsLocked = @IsLocked,
@@ -119,7 +120,7 @@ UPDATE SET
     DefaultValueReal = @DefaultValueReal,
     DefaultValueBool = @DefaultValueBool,
     DefaultValueText = @DefaultValueText
-WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode;",
+WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND ifnull(SampleGroupCode, '') = ifnull(@SampleGroupCode, '') AND Field = @Field;",
             new
             {
                 CruiseID,
@@ -143,6 +144,48 @@ WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = 
 
             Database.Execute("DELETE FROM TreeFieldSetup WHERE CruiseID = @p1 AND StratumCode = @p2 AND ifnull(SampleGroup, '') = ifnull(@p3, '') AND Field = @p4;",
                 CruiseID, tfs.StratumCode, tfs.StratumCode, tfs.Field.Field);
+        }
+
+        public void SetTreeFieldsFromStratumDefault(string stratumCode, StratumDefault sd)
+        {
+            Database.Execute2(
+@"BEGIN;
+Delete FROM TreeFieldSetup WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode IS  NULL;
+
+INSERT INTO TreeFieldSetup (
+    CruiseID,
+    StratumCode,
+    Field,
+    FieldOrder,
+    IsHidden,
+    IsLocked,
+    DefaultValueInt,
+    DefaultValueReal,
+    DefaultValueBool,
+    DefaultValueText
+)
+SELECT
+    @CruiseID,
+    @StratumCode,
+    tfsd.Field,
+    tfsd.FieldOrder,
+    tfsd.IsHidden,
+    tfsd.IsLocked,
+    tfsd.DefaultValueInt,
+    tfsd.DefaultValueReal,
+    tfsd.DefaultValueBool,
+    tfsd.DefaultValueText
+FROM TreeFieldSetupDefault AS tfsd
+WHERE StratumDefaultID = @StratumDefaultID AND SampleGroupDefaultID IS NULL;
+
+COMMIT;",
+                new
+                {
+                    CruiseID,
+                    StratumCode = stratumCode,
+                    sd.StratumDefaultID
+                });
+
         }
     }
 }

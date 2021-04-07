@@ -35,5 +35,10 @@ namespace NatCruise.Design.Models
         public string YieldComponent { get; set; }
 
         public string FixCNTField { get; set; }
+
+        public override string ToString()
+        {
+            return $"{StratumCode} {Method} {Description}";
+        }
     }
 }

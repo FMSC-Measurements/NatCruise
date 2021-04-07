@@ -529,6 +529,13 @@ WHERE CruiseID = @CruiseID AND Field = @Field;",
             return Database.From<StratumDefault>().Query().ToArray();
         }
 
+        public IEnumerable<StratumDefault> GetTreeFieldSetupStratumDefaults()
+        {
+            return Database.From<StratumDefault>()
+                .Where("EXISTS (SELECT * FROM TreeFieldSetupDefault AS tfsd WHERE tfsd.StratumDefaultID = StratumDefault.StratumDefaultID AND tfsd.SampleGroupDefaultID IS NULL)")
+                .Query().ToArray();
+        }
+
         public void AddStratumDefault(StratumDefault std)
         {
             if (string.IsNullOrEmpty(std.StratumDefaultID)) { throw new ArgumentException("Value was null or empty", nameof(std)); }
