@@ -4,6 +4,7 @@ using NatCruise.Data;
 using NatCruise.Design.Services;
 using NatCruise.Models;
 using NatCruise.Services;
+using NatCruise.Wpf.Util;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
@@ -20,6 +21,7 @@ namespace NatCruise.Wpf.ViewModels
         private ICommand _openFileCommand;
         private ICommand _selectFileCommand;
         private ICommand _createNewFileCommand;
+        private string _currentFileName;
 
         public MainWindowViewModel(
             IDataserviceProvider dataserviceProvider,
@@ -49,7 +51,17 @@ namespace NatCruise.Wpf.ViewModels
 
         //protected IRegionNavigationService RegionNavigationService => RegionManager?.Regions[Regions.ContentRegion].NavigationService;
 
-        public string Title => "National Cruise System (0.3)";
+        public string CurrentFileName
+        {
+            get => _currentFileName;
+            set
+            {
+                SetProperty(ref _currentFileName, value);
+                RaisePropertyChanged(nameof(Title));
+            }
+        }
+
+        public string Title => $"National Cruise System (0.4-Alpha) {CurrentFileName?.Prepend(" - ")}";
 
         public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles().Select(x => new FileInfo(x));
 
@@ -75,6 +87,7 @@ namespace NatCruise.Wpf.ViewModels
                         NavigationService.ShowCruiseLandingLayout();
                     }
 
+                    CurrentFileName = Path.GetFileName(filePath);
                     RaisePropertyChanged(nameof(RecentFiles));
                 }
             });
@@ -112,6 +125,7 @@ namespace NatCruise.Wpf.ViewModels
 
             NavigationService.ShowCruiseLandingLayout();
             RecentFilesDataservice.AddRecentFile(filePath);
+            CurrentFileName = Path.GetFileName(filePath);
             RaisePropertyChanged(nameof(RecentFiles));
         }
     }
