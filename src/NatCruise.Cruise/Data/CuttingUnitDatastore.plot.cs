@@ -144,7 +144,7 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
                     "Slope = @Slope, " +
                     "Aspect = @Aspect, " +
                     "Remarks = @Remarks, " +
-                    "ModifiedBy = @UserName " +
+                    "ModifiedBy = @DeviceID " +
                 "WHERE PlotID = @PlotID; ",
                     new
                     {
@@ -539,7 +539,7 @@ INSERT INTO TallyLedger (
                     CountOrMeasure = countMeasure,
                     TreeCount = treeCount,
                     KPI = kpi,
-                    STM = (stm) ? "Y" : "N",
+                    STM = stm,
                 }
             );
         }
