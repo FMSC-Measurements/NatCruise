@@ -36,7 +36,7 @@ namespace FScruiser.XF.ViewModels
 
         public event EventHandler TreeAdded;
 
-        public ICuttingUnitDatastore Datastore { get; }
+        public ICuttingUnitDatastore Dataservice { get; }
         public ICruiseDialogService DialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
 
@@ -44,6 +44,7 @@ namespace FScruiser.XF.ViewModels
         public ITallySettingsDataService TallySettings { get; private set; }
         public ISoundService SoundService { get; private set; }
         public IContainerProvider ContainerProvider { get; }
+        public IPlotTallyService TallyService { get; }
 
         public TreeEditViewModel SelectedTreeViewModel
         {
@@ -59,17 +60,19 @@ namespace FScruiser.XF.ViewModels
             IDataserviceProvider datastoreProvider,
             ISoundService soundService,
             ITallySettingsDataService tallySettings,
-            IContainerProvider containerProvider)
+            IContainerProvider containerProvider,
+            IPlotTallyService tallyService)
         {
             if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
 
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            Dataservice = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
             SampleSelectorDataService = datastoreProvider.GetDataservice<ISampleSelectorDataService>();
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             TallySettings = tallySettings ?? throw new ArgumentNullException(nameof(tallySettings));
             SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
             ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
+            TallyService = tallyService ?? throw new ArgumentNullException(nameof(tallyService));
         }
 
         public ICommand SelectTreeCommand => new Command<object>(SelectTree);
@@ -181,19 +184,16 @@ namespace FScruiser.XF.ViewModels
             Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
-                plot = Datastore.GetPlot(plotID);
+                plot = Dataservice.GetPlot(plotID);
             }
             else
             {
-                plot = Datastore.GetPlot(unitCode, plotNumber);
+                plot = Dataservice.GetPlot(unitCode, plotNumber);
             }
 
-            var salePurpose = Datastore.GetCruisePurpose();
-            IsRecon = salePurpose.ToLower() == "recon";
-
-            TallyPopulations = Datastore.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
-            Strata = Datastore.GetPlotStrataProxies(plot.CuttingUnitCode).ToArray();
-            Trees = Datastore.GetPlotTreeProxies(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
+            TallyPopulations = Dataservice.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
+            Strata = Dataservice.GetPlotStrataProxies(plot.CuttingUnitCode).ToArray();
+            Trees = Dataservice.GetPlotTreeProxies(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
 
             Plot = plot;
             PlotNumber = plot.PlotNumber;
@@ -216,22 +216,12 @@ namespace FScruiser.XF.ViewModels
                 return;
             }
 
-            ITallySettingsDataService tallySettings = TallySettings;
-            ISoundService soundService = SoundService;
-            ICuttingUnitDatastore dataService = Datastore;
-            ISampleSelectorDataService sampleSelectorRepository = SampleSelectorDataService;
-
-            var nextTreeNumber = Datastore.GetNextPlotTreeNumber(UnitCode, pop.StratumCode, PlotNumber, IsRecon);
-
-            var tree = await PlotBasedTallyLogic.TallyAsync(pop, UnitCode, PlotNumber, sampleSelectorRepository, dialogService);
-            if (tree == null) { return; }
-
-            tree.TreeNumber = nextTreeNumber;
-            Datastore.InsertTree(tree);
+            var tree = await TallyService.TallyAsync(pop, UnitCode, PlotNumber);
             _trees.Add(tree);
             OnTreeAdded();
 
-            await HandleTally(pop, tree, soundService, dialogService, tallySettings);
+            
+            await HandleTally(pop, tree);
         }
 
         public void ShowEditTree(string treeID)
@@ -240,13 +230,13 @@ namespace FScruiser.XF.ViewModels
             NavigationService.ShowTreeEdit(treeID);
         }
 
-        public static async Task HandleTally(TallyPopulation_Plot population,
-           TreeStub_Plot tree,
-           ISoundService soundService,
-           ICruiseDialogService dialogService,
-           ITallySettingsDataService tallySettings)
+        public async Task HandleTally(TallyPopulation_Plot population,
+           TreeStub_Plot tree)
         {
             if (tree == null) { throw new ArgumentNullException(nameof(tree)); }
+            ICruiseDialogService dialogService = DialogService;
+            ITallySettingsDataService tallySettings = TallySettings;
+            ISoundService soundService = SoundService;
 
             await soundService.SignalTallyAsync();
             if (tree.CountOrMeasure == "M")
@@ -272,14 +262,14 @@ namespace FScruiser.XF.ViewModels
 
         public void DeleteTree(string tree_guid)
         {
-            Datastore.DeleteTree(tree_guid);
+            Dataservice.DeleteTree(tree_guid);
             var tree = Trees.Where(x => x.TreeID == tree_guid).Single();
             Trees.Remove(tree);
         }
 
         public void DeleteTree(TreeStub_Plot tree)
         {
-            Datastore.DeleteTree(tree.TreeID);
+            Dataservice.DeleteTree(tree.TreeID);
             Trees.Remove(tree);
         }
     }

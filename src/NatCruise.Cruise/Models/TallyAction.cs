@@ -4,7 +4,6 @@ using System;
 
 namespace NatCruise.Cruise.Models
 {
-    [Table("TallyLedger")]
     public class TallyAction
     {
         public enum CountOrMeasureValue { M, C, I };
@@ -33,7 +32,6 @@ namespace NatCruise.Cruise.Models
             PlotNumber = plotNumber;
         }
 
-        [IgnoreField]
         public SamplerState SamplerState { get; set; }
 
         public string CuttingUnitCode { get; set; }
