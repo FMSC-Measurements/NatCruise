@@ -163,21 +163,21 @@ namespace NatCruise.Test
             {
                 SaleID = saleID,
                 SaleNumber = saleNumber,
-            }); ;
+            }, option: Backpack.SqlBuilder.OnConflictOption.Ignore); ;
 
             db.Insert(new CruiseDAL.V3.Models.Cruise()
             {
                 CruiseID = cruiseID,
                 SaleID = saleID,
                 CruiseNumber = saleNumber,
-            });
+            }, option: Backpack.SqlBuilder.OnConflictOption.Ignore);
 
             db.Insert(new Device()
             {
                 CruiseID = cruiseID,
                 DeviceID = deviceID,
                 Name = "deviceName",
-            });
+            }, option: Backpack.SqlBuilder.OnConflictOption.Ignore);
 
             //Cutting Units
             foreach (var unit in units.OrEmpty())
