@@ -243,7 +243,10 @@ namespace FScruiser.XF
                     var newDb = new CruiseDatastore_V3(cruiseDbPath, true);
                 }
 
-                containerRegistry.RegisterInstance<IDataserviceProvider>(_dataserviceProvider = new DataserviceProvider(cruiseDbPath, deviceInfo));
+                _dataserviceProvider = new DataserviceProvider(cruiseDbPath, deviceInfo);
+                _dataserviceProvider.RegisterDataservices(containerRegistry);
+
+                containerRegistry.RegisterInstance<IDataserviceProvider>(_dataserviceProvider);
             }
 
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)

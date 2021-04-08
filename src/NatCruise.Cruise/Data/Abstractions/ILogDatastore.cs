@@ -1,13 +1,10 @@
 ﻿using NatCruise.Cruise.Models;
-using System;
+using NatCruise.Data;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
 {
-    public interface ILogDatastore
+    public interface ILogDatastore : IDataservice
     {
         IEnumerable<Log> GetLogs(string tree_guid);
 
@@ -26,6 +23,5 @@ namespace NatCruise.Cruise.Services
         IEnumerable<LogError> GetLogErrorsByLog(string logID);
 
         IEnumerable<LogError> GetLogErrorsByTree(string treeID);
-
     }
 }

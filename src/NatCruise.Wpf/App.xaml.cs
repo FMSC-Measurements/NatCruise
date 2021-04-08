@@ -1,4 +1,5 @@
-﻿using Microsoft.AppCenter;
+﻿using CruiseDAL;
+using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using NatCruise.Core.Services;
@@ -93,8 +94,6 @@ namespace NatCruise.Wpf
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IDataserviceProvider, WpfDataserviceProvider>();
-
             containerRegistry.Register<IApplicationSettingService, WpfApplicationSettingService>();
             containerRegistry.Register<IDialogService, WpfDialogService>();
             containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();
@@ -103,6 +102,11 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterInstance<ILoggingService>(new WpfLoggingService());
             containerRegistry.RegisterInstance<IFileDialogService>(new WpfFileDialogService());
             containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
+
+            var deviceInfo = Container.Resolve<IDeviceInfoService>();
+            var dataserviceProvider = new WpfDataserviceProvider((CruiseDatastore_V3)null, deviceInfo);
+            dataserviceProvider.RegisterDataservices(containerRegistry);
+            containerRegistry.RegisterInstance<IDataserviceProvider>(dataserviceProvider);
 
             containerRegistry.RegisterDialog<NewCruiseView, NewCruiseViewModel>("NewCruise");
 

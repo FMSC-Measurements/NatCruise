@@ -3,6 +3,7 @@ using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Design.Data;
+using Prism.Ioc;
 using System;
 
 namespace NatCruise.Data
@@ -79,6 +80,18 @@ namespace NatCruise.Data
                 throw;
                 //return null;
             }
+        }
+
+        public override void RegisterDataservices(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<ISaleDataservice>(x => GetDataservice<ISaleDataservice>());
+            containerRegistry.Register<ICuttingUnitDataservice>(x => GetDataservice<ICuttingUnitDataservice>());
+            containerRegistry.Register<ISampleGroupDataservice>(x => GetDataservice<ISampleGroupDataservice>());
+            containerRegistry.Register<ISpeciesCodeDataservice>(x => GetDataservice<ISpeciesCodeDataservice>());
+            containerRegistry.Register<IStratumDataservice>(x => GetDataservice<IStratumDataservice>());
+            containerRegistry.Register<ISubpopulationDataservice>(x => GetDataservice<ISubpopulationDataservice>());
+            containerRegistry.Register<ITemplateDataservice>(x => GetDataservice<ITemplateDataservice>());
+            containerRegistry.Register<IFieldSetupDataservice>(x => GetDataservice<IFieldSetupDataservice>());
         }
     }
 }

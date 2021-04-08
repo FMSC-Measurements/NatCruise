@@ -1,14 +1,11 @@
 ﻿using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
 {
     public interface ICuttingUnitDatastore : IPlotDatastore, ITreeDatastore, ILogDatastore, IDataservice
     {
-        string GetCruisePurpose();
-
         CuttingUnit_Ex GetUnit(string code);
 
         IEnumerable<CuttingUnit_Ex> GetUnits();
@@ -16,6 +13,7 @@ namespace NatCruise.Cruise.Services
         void UpdateCuttingUnit(CuttingUnit_Ex cuttingUnit);
 
         #region stratra
+
         string GetCruiseMethod(string stratumCode);
 
         IEnumerable<string> GetStratumCodesByUnit(string unitCode);
@@ -39,10 +37,6 @@ namespace NatCruise.Cruise.Services
         IEnumerable<SampleGroupProxy> GetSampleGroupProxies(string stratumCode);
 
         SampleGroupProxy GetSampleGroupProxy(string stratumCode, string sampleGroupCode);
-
-        SamplerInfo GetSamplerState(string stratumCode, string sampleGroupCode);
-
-        void UpdateSamplerState(SamplerInfo samplerState);
 
         #endregion sampleGroups
 
@@ -73,6 +67,7 @@ namespace NatCruise.Cruise.Services
         #endregion tree
 
         #region Tally Entries
+
         //TallyEntry GetTallyEntry(string tallyLedgerID);
         //IEnumerable<TallyEntry> GetTallyEntriesByUnitCode(string unitCode);
 
