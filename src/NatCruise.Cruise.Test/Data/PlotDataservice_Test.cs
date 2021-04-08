@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
 using NatCruise.Test;
 using System;
@@ -19,7 +20,7 @@ namespace NatCruise.Cruise.Test.Data
             var unit = init.Units[0];
             using(var db = init.CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(db, init.CruiseID, init.DeviceID));
 
                 ds.AddNewPlot(unit);
 
@@ -39,7 +40,7 @@ namespace NatCruise.Cruise.Test.Data
             var unit = init.Units[0];
             using (var db = init.CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(db, init.CruiseID, init.DeviceID));
 
                 ds.AddNewPlot(unit);
 
@@ -62,7 +63,7 @@ namespace NatCruise.Cruise.Test.Data
             var unit = init.Units[0];
             using (var db = init.CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(db, init.CruiseID, init.DeviceID));
 
                 ds.AddNewPlot(unit);
 
@@ -82,7 +83,7 @@ namespace NatCruise.Cruise.Test.Data
             var unit = init.Units[0];
             using (var db = init.CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var ds = new CuttingUnitDatastore(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(db, init.CruiseID, init.DeviceID));
 
                 ds.AddNewPlot(unit);
                 
