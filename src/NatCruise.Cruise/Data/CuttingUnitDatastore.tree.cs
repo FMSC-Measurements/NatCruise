@@ -84,7 +84,7 @@ namespace NatCruise.Cruise.Services
     @Remarks,
     @IsFallBuckScale,
     @Initials,
-    @UserName )
+    @DeviceID )
 ON CONFLICT (TreeID) DO UPDATE SET
 
     SeenDefectPrimary = @SeenDefectPrimary,
@@ -121,7 +121,7 @@ ON CONFLICT (TreeID) DO UPDATE SET
     IsFallBuckScale = @IsFallBuckScale,
     Initials = @Initials,
 
-    ModifiedBy = @UserName
+    ModifiedBy = @DeviceID
 WHERE TreeID = @TreeID;";
 
         public string CreateMeasureTree(string unitCode, string stratumCode,
@@ -288,7 +288,7 @@ INSERT INTO TallyLedger (
     SpeciesCode = @SpeciesCode,
     LiveDead = @LiveDead,
     CountOrMeasure = @CountOrMeasure,
-    ModifiedBy = @UserName
+    ModifiedBy = @DeviceID
 WHERE TreeID = @TreeID;
 " +
 UPSERT_TREEMEASURMENT_COMMAND,
