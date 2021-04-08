@@ -3,6 +3,7 @@ using CruiseDAL.V3.Sync;
 using FScruiser.XF.Services;
 using NatCruise;
 using NatCruise.Core.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Services;
@@ -177,7 +178,7 @@ namespace FScruiser.XF.ViewModels
                 File.Delete(convertToPath);
                 try
                 {
-                    Migrator.MigrateFromV2ToV3(convertFromPath, convertToPath);
+                    Migrator.MigrateFromV2ToV3(convertFromPath, convertToPath, DeviceInfoService.DeviceID);
                 }
                 catch (Exception e)
                 {
@@ -212,6 +213,12 @@ namespace FScruiser.XF.ViewModels
 
             if (await ImportCruise(cruiseID, importPath) == true)
             {
+                var sampleInfoDataservice = DataserviceProvider.GetDataservice<ISampleInfoDataservice>();
+                if (sampleInfoDataservice.HasSampleStateEnvy())
+                {
+                    //DialogService.ShowNotification()
+                }
+
                 DialogService.ShowNotification("Done");
                 await NavigationService.GoBackAsync();
             }
