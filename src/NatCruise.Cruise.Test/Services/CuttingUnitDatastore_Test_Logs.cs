@@ -2,6 +2,7 @@
 using CruiseDAL;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Test;
@@ -26,7 +27,8 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var tree_guid = datastore.CreateMeasureTree("u1", "st1", "sg1");
 
@@ -65,7 +67,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var tree_guid = datastore.CreateMeasureTree("u1", "st1", "sg1");
 
@@ -108,7 +110,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var treeID = datastore.CreateMeasureTree("u1", "st1", "sg1");
 
