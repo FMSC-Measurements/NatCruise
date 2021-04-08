@@ -19,6 +19,10 @@ namespace FScruiser.XF.ViewModels
                 Parameters = parameters;
                 _isFirstNavigatedTo = false;
             }
+            OnInitialize(parameters);
         }
+
+        protected virtual void OnInitialize(INavigationParameters parameters)
+        { }
     }
 }
