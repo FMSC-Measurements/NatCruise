@@ -1,6 +1,7 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Models;
 using NatCruise.Core.Services;
+using Prism.Ioc;
 using System;
 using System.IO;
 using System.Linq;
@@ -36,9 +37,11 @@ namespace NatCruise.Data
             }
         }
 
+        public abstract void RegisterDataservices(IContainerRegistry containerRegistry);
+
         public DataserviceProviderBase(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService)
         {
-            Database = database ?? throw new ArgumentNullException(nameof(database));
+            Database = database; //?? throw new ArgumentNullException(nameof(database));
             DeviceInfoService = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
             DeviceID = deviceInfoService.DeviceID;
         }

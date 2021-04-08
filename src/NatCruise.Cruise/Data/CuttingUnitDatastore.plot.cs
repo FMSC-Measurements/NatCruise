@@ -57,7 +57,6 @@ namespace NatCruise.Cruise.Services
         AND ifnull(tp.SpeciesCode, '') = ifnull(tl.SpeciesCode, '')
         AND ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, '') ";
 
-
         #region plot
 
         public string AddNewPlot(string cuttingUnitCode)
@@ -352,14 +351,23 @@ AND p.PlotNumber = @p4; ",
 
         #region tree
 
-        public void InsertTree(TreeStub_Plot tree)
+        public void InsertTree(TreeStub_Plot tree, SamplerState samplerState)
         {
             if (tree is null) { throw new ArgumentNullException(nameof(tree)); }
 
-            var treeID = tree.TreeID ?? Guid.NewGuid().ToString();
+           
 
-            Database.Execute2(
-@"INSERT INTO Tree (
+            var database = Database;
+            database.BeginTransaction();
+            try
+            {
+                var treeID = tree.TreeID ?? Guid.NewGuid().ToString();
+
+                var nextTreeNumber = GetNextPlotTreeNumber(tree.CuttingUnitCode, tree.StratumCode, tree.PlotNumber);
+                tree.TreeNumber = nextTreeNumber;
+
+                database.Execute2(
+    @"INSERT INTO Tree (
     CruiseID,
     TreeID,
     TreeNumber,
@@ -394,6 +402,7 @@ INSERT INTO TallyLedger (
     LiveDead,
     TreeCount,
     KPI,
+    ThreePRandomValue,
     STM
 ) VALUES (
     @CruiseID,
@@ -407,26 +416,40 @@ INSERT INTO TallyLedger (
     @LiveDead,
     @TreeCount,
     @KPI,
+    @ThreePRandomValue,
     @STM
 ); "
-                , new
-                {
-                    CruiseID,
-                    TreeID = treeID,
-                    tree.TreeNumber,
-                    tree.CuttingUnitCode,
-                    tree.PlotNumber,
-                    tree.StratumCode,
-                    tree.SampleGroupCode,
-                    tree.SpeciesCode,
-                    tree.LiveDead,
-                    tree.CountOrMeasure,
-                    tree.TreeCount,
-                    tree.KPI,
-                    tree.STM,
-                });
+                    , new
+                    {
+                        CruiseID,
+                        TreeID = treeID,
+                        tree.TreeNumber,
+                        tree.CuttingUnitCode,
+                        tree.PlotNumber,
+                        tree.StratumCode,
+                        tree.SampleGroupCode,
+                        tree.SpeciesCode,
+                        tree.LiveDead,
+                        tree.CountOrMeasure,
+                        tree.TreeCount,
+                        tree.KPI,
+                        tree.ThreePRandomValue,
+                        tree.STM,
+                    });
 
-            tree.TreeID = treeID;
+                tree.TreeID = treeID;
+
+                if (samplerState != null)
+                {
+                    SampleInfoDataservice.UpsertSamplerState(samplerState);
+                }
+                database.CommitTransaction();
+            }
+            catch
+            {
+                database.RollbackTransaction();
+                throw;
+            }
         }
 
         public string CreatePlotTree(string unitCode, int plotNumber,
@@ -524,7 +547,7 @@ INSERT INTO TallyLedger (
         public IEnumerable<TreeStub_Plot> GetPlotTreeProxies(string unitCode, int plotNumber)
         {
             return Database.Query<TreeStub_Plot>(
-@"SELECT 
+@"SELECT
     t.TreeID,
     t.CuttingUnitCode,
     t.TreeNumber,
@@ -551,20 +574,22 @@ ORDER BY t.TreeNumber
                 new object[] { unitCode, CruiseID, plotNumber });
         }
 
-        public int GetNextPlotTreeNumber(string unitCode, string stratumCode, int plotNumber, bool isRecon)
+        public int GetNextPlotTreeNumber(string unitCode, string stratumCode, int plotNumber)
         {
-            if (isRecon)
-            {
-                // if cruise is a recon cruise we do number trees seperatly for each stratum
-                return Database.ExecuteScalar<int>("SELECT ifnull(max(TreeNumber), 0) + 1  FROM Tree " +
-                    "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3 AND StratumCode = @p4;"
-                    , unitCode, CruiseID, plotNumber, stratumCode);
-            }
-            else
+            var database = Database;
+            var useCrossStrataTreeNumbering = database.ExecuteScalar<bool>("SELECT UseCrossStrataPlotTreeNumbering FROM Cruise WHERE CruiseID = @p1;", CruiseID);
+
+            if (useCrossStrataTreeNumbering)
             {
                 return Database.ExecuteScalar<int>("SELECT ifnull(max(TreeNumber), 0) + 1  FROM Tree " +
                     "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3;"
                     , unitCode, CruiseID, plotNumber);
+            }
+            else
+            {
+                return Database.ExecuteScalar<int>("SELECT ifnull(max(TreeNumber), 0) + 1  FROM Tree " +
+                    "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3 AND StratumCode = @p4;"
+                    , unitCode, CruiseID, plotNumber, stratumCode);
             }
         }
 
@@ -628,7 +653,5 @@ JOIN Plot AS p USING (CuttingUnitCode, CruiseID, PlotNumber)
 WHERE p.PlotID = @p1;",
                 new object[] { plotID }).ToArray();
         }
-
-        
     }
 }

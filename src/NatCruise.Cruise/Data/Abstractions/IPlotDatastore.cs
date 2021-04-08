@@ -1,9 +1,11 @@
-﻿using NatCruise.Cruise.Models;
+﻿using FMSC.Sampling;
+using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System.Collections.Generic;
 
 namespace NatCruise.Cruise.Services
 {
-    public interface IPlotDatastore
+    public interface IPlotDatastore : IDataservice
     {
         #region plot
 
@@ -45,7 +47,7 @@ namespace NatCruise.Cruise.Services
 
         #region tree
 
-        void InsertTree(TreeStub_Plot tree);
+        void InsertTree(TreeStub_Plot tree, SamplerState samplerState);
 
         string CreatePlotTree(string unitCode,
             int plotNumber,
@@ -60,7 +62,7 @@ namespace NatCruise.Cruise.Services
 
         IEnumerable<TreeStub_Plot> GetPlotTreeProxies(string unitCode, int plotNumber);
 
-        int GetNextPlotTreeNumber(string unitCode, string stratumCode, int plotNumber, bool isRecon);
+        int GetNextPlotTreeNumber(string unitCode, string stratumCode, int plotNumber);
 
         #endregion tree
 

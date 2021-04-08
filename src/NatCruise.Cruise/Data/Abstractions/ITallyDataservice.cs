@@ -1,10 +1,11 @@
 ﻿using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Data
 {
-    public interface ITallyDataservice : ISampleInfoDataservice
+    public interface ITallyDataservice : IDataservice
     {
         TallyEntry GetTallyEntry(string tallyLedgerID);
 

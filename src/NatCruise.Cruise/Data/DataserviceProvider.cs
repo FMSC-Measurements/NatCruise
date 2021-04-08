@@ -3,6 +3,7 @@ using NatCruise.Core.Services;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
+using Prism.Ioc;
 using System;
 
 namespace NatCruise.Cruise.Data
@@ -24,7 +25,7 @@ namespace NatCruise.Cruise.Data
             base.OnCruiseIDChanged(value);
             if (value != null)
             {
-                SampleSelectorDataService = new SampleSelectorRepository((ISampleInfoDataservice)GetDataservice(typeof(ISampleInfoDataservice)));
+                SampleSelectorDataService = new SampleSelectorRepository(GetDataservice<ISampleInfoDataservice>());
             }
             else
             {
@@ -46,7 +47,19 @@ namespace NatCruise.Cruise.Data
             //      is esential and throw if null, or allow for null to be returned and check for it.
 
             if (typeof(ICuttingUnitDatastore).IsAssignableFrom(type))
-            { return new CuttingUnitDatastore(database, cruiseID, deviceID); }
+            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+
+            if (typeof(IPlotDatastore).IsAssignableFrom(type))
+            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+
+            if (typeof(ITreeDatastore).IsAssignableFrom(type))
+            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+
+            if (typeof(ILogDatastore).IsAssignableFrom(type))
+            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+
+            if (typeof(ICuttingUnitDatastore).IsAssignableFrom(type))
+            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
 
             if (typeof(ISampleSelectorDataService).IsAssignableFrom(type))
             { return SampleSelectorDataService; }
@@ -57,9 +70,13 @@ namespace NatCruise.Cruise.Data
             if (typeof(IFixCNTDataservice).IsAssignableFrom(type))
             { return new FixCNTDataservice(database, cruiseID, deviceID); }
 
-            if (typeof(ITallyDataservice).IsAssignableFrom(type)
-                || typeof(ISampleInfoDataservice).IsAssignableFrom(type))
-            { return new TallyDataservice(database, cruiseID, deviceID); }
+            if (typeof(ITallyDataservice).IsAssignableFrom(type))
+            { return new TallyDataservice(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+
+            if(typeof(ISampleInfoDataservice).IsAssignableFrom(type))
+            {
+                return new SamplerInfoDataservice(database, cruiseID, deviceID);
+            }
 
             if (typeof(ITallyPopulationDataservice).IsAssignableFrom(type))
             { return new TallyPopulationDataservice(database, cruiseID, deviceID); }
@@ -72,6 +89,20 @@ namespace NatCruise.Cruise.Data
 
                 //return null;
             }
+        }
+
+        public override void RegisterDataservices(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<ICuttingUnitDatastore>(x => GetDataservice<ICuttingUnitDatastore>());
+            containerRegistry.Register<IPlotDatastore>(x => GetDataservice<IPlotDatastore>());
+            containerRegistry.Register<ITreeDatastore>(x => GetDataservice<ITreeDatastore>());
+            containerRegistry.Register<ILogDatastore>(x => GetDataservice<ILogDatastore>());
+            containerRegistry.Register<ISampleSelectorDataService>(x => GetDataservice<ISampleSelectorDataService>());
+            containerRegistry.Register<ISaleDataservice>(x => GetDataservice<ISaleDataservice>());
+            containerRegistry.Register<IFixCNTDataservice>(x => GetDataservice<IFixCNTDataservice>());
+            containerRegistry.Register<ITallyDataservice>(x => GetDataservice<ITallyDataservice>());
+            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
+            containerRegistry.Register<ISampleInfoDataservice>(x => GetDataservice<ISampleInfoDataservice>());
         }
     }
 }

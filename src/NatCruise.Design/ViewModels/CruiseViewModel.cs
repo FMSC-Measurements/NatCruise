@@ -14,11 +14,9 @@ namespace NatCruise.Design.ViewModels
         private Cruise _cruise;
         private IEnumerable<Purpose> _purposeOptions;
 
-        public CruiseViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo)
+        public CruiseViewModel(ISaleDataservice saleDataservice, ISetupInfoDataservice setupInfo)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
-
-            SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
+            SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             SetupDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
         }
 
