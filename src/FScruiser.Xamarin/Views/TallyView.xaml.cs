@@ -96,6 +96,7 @@ namespace FScruiser.XF.Views
             int counter = 2;
             foreach (var field in treeFieldValues)
             {
+                if(field.IsHidden || field.IsLocked) { continue; }
                 var fieldLabel = new Label()
                 {
                     Text = field.Heading

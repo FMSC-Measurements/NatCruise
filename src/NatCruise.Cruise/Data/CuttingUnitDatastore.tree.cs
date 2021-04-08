@@ -228,16 +228,21 @@ INSERT INTO TallyLedger (
                 "SELECT " +
                     "t.TreeID, " +
                     "tf.Field, " +
-                    "tfs.Heading, " +
+                    "ifnull(tfh.Heading, tf.DefaultHeading) AS Heading, " +
                     "tf.DbType, " +
                     "tfv.ValueReal, " +
                     "tfv.ValueBool, " +
                     "tfv.ValueText, " +
-                    "tfv.ValueInt " +
+                    "tfv.ValueInt, " +
+                    "tfs.DefaultValueInt, " +
+                    "tfs.DefaultValueReal, " +
+                    "tfs.DefaultValueBool, " +
+                    "tfs.DefaultValueText " +
                 "FROM Tree AS t " +
-                "JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID) " +
+                "JOIN TreeFieldSetup AS tfs ON t.StratumCode = tfs.StratumCode AND t.CruiseID = tfs.CruiseID AND (tfs.SampleGroupCode IS NULL OR t.SampleGroupCode = tfs.SampleGroupCode) " +
+                "LEFT JOIN TreeFieldHeading AS tfh USING (Field, CruiseID) " +
                 "JOIN TreeField AS tf USING (Field) " +
-                "LEFT JOIN TreeFieldValue_TreeMeasurment AS tfv USING (TreeID, Field) " +
+                "LEFT JOIN TreeFieldValue_All AS tfv USING (TreeID, Field) " +
                 "WHERE t.TreeID = @p1 " +
                 "ORDER BY tfs.FieldOrder;", treeID).ToArray();
         }
