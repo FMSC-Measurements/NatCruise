@@ -11,13 +11,7 @@ namespace NatCruise.Cruise.Models
         public int TreeCount { get; set; }
         public bool STM { get; set; }
         public int KPI { get; set; }
+        public int ThreePRandomValue { get; set; }
         public string Initials { get; set; }
-
-        [IgnoreField]
-        public string STMstr
-        {
-            get { return  (STM) ? "Y" : "N";  }
-            set { STM = value == "Y";  }
-        }
     }
 }

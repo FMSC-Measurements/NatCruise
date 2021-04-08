@@ -17,6 +17,8 @@ namespace FScruiser.XF
             containerRegistry.RegisterSingleton<ITallySettingsDataService, TallySettingsDataService>();
             containerRegistry.RegisterSingleton<ICruiseDialogService, XamarinCruiseDialogService>();
             containerRegistry.RegisterInstance<ILoggingService>(new AppCenterLoggerService());
+            containerRegistry.Register<IPlotTallyService, PlotTallyService>();
+            containerRegistry.Register<ITreeBasedTallyService, TreeBasedTallyService>();
 
             RegisterViews(containerRegistry);
         }

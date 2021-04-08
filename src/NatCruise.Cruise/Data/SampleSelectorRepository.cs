@@ -11,6 +11,10 @@ namespace NatCruise.Cruise.Services
     // TODO can this class be folded into ISampleInfoDataservie?
     public class SampleSelectorRepository : ISampleSelectorDataService
     {
+        public const string SAMPLESELECTORTYPE_SYSTEMATICSELECTER = "SystematicSelecter";
+        public const string SAMPLESELECTORTYPE_BLOCKSELECTER = "BlockSelecter";
+        public const string SAMPLESELECTORTYPE_CLICKERSELECTER = "ClickerSelecter";
+
         private Dictionary<string, ISampleSelector> _sampleSelectors = new Dictionary<string, ISampleSelector>();
 
         public SampleSelectorRepository(ISampleInfoDataservice dataservice)
@@ -48,6 +52,7 @@ namespace NatCruise.Cruise.Services
             if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
 
             var method = samplerInfo.Method;
+            var sampleSelectortype = samplerInfo.SampleSelectorType;
 
             //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
             //{
@@ -66,7 +71,12 @@ namespace NatCruise.Cruise.Services
 
                 case "STR":
                     {
-                        return MakeBlockSampleSelector(samplerInfo);
+                        // default sample selector for STR is blocked
+                        if(sampleSelectortype == SAMPLESELECTORTYPE_SYSTEMATICSELECTER)
+                        { return MakeSampleSelecter(samplerInfo); }
+                        else
+                        { return MakeBlockSampleSelector(samplerInfo); }
+                        
                     }
                 case "S3P":
                     {
@@ -81,7 +91,12 @@ namespace NatCruise.Cruise.Services
                 case "FCM":
                 case "PCM":
                     {
-                        return MakeSystematicSampleSelector(samplerInfo);
+                        // default sample selector for plot methods is systematic
+                        if(sampleSelectortype == SAMPLESELECTORTYPE_BLOCKSELECTER)
+                        { return MakeBlockSampleSelector(samplerInfo); }
+                        else
+                        { return MakeSystematicSampleSelector(samplerInfo); }
+                        
                     }
                 default:
                     {
