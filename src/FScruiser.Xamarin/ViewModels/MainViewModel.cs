@@ -6,8 +6,10 @@ using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Services;
 using Prism.Common;
+using Prism.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -132,8 +134,6 @@ namespace FScruiser.XF.ViewModels
                 CuttingUnitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
                 SaleDataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
             }
-
-            //RefreshNavigation(null);
         }
 
         private void ShowTrees()
@@ -160,189 +160,22 @@ namespace FScruiser.XF.ViewModels
             NavigationService.ShowTally(selectedUnit.CuttingUnitCode);
         }
 
-        //public void RefreshNavigation(CuttingUnit_Ex cuttingUnit)
+        //public override void Load()
         //{
-        //    var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+        //    base.Load();
 
-        //    var navigationItems = new List<NavigationListItem>();
-
-        //    if (datastore != null)
-        //    {
-        //        navigationItems.Add(new NavigationListItem
-        //        {
-        //            Title = "Sale",
-        //            NavigationPath = "Navigation/Sale",
-        //        });
-
-        //        navigationItems.Add(new NavigationListItem
-        //        {
-        //            Title = "Cutting Units",
-        //            NavigationPath = "Navigation/CuttingUnits"
-        //        });
-
-        //        if (cuttingUnit != null)
-        //        {
-        //            if (cuttingUnit.HasTreeStrata)
-        //            {
-        //                navigationItems.Add(new NavigationListItem
-        //                {
-        //                    Title = "Tally",
-        //                    NavigationPath = "Navigation/Tally",
-        //                    GetParamaters = () => new NavigationParameters($"{NavParams.UNIT}={cuttingUnit.CuttingUnitCode}")
-        //                });
-
-        //                navigationItems.Add(new NavigationListItem
-        //                {
-        //                    Title = "Trees",
-        //                    NavigationPath = "Navigation/Trees",
-        //                    GetParamaters = () => new NavigationParameters($"{NavParams.UNIT}={cuttingUnit.CuttingUnitCode}")
-        //                });
-        //            }
-        //            if (cuttingUnit.HasPlotStrata)
-        //            {
-        //                navigationItems.Add(new NavigationListItem
-        //                {
-        //                    Title = "Plots",
-        //                    NavigationPath = "Navigation/Plots",
-        //                    GetParamaters = () => new NavigationParameters($"{NavParams.UNIT}={cuttingUnit.CuttingUnitCode}")
-        //                });
-        //            }
-        //        }
-
-        //        navigationItems.Add(new NavigationListItem
-        //        {
-        //            Title = "Samplers",
-        //            NavigationPath = "Navigation/SampleStateManagmentOther"
-        //        });
-        //    }
-
-        //    //navigationItems.Add(new NavigationListItem
-        //    //{
-        //    //    Title = "Cruisers",
-        //    //    NavigationPath = "Navigation/Cruisers"
-        //    //});
-
-        //    NavigationListItems = navigationItems;
+            
         //}
 
-        //public async System.Threading.Tasks.Task NavigateToAsync(NavigationListItem obj)
-        //{
-        //    var navParams = obj?.GetParamaters?.Invoke();
-
-        //    try
-        //    {
-        //        var result = await NavigationService.NavigateAsync(obj.NavigationPath, navParams);
-
-        //        var ex = result.Exception;
-        //        if (ex != null)
-        //        {
-        //            Debug.WriteLine("ERROR::::" + ex);
-        //            Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", obj.NavigationPath } });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine("ERROR::::" + ex);
-        //        Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", obj.NavigationPath } });
-        //    }
-        //}
-
-        //public void ShowFeedback()
-        //{
-        //    NavigationService.ShowFeedback();
-
-        //    //NavigationService.NavigateAsync("Feedback", useModalNavigation: true);
-        //}
-
-        //public void ShowSettings()
-        //{
-        //    NavigationService.ShowSettings();
-
-        //    //NavigationService.NavigateAsync("Settings", useModalNavigation: true);
-        //}
-
-        //public void ShowSampleStateManagment()
-        //{
-        //    NavigationService.ShowSampleStateManagment();
-
-        //    //NavigationService.NavigateAsync("SampleStateManagment", useModalNavigation: true);
-        //}
-
-        //private async void SelectFileAsync(object obj)
-        //{
-        //    try
-        //    {
-        //        var filePath = await FileDialogService.SelectCruiseFileAsync();
-        //        if (filePath == null) { return; }
-
-        //        //var fileData = await CrossFilePicker.Current.PickFile(new string[] { ".cruise", ".crz3" });
-        //        //if (fileData == null) { return; }//user canceled file picking
-
-        //        //var filePath = fileData.FilePath;
-
-        //        //Check path exists
-        //        if (File.Exists(filePath) == false)
-        //        {
-        //            await DialogService.ShowMessageAsync(filePath, "File Doesn't Exist").ConfigureAwait(false);
-        //            return;
-        //        }
-
-        //        MessagingCenter.Send<object, string>(this, Messages.CRUISE_FILE_SELECTED, filePath);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine($"Error:::{ex.Message}");
-        //        Debug.WriteLine(ex.StackTrace);
-        //        Crashes.TrackError(ex);
-        //    }
-        //}
-
-        //public override void OnNavigatedFrom(INavigationParameters parameters)
-        //{
-        //    base.OnNavigatedFrom(parameters);
-
-        //    MessagingCenter.Unsubscribe<Object>(this, Messages.CRUISE_FILE_OPENED);
-        //    MessagingCenter.Unsubscribe<Object>(this, Messages.CRUISE_FILE_SELECTED);
-        //}
-
-        //public override void OnNavigatedTo(INavigationParameters parameters)
-        //{
-        //    base.OnNavigatedTo(parameters);
-
-        //    MessagingCenter.Subscribe<object, string>(this, Messages.CRUISE_FILE_OPENED,
-        //        MessagingCenter_CruiseFileOpened);
-
-        //    MessagingCenter.Subscribe<string>(this, Messages.CUTTING_UNIT_SELECTED,
-        //        MessagingCenter_CuttingUnitSelected);
-        //}
-
-        //private void MessagingCenter_CuttingUnitSelected(string unit)
-        //{
-        //    var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDatastore>();
-        //    var cuttingUnit = datastore.GetUnit(unit);
-
-        //    RefreshNavigation(cuttingUnit);
-
-        //    RaisePropertyChanged(nameof(NavigationListItems));
-        //}
-
-        //private async void MessagingCenter_CruiseFileOpened(object sender, string path)
-        //{
-        //    RefreshNavigation(null);
-
-        //    RaisePropertyChanged(nameof(CurrentCruiseName));
-        //    RaisePropertyChanged(nameof(NavigationListItems));
-        //}
-
-        protected override void Load(IParameters parameters)
+        protected override void OnInitialize(INavigationParameters parameters)
         {
+            base.OnInitialize(parameters);
+
             var cuttingUnitDataservice = CuttingUnitDataservice;
             if (cuttingUnitDataservice != null)
             {
                 CuttingUnits = cuttingUnitDataservice.GetUnits();
             }
-
-            //do nothing
         }
     }
 }
