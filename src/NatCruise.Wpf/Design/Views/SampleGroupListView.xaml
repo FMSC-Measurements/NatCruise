@@ -55,6 +55,7 @@
                         <Button Grid.Column="1"
                                 Content="+"
                                 Background="{StaticResource brush_addItem}"
+                                Foreground="{StaticResource brush_text_dark}"
                                 IsEnabled="{Binding Text, ElementName=_sampleGroupCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
@@ -67,6 +68,7 @@
                         <Button  Grid.Column="2"
                                  Content="-"
                                  Background="{StaticResource brush_removeItem}"
+                                 Foreground="{StaticResource brush_text_dark}"
                                  Command="{Binding RemoveSampleGroupCommand}"
                                  CommandParameter="{Binding SelectedItem, ElementName=_sampleGroupListView}"
                                  IsEnabled="{Binding SelectedItem, ElementName=_sampleGroupListView, Converter={StaticResource NotNullConverter}}"/>

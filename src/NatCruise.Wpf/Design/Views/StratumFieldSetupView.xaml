@@ -166,14 +166,12 @@
                      IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}" />
             <TextBox x:Name="_realDefaultValueTextBox"
                      Grid.Column="2"
-                     Background="LightGreen"
                      Visibility="{Binding IsDefaultReal, Converter={StaticResource IsVisableConverter}}"
                      Grid.Row="1"
                      Text="{Binding SelectedTreeFieldSetup.DefaultValueReal}"
                      IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}" />
             <TextBox x:Name="_textDefaultValueTextBox"
                      Grid.Column="2"
-                     Background="MediumPurple"
                      Visibility="{Binding IsDefaultText, Converter={StaticResource IsVisableConverter}}"
                      Grid.Row="1"
                      Text="{Binding SelectedTreeFieldSetup.DefaultValueText}"
