@@ -124,9 +124,51 @@ namespace NatCruise.Design.Data
             throw new NotImplementedException();
         }
 
-        public void UpdateSampleGroup(SampleGroup sampleGroup)
+        public void UpdateSampleGroup(SampleGroup sg)
         {
-            Database.Update(sampleGroup);
+            Database.Execute2(
+@"UPDATE SampleGroup SET
+    Description = @Description,
+    CutLeave = @CutLeave,
+    UOM = @UOM,
+    PrimaryProduct = @PrimaryProduct,
+    SecondaryProduct = @SecondaryProduct,
+    BiomassProduct = @BiomassProduct,
+    DefaultLiveDead = @DefaultLiveDead,
+    SamplingFrequency = @SamplingFrequency,
+    InsuranceFrequency = @InsuranceFrequency,
+    KZ = @KZ,
+    BigBAF = @BigBAF,
+    TallyBySubPop = @TallyBySubPop,
+    SampleSelectorType = @SampleSelectorType,
+    UseExternalSampler = @UseExternalSampler,
+    MinKPI = @MinKPI,
+    MaxKPI = @MaxKPI,
+    SmallFPS = @SmallFPS,
+    ModifiedBy = @DeviceID
+WHERE SampleGroupID = @SampleGroupID;",
+                new
+                {
+                    sg.SampleGroupID,
+                    sg.Description,
+                    sg.CutLeave,
+                    sg.UOM,
+                    sg.PrimaryProduct,
+                    sg.SecondaryProduct,
+                    sg.BiomassProduct,
+                    sg.DefaultLiveDead,
+                    sg.SamplingFrequency,
+                    sg.InsuranceFrequency,
+                    sg.KZ,
+                    sg.BigBAF,
+                    sg.TallyBySubPop,
+                    sg.SampleSelectorType,
+                    sg.UseExternalSampler,
+                    sg.MinKPI,
+                    sg.MaxKPI,
+                    sg.SmallFPS,
+                    DeviceID
+                });
         }
     }
 }
