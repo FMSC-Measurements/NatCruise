@@ -142,8 +142,8 @@ WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND ifnull(SampleGroup
             if (tfs is null) { throw new ArgumentNullException(nameof(tfs)); }
             if (tfs.Field is null) { throw new ArgumentNullException(nameof(TreeField.Field)); }
 
-            Database.Execute("DELETE FROM TreeFieldSetup WHERE CruiseID = @p1 AND StratumCode = @p2 AND ifnull(SampleGroup, '') = ifnull(@p3, '') AND Field = @p4;",
-                CruiseID, tfs.StratumCode, tfs.StratumCode, tfs.Field.Field);
+            Database.Execute("DELETE FROM TreeFieldSetup WHERE CruiseID = @p1 AND StratumCode = @p2 AND ifnull(SampleGroupCode, '') = ifnull(@p3, '') AND Field = @p4;",
+                CruiseID, tfs.StratumCode, tfs.SampleGroupCode, tfs.Field.Field);
         }
 
         public void SetTreeFieldsFromStratumDefault(string stratumCode, StratumDefault sd)
