@@ -104,6 +104,7 @@
             <ComboBox Grid.Row="2"
                       Grid.Column="1"
                       SelectedValue="{Binding Stratum.Method}"
+                      SelectedValuePath="Method"
                       ItemsSource="{Binding Methods}" />
 
 
