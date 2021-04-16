@@ -71,6 +71,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Content="Code*" />
             <TextBox HorizontalAlignment="Left"
@@ -122,16 +123,27 @@
                       ItemsSource="{Binding DefaultLiveDeadOptions}"
                       ToolTip="Default Live Dead Value" 
                       SelectedItem="{Binding SampleGroup.DefaultLiveDead}"/>
-            <CheckBox Content="Tally By Subpop"
+            <CheckBox Content="Tally By Species"
                       Grid.Row="6"
                       Grid.Column="1"
-                      ToolTip="Tally By Subpopulation"
+                      ToolTip="Tally By Species"
                       IsChecked="{Binding SampleGroup.TallyBySubPop}"/>
+
+            <Label Content="Sample Selector Type"
+                   Grid.Row="7"
+                   Grid.Column="0"
+                   Visibility="{Binding CanSelectSampleSelectorType, Converter={StaticResource isVisableConverter}}" />
+            <ComboBox Grid.Row="7"
+                      Grid.Column="1"
+                      ItemsSource="{Binding SampleSelectorTypeOptions}"
+                      SelectedItem="{Binding SampleSelectorType}"
+                      Visibility="{Binding CanSelectSampleSelectorType, Converter={StaticResource isVisableConverter}}"
+                      />
 
         </Grid>
 
-        <GroupBox Header="Sample Tree (STR) Options"
-                  Visibility="{Binding IsSTR, Converter={StaticResource isVisableConverter}, FallbackValue=Collapsed}">
+        <GroupBox Header="Sampleing Frequency Options"
+                  Visibility="{Binding IsFrequencyBased, Converter={StaticResource isVisableConverter}, FallbackValue=Visible}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -156,7 +168,7 @@
         </GroupBox>
 
         <GroupBox Header="3P/F3P/P3P Options"
-                  Visibility="{Binding Is3P, Converter={StaticResource isVisableConverter}, FallbackValue=Collapsed}">
+                  Visibility="{Binding Is3P, Converter={StaticResource isVisableConverter}, FallbackValue=Visible}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -194,7 +206,7 @@
         </GroupBox>
 
         <GroupBox Header="Variable Radius"
-                  Visibility="{Binding IsVariableRadious, Converter={StaticResource isVisableConverter}, FallbackValue=Collapsed}">
+                  Visibility="{Binding IsVariableRadious, Converter={StaticResource isVisableConverter}, FallbackValue=Visible}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -208,15 +220,9 @@
                 </Grid.RowDefinitions>
                 <Label Content="BigBAF"
                        HorizontalAlignment="Left" />
-                <Label Content="BAF"
-                       Grid.Row="1" />
                 <TextBox Text="{Binding SampleGroup.BigBAF}"
                          ToolTip="Big BAF"
                          Grid.Column="1" />
-                <TextBox ToolTip="BAF"
-                         Text="{Binding SampleGroup.BasalAreaFactor}"
-                         Grid.Column="1"
-                         Grid.Row="1" />
 
             </Grid>
 
