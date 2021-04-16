@@ -3,7 +3,7 @@ using Prism.Mvvm;
 
 namespace NatCruise.Design.Models
 {
-    [Table("SampleGroup_V3")]
+    [Table("SampleGroup")]
     public class SampleGroup : BindableBase
     {
         private string _sampleGroupCode;
