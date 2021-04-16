@@ -55,11 +55,13 @@ namespace NatCruise.Design.ViewModels
 
         private void OnStratumChanged(Stratum stratum)
         {
-            if (stratum == null) { return; }
-
-            var stratumCode = Stratum.StratumCode;
-            CuttingUnits = StratumDataservice.GetCuttingUnitCodesByStratum(stratumCode);
-            stratum.PropertyChanged += Stratum_PropertyChanged;
+            NotifyCruiseMethodChanged();
+            if (stratum != null)
+            {
+                var stratumCode = Stratum.StratumCode;
+                CuttingUnits = StratumDataservice.GetCuttingUnitCodesByStratum(stratumCode);
+                stratum.PropertyChanged += Stratum_PropertyChanged;
+            }
         }
 
         public IEnumerable<string> CuttingUnits { get; set; }
@@ -93,6 +95,15 @@ namespace NatCruise.Design.ViewModels
 
         public bool IsFixCNT => Stratum?.Method == CruiseMethods.FIXCNT;
 
+        protected void NotifyCruiseMethodChanged()
+        {
+            RaisePropertyChanged(nameof(IsPlot));
+            RaisePropertyChanged(nameof(IsFixedSizePlot));
+            RaisePropertyChanged(nameof(IsVariableRariousePlot));
+            RaisePropertyChanged(nameof(Is3PPNT));
+            RaisePropertyChanged(nameof(IsFixCNT));
+        }
+
         private void Stratum_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var stratum = Stratum;
@@ -102,11 +113,7 @@ namespace NatCruise.Design.ViewModels
 
             if (e.PropertyName == nameof(Stratum.Method))
             {
-                RaisePropertyChanged(nameof(IsPlot));
-                RaisePropertyChanged(nameof(IsFixedSizePlot));
-                RaisePropertyChanged(nameof(IsVariableRariousePlot));
-                RaisePropertyChanged(nameof(Is3PPNT));
-                RaisePropertyChanged(nameof(IsFixCNT));
+                NotifyCruiseMethodChanged();
             }
         }
     }
