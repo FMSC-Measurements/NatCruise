@@ -18,6 +18,8 @@ namespace NatCruise.Design.ViewModels
         {
             SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             SetupDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
+
+            PurposeOptions = SetupDataservice.GetPurposes();
         }
 
         private ISaleDataservice SaleDataservice { get; }
@@ -67,8 +69,9 @@ namespace NatCruise.Design.ViewModels
         {
             base.Load();
 
+            
             Cruise = SaleDataservice.GetCruise();
-            PurposeOptions = SetupDataservice.GetPurposes();
+            
         }
     }
 }
