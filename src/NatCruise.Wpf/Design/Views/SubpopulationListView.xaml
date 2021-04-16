@@ -51,12 +51,23 @@
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="40" />
             </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}"
+                       BasedOn="{StaticResource MetroFlatButton}">
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+                    <Setter Property="FontSize"
+                            Value="16" />
+                </Style>
+            </Grid.Resources>
             <controls:AutoCompleteBox x:Name="_speciesTextBox"
                                       ItemsSource="{Binding SpeciesOptions}"/>
             <Button x:Name="_addSpeciesButton"
                     Background="{StaticResource brush_addItem}"
+                    Foreground="{StaticResource brush_text_dark}"
                     Grid.Column="1"
-                    Content="+">
+                    Content="+"
+                    IsEnabled="{Binding Text, ElementName=_speciesTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding AddSubpopulationCommand}"
@@ -67,10 +78,12 @@
             </Button>
             <Button x:Name="_removeSpeciesButton"
                     Background="{StaticResource brush_removeItem}"
+                    Foreground="{StaticResource brush_text_dark}"
                     Command="{Binding RemoveSubpopulationCommand}"
                     CommandParameter="{Binding SelectedItem, Source={x:Reference _subpopListView} }"
                     Content="-"
-                    Grid.Column="2" />
+                    Grid.Column="2"
+                    IsEnabled="{Binding SelectedItem, ElementName=_subpopListView, Converter={StaticResource NotNullConverter}}"/>
 
         </Grid>
     </Grid>
