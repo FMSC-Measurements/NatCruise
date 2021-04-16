@@ -45,7 +45,8 @@
                                  mah:TextBoxHelper.Watermark="Code" />
                         <Button Grid.Column="1"
                                 Content="+"
-                                Background="{StaticResource brush_addItem}">
+                                Background="{StaticResource brush_addItem}"
+                                Foreground="{StaticResource brush_text_dark}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <i:InvokeCommandAction Command="{Binding AddCuttingUnitCommand}"
@@ -57,6 +58,7 @@
                         <Button  Grid.Column="2"
                                  Content="-"
                                  Background="{StaticResource brush_removeItem}"
+                                 Foreground="{StaticResource brush_text_dark}"
                                  Command="{Binding RemoveCuttingUnitCommand}"
                                  CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}" />
                     </Grid>
