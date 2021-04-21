@@ -26,7 +26,7 @@ namespace NatCruise.Wpf
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : PrismApplication
+    public partial class App : PrismApplication, IAppService
     {
         private string[] StartupArgs { get; set; }
 
@@ -94,6 +94,7 @@ namespace NatCruise.Wpf
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterInstance<IAppService>(this);
             containerRegistry.Register<IApplicationSettingService, WpfApplicationSettingService>();
             containerRegistry.Register<IDialogService, WpfDialogService>();
             containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();

@@ -31,7 +31,7 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
 
-                <MenuItem Header="Exit" />
+                <MenuItem Header="Exit" Command="{Binding ShutdownCommand}"  />
             </MenuItem>
         </Menu>
         <Grid>
