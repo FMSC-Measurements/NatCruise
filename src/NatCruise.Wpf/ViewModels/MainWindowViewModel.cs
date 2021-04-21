@@ -4,6 +4,7 @@ using NatCruise.Data;
 using NatCruise.Design.Services;
 using NatCruise.Models;
 using NatCruise.Services;
+using NatCruise.Wpf.Services;
 using NatCruise.Wpf.Util;
 using Prism.Commands;
 using Prism.Ioc;
@@ -24,6 +25,7 @@ namespace NatCruise.Wpf.ViewModels
         private string _currentFileName;
 
         public MainWindowViewModel(
+            IAppService appService,
             IDataserviceProvider dataserviceProvider,
             IDesignNavigationService navigationService,
             IFileDialogService fileDialogService,
@@ -32,6 +34,7 @@ namespace NatCruise.Wpf.ViewModels
             NatCruise.Services.IDialogService cruiseDialogService,
             IDeviceInfoService deviceInfo)
         {
+            AppService = appService ?? throw new ArgumentNullException(nameof(appService));
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
@@ -41,6 +44,7 @@ namespace NatCruise.Wpf.ViewModels
             CruiseDialogService = cruiseDialogService ?? throw new ArgumentNullException(nameof(cruiseDialogService));
         }
 
+        protected IAppService AppService { get; }
         protected IDataserviceProvider DataserviceProvider { get; }
         protected IDesignNavigationService NavigationService { get; }
         protected IRecentFilesDataservice RecentFilesDataservice { get; }
@@ -61,7 +65,7 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        public string Title => $"National Cruise System (0.4-Alpha) {CurrentFileName?.Prepend(" - ")}";
+        public string Title => $"National Cruise System (0.4.3-Alpha) {CurrentFileName?.Prepend(" - ")}";
 
         public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles().Select(x => new FileInfo(x));
 
@@ -72,6 +76,8 @@ namespace NatCruise.Wpf.ViewModels
         public ICommand OpenFileInfoCommand => _openFileCommand ?? (_openFileCommand = new DelegateCommand<FileInfo>(OpenFile));
 
         public ICommand SelectFileCommand => _selectFileCommand ?? (_selectFileCommand = new DelegateCommand(SelectFile));
+
+        public ICommand ShutdownCommand => new DelegateCommand(() => AppService.Shutdown());
 
         private void CreateNewFile()
         {
