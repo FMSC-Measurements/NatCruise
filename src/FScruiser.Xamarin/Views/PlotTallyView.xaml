@@ -54,8 +54,9 @@
                             <SwipeView>
                                 <SwipeView.LeftItems>
                                     <SwipeItem Text="Delete"
+                                               BackgroundColor="Red"
                                                Command="{Binding BindingContext.DeleteTreeCommand, Source={Reference _page}}"
-                                               CommandParameter="{Binding .}" />
+                                               CommandParameter="{Binding TreeID}" />
                                 </SwipeView.LeftItems>
 
                                 <cells:PlotTreeViewCell>
