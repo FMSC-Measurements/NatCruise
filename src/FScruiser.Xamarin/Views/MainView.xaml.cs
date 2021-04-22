@@ -8,7 +8,7 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainView : MasterDetailPage, IMasterDetailPageOptions
+    public partial class MainView : FlyoutPage, IMasterDetailPageOptions
     {
         public bool IsPresentedAfterNavigation => Device.Idiom != TargetIdiom.Phone;
 
