@@ -196,20 +196,20 @@ namespace NatCruise.Cruise.Services
             }
         }
 
-        public void SaveSamplerStates()
-        {
-            foreach (var sampler in _sampleSelectors.Values.Select(x => x))
-            {
-                SaveSampler(sampler);
-            }
-        }
+        //public void SaveSamplerStates()
+        //{
+        //    foreach (var sampler in _sampleSelectors.Values.Select(x => x))
+        //    {
+        //        SaveSampler(sampler);
+        //    }
+        //}
 
-        public void SaveSampler(ISampleSelector sampler)
-        {
-            if (sampler is null) { throw new ArgumentNullException(nameof(sampler)); }
+        //public void SaveSampler(ISampleSelector sampler)
+        //{
+        //    if (sampler is null) { throw new ArgumentNullException(nameof(sampler)); }
 
-            var state = new SamplerState(sampler);
-            Dataservice.UpsertSamplerState(state);
-        }
+        //    var state = new SamplerState(sampler);
+        //    Dataservice.UpsertSamplerState(state);
+        //}
     }
 }
