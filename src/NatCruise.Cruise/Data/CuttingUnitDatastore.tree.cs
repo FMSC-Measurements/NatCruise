@@ -262,7 +262,7 @@ INSERT INTO TallyLedger (
                     "SpeciesCode = @SpeciesCode," +
                     "LiveDead = @LiveDead, " +
                     "CountOrMeasure = @CountOrMeasure, " +
-                    "ModifiedBy = @UserName " +
+                    "ModifiedBy = @DeviceID " +
                 "WHERE TreeID = @TreeID; ",
                 new
                 {
