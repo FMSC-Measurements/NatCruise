@@ -91,10 +91,11 @@ namespace FScruiser.XF.ViewModels
         public async Task BrowseCruiseFileAsync()
         {
             var cruisePath = await FileDialogService.SelectCruiseFileAsync();
-
             if (cruisePath == null) { return; }
 
             var importPath = GetPathForImport(cruisePath);
+            if(importPath == null) { return; }
+
             ImportPath = importPath;
 
             using (var db = new CruiseDatastore_V3(importPath))
@@ -110,6 +111,7 @@ namespace FScruiser.XF.ViewModels
                 Cruises = cruises;
                 if (cruises.Count() == 1)
                 {
+                    SelectedCruise = cruises.First();
                 }
             }
         }
