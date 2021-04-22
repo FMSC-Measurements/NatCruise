@@ -16,15 +16,17 @@ namespace FScruiser.XF.ViewCells
 
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
-            var tallyEntry = (TallyEntry)item;
-
-            if(tallyEntry.EntryType == TallyLedger.EntryTypeValues.TALLY)
+            if (item is TallyEntry tallyEntry)
             {
-                return (tallyEntry.TreeID != null) ? TreeItemTemplate : BasicTemplate;
+                if (tallyEntry.EntryType == TallyLedger.EntryTypeValues.TALLY)
+                {
+                    return (tallyEntry.TreeID != null) ? TreeItemTemplate : BasicTemplate;
+                }
+                else
+                { return TallyEditTemplate; }
             }
             else
-            { return TallyEditTemplate; }
-            
+            { return null; }
         }
     }
 }

@@ -236,6 +236,7 @@ namespace FScruiser.XF.ViewModels
         public async Task TallyAsync(TallyPopulation pop)
         {
             var entry = await TallyService.TallyAsync(UnitCode, pop);
+            if(entry == null) { return; }
 
             TallyFeed.Add(entry);
             RaiseTallyEntryAdded();

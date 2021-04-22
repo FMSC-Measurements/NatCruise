@@ -83,23 +83,23 @@ namespace FScruiser.XF.Services
 
             void handelClose(object sender, object output)
             {
-                var reslut = output as AskKPIResult;
+                var result = output as AskKPIResult;
 
                 var tcs = System.Threading.Interlocked.Exchange(ref _askKpiTcs, null);//_askKpiTcs = null; return original value of _askKpiTcs
 
                 view.OnClosed -= handelClose;
 
-                if (reslut.DialogResult == DialogResult.Cancel)
+                if (result == null || result.DialogResult == DialogResult.Cancel)
                 {
                     tcs?.SetResult(null);
                 }
-                else if (reslut.IsSTM)
+                else if (result.IsSTM)
                 {
                     tcs?.SetResult(-1);
                 }
                 else
                 {
-                    tcs?.SetResult(reslut.KPI);
+                    tcs?.SetResult(result.KPI);
                 }
             }
 
