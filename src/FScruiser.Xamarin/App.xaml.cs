@@ -231,7 +231,10 @@ namespace FScruiser.XF
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<IFileDialogService, XamarinFileDialogService>();
+            if(containerRegistry.IsRegistered<IFileDialogService>() == false)
+            {
+                containerRegistry.Register<IFileDialogService, XamarinFileDialogService>();
+            }
 
             if (containerRegistry.IsRegistered<IDataserviceProvider>() == false)
             {

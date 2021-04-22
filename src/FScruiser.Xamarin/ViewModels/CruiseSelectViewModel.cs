@@ -10,6 +10,7 @@ using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -28,10 +29,12 @@ namespace FScruiser.XF.ViewModels
         protected ICruiseNavigationService NavigationService { get; }
         protected IDataserviceProvider DataserviceProvider { get; }
         protected IFileSystemService FileSystemService { get; }
+        protected IFileDialogService FileDialogService { get; }
         protected IDialogService DialogService { get; }
 
         public ICommand OpenSelectedCruiseCommand => new Command(OpenSelectedCruise);
-        public ICommand ExportSelectedCruiseCommand => new Command(ExportSelectedCruise);
+        public ICommand ShareSelectedCruiseCommand => new Command(ShareSelectedCruise);        
+        public ICommand ExportSelectedCruiseCommand => new Command(async () => await ExportSelectedCruise());
         public ICommand DeleteSelectedCruiseCommand => new Command(DeleteSelectedCruise);
 
         public Cruise SelectedCruise
@@ -52,13 +55,14 @@ namespace FScruiser.XF.ViewModels
             set => SetProperty(ref _cruises, value);
         }
 
-        public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, IDialogService dialogService)
+        public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, IDialogService dialogService, IFileDialogService fileDialogService)
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
         }
 
         public void OpenSelectedCruise()
@@ -75,14 +79,21 @@ namespace FScruiser.XF.ViewModels
             NavigationService.ShowCruiseLandingLayout();
         }
 
-        public void ExportSelectedCruise()
+        public Task ExportSelectedCruise()
+        {
+            var selectedCruise = SelectedCruise;
+            if (selectedCruise == null) { return null; }
+            return ExportCruise(selectedCruise);
+        }
+
+        public void ShareSelectedCruise()
         {
             var selectedCruise = SelectedCruise;
             if (selectedCruise == null) { return; }
-            ExportCruise(selectedCruise);
+            ShareCruise(selectedCruise);
         }
 
-        public void ExportCruise(Cruise cruise)
+        public void ShareCruise(Cruise cruise)
         {
             var timestamp = DateTime.Today.ToString("ddMMyyyy");
             var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.Purpose.Replace(' ', '_')}_{timestamp}.crz3";
@@ -101,6 +112,34 @@ namespace FScruiser.XF.ViewModels
                 Title = defaultFileName,
                 File = new ShareFile(fileToExport),
             });
+        }
+
+        public async Task ExportCruise(Cruise cruise)
+        {
+            var timestamp = DateTime.Today.ToString("ddMMyyyy");
+            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.Purpose.Replace(' ', '_')}_{timestamp}.crz3";
+
+            // create file to export before geting the destination path
+            // on android requesting the desination file creates an empty file
+            // if creating the file to export fails we don't want to create an empty file
+            var exportTempDir = FileSystemService.ExportTempDir;
+            var fileToExport = Path.Combine(exportTempDir, defaultFileName);
+
+            var db = DataserviceProvider.Database;
+            using (var destDb = new CruiseDatastore_V3(fileToExport, true))
+            {
+                var cruiseCopier = new CruiseCopier();
+                cruiseCopier.Copy(db, destDb, cruise.CruiseID);
+            }
+
+            var destPath = await FileDialogService.SelectCruiseFileDestinationAsync(defaultFileName: defaultFileName);
+            if(destPath != null)
+            {
+                FileSystemService.CopyTo(fileToExport, destPath);
+                // todo need to delete the android content if creating file fails
+
+                //File.Copy(fileToExport, destPath);
+            }
         }
 
         public void DeleteSelectedCruise()
