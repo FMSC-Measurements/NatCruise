@@ -54,7 +54,7 @@ namespace FScruiser.XF.Views
                 case "Cancel": { Close(DialogResult.Cancel); break; }
                 case "STM":
                     {
-                        DisplayValue = "";
+                        DisplayValue = "STM";
                         Close(DialogResult.OK);
                         break;
                     }

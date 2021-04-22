@@ -217,10 +217,11 @@ namespace FScruiser.XF.ViewModels
             }
 
             var tree = await TallyService.TallyAsync(pop, UnitCode, PlotNumber);
+            if(tree == null) { return; }
+
             _trees.Add(tree);
             OnTreeAdded();
 
-            
             await HandleTally(pop, tree);
         }
 
