@@ -7,6 +7,8 @@ namespace NatCruise.Cruise.Services
     {
         ISampleSelector GetSamplerBySampleGroupCode(string stratumCode, string sgCode);
 
-        void SaveSamplerStates();
+        //void SaveSampler(ISampleSelector sampler);
+
+        //void SaveSamplerStates();
     }
 }
