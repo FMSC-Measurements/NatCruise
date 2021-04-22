@@ -431,7 +431,7 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 "te.Message, " +
                 "te.Resolution " +
                 "FROM TreeError AS te " +
-                "JOIN Tree_V3 AS t USING (TreeID) " +
+                "JOIN Tree AS t USING (TreeID) " +
                 "WHERE t.CuttingUnitCode = @p1 AND t.CruiseID = @p2;",
                 new object[] { cuttingUnitCode, CruiseID }).ToArray();
         }
