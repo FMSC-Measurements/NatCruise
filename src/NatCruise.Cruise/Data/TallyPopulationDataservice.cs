@@ -61,20 +61,20 @@ namespace NatCruise.Cruise.Data
     JOIN SampleGroup AS sg USING (CruiseID, StratumCode, SampleGroupCode)
     -- Left JOIN SamplerState ss USING (CruiseID, StratumCode, SampleGroupCode)
     JOIN Stratum AS st USING (CruiseID, StratumCode)
-    JOIN CuttingUnit_Stratum AS cust ON tp.StratumCode = cust.StratumCode AND cust.CuttingUnitCode = @p1
+    JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
     LEFT JOIN tallyPopTreeCounts AS tl
-        ON tl.CuttingUnitCode = @p1
-        AND tl.CruiseID =  @p2
+        ON tl.CuttingUnitCode = cust.CuttingUnitCode
+        AND tl.CruiseID =  tp.CruiseID
         AND tp.StratumCode = tl.StratumCode
         AND tp.SampleGroupCode = tl.SampleGroupCode
         AND ifnull(tp.SpeciesCode, '') = ifnull(tl.SpeciesCode, '')
-        AND ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, '') ";
+        AND ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, '')";
 
         public IEnumerable<TallyPopulation> GetTallyPopulationsByUnitCode(string unitCode)
         {
             return Database.Query<TallyPopulation>(
                 SELECT_TALLYPOPULATION_CORE +
-                "WHERE st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)"
+                "WHERE cust.CuttingUnitCode = @p1 AND tp.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)"
                 , new object[] { unitCode, CruiseID }).ToArray();
 
             //return Database.From<TallyPopulation>()
