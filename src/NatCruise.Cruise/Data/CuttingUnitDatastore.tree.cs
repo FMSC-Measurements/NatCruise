@@ -442,7 +442,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
 
         public int? GetTreeNumber(string treeID)
         {
-            return Database.ExecuteScalar<int?>("SELECT TreeNumber FROM Tree_V3 WHERE TreeID = @p1;", treeID);
+            return Database.ExecuteScalar<int?>("SELECT TreeNumber FROM Tree WHERE TreeID = @p1;", treeID);
         }
 
         public IEnumerable<TreeError> GetTreeErrors(string treeID)
