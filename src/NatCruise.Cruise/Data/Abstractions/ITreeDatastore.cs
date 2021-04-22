@@ -41,7 +41,7 @@ namespace NatCruise.Cruise.Services
 
         void ClearTreeAuditResolution(string treeID, string treeAuditRuleID);
 
-        bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null);
+        bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null, string stratumCode = null);
 
         void UpdateTreeInitials(string treeGuid, string value);
 
