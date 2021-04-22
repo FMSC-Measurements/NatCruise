@@ -28,13 +28,13 @@ namespace FScruiser.XF.Services
 
         Task ShowPlotEdit(string plotID);
 
-        Task ShowPlotEdit(string unitCode, int plotNumber);
+        //Task ShowPlotEdit(string unitCode, int plotNumber);
 
         Task ShowPlotList(string unitCode);
 
         Task ShowPlotTally(string plotID);
 
-        Task ShowPlotTally(string unitCode, int plotNumber);
+        //Task ShowPlotTally(string unitCode, int plotNumber);
 
         Task ShowSaleSelect();
 
