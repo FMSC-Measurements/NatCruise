@@ -1,4 +1,5 @@
-﻿using Android.Content;
+﻿using Android.App;
+using Android.Content;
 using NatCruise.Services;
 using System.IO;
 
@@ -26,6 +27,7 @@ namespace FScruiser.Droid.Services
         }
 
         public Context Context { get; }
+        public Activity ParentActivity { get; }
 
         public override string AppDataDirectory => Context.FilesDir.AbsolutePath;
         public string CacheDir => Context.CacheDir.AbsolutePath;
@@ -57,6 +59,17 @@ namespace FScruiser.Droid.Services
 
             File.Copy(path, destinationPath, overwrite: true);
             return destinationPath;
+        }
+
+        public override void CopyTo(string from, string to)
+        {
+            var resolver = Context.ContentResolver;
+
+            var aTo = Android.Net.Uri.Parse(to);
+            var stream = resolver.OpenOutputStream(aTo);
+
+            var fromStream = File.OpenRead(from);
+            fromStream.CopyTo(stream);
         }
 
         bool IsInternalPath(string path)

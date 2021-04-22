@@ -19,5 +19,7 @@ namespace NatCruise.Services
         public abstract string GetFileForConvert(string path);
 
         public abstract string GetFileForImport(string location);
+
+        public abstract void CopyTo(string from, string to);
     }
 }
