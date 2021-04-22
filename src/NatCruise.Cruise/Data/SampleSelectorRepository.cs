@@ -73,7 +73,7 @@ namespace NatCruise.Cruise.Services
                     {
                         // default sample selector for STR is blocked
                         if(sampleSelectortype == SAMPLESELECTORTYPE_SYSTEMATICSELECTER)
-                        { return MakeSampleSelecter(samplerInfo); }
+                        { return MakeSystematicSampleSelector(samplerInfo); }
                         else
                         { return MakeBlockSampleSelector(samplerInfo); }
                         
