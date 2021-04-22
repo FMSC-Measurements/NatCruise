@@ -165,6 +165,7 @@ namespace FScruiser.XF.ViewModels
                 var treeVM = ContainerProvider.Resolve<TreeEditViewModel>();
                 treeVM.UseSimplifiedTreeFields = true;
                 treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
+                treeVM.Load();
 
                 SelectedTreeViewModel = treeVM;
             }
@@ -200,7 +201,6 @@ namespace FScruiser.XF.ViewModels
             UnitCode = plot.CuttingUnitCode;
 
             // refresh selected tree incase coming back from TreeEdit page
-            SelectedTreeViewModel?.Load();
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
 
