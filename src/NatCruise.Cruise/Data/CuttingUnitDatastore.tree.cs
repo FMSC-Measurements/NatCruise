@@ -480,23 +480,28 @@ UPSERT_TREEMEASURMENT_COMMAND,
                 new object[] { treeID, treeAuditRuleID }).FirstOrDefault();
         }
 
-        public bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null)
+        public bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null, string stratumCode = null)
         {
             if (plotNumber != null)
             {
-                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3 " +
+                if (stratumCode == null) { throw new ArgumentNullException(nameof(stratumCode), "if plot number is not null, stratum code must be as well"); }
+
+                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree " +
                     "WHERE CuttingUnitCode = @p1 " +
                     "AND PlotNumber = @p2 " +
-                    "AND TreeNumber = @p3;",
-                    unit, plotNumber, treeNumber) == 0;
+                    "AND TreeNumber = @p3 " +
+                    "AND ((SELECT UseCrossStrataPlotTreeNumbering FROM Cruise WHERE CruiseID = @p4) = 1 OR StratumCode = @p5) " +
+                    "AND CruiseID = @p4;",
+                    unit, plotNumber, treeNumber, CruiseID, stratumCode) == 0;
             }
             else
             {
-                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3 " +
+                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree " +
                     "WHERE CuttingUnitCode = @p1 " +
                     "AND PlotNumber IS NULL " +
-                    "AND TreeNumber = @p2;",
-                    unit, treeNumber) == 0;
+                    "AND TreeNumber = @p2 " +
+                    "AND CruiseID = @p3;",
+                    unit, treeNumber, CruiseID) == 0;
             }
         }
 
