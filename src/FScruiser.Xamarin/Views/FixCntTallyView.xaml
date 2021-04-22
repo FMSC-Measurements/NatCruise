@@ -40,7 +40,7 @@
                             <Frame BackgroundColor="{StaticResource accent}"
                                    CornerRadius="5">
 
-                                <Label Text="{Binding Species}"
+                                <Label Text="{Binding SpeciesCode}"
                                        HorizontalTextAlignment="Center" />
 
                             </Frame >
