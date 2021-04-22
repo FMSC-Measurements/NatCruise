@@ -214,7 +214,7 @@ namespace FScruiser.XF.ViewModels
             TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse().ToObservableCollection();
 
             // refresh selected tree incase coming back from TreeEdit page
-            SelectedTreeViewModel?.Load();
+            
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
 
