@@ -416,7 +416,7 @@
                                                                          Grid.Row="1"
                                                                          StratumCode="{Binding StratumCode}"
                                                                          SampleGroupCode="{Binding SampleGroupCode}"
-                                                                         Species="{Binding Species}"
+                                                                         Species="{Binding SpeciesCode}"
                                                                          LiveDead="{Binding LiveDead}"
                                                                          Margin="5,5,0,0"
                                                                          HeightRequest="20"
