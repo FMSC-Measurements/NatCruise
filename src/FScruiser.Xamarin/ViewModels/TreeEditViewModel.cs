@@ -74,7 +74,7 @@ namespace FScruiser.XF.ViewModels
                 RaisePropertyChanged(nameof(StratumCode));
                 RaisePropertyChanged(nameof(SampleGroupCode));
                 //RaisePropertyChanged(nameof(SubPopulation));
-                RaisePropertyChanged(nameof(Species));
+                RaisePropertyChanged(nameof(SpeciesCode));
                 RaisePropertyChanged(nameof(LiveDead));
                 RaisePropertyChanged(nameof(Remarks));
             }
@@ -364,7 +364,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public string Species
+        public string SpeciesCode
         {
             get => Tree?.SpeciesCode;
             set
