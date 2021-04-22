@@ -28,6 +28,15 @@ namespace FScruiser.XF.Views
             {
                 _tallyFeedListView.ScrollTo(count - 1, position: ScrollToPosition.End, animate: false);
             }
+
+            var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
+            if (vm != null)
+            {
+                _treeEditControlGrid.Children.Clear();
+                vm.Load();
+                var editControls = MakeEditControls(vm.TreeFieldValues);
+                _treeEditControlGrid.Children.AddRange(editControls);
+            }
         }
 
         private void _tallyFeedListView_Focused(object sender, FocusEventArgs e)
@@ -74,7 +83,7 @@ namespace FScruiser.XF.Views
             AjustEditView(speciesPicker);
 
             controls.Add(speciesPicker
-                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Species))
+                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.SpeciesCode))
                 .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.SpeciesOptions))
                 .Col(0)
                 .Row(1));

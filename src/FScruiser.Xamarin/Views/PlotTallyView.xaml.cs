@@ -24,16 +24,19 @@ namespace FScruiser.XF.Views
             InitializeComponent();
         }
 
-        //protected override void OnAppearing()
-        //{
-        //    base.OnAppearing();
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
 
-        //    if (BindingContext is PlotTallyViewModel vm)
-        //    {
-        //        vm.TreeAdded += TallyFeed_CollectionChanged;
-        //        TallyFeed_CollectionChanged(null, null);//Scroll to the bottom of the tally feed when page appears
-        //    }
-        //}
+            var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
+            if (vm != null)
+            {
+                _treeEditControlGrid.Children.Clear();
+                vm.Load();
+                var editControls = MakeEditControls(vm.TreeFieldValues);
+                _treeEditControlGrid.Children.AddRange(editControls);
+            }
+        }
 
 
         private void _stratumFilterButton_Clicked(object sender, EventArgs e)
@@ -86,7 +89,7 @@ namespace FScruiser.XF.Views
             AjustEditView(speciesPicker);
 
             controls.Add(speciesPicker
-                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Species))
+                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.SpeciesCode))
                 .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.SpeciesOptions))
                 .Col(0)
                 .Row(1));
