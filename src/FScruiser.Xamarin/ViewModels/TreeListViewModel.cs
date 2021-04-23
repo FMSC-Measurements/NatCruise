@@ -1,19 +1,16 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
+﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
-using Microsoft.AppCenter.Crashes;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
+using NatCruise.Data;
 using NatCruise.Util;
-using Prism.Navigation;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using Prism.Common;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -67,6 +64,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
 
             Trees = Datastore.GetTreeStubsByUnitCode(unitCode).ToObservableCollection();
@@ -80,7 +79,6 @@ namespace FScruiser.XF.ViewModels
 
             var stratumCode = await DialogService.AskValueAsync("Select Stratum", StratumCodes);
 
-            
             if (stratumCode != null)
             {
                 var sampleGroups = datastore.GetSampleGroupCodes(stratumCode).OrEmpty()

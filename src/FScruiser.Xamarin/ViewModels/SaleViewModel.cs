@@ -56,6 +56,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new System.ArgumentNullException(nameof(parameters)); }
+
             var cruiseID = parameters.GetValue<string>(NavParams.CruiseID);
 
             Sale = Dataservice.GetSale(cruiseID);

@@ -3,12 +3,8 @@ using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Models;
 using Prism.Common;
-using Prism.Navigation;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -40,6 +36,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var saleID = parameters.GetValue<string>(NavParams.SaleID);
             var saleDataservice = SaleDataservice;
             var sale = saleDataservice.GetSale(saleID);
@@ -47,7 +45,6 @@ namespace FScruiser.XF.ViewModels
 
             var cruises = saleDataservice.GetCruises(saleID);
             Cruises = cruises;
-
         }
     }
 }

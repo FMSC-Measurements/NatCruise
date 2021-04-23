@@ -43,6 +43,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var sales = SaleDataservice.GetSales();
             Sales = sales;
         }

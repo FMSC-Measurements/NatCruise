@@ -2,7 +2,6 @@
 using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
@@ -192,6 +191,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
 
             Title = $"Unit {unitCode}";
@@ -214,7 +215,7 @@ namespace FScruiser.XF.ViewModels
             TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse().ToObservableCollection();
 
             // refresh selected tree incase coming back from TreeEdit page
-            
+
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
 
@@ -236,7 +237,7 @@ namespace FScruiser.XF.ViewModels
         public async Task TallyAsync(TallyPopulation pop)
         {
             var entry = await TallyService.TallyAsync(UnitCode, pop);
-            if(entry == null) { return; }
+            if (entry == null) { return; }
 
             TallyFeed.Add(entry);
             RaiseTallyEntryAdded();

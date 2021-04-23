@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using FScruiser.XF.Constants;
+using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
-using Prism.Navigation;
-using Xamarin.Forms;
-using static NatCruise.Cruise.Constants;
 using NatCruise.Data;
 using Prism.Common;
+using System;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -109,10 +103,11 @@ namespace FScruiser.XF.ViewModels
             get => _remarks;
             set => SetProperty(ref _remarks, value);
         }
-        
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var unit = parameters.GetValue<string>(NavParams.UNIT);
             var stratum = parameters.GetValue<string>(NavParams.STRATUM);
             var sampleGroup = parameters.GetValue<string>(NavParams.SAMPLE_GROUP);
@@ -120,11 +115,10 @@ namespace FScruiser.XF.ViewModels
             var liveDead = parameters.GetValue<string>(NavParams.LIVE_DEAD);
 
             var tallyPopulation = TallyPopulationDataservice.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead);
-            
+
             TallyPopulation = tallyPopulation;
             UnitCode = unit;
             CruiseMethod = tallyPopulation.Method;
-
         }
 
         public void SaveEdit()
@@ -132,7 +126,7 @@ namespace FScruiser.XF.ViewModels
             var reason = EditReason;
             var treeCountDelta = TreeCountDelta;
             var cruiser = DialogService.AskCruiserAsync();
-            if(cruiser == null) { return; }
+            if (cruiser == null) { return; }
 
             var tallyLedger = new TallyLedger(UnitCode, TallyPopulation);
             tallyLedger.TreeCount = treeCountDelta;
@@ -144,6 +138,5 @@ namespace FScruiser.XF.ViewModels
 
             NavigationService.GoBackAsync();
         }
-
     }
 }
