@@ -1,16 +1,16 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
+﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
+using NatCruise.Data;
 using NatCruise.Util;
+using Prism.Common;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using Prism.Common;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -94,7 +94,7 @@ namespace FScruiser.XF.ViewModels
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.Remarks;
-                if(value != oldValue)
+                if (value != oldValue)
                 {
                     Datastore.UpdateTreeRemarks(tree.TreeID, value);
                 }
@@ -182,7 +182,6 @@ namespace FScruiser.XF.ViewModels
             //{
             //    Tree.SampleGroupCode = "";
             //}
-
 
             RefreshSampleGroups(tree);
             RefreshSubPopulations(tree);
@@ -436,6 +435,7 @@ namespace FScruiser.XF.ViewModels
         public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new Command(ShowLogs));
 
         public ICommand ShowEditTreeErrorCommand => _showEditTreeErrorCommand ?? (_showEditTreeErrorCommand = new Command<TreeError>(ShowEditTreeError));
+
         private void ShowEditTreeError(TreeError treeError)
         {
             if (treeError.Level != "W"
@@ -443,7 +443,6 @@ namespace FScruiser.XF.ViewModels
             { return; }
             else
             {
-
                 //NavigationService.NavigateAsync("TreeErrorEdit",
                 //    new Prism.Navigation.NavigationParameters($"{NavParams.TreeID}={treeError.TreeID}&{NavParams.TreeAuditRuleID}={treeError.TreeAuditRuleID}"));
 
@@ -476,12 +475,13 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var treeID = parameters.GetValue<string>(NavParams.TreeID);
 
             var datastore = Datastore;
 
             var tree = datastore.GetTree(treeID);
-
             var unitCode = tree.CuttingUnitCode;
             var stratumCodes = datastore.GetStratumCodesByUnit(unitCode);
             StratumCodes = stratumCodes;
@@ -576,8 +576,6 @@ namespace FScruiser.XF.ViewModels
                 }
             }
         }
-
-
 
         //public static void SetTreeTDV(Tree tree, TreeDefaultValueDO tdv)
         //{

@@ -33,7 +33,7 @@ namespace FScruiser.XF.ViewModels
         protected IDialogService DialogService { get; }
 
         public ICommand OpenSelectedCruiseCommand => new Command(OpenSelectedCruise);
-        public ICommand ShareSelectedCruiseCommand => new Command(ShareSelectedCruise);        
+        public ICommand ShareSelectedCruiseCommand => new Command(ShareSelectedCruise);
         public ICommand ExportSelectedCruiseCommand => new Command(async () => await ExportSelectedCruise());
         public ICommand DeleteSelectedCruiseCommand => new Command(DeleteSelectedCruise);
 
@@ -133,7 +133,7 @@ namespace FScruiser.XF.ViewModels
             }
 
             var destPath = await FileDialogService.SelectCruiseFileDestinationAsync(defaultFileName: defaultFileName);
-            if(destPath != null)
+            if (destPath != null)
             {
                 FileSystemService.CopyTo(fileToExport, destPath);
                 // todo need to delete the android content if creating file fails
@@ -165,6 +165,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var saleID = parameters.GetValue<string>(NavParams.SaleID);
             var saleDataservice = SaleDataservice;
             var sale = saleDataservice.GetSale(saleID);

@@ -60,6 +60,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
             var unit = parameters.GetValue<string>(NavParams.UNIT);
             var plotNum = parameters.GetValue<int>(NavParams.PLOT_NUMBER);

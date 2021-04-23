@@ -123,6 +123,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new System.ArgumentNullException(nameof(parameters)); }
+
             var treeID = parameters.GetValue<string>(NavParams.TreeID);
             var treeAuditRuleID = parameters.GetValue<string>(NavParams.TreeAuditRuleID);
 
@@ -133,7 +135,5 @@ namespace FScruiser.XF.ViewModels
             TreeError = treeError;
             TreeNumber = treeNumber.GetValueOrDefault();
         }
-
-
     }
 }

@@ -42,6 +42,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var unit = CuttingUnitDataservice.GetUnit(unitCode);
             CuttingUnit = unit;

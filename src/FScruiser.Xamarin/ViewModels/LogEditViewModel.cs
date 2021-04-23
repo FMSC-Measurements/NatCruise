@@ -33,6 +33,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new System.ArgumentNullException(nameof(parameters)); }
+
             var log_guid = parameters.GetValue<string>(NavParams.LogID);
 
             var log = Datastore.GetLog(log_guid);
@@ -60,7 +62,5 @@ namespace FScruiser.XF.ViewModels
                 Datastore.UpdateLog(log);
             }
         }
-
-        
     }
 }

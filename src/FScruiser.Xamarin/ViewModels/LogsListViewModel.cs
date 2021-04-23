@@ -61,6 +61,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var tree_guid = Tree_GUID = parameters.GetValue<string>(NavParams.TreeID)
                 ?? parameters.GetValue<string>(KnownNavigationParameters.XamlParam);
 

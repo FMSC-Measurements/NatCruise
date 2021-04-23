@@ -1,13 +1,11 @@
 ﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
-using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Util;
 using Prism.Common;
 using Prism.Ioc;
-using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -177,8 +175,9 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
-            var plotID = parameters.GetValue<string>(NavParams.PlotID);
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
+            var plotID = parameters.GetValue<string>(NavParams.PlotID);
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
@@ -217,7 +216,7 @@ namespace FScruiser.XF.ViewModels
             }
 
             var tree = await TallyService.TallyAsync(pop, UnitCode, PlotNumber);
-            if(tree == null) { return; }
+            if (tree == null) { return; }
 
             _trees.Add(tree);
             OnTreeAdded();

@@ -8,7 +8,6 @@ using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -232,8 +231,9 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
-            var plotID = parameters.GetValue<string>(NavParams.PlotID);
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
+            var plotID = parameters.GetValue<string>(NavParams.PlotID);
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
