@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<FlyoutPage xmlns="http://xamarin.com/schemas/2014/forms"
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                   x:Class="FScruiser.XF.Views.MainView"
                   xmlns:views="clr-namespace:FScruiser.XF.Views"
@@ -9,7 +9,7 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   mc:Ignorable="d"
                   IsPresented="True">
-    <FlyoutPage.Flyout>
+    <MasterDetailPage.Master>
         <ContentPage x:Name="MasterPage"
                      Title="Master"
                      Icon="ic_menu_white_18dp.png"
@@ -149,8 +149,8 @@
                 </StackLayout>
             </StackLayout>
         </ContentPage>
-    </FlyoutPage.Flyout>
-    <FlyoutPage.Detail>
+    </MasterDetailPage.Master>
+    <MasterDetailPage.Detail>
         <NavigationPage BarBackgroundColor="{StaticResource primary_500}"
                         BarTextColor="{StaticResource white_90}">
 
@@ -159,5 +159,5 @@
             </x:Arguments>
 
         </NavigationPage>
-    </FlyoutPage.Detail>
-</FlyoutPage>
+    </MasterDetailPage.Detail>
+</MasterDetailPage>
