@@ -34,7 +34,7 @@ namespace FScruiser.XF.Services
 
         public Task ShowManageCruisers()
         {
-            return NavigationService.NavigateAsync("/Main/Navigation/Cruisers");
+            return NavigationService.NavigateAsync("Navigation/Cruisers");
         }
 
         public Task ShowCruiseLandingLayout()
@@ -60,14 +60,14 @@ namespace FScruiser.XF.Services
                 throw new ArgumentException($"'{nameof(unitCode)}' cannot be null or empty.", nameof(unitCode));
             }
 
-            return NavigationService.NavigateAsync("/Main/Navigation/CuttingUnitInfo",
+            return NavigationService.NavigateAsync("Navigation/CuttingUnitInfo",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
 
 
         public Task ShowCuttingUnitList()
         {
-            return NavigationService.NavigateAsync("/Main/Navigation/CuttingUnitList");
+            return NavigationService.NavigateAsync("Navigation/CuttingUnitList");
         }
 
         public Task ShowFeedback()
@@ -177,7 +177,7 @@ namespace FScruiser.XF.Services
                 throw new ArgumentException($"'{nameof(unitCode)}' cannot be null or empty.", nameof(unitCode));
             }
 
-            return NavigationService.NavigateAsync("/Main/Navigation/PlotList",
+            return NavigationService.NavigateAsync("Navigation/PlotList",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
 
@@ -205,13 +205,13 @@ namespace FScruiser.XF.Services
                 throw new ArgumentException($"'{nameof(cruiseID)}' cannot be null or empty.", nameof(cruiseID));
             }
 
-            return NavigationService.NavigateAsync("/Main/Navigation/Sale",
+            return NavigationService.NavigateAsync("Navigation/Sale",
                 new NavigationParameters($"{NavParams.CruiseID}={cruiseID}"));
         }
 
         public Task ShowSaleSelect()
         {
-            return NavigationService.NavigateAsync("/Main/Navigation/SaleSelect");
+            return NavigationService.NavigateAsync("Navigation/SaleSelect");
         }
 
         public Task ShowSampleStateManagment()
@@ -221,7 +221,7 @@ namespace FScruiser.XF.Services
 
         public Task ShowSettings()
         {
-            return NavigationService.NavigateAsync("/Main/Navigation/Settings");
+            return NavigationService.NavigateAsync("Navigation/Settings");
         }
 
         public Task ShowTally(string unitCode)
@@ -231,7 +231,7 @@ namespace FScruiser.XF.Services
                 throw new ArgumentException($"'{nameof(unitCode)}' cannot be null or empty.", nameof(unitCode));
             }
 
-            return NavigationService.NavigateAsync("/Main/Navigation/Tally",
+            return NavigationService.NavigateAsync("Navigation/Tally",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
 
@@ -319,7 +319,7 @@ namespace FScruiser.XF.Services
                 throw new ArgumentException($"'{nameof(unitCode)}' cannot be null or empty.", nameof(unitCode));
             }
 
-            return NavigationService.NavigateAsync("/Main/Navigation/TreeList",
+            return NavigationService.NavigateAsync("Navigation/TreeList",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
     }
