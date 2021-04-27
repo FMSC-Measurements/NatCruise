@@ -25,7 +25,10 @@ namespace FScruiser.XF
 
         protected virtual void RegisterViews(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<MyNavigationView>("Navigation"); // override built in navigation page with custom one
+            // override built in navigation page with custom one
+            // this is needed to set the color of the navigation bar and the navigation bar text color
+            containerRegistry.RegisterForNavigation<MyNavigationView>("Navigation");
+
             containerRegistry.RegisterForNavigation<BlankView>("Blank");
             containerRegistry.RegisterForNavigation<ImportView>("Import");
             containerRegistry.RegisterForNavigation<SaleSelectView>("SaleSelect");
