@@ -42,7 +42,7 @@ namespace FScruiser.Droid
     //    Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
     //    Icon = "@drawable/fscruiser_32dp")]
 
-    public class MainActivity : FormsApplicationActivity
+    public class MainActivity : FormsAppCompatActivity
     {
         const string TASKID_EXTRA = "taskid";
         const string REQUESTCODE_EXTRA = "request_code";
