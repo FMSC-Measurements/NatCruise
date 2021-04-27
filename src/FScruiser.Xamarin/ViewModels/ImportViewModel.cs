@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -68,6 +69,9 @@ namespace FScruiser.XF.ViewModels
         public ICommand SelectCruiseCommand => new DelegateCommand<Cruise>(async (cruise) => await SelectCruiseForImport(cruise));
 
         public ICommand ImportCruiseCommand => new DelegateCommand(async () => await ImportCruise());
+
+        private ICommand cancelCommand;
+        public ICommand CancelCommand => cancelCommand ??= new Command(Cancel);
 
         public ImportViewModel(
             IDataserviceProvider dataserviceProvider,
@@ -265,6 +269,13 @@ namespace FScruiser.XF.ViewModels
                     IsWorking = false;
                 }
             }
+        }
+
+        
+
+        public void Cancel()
+        {
+            NavigationService.GoBackAsync();
         }
     }
 }

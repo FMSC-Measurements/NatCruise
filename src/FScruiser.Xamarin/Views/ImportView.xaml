@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.ImportView"
              x:Name="_page"
+             x:DataType="viewmodels:ImportViewModel"
              IsBusy="{Binding IsWorking}">
     <ContentPage.Content>
         <StackLayout>
@@ -25,7 +27,7 @@
             <Button Text="Import"
                     Command="{Binding ImportCruiseCommand}"
                     IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}"/>
-            <Button Text="Cancel" />
+            <Button Text="Cancel" Command="{Binding CancelCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
