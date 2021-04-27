@@ -109,7 +109,7 @@
                                                        CommandParameter="{Binding TallyLedgerID}" />
                                         </SwipeView.LeftItems>
 
-                                        <Frame BackgroundColor="{StaticResource accent}"
+                                        <Frame BackgroundColor="{Binding CountOrMeasure, Converter={StaticResource countMeasureToColorConverter}}"
                                                CornerRadius="5"
                                                Margin="2,5,2,0"
                                                Padding="0">

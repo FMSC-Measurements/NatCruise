@@ -1,17 +1,19 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
-                                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                                   xmlns:local="clr-namespace:FScruiser.XF.ViewCells"
-                                   xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
-                                   x:Class="FScruiser.XF.ViewCells.PlotTreeViewCell"
-                                   xmlns:prismxaml="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms"
-                                   BackgroundColor="Silver">
-    <Frame BackgroundColor="#30C1BC"
-                   CornerRadius="5"
-                   Margin="2,5,2,0"
-                   Padding="0">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:FScruiser.XF.ViewCells"
+             xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
+             x:Class="FScruiser.XF.ViewCells.PlotTreeViewCell"
+             xmlns:prismxaml="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms"
+             BackgroundColor="Silver">
+    <Frame CornerRadius="5"
+           Margin="2,5,2,0"
+           Padding="0"
+           BackgroundColor="{Binding CountOrMeasure, Converter={StaticResource countMeasureToColorConverter}}">
 
-        <Frame.Triggers>
+        <!--BackgroundColor="#30C1BC"-->
+
+        <!--<Frame.Triggers>
 
             <DataTrigger TargetType="Frame"
                                  Binding="{Binding CountOrMeasure}"
@@ -34,7 +36,7 @@
                                 Value="White" />
             </DataTrigger>
 
-        </Frame.Triggers>
+        </Frame.Triggers>-->
 
         <Grid>
             <Grid.RowDefinitions>
@@ -48,26 +50,25 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Label 
-                   Grid.Column="0"
+            <Label Grid.Column="0"
                    Text="{Binding CountOrMeasure}"
                    TextColor="{StaticResource darkText}"
                    FontSize="16"
                    VerticalTextAlignment="Center" />
 
             <local_ctrls:PopulationIndicator Grid.Row="0"
-                                                         Grid.Column="1"
-                                                         StratumCode="{Binding StratumCode}"
-                                                         SampleGroupCode="{Binding SampleGroupCode}"
-                                                         Species="{Binding SpeciesCode}"
-                                                         LiveDead="{Binding LiveDead}"
-                                                         Margin="5"
-                                                         HeightRequest="30"
-                                                         VerticalOptions="Center"
-                                                         HorizontalOptions="Start"
-                                                         FontSize="Small" />
+                                             Grid.Column="1"
+                                             StratumCode="{Binding StratumCode}"
+                                             SampleGroupCode="{Binding SampleGroupCode}"
+                                             Species="{Binding SpeciesCode}"
+                                             LiveDead="{Binding LiveDead}"
+                                             Margin="5"
+                                             HeightRequest="30"
+                                             VerticalOptions="Center"
+                                             HorizontalOptions="Start"
+                                             FontSize="Small" />
 
-            
+
 
             <Label Grid.Row="0"
                    Grid.Column="2"

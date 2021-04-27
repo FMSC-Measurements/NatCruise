@@ -34,8 +34,12 @@
             <Color x:Key="error">Red</Color>
             <Color x:Key="warning">Gold</Color>
             <Color x:Key="error_suppressed">LightGray</Color>
-            
-            
+
+            <Color x:Key="measureTreeColor">#3CB371</Color> <!--MediumSeaGreen-->
+            <Color x:Key="insuranceTreeColor">#BA55D3</Color><!--MediumOrchid-->
+            <Color x:Key="tallyCountEntryColor">#F4A460</Color>
+            <!--SandyBrown-->
+
 
             <!-- converters -->
             <tc_conv:HasDataConverter x:Key="hasDataConverter" />
@@ -44,7 +48,12 @@
                                                    Default="White"
                                                    Error="Red"
                                                    Warning="Gold" />
-            
+
+            <converters:CountMeasureToColorConverter x:Key="countMeasureToColorConverter"
+                                                     Default="White"
+                                                     Measure="{StaticResource measureTreeColor}"
+                                                     Insurance="{StaticResource insuranceTreeColor}" />
+
             <!-- base styles -->
             <Style x:Key="button_base"
                    TargetType="Button">
