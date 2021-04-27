@@ -11,9 +11,7 @@
                             SelectedItem="{Binding SelectedCruise}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell  Text="{Binding .}" 
-                                   Command="{Binding BindingContext.SelectCruiseCommand, Source={Reference _page}}"
-                                   CommandParameter="{Binding .}"/>
+                        <TextCell  Text="{Binding .}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
