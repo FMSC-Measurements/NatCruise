@@ -96,6 +96,7 @@
                         Image="ic_plus_white_18dp.png"
                         BackgroundColor="{StaticResource primary_500}"
                         WidthRequest="60"
+                        IsEnabled="{Binding Text, Source={Reference _addCruiserEntry}, Converter={StaticResource isNotNullOrEmptyConverter}}"
                         Margin="5"/>
 
                 <Entry x:Name="_addCruiserEntry"
