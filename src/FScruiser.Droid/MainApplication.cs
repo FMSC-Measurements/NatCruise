@@ -1,6 +1,5 @@
 ﻿using Android.App;
 using Android.Runtime;
-using Plugin.CurrentActivity;
 using System;
 
 namespace FScruiser.Droid
