@@ -18,21 +18,21 @@
             
             <Button Text="Open"
                     Command="{Binding OpenSelectedCruiseCommand}"
-                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}"/>
+                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"/>
             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                 <Button Text="Export"
                         Command="{Binding ExportSelectedCruiseCommand}"
-                        IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}"
+                        IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
                         HorizontalOptions="FillAndExpand"/>
                 <Button Text="Share"
                         Command="{Binding ShareSelectedCruiseCommand}"
-                        IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}"
+                        IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
                         HorizontalOptions="FillAndExpand"/>
             </StackLayout>
             
             <Button Text="Delete"
                     Command="{Binding DeleteSelectedCruiseCommand}"
-                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}" />
+                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -7,7 +7,7 @@ using Xamarin.Forms.Xaml;
 using NatCruise.Cruise.Models;
 using System.Collections.Generic;
 using Backpack.XF.WidgiWhats;
-using CSharpForMarkup;
+using Xamarin.CommunityToolkit.Markup;
 
 namespace FScruiser.XF.Views
 {
@@ -76,7 +76,7 @@ namespace FScruiser.XF.Views
 
             controls.Add(new Label
             { Text = "Spcies" }
-            .Col(0)
+            .Column(0)
             .Row(0));
 
             var speciesPicker = new ValuePicker();
@@ -85,12 +85,12 @@ namespace FScruiser.XF.Views
             controls.Add(speciesPicker
                 .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.SpeciesCode))
                 .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.SpeciesOptions))
-                .Col(0)
+                .Column(0)
                 .Row(1));
 
             controls.Add(new Label
             { Text = "L/D" }
-            .Col(1)
+            .Column(1)
             .Row(0));
 
             var ldPicker = new ValuePicker();
@@ -99,7 +99,7 @@ namespace FScruiser.XF.Views
             controls.Add(ldPicker
                 .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.LiveDead))
                 .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.LiveDeadOptions))
-                .Col(1)
+                .Column(1)
                 .Row(1));
 
             int counter = 2;
@@ -110,11 +110,11 @@ namespace FScruiser.XF.Views
                 {
                     Text = field.Heading
                 }
-                .Col(counter)
+                .Column(counter)
                 .Row(0);
 
                 var editControl = Util.TreeEditControlFactory.MakeEditView(field)
-                    .Col(counter)
+                    .Column(counter)
                     .Row(1);
                 AjustEditView(editControl);
 

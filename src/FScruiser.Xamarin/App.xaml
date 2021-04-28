@@ -2,7 +2,7 @@
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                         xmlns:prism="http://prismlibrary.com"
-                        xmlns:tc_conv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+                        xmlns:tc_conv="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
                         xmlns:converters="clr-namespace:FScruiser.XF.Converters"
                         x:Class="FScruiser.XF.App">
     <Application.Resources>
@@ -42,7 +42,8 @@
 
 
             <!-- converters -->
-            <tc_conv:HasDataConverter x:Key="hasDataConverter" />
+            <tc_conv:IsNotNullOrEmptyConverter x:Key="isNotNullOrEmptyConverter" />
+            <tc_conv:ListIsNotNullOrEmptyConverter x:Key="listIsNotNullOrEmptyConverter" />
 
             <converters:ErrorLevelToColorConverter x:Key="errorLevelToColorConverter"
                                                    Default="White"
@@ -53,6 +54,10 @@
                                                      Default="White"
                                                      Measure="{StaticResource measureTreeColor}"
                                                      Insurance="{StaticResource insuranceTreeColor}" />
+
+            <converters:Is3PConverter x:Key="is3pConverter" />
+            <converters:IsSTRConverter x:Key="isStrConverter" />
+            
 
             <!-- base styles -->
             <Style x:Key="button_base"

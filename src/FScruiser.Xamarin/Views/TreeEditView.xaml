@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:effects="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
-             xmlns:tk_converters="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+             xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
+             xmlns:tk_converters="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
              xmlns:widgiwhats="clr-namespace:Backpack.XF.WidgiWhats;assembly=Backpack.XF.WidgiWhats"
              xmlns:converters="clr-namespace:FScruiser.XF.Converters"
              x:Class="FScruiser.XF.Views.TreeEditView"
@@ -40,7 +40,7 @@
                     Value="{Binding Message}" />
         </Style>
 
-        <tk_converters:BooleanToObjectConverter x:Key="hasErrorConverter"
+        <tk_converters:BoolToObjectConverter x:Key="hasErrorConverter"
                                                 x:TypeArguments="Color"
                                                 TrueObject="Red"
                                                 FalseObject="Transparent" />
@@ -90,7 +90,7 @@
                 <Label Text="Tree #" />
                 <Entry x:Name="_treeNumberEntry">
                     <Entry.Effects>
-                        <effects:EntrySelectAllText />
+                        <effects:SelectAllTextEffect />
                     </Entry.Effects>
                 </Entry>
 
