@@ -74,7 +74,7 @@ namespace FScruiser.Droid
 
             global::Xamarin.Forms.Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental" });
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            Xamarin.Toolkit.Effects.Droid.Effects.Init();
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             DLToolkit.Forms.Controls.FlowListView.Init();
 
             var app = new App(new AndroidPlatformInitializer(this));
@@ -85,6 +85,7 @@ namespace FScruiser.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 

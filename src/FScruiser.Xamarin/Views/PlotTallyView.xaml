@@ -2,10 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
-             xmlns:flow="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
-             xmlns:tk_conv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+             xmlns:tk_conv="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
              xmlns:my_behv="clr-namespace:FScruiser.XF.Behaviors"
-             xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
              x:Class="FScruiser.XF.Views.PlotTallyView"
              BackgroundColor="White"
              x:Name="_page"
@@ -14,12 +12,10 @@
         <ResourceDictionary>
             <Color x:Key="tallyIncruiseColor"></Color>
 
-            <tk_conv:BooleanToObjectConverter x:Key="tallyIncruiseBackgroundColorConverter"
+            <tk_conv:BoolToObjectConverter x:Key="tallyIncruiseBackgroundColorConverter"
                                               x:TypeArguments="Color"
                                               TrueObject="{StaticResource primary_500}"
                                               FalseObject="DimGray" />
-
-            <tk_conv:HasDataConverter x:Key="hasDataConverter" />
 
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -150,7 +146,7 @@
 
             <CollectionView Grid.Row="1"
                                x:Name="TallyListView"
-                               IsVisible="{Binding TalliesFiltered, Converter={StaticResource hasDataConverter}}"
+                            IsVisible="{Binding TalliesFiltered, Converter={StaticResource listIsNotNullOrEmptyConverter}}"
                                ItemsSource="{Binding TalliesFiltered}"
                                BackgroundColor="White"
                                VerticalOptions="CenterAndExpand">
@@ -218,13 +214,13 @@
                                            Text="{Binding SampleGroupCode}" LineBreakMode="NoWrap"  />
                                     <BoxView x:Name="_spLableSplitter"
                                              Grid.Column="3"
-                                             IsVisible="{Binding SpeciesCode, Converter={StaticResource hasDataConverter}}" />
+                                             IsVisible="{Binding SpeciesCode, Converter={StaticResource isNotNullOrEmptyConverter}}" />
                                     <Label x:Name="_spLabel"
                                            Grid.Column="4"
                                            Text="{Binding SpeciesCode}" />
                                     <BoxView x:Name="_ldLableSplitter"
                                              Grid.Column="5"
-                                             IsVisible="{Binding LiveDead, Converter={StaticResource hasDataConverter}}" />
+                                             IsVisible="{Binding LiveDead, Converter={StaticResource isNotNullOrEmptyConverter}}" />
                                     <Label x:Name="_ldLabel"
                                            Grid.Column="6"
                                            Text="{Binding LiveDead}" />
@@ -255,7 +251,7 @@
                             SelectedItem="{Binding StratumFilter}"
                             SelectionMode="Single"
                             ItemsSource="{Binding StrataFilterOptions}"
-                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource hasDataConverter}}">
+                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal"
                                        ItemSpacing="2" />

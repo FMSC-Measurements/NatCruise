@@ -55,7 +55,7 @@ namespace FScruiser.XF.Util
             }
             if (editView is Entry entry)
             {
-                entry.Effects.Add(new Xamarin.Toolkit.Effects.EntrySelectAllText());
+                entry.Effects.Add(new Xamarin.CommunityToolkit.Effects.SelectAllTextEffect());
             }
 
             return editView;
