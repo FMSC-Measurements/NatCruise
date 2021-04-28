@@ -1,21 +1,18 @@
 ﻿using Android.App;
-using Android.Content.PM;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
-using FScruiser.XF;
-using Plugin.Permissions;
-using Xamarin.Forms.Platform.Android;
 using Android.Views;
+using FScruiser.XF;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
+using Xamarin.Forms.Platform.Android;
 
 namespace FScruiser.Droid
 {
     [Activity(Label = "FScruiser", Icon = "@drawable/fscruiser_32dp", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-
-
 
     //[IntentFilter(new[] { Intent.ActionView },
     //    DataScheme = "file",
@@ -44,11 +41,10 @@ namespace FScruiser.Droid
 
     public class MainActivity : FormsAppCompatActivity
     {
-        const string TASKID_EXTRA = "taskid";
-        const string REQUESTCODE_EXTRA = "request_code";
+        private const string TASKID_EXTRA = "taskid";
+        private const string REQUESTCODE_EXTRA = "request_code";
 
-
-        static readonly ConcurrentDictionary<int, IntentTask> _tasks = new ConcurrentDictionary<int, IntentTask>();
+        private static readonly ConcurrentDictionary<int, IntentTask> _tasks = new ConcurrentDictionary<int, IntentTask>();
 
         public override bool DispatchTouchEvent(MotionEvent ev)
         {
@@ -75,7 +71,6 @@ namespace FScruiser.Droid
             global::Xamarin.Forms.Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental" });
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            DLToolkit.Forms.Controls.FlowListView.Init();
 
             var app = new App(new AndroidPlatformInitializer(this));
 
@@ -84,7 +79,6 @@ namespace FScruiser.Droid
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
-            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -128,7 +122,7 @@ namespace FScruiser.Droid
             return data.TCS.Task;
         }
 
-        static IntentTask GetTask(int requestCode, bool remove = false)
+        private static IntentTask GetTask(int requestCode, bool remove = false)
         {
             if (remove)
             {
@@ -143,7 +137,7 @@ namespace FScruiser.Droid
         }
     }
 
-    class IntentTask
+    internal class IntentTask
     {
         public IntentTask(int requestCode, Action<Intent> onCreate, Action<Intent> onResult)
         {
@@ -161,6 +155,4 @@ namespace FScruiser.Droid
 
         public Action<Intent> OnCreate { get; }
     }
-
-
 }
