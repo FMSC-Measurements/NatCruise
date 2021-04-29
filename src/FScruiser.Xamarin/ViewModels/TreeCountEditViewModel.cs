@@ -6,6 +6,7 @@ using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using Prism.Common;
 using System;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -13,8 +14,10 @@ namespace FScruiser.XF.ViewModels
 {
     public class TreeCountEditViewModel : XamarinViewModelBase
     {
+        private bool _isSaved;
         private string _unitCode;
         private int _treeCountDelta;
+        private int _kPIDelta;
         private string _editReason;
         private string _remarks;
         private TallyPopulation _tallyPopulation;
@@ -73,6 +76,10 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
+        
+
+        public int KPIDelta { get => _kPIDelta; set => SetProperty(ref _kPIDelta, value); }
+
         public string CruiseMethod
         {
             get => _cruiseMethod;
@@ -80,10 +87,13 @@ namespace FScruiser.XF.ViewModels
             {
                 SetProperty(ref _cruiseMethod, value);
                 RaisePropertyChanged(nameof(IsSTR));
+                RaisePropertyChanged(nameof(Is3P));
             }
         }
 
         public bool IsSTR => CruiseMethod == CruiseDAL.Schema.CruiseMethods.STR;
+
+        public bool Is3P => CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS.Contains(CruiseMethod);
 
         public int AdjustedTreeCount
         {
@@ -123,17 +133,22 @@ namespace FScruiser.XF.ViewModels
 
         public void SaveEdit()
         {
+            if(_isSaved == true) { return; } // prevent double press
+
             var reason = EditReason;
             var treeCountDelta = TreeCountDelta;
+            var kpiDelta = KPIDelta;
             var cruiser = DialogService.AskCruiserAsync();
             if (cruiser == null) { return; }
 
             var tallyLedger = new TallyLedger(UnitCode, TallyPopulation);
             tallyLedger.TreeCount = treeCountDelta;
+            tallyLedger.KPI = kpiDelta;
             tallyLedger.Reason = reason;
             tallyLedger.Remarks = Remarks;
             tallyLedger.EntryType = TallyLedger.EntryTypeValues.TREECOUNT_EDIT;
 
+            _isSaved = true;
             TallyDataservice.InsertTallyLedger(tallyLedger);
 
             NavigationService.GoBackAsync();

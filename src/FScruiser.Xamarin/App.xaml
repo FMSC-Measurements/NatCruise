@@ -37,13 +37,15 @@
 
             <Color x:Key="measureTreeColor">#3CB371</Color> <!--MediumSeaGreen-->
             <Color x:Key="insuranceTreeColor">#BA55D3</Color><!--MediumOrchid-->
-            <Color x:Key="tallyCountEntryColor">#F4A460</Color>
+            <Color x:Key="tallyCountEntryColor">#00BFFF</Color>
             <!--SandyBrown-->
 
 
             <!-- converters -->
             <tc_conv:IsNotNullOrEmptyConverter x:Key="isNotNullOrEmptyConverter" />
             <tc_conv:ListIsNotNullOrEmptyConverter x:Key="listIsNotNullOrEmptyConverter" />
+            <!--False if value is 0, True for everything else-->
+            <tc_conv:IntToBoolConverter x:Key="intToBoolConverter" />
 
             <converters:ErrorLevelToColorConverter x:Key="errorLevelToColorConverter"
                                                    Default="White"
@@ -58,6 +60,7 @@
             <converters:Is3PConverter x:Key="is3pConverter" />
             <converters:IsSTRConverter x:Key="isStrConverter" />
             
+
 
             <!-- base styles -->
             <Style x:Key="button_base"
