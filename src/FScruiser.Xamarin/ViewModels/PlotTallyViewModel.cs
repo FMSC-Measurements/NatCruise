@@ -217,34 +217,21 @@ namespace FScruiser.XF.ViewModels
 
             var tree = await TallyService.TallyAsync(pop, UnitCode, PlotNumber);
             if (tree == null) { return; }
-
-            _trees.Add(tree);
-            OnTreeAdded();
-
-            await HandleTally(pop, tree);
-        }
-
-        public void ShowEditTree(string treeID)
-        {
-            //NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, treeID } });
-            NavigationService.ShowTreeEdit(treeID);
-        }
-
-        public async Task HandleTally(TallyPopulation_Plot population,
-           TreeStub_Plot tree)
-        {
-            if (tree == null) { throw new ArgumentNullException(nameof(tree)); }
-            ICruiseDialogService dialogService = DialogService;
-            ITallySettingsDataService tallySettings = TallySettings;
             ISoundService soundService = SoundService;
 
             await soundService.SignalTallyAsync();
+
+            _trees.Add(tree);
+            OnTreeAdded();
+            
             if (tree.CountOrMeasure == "M")
             {
                 await soundService.SignalMeasureTreeAsync();
 
-                //if (tallySettings.EnableCruiserPopup)
+                //if (TallySettings.EnableCruiserPopup)
                 //{
+                //    var cruiser = dialogService.AskCruiserAsync();
+                //    if(cruiser != null)
                 //    await dialogService.AskCruiserAsync(tree);
                 //}
             }
@@ -252,6 +239,12 @@ namespace FScruiser.XF.ViewModels
             {
                 await soundService.SignalInsuranceTreeAsync();
             }
+        }
+
+        public void ShowEditTree(string treeID)
+        {
+            //NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, treeID } });
+            NavigationService.ShowTreeEdit(treeID);
         }
 
         public void ShowEditPlot()

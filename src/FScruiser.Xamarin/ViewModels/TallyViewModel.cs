@@ -238,14 +238,14 @@ namespace FScruiser.XF.ViewModels
         {
             var entry = await TallyService.TallyAsync(UnitCode, pop);
             if (entry == null) { return; }
-
-            TallyFeed.Add(entry);
-            RaiseTallyEntryAdded();
+            SoundService.SignalTallyAsync().FireAndForget();
 
             pop.TreeCount = pop.TreeCount + entry.TreeCount;
             pop.SumKPI = pop.SumKPI + entry.KPI;
 
-            SoundService.SignalTallyAsync().FireAndForget();
+            TallyFeed.Add(entry);
+            RaiseTallyEntryAdded();
+
             if (entry.CountOrMeasure == "M" || entry.CountOrMeasure == "I")
             {
                 var method = pop.Method;
