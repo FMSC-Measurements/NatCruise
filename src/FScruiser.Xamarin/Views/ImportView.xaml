@@ -5,6 +5,7 @@
              x:Class="FScruiser.XF.Views.ImportView"
              x:Name="_page"
              x:DataType="viewmodels:ImportViewModel"
+             Title="Import Cruise"
              IsBusy="{Binding IsWorking}">
     <ContentPage.Content>
         <StackLayout>

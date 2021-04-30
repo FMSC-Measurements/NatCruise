@@ -1,16 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+             xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              x:Class="FScruiser.XF.Views.PlotListView"
              x:Name="_page"
-             Title="Plots">
+             x:DataType="viewmodels:PlotListViewModel"
+             Title="{Binding UnitCode, StringFormat='{}Unit {0} Plots'}">
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="_plotListView"
                       ItemsSource="{Binding Plots}"
                       RowHeight="75">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="models:Plot">
                         <ViewCell>
                             <ViewCell.ContextActions>
                                 <MenuItem Text="Delete"

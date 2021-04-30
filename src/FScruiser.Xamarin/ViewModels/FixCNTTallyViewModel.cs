@@ -11,10 +11,12 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class FixCNTViewModel : XamarinViewModelBase
+    public class FixCNTTallyViewModel : XamarinViewModelBase
     {
         private Command<FixCNTTallyBucket> _processTallyCommand;
         private bool _isUntallyEnabled;
+
+        public string Title => $"FixCNT Tally Unit {Unit} Plot {PlotNumber}";
 
         public IEnumerable<FixCntTallyPopulation> TallyPopulations { get; set; }
 
@@ -31,11 +33,11 @@ namespace FScruiser.XF.ViewModels
         public string Unit { get; private set; }
         public int PlotNumber { get; private set; }
 
-        protected FixCNTViewModel()
+        protected FixCNTTallyViewModel()
         {
         }
 
-        public FixCNTViewModel(IDataserviceProvider datastoreProvider)
+        public FixCNTTallyViewModel(IDataserviceProvider datastoreProvider)
         {
             if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
 

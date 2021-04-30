@@ -2,8 +2,11 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:tk_ef="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.ThreePPNTPlotView"
-             BackgroundColor="White">
+             x:DataType="viewmodels:ThreePPNTPlotViewModel"
+             BackgroundColor="White"
+             Title="{Binding StratumPlot.PlotNumber, StringFormat='{}Plot {0} '}">
     
     
     <ContentPage.Content>
