@@ -81,7 +81,7 @@ namespace FScruiser.XF.Views
             var controls = new List<View>();
 
             controls.Add(new Label
-            { Text = "Spcies" }
+            { Text = "Species" }
             .Column(0)
             .Row(0));
 
