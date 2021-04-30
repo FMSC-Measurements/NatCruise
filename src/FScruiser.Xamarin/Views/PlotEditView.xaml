@@ -4,7 +4,8 @@
              xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
              xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
              x:Class="FScruiser.XF.Views.PlotEditView"
-             x:Name="_page">
+             x:Name="_page"
+             Title="Edit Plot">
 
     <ContentPage.Resources>
         <Style x:Key="errorWarningLabel"

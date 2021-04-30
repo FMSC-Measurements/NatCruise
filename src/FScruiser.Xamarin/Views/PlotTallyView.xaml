@@ -5,10 +5,12 @@
              xmlns:tk_conv="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
              xmlns:my_behv="clr-namespace:FScruiser.XF.Behaviors"
              xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+             xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              x:Class="FScruiser.XF.Views.PlotTallyView"
              BackgroundColor="White"
              x:Name="_page"
-             Title="{Binding PlotNumber, StringFormat='{}Plot Number {0}'}">
+             x:DataType="viewmodels:PlotTallyViewModel"
+             Title="{Binding PlotNumber, StringFormat='{}Plot {0}'}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="tallyIncruiseColor"></Color>
@@ -48,7 +50,7 @@
                         <my_behv:ScrollOnLoadBehavior />
                     </CollectionView.Behaviors>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:TreeStub_Plot">
                             <SwipeView>
                                 <SwipeView.LeftItems>
                                     <SwipeItem Text="Delete"
@@ -278,7 +280,7 @@
                 </CollectionView.ItemsLayout>
                 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="models:TallyPopulation_Plot">
                         <Frame Padding="0"
                                HeightRequest="80"
                                BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}">
