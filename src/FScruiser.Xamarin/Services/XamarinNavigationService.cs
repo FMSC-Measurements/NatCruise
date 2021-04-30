@@ -39,7 +39,7 @@ namespace FScruiser.XF.Services
 
         public Task ShowCruiseLandingLayout()
         {
-            return NavigationService.NavigateAsync("/Main/Navigation/Blank");
+            return NavigationService.NavigateAsync("/Main/Navigation/Blank", parameters: null, useModalNavigation: false, animated: false);
         }
 
         public Task ShowCruiseSelect(string saleID)
