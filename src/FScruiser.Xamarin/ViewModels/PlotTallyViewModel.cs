@@ -34,6 +34,8 @@ namespace FScruiser.XF.ViewModels
 
         public event EventHandler TreeAdded;
 
+        public string Title => $"Unit {UnitCode} Plot {PlotNumber}";
+
         public ICuttingUnitDatastore Dataservice { get; }
         public ICruiseDialogService DialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
