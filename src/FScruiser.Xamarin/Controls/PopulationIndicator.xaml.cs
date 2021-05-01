@@ -13,64 +13,62 @@ namespace FScruiser.XF.Controls
             nameof(FontSize),
             typeof(double),
             typeof(PopulationIndicator),
-            propertyChanged: (view, oldValue, newValue) => FontSizePropertyChanged(view as PopulationIndicator, (double)oldValue, (double)newValue));
-        private static void FontSizePropertyChanged(PopulationIndicator self, double oldValue, double newValue)
-        {
-            self._stratumLabel.FontSize = newValue;
-            self._sgLabel.FontSize = newValue;
-            self._spLabel.FontSize = newValue;
-            self._ldLabel.FontSize = newValue;
-        }
+            -1.0);
+
+        public static readonly BindableProperty AltFontSizeProperty = BindableProperty.Create(
+            nameof(AltFontSize),
+            typeof(double),
+            typeof(PopulationIndicator),
+            -1.0);
+
+        public static readonly BindableProperty AltFontAttributesProperty = BindableProperty.Create(
+            nameof(AltFontAttributes),
+            typeof(FontAttributes),
+            typeof(PopulationIndicator),
+            FontAttributes.None);
+
+        public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
+            nameof(TextColor),
+            typeof(Color),
+            typeof(PopulationIndicator),
+            Color.White);
+
+        public static readonly BindableProperty CellPaddingProperty = BindableProperty.Create(
+            nameof(CellPadding),
+            typeof(Thickness),
+            typeof(PopulationIndicator),
+            default(Thickness));
+
+        public static readonly BindableProperty CellMarginProperty = BindableProperty.Create(
+            nameof(CellMargin),
+            typeof(Thickness),
+            typeof(PopulationIndicator),
+            default(Thickness));
 
         public static readonly BindableProperty StratumCodeProperty = BindableProperty.Create(
             nameof(StratumCode),
             typeof(string),
             typeof(PopulationIndicator),
-            propertyChanged: (view, oldValue, newValue) => StratumCodePropertyChanged(view as PopulationIndicator, oldValue as string, newValue as string));
+            default(string));
 
-        private static void StratumCodePropertyChanged(PopulationIndicator self, string oldValue, string newValue)
-        {
-            self._stratumLabel.Text = newValue;
-        }
 
         public static readonly BindableProperty SampleGroupCodeProperty = BindableProperty.Create(
             nameof(SampleGroupCode),
             typeof(string),
             typeof(PopulationIndicator),
-            propertyChanged: (view, oldValue, newValue) => SampleGroupCodePropertyChanged(view as PopulationIndicator, oldValue as string, newValue as string));
-
-        private static void SampleGroupCodePropertyChanged(PopulationIndicator self, string oldValue, string newValue)
-        {
-            self._sgLabel.Text = newValue;
-        }
+            default(string));
 
         public static readonly BindableProperty SpeciesProperty = BindableProperty.Create(
             nameof(Species),
             typeof(string),
             typeof(PopulationIndicator),
-            propertyChanged: (view, oldValue, newValue) => SpeciesPropertyChanged(view as PopulationIndicator, oldValue as string, newValue as string));
-
-        private static void SpeciesPropertyChanged(PopulationIndicator self, string oldValue, string newValue)
-        {
-            self._spLabel.Text = newValue;
-            var hasValue = string.IsNullOrEmpty(newValue) == false;
-            self._spLabel.IsVisible = hasValue;
-            self._spLableSplitter.IsVisible = hasValue;
-        }
+            default(string));
 
         public static readonly BindableProperty LiveDeadProperty = BindableProperty.Create(
             nameof(LiveDead),
             typeof(string),
             typeof(PopulationIndicator),
-            propertyChanged: (view, oldValue, newValue) => LiveDeadPropertyChanged(view as PopulationIndicator, oldValue as string, newValue as string));
-
-        private static void LiveDeadPropertyChanged(PopulationIndicator self, string oldValue, string newValue)
-        {
-            self._ldLabel.Text = newValue;
-            var hasValue = string.IsNullOrEmpty(newValue) == false;
-            self._ldLabel.IsVisible = hasValue;
-            self._ldLableSplitter.IsVisible = hasValue;
-        }
+            default(string));
 
         private TallyPopulation_Base _tallyPopulation;
 
@@ -79,6 +77,40 @@ namespace FScruiser.XF.Controls
         {
             get => (double)GetValue(FontSizeProperty);
             set => SetValue(FontSizeProperty, value);
+        }
+
+        [TypeConverter(typeof(FontSizeConverter))]
+        public double AltFontSize
+        {
+            get => (double)GetValue(AltFontSizeProperty);
+            set => SetValue(AltFontSizeProperty, value);
+        }
+
+        public FontAttributes AltFontAttributes
+        {
+            get => (FontAttributes)GetValue(AltFontAttributesProperty);
+            set => SetValue(AltFontAttributesProperty, value);
+        }
+
+        [TypeConverter(typeof(ColorTypeConverter))]
+        public Color TextColor
+        {
+            get => (Color)GetValue(TextColorProperty);
+            set => SetValue(TextColorProperty, value);
+        }
+
+        [TypeConverter(typeof(ThicknessTypeConverter))]
+        public Thickness CellPadding
+        {
+            get => (Thickness)GetValue(CellPaddingProperty);
+            set => SetValue(CellPaddingProperty, value);
+        }
+
+        [TypeConverter(typeof(ThicknessTypeConverter))]
+        public Thickness CellMargin
+        {
+            get => (Thickness)GetValue(CellMarginProperty);
+            set => SetValue(CellMarginProperty, value);
         }
 
         public TallyPopulation_Base TallyPopulation
@@ -120,9 +152,13 @@ namespace FScruiser.XF.Controls
             get => GetValue(LiveDeadProperty) as string;
             set => SetValue(LiveDeadProperty, value);
         }
+        
 
         public PopulationIndicator()
         {
+            BackgroundColor = Color.Black;
+            TextColor = Color.White;
+
             InitializeComponent();
         }
     }
