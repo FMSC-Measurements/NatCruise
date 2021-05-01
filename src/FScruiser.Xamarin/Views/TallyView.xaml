@@ -382,7 +382,6 @@
                                 <Frame CornerRadius="5"
                                        BackgroundColor="Green"
                                        Margin="3"
-                                       HeightRequest="130"
                                        Padding="0">
                                     <Frame.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
@@ -422,10 +421,11 @@
                                                                          SampleGroupCode="{Binding SampleGroupCode}"
                                                                          Species="{Binding SpeciesCode}"
                                                                          LiveDead="{Binding LiveDead}"
-                                                                         Margin="5,5,0,0"
-                                                                         HeightRequest="20"
+                                                                         AltFontAttributes="Bold"
+                                                                         AltFontSize="Large"
                                                                          FontSize="Micro"
                                                                          HorizontalOptions="Center" />
+
 
                                         <Frame  Grid.Column="0"
                                                 Grid.Row="2"
@@ -483,7 +483,7 @@
                 </CollectionView.ItemsSource>-->
 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="x:String">
                         <Button Text="{Binding .}"
                                 TextColor="{StaticResource white_90}"
                                 BackgroundColor="{StaticResource primary_500}"
