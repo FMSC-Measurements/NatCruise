@@ -10,7 +10,7 @@
              BackgroundColor="White"
              x:Name="_page"
              x:DataType="viewmodels:PlotTallyViewModel"
-             Title="{Binding PlotNumber, StringFormat='{}Plot {0}'}">
+             Title="{Binding Title}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="tallyIncruiseColor"></Color>
