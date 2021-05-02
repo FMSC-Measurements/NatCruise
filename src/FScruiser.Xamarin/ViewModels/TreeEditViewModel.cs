@@ -3,6 +3,7 @@ using FScruiser.XF.Services;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Common;
 using Prism.Navigation;
@@ -22,7 +23,7 @@ namespace FScruiser.XF.ViewModels
     // also it would be nice if the view model had a Errors property that exposed a observable dictionary
     // which exposed all the errors rather than having properties to indecated if a property had an error
 
-    public class TreeEditViewModel : XamarinViewModelBase, INavigatedAware
+    public class TreeEditViewModel : XamarinViewModelBase
     {
         private Command _showLogsCommand;
         private IEnumerable<string> _stratumCodes;
@@ -36,11 +37,14 @@ namespace FScruiser.XF.ViewModels
         private Command<TreeError> _showEditTreeErrorCommand;
         private IEnumerable<string> _cruisers;
         private string _initials;
+        private string _cruiseMethod;
 
+        protected bool IsLoading { get; set; }
         protected ICuttingUnitDatastore Datastore { get; }
         public ICruisersDataservice CruisersDataservice { get; }
         protected ICruiseDialogService DialogService { get; }
         protected ICruiseNavigationService NavigationService { get; }
+        protected ILoggingService LoggingService { get; }
 
         public bool UseSimplifiedTreeFields { get; set; } = false;
 
@@ -70,6 +74,7 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _tree, value);
+                RaisePropertyChanged(nameof(CountOrMeasure));
                 RaisePropertyChanged(nameof(TreeNumber));
                 RaisePropertyChanged(nameof(StratumCode));
                 RaisePropertyChanged(nameof(SampleGroupCode));
@@ -83,7 +88,11 @@ namespace FScruiser.XF.ViewModels
         public string Initials
         {
             get => _initials;
-            set => SetProperty(ref _initials, value);
+            set
+            {
+                if (IsLoading) { return; }
+                SetProperty(ref _initials, value);
+            }
         }
 
         public string Remarks
@@ -91,6 +100,7 @@ namespace FScruiser.XF.ViewModels
             get => Tree?.Remarks;
             set
             {
+                if (IsLoading) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.Remarks;
@@ -107,6 +117,46 @@ namespace FScruiser.XF.ViewModels
 
         public string TreeID => Tree?.TreeID;
 
+        #region CountOrMeasure
+
+        public string CountOrMeasure
+        {
+            get => Tree?.CountOrMeasure;
+            set
+            {
+                if (IsLoading) { return; }
+                var tree = Tree;
+                if (tree == null) { return; }
+                var oldValue = tree.CountOrMeasure;
+                if (OnCountOrMeasureChangeing(tree, oldValue, value))
+                {
+                    tree.CountOrMeasure = value;
+                    OnCountOrMeasureChanged(oldValue, value);
+                }
+            }
+        }
+
+        private void OnCountOrMeasureChanged(string oldValue, string value)
+        {
+            SaveTree();
+        }
+
+        private bool OnCountOrMeasureChangeing(Tree_Ex tree, string oldValue, string newValue)
+        {
+            var stratum = tree.StratumCode;
+            var cruiseMethod = Datastore.GetCruiseMethod(stratum);
+            var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod);
+            if (isPlotMethod == false)
+            {
+                //DialogService.ShowMessageAsync($"Cruise Method {cruiseMethod} does not allow changing Count or Measure value");
+            }
+            return isPlotMethod;
+        }
+
+        #endregion CountOrMeasure
+
+        public IEnumerable<string> CountOrMeasureOptions => new[] { "C", "M", "I" };
+
         #region TreeNumber
 
         public int TreeNumber
@@ -117,6 +167,7 @@ namespace FScruiser.XF.ViewModels
             }
             set
             {
+                if (IsLoading) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.TreeNumber;
@@ -163,6 +214,7 @@ namespace FScruiser.XF.ViewModels
             get { return Tree?.StratumCode; }
             set
             {
+                if (IsLoading) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = Tree.StratumCode;
@@ -183,6 +235,7 @@ namespace FScruiser.XF.ViewModels
             //    Tree.SampleGroupCode = "";
             //}
 
+            RefreshCruiseMethod(tree);
             RefreshSampleGroups(tree);
             RefreshSubPopulations(tree);
             RefreshTreeFieldValues(tree);
@@ -299,6 +352,7 @@ namespace FScruiser.XF.ViewModels
 
         //#region SubPopulation
 
+        // TODO remove SubPopulations?
         protected IEnumerable<SubPopulation> SubPopulations
         {
             get => _subPopulations;
@@ -356,7 +410,6 @@ namespace FScruiser.XF.ViewModels
             get
             {
                 var tree = Tree;
-
                 return _subPopulations.OrEmpty()
                   .Select(x => x.SpeciesCode)
                   .ToArray();
@@ -368,6 +421,7 @@ namespace FScruiser.XF.ViewModels
             get => Tree?.SpeciesCode;
             set
             {
+                if (IsLoading) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.SpeciesCode;
@@ -416,6 +470,7 @@ namespace FScruiser.XF.ViewModels
             get => Tree?.LiveDead;
             set
             {
+                if (IsLoading) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.LiveDead;
@@ -431,6 +486,12 @@ namespace FScruiser.XF.ViewModels
         }
 
         #endregion LiveDead
+
+        public string CruiseMethod
+        {
+            get => _cruiseMethod;
+            protected set => SetProperty(ref _cruiseMethod, value);
+        }
 
         public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new Command(ShowLogs));
 
@@ -450,8 +511,12 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public TreeEditViewModel(IDataserviceProvider datastoreProvider
-            , ICruiseDialogService dialogService, ICruiseNavigationService navigationService, ICruisersDataservice cruisersDataservice)
+        public TreeEditViewModel(
+            IDataserviceProvider datastoreProvider,
+            ICruiseDialogService dialogService,
+            ICruiseNavigationService navigationService,
+            ICruisersDataservice cruisersDataservice,
+            ILoggingService loggingService)
         {
             if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
 
@@ -459,18 +524,7 @@ namespace FScruiser.XF.ViewModels
             CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-        }
-
-        public void OnNavigatedFrom(INavigationParameters parameters)
-        {
-            // TODO is there another way we can unwire the tree? maybe using IActiveAware?
-
-            Tree = null;//unwire tree
-        }
-
-        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
-        {
-            // do nothing
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
         protected override void Load(IParameters parameters)
@@ -481,19 +535,37 @@ namespace FScruiser.XF.ViewModels
 
             var datastore = Datastore;
 
-            var tree = datastore.GetTree(treeID);
-            var unitCode = tree.CuttingUnitCode;
-            var stratumCodes = datastore.GetStratumCodesByUnit(unitCode);
-            StratumCodes = stratumCodes;
+            try
+            {
+                IsLoading = true;
+                var tree = datastore.GetTree(treeID);
+                var unitCode = tree.CuttingUnitCode;
+                var stratumCodes = datastore.GetStratumCodesByUnit(unitCode);
+                StratumCodes = stratumCodes;
 
-            RefreshSampleGroups(tree);
-            RefreshSubPopulations(tree);
-            RefreshTreeFieldValues(tree);
-            RefreshErrorsAndWarnings(tree);
+                RefreshCruiseMethod(tree);
+                RefreshSampleGroups(tree);
+                RefreshSubPopulations(tree);
+                RefreshTreeFieldValues(tree);
+                RefreshErrorsAndWarnings(tree);
 
-            Cruisers = CruisersDataservice.GetCruisers().ToArray();
+                Cruisers = CruisersDataservice.GetCruisers().ToArray();
 
-            Tree = tree;
+                Tree = tree;
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void RefreshCruiseMethod(Tree tree)
+        {
+            var stratumCode = tree?.StratumCode;
+            if (string.IsNullOrEmpty(stratumCode) == false)
+            { CruiseMethod = Datastore.GetCruiseMethod(stratumCode); }
+            else
+            { CruiseMethod = null; }
         }
 
         private void RefreshSampleGroups(Tree tree)
@@ -545,12 +617,10 @@ namespace FScruiser.XF.ViewModels
 
         public void ShowLogs()
         {
-            //NavigationService.NavigateAsync("Logs", new NavigationParameters($"{NavParams.TreeID}={Tree.TreeID}"));
-
             NavigationService.ShowLogsList(Tree.TreeID);
         }
 
-        protected void SaveTree()
+        public void SaveTree()
         {
             SaveTree(Tree);
         }
@@ -569,9 +639,10 @@ namespace FScruiser.XF.ViewModels
                     {
                         Datastore.UpdateTree(tree);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        //TODO notify error to view
+                        LoggingService.LogException(nameof(TreeEditViewModel), "SaveTree", e);
+                        DialogService.ShowMessageAsync("Save Tree Error");
                     }
                 }
             }

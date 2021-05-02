@@ -115,7 +115,7 @@ namespace FScruiser.XF.Views
             var index = 0;
             foreach (var field in treeFields)
             {
-                if(string.Compare(field.Field, "initials") == 0) { continue; }
+                if(string.Compare(field.Field, "initials", true) == 0) { continue; }
 
                 grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 
