@@ -85,6 +85,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\MainActivity.cs" />
+    <Compile Include="CustomRenderers\ValuePickerEditText.cs" />
+    <Compile Include="CustomRenderers\ValuePickerRenderer.cs" />
     <Compile Include="Services\ActivityService.cs" />
     <Compile Include="Services\IActivityService.cs" />
     <None Include="Activities\SurrogateActivity.cs~" />
@@ -126,9 +128,7 @@
       <Name>NatCruise.Cruise</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CustomRenderers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms">
       <Version>5.0.0.2012</Version>
