@@ -5,13 +5,12 @@
              xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
              x:Class="FScruiser.XF.Views.SaleSelectView"
              x:Name="_page"
-             x:DataType="viewmodels:SaleSelectViewModel"
              Title="Select Sale">
     <ContentPage.Content>
         <StackLayout>
         <ListView ItemsSource="{Binding Sales}" >
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:Sale">
+                <DataTemplate>
                     <TextCell Text="{Binding .}" 
                               Command="{Binding BindingContext.ShowCruiseSelectCommand, Source={Reference _page}}"
                               CommandParameter="{Binding SaleID}"/>

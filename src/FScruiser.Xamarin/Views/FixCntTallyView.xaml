@@ -35,7 +35,7 @@
 
                 <BindableLayout.ItemTemplate>
 
-                    <DataTemplate x:DataType="models:FixCntTallyPopulation">
+                    <DataTemplate>
 
                         <StackLayout Orientation="Horizontal">
 
@@ -55,7 +55,7 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
 
-                                    <DataTemplate x:DataType="models:FixCNTTallyBucket">
+                                    <DataTemplate>
 
                                         <Frame BorderColor="Black"
                                                HeightRequest="75"

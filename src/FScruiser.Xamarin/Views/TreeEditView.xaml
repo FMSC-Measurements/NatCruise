@@ -8,7 +8,6 @@
              xmlns:controls="clr-namespace:FScruiser.XF.Controls"
              x:Class="FScruiser.XF.Views.TreeEditView"
              x:Name="_page"
-             x:DataType="viewmodels:TreeEditViewModel"
              Title="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
              BackgroundColor="White"
              TreeNumber="{Binding TreeNumber}"

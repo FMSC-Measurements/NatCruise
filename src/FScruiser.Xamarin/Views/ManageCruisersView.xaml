@@ -5,7 +5,6 @@
              x:Class="FScruiser.XF.Views.ManageCruisersView"
              BackgroundColor="White"
              x:Name="_self"
-             x:DataType="viewmodels:ManageCruisersViewModel"
              Title="Manage Cruisers">
     <ContentPage.Content>
         <Grid>

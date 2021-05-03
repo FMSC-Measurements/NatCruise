@@ -5,15 +5,14 @@
              xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
              x:Class="FScruiser.XF.Views.CruiseSelectView"
              x:Name="_page"
-             Title="Select Cruise"
-             x:DataType="viewmodels:CruiseSelectViewModel">
+             Title="Select Cruise">
     <ContentPage.Content>
         <StackLayout>
             <ListView ItemsSource="{Binding Cruises}" 
                             SelectionMode="Single"
                             SelectedItem="{Binding SelectedCruise}">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Cruise">
+                    <DataTemplate>
                         <TextCell  Text="{Binding .}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>

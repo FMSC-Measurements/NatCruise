@@ -7,12 +7,11 @@
              xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
              mc:Ignorable="d"
              x:Class="FScruiser.XF.Views.SaleView"
-             x:DataType="viewmodels:SaleViewModel"
              Title="Sale Info">
     <ContentPage.Content>
         <TableView BindingContext="{Binding Sale}"
                    HasUnevenRows="True">
-            <TableRoot x:DataType="models:Sale">
+            <TableRoot>
                 <TableSection>
                     <EntryCell Label="Sale Name"
                                Text="{Binding Name, Mode=OneWay}"

@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             x:Class="FScruiser.XF.Views.LogEditView"
-             x:DataType="viewmodels:LogEditViewModel">
+             x:Class="FScruiser.XF.Views.LogEditView">
 
     <ContentPage.Resources>
         <Style x:Key="errorWarningLabel"
