@@ -35,5 +35,10 @@ namespace FScruiser.XF.TestServices
         {
             return "";
         }
+
+        public void CopyTo(string from, string to)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

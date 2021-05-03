@@ -42,7 +42,7 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<TreeEditView>("Tree");
             containerRegistry.RegisterForNavigation<PlotListView>("PlotList");
             containerRegistry.RegisterForNavigation<PlotTallyView>("PlotTally");
-            containerRegistry.RegisterForNavigation<FixCntTallyView>("FixCNTTally");
+            containerRegistry.RegisterForNavigation<FixCntTallyView, FixCNTTallyViewModel>("FixCNTTally");
             containerRegistry.RegisterForNavigation<PlotEditView>("PlotEdit");
             containerRegistry.RegisterForNavigation<TreeCountEditView>("TreeCountEdit");
             containerRegistry.RegisterForNavigation<TreeErrorEditView>("TreeErrorEdit");

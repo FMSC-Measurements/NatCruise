@@ -5,7 +5,6 @@
              xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              x:Class="FScruiser.XF.Views.FixCntTallyView"
              x:Name="Page"
-             x:DataType="viewmodels:FixCNTTallyViewModel"
              Title="{Binding Title}">
     <ContentPage.Content>
         <Grid>
