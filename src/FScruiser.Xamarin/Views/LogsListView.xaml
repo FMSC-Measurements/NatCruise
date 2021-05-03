@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.LogsListView"
-             x:DataType="viewmodels:LogsListViewModel"
              Title="{Binding TreeNumber, StringFormat='{}Logs: Tree Number {0}'}">
     <ContentPage.Content>
         <StackLayout>

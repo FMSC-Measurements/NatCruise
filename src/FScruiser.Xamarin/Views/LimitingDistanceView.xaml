@@ -4,7 +4,6 @@
              xmlns:tk_effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
              xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.LimitingDistanceView"
-             x:DataType="viewmodels:LimitingDistanceViewModel"
              Title="Limiting Distance Calculator">
     <ContentPage.Resources>
         <Style TargetType="Label">

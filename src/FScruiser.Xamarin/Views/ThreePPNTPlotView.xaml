@@ -4,7 +4,6 @@
              xmlns:tk_ef="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
              xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.ThreePPNTPlotView"
-             x:DataType="viewmodels:ThreePPNTPlotViewModel"
              BackgroundColor="White"
              Title="{Binding StratumPlot.PlotNumber, StringFormat='{}Plot {0} '}">
     

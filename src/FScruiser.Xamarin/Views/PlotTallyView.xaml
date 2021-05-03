@@ -10,7 +10,6 @@
              x:Class="FScruiser.XF.Views.PlotTallyView"
              BackgroundColor="White"
              x:Name="_page"
-             x:DataType="viewmodels:PlotTallyViewModel"
              Title="{Binding Title}">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -51,7 +50,7 @@
                         <my_behv:ScrollOnLoadBehavior />
                     </CollectionView.Behaviors>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:TreeStub_Plot">
+                        <DataTemplate>
                             <SwipeView>
                                 <SwipeView.LeftItems>
                                     <SwipeItem Text="Delete"
@@ -86,7 +85,7 @@
                         BindingContextChanged="_treeEditPanel_BindingContextChanged">
 
 
-                    <Grid x:DataType="viewmodels:TreeEditViewModel">
+                    <Grid>
                         <!--default to not visable, when view cell expands visability will be set to true -->
 
                         <Grid.RowDefinitions>
@@ -169,7 +168,7 @@
                 </CollectionView.ItemsLayout>
                 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:TallyPopulation_Plot">
+                    <DataTemplate>
                         <Frame Padding="0"
                                HeightRequest="80"
                                BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}">
@@ -274,7 +273,7 @@
                 </CollectionView.ItemsLayout>
 
                 <CollectionView.ItemTemplate >
-                    <DataTemplate x:DataType="x:String">
+                    <DataTemplate>
                         <Label Text="{Binding .}"
                                 TextColor="{StaticResource white_90}"
                                 BackgroundColor="{StaticResource primary_500}"

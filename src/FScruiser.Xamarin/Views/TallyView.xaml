@@ -8,7 +8,6 @@
              xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              x:Class="FScruiser.XF.Views.TallyView"
              x:Name="_page"
-             x:DataType="viewmodels:TallyViewModel"
              BackgroundColor="White"
              Title="{Binding Title}">
     <ContentPage.Resources>
@@ -39,7 +38,7 @@
                         <cells:TreeDataTemplateSelector>
 
                             <cells:TreeDataTemplateSelector.TallyEditTemplate>
-                                <DataTemplate x:DataType="models:TallyEntry">
+                                <DataTemplate>
                                     <!--<cells:TallyEditViewCell />-->
 
                                     <Frame BackgroundColor="{DynamicResource tallyCountEntryColor}"
@@ -106,7 +105,7 @@
                             </cells:TreeDataTemplateSelector.TallyEditTemplate>
 
                             <cells:TreeDataTemplateSelector.TreeItemTemplate>
-                                <DataTemplate x:DataType="models:TallyEntry">
+                                <DataTemplate>
                                     <SwipeView>
                                         <SwipeView.LeftItems>
                                             <SwipeItem Text="Untally"
@@ -234,7 +233,7 @@
                             </cells:TreeDataTemplateSelector.TreeItemTemplate>
 
                             <cells:TreeDataTemplateSelector.BasicTemplate>
-                                <DataTemplate x:DataType="models:TallyEntry">
+                                <DataTemplate>
                                     <SwipeView>
                                         <SwipeView.LeftItems>
                                             <SwipeItem Text="Untally"
@@ -293,7 +292,7 @@
                         BindingContext="{Binding SelectedTreeViewModel}"
                         BindingContextChanged="_treeEditPanel_BindingContextChanged">
 
-                    <Grid x:DataType="viewmodels:TreeEditViewModel">
+                    <Grid>
                         <!--default to not visable, when view cell expands visability will be set to true -->
 
                         <Grid.RowDefinitions>
@@ -375,7 +374,7 @@
                                      VerticalItemSpacing="3" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <cells:TallyDataTemplateSelector x:DataType="models:TallyPopulation">
+                    <cells:TallyDataTemplateSelector>
                         <cells:TallyDataTemplateSelector.TallyTemplate>
                             <DataTemplate>
 
@@ -483,7 +482,7 @@
                 </CollectionView.ItemsSource>-->
 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
+                    <DataTemplate>
                         <Button Text="{Binding .}"
                                 TextColor="{StaticResource white_90}"
                                 BackgroundColor="{StaticResource primary_500}"

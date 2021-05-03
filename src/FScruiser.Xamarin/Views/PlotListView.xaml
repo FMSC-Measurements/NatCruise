@@ -5,7 +5,6 @@
              xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              x:Class="FScruiser.XF.Views.PlotListView"
              x:Name="_page"
-             x:DataType="viewmodels:PlotListViewModel"
              Title="{Binding UnitCode, StringFormat='{}Unit {0} Plots'}">
     <ContentPage.Content>
         <StackLayout>
@@ -13,7 +12,7 @@
                       ItemsSource="{Binding Plots}"
                       RowHeight="75">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Plot">
+                    <DataTemplate>
                         <ViewCell>
                             <ViewCell.ContextActions>
                                 <MenuItem Text="Delete"
