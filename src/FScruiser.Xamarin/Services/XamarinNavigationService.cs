@@ -87,7 +87,7 @@ namespace FScruiser.XF.Services
                 throw new ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty.", nameof(stratumCode));
             }
 
-            return NavigationService.NavigateAsync($"FixCNT",
+            return NavigationService.NavigateAsync($"FixCNTTally",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.PLOT_NUMBER}={plotNumber}&{NavParams.STRATUM}={stratumCode}"));
         }
 

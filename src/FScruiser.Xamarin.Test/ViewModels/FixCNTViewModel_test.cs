@@ -20,29 +20,12 @@ namespace FScruiser.XF.ViewModels
         {
         }
 
-        private CruiseDatastore_V3 CreateDatabase(out string cruiseID)
+        private void InitializeFizCNT(CruiseDatastore_V3 database, string cruiseID)
         {
-            var saleID = Guid.NewGuid().ToString();
-            cruiseID = Guid.NewGuid().ToString();
-            var database = new CruiseDatastore_V3();
-
-            var cruise = new CruiseDAL.V3.Models.Cruise
-            {
-                CruiseID = cruiseID,
-                SaleID = saleID,
-            };
-            database.Insert(cruise);
-
-            database.Insert(new CruiseDAL.V3.Models.CuttingUnit
-            {
-                CruiseID = cruiseID,
-                CuttingUnitCode = "u1",
-                Area = 0,
-            });
-
             var stratum = new CruiseDAL.V3.Models.Stratum()
             {
                 CruiseID = cruiseID,
+                StratumID = Guid.NewGuid().ToString(),
                 StratumCode = "fixCnt1",
                 Method = CruiseDAL.Schema.CruiseMethods.FIXCNT,
                 FixCNTField = "DBH",
@@ -52,6 +35,7 @@ namespace FScruiser.XF.ViewModels
             var sg = new CruiseDAL.V3.Models.SampleGroup()
             {
                 CruiseID = cruiseID,
+                SampleGroupID = Guid.NewGuid().ToString(),
                 SampleGroupCode = "sgFixCnt",
                 CutLeave = "C",
                 UOM = "01",
@@ -60,7 +44,7 @@ namespace FScruiser.XF.ViewModels
             };
             database.Insert(sg);
 
-            database.Execute($"INSERT INTO SpeciesCode (Species) values ('someSpecies');");
+            database.Execute($"INSERT INTO Species (SpeciesCode, CruiseID) values ('someSpecies', '{cruiseID}');");
 
             var tdv = new CruiseDAL.V3.Models.TreeDefaultValue()
             {
@@ -73,6 +57,7 @@ namespace FScruiser.XF.ViewModels
             var sgTdv = new CruiseDAL.V3.Models.SubPopulation()
             {
                 CruiseID = cruiseID,
+                SubPopulationID = Guid.NewGuid().ToString(),
                 StratumCode = sg.StratumCode,
                 SampleGroupCode = sg.SampleGroupCode,
                 SpeciesCode = tdv.SpeciesCode,
@@ -100,24 +85,27 @@ namespace FScruiser.XF.ViewModels
                 CuttingUnitCode = "u1",
                 PlotNumber = 1
             });
-
-            return database;
         }
 
         [Fact]
         public void Refresh_test()
         {
-            using (var database = CreateDatabase(out var cruiseID))
+            var init = new DatastoreInitializer();
+
+            using (var database = init.CreateDatabase())
             {
-                var viewModel = new FixCNTViewModel(
+                InitializeFizCNT(database, init.CruiseID);
+
+                var viewModel = new FixCNTTallyViewModel(
                     new DataserviceProvider(database, new TestDeviceInfoService())
                     {
-                        CruiseID = cruiseID
+                        CruiseID = init.CruiseID
                     });
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
 
                 viewModel.Initialize(navParams);
+                viewModel.Load();
 
                 viewModel.TallyPopulations.Should().NotBeEmpty();
 
@@ -135,19 +123,24 @@ namespace FScruiser.XF.ViewModels
         [Fact]
         public void Tally()
         {
-            using (var database = CreateDatabase(out var cruiseID))
-            {
-                var deviceInfo = new TestDeviceInfoService();
-                var datastore = new CuttingUnitDatastore(database, cruiseID, deviceInfo.DeviceID);
+            var init = new DatastoreInitializer();
 
-                var viewModel = new FixCNTViewModel(
+            using (var database = init.CreateDatabase())
+            {
+                InitializeFizCNT(database, init.CruiseID);
+
+                var deviceInfo = new TestDeviceInfoService();
+                var datastore = new CuttingUnitDatastore(database, init.CruiseID, deviceInfo.DeviceID,new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
+
+                var viewModel = new FixCNTTallyViewModel(
                     new DataserviceProvider(database, deviceInfo)
                     {
-                        CruiseID = cruiseID
+                        CruiseID = init.CruiseID,
                     });
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
                 viewModel.Initialize(navParams);
+                viewModel.Load();
 
                 var tallyPop = viewModel.TallyPopulations.First();
 
