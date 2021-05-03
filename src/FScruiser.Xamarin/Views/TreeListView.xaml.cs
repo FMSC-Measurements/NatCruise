@@ -1,5 +1,5 @@
-﻿using NatCruise.Cruise.Models;
-using FScruiser.XF.ViewModels;
+﻿using FScruiser.XF.ViewModels;
+using NatCruise.Cruise.Models;
 using System;
 using System.Linq;
 using Xamarin.Forms;
@@ -14,7 +14,7 @@ namespace FScruiser.XF.Views
 
             _goToEndButton.Clicked += _goToEndButton_Clicked;
             _goToStartButton.Clicked += _goToStartButton_Clicked;
-            _treeListView.ItemSelected += _treeListView_ItemSelected;
+            //_treeListView.ItemSelected += _treeListView_ItemSelected;
         }
 
         protected override void OnAppearing()
@@ -62,10 +62,9 @@ namespace FScruiser.XF.Views
         {
             var itemSource = _treeListView.ItemsSource;
             if (itemSource == null) { return; }
-            var lastItem = itemSource.Cast<object>().LastOrDefault();
-            if (lastItem == null) { return; }
+            var lastIndex = itemSource.OfType<object>().Count();
 
-            _treeListView.ScrollTo(lastItem, ScrollToPosition.End, false);
+            _treeListView.ScrollTo(lastIndex - 1, position: ScrollToPosition.End, animate: false);
         }
 
         private void _goToStartButton_Clicked(object sender, EventArgs e)
@@ -77,10 +76,8 @@ namespace FScruiser.XF.Views
         {
             var itemSource = _treeListView.ItemsSource;
             if (itemSource == null) { return; }
-            var firstItem = itemSource.Cast<object>().FirstOrDefault();
-            if (firstItem == null) { return; }
 
-            _treeListView.ScrollTo(firstItem, ScrollToPosition.Start, false);
+            _treeListView.ScrollTo(0, position: ScrollToPosition.Start, animate: false);
         }
     }
 }

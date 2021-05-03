@@ -21,6 +21,7 @@ namespace FScruiser.XF.ViewModels
         private ICollection<TreeStub> _trees;
         private Command _addTreeCommand;
         private Command<TreeStub> _showLogsCommand;
+        private string _unitCode;
 
         public ICollection<TreeStub> Trees
         {
@@ -41,7 +42,11 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new Command<TreeStub>(async (x) => await ShowLogsAsync(x)));
 
-        public string UnitCode { get; set; }
+        public string UnitCode
+        {
+            get => _unitCode;
+            set => SetProperty(ref _unitCode, value);
+        }
 
         public ICuttingUnitDatastore Datastore { get; set; }
 
