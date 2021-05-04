@@ -1,66 +1,90 @@
 ﻿using Android.Content;
-using Com.Obsez.Android.Lib.Filechooser;
+using FScruiser.XF.Services;
 using NatCruise.Services;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace FScruiser.Droid.Services
 {
-    public class AndroidFileDialogService : IFileDialogService
+    public class AndroidFileDialogService : XamarinFileDialogService, IFileDialogService
     {
-        private TaskCompletionSource<string> _tcs;
+        private TaskCompletionSource<string> _selectCruiseFileDestTcs;
+        protected int CREATE_FILE_REQUESTCODE = 100;
 
-        private Context Context { get; }
+        protected MainActivity Activity { get; }
 
-        public AndroidFileDialogService(Context context)
+        public AndroidFileDialogService(MainActivity activity)
         {
-            Context = context ?? throw new ArgumentNullException(nameof(context));
+            Activity = activity ?? throw new ArgumentNullException(nameof(activity));
         }
 
-        public Task<string> SelectCruiseFileAsync()
+        public async override Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
         {
-            var newTcs = new TaskCompletionSource<string>();
-            var existingTcs = Interlocked.Exchange(ref _tcs, newTcs);
-            if (existingTcs != null)
+            var action = Intent.ActionCreateDocument;
+            var intent = new Intent(action);
+            intent.SetType("application/x.crz3");
+
+            if (string.IsNullOrWhiteSpace(defaultFileName) == false)
             {
-                existingTcs.TrySetResult(null);
+                intent.PutExtra(Intent.ExtraTitle, defaultFileName);
             }
 
-            var chooserDialog = new ChooserDialog(Context)
-                .WithFilter(false, false, "cruise", "CRUISE", "crz3", "CRZ3")
-                .WithStringResources("Choose a file",
-                    "Choose", "Cancel")
-                .WithOptionStringResources("New folder",
-                    "Delete", "Cancel", "Ok");
+            var requestCode = CREATE_FILE_REQUESTCODE;
+            intent.PutExtra("request_code", requestCode);
 
-            chooserDialog.WithChosenListener((path, file) =>
+            var createIntent = Intent.CreateChooser(intent, "Select File Destination");
+
+            try
             {
-                var tcs = Interlocked.Exchange(ref _tcs, null);
+                string resultPath = null;
+                void OnResult(Intent intent)
+                {
+                    resultPath = intent.Data.ToString();
+                }
 
-                tcs.SetResult(file.AbsolutePath);
-            });
+                await Activity.StartAsync(createIntent, requestCode, onResult: OnResult);
 
-            chooserDialog.WithOnCancelListener(x =>
+                return resultPath;
+            }
+            catch (OperationCanceledException)
             {
-                var tcs = Interlocked.Exchange(ref _tcs, null);
-
-                tcs.SetResult(null);
-            });
-
-            //chooserDialog.WithOnBackPressedListener(d =>
-            //{
-            //    chooserDialog.GoBack();
-            //});
-
-            chooserDialog.Build().Show();
-
-            return _tcs.Task;
+                return null;
+            }
         }
 
-        public Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        public async override Task<string> SelectBackupFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
         {
-            throw new NotSupportedException();
+            var action = Intent.ActionCreateDocument;
+            var intent = new Intent(action);
+            intent.SetType("application/x.crz3db");
+
+            if (string.IsNullOrWhiteSpace(defaultFileName) == false)
+            {
+                intent.PutExtra(Intent.ExtraTitle, defaultFileName);
+            }
+
+            var requestCode = CREATE_FILE_REQUESTCODE;
+            intent.PutExtra("request_code", requestCode);
+
+            var createIntent = Intent.CreateChooser(intent, "Select Backup File Destination");
+
+            try
+            {
+                string resultPath = null;
+                void OnResult(Intent intent)
+                {
+                    resultPath = intent.Data.ToString();
+                }
+
+                await Activity.StartAsync(createIntent, requestCode, onResult: OnResult);
+
+                return resultPath;
+            }
+            catch (OperationCanceledException)
+            {
+                return null;
+            }
         }
+
     }
 }

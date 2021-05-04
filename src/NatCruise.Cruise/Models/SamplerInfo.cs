@@ -8,6 +8,7 @@
         public string Method { get; set; }
         public int SamplingFrequency { get; set; }
         public int InsuranceFrequency { get; set; }
+        public string SampleSelectorType { get; set; }
         public int KZ { get; set; }
     }
 }

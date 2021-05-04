@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.TreeErrorEditView"
-             Title="{Binding TreeNumber}">
+             Title="Tree Error">
     <ContentPage.Content>
 
+        <StackLayout>
         <Grid>
             <Grid.Resources>
                 
@@ -53,7 +55,7 @@
 
             <Label Grid.Row="2"
                    Grid.Column="0"
-                   Text="Remarks" />
+                   Text="Remarks*" />
 
             <Editor Grid.Row="3"
                     Grid.Column="0"
@@ -73,6 +75,10 @@
                    WidthRequest="100"
                    IsEnabled="{Binding IsResolved}" />
         </Grid>
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Save" Command="{Binding SaveCommand}" />
+            </StackLayout>
+        </StackLayout>
 
     </ContentPage.Content>
 </ContentPage>

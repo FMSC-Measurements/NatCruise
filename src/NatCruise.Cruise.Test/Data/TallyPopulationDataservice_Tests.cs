@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using CruiseDAL.V3.Models;
+using NatCruise.Test;
 
 namespace NatCruise.Cruise.Test.Data
 {
@@ -103,7 +104,7 @@ namespace NatCruise.Cruise.Test.Data
                 database.Execute("INSERT INTO TallyHotKey (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead, HotKey) VALUES " +
                     "(@p1, @p2, @p3, @p4, @p5, @p6);", new object[] { cruiseID, stratum, sampleGroup, species, liveDead, hotKey });
 
-                var datastore = new TallyPopulationDataservice(database, cruiseID);
+                var datastore = new TallyPopulationDataservice(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var spResult = database.QueryGeneric("select * from SubPopulation;");
                 var tpresult = database.QueryGeneric("select * from TallyPopulation;");
@@ -117,6 +118,27 @@ namespace NatCruise.Cruise.Test.Data
                 pop.TallyHotKey.Should().NotBeNullOrWhiteSpace();
                 pop.Method.Should().NotBeNullOrWhiteSpace();
             }
+        }
+
+        [Fact]
+        public void GetTallyPopulationsByUnitCode_multiCruise()
+        {
+            
+
+            var init1 = new DatastoreInitializer();
+            var init2 = new DatastoreInitializer( "1");
+
+            var unitCode = init1.Units[0];
+
+            using var db = init1.CreateDatabase();
+
+            init2.InitializeCruise(db);
+
+            var ds = new TallyPopulationDataservice(db, init1.CruiseID, init1.DeviceID);
+
+            var tp = ds.GetTallyPopulationsByUnitCode(unitCode).ToArray();
+            tp.Should().HaveCount(4);
+
         }
 
         [Fact]
@@ -172,7 +194,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 base.InitializeDatabase(database, cruiseID, SaleID, units, strata, unit_strata, sampleGroups, species, null, subPop);
 
-                var datastore = new TallyPopulationDataservice(database, CruiseID);
+                var datastore = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var results = datastore.GetTallyPopulationsByUnitCode(unitCode);
                 results.Should().HaveCount(species.Count());
@@ -261,7 +283,7 @@ namespace NatCruise.Cruise.Test.Data
                 //        $"('{stratum}', '{sampleGroup}', '{sp}', '{liveDead}');");
                 //}
 
-                var datastore = new TallyPopulationDataservice(database, CruiseID);
+                var datastore = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var results = datastore.GetTallyPopulationsByUnitCode(unitCode);
                 results.Should().HaveCount(1);
@@ -350,7 +372,7 @@ namespace NatCruise.Cruise.Test.Data
                 //        $"('{stratum}', '{sampleGroup}', '{sp}', '{liveDead}');");
                 //}
 
-                var ds = new TallyPopulationDataservice(database, CruiseID);
+                var ds = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 //database.Execute($"INSERT INTO SamplerState (StratumCode, SampleGroupCode, SampleSelectorType) " +
                 //    $"SELECT StratumCode, SampleGroupCode, '{CruiseDAL.Schema.CruiseMethods.CLICKER_SAMPLER_TYPE}' AS SampleSelectorType FROM SampleGroup_V3;");

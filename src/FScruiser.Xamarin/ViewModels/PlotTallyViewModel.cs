@@ -1,23 +1,21 @@
-﻿using NatCruise.Cruise.Logic;
+﻿using FScruiser.XF.Constants;
+using FScruiser.XF.Services;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using NatCruise.Cruise.Util;
-using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+using NatCruise.Data;
 using NatCruise.Util;
-using Prism.Navigation;
+using Prism.Common;
+using Prism.Ioc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using Prism.Ioc;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class PlotTallyViewModel : ViewModelBase
+    public class PlotTallyViewModel : XamarinViewModelBase
     {
         private const string STRATUM_FILTER_ALL = "All";
 
@@ -36,7 +34,9 @@ namespace FScruiser.XF.ViewModels
 
         public event EventHandler TreeAdded;
 
-        public ICuttingUnitDatastore Datastore { get; }
+        public string Title => $"Unit {UnitCode} Plot {PlotNumber}";
+
+        public ICuttingUnitDatastore Dataservice { get; }
         public ICruiseDialogService DialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
 
@@ -44,6 +44,7 @@ namespace FScruiser.XF.ViewModels
         public ITallySettingsDataService TallySettings { get; private set; }
         public ISoundService SoundService { get; private set; }
         public IContainerProvider ContainerProvider { get; }
+        public IPlotTallyService TallyService { get; }
 
         public TreeEditViewModel SelectedTreeViewModel
         {
@@ -59,17 +60,19 @@ namespace FScruiser.XF.ViewModels
             IDataserviceProvider datastoreProvider,
             ISoundService soundService,
             ITallySettingsDataService tallySettings,
-            IContainerProvider containerProvider)
+            IContainerProvider containerProvider,
+            IPlotTallyService tallyService)
         {
             if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
 
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            Dataservice = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
             SampleSelectorDataService = datastoreProvider.GetDataservice<ISampleSelectorDataService>();
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             TallySettings = tallySettings ?? throw new ArgumentNullException(nameof(tallySettings));
             SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
             ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
+            TallyService = tallyService ?? throw new ArgumentNullException(nameof(tallyService));
         }
 
         public ICommand SelectTreeCommand => new Command<object>(SelectTree);
@@ -161,7 +164,8 @@ namespace FScruiser.XF.ViewModels
             {
                 var treeVM = ContainerProvider.Resolve<TreeEditViewModel>();
                 treeVM.UseSimplifiedTreeFields = true;
-                treeVM.OnNavigatedTo(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
+                treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
+                treeVM.Load();
 
                 SelectedTreeViewModel = treeVM;
             }
@@ -171,53 +175,35 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
-            MessagingCenter.Unsubscribe<object>(this, Messages.EDIT_TREE_CLICKED);
-            MessagingCenter.Unsubscribe<object>(this, Messages.DELETE_TREE_CLICKED);
-        }
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-
-            MessagingCenter.Subscribe<object, string>(this, Messages.EDIT_TREE_CLICKED, (sender, tree_guid) => ShowEditTree(tree_guid));
-            MessagingCenter.Subscribe<object, string>(this, Messages.DELETE_TREE_CLICKED, (sender, tree_guid) => DeleteTree(tree_guid));
-        }
-
-        protected override void Refresh(INavigationParameters parameters)
-        {
             var plotID = parameters.GetValue<string>(NavParams.PlotID);
-
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
             Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
-                plot = Datastore.GetPlot(plotID);
+                plot = Dataservice.GetPlot(plotID);
             }
             else
             {
-                plot = Datastore.GetPlot(unitCode, plotNumber);
+                plot = Dataservice.GetPlot(unitCode, plotNumber);
             }
 
-            var salePurpose = Datastore.GetCruisePurpose();
-            IsRecon = salePurpose.ToLower() == "recon";
-
-            TallyPopulations = Datastore.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
-            Strata = Datastore.GetPlotStrataProxies(plot.CuttingUnitCode).ToArray();
-            Trees = Datastore.GetPlotTreeProxies(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
+            TallyPopulations = Dataservice.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
+            Strata = Dataservice.GetPlotStrataProxies(plot.CuttingUnitCode).ToArray();
+            Trees = Dataservice.GetPlotTreeProxies(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
 
             Plot = plot;
             PlotNumber = plot.PlotNumber;
             UnitCode = plot.CuttingUnitCode;
 
             // refresh selected tree incase coming back from TreeEdit page
-            SelectedTreeViewModel?.Refresh();
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
-
 
         public async Task TallyAsync(TallyPopulation_Plot pop)
         {
@@ -231,45 +217,23 @@ namespace FScruiser.XF.ViewModels
                 return;
             }
 
-            ITallySettingsDataService tallySettings = TallySettings;
+            var tree = await TallyService.TallyAsync(pop, UnitCode, PlotNumber);
+            if (tree == null) { return; }
             ISoundService soundService = SoundService;
-            ICuttingUnitDatastore dataService = Datastore;
-            ISampleSelectorDataService sampleSelectorRepository = SampleSelectorDataService;
-
-            var nextTreeNumber = Datastore.GetNextPlotTreeNumber(UnitCode, pop.StratumCode, PlotNumber, IsRecon);
-
-            var tree = await PlotBasedTallyLogic.TallyAsync(pop, UnitCode, PlotNumber, sampleSelectorRepository, dialogService);
-            if(tree == null) { return; }
-
-            tree.TreeNumber = nextTreeNumber;
-            Datastore.InsertTree(tree);
-            _trees.Add(tree);
-            OnTreeAdded();
-
-            await HandleTally(pop, tree, soundService, dialogService, tallySettings);
-        }
-
-        public void ShowEditTree(string treeID)
-        {
-            //NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, treeID } });
-            NavigationService.ShowTreeEdit(treeID);
-        }
-
-        public static async Task HandleTally(TallyPopulation_Plot population,
-           TreeStub_Plot tree,
-           ISoundService soundService,
-           ICruiseDialogService dialogService,
-           ITallySettingsDataService tallySettings)
-        {
-            if (tree == null) { throw new ArgumentNullException(nameof(tree)); }
 
             await soundService.SignalTallyAsync();
+
+            _trees.Add(tree);
+            OnTreeAdded();
+            
             if (tree.CountOrMeasure == "M")
             {
                 await soundService.SignalMeasureTreeAsync();
 
-                //if (tallySettings.EnableCruiserPopup)
+                //if (TallySettings.EnableCruiserPopup)
                 //{
+                //    var cruiser = dialogService.AskCruiserAsync();
+                //    if(cruiser != null)
                 //    await dialogService.AskCruiserAsync(tree);
                 //}
             }
@@ -277,6 +241,12 @@ namespace FScruiser.XF.ViewModels
             {
                 await soundService.SignalInsuranceTreeAsync();
             }
+        }
+
+        public void ShowEditTree(string treeID)
+        {
+            //NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, treeID } });
+            NavigationService.ShowTreeEdit(treeID);
         }
 
         public void ShowEditPlot()
@@ -287,17 +257,15 @@ namespace FScruiser.XF.ViewModels
 
         public void DeleteTree(string tree_guid)
         {
-            Datastore.DeleteTree(tree_guid);
+            Dataservice.DeleteTree(tree_guid);
             var tree = Trees.Where(x => x.TreeID == tree_guid).Single();
             Trees.Remove(tree);
         }
 
         public void DeleteTree(TreeStub_Plot tree)
         {
-            Datastore.DeleteTree(tree.TreeID);
+            Dataservice.DeleteTree(tree.TreeID);
             Trees.Remove(tree);
         }
-
-        
     }
 }

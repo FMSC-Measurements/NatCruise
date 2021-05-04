@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:tk_ef="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
+             xmlns:tk_ef="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.ThreePPNTPlotView"
-             BackgroundColor="White">
+             BackgroundColor="White"
+             Title="{Binding StratumPlot.PlotNumber, StringFormat='{}Plot {0} '}">
     
     
     <ContentPage.Content>
@@ -40,7 +42,7 @@
                        WidthRequest="40"
                        >
                     <Entry.Effects>
-                        <tk_ef:EntrySelectAllText />
+                        <tk_ef:SelectAllTextEffect />
                     </Entry.Effects>
                 </Entry>
                 
@@ -50,7 +52,7 @@
                        WidthRequest="40"
                        >
                     <Entry.Effects>
-                        <tk_ef:EntrySelectAllText />
+                        <tk_ef:SelectAllTextEffect />
                     </Entry.Effects>
                 </Entry>
                 
@@ -59,7 +61,7 @@
                        IsEnabled="False"
                        >
                     <Entry.Effects>
-                        <tk_ef:EntrySelectAllText />
+                        <tk_ef:SelectAllTextEffect />
                     </Entry.Effects>
                 </Entry>
 

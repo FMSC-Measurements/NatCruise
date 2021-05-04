@@ -6,12 +6,12 @@ namespace NatCruise.Data
     {
         public string CruiseID { get; }
 
-        public CruiseDataserviceBase(CruiseDatastore_V3 database, string cruiseID) : base(database)
+        public CruiseDataserviceBase(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, deviceID)
         {
             CruiseID = cruiseID;
         }
 
-        public CruiseDataserviceBase(string path, string cruiseID) : base(path)
+        public CruiseDataserviceBase(string path, string cruiseID, string deviceID) : base(path, deviceID)
         {
             CruiseID = cruiseID;
         }

@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
+using NatCruise.Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +60,7 @@ namespace NatCruise.Cruise.Test.Services
                     null, null
                     );
 
-                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
+                var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
                 var repo = new SampleSelectorRepository(ds);
 
                 var sampler = repo.GetSamplerBySampleGroupCode(stratumCode, sampleGroupCode);

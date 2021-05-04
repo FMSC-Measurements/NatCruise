@@ -1,17 +1,17 @@
-﻿using NatCruise.Cruise.Models;
+﻿using FScruiser.XF.Constants;
+using NatCruise.Cruise.Logic;
+using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using FScruiser.XF.Services;
+using NatCruise.Data;
+using Prism.Common;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NatCruise.Cruise.Logic;
-using NatCruise.Data;
-using FScruiser.XF.Constants;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class LimitingDistanceViewModel : ViewModelBase
+    public class LimitingDistanceViewModel : XamarinViewModelBase, INavigatedAware
     {
         public const String MEASURE_TO_FACE = "Face";
         public const String MEASURE_TO_CENTER = "Center";
@@ -63,13 +63,13 @@ namespace FScruiser.XF.ViewModels
 
         // HACK xamarin really doesn't like binding to nullible types
         // so instead we will bind the text box to a property that exposes SlopeDistance as a string.
-        // see: https://forums.xamarin.com/discussion/144704/binding-to-nullable-int 
+        // see: https://forums.xamarin.com/discussion/144704/binding-to-nullable-int
         public string SlopeDistanceStr
         {
             get => SlopeDistance?.ToString() ?? "";
             set
             {
-                if(value != null && double.TryParse(value, out var d))
+                if (value != null && double.TryParse(value, out var d))
                 {
                     SlopeDistance = d;
                 }
@@ -78,7 +78,6 @@ namespace FScruiser.XF.ViewModels
                     SlopeDistance = null;
                 }
             }
-
         }
 
         public double? SlopeDistance
@@ -168,18 +167,23 @@ namespace FScruiser.XF.ViewModels
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
+        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
         {
-            base.OnNavigatedFrom(parameters);
+            // do nothing
+        }
 
-            if(TreeStatus != null)
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            if (TreeStatus != null)
             {
                 SaveReport();
             }
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
@@ -232,7 +236,7 @@ namespace FScruiser.XF.ViewModels
             if (IsTreeIn.HasValue)
             {
                 return CalculateLimitingDistance.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
-                    SlopePCT, Azimuth, BafOrFps, DBH, IsVariableRadius, IsToFace, Plot.StratumCode);
+                    SlopePCT, Azimuth, BafOrFps, DBH, IsVariableRadius, IsToFace, Plot?.StratumCode);
             }
             else { return null; }
         }

@@ -31,10 +31,13 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
 
-                <MenuItem Header="Exit" />
+                <MenuItem Header="Exit" Command="{Binding ShutdownCommand}"  />
             </MenuItem>
         </Menu>
         <Grid>
+            <Image StretchDirection="UpOnly"
+                   Stretch="UniformToFill"
+                   Source="{StaticResource image_wallpaper}" />
             <ContentControl prism:RegionManager.RegionName="{x:Static nav:Regions.ContentRegion}" />
         </Grid>
     </DockPanel>

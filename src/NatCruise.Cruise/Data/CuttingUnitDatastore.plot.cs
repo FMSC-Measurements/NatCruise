@@ -8,56 +8,6 @@ namespace NatCruise.Cruise.Services
 {
     public partial class CuttingUnitDatastore : IPlotDatastore
     {
-        private string SELECT_TALLYPOPULATION_CORE =
-@"WITH tallyPopTreeCounts AS (
-    SELECT CruiseID,
-        CuttingUnitCode,
-        StratumCode,
-        SampleGroupCode,
-        SpeciesCode,
-        LiveDead,
-        sum(TreeCount) AS TreeCount,
-        sum(KPI) AS SumKPI
-    FROM TallyLedger AS tl
-    WHERE CuttingUnitCode = @p1 AND CruiseID = @p2
-    GROUP BY
-        CruiseID,
-        CuttingUnitCode,
-        StratumCode,
-        SampleGroupCode,
-        ifnull(SpeciesCode, ''),
-        ifnull(LiveDead, ''))
-
-    SELECT
-        tp.Description,
-        tp.StratumCode,
-        st.Method AS StratumMethod,
-        tp.SampleGroupCode,
-        tp.SpeciesCode,
-        tp.LiveDead,
-        tp.HotKey,
-        ifnull(tl.TreeCount, 0) AS TreeCount,
-        ifnull(tl.SumKPI, 0) AS SumKPI,
-        --sum(tl.KPI) SumKPI,
-        sg.SamplingFrequency AS Frequency,
-        sg.MinKPI AS sgMinKPI,
-        sg.MaxKPI AS sgMaxKPI,
-        sg.UseExternalSampler
-    -- ss.SampleSelectorType == '{CruiseMethods.CLICKER_SAMPLER_TYPE}' AS IsClickerTally
-    FROM TallyPopulation AS tp
-    JOIN SampleGroup AS sg USING (StratumCode, SampleGroupCode)
-    -- Left JOIN SamplerState ss USING (StratumCode, SampleGroupCode)
-    JOIN Stratum AS st USING (StratumCode, CruiseID)
-    JOIN CuttingUnit_Stratum AS cust ON tp.StratumCode = cust.StratumCode AND cust.CuttingUnitCode = @p1 AND cust.CruiseID = @p2
-    LEFT JOIN tallyPopTreeCounts AS tl
-        ON tl.CuttingUnitCode = @p1
-        AND tl.CruiseID = @p2
-        AND tp.StratumCode = tl.StratumCode
-        AND tp.SampleGroupCode = tl.SampleGroupCode
-        AND ifnull(tp.SpeciesCode, '') = ifnull(tl.SpeciesCode, '')
-        AND ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, '') ";
-
-
         #region plot
 
         public string AddNewPlot(string cuttingUnitCode)
@@ -67,7 +17,7 @@ namespace NatCruise.Cruise.Services
             var plotNumber = GetNextPlotNumber(cuttingUnitCode);
 
             Database.Execute2(
-@$"INSERT INTO Plot (
+$@"INSERT INTO Plot (
     PlotID,
     CruiseID,
     PlotNumber,
@@ -96,9 +46,9 @@ SELECT
 FROM Plot AS p
 JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID)
 JOIN Stratum AS st USING (StratumCode, CruiseID)
-WHERE p.PlotID = @PlotID AND st.Method IN ({PLOT_METHODS})
+WHERE p.PlotID = @PlotID AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)
 AND st.Method != '{CruiseMethods.THREEPPNT}';",
-                new { CruiseID, CuttingUnitCode = cuttingUnitCode, PlotID = plotID, PlotNumber = plotNumber, CreatedBy = UserName }); // dont automaticly add plot_stratum for 3ppnt methods
+                new { CruiseID, CuttingUnitCode = cuttingUnitCode, PlotID = plotID, PlotNumber = plotNumber, CreatedBy = DeviceID }); // dont automaticly add plot_stratum for 3ppnt methods
 
             return plotID;
         }
@@ -124,15 +74,15 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
                     "p.Aspect, " +
                     "p.Remarks " +
                 "FROM Plot AS p " +
-                "WHERE CuttingUnitCode = @p1 AND PlotNumber = @p2;", new object[] { cuttingUnitCode, plotNumber })
+                "WHERE CuttingUnitCode = @p1 AND PlotNumber = @p2 AND CruiseID = @p3;", new object[] { cuttingUnitCode, plotNumber, CruiseID })
                 .FirstOrDefault();
         }
 
         public IEnumerable<Plot> GetPlotsByUnitCode(string unit)
         {
             return Database.Query<Plot>("SELECT *  FROM Plot " +
-                "WHERE CuttingUnitCode = @p1;"
-                , new object[] { unit });
+                "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2;"
+                , new object[] { unit, CruiseID });
         }
 
         public void UpdatePlot(Plot plot)
@@ -145,7 +95,7 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
                     "Slope = @Slope, " +
                     "Aspect = @Aspect, " +
                     "Remarks = @Remarks, " +
-                    "ModifiedBy = @UserName " +
+                    "ModifiedBy = @DeviceID " +
                 "WHERE PlotID = @PlotID; ",
                     new
                     {
@@ -153,7 +103,7 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
                         plot.Slope,
                         plot.Aspect,
                         plot.Remarks,
-                        UserName,
+                        DeviceID,
                         plot.PlotID,
                     });
         }
@@ -166,7 +116,7 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
         public void DeletePlot(string unitCode, int plotNumber)
         {
             Database.Execute(
-                "DELETE FROM Plot WHERE CuttingUnitCode = @p1 AND PlotNumber = @p2 ;", new object[] { unitCode, plotNumber });
+                "DELETE FROM Plot WHERE CuttingUnitCode = @p1 AND PlotNumber = @p2 AND CruiseID = @p3;", new object[] { unitCode, plotNumber, CruiseID });
         }
 
         #endregion plot
@@ -176,8 +126,54 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
             var cruiseID = CruiseID;
 
             var tallyPops = Database.Query<TallyPopulation_Plot>(
-                SELECT_TALLYPOPULATION_CORE +
-                $"WHERE st.Method IN ({PLOT_METHODS})"
+@"WITH tallyPopTreeCounts AS (
+    SELECT CruiseID,
+        CuttingUnitCode,
+        StratumCode,
+        SampleGroupCode,
+        SpeciesCode,
+        LiveDead,
+        sum(TreeCount) AS TreeCount,
+        sum(KPI) AS SumKPI
+    FROM TallyLedger AS tl
+    WHERE CuttingUnitCode = @p1 AND CruiseID = @p2
+    GROUP BY
+        CruiseID,
+        CuttingUnitCode,
+        StratumCode,
+        SampleGroupCode,
+        ifnull(SpeciesCode, ''),
+        ifnull(LiveDead, ''))
+
+SELECT
+    tp.Description,
+    tp.StratumCode,
+    st.Method AS StratumMethod,
+    tp.SampleGroupCode,
+    tp.SpeciesCode,
+    tp.LiveDead,
+    tp.HotKey,
+    ifnull(tl.TreeCount, 0) AS TreeCount,
+    ifnull(tl.SumKPI, 0) AS SumKPI,
+    --sum(tl.KPI) SumKPI,
+    sg.SamplingFrequency AS Frequency,
+    sg.MinKPI AS sgMinKPI,
+    sg.MaxKPI AS sgMaxKPI,
+    sg.UseExternalSampler
+-- ss.SampleSelectorType == '{CruiseMethods.CLICKER_SAMPLER_TYPE}' AS IsClickerTally
+FROM TallyPopulation AS tp
+JOIN SampleGroup AS sg USING (StratumCode, SampleGroupCode, CruiseID)
+-- Left JOIN SamplerState ss USING (StratumCode, SampleGroupCode)
+JOIN Stratum AS st USING (StratumCode, CruiseID)
+JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
+LEFT JOIN tallyPopTreeCounts AS tl
+        ON tl.CuttingUnitCode = cust.CuttingUnitCode
+        AND tl.CruiseID =  tp.CruiseID
+        AND tp.StratumCode = tl.StratumCode
+        AND tp.SampleGroupCode = tl.SampleGroupCode
+        AND ifnull(tp.SpeciesCode, '') = ifnull(tl.SpeciesCode, '')
+        AND ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, '')
+WHERE cust.CuttingUnitCode = @p1 AND tp.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)"
                 , new object[] { unitCode, cruiseID }).ToArray();
 
             foreach (var pop in tallyPops)
@@ -199,7 +195,8 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
                     "FROM Plot_Stratum " +
                     "WHERE StratumCode = @p1 " +
                         "AND CuttingUnitCode = @p2 " +
-                        "AND PlotNumber = @p3);",
+                        "AND PlotNumber = @p3 " +
+                        "AND CruiseID = @p4);",
                 stratumCode, unitCode, plotNumber, cruiseID) ?? false;
         }
 
@@ -227,7 +224,7 @@ $@"INSERT INTO Plot_Stratum (
     @IsEmpty,
     @KPI,
     @ThreePRandomValue,
-    '{UserName}'
+    '{DeviceID}'
 );
 SELECT last_insert_rowid();",
                 plotStratum);
@@ -239,7 +236,7 @@ SELECT last_insert_rowid();",
         public IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber, bool insertIfNotExists = false)
         {
             return Database.Query<Plot_Stratum>(
-$@"SELECT
+@"SELECT
     ps.Plot_Stratum_CN,
     (CASE WHEN ps.Plot_Stratum_CN IS NOT NULL THEN 1 ELSE 0 END) AS InCruise,
     st.StratumCode,
@@ -256,7 +253,7 @@ FROM Plot AS p
 JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID)
 JOIN Stratum AS st USING (StratumCode, CruiseID)
 LEFT JOIN Plot_Stratum AS ps USING (CuttingUnitCode, StratumCode, CruiseID, PlotNumber)
-WHERE p.CuttingUnitCode = @p1 AND p.CruiseID = @p2 AND st.Method IN ({PLOT_METHODS})
+WHERE p.CuttingUnitCode = @p1 AND p.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)
 AND p.PlotNumber = @p3;",
                 new object[] { unitCode, CruiseID, plotNumber }).ToArray();
         }
@@ -352,14 +349,23 @@ AND p.PlotNumber = @p4; ",
 
         #region tree
 
-        public void InsertTree(TreeStub_Plot tree)
+        public void InsertTree(TreeStub_Plot tree, SamplerState samplerState)
         {
             if (tree is null) { throw new ArgumentNullException(nameof(tree)); }
 
-            var treeID = tree.TreeID ?? Guid.NewGuid().ToString();
+           
 
-            Database.Execute2(
-@"INSERT INTO Tree (
+            var database = Database;
+            database.BeginTransaction();
+            try
+            {
+                var treeID = tree.TreeID ?? Guid.NewGuid().ToString();
+
+                var nextTreeNumber = GetNextPlotTreeNumber(tree.CuttingUnitCode, tree.StratumCode, tree.PlotNumber);
+                tree.TreeNumber = nextTreeNumber;
+
+                database.Execute2(
+    @"INSERT INTO Tree (
     CruiseID,
     TreeID,
     TreeNumber,
@@ -394,6 +400,7 @@ INSERT INTO TallyLedger (
     LiveDead,
     TreeCount,
     KPI,
+    ThreePRandomValue,
     STM
 ) VALUES (
     @CruiseID,
@@ -407,26 +414,40 @@ INSERT INTO TallyLedger (
     @LiveDead,
     @TreeCount,
     @KPI,
+    @ThreePRandomValue,
     @STM
 ); "
-                , new
-                {
-                    CruiseID,
-                    TreeID = treeID,
-                    tree.TreeNumber,
-                    tree.CuttingUnitCode,
-                    tree.PlotNumber,
-                    tree.StratumCode,
-                    tree.SampleGroupCode,
-                    tree.SpeciesCode,
-                    tree.LiveDead,
-                    tree.CountOrMeasure,
-                    tree.TreeCount,
-                    tree.KPI,
-                    tree.STM,
-                });
+                    , new
+                    {
+                        CruiseID,
+                        TreeID = treeID,
+                        tree.TreeNumber,
+                        tree.CuttingUnitCode,
+                        tree.PlotNumber,
+                        tree.StratumCode,
+                        tree.SampleGroupCode,
+                        tree.SpeciesCode,
+                        tree.LiveDead,
+                        tree.CountOrMeasure,
+                        tree.TreeCount,
+                        tree.KPI,
+                        tree.ThreePRandomValue,
+                        tree.STM,
+                    });
 
-            tree.TreeID = treeID;
+                tree.TreeID = treeID;
+
+                if (samplerState != null)
+                {
+                    SampleInfoDataservice.UpsertSamplerState(samplerState);
+                }
+                database.CommitTransaction();
+            }
+            catch
+            {
+                database.RollbackTransaction();
+                throw;
+            }
         }
 
         public string CreatePlotTree(string unitCode, int plotNumber,
@@ -516,7 +537,7 @@ INSERT INTO TallyLedger (
                     CountOrMeasure = countMeasure,
                     TreeCount = treeCount,
                     KPI = kpi,
-                    STM = (stm) ? "Y" : "N",
+                    STM = stm,
                 }
             );
         }
@@ -524,7 +545,7 @@ INSERT INTO TallyLedger (
         public IEnumerable<TreeStub_Plot> GetPlotTreeProxies(string unitCode, int plotNumber)
         {
             return Database.Query<TreeStub_Plot>(
-@"SELECT 
+@"SELECT
     t.TreeID,
     t.CuttingUnitCode,
     t.TreeNumber,
@@ -551,20 +572,22 @@ ORDER BY t.TreeNumber
                 new object[] { unitCode, CruiseID, plotNumber });
         }
 
-        public int GetNextPlotTreeNumber(string unitCode, string stratumCode, int plotNumber, bool isRecon)
+        public int GetNextPlotTreeNumber(string unitCode, string stratumCode, int plotNumber)
         {
-            if (isRecon)
-            {
-                // if cruise is a recon cruise we do number trees seperatly for each stratum
-                return Database.ExecuteScalar<int>("SELECT ifnull(max(TreeNumber), 0) + 1  FROM Tree " +
-                    "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3 AND StratumCode = @p4;"
-                    , unitCode, CruiseID, plotNumber, stratumCode);
-            }
-            else
+            var database = Database;
+            var useCrossStrataTreeNumbering = database.ExecuteScalar<bool>("SELECT UseCrossStrataPlotTreeNumbering FROM Cruise WHERE CruiseID = @p1;", CruiseID);
+
+            if (useCrossStrataTreeNumbering)
             {
                 return Database.ExecuteScalar<int>("SELECT ifnull(max(TreeNumber), 0) + 1  FROM Tree " +
                     "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3;"
                     , unitCode, CruiseID, plotNumber);
+            }
+            else
+            {
+                return Database.ExecuteScalar<int>("SELECT ifnull(max(TreeNumber), 0) + 1  FROM Tree " +
+                    "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3 AND StratumCode = @p4;"
+                    , unitCode, CruiseID, plotNumber, stratumCode);
             }
         }
 
@@ -628,7 +651,5 @@ JOIN Plot AS p USING (CuttingUnitCode, CruiseID, PlotNumber)
 WHERE p.PlotID = @p1;",
                 new object[] { plotID }).ToArray();
         }
-
-        
     }
 }

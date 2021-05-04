@@ -1,5 +1,4 @@
 ﻿using Backpack.XF.Converters;
-using CSharpForMarkup;
 using NatCruise.Cruise.Models;
 using FScruiser.XF.ViewModels;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.Linq;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Xamarin.CommunityToolkit.Markup;
 
 namespace FScruiser.XF.Views
 {
@@ -66,8 +66,8 @@ namespace FScruiser.XF.Views
                 new Label()
                 { FontAttributes = FontAttributes.Bold }
                     .Bind(Label.TextProperty, "LogNumber", stringFormat: "Log #{0}")
-                    .ColSpan(3)
-                    .Col(0)
+                    .ColumnSpan(3)
+                    .Column(0)
                     .Row(0));
 
             foreach (var (field, index) in fields.Where(x => x.Field != "LogNumber").Select((v, i) => (v, i)))
@@ -81,7 +81,7 @@ namespace FScruiser.XF.Views
                     .Bind(Label.TextProperty, field.Field, stringFormat: $"{field.Heading}: {{0}}")
                     ,
                 }
-                .Col(index % COLUMN_COUNT)
+                .Column(index % COLUMN_COUNT)
                 .Row((index / COLUMN_COUNT) + 1);//ajust down one because logNumber is first
 
                 grid.Children.Add(frame);
@@ -109,7 +109,7 @@ namespace FScruiser.XF.Views
             }
             .Padding(0, 0)
             .Bind(Frame.IsVisibleProperty, "ErrorCount", converter: _greaterThanZeroConverter)
-            .Col(COLUMN_COUNT + 1)
+            .Column(COLUMN_COUNT + 1)
             .Row(0);
 
             grid.Children.Add(errorCountIndicator);

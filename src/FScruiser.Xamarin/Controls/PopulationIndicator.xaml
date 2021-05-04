@@ -2,39 +2,63 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FScruiser.XF.Controls.PopulationIndicator"
-             x:Name="_view"
-             BackgroundColor="Black"
-             Padding="5,2,5,2">
+             x:Name="_view">
     <ContentView.Content>
 
-        <StackLayout Orientation="Horizontal">
+        <StackLayout Orientation="Horizontal"
+                     BindingContext="{x:Reference _view}"
+                     BackgroundColor="{Binding BackgroundColor}">
             <StackLayout.Resources>
                 <ResourceDictionary>
                     <Style TargetType="Label">
-                        <Setter Property="TextColor"
-                                Value="White" />
                         <Setter Property="VerticalTextAlignment"
                                 Value="Center" />
                         <Setter Property="HorizontalTextAlignment"
                                 Value="Center" />
-                    </Style>
-                    <Style TargetType="BoxView">
-                        <Setter Property="BackgroundColor"
-                                Value="White" />
-                        <Setter Property="WidthRequest"
-                                Value="2" />
+                        <Setter Property="LineBreakMode"
+                                Value="NoWrap" />
                     </Style>
                 </ResourceDictionary>
             </StackLayout.Resources>
-            <Label x:Name="_stratumLabel" />
-            <BoxView />
-            <Label x:Name="_sgLabel" />
-            <BoxView x:Name="_spLableSplitter"
-                     IsVisible="False" />
-            <Label x:Name="_spLabel" />
-            <BoxView x:Name="_ldLableSplitter"
-                     IsVisible="False" />
-            <Label x:Name="_ldLabel" />
+            
+            <Label x:Name="_stratumLabel"
+                   Text="{Binding StratumCode}"
+                   TextColor="{Binding TextColor }"
+                   Padding="{Binding CellPadding}"
+                   Margin="{Binding CellMargin}"/>
+            <BoxView WidthRequest="2"
+                     BackgroundColor="White"/>
+            
+            <Label x:Name="_sgLabel"
+                   Text="{Binding SampleGroupCode}"
+                   FontSize="{Binding AltFontSize}"
+                   FontAttributes="{Binding AltFontAttributes}"
+                   TextColor="{Binding TextColor }"
+                   Padding="{Binding CellPadding}"
+                   Margin="{Binding CellMargin}"/>
+            <BoxView
+                     WidthRequest="2"
+                     BackgroundColor="White"
+                     IsVisible="{Binding Species, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+            
+            <Label x:Name="_spLabel"
+                   Text="{Binding Species}"
+                   FontSize="{Binding AltFontSize}"
+                   FontAttributes="{Binding AltFontAttributes}"
+                   TextColor="{Binding TextColor }"
+                   IsVisible="{Binding Species, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                   Padding="{Binding CellPadding}"
+                   Margin="{Binding CellMargin}"/>
+            <BoxView WidthRequest="2"
+                     BackgroundColor="White"
+                     IsVisible="{Binding LiveDead, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+            
+            <Label x:Name="_ldLabel"
+                   Text="{Binding LiveDead}"
+                   TextColor="{Binding TextColor }"
+                   IsVisible="{Binding LiveDead, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                   Padding="{Binding CellPadding}"
+                   Margin="{Binding CellMargin}"/>
         </StackLayout>
     </ContentView.Content>
 </ContentView>

@@ -7,8 +7,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using NatCruise.Util;
 using System.Collections.Generic;
-using CSharpForMarkup;
-using Backpack.XF.WidgiWhats;
+using Xamarin.CommunityToolkit.Markup;
+using FScruiser.XF.Controls;
 
 namespace FScruiser.XF.Views
 {
@@ -24,16 +24,27 @@ namespace FScruiser.XF.Views
             InitializeComponent();
         }
 
-        //protected override void OnAppearing()
-        //{
-        //    base.OnAppearing();
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
 
-        //    if (BindingContext is PlotTallyViewModel vm)
-        //    {
-        //        vm.TreeAdded += TallyFeed_CollectionChanged;
-        //        TallyFeed_CollectionChanged(null, null);//Scroll to the bottom of the tally feed when page appears
-        //    }
-        //}
+            var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
+            if (vm != null)
+            {
+                vm.Load();
+                vm.IsLoading = true; // prevent changing controls from triggering prop changed events
+                try
+                {
+                    _treeEditControlGrid.Children.Clear();
+                    var editControls = MakeEditControls(vm.TreeFieldValues);
+                    _treeEditControlGrid.Children.AddRange(editControls);
+                }
+                finally
+                {
+                    vm.IsLoading = false;
+                }
+            }
+        }
 
 
         private void _stratumFilterButton_Clicked(object sender, EventArgs e)
@@ -62,9 +73,17 @@ namespace FScruiser.XF.Views
             var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
             if (vm != null)
             {
-                _treeEditControlGrid.Children.Clear();
-                var editControls = MakeEditControls(vm.TreeFieldValues);
-                _treeEditControlGrid.Children.AddRange(editControls);
+                vm.IsLoading = true; // prevent changing controls from triggering prop changed events
+                try
+                {
+                    _treeEditControlGrid.Children.Clear();
+                    var editControls = MakeEditControls(vm.TreeFieldValues);
+                    _treeEditControlGrid.Children.AddRange(editControls);
+                }
+                finally
+                {
+                    vm.IsLoading = false;
+                }
             }
             else
             {
@@ -78,22 +97,22 @@ namespace FScruiser.XF.Views
             var controls = new List<View>();
 
             controls.Add(new Label
-            { Text = "Spcies" }
-            .Col(0)
+            { Text = "Species" }
+            .Column(0)
             .Row(0));
 
             var speciesPicker = new ValuePicker();
             AjustEditView(speciesPicker);
 
             controls.Add(speciesPicker
-                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Species))
+                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.SpeciesCode))
                 .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.SpeciesOptions))
-                .Col(0)
+                .Column(0)
                 .Row(1));
 
             controls.Add(new Label
             { Text = "L/D" }
-            .Col(1)
+            .Column(1)
             .Row(0));
 
             var ldPicker = new ValuePicker();
@@ -102,7 +121,7 @@ namespace FScruiser.XF.Views
             controls.Add(ldPicker
                 .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.LiveDead))
                 .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.LiveDeadOptions))
-                .Col(1)
+                .Column(1)
                 .Row(1));
 
             int counter = 2;
@@ -112,11 +131,11 @@ namespace FScruiser.XF.Views
                 {
                     Text = field.Heading
                 }
-                .Col(counter)
+                .Column(counter)
                 .Row(0);
 
                 var editControl = Util.TreeEditControlFactory.MakeEditView(field)
-                    .Col(counter)
+                    .Column(counter)
                     .Row(1);
                 AjustEditView(editControl);
 

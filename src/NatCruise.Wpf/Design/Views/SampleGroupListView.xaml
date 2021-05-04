@@ -1,0 +1,128 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
+             xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             x:Class="NatCruise.Design.Views.SampleGroupListView"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Tag="Sample Groups"
+             mc:Ignorable="d"
+             d:DesignHeight="448.881"
+             d:DesignWidth="788.806"
+             IsEnabled="{Binding Stratum, Converter={StaticResource NotNullConverter}}">
+    <ScrollViewer>
+        <Grid Background="{StaticResource brush_background}"
+              Margin="0,0,10,0"
+              ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0"
+                    BorderBrush="{StaticResource brush_shade_black_30}"
+                    BorderThickness="1">
+                <Grid       VerticalAlignment="Stretch"
+                            HorizontalAlignment="Left">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type Button}"
+                                   BasedOn="{StaticResource MetroFlatButton}">
+                                <Setter Property="FontWeight"
+                                        Value="Bold" />
+                                <Setter Property="FontSize"
+                                        Value="16" />
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="32" />
+                            <ColumnDefinition Width="32" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="_sampleGroupCodeTextBox"
+                                 Grid.Column="0"
+                                 mah:TextBoxHelper.Watermark="Code" />
+                        <Button Grid.Column="1"
+                                Content="+"
+                                Background="{StaticResource brush_addItem}"
+                                Foreground="{StaticResource brush_text_dark}"
+                                IsEnabled="{Binding Text, ElementName=_sampleGroupCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding AddSampleGroupCommand}"
+                                                           CommandParameter="{Binding Text, Source={x:Reference _sampleGroupCodeTextBox}}" />
+                                    <triggers:ClearTextBoxAction TargetName="_sampleGroupCodeTextBox" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button  Grid.Column="2"
+                                 Content="-"
+                                 Background="{StaticResource brush_removeItem}"
+                                 Foreground="{StaticResource brush_text_dark}"
+                                 Command="{Binding RemoveSampleGroupCommand}"
+                                 CommandParameter="{Binding SelectedItem, ElementName=_sampleGroupListView}"
+                                 IsEnabled="{Binding SelectedItem, ElementName=_sampleGroupListView, Converter={StaticResource NotNullConverter}}"/>
+                    </Grid>
+
+                    <!--<DataGrid x:Name="_sampleGroupListView"
+                          Width="200"
+                          MinHeight="300"
+                          Background="White"
+                          ItemsSource="{Binding SampleGroups}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Code"
+                                            Binding="{Binding SampleGroupCode}" />
+                        <DataGridTextColumn Header="Description"
+                                            Binding="{Binding Description}" />
+                    </DataGrid.Columns>
+                </DataGrid>-->
+
+                    <ListView Grid.Row="1"
+                              x:Name="_sampleGroupListView"
+                              ItemsSource="{Binding SampleGroups}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False"
+                                      ColumnHeaderToolTip="Sample Groups">
+                                <GridViewColumn Header="Code"
+                                                DisplayMemberBinding="{Binding SampleGroupCode}"
+                                                Width="60" />
+                                <GridViewColumn Header="Description"
+                                                DisplayMemberBinding="{Binding Description}"
+                                                Width="150" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </Grid>
+            </Border>
+
+            <TabControl Grid.Column="1"
+                        Margin="5,5,0,0"
+                        prism:RegionManager.RegionName="{x:Static nav:Regions.SampleGroupDetailsRegion}"
+                        prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_sampleGroupListView}">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabItem}"
+                           BasedOn="{StaticResource {x:Type TabItem}}">
+                        <Setter Property="Header"
+                                Value="{Binding ToolTip}" />
+                        <Setter Property="HorizontalContentAlignment"
+                                Value="Left" />
+                    </Style>
+                </TabControl.Resources>
+            </TabControl>
+
+            <!--<ContentControl  />-->
+
+        </Grid>
+    </ScrollViewer>
+</UserControl>

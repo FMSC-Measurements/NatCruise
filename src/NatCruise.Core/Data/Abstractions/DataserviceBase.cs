@@ -12,53 +12,25 @@ namespace NatCruise.Data
             .Append(CruiseMethods.FIXCNT)
             .Select(x => "'" + x + "'").ToArray());
 
-        protected string DeviceID { get; set; }
-        //private string DeviceName { get; set; }
+        public string DeviceID { get; protected set; }
 
-        private CruiseDatastore_V3 _database;
+        public CruiseDatastore_V3 Database { get; }
 
-        public CruiseDatastore_V3 Database
+        public DataserviceBase(string path, string deviceID)
         {
-            get { return _database; }
-            set
-            {
-                _database = value;
-                OnDatabaseChanged();
-            }
-        }
+            if (string.IsNullOrWhiteSpace(deviceID)) { throw new ArgumentException($"'{nameof(deviceID)}' cannot be null or whitespace", nameof(deviceID)); }
+            DeviceID = deviceID;
 
-        protected virtual void OnDatabaseChanged()
-        {
-            var database = Database;
-            if (database == null) { return; }
-
-            //DatabaseUpdater.Update(database);
-        }
-
-        public DataserviceBase(string path)
-        {
             var database = new CruiseDatastore_V3(path ?? throw new ArgumentNullException(nameof(path)));
-
             Database = database;
         }
 
-        public DataserviceBase(CruiseDatastore_V3 database)
+        public DataserviceBase(CruiseDatastore_V3 database, string deviceID)
         {
+            if (string.IsNullOrWhiteSpace(deviceID)) { throw new ArgumentException($"'{nameof(deviceID)}' cannot be null or whitespace", nameof(deviceID)); }
+            DeviceID = deviceID;
+
             Database = database ?? throw new ArgumentNullException(nameof(database));
         }
-
-
-        //public void ImportCruise(string path, string cruiseID)
-        //{
-        //    using (var sourceDatabase = new CruiseDatastore_V3(path))
-        //    {
-        //        try
-        //        {
-
-        //        }
-
-        //    }
-
-        //}
     }
 }

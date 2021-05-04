@@ -3,7 +3,7 @@ using Prism.Mvvm;
 
 namespace NatCruise.Design.Models
 {
-    [Table("SampleGroup_V3")]
+    [Table("SampleGroup")]
     public class SampleGroup : BindableBase
     {
         private string _sampleGroupCode;
@@ -21,9 +21,14 @@ namespace NatCruise.Design.Models
         private bool _tallyBySubPop;
         private int _minKPI;
         private int _maxKPI;
+        private string _sampleSelectorType;
+        private bool _useExternalSampler;
+        private double _smallFPS;
 
         [PrimaryKeyField("SampleGroup_CN")]
         public int SampleGroup_CN { get; set; }
+
+        public string SampleGroupID { get; set; }
 
         public string StratumCode { get; set; }
 
@@ -105,6 +110,18 @@ namespace NatCruise.Design.Models
             set => SetProperty(ref _tallyBySubPop, value);
         }
 
+        public string SampleSelectorType
+        {
+            get => _sampleSelectorType;
+            set => SetProperty(ref _sampleSelectorType, value);
+        }
+
+        public bool UseExternalSampler
+        {
+            get => _useExternalSampler;
+            set => SetProperty(ref _useExternalSampler, value);
+        }
+
         public int MinKPI
         {
             get => _minKPI;
@@ -115,6 +132,12 @@ namespace NatCruise.Design.Models
         {
             get => _maxKPI;
             set => SetProperty(ref _maxKPI, value);
+        }
+
+        public double SmallFPS
+        {
+            get => _smallFPS;
+            set => SetProperty(ref _smallFPS, value);
         }
     }
 }

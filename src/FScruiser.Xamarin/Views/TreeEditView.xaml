@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:effects="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
-             xmlns:tk_converters="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
-             xmlns:widgiwhats="clr-namespace:Backpack.XF.WidgiWhats;assembly=Backpack.XF.WidgiWhats"
+             xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
+             xmlns:tk_converters="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
              xmlns:converters="clr-namespace:FScruiser.XF.Converters"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+             xmlns:controls="clr-namespace:FScruiser.XF.Controls"
              x:Class="FScruiser.XF.Views.TreeEditView"
              x:Name="_page"
              Title="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
@@ -40,10 +41,10 @@
                     Value="{Binding Message}" />
         </Style>
 
-        <tk_converters:BooleanToObjectConverter x:Key="hasErrorConverter"
-                                                x:TypeArguments="Color"
-                                                TrueObject="Red"
-                                                FalseObject="Transparent" />
+        <tk_converters:BoolToObjectConverter x:Key="hasErrorConverter"
+                                             x:TypeArguments="Color"
+                                             TrueObject="Red"
+                                             FalseObject="Transparent" />
     </ContentPage.Resources>
 
     <Grid>
@@ -53,7 +54,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <!--main fields-->
         <FlexLayout Grid.Row="0"
                     Wrap="Wrap"
@@ -85,74 +86,91 @@
                 </Style>
             </FlexLayout.Resources>
 
+            <!--Tree Number-->
             <StackLayout Orientation="Horizontal">
 
                 <Label Text="Tree #" />
                 <Entry x:Name="_treeNumberEntry">
                     <Entry.Effects>
-                        <effects:EntrySelectAllText />
+                        <effects:SelectAllTextEffect />
                     </Entry.Effects>
                 </Entry>
 
             </StackLayout>
 
+            <!--Stratum-->
             <StackLayout Orientation="Horizontal">
 
                 <Label Text="Stratum" />
-                <widgiwhats:ValuePicker x:Name="_stratumCodeEntry"
+                <controls:ValuePicker x:Name="_stratumCodeEntry"
                                         SelectedValue="{Binding StratumCode}"
                                         ValueSource="{Binding StratumCodes}"
                                         WidthRequest="40">
-                </widgiwhats:ValuePicker>
+                </controls:ValuePicker>
 
             </StackLayout>
 
+            <!--Sample Group-->
             <StackLayout Orientation="Horizontal"
                          BackgroundColor="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}">
 
                 <Label Text="Sample Group" />
-                <widgiwhats:ValuePicker x:Name="_sampleGroupEntry"
+                <controls:ValuePicker x:Name="_sampleGroupEntry"
                                         SelectedValue="{Binding SampleGroupCode}"
                                         ValueSource="{Binding SampleGroupCodes}"
                                         WidthRequest="40">
-                </widgiwhats:ValuePicker>
+                </controls:ValuePicker>
 
             </StackLayout>
 
+            <!--Species-->
             <StackLayout Orientation="Horizontal"
                          BackgroundColor="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}">
 
                 <Label Text="Species" />
-                <widgiwhats:ValuePicker x:Name="_speciesEntry"
+                <controls:ValuePicker x:Name="_speciesEntry"
                                         SelectedValue="{Binding SpeciesCode}"
                                         ValueSource="{Binding SpeciesOptions}"
                                         WidthRequest="40">
-                </widgiwhats:ValuePicker>
+                </controls:ValuePicker>
 
             </StackLayout>
 
+            <!--Live Dead-->
             <StackLayout Orientation="Horizontal">
 
                 <Label Text="Live/Dead" />
-                <widgiwhats:ValuePicker x:Name="_liveDeadPicker"
+                <controls:ValuePicker x:Name="_liveDeadPicker"
                                         SelectedValue="{Binding LiveDead}"
                                         WidthRequest="40">
-                    <widgiwhats:ValuePicker.ValueSource>
+                    <controls:ValuePicker.ValueSource>
                         <Array Type="{x:Type x:String}">
                             <x:String>L</x:String>
                             <x:String>D</x:String>
                         </Array>
-                    </widgiwhats:ValuePicker.ValueSource>
-                </widgiwhats:ValuePicker>
+                    </controls:ValuePicker.ValueSource>
+                </controls:ValuePicker>
 
             </StackLayout>
 
+            <!--Initials-->
             <StackLayout Orientation="Horizontal">
                 <Label Text="Initials" />
                 <Picker x:Name="_initialsPicker"
                         WidthRequest="40"
                         SelectedItem="{Binding Initials}"
                         ItemsSource="{Binding Cruisers}" />
+            </StackLayout>
+
+            <!--Count Or Measure-->
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Count/Measure" />
+                <Picker WidthRequest="40"
+                        SelectedItem="{Binding CountOrMeasure}"
+                        ItemsSource="{Binding CountOrMeasureOptions}">
+
+                </Picker>
+
             </StackLayout>
 
         </FlexLayout>
@@ -183,9 +201,11 @@
             </ScrollView.Resources>
         </ScrollView>
 
+        <!--Remarks-->
         <StackLayout Grid.Row="2">
             <Label>Remarks</Label>
-            <Editor HeightRequest="80" Text="{Binding Remarks}" />
+            <Editor HeightRequest="80"
+                    Text="{Binding Remarks}" />
         </StackLayout>
 
         <StackLayout Grid.Row="3"

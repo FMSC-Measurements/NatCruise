@@ -58,6 +58,18 @@ namespace NatCruise.Cruise.Models
             set => SetValue(ref _valueText, value);
         }
 
+        public bool IsHidden { get; set; }
+
+        public bool IsLocked { get; set; }
+
+        public double? DefaultValueReal { get; set; }
+
+        public int? DefaultValueInt { get; set; }
+
+        public bool? DefaultValueBool { get; set; }
+
+        public string DefaultValueText { get; set; }
+
         [IgnoreField]
         public object Value
         {
@@ -95,6 +107,29 @@ namespace NatCruise.Cruise.Models
                         { ValueBool = (bool?)value; break; }
                     default:
                         throw new InvalidOperationException($"Unable to set value with DbType of {DBType ?? "null"}");
+                }
+            }
+        }
+
+        [IgnoreField]
+        public string StrDefaultValue
+        {
+            get
+            {
+                switch (DBType)
+                {
+                    case "REAL":
+                        { return DefaultValueReal.ToString(); }
+                    case "INT":
+                    case "INTEGER":
+                        { return DefaultValueInt.ToString(); }
+                    case "TEXT":
+                        { return DefaultValueText; }
+                    case "BOOL":
+                    case "BOOLEAN":
+                        { return DefaultValueBool.ToString(); }
+                    default:
+                        return null;
                 }
             }
         }

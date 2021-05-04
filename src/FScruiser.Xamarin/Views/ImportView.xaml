@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.ImportView"
              x:Name="_page"
+             Title="Import Cruise"
              IsBusy="{Binding IsWorking}">
     <ContentPage.Content>
         <StackLayout>
@@ -11,9 +13,12 @@
                    IsReadOnly="True"/>
             <Button Text="Browse"
                     Command="{Binding BrowseFileCommand}" />
-            <ListView ItemsSource="{Binding Cruises}"
-                      SelectionMode="Single"
-                      SelectedItem="{Binding SelectedCruise}">
+            <AbsoluteLayout>
+            <ListView
+                AbsoluteLayout.LayoutBounds="1,1,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                ItemsSource="{Binding Cruises}"
+                      SelectionMode="Single">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell  Text="{Binding .}" 
@@ -22,10 +27,14 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+                <ActivityIndicator AbsoluteLayout.LayoutBounds=".5,.5" AbsoluteLayout.LayoutFlags="PositionProportional" Color="{StaticResource primary_500}"
+                                   IsRunning="{Binding IsWorking}" />
+            </AbsoluteLayout>
             <Button Text="Import"
                     Command="{Binding ImportCruiseCommand}"
-                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}"/>
-            <Button Text="Cancel" />
+                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"/>
+            <Button Text="Cancel" Command="{Binding CancelCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

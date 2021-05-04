@@ -1,19 +1,17 @@
-﻿using NatCruise.Cruise.Data;
+﻿using FScruiser.XF.Services;
+using NatCruise.Core.Services;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using FScruiser.XF.Services;
-using Microsoft.AppCenter.Crashes;
+using NatCruise.Data;
+using NatCruise.Data.Abstractions;
+using NatCruise.Services;
+using Prism.Common;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using NatCruise.Services;
-using FScruiser.XF.Constants;
-using NatCruise.Data.Abstractions;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -36,7 +34,7 @@ namespace FScruiser.XF.ViewModels
     //    public Func<bool> CanShowAction { get; set; }
     //}
 
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : XamarinViewModelBase
     {
         private IEnumerable<CuttingUnit_Ex> _cuttingUnits;
         private CuttingUnit_Ex _selectedCuttingUnit;
@@ -74,6 +72,7 @@ namespace FScruiser.XF.ViewModels
                 RaisePropertyChanged(nameof(IsCuttingUnitSelected));
                 RaisePropertyChanged(nameof(HasPlotStrata));
                 RaisePropertyChanged(nameof(HasTreeStrata));
+                NavigationService.ShowBlank();
             }
         }
 
@@ -88,7 +87,7 @@ namespace FScruiser.XF.ViewModels
             get
             {
                 var cruiseID = DatastoreProvider?.CruiseID;
-                if(cruiseID != null)
+                if (cruiseID != null)
                 {
                     var cruise = SaleDataservice.GetCruise(cruiseID);
                     return cruise.ToString();
@@ -111,14 +110,12 @@ namespace FScruiser.XF.ViewModels
 
         public bool HasTreeStrata => IsCuttingUnitSelected && SelectedCuttingUnit.HasTreeStrata;
 
-
         public IDataserviceProvider DatastoreProvider { get; }
         public IAppInfoService AppInfo { get; }
         public ICruiseDialogService DialogService { get; }
         public IDeviceInfoService DeviceInfo { get; }
         public ICuttingUnitDatastore CuttingUnitDataservice { get; }
         public ISaleDataservice SaleDataservice { get; }
-
 
         public MainViewModel(
                 ICruiseNavigationService navigationService,
@@ -133,15 +130,12 @@ namespace FScruiser.XF.ViewModels
             DatastoreProvider = datastoreProvider;
             DeviceInfo = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
 
-            if(datastoreProvider.CruiseID != null)
+            if (datastoreProvider.CruiseID != null)
             {
                 CuttingUnitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
                 SaleDataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
             }
-
-            //RefreshNavigation(null);
         }
-
 
         private void ShowTrees()
         {
@@ -167,189 +161,22 @@ namespace FScruiser.XF.ViewModels
             NavigationService.ShowTally(selectedUnit.CuttingUnitCode);
         }
 
-        //public void RefreshNavigation(CuttingUnit_Ex cuttingUnit)
+        //public override void Load()
         //{
-        //    var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+        //    base.Load();
 
-        //    var navigationItems = new List<NavigationListItem>();
-
-        //    if (datastore != null)
-        //    {
-        //        navigationItems.Add(new NavigationListItem
-        //        {
-        //            Title = "Sale",
-        //            NavigationPath = "Navigation/Sale",
-        //        });
-
-        //        navigationItems.Add(new NavigationListItem
-        //        {
-        //            Title = "Cutting Units",
-        //            NavigationPath = "Navigation/CuttingUnits"
-        //        });
-
-        //        if (cuttingUnit != null)
-        //        {
-        //            if (cuttingUnit.HasTreeStrata)
-        //            {
-        //                navigationItems.Add(new NavigationListItem
-        //                {
-        //                    Title = "Tally",
-        //                    NavigationPath = "Navigation/Tally",
-        //                    GetParamaters = () => new NavigationParameters($"{NavParams.UNIT}={cuttingUnit.CuttingUnitCode}")
-        //                });
-
-        //                navigationItems.Add(new NavigationListItem
-        //                {
-        //                    Title = "Trees",
-        //                    NavigationPath = "Navigation/Trees",
-        //                    GetParamaters = () => new NavigationParameters($"{NavParams.UNIT}={cuttingUnit.CuttingUnitCode}")
-        //                });
-        //            }
-        //            if (cuttingUnit.HasPlotStrata)
-        //            {
-        //                navigationItems.Add(new NavigationListItem
-        //                {
-        //                    Title = "Plots",
-        //                    NavigationPath = "Navigation/Plots",
-        //                    GetParamaters = () => new NavigationParameters($"{NavParams.UNIT}={cuttingUnit.CuttingUnitCode}")
-        //                });
-        //            }
-        //        }
-
-        //        navigationItems.Add(new NavigationListItem
-        //        {
-        //            Title = "Samplers",
-        //            NavigationPath = "Navigation/SampleStateManagmentOther"
-        //        });
-        //    }
-
-        //    //navigationItems.Add(new NavigationListItem
-        //    //{
-        //    //    Title = "Cruisers",
-        //    //    NavigationPath = "Navigation/Cruisers"
-        //    //});
-
-        //    NavigationListItems = navigationItems;
+            
         //}
 
-        //public async System.Threading.Tasks.Task NavigateToAsync(NavigationListItem obj)
-        //{
-        //    var navParams = obj?.GetParamaters?.Invoke();
-
-        //    try
-        //    {
-        //        var result = await NavigationService.NavigateAsync(obj.NavigationPath, navParams);
-
-        //        var ex = result.Exception;
-        //        if (ex != null)
-        //        {
-        //            Debug.WriteLine("ERROR::::" + ex);
-        //            Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", obj.NavigationPath } });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine("ERROR::::" + ex);
-        //        Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", obj.NavigationPath } });
-        //    }
-        //}
-
-        //public void ShowFeedback()
-        //{
-        //    NavigationService.ShowFeedback();
-
-        //    //NavigationService.NavigateAsync("Feedback", useModalNavigation: true);
-        //}
-
-        //public void ShowSettings()
-        //{
-        //    NavigationService.ShowSettings();
-
-        //    //NavigationService.NavigateAsync("Settings", useModalNavigation: true);
-        //}
-
-        //public void ShowSampleStateManagment()
-        //{
-        //    NavigationService.ShowSampleStateManagment();
-
-        //    //NavigationService.NavigateAsync("SampleStateManagment", useModalNavigation: true);
-        //}
-
-        //private async void SelectFileAsync(object obj)
-        //{
-        //    try
-        //    {
-        //        var filePath = await FileDialogService.SelectCruiseFileAsync();
-        //        if (filePath == null) { return; }
-
-        //        //var fileData = await CrossFilePicker.Current.PickFile(new string[] { ".cruise", ".crz3" });
-        //        //if (fileData == null) { return; }//user canceled file picking
-
-        //        //var filePath = fileData.FilePath;
-
-        //        //Check path exists
-        //        if (File.Exists(filePath) == false)
-        //        {
-        //            await DialogService.ShowMessageAsync(filePath, "File Doesn't Exist").ConfigureAwait(false);
-        //            return;
-        //        }
-
-        //        MessagingCenter.Send<object, string>(this, Messages.CRUISE_FILE_SELECTED, filePath);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine($"Error:::{ex.Message}");
-        //        Debug.WriteLine(ex.StackTrace);
-        //        Crashes.TrackError(ex);
-        //    }
-        //}
-
-        //public override void OnNavigatedFrom(INavigationParameters parameters)
-        //{
-        //    base.OnNavigatedFrom(parameters);
-
-        //    MessagingCenter.Unsubscribe<Object>(this, Messages.CRUISE_FILE_OPENED);
-        //    MessagingCenter.Unsubscribe<Object>(this, Messages.CRUISE_FILE_SELECTED);
-        //}
-
-        //public override void OnNavigatedTo(INavigationParameters parameters)
-        //{
-        //    base.OnNavigatedTo(parameters);
-
-        //    MessagingCenter.Subscribe<object, string>(this, Messages.CRUISE_FILE_OPENED,
-        //        MessagingCenter_CruiseFileOpened);
-
-        //    MessagingCenter.Subscribe<string>(this, Messages.CUTTING_UNIT_SELECTED,
-        //        MessagingCenter_CuttingUnitSelected);
-        //}
-
-        //private void MessagingCenter_CuttingUnitSelected(string unit)
-        //{
-        //    var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDatastore>();
-        //    var cuttingUnit = datastore.GetUnit(unit);
-
-        //    RefreshNavigation(cuttingUnit);
-
-        //    RaisePropertyChanged(nameof(NavigationListItems));
-        //}
-
-        //private async void MessagingCenter_CruiseFileOpened(object sender, string path)
-        //{
-        //    RefreshNavigation(null);
-
-        //    RaisePropertyChanged(nameof(CurrentCruiseName));
-        //    RaisePropertyChanged(nameof(NavigationListItems));
-        //}
-
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void OnInitialize(INavigationParameters parameters)
         {
+            base.OnInitialize(parameters);
+
             var cuttingUnitDataservice = CuttingUnitDataservice;
-            if(cuttingUnitDataservice != null)
+            if (cuttingUnitDataservice != null)
             {
                 CuttingUnits = cuttingUnitDataservice.GetUnits();
             }
-
-            //do nothing
         }
     }
 }

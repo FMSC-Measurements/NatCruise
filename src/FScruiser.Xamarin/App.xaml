@@ -2,7 +2,7 @@
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                         xmlns:prism="http://prismlibrary.com"
-                        xmlns:tc_conv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+                        xmlns:tc_conv="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
                         xmlns:converters="clr-namespace:FScruiser.XF.Converters"
                         x:Class="FScruiser.XF.App">
     <Application.Resources>
@@ -34,17 +34,34 @@
             <Color x:Key="error">Red</Color>
             <Color x:Key="warning">Gold</Color>
             <Color x:Key="error_suppressed">LightGray</Color>
-            
-            
+
+            <Color x:Key="measureTreeColor">#3CB371</Color> <!--MediumSeaGreen-->
+            <Color x:Key="insuranceTreeColor">#BA55D3</Color><!--MediumOrchid-->
+            <Color x:Key="tallyCountEntryColor">#00BFFF</Color>
+            <!--SandyBrown-->
+
 
             <!-- converters -->
-            <tc_conv:HasDataConverter x:Key="hasDataConverter" />
+            <tc_conv:IsNotNullOrEmptyConverter x:Key="isNotNullOrEmptyConverter" />
+            <tc_conv:ListIsNotNullOrEmptyConverter x:Key="listIsNotNullOrEmptyConverter" />
+            <!--False if value is 0, True for everything else-->
+            <tc_conv:IntToBoolConverter x:Key="intToBoolConverter" />
 
             <converters:ErrorLevelToColorConverter x:Key="errorLevelToColorConverter"
                                                    Default="White"
                                                    Error="Red"
                                                    Warning="Gold" />
+
+            <converters:CountMeasureToColorConverter x:Key="countMeasureToColorConverter"
+                                                     Default="White"
+                                                     Measure="{StaticResource measureTreeColor}"
+                                                     Insurance="{StaticResource insuranceTreeColor}" />
+
+            <converters:Is3PConverter x:Key="is3pConverter" />
+            <converters:IsSTRConverter x:Key="isStrConverter" />
             
+
+
             <!-- base styles -->
             <Style x:Key="button_base"
                    TargetType="Button">

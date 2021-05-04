@@ -8,9 +8,14 @@ using System.Linq;
 
 namespace NatCruise.Cruise.Services
 {
+    // TODO can this class be folded into ISampleInfoDataservie?
     public class SampleSelectorRepository : ISampleSelectorDataService
     {
-        private Dictionary<string, ISampleSelector> _sampleSelectors = new Dictionary<string, ISampleSelector>();
+        public const string SAMPLESELECTORTYPE_SYSTEMATICSELECTER = "SystematicSelecter";
+        public const string SAMPLESELECTORTYPE_BLOCKSELECTER = "BlockSelecter";
+        public const string SAMPLESELECTORTYPE_CLICKERSELECTER = "ClickerSelecter";
+
+        protected Dictionary<string, ISampleSelector> _sampleSelectors = new Dictionary<string, ISampleSelector>();
 
         public SampleSelectorRepository(ISampleInfoDataservice dataservice)
         {
@@ -18,6 +23,8 @@ namespace NatCruise.Cruise.Services
         }
 
         public ISampleInfoDataservice Dataservice { get; set; }
+
+        public string DeviceID => Dataservice.DeviceID;
 
         public ISampleSelector GetSamplerBySampleGroupCode(string stratumCode, string sgCode)
         {
@@ -45,6 +52,7 @@ namespace NatCruise.Cruise.Services
             if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
 
             var method = samplerInfo.Method;
+            var sampleSelectortype = samplerInfo.SampleSelectorType;
 
             //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
             //{
@@ -63,7 +71,12 @@ namespace NatCruise.Cruise.Services
 
                 case "STR":
                     {
-                        return MakeBlockSampleSelector(samplerInfo);
+                        // default sample selector for STR is blocked
+                        if(sampleSelectortype == SAMPLESELECTORTYPE_SYSTEMATICSELECTER)
+                        { return MakeSystematicSampleSelector(samplerInfo); }
+                        else
+                        { return MakeBlockSampleSelector(samplerInfo); }
+                        
                     }
                 case "S3P":
                     {
@@ -78,8 +91,15 @@ namespace NatCruise.Cruise.Services
                 case "FCM":
                 case "PCM":
                     {
-                        return MakeSystematicSampleSelector(samplerInfo);
+                        // default sample selector for plot methods is systematic
+                        if(sampleSelectortype == SAMPLESELECTORTYPE_BLOCKSELECTER)
+                        { return MakeBlockSampleSelector(samplerInfo); }
+                        else
+                        { return MakeSystematicSampleSelector(samplerInfo); }
+                        
                     }
+                case null:
+                    { throw new NullReferenceException("method should not be null"); }
                 default:
                     {
                         return null;
@@ -178,20 +198,20 @@ namespace NatCruise.Cruise.Services
             }
         }
 
-        public void SaveSamplerStates()
-        {
-            foreach (var sampler in _sampleSelectors.Values.Select(x => x))
-            {
-                SaveSampler(sampler);
-            }
-        }
+        //public void SaveSamplerStates()
+        //{
+        //    foreach (var sampler in _sampleSelectors.Values.Select(x => x))
+        //    {
+        //        SaveSampler(sampler);
+        //    }
+        //}
 
-        public void SaveSampler(ISampleSelector sampler)
-        {
-            if (sampler is null) { throw new ArgumentNullException(nameof(sampler)); }
+        //public void SaveSampler(ISampleSelector sampler)
+        //{
+        //    if (sampler is null) { throw new ArgumentNullException(nameof(sampler)); }
 
-            var state = new SamplerState(sampler);
-            Dataservice.UpsertSamplerState(state);
-        }
+        //    var state = new SamplerState(sampler);
+        //    Dataservice.UpsertSamplerState(state);
+        //}
     }
 }

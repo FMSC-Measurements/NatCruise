@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise.Services;
 using Prism.Behaviors;
 using Prism.Common;
 using Prism.Ioc;
@@ -138,6 +139,41 @@ namespace FScruiser.XF
         }
 
         public Task ShowSampleStateManagment()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowManageCruisers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowCuttingUnitInfo(string unitCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task ICruiseNavigationService.ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task ICruiseNavigationService.ShowLogsList(string treeID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowSale(string cruiseID)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task ICruiseNavigationService.ShowTreeEdit(string treeID)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task ICoreNavigationService.GoBackAsync()
         {
             throw new NotImplementedException();
         }

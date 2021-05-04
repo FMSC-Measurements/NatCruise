@@ -2,10 +2,6 @@
 using Moq;
 using NatCruise.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FScruiser.XF.TestServices
 {
@@ -15,9 +11,10 @@ namespace FScruiser.XF.TestServices
 
         public string CruiseID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public CruiseDatastore_V3 GetDatabase()
+        public CruiseDatastore_V3 Database
         {
-            throw new NotImplementedException();
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
         }
 
         public IDataservice GetDataservice(Type type)
@@ -29,11 +26,6 @@ namespace FScruiser.XF.TestServices
         {
             var mock = new Mock<T>();
             return mock.Object;
-        }
-
-        public void OpenDatabase(string filePath)
-        {
-            throw new NotImplementedException();
         }
     }
 }

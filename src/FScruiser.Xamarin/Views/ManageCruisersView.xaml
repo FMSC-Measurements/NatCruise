@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.ManageCruisersView"
              BackgroundColor="White"
-             x:Name="_self">
+             x:Name="_self"
+             Title="Manage Cruisers">
     <ContentPage.Content>
         <Grid>
             
@@ -96,6 +98,7 @@
                         Image="ic_plus_white_18dp.png"
                         BackgroundColor="{StaticResource primary_500}"
                         WidthRequest="60"
+                        IsEnabled="{Binding Text, Source={Reference _addCruiserEntry}, Converter={StaticResource isNotNullOrEmptyConverter}}"
                         Margin="5"/>
 
                 <Entry x:Name="_addCruiserEntry"

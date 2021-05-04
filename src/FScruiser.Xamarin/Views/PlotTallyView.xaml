@@ -2,24 +2,23 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
-             xmlns:flow="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
-             xmlns:tk_conv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
+             xmlns:tk_conv="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
              xmlns:my_behv="clr-namespace:FScruiser.XF.Behaviors"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+             xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
              x:Class="FScruiser.XF.Views.PlotTallyView"
              BackgroundColor="White"
              x:Name="_page"
-             Title="{Binding PlotNumber, StringFormat='{}Plot Number {0}'}">
+             Title="{Binding Title}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="tallyIncruiseColor"></Color>
 
-            <tk_conv:BooleanToObjectConverter x:Key="tallyIncruiseBackgroundColorConverter"
+            <tk_conv:BoolToObjectConverter x:Key="tallyIncruiseBackgroundColorConverter"
                                               x:TypeArguments="Color"
                                               TrueObject="{StaticResource primary_500}"
                                               FalseObject="DimGray" />
-
-            <tk_conv:HasDataConverter x:Key="hasDataConverter" />
 
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -37,8 +36,9 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <AbsoluteLayout Grid.Row="0">
-
+            <RelativeLayout Grid.Row="0">
+                
+                <!--Trees List-->
                 <CollectionView AbsoluteLayout.LayoutFlags="SizeProportional"
                                 AbsoluteLayout.LayoutBounds="0,0,1,1"
                                 x:Name="_tallyFeedListView"
@@ -54,8 +54,9 @@
                             <SwipeView>
                                 <SwipeView.LeftItems>
                                     <SwipeItem Text="Delete"
+                                               BackgroundColor="Red"
                                                Command="{Binding BindingContext.DeleteTreeCommand, Source={Reference _page}}"
-                                               CommandParameter="{Binding .}" />
+                                               CommandParameter="{Binding TreeID}" />
                                 </SwipeView.LeftItems>
 
                                 <cells:PlotTreeViewCell>
@@ -65,7 +66,7 @@
                                                               CommandParameter="{Binding .}"
                                                               Tapped="_treeCellTappedGesture_Tapped" />
                                     </cells:PlotTreeViewCell.GestureRecognizers>
-                                    
+
                                 </cells:PlotTreeViewCell>
 
                             </SwipeView>
@@ -73,83 +74,89 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <Grid x:Name="_treeEditPanel"
-                      AbsoluteLayout.LayoutFlags="WidthProportional"
-                      AbsoluteLayout.LayoutBounds="0,0,1,165"
-                      BackgroundColor="White"
-                      IsVisible="false"
-                      BindingContext="{Binding SelectedTreeViewModel}"
-                      BindingContextChanged="_treeEditPanel_BindingContextChanged">
-                    <!--default to not visable, when view cell expands visability will be set to true -->
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="2" />
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <Label Grid.ColumnSpan="3"
-                           Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
-                           TextColor="{StaticResource darkText}"
-                           FontSize="Large" />
-
-                    <ScrollView x:Name="_treeEditScrollView"
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="4"
-                                Orientation="Horizontal">
-                        <Grid x:Name="_treeEditControlGrid">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="19" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                        </Grid>
-                    </ScrollView>
-
-                    <Button  x:Name="_hideTreeEditPanelButton"
-                             Grid.Row="2"
-                             Grid.Column="0"
-                             Text="Hide"
-                             HorizontalOptions="Start"
-                             Clicked="_hideTreeEditPanelButton_Clicked" />
+                <!--Tree Edit Panel-->
+                <Frame  x:Name="_treeEditPanel"
+                        IsVisible="false"
+                        RelativeLayout.XConstraint="0"
+                        RelativeLayout.YConstraint="0"
+                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                        Padding="0"
+                        BindingContext="{Binding SelectedTreeViewModel}"
+                        BindingContextChanged="_treeEditPanel_BindingContextChanged">
 
 
-                    <Button Grid.Row="2"
-                            Grid.Column="1"
-                            x:Name="_logsButton"
-                            Text="Logs"
-                            Command="{Binding ShowLogsCommand}"/>
+                    <Grid>
+                        <!--default to not visable, when view cell expands visability will be set to true -->
 
-                    <Button Grid.Row="2"
-                            Grid.Column="2"
-                            x:Name="_editButton"
-                            Text="Edit"
-                            Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
-                            CommandParameter="{Binding TreeID}"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="2" />
+                        </Grid.RowDefinitions>
 
-                    <!--<Button Grid.Row="2"
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.ColumnSpan="3"
+                               Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
+                               TextColor="{StaticResource darkText}"
+                               FontSize="Large" />
+
+                        <ScrollView x:Name="_treeEditScrollView"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="4"
+                                    Orientation="Horizontal">
+                            <Grid x:Name="_treeEditControlGrid">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                            </Grid>
+                        </ScrollView>
+
+                        <Button  x:Name="_hideTreeEditPanelButton"
+                                 Grid.Row="2"
+                                 Grid.Column="0"
+                                 Text="Hide"
+                                 HorizontalOptions="Start"
+                                 Clicked="_hideTreeEditPanelButton_Clicked" />
+
+
+                        <Button Grid.Row="2"
+                                Grid.Column="1"
+                                x:Name="_logsButton"
+                                Text="Logs"
+                                Command="{Binding ShowLogsCommand}" />
+
+                        <Button Grid.Row="2"
+                                Grid.Column="2"
+                                x:Name="_editButton"
+                                Text="Edit"
+                                Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
+                                CommandParameter="{Binding TreeID}" />
+
+                        <!--<Button Grid.Row="2"
                             Grid.Column="3"
                             x:Name="_untallyButton"
                             Text="Untally" />-->
 
-                    <BoxView Grid.Row="3"
-                             Grid.ColumnSpan="4"
-                             BackgroundColor="Black" />
-                </Grid>
+                        <BoxView Grid.Row="3"
+                                 Grid.ColumnSpan="4"
+                                 BackgroundColor="Black" />
+                    </Grid>
+                </Frame>
 
-            </AbsoluteLayout>
-
+            </RelativeLayout>
+            
             <CollectionView Grid.Row="1"
                                x:Name="TallyListView"
-                               IsVisible="{Binding TalliesFiltered, Converter={StaticResource hasDataConverter}}"
+                            IsVisible="{Binding TalliesFiltered, Converter={StaticResource listIsNotNullOrEmptyConverter}}"
                                ItemsSource="{Binding TalliesFiltered}"
                                BackgroundColor="White"
                                VerticalOptions="CenterAndExpand">
@@ -171,16 +178,15 @@
                                                       CommandParameter="{Binding .}" />
                             </Frame.GestureRecognizers>
 
-                            <StackLayout>
 
-                                <StackLayout
+                                <!--<StackLayout
                                     Orientation="Horizontal"
                                     VerticalOptions="CenterAndExpand"
                                     HorizontalOptions="Center"
                                     HeightRequest="20"
                                              BackgroundColor="Black"
                                              Padding="5,2,5,2">
-                                    <!--<Grid.ColumnDefinitions>
+                                    --><!--<Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="10" />
                                         <ColumnDefinition Width="2" />
                                         <ColumnDefinition Width="*" />
@@ -189,7 +195,7 @@
                                         <ColumnDefinition Width="2" />
                                         <ColumnDefinition Width="*" />
                                         
-                                    </Grid.ColumnDefinitions>-->
+                                    </Grid.ColumnDefinitions>--><!--
                                     <StackLayout.Resources>
                                         <ResourceDictionary>
                                             <Style TargetType="Label">
@@ -217,27 +223,33 @@
                                            Text="{Binding SampleGroupCode}" LineBreakMode="NoWrap"  />
                                     <BoxView x:Name="_spLableSplitter"
                                              Grid.Column="3"
-                                             IsVisible="{Binding SpeciesCode, Converter={StaticResource hasDataConverter}}" />
+                                             IsVisible="{Binding SpeciesCode, Converter={StaticResource isNotNullOrEmptyConverter}}" />
                                     <Label x:Name="_spLabel"
                                            Grid.Column="4"
                                            Text="{Binding SpeciesCode}" />
                                     <BoxView x:Name="_ldLableSplitter"
                                              Grid.Column="5"
-                                             IsVisible="{Binding LiveDead, Converter={StaticResource hasDataConverter}}" />
+                                             IsVisible="{Binding LiveDead, Converter={StaticResource isNotNullOrEmptyConverter}}" />
                                     <Label x:Name="_ldLabel"
                                            Grid.Column="6"
                                            Text="{Binding LiveDead}" />
-                                </StackLayout>
-                                <!--<local_ctrls:PopulationIndicator HorizontalOptions="CenterAndExpand"
-                                                                 VerticalOptions="CenterAndExpand"
-                                                                 StratumCode="{Binding StratumCode}"
-                                                                 SampleGroupCode="{Binding SampleGroupCode}"
-                                                                 Species="{Binding Species}"
-                                                                 LiveDead="{Binding LiveDead}"
-                                                                 HeightRequest="20"
-                                                                 FontSize="Micro" />-->
+                                </StackLayout>-->
 
-                            </StackLayout>
+                                <Grid RowDefinitions="*,Auto,*">
+
+                                    <local_ctrls:PopulationIndicator
+                                        Grid.Row="1"
+                                        HorizontalOptions="Center"
+                                        StratumCode="{Binding StratumCode}"
+                                        SampleGroupCode="{Binding SampleGroupCode}"
+                                        Species="{Binding SpeciesCode}"
+                                        LiveDead="{Binding LiveDead}"
+                                        FontSize="Micro"
+                                        AltFontSize="Large"
+                                        AltFontAttributes="Bold"
+                                        CellPadding="2,-4"/>
+                                </Grid>
+
 
                         </Frame>
                     </DataTemplate>
@@ -254,34 +266,22 @@
                             SelectedItem="{Binding StratumFilter}"
                             SelectionMode="Single"
                             ItemsSource="{Binding StrataFilterOptions}"
-                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource hasDataConverter}}">
+                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal"
                                        ItemSpacing="2" />
                 </CollectionView.ItemsLayout>
 
-                <!--<CollectionView.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Any</x:String>
-                        <x:String>001</x:String>
-                        <x:String>002</x:String>
-                        <x:String>002</x:String>
-                        <x:String>002</x:String>
-                        <x:String>002</x:String>
-                        <x:String>002</x:String>
-                    </x:Array>
-                </CollectionView.ItemsSource>-->
-
-                <CollectionView.ItemTemplate>
+                <CollectionView.ItemTemplate >
                     <DataTemplate>
-                        <Button Text="{Binding .}"
+                        <Label Text="{Binding .}"
                                 TextColor="{StaticResource white_90}"
                                 BackgroundColor="{StaticResource primary_500}"
                                 Margin="2"
                                 Padding="1"
-                                HeightRequest="40"
-                                Command="{Binding BindingContext.StratumSelectedCommand, Source={x:Reference StratumFilterListView}}"
-                                CommandParameter="{Binding .}" />
+                               WidthRequest="70"
+                               VerticalTextAlignment="Center"
+                               HorizontalTextAlignment="Center"/>
                     </DataTemplate>
 
                 </CollectionView.ItemTemplate>

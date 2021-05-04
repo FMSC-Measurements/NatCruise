@@ -12,46 +12,48 @@ namespace NatCruise.Design.Models
         private string _loggingMethod;
         private string _paymentUnit;
         private string _rx;
+        private string _remarks;
 
-        [PrimaryKeyField("CuttingUnit_CN")]
         public int CuttingUnit_CN { get; set; }
 
-        [Field("Code")]
+        public string CuttingUnitID { get; set; }
+
         public string CuttingUnitCode
         {
             get => _cuttingUnitCode;
             set => SetProperty(ref _cuttingUnitCode, value);
         }
 
-        [Field("Area")]
         public double Area
         {
             get => _area;
             set => SetProperty(ref _area, value);
         }
 
-        [Field("Description")]
         public string Description
         {
             get => _description;
             set => SetProperty(ref _description, value);
         }
 
-        [Field("LoggingMethod")]
         public string LoggingMethod
         {
             get => _loggingMethod;
             set => SetProperty(ref _loggingMethod, value);
         }
 
-        [Field("PaymentUnit")]
         public string PaymentUnit
         {
             get => _paymentUnit;
             set => SetProperty(ref _paymentUnit, value);
         }
 
-        [Field("Rx")]
+        public string Remarks
+        {
+            get => _remarks;
+            set => SetProperty(ref _remarks, value);
+        }
+
         public string Rx
         {
             get => _rx;

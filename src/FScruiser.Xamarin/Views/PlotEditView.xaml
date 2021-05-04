@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:tkConv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
-             xmlns:tkBehv="clr-namespace:Xamarin.Toolkit.Behaviors;assembly=Xamarin.Toolkit.Behaviors"
-             xmlns:effects="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
+             xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
              xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
              x:Class="FScruiser.XF.Views.PlotEditView"
-             x:Name="_page">
+             x:Name="_page"
+             Title="Edit Plot">
 
     <ContentPage.Resources>
         <Style x:Key="errorWarningLabel"
@@ -85,7 +84,7 @@
                        ReturnCommandParameter="{Binding Text, Source={Reference _plotNumberEntry}}"
                        ReturnType="Default">
                     <Entry.Effects>
-                        <effects:EntrySelectAllText />
+                        <effects:SelectAllTextEffect />
                     </Entry.Effects>
                     <Entry.Behaviors>
                         <behaviors:SendCompletedOnLostFocusBehavior />

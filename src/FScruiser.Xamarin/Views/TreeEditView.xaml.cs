@@ -115,6 +115,8 @@ namespace FScruiser.XF.Views
             var index = 0;
             foreach (var field in treeFields)
             {
+                if(string.Compare(field.Field, "initials", true) == 0) { continue; }
+
                 grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 
                 //if (index % 2 == 0) //alternate row color
@@ -132,7 +134,12 @@ namespace FScruiser.XF.Views
                 if (editView is Entry entry)
                 {
                     entry.Completed += _entry_Completed;
+                    entry.IsReadOnly = field.IsLocked || field.IsHidden;
+                    entry.Placeholder = field.StrDefaultValue;
+                    
                 }
+                editView.IsVisible = !field.IsHidden;
+                editView.IsEnabled = !field.IsLocked;
 
                 grid.Children.Add(editView, 1, index);
                 index++;

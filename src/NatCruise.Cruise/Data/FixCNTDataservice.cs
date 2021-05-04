@@ -11,11 +11,13 @@ namespace NatCruise.Cruise.Data
 {
     public class FixCNTDataservice : CruiseDataserviceBase, IFixCNTDataservice
     {
-        public FixCNTDataservice(string path, string cruiseID) : base(path, cruiseID)
+        public FixCNTDataservice(string path, string cruiseID, string deviceID)
+            : base(path, cruiseID, deviceID)
         {
         }
 
-        public FixCNTDataservice(CruiseDatastore_V3 database, string cruiseID) : base(database, cruiseID)
+        public FixCNTDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID)
+            : base(database, cruiseID, deviceID)
         {
         }
 

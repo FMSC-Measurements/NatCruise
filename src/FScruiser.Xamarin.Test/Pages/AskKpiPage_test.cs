@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace FScruiser.XF.Pages
 {
-    public class AskKpiPage_test : TestBase
+    public class AskKpiPage_test : XFTestBase
     {
         public AskKpiPage_test(ITestOutputHelper output) : base(output)
         {
