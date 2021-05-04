@@ -13,12 +13,11 @@ namespace FScruiser.Droid.Services
 
             var importTempDir = ImportTempDir;
             var convertTempDir = ConvertTempDir;
-            
 
-            if(Directory.Exists(importTempDir) == false)
+            if (Directory.Exists(importTempDir) == false)
             { Directory.CreateDirectory(importTempDir); }
 
-            if(Directory.Exists(convertTempDir) == false)
+            if (Directory.Exists(convertTempDir) == false)
             { Directory.CreateDirectory(convertTempDir); }
 
             var exportTempDir = ExportTempDir;
@@ -40,7 +39,7 @@ namespace FScruiser.Droid.Services
         {
             var fileName = Path.GetFileName(location);
             var destinationPath = Path.Combine(ImportTempDir, fileName);
-            if(IsInternalPath(location))
+            if (IsInternalPath(location))
             {
                 File.Copy(location, destinationPath, true);
             }
@@ -66,13 +65,12 @@ namespace FScruiser.Droid.Services
             var resolver = Context.ContentResolver;
 
             var aTo = Android.Net.Uri.Parse(to);
-            var stream = resolver.OpenOutputStream(aTo);
-
-            var fromStream = File.OpenRead(from);
+            using var stream = resolver.OpenOutputStream(aTo);
+            using var fromStream = File.OpenRead(from);
             fromStream.CopyTo(stream);
         }
 
-        bool IsInternalPath(string path)
+        private bool IsInternalPath(string path)
         {
             // TODO detect if file is in convert temp dir
             return false;

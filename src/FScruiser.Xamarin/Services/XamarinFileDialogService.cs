@@ -25,6 +25,11 @@ namespace FScruiser.XF.Services
             throw new NotImplementedException();
         }
 
+        public virtual Task<string> SelectBackupFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<string> SelectTemplateFileAsync()
         {
             throw new NotImplementedException();
