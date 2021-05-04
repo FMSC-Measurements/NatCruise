@@ -80,5 +80,10 @@ namespace NatCruise.Wpf.Services
             else
             { return null; }
         }
+
+        public Task<string> SelectBackupFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

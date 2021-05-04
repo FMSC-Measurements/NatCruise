@@ -23,13 +23,17 @@ namespace FScruiser.XF.ViewModels
         public IDataserviceProvider DataserviceProvider { get; }
 
         public ICommand ResetDatabaseCommand => new Command(() => ResetDatabase());
+        public ICommand BackupDatabaseCommand => new Command(BackupDatabase);
 
-        public SettingsViewModel(IDialogService dialogService, IFileSystemService fileSystemService, IDataserviceProvider dataserviceProvider)
+        public IFileDialogService FileDialogService { get; }
+
+        public SettingsViewModel(IDialogService dialogService, IFileSystemService fileSystemService, IDataserviceProvider dataserviceProvider, IFileDialogService fileDialogService)
         {
             AppSettings = new XamarinApplicationSettingService();
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
         }
 
         public async void ResetDatabase()
@@ -41,6 +45,19 @@ namespace FScruiser.XF.ViewModels
                 Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Database Reset");
                 var newDatabase = new CruiseDatastore_V3(databasePath, true);
                 DataserviceProvider.CruiseID = null;
+            }
+        }
+
+        public async void BackupDatabase()
+        {
+            var timestamp = DateTime.Today.ToString("ddMMyyyy");
+            var defaultFileName = $"CruiseDatabaseBackup_{timestamp}.crz3db";
+
+            var backupPath = await FileDialogService.SelectBackupFileDestinationAsync(defaultFileName: defaultFileName);
+            if(string.IsNullOrEmpty(backupPath) == false)
+            {
+
+                FileSystemService.CopyTo(DataserviceProvider.DatabasePath, backupPath);
             }
         }
 
