@@ -15,7 +15,7 @@ namespace NatCruise.Cruise.Services
         public const string SAMPLESELECTORTYPE_BLOCKSELECTER = "BlockSelecter";
         public const string SAMPLESELECTORTYPE_CLICKERSELECTER = "ClickerSelecter";
 
-        private Dictionary<string, ISampleSelector> _sampleSelectors = new Dictionary<string, ISampleSelector>();
+        protected Dictionary<string, ISampleSelector> _sampleSelectors = new Dictionary<string, ISampleSelector>();
 
         public SampleSelectorRepository(ISampleInfoDataservice dataservice)
         {
@@ -98,6 +98,8 @@ namespace NatCruise.Cruise.Services
                         { return MakeSystematicSampleSelector(samplerInfo); }
                         
                     }
+                case null:
+                    { throw new NullReferenceException("method should not be null"); }
                 default:
                     {
                         return null;

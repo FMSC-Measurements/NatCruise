@@ -182,6 +182,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
@@ -234,7 +236,7 @@ namespace FScruiser.XF.ViewModels
             if (IsTreeIn.HasValue)
             {
                 return CalculateLimitingDistance.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
-                    SlopePCT, Azimuth, BafOrFps, DBH, IsVariableRadius, IsToFace, Plot.StratumCode);
+                    SlopePCT, Azimuth, BafOrFps, DBH, IsVariableRadius, IsToFace, Plot?.StratumCode);
             }
             else { return null; }
         }
@@ -248,7 +250,5 @@ namespace FScruiser.XF.ViewModels
                 Datastore.AddPlotRemark(plot.CuttingUnitCode, plot.PlotNumber, report);
             }
         }
-
-        
     }
 }
