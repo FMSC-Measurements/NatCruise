@@ -54,7 +54,7 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<SettingsView>("Settings");
             containerRegistry.RegisterForNavigation<LimitingDistanceView>("LimitingDistance");
             containerRegistry.RegisterForNavigation<LogsListView>("LogList");
-            containerRegistry.RegisterForNavigation<LogEditView>("Log");
+            containerRegistry.RegisterForNavigation<LogEditView>("LogEdit");
             containerRegistry.RegisterForNavigation<FeedbackView>("Feedback");
         }
 
