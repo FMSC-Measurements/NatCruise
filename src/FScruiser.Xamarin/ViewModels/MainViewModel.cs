@@ -72,6 +72,7 @@ namespace FScruiser.XF.ViewModels
                 RaisePropertyChanged(nameof(IsCuttingUnitSelected));
                 RaisePropertyChanged(nameof(HasPlotStrata));
                 RaisePropertyChanged(nameof(HasTreeStrata));
+                NavigationService.ShowBlank();
             }
         }
 
