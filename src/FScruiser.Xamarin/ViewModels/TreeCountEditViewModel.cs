@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using FScruiser.XF.Constants;
+using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
-using Prism.Navigation;
-using Xamarin.Forms;
-using static NatCruise.Cruise.Constants;
 using NatCruise.Data;
+using Prism.Common;
+using System;
+using System.Linq;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeCountEditViewModel : ViewModelBase
+    public class TreeCountEditViewModel : XamarinViewModelBase
     {
+        private bool _isSaved;
         private string _unitCode;
         private int _treeCountDelta;
+        private int _kPIDelta;
         private string _editReason;
         private string _remarks;
         private TallyPopulation _tallyPopulation;
@@ -78,6 +76,10 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
+        
+
+        public int KPIDelta { get => _kPIDelta; set => SetProperty(ref _kPIDelta, value); }
+
         public string CruiseMethod
         {
             get => _cruiseMethod;
@@ -85,10 +87,13 @@ namespace FScruiser.XF.ViewModels
             {
                 SetProperty(ref _cruiseMethod, value);
                 RaisePropertyChanged(nameof(IsSTR));
+                RaisePropertyChanged(nameof(Is3P));
             }
         }
 
         public bool IsSTR => CruiseMethod == CruiseDAL.Schema.CruiseMethods.STR;
+
+        public bool Is3P => CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS.Contains(CruiseMethod);
 
         public int AdjustedTreeCount
         {
@@ -108,10 +113,11 @@ namespace FScruiser.XF.ViewModels
             get => _remarks;
             set => SetProperty(ref _remarks, value);
         }
-        
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var unit = parameters.GetValue<string>(NavParams.UNIT);
             var stratum = parameters.GetValue<string>(NavParams.STRATUM);
             var sampleGroup = parameters.GetValue<string>(NavParams.SAMPLE_GROUP);
@@ -119,30 +125,33 @@ namespace FScruiser.XF.ViewModels
             var liveDead = parameters.GetValue<string>(NavParams.LIVE_DEAD);
 
             var tallyPopulation = TallyPopulationDataservice.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead);
-            
+
             TallyPopulation = tallyPopulation;
             UnitCode = unit;
             CruiseMethod = tallyPopulation.Method;
-
         }
 
         public void SaveEdit()
         {
+            if(_isSaved == true) { return; } // prevent double press
+
             var reason = EditReason;
             var treeCountDelta = TreeCountDelta;
+            var kpiDelta = KPIDelta;
             var cruiser = DialogService.AskCruiserAsync();
-            if(cruiser == null) { return; }
+            if (cruiser == null) { return; }
 
             var tallyLedger = new TallyLedger(UnitCode, TallyPopulation);
             tallyLedger.TreeCount = treeCountDelta;
+            tallyLedger.KPI = kpiDelta;
             tallyLedger.Reason = reason;
             tallyLedger.Remarks = Remarks;
             tallyLedger.EntryType = TallyLedger.EntryTypeValues.TREECOUNT_EDIT;
 
+            _isSaved = true;
             TallyDataservice.InsertTallyLedger(tallyLedger);
 
             NavigationService.GoBackAsync();
         }
-
     }
 }

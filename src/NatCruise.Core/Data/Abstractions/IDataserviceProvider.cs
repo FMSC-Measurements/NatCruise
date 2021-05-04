@@ -1,5 +1,4 @@
 ﻿using CruiseDAL;
-using NatCruise.Models;
 using System;
 
 namespace NatCruise.Data
@@ -10,9 +9,7 @@ namespace NatCruise.Data
 
         string CruiseID { get; set; }
 
-        void OpenDatabase(string filePath);
-
-        CruiseDatastore_V3 GetDatabase();
+        CruiseDatastore_V3 Database { get; set; }
 
         IDataservice GetDataservice(Type type);
 

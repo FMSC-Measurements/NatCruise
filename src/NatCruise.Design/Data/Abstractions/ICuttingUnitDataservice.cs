@@ -15,7 +15,5 @@ namespace NatCruise.Design.Data
         void UpdateCuttingUnit(CuttingUnit unit);
 
         void DeleteCuttingUnit(CuttingUnit unit);
-
-        IEnumerable<LoggingMethod> GetLoggingMethods();
     }
 }

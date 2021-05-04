@@ -85,6 +85,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\MainActivity.cs" />
+    <Compile Include="CustomRenderers\ValuePickerEditText.cs" />
+    <Compile Include="CustomRenderers\ValuePickerRenderer.cs" />
+    <Compile Include="Services\ActivityService.cs" />
+    <Compile Include="Services\IActivityService.cs" />
+    <None Include="Activities\SurrogateActivity.cs~" />
     <Compile Include="AndroidPlatformInitializer.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -123,16 +128,14 @@
       <Name>NatCruise.Cruise</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <PackageReference Include="Plugin.CurrentActivity">
-      <Version>2.1.0.4</Version>
-    </PackageReference>
-    <PackageReference Include="XamarinFileChooser">
-      <Version>1.2.0</Version>
+    <PackageReference Include="Xamarin.Forms">
+      <Version>5.0.0.2012</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="CustomRenderers\" />
+    <AndroidResource Include="Resources\drawable\logs2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

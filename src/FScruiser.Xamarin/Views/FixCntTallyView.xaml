@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+             xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              x:Class="FScruiser.XF.Views.FixCntTallyView"
-             xmlns:tk_conv="clr-namespace:Xamarin.Toolkit.Converters;assembly=Xamarin.Toolkit.Converters"
-             x:Name="Page">
+             x:Name="Page"
+             Title="{Binding Title}">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -40,7 +42,7 @@
                             <Frame BackgroundColor="{StaticResource accent}"
                                    CornerRadius="5">
 
-                                <Label Text="{Binding Species}"
+                                <Label Text="{Binding SpeciesCode}"
                                        HorizontalTextAlignment="Center" />
 
                             </Frame >

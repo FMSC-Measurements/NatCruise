@@ -3,4 +3,6 @@
                     x:Class="NatCruise.Wpf.Images">
     <!--https://docs.microsoft.com/en-us/dotnet/framework/wpf/app-development/pack-uris-in-wpf-->
     <BitmapImage  x:Key="image_appIcon" UriSource="pack://application:,,,/Resources/cruisetree_setup.ico" />
+    <BitmapImage  x:Key="image_wallpaper"
+                  UriSource="pack://application:,,,/Resources/logs.jpg" />
 </ResourceDictionary>

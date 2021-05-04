@@ -13,23 +13,18 @@
   <ItemGroup>
     <None Remove="**\*~" />
   </ItemGroup>
-  
 
   <ItemGroup>
     <PackageReference Include="Backpack.XF.Converters" Version="1.0.1.2" />
-    <PackageReference Include="Backpack.XF.WidgiWhats" Version="1.0.2" />
-    <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.10" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.1.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
     <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
     <PackageReference Include="Scripty.MsBuild" Version="0.7.4" />
+    <PackageReference Include="Xamarin.CommunityToolkit" Version="1.1.0" />
+    <PackageReference Include="Xamarin.CommunityToolkit.Markup" Version="1.1.0" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.1931" />
-    <PackageReference Include="Xamarin.Toolkit.Behaviors" Version="0.0.1.34-preview" />
-    <PackageReference Include="Xamarin.Toolkit.Converters" Version="0.0.1.34-preview" />
-    <PackageReference Include="Xamarin.Toolkit.Effects" Version="1.0.0" />
   </ItemGroup>
   
 

@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FScruiser.XF.Constants;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using FScruiser.XF.Services;
-using Prism.Navigation;
 using NatCruise.Data;
-using FScruiser.XF.Constants;
+using Prism.Common;
+using Prism.Navigation;
+using System.Collections.Generic;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class LogEditViewModel : ViewModelBase
+    public class LogEditViewModel : XamarinViewModelBase, INavigatedAware
     {
         private Log _log;
         private IEnumerable<LogFieldSetup> _logFields;
         private IEnumerable<LogError> _errors;
-
 
         public Log Log
         {
@@ -36,22 +31,26 @@ namespace FScruiser.XF.ViewModels
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new System.ArgumentNullException(nameof(parameters)); }
+
             var log_guid = parameters.GetValue<string>(NavParams.LogID);
 
             var log = Datastore.GetLog(log_guid);
-
 
             LogFields = Datastore.GetLogFields(log.TreeID);
             Errors = Datastore.GetLogErrorsByLog(log.LogID);
             Log = log;
         }
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
+        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
         {
-            base.OnNavigatedFrom(parameters);
+            // do nothing
+        }
 
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
             SaveLog();
         }
 
@@ -63,6 +62,5 @@ namespace FScruiser.XF.ViewModels
                 Datastore.UpdateLog(log);
             }
         }
-
     }
 }

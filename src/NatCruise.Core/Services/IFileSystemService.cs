@@ -15,5 +15,7 @@
         string GetFileForImport(string location);
 
         string GetFileForConvert(string path);
+
+        void CopyTo(string from, string to);
     }
 }

@@ -1,29 +1,27 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using NatCruise.Cruise.Util;
-using FScruiser.XF.Constants;
+﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
-using Microsoft.AppCenter.Crashes;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
+using NatCruise.Data;
 using NatCruise.Util;
-using Prism.Navigation;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeListViewModel : ViewModelBase, INavigatedAware
+    public class TreeListViewModel : XamarinViewModelBase
     {
         private ICommand _deleteTreeCommand;
         private Command<TreeStub> _editTreeCommand;
         private ICollection<TreeStub> _trees;
         private Command _addTreeCommand;
         private Command<TreeStub> _showLogsCommand;
+        private string _unitCode;
 
         public ICollection<TreeStub> Trees
         {
@@ -44,7 +42,11 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new Command<TreeStub>(async (x) => await ShowLogsAsync(x)));
 
-        public string UnitCode { get; set; }
+        public string UnitCode
+        {
+            get => _unitCode;
+            set => SetProperty(ref _unitCode, value);
+        }
 
         public ICuttingUnitDatastore Datastore { get; set; }
 
@@ -65,8 +67,10 @@ namespace FScruiser.XF.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
 
             Trees = Datastore.GetTreeStubsByUnitCode(unitCode).ToObservableCollection();
@@ -80,7 +84,6 @@ namespace FScruiser.XF.ViewModels
 
             var stratumCode = await DialogService.AskValueAsync("Select Stratum", StratumCodes);
 
-            
             if (stratumCode != null)
             {
                 var sampleGroups = datastore.GetSampleGroupCodes(stratumCode).OrEmpty()
@@ -103,24 +106,9 @@ namespace FScruiser.XF.ViewModels
             TreeAdded?.Invoke(this, e);
         }
 
-        public async Task ShowEditTreeAsync(TreeStub tree)
+        public Task ShowEditTreeAsync(TreeStub tree)
         {
-            try
-            {
-                //var result = await NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, tree.TreeID } });
-                var result = await NavigationService.ShowTreeEdit(tree.TreeID);
-                var ex = result.Exception;
-                if(ex != null)
-                {
-                    Debug.WriteLine("ERROR::::" + ex);
-                    Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", "/Main/Navigation/CuttingUnits" } });
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("ERROR::::" + ex);
-                Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", "/Main/Navigation/CuttingUnits" } });
-            }
+            return NavigationService.ShowTreeEdit(tree.TreeID);
         }
 
         private void DeleteTree(TreeStub tree)
@@ -130,24 +118,9 @@ namespace FScruiser.XF.ViewModels
             Datastore.DeleteTree(tree.TreeID);
         }
 
-        public async System.Threading.Tasks.Task ShowLogsAsync(TreeStub tree)
+        public Task ShowLogsAsync(TreeStub tree)
         {
-            try
-            {
-                //var result = await NavigationService.NavigateAsync("Logs", new NavigationParameters() { { NavParams.TreeID, tree.TreeID } });
-                var result = await NavigationService.ShowLogsList(tree.TreeID);
-
-                if (result?.Exception != null)
-                {
-                    Debug.WriteLine("ERROR::::" + result?.Exception);
-                    Crashes.TrackError(result?.Exception, new Dictionary<string, string>() { { "nav_path", "/Main/Navigation/CuttingUnits" } });
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("ERROR::::" + ex);
-                Crashes.TrackError(ex, new Dictionary<string, string>() { { "nav_path", "/Main/Navigation/CuttingUnits" } });
-            }
+            return NavigationService.ShowLogsList(tree.TreeID);
         }
     }
 }

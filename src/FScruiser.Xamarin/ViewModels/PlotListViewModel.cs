@@ -1,19 +1,19 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
+﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
-using Prism.Navigation;
+using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using Prism.Common;
 using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class PlotListViewModel : ViewModelBase
+    public class PlotListViewModel : XamarinViewModelBase
     {
         private ICommand _addPlotCommand;
         private Command<Plot> _editPlotCommand;
@@ -32,8 +32,6 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand DeletePlotCommand => _deletePlotCommand ?? (_deletePlotCommand = new Command<Plot>(DeletePlot));
 
-
-
         public ICommand EditPlotCommand => _editPlotCommand ?? (_editPlotCommand = new Command<Plot>(ShowEditPlot));
 
         public PlotListViewModel(ICruiseNavigationService navigationService
@@ -47,8 +45,10 @@ namespace FScruiser.XF.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        protected override void Load(IParameters parameters)
         {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+
             var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
             RefreshPlots();
         }
@@ -95,7 +95,7 @@ namespace FScruiser.XF.ViewModels
                 && await DialogService.DisplayAlertAsync("Show FixCNT Tally Page?", "", "FixCNT", "Standard"))
             {
                 string stratum = null;
-                if(fixCNTstrata.Count() == 1)
+                if (fixCNTstrata.Count() == 1)
                 {
                     stratum = fixCNTstrata.Single().StratumCode;
                 }
@@ -104,7 +104,7 @@ namespace FScruiser.XF.ViewModels
                     stratum = await DialogService.DisplayActionSheetAsync("Select Stratum", "Cancel", "", fixCNTstrata.Select(x => x.StratumCode).ToArray());
                 }
 
-                if(stratum == null || stratum == "Cancel") { return; }
+                if (stratum == null || stratum == "Cancel") { return; }
 
                 //await NavigationService.NavigateAsync($"FixCNTTally?{NavParams.UNIT}={UnitCode}&{NavParams.STRATUM}={stratum}&{NavParams.PLOT_NUMBER}={plot.PlotNumber}");
 
@@ -117,7 +117,5 @@ namespace FScruiser.XF.ViewModels
                 await NavigationService.ShowPlotTally(plot.PlotID);
             }
         }
-
-        
     }
 }

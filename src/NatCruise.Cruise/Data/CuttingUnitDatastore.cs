@@ -2,6 +2,7 @@
 using CruiseDAL.Schema;
 using FMSC.ORM.Core.SQL.QueryBuilder;
 using FMSC.ORM.EntityModel.Attributes;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using System;
@@ -18,20 +19,19 @@ namespace NatCruise.Cruise.Services
         //    .Append(CruiseMethods.FIXCNT)
         //    .Select(x => "'" + x + "'").ToArray());
 
-        protected string UserName => "AndroidUser";
-
-        public CuttingUnitDatastore(string path, string cruiseID) : base (path, cruiseID)
+        public CuttingUnitDatastore(string path, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice)
+            : base (path, cruiseID, deviceID)
         {
+            SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        public CuttingUnitDatastore(CruiseDatastore_V3 database, string cruiseID) : base(database, cruiseID)
+        public CuttingUnitDatastore(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice)
+            : base(database, cruiseID, deviceID)
         {
+            SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        public string GetCruisePurpose()
-        {
-            return Database.ExecuteScalar<string>("SELECT Purpose FROM Cruise WHERE CruiseID = @p1 LIMIT 1;", CruiseID);
-        }
+        public ISampleInfoDataservice SampleInfoDataservice { get; }
 
         #region units
 
@@ -103,7 +103,7 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 "st.* " +
                 "FROM Stratum AS st " +
                 "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
-                $"WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method NOT IN ({PLOT_METHODS})",
+                "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)",
                 new object[] { unitCode, CruiseID })
                 .ToArray();
         }
@@ -115,7 +115,7 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 "st.* " +
                 "FROM Stratum AS st " +
                 "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
-                $"WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method NOT IN ({PLOT_METHODS})",
+                "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)",
                 new object[] { unitCode, CruiseID })
                 .ToArray();
         }
@@ -127,7 +127,7 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 "st.* " +
                 "FROM Stratum AS st " +
                 "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
-                $"WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN ({PLOT_METHODS})",
+                "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)",
                 new object[] { unitCode, CruiseID })
                 .ToArray();
         }
@@ -181,52 +181,6 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
             return Database.From<SampleGroupProxy>()
                 .Where("StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID =  @p3")
                 .Query(stratumCode, sampleGroupCode, CruiseID).FirstOrDefault();
-        }
-
-        public SamplerInfo GetSamplerState(string stratumCode, string sampleGroupCode)
-        {
-            return Database.Query<SamplerInfo>(
-                "SELECT " +
-                    "sg.StratumCode," +
-                    "sg.SampleGroupCode, " +
-                    "st.Method, " +
-                    "sg.SamplingFrequency, " +
-                    "sg.InsuranceFrequency, " +
-                    "sg.KZ, " +
-                    "ss.SampleSelectorState, " +
-                    "ss.SampleSelectorType " +
-                "FROM SampleGroup AS sg " +
-                "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
-                "LEFT JOIN SamplerState AS ss USING (StratumCode, SampleGroupCode, CruiseID) " +
-                "WHERE sg.StratumCode = @p1 " +
-                "AND sg.SampleGroupCode = @p2" +
-                "AND sg.CruiseID =  @p3;",
-                new object[] { stratumCode, sampleGroupCode, CruiseID }).FirstOrDefault();
-        }
-
-        public void UpdateSamplerState(SamplerInfo samplerState)
-        {
-            Database.Execute2(
-                "INSERT INTO SamplerState ( " +
-                    "CruiseID, " +
-                    "StratumCode, " +
-                    "SampleGroupCode, " +
-                    "SampleSelectorType, " +
-                    "SampleSelectorState " +
-                ") VALUES (" +
-                    "@CruiseID, " +
-                    "@StratumCode, " +
-                    "@SampleGroupCode, " +
-                    "@SampleSelectorType, " +
-                    "@SampleSelectorState" +
-                ") ON CONFLICT (StratumCode, SampleGroupCode, CruiseID) " +
-                "DO UPDATE SET " +
-                    "SampleSelectorType = @SampleSelectorType, " +
-                    "SampleSelectorState = @SampleSelectorState " +
-                "WHERE StratumCode = @StratumCode " +
-                "AND SampleGroupCode = @SampleGroupCode" +
-                "AND CruiseID = @CruiseID;",
-                samplerState);
         }
 
         //private string SELECT_TALLYPOPULATION_CORE =
@@ -477,7 +431,7 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 "te.Message, " +
                 "te.Resolution " +
                 "FROM TreeError AS te " +
-                "JOIN Tree_V3 AS t USING (TreeID) " +
+                "JOIN Tree AS t USING (TreeID) " +
                 "WHERE t.CuttingUnitCode = @p1 AND t.CruiseID = @p2;",
                 new object[] { cuttingUnitCode, CruiseID }).ToArray();
         }

@@ -13,6 +13,10 @@
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <ApplicationIcon>Resources\cruisetree_setup.ico</ApplicationIcon>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="Resources\logs.jpg" />
+  </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\cruisetree_setup.ico">
@@ -20,6 +24,7 @@
     </Resource>
     <Resource Include="Resources\fsmeasicon98x56.gif" />
     <Resource Include="Resources\Icon.bmp" />
+    <Resource Include="Resources\logs.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,19 +33,19 @@
       <Version>1.6.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>3.0.0</Version>
+      <Version>4.1.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>3.0.0</Version>
+      <Version>4.1.0</Version>
     </PackageReference>
     <!--<PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>-->
     <PackageReference Include="Prism.DryIoc">
-      <Version>7.2.0.1422</Version>
+      <Version>8.0.0.1909</Version>
     </PackageReference>
     <PackageReference Include="Prism.Wpf">
-      <Version>7.2.0.1422</Version>
+      <Version>8.0.0.1909</Version>
     </PackageReference>
     <PackageReference Include="Scripty.MsBuild">
       <Version>0.7.4</Version>
@@ -55,36 +60,41 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Design\Views\CuttingUnitDetailPage.xaml">
+    <Page Update="Design\Views\CuttingUnitDetailView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\CuttingUnitListPage.xaml">
+    <Page Update="Design\Views\CuttingUnitListView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\CuttingUnitStrataPage.xaml">
+    <Page Update="Design\Views\CuttingUnitStrataView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\SalePage.xaml">
+    <Page Update="Design\Views\SaleView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\SampleGroupDetailPage.xaml">
+    <Page Update="Design\Views\SampleGroupDetailView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\SampleGroupListPage.xaml">
+    <Page Update="Design\Views\SampleGroupListView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\StratumDetailPage.xaml">
+    <Page Update="Design\Views\StratumDetailView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\StratumListPage.xaml">
+    <Page Update="Design\Views\StratumListView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\SubpopulationListPage.xaml">
+    <Page Update="Design\Views\SubpopulationListView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Design\Views\TallySettingsPage.xaml">
+    <Page Update="Design\Views\TallySettingsView.xaml">
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Cruise\ViewModels\" />
+    <Folder Include="Cruise\Views\" />
   </ItemGroup>
 
 </Project>

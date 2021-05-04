@@ -3,10 +3,10 @@
                     x:Class="NatCruise.Wpf.Colors">
 
     <Color x:Key="color_background">White</Color>
-    <Color x:Key="color_accent">#1E90FF</Color><!--dodger blue-->
+    <Color x:Key="color_accent">#1e90ff</Color>
     <Color x:Key="color_foreground">Black</Color>
-    <Color x:Key="color_addItem">SpringGreen</Color>
-    <Color x:Key="color_removeItem">Tomato</Color>
+    <Color x:Key="color_addItem">#00a91c</Color>
+    <Color x:Key="color_removeItem">#d54309</Color>
     <Color x:Key="color_fs_brown">#312418</Color>
     <Color x:Key="color_fs_green">#345E36</Color>
     <Color x:Key="color_text_light">White</Color>

@@ -84,7 +84,7 @@ namespace NatCruise.Cruise.Services
     @Remarks,
     @IsFallBuckScale,
     @Initials,
-    @UserName )
+    @DeviceID )
 ON CONFLICT (TreeID) DO UPDATE SET
 
     SeenDefectPrimary = @SeenDefectPrimary,
@@ -121,7 +121,7 @@ ON CONFLICT (TreeID) DO UPDATE SET
     IsFallBuckScale = @IsFallBuckScale,
     Initials = @Initials,
 
-    ModifiedBy = @UserName
+    ModifiedBy = @DeviceID
 WHERE TreeID = @TreeID;";
 
         public string CreateMeasureTree(string unitCode, string stratumCode,
@@ -228,16 +228,21 @@ INSERT INTO TallyLedger (
                 "SELECT " +
                     "t.TreeID, " +
                     "tf.Field, " +
-                    "tfs.Heading, " +
+                    "ifnull(tfh.Heading, tf.DefaultHeading) AS Heading, " +
                     "tf.DbType, " +
                     "tfv.ValueReal, " +
                     "tfv.ValueBool, " +
                     "tfv.ValueText, " +
-                    "tfv.ValueInt " +
+                    "tfv.ValueInt, " +
+                    "tfs.DefaultValueInt, " +
+                    "tfs.DefaultValueReal, " +
+                    "tfs.DefaultValueBool, " +
+                    "tfs.DefaultValueText " +
                 "FROM Tree AS t " +
-                "JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID) " +
+                "JOIN TreeFieldSetup AS tfs ON t.StratumCode = tfs.StratumCode AND t.CruiseID = tfs.CruiseID AND (tfs.SampleGroupCode IS NULL OR t.SampleGroupCode = tfs.SampleGroupCode) " +
+                "LEFT JOIN TreeFieldHeading AS tfh USING (Field, CruiseID) " +
                 "JOIN TreeField AS tf USING (Field) " +
-                "LEFT JOIN TreeFieldValue_TreeMeasurment AS tfv USING (TreeID, Field) " +
+                "LEFT JOIN TreeFieldValue_All AS tfv USING (TreeID, Field) " +
                 "WHERE t.TreeID = @p1 " +
                 "ORDER BY tfs.FieldOrder;", treeID).ToArray();
         }
@@ -257,7 +262,7 @@ INSERT INTO TallyLedger (
                     "SpeciesCode = @SpeciesCode," +
                     "LiveDead = @LiveDead, " +
                     "CountOrMeasure = @CountOrMeasure, " +
-                    "ModifiedBy = @UserName " +
+                    "ModifiedBy = @DeviceID " +
                 "WHERE TreeID = @TreeID; ",
                 new
                 {
@@ -269,7 +274,7 @@ INSERT INTO TallyLedger (
                     tree.LiveDead,
                     tree.CountOrMeasure,
 
-                    UserName,
+                    DeviceID,
                 });
         }
 
@@ -288,7 +293,7 @@ INSERT INTO TallyLedger (
     SpeciesCode = @SpeciesCode,
     LiveDead = @LiveDead,
     CountOrMeasure = @CountOrMeasure,
-    ModifiedBy = @UserName
+    ModifiedBy = @DeviceID
 WHERE TreeID = @TreeID;
 " +
 UPSERT_TREEMEASURMENT_COMMAND,
@@ -335,7 +340,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
                     tree.Remarks,
                     tree.IsFallBuckScale,
                     tree.Initials,
-                    UserName,
+                    DeviceID,
                 });
         }
 
@@ -382,7 +387,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
                     mes.Remarks,
                     mes.IsFallBuckScale,
                     mes.Initials,
-                    UserName,
+                    DeviceID,
                 }
                 );
         }
@@ -425,7 +430,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
                 $"VALUES (@p1, @p2, @p3)" +
                 $"ON CONFLICT (TreeID) DO " +
                 $"UPDATE SET {treeFieldValue.Field} = @p2, ModifiedBy = @p3 WHERE TreeID = @p1;",
-                treeFieldValue.TreeID, treeFieldValue.Value, UserName);
+                treeFieldValue.TreeID, treeFieldValue.Value, DeviceID);
         }
 
         public void DeleteTree(string tree_guid)
@@ -437,7 +442,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
 
         public int? GetTreeNumber(string treeID)
         {
-            return Database.ExecuteScalar<int?>("SELECT TreeNumber FROM Tree_V3 WHERE TreeID = @p1;", treeID);
+            return Database.ExecuteScalar<int?>("SELECT TreeNumber FROM Tree WHERE TreeID = @p1;", treeID);
         }
 
         public IEnumerable<TreeError> GetTreeErrors(string treeID)
@@ -475,23 +480,28 @@ UPSERT_TREEMEASURMENT_COMMAND,
                 new object[] { treeID, treeAuditRuleID }).FirstOrDefault();
         }
 
-        public bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null)
+        public bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null, string stratumCode = null)
         {
             if (plotNumber != null)
             {
-                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3 " +
+                if (stratumCode == null) { throw new ArgumentNullException(nameof(stratumCode), "if plot number is not null, stratum code must be as well"); }
+
+                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree " +
                     "WHERE CuttingUnitCode = @p1 " +
                     "AND PlotNumber = @p2 " +
-                    "AND TreeNumber = @p3;",
-                    unit, plotNumber, treeNumber) == 0;
+                    "AND TreeNumber = @p3 " +
+                    "AND ((SELECT UseCrossStrataPlotTreeNumbering FROM Cruise WHERE CruiseID = @p4) = 1 OR StratumCode = @p5) " +
+                    "AND CruiseID = @p4;",
+                    unit, plotNumber, treeNumber, CruiseID, stratumCode) == 0;
             }
             else
             {
-                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3 " +
+                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree " +
                     "WHERE CuttingUnitCode = @p1 " +
                     "AND PlotNumber IS NULL " +
-                    "AND TreeNumber = @p2;",
-                    unit, treeNumber) == 0;
+                    "AND TreeNumber = @p2 " +
+                    "AND CruiseID = @p3;",
+                    unit, treeNumber, CruiseID) == 0;
             }
         }
 
@@ -507,10 +517,10 @@ UPSERT_TREEMEASURMENT_COMMAND,
         public void SetTreeAuditResolution(string treeID, string treeAuditRuleID, string resolution, string initials)
         {
             Database.Execute("INSERT OR REPLACE INTO TreeAuditResolution " +
-                "(TreeID, TreeAuditRuleID, Resolution, Initials)" +
+                "(TreeID, CruiseID, TreeAuditRuleID, Resolution, Initials)" +
                 "VALUES" +
-                "(@p1, @p2, @p3, @p4);"
-                , treeID, treeAuditRuleID, resolution, initials);
+                "(@p1, @p2, @p3, @p4, @p5);"
+                , treeID, CruiseID, treeAuditRuleID, resolution, initials);
         }
 
         public void ClearTreeAuditResolution(string treeID, string treeAuditRuleID)

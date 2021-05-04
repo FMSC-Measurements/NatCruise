@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+             xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
              x:Class="FScruiser.XF.Views.CruiseSelectView"
              x:Name="_page"
              Title="Select Cruise">
@@ -11,22 +13,28 @@
                             SelectedItem="{Binding SelectedCruise}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell  Text="{Binding .}" 
-                                   Command="{Binding BindingContext.SelectCruiseCommand, Source={Reference _page}}"
-                                   CommandParameter="{Binding .}"/>
+                        <TextCell  Text="{Binding .}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
             
             <Button Text="Open"
                     Command="{Binding OpenSelectedCruiseCommand}"
-                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}"/>
-            <Button Text="Export"
-                    Command="{Binding ExportSelectedCruiseCommand}"
-                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}"/>
+                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                <Button Text="Export"
+                        Command="{Binding ExportSelectedCruiseCommand}"
+                        IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                        HorizontalOptions="FillAndExpand"/>
+                <Button Text="Share"
+                        Command="{Binding ShareSelectedCruiseCommand}"
+                        IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                        HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+            
             <Button Text="Delete"
                     Command="{Binding DeleteSelectedCruiseCommand}"
-                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource hasDataConverter}}" />
+                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

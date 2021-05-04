@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.TreeCountEditView"
              Title="Edit Tree Count">
     <ContentPage.Content>
@@ -32,7 +33,6 @@
                     <!-- tally pop identifier -->
                     <Frame Grid.Row="0"
                            WidthRequest="250"
-                           HeightRequest="50"
                            HorizontalOptions="Center"
                            BackgroundColor="Black"
                            BorderColor="Black"
@@ -59,7 +59,7 @@
                                         <Setter Property="FontSize"
                                                 Value="12" />
                                         <Setter Property="Margin"
-                                                Value="5,0,5,0" />
+                                                Value="5,-5,5,-5" />
                                     </Style>
 
                                     <Style x:Key="tallyInfo_label_value"
@@ -69,6 +69,10 @@
                                                 Value="25" />
                                         <Setter Property="HorizontalTextAlignment"
                                                 Value="Center" />
+                                        <Setter Property="Margin"
+                                                Value="0,-3"/>
+                                        <Setter Property="BackgroundColor"
+                                                Value="Transparent" />
                                     </Style>
 
                                     <Style TargetType="BoxView">
@@ -83,10 +87,10 @@
                             </Grid.Resources>
 
                             <Grid.RowDefinitions>
-                                <!-- label -->
-                                <RowDefinition Height="16" />
-                                <!-- value -->
-                                <RowDefinition Height="30" />
+                                <!-- label 16 -->
+                                <RowDefinition Height="Auto" />
+                                <!-- value 30 -->
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <Grid.ColumnDefinitions>
@@ -221,13 +225,16 @@
                         <x:Int16 x:Key="form_rowHeight">40</x:Int16>
                     </Grid.Resources>
                     <Grid.RowDefinitions>
+                        <!--tree count -->
                         <RowDefinition Height="{StaticResource form_rowHeight}" />
-                        <!-- tree count change -->
+                        <!--KPI-->
                         <RowDefinition Height="{StaticResource form_rowHeight}" />
-                        <!-- reason -->
+                        <!--reason -->
+                        <RowDefinition Height="{StaticResource form_rowHeight}" />
+                        <!--remarks -->
                         <RowDefinition Height="{StaticResource form_rowHeight}" />
                         <RowDefinition Height="150" />
-                        <!-- remarks -->
+                        
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -236,48 +243,98 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
+                    <!--Tree Count-->
                     <Label  Grid.Row="0"
                             Grid.Column="0"
-                            Text="Difference"
+                            Text="Tree Count (+/-)"
                             VerticalTextAlignment="Center"
                             HorizontalOptions="StartAndExpand" />
-
                     <Entry  Grid.Row="0"
                             Grid.Column="1"
                             x:Name="_treeCountDifferenceEntry"
                             Text="{Binding TreeCountDelta}"
                             WidthRequest="50"
-                            HorizontalOptions="Start" />
+                            HorizontalOptions="Start"
+                            Keyboard="Numeric"/>
 
+                    <!--Ajusted Tree Count-->
                     <Label  Grid.Row="0"
                             Grid.Column="2"
                             VerticalOptions="Center"
-                            Text="{Binding AdjustedTreeCount, StringFormat='{}New Tree Count:{0}', FallbackValue='New Tree Count:00000'}" />
+                            Text="{Binding AdjustedTreeCount, StringFormat='{}New Tree Count:{0}'}" />
 
-                    <Label  Grid.Row="1"
+                    <!--KPI-->
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Text="KPI (+/-)"
+                           IsEnabled="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}" />
+                    <Entry Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding KPIDelta}"
+                           WidthRequest="50"
+                           HorizontalOptions="Start"
+                           IsEnabled="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
+                           Keyboard="Numeric"/>
+
+                    <!--Reason-->
+                    <Label  Grid.Row="2"
                             Grid.Column="0"
                             Text="Reason"
                             VerticalTextAlignment="Center"
                             HorizontalOptions="StartAndExpand" />
-
-                    <Picker Grid.Row="1"
+                    <Picker Grid.Row="2"
                             Grid.Column="1"
                             ItemsSource="{Binding EditReasonOptions}"
                             SelectedItem="{Binding EditReason}"
                             VerticalOptions="CenterAndExpand"
                             WidthRequest="150" />
 
-                    <Label  Grid.Row="2"
+                    <!--Remarks-->
+                    <Label  Grid.Row="3"
                             Grid.Column="0"
                             Text="Remarks" />
-
-                    <Editor Grid.Row="3"
+                    <Editor Grid.Row="4"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Text="{Binding Remarks}"
                             HeightRequest="100"
                             BackgroundColor="LightGray" />
                 </Grid>
+
+                <!--<TableView>
+                    <TableRoot>
+                        <TableSection>
+                            <EntryCell Label="TreeCount (+/-)"
+                                       Text="{Binding TreeCountDelta}" />
+                            <TextCell Text="New Tree Count"
+                                      Detail="{Binding AdjustedTreeCount, FallbackValue='00000'}" />
+                        </TableSection>
+                        <TableSection Title="3P">
+                            <EntryCell Label="KPI (+/-)"
+                                       Text="{Binding KPIDelta}" />
+                            <TextCell Text="New KPI"
+                                      Detail="{Binding AdjustedSumKPI, FallbackValue='00000'}" />
+                        </TableSection>
+                        <TableSection>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Reason" />
+                                    <Picker ItemsSource="{Binding EditReasonOptions}"
+                                            SelectedItem="{Binding EditReason}" />
+                                </StackLayout>
+                            </ViewCell>
+
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Remarks" />
+                                    <Editor Text="{Binding Remarks}"
+                                            HeightRequest="100"
+                                            BackgroundColor="LightGray" />
+                                </StackLayout>
+                            </ViewCell>
+                        </TableSection>
+                    </TableRoot>
+                </TableView>-->
             </ScrollView>
 
             <StackLayout Grid.Row="2"

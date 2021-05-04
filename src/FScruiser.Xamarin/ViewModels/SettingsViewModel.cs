@@ -15,21 +15,25 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : XamarinViewModelBase, INavigatedAware
     {
-        public IApplicationSettings AppSettings { get; }
+        public IApplicationSettingService AppSettings { get; }
         public IDialogService DialogService { get; }
         public IFileSystemService FileSystemService { get; }
         public IDataserviceProvider DataserviceProvider { get; }
 
         public ICommand ResetDatabaseCommand => new Command(() => ResetDatabase());
+        public ICommand BackupDatabaseCommand => new Command(BackupDatabase);
 
-        public SettingsViewModel(IDialogService dialogService, IFileSystemService fileSystemService, IDataserviceProvider dataserviceProvider)
+        public IFileDialogService FileDialogService { get; }
+
+        public SettingsViewModel(IDialogService dialogService, IFileSystemService fileSystemService, IDataserviceProvider dataserviceProvider, IFileDialogService fileDialogService)
         {
-            AppSettings = new ApplicationSettings();
+            AppSettings = new XamarinApplicationSettingService();
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
         }
 
         public async void ResetDatabase()
@@ -44,16 +48,27 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        protected override void Refresh(INavigationParameters parameters)
+        public async void BackupDatabase()
         {
-            
+            var timestamp = DateTime.Today.ToString("ddMMyyyy");
+            var defaultFileName = $"CruiseDatabaseBackup_{timestamp}.crz3db";
+
+            var backupPath = await FileDialogService.SelectBackupFileDestinationAsync(defaultFileName: defaultFileName);
+            if(string.IsNullOrEmpty(backupPath) == false)
+            {
+
+                FileSystemService.CopyTo(DataserviceProvider.DatabasePath, backupPath);
+            }
         }
 
-        public override void OnNavigatedFrom(INavigationParameters parameters)
+        public void OnNavigatedFrom(INavigationParameters parameters)
         {
-            base.OnNavigatedFrom(parameters);
-
             AppSettings.Save();
+        }
+
+        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
+        {
+            // do nothing
         }
     }
 }

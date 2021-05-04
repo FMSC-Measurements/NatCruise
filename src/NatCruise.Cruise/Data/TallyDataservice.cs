@@ -1,29 +1,31 @@
-﻿using System;
+﻿using CruiseDAL;
+using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using CruiseDAL;
-using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
 
 namespace NatCruise.Cruise.Data
 {
-    public class TallyDataservice : SamplerInfoDataservice, ITallyDataservice
+    public class TallyDataservice : CruiseDataserviceBase, ITallyDataservice
     {
-
-        public TallyDataservice(string path, string cruiseID, IDeviceInfoService deviceInfo)
-            : base(path, cruiseID, deviceInfo)
+        public TallyDataservice(string path, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice)
+            : base(path, cruiseID, deviceID)
         {
+            SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        public TallyDataservice(CruiseDatastore_V3 database, string cruiseID, IDeviceInfoService deviceInfo)
-            : base(database, cruiseID, deviceInfo)
+        public TallyDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice)
+            : base(database, cruiseID, deviceID)
         {
+            SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        const string QUERY_TALLYENTRY_BASE =
-@"SELECT 
+        public ISampleInfoDataservice SampleInfoDataservice { get; }
+
+        private const string QUERY_TALLYENTRY_BASE =
+@"SELECT
         tl.TreeID,
         tl.TallyLedgerID,
         tl.CuttingUnitCode,
@@ -241,7 +243,7 @@ INSERT INTO TreeMeasurment (
                             atn.SpeciesCode,
                             atn.LiveDead,
                             tallyEntry.CountOrMeasure,
-                            CreatedBy = DeviceInfo.DeviceID,
+                            CreatedBy = DeviceID,
                         });
                 }
 
@@ -295,13 +297,13 @@ INSERT INTO TreeMeasurment (
                         atn.STM,
                         atn.ThreePRandomValue,
                         atn.EntryType,
-                        CreatedBy = DeviceInfo.DeviceID,
+                        CreatedBy = DeviceID,
                     });
 
                 var samplerState = atn.SamplerState;
                 if (samplerState != null)
                 {
-                    UpsertSamplerState(atn.SamplerState);
+                    SampleInfoDataservice.UpsertSamplerState(samplerState);
                 }
 
                 Database.CommitTransaction();
@@ -314,8 +316,6 @@ INSERT INTO TreeMeasurment (
                 throw;
             }
         }
-
-        
 
         public void DeleteTallyEntry(string tallyLedgerID)
         {

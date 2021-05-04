@@ -73,7 +73,7 @@
                     Text="Copy"
                     Command="{Binding CopyDeviceStateCommand}"
                     CommandParameter="{Binding SelectedItem.DeviceID, Source={Reference _deviceListView}}"
-                    IsEnabled="{Binding SelectedItem, Source={Reference _deviceListView}, Converter={StaticResource hasDataConverter} }"
+                    IsEnabled="{Binding SelectedItem, Source={Reference _deviceListView}, Converter={StaticResource isNotNullOrEmptyConverter} }"
                     BackgroundColor="Orange" />
         </Grid>
     </ContentPage.Content>

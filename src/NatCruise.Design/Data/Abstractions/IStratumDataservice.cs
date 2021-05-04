@@ -22,8 +22,6 @@ namespace NatCruise.Design.Data
 
         IEnumerable<string> GetCuttingUnitCodesByStratum(string stratumCode);
 
-        IEnumerable<Method> GetMethods();
-
         bool HasTreeCounts(string unitCode, string stratum);
     }
 }

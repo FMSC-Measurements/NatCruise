@@ -1,9 +1,13 @@
-﻿using NatCruise.Data;
+﻿using CruiseDAL;
+using NatCruise.Core.Services;
+using NatCruise.Data;
+using NatCruise.Design.Services;
+using NatCruise.Models;
 using NatCruise.Services;
-using NatCruise.Wpf.Navigation;
-using NatCruise.Wpf.Views;
+using NatCruise.Wpf.Services;
+using NatCruise.Wpf.Util;
 using Prism.Commands;
-using Prism.Regions;
+using Prism.Ioc;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -18,31 +22,50 @@ namespace NatCruise.Wpf.ViewModels
         private ICommand _openFileCommand;
         private ICommand _selectFileCommand;
         private ICommand _createNewFileCommand;
+        private string _currentFileName;
 
-        public MainWindowViewModel(IRegionManager regionManager,
+        public MainWindowViewModel(
+            IAppService appService,
+            IDataserviceProvider dataserviceProvider,
+            IDesignNavigationService navigationService,
             IFileDialogService fileDialogService,
             IRecentFilesDataservice recentFilesDataservice,
-            IDataserviceProvider dataserviceProvider,
-            Prism.Services.Dialogs.IDialogService dialogService)
+            Prism.Services.Dialogs.IDialogService dialogService,
+            NatCruise.Services.IDialogService cruiseDialogService,
+            IDeviceInfoService deviceInfo)
         {
+            AppService = appService ?? throw new ArgumentNullException(nameof(appService));
+            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            RegionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
-            //RegionNavigationService = regionNavigationService ?? throw new ArgumentNullException(nameof(regionNavigationService));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             RecentFilesDataservice = recentFilesDataservice ?? throw new ArgumentNullException(nameof(recentFilesDataservice));
-            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            DeviceInfoService = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
+            CruiseDialogService = cruiseDialogService ?? throw new ArgumentNullException(nameof(cruiseDialogService));
         }
 
+        protected IAppService AppService { get; }
         protected IDataserviceProvider DataserviceProvider { get; }
-
+        protected IDesignNavigationService NavigationService { get; }
         protected IRecentFilesDataservice RecentFilesDataservice { get; }
         public Prism.Services.Dialogs.IDialogService DialogService { get; }
-        public IRegionManager RegionManager { get; }
+        protected NatCruise.Services.IDialogService CruiseDialogService { get; }
         protected IFileDialogService FileDialogService { get; }
+        protected IDeviceInfoService DeviceInfoService { get; }
 
         //protected IRegionNavigationService RegionNavigationService => RegionManager?.Regions[Regions.ContentRegion].NavigationService;
 
-        public string Title => "National Cruise System (0.2.1-Alpha)";
+        public string CurrentFileName
+        {
+            get => _currentFileName;
+            set
+            {
+                SetProperty(ref _currentFileName, value);
+                RaisePropertyChanged(nameof(Title));
+            }
+        }
+
+        public string Title => $"National Cruise System (0.4.3-Alpha) {CurrentFileName?.Prepend(" - ")}";
 
         public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles().Select(x => new FileInfo(x));
 
@@ -54,37 +77,26 @@ namespace NatCruise.Wpf.ViewModels
 
         public ICommand SelectFileCommand => _selectFileCommand ?? (_selectFileCommand = new DelegateCommand(SelectFile));
 
+        public ICommand ShutdownCommand => new DelegateCommand(() => AppService.Shutdown());
+
         private void CreateNewFile()
         {
             DialogService.Show("NewCruise", (IDialogParameters)null, r =>
             {
-                if (r.Result == ButtonResult.OK)
+                if(r.Result == ButtonResult.OK)
                 {
                     var filePath = DataserviceProvider.DatabasePath;
                     var fileExtention = Path.GetExtension(filePath).ToLower();
+                    RecentFilesDataservice.AddRecentFile(filePath);
                     if (fileExtention == ".crz3")
                     {
-                        RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
+                        NavigationService.ShowCruiseLandingLayout();
                     }
 
-                    RecentFilesDataservice.AddRecentFile(filePath);
+                    CurrentFileName = Path.GetFileName(filePath);
                     RaisePropertyChanged(nameof(RecentFiles));
                 }
             });
-        }
-
-        public void OpenFile(string path)
-        {
-            OpenFile(new FileInfo(path));
-        }
-
-        public void OpenFile(FileInfo file)
-        {
-            DataserviceProvider.OpenDatabase(file.FullName);
-
-            RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterPage));
-            RecentFilesDataservice.AddRecentFile(file.FullName);
-            RaisePropertyChanged(nameof(RecentFiles));
         }
 
         public async void SelectFile()
@@ -96,12 +108,31 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        public void Exit()
+        public void OpenFile(string path)
         {
+            OpenFile(new FileInfo(path));
         }
 
-        protected override void Load()
+        public void OpenFile(FileInfo file)
         {
+            var filePath = file.FullName;
+            var database = new CruiseDatastore_V3(filePath);
+
+            var cruiseIDs = database.QueryScalar<string>("SELECT CruiseID FROM Cruise;").ToArray();
+            if (cruiseIDs.Length > 1)
+            {
+                CruiseDialogService.ShowNotification("File contains multiple cruises. \r\nOpening files with multiple cruises is not supported yet", "Warning");
+                return;
+            }
+            var cruiseID = cruiseIDs.First();
+
+            DataserviceProvider.Database = database;
+            DataserviceProvider.CruiseID = cruiseID;
+
+            NavigationService.ShowCruiseLandingLayout();
+            RecentFilesDataservice.AddRecentFile(filePath);
+            CurrentFileName = Path.GetFileName(filePath);
+            RaisePropertyChanged(nameof(RecentFiles));
         }
     }
 }

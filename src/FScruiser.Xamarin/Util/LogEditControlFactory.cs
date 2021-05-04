@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.CommunityToolkit.Markup;
 
 namespace FScruiser.XF.Util
 {
@@ -41,7 +42,10 @@ namespace FScruiser.XF.Util
                     {
                         editView = new Entry();
                         ((InputView)editView).Keyboard = Keyboard.Numeric;
-                        ((Entry)editView).Behaviors.Add(new Xamarin.Toolkit.Behaviors.NumericValidationBehavior { TextColorInvalid = Color.Red });
+                        ((Entry)editView).Behaviors.Add(new Xamarin.CommunityToolkit.Behaviors.NumericValidationBehavior
+                        {
+                            InvalidStyle = new Style<Entry>().Add((Entry.TextColorProperty, Color.Red))
+                        });
                         Xamarin.Forms.PlatformConfiguration.AndroidSpecific.Entry.SetImeOptions(editView, Xamarin.Forms.PlatformConfiguration.AndroidSpecific.ImeFlags.Next);
                         editView.SetBinding(Entry.TextProperty, $"Log.{field.Field}");
                         break;
@@ -57,7 +61,7 @@ namespace FScruiser.XF.Util
 
             if (editView is Entry entry)
             {
-                entry.Effects.Add(new Xamarin.Toolkit.Effects.EntrySelectAllText());
+                entry.Effects.Add(new Xamarin.CommunityToolkit.Effects.SelectAllTextEffect());
             }
 
             return editView;

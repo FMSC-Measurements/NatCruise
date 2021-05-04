@@ -1,12 +1,9 @@
 ﻿using FluentAssertions;
-using NatCruise.Cruise.Test.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using System;
-using System.Collections.Generic;
+using NatCruise.Cruise.Test.Services;
+using NatCruise.Test;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -24,13 +21,10 @@ namespace NatCruise.Cruise.Test.Data
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
-
+                var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 ds.GetSamplerInfo(stratumCode, sampleGroupCode);
             }
-
-
         }
 
         [Theory]
@@ -39,21 +33,22 @@ namespace NatCruise.Cruise.Test.Data
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
-
+                var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 ds.GetSamplerState(stratumCode, sampleGroupCode);
             }
         }
 
-        [Theory]
-        [InlineData("st1", "sg1")]
-        public void UpsertSamplerState(string stratumCode, string sampleGroupCode)
+        [Fact]
+        public void UpsertSamplerState()
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, CruiseID, new TestDeviceInfoService());
+                var sg = SampleGroups[0];
+                string stratumCode = sg.StratumCode;
+                string sampleGroupCode = sg.SampleGroupCode;
 
+                var ds = new SamplerInfoDataservice(database, CruiseID, Initializer.DeviceID);
 
                 var ss = new SamplerState()
                 {
@@ -73,17 +68,17 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void CopySamplerStates()
         {
-            var fromDeviceID = "fromDeviceID";
+            var fromDeviceID = Initializer.DeviceID;
             var toDeviceID = "toDeviceID";
 
-            var stratum = "st1";
-            var sampleGroup = "sg1";
+            var stratum = SampleGroups[0].StratumCode;
+            var sampleGroup = SampleGroups[0].SampleGroupCode;
             var cruiseID = CruiseID;
 
             using (var database = CreateDatabase())
             {
                 var ds = new SamplerInfoDataservice(database, cruiseID,
-                    new TestDeviceInfoService(fromDeviceID, "fromDeviceName"));
+                    fromDeviceID);
 
                 var ss = new SamplerState()
                 {
@@ -106,7 +101,6 @@ namespace NatCruise.Cruise.Test.Data
 
                 var ssAgain = ds.GetSamplerState(stratum, sampleGroup, toDeviceID);
                 ssAgain.Should().NotBeNull();
-
 
                 var stuff = database.QueryGeneric("select * from samplerState ;").ToArray();
             }

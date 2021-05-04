@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:conv="clr-namespace:FScruiser.XF.Converters"
-             xmlns:tk_effects="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
-             x:Class="FScruiser.XF.Views.LimitingDistanceView">
+             xmlns:tk_effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+             x:Class="FScruiser.XF.Views.LimitingDistanceView"
+             Title="Limiting Distance Calculator">
     <ContentPage.Resources>
         <Style TargetType="Label">
             <Setter Property="VerticalTextAlignment"
@@ -31,7 +32,7 @@
             <Frame BackgroundColor="LightBlue">
                 <StackLayout Orientation="Horizontal">
                     <StackLayout Orientation="Horizontal">
-                        <Label>Variable Radious</Label>
+                        <Label>Variable Radius</Label>
                         <Switch IsToggled="{Binding IsVariableRadius}" />
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
@@ -40,7 +41,7 @@
                                Text="{Binding BafOrFps}"
                                Keyboard="Numeric">
                             <Entry.Effects>
-                                <tk_effects:EntrySelectAllText />
+                                <tk_effects:SelectAllTextEffect />
                             </Entry.Effects>
                         </Entry>
                     </StackLayout>
@@ -56,7 +57,7 @@
                                    Text="{Binding DBH}"
                                    Keyboard="Numeric">
                                 <Entry.Effects>
-                                    <tk_effects:EntrySelectAllText />
+                                    <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
                             </Entry>
                         </StackLayout>
@@ -69,7 +70,7 @@
                                    Text="{Binding SlopePCT}"
                                    Keyboard="Numeric">
                                 <Entry.Effects>
-                                    <tk_effects:EntrySelectAllText />
+                                    <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
                             </Entry>
                         </StackLayout>
@@ -83,12 +84,12 @@
                                        Text="{Binding SlopeDistanceStr}"
                                        Keyboard="Numeric">
                                     <Entry.Effects>
-                                        <tk_effects:EntrySelectAllText />
+                                        <tk_effects:SelectAllTextEffect />
                                     </Entry.Effects>
                                 </Entry>
                             </StackLayout>
                             <StackLayout Orientation="Horizontal">
-                                <Label>Measureing To</Label>
+                                <Label>Measuring To</Label>
                                 <Picker SelectedItem="{Binding MeasureToSelection}"
                                         ItemsSource="{Binding MeasureToOptions}" />
                             </StackLayout>
@@ -102,7 +103,7 @@
                                    Text="{Binding Azimuth}"
                                    Keyboard="Numeric">
                                 <Entry.Effects>
-                                    <tk_effects:EntrySelectAllText />
+                                    <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
                             </Entry>
                         </StackLayout>
@@ -114,7 +115,7 @@
                         <Label Text="{Binding LimitingDistance, StringFormat='{}{0:f2}'}" />
                         <Label x:Name="_treeInOutLabel"
                                Text="{Binding TreeStatus, StringFormat='{}Tree is {0}'}"
-                               IsVisible="{Binding TreeStatus, Converter={StaticResource hasDataConverter}}" />
+                               IsVisible="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
                     </StackLayout>
                 </Frame>
             </StackLayout>

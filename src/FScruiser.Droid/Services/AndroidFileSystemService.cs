@@ -1,4 +1,5 @@
-﻿using Android.Content;
+﻿using Android.App;
+using Android.Content;
 using NatCruise.Services;
 using System.IO;
 
@@ -12,12 +13,11 @@ namespace FScruiser.Droid.Services
 
             var importTempDir = ImportTempDir;
             var convertTempDir = ConvertTempDir;
-            
 
-            if(Directory.Exists(importTempDir) == false)
+            if (Directory.Exists(importTempDir) == false)
             { Directory.CreateDirectory(importTempDir); }
 
-            if(Directory.Exists(convertTempDir) == false)
+            if (Directory.Exists(convertTempDir) == false)
             { Directory.CreateDirectory(convertTempDir); }
 
             var exportTempDir = ExportTempDir;
@@ -26,6 +26,7 @@ namespace FScruiser.Droid.Services
         }
 
         public Context Context { get; }
+        public Activity ParentActivity { get; }
 
         public override string AppDataDirectory => Context.FilesDir.AbsolutePath;
         public string CacheDir => Context.CacheDir.AbsolutePath;
@@ -38,7 +39,7 @@ namespace FScruiser.Droid.Services
         {
             var fileName = Path.GetFileName(location);
             var destinationPath = Path.Combine(ImportTempDir, fileName);
-            if(IsInternalPath(location))
+            if (IsInternalPath(location))
             {
                 File.Copy(location, destinationPath, true);
             }
@@ -59,7 +60,17 @@ namespace FScruiser.Droid.Services
             return destinationPath;
         }
 
-        bool IsInternalPath(string path)
+        public override void CopyTo(string from, string to)
+        {
+            var resolver = Context.ContentResolver;
+
+            var aTo = Android.Net.Uri.Parse(to);
+            using var stream = resolver.OpenOutputStream(aTo);
+            using var fromStream = File.OpenRead(from);
+            fromStream.CopyTo(stream);
+        }
+
+        private bool IsInternalPath(string path)
         {
             // TODO detect if file is in convert temp dir
             return false;

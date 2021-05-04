@@ -11,28 +11,13 @@ namespace NatCruise.Data
 {
     public class SaleDataservice : CruiseDataserviceBase, ISaleDataservice
     {
-        public SaleDataservice(string path, string cruiseID) : base(path, cruiseID)
+        public SaleDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
         {
         }
 
-        public SaleDataservice(CruiseDatastore_V3 database, string cruiseID) : base(database, cruiseID)
+        public SaleDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
-
-        public IEnumerable<SaleCruises> GetSaleCruises()
-        {
-            var sales = GetSales();
-            var saleCruises = sales.Select(x => new SaleCruises() { Sale = x }).ToArray();
-
-            foreach(var sc in saleCruises)
-            {
-                var saleID = sc.Sale.SaleID;
-                sc.Cruises = GetCruises(saleID);
-            }
-
-            return saleCruises;
-        }
-
 
         public void DeleteCruise(string cruiseID)
         {
@@ -65,6 +50,11 @@ namespace NatCruise.Data
                 .Query(saleID).ToArray();
         }
 
+        public Cruise GetCruise()
+        {
+            return GetCruise(CruiseID);
+        }
+
         public Cruise GetCruise(string cruiseID)
         {
             return Database.From<Cruise>()
@@ -80,8 +70,15 @@ namespace NatCruise.Data
                 .Query(saleNumber).FirstOrDefault();
         }
 
+        public Sale GetSale()
+        {
+            return GetSale(CruiseID);
+        }
+
         public Sale GetSale(string cruiseID)
         {
+            if (string.IsNullOrEmpty(cruiseID)) { throw new ArgumentException($"'{nameof(cruiseID)}' cannot be null or empty.", nameof(cruiseID)); }
+
             return Database.From<Sale>()
                 .Join("Cruise", "USING (SaleID)")
                 .Where("Cruise.CruiseID = @p1")
@@ -99,9 +96,19 @@ namespace NatCruise.Data
         {
             if (cruise is null) { throw new ArgumentNullException(nameof(cruise)); }
 
-            Database.Execute2("UPDATE Cruise SET " +
-                "Purpose = @Purpose, Remarks = @Remarks, ModifiedBy = @UserName " +
-                "WHERE Cruise_CN = @Cruise_CN", cruise);
+            Database.Execute2(
+@"UPDATE Cruise SET 
+    Purpose = @Purpose,
+    Remarks = @Remarks,
+    ModifiedBy = @DeviceID
+WHERE CruiseID = @CruiseID",
+                new
+                {
+                    cruise.CruiseID,
+                    cruise.Purpose,
+                    cruise.Remarks,
+                    DeviceID,
+                });
         }
 
         public void UpdateSale(Sale sale)
@@ -115,13 +122,25 @@ namespace NatCruise.Data
     Region = @Region,
     Forest = @Forest,
     District = @District,
-    Remarks = @Remarks
-WHERE SaleID = @SaleID;", sale);
+    Remarks = @Remarks,
+    ModifiedBy = @DeviceID
+WHERE SaleID = @SaleID;",
+new
+{
+    sale.Name,
+    sale.SaleNumber,
+    sale.Region,
+    sale.Forest,
+    sale.District,
+    sale.Remarks,
+    sale.SaleID,
+    DeviceID,
+});
         }
 
         public void UpdateSaleRemarks(long sale_CN, string remarks)
         {
-            Database.Execute("UPDATE Sale SET Remarks = @p1 WHERE Sale_CN = @p2;", remarks, sale_CN);
+            Database.Execute("UPDATE Sale SET Remarks = @p1, ModifiedBy = @p3 WHERE Sale_CN = @p2;", remarks, sale_CN, DeviceID);
         }
     }
 }

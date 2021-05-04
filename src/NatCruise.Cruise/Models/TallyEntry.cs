@@ -18,6 +18,8 @@ namespace NatCruise.Cruise.Models
             StratumCode = action.StratumCode;
             SampleGroupCode = action.SampleGroupCode;
             SpeciesCode = action.SpeciesCode;
+            TreeCount = action.TreeCount;
+            KPI = action.KPI;
             LiveDead = action.LiveDead;
             EntryType = action.EntryType;
             CountOrMeasure = action.SampleResult.ToString();
@@ -42,6 +44,8 @@ namespace NatCruise.Cruise.Models
         public string EntryType { get; set; }
 
         public int TreeCount { get; set; }
+
+        public int KPI { get; set; }
 
         public string Reason { get; set; }
 

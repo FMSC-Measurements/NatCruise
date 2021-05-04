@@ -11,13 +11,14 @@ namespace NatCruise.Test
         public string CruiseID { get; }
         public string SaleID { get; }
 
-        protected string[] Units { get; }
-        protected Stratum[] Strata { get; }
-        protected CuttingUnit_Stratum[] UnitStrata { get; }
-        protected string[] Species { get; }
-        protected SampleGroup[] SampleGroups { get; }
-        protected TreeDefaultValue[] TreeDefaults { get; }
-        protected SubPopulation[] Subpops { get; }
+        public string DeviceID { get; }
+        public string[] Units { get; }
+        public Stratum[] Strata { get; }
+        public CuttingUnit_Stratum[] UnitStrata { get; }
+        public string[] Species { get; }
+        public SampleGroup[] SampleGroups { get; }
+        public TreeDefaultValue[] TreeDefaults { get; }
+        public SubPopulation[] Subpops { get; }
         public Stratum[] PlotStrata { get; }
         public Stratum[] NonPlotStrata { get; }
 
@@ -25,6 +26,7 @@ namespace NatCruise.Test
         {
             CruiseID = Guid.NewGuid().ToString();
             SaleID = Guid.NewGuid().ToString();
+            DeviceID = Guid.NewGuid().ToString();
 
             var units = Units = new string[] { "u1", "u2" };
 
@@ -125,54 +127,27 @@ namespace NatCruise.Test
             var cruiseID = CruiseID;
             var saleID = SaleID;
 
-            var units = Units;
-
-            var strata = Strata;
-
-            var unitStrata = UnitStrata;
-
-            var sampleGroups = SampleGroups;
-
-            var species = Species;
-
-            var tdvs = TreeDefaults;
-
-            var subPops = Subpops;
-
             var database = new CruiseDatastore_V3();
 
-            InitializeDatabase(database, cruiseID, saleID, units, strata, unitStrata, sampleGroups, species, tdvs, subPops);
+            InitializeDatabase(database, DeviceID, cruiseID, saleID, Units, Strata, UnitStrata, SampleGroups, Species, TreeDefaults, Subpops);
 
             return database;
         }
 
         public CruiseDatastore_V3 CreateDatabase(string path, string cruiseID = null, string saleID = null)
         {
-            cruiseID = cruiseID ?? Guid.NewGuid().ToString();
-            saleID = saleID ?? Guid.NewGuid().ToString();
-
-            var units = Units;
-
-            var strata = Strata;
-
-            var unitStrata = UnitStrata;
-
-            var sampleGroups = SampleGroups;
-
-            var species = Species;
-
-            var tdvs = TreeDefaults;
-
-            var subPops = Subpops;
+            cruiseID = cruiseID ?? CruiseID;
+            saleID = saleID ?? SaleID;
 
             var database = new CruiseDatastore_V3(path, true);
 
-            InitializeDatabase(database, cruiseID, saleID, units, strata, unitStrata, sampleGroups, species, tdvs, subPops);
+            InitializeDatabase(database, DeviceID, cruiseID, saleID, Units, Strata, UnitStrata, SampleGroups, Species, TreeDefaults, Subpops);
 
             return database;
         }
 
         public static void InitializeDatabase(CruiseDatastore_V3 db,
+    string deviceID,
     string cruiseID,
     string saleID,
     string[] units,
@@ -180,19 +155,28 @@ namespace NatCruise.Test
     CruiseDAL.V3.Models.CuttingUnit_Stratum[] unitStrata,
     CruiseDAL.V3.Models.SampleGroup[] sampleGroups,
     string[] species,
-    CruiseDAL.V3.Models.TreeDefaultValue[] tdvs,
-    CruiseDAL.V3.Models.SubPopulation[] subPops)
+    CruiseDAL.V3.Models.TreeDefaultValue[] tdvs, CruiseDAL.V3.Models.SubPopulation[] subPops)
         {
+            var saleNumber = (saleID.GetHashCode() % 10000).ToString();
+
             db.Insert(new Sale()
             {
                 SaleID = saleID,
-                SaleNumber = (saleID.GetHashCode() % 10000).ToString(),
+                SaleNumber = saleNumber,
             }, option: Backpack.SqlBuilder.OnConflictOption.Ignore); ;
 
             db.Insert(new CruiseDAL.V3.Models.Cruise()
             {
                 CruiseID = cruiseID,
                 SaleID = saleID,
+                CruiseNumber = saleNumber,
+            }, option: Backpack.SqlBuilder.OnConflictOption.Ignore);
+
+            db.Insert(new Device()
+            {
+                CruiseID = cruiseID,
+                DeviceID = deviceID,
+                Name = "deviceName",
             }, option: Backpack.SqlBuilder.OnConflictOption.Ignore);
 
             //Cutting Units

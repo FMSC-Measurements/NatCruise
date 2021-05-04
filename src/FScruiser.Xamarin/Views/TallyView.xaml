@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
-             xmlns:my_behv="clr-namespace:FScruiser.XF.Behaviors"
              xmlns:converters="clr-namespace:Backpack.XF.Converters;assembly=Backpack.XF.Converters"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
+             xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
+             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+             xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              x:Class="FScruiser.XF.Views.TallyView"
+             x:Name="_page"
              BackgroundColor="White"
-             Title="{Binding Title}"
-             x:Name="_page">
+             Title="{Binding Title}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="tallyButtonBgColor">Green</Color>
@@ -24,17 +24,12 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <AbsoluteLayout Grid.Row="0"
-                            Grid.Column="0">
-
-
-
+            <RelativeLayout Grid.Row="0">
 
                 <!-- tally feed -->
-                <CollectionView AbsoluteLayout.LayoutFlags="SizeProportional"
-                                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                <CollectionView RelativeLayout.XConstraint="0"
+                                RelativeLayout.YConstraint="0"
                                 ItemsSource="{Binding TallyFeed}"
-                                d:BackgroundColor="LightBlue"
                                 x:Name="_tallyFeedListView"
                                 Focused="_tallyFeedListView_Focused"
                                 SelectionMode="None"
@@ -46,7 +41,7 @@
                                 <DataTemplate>
                                     <!--<cells:TallyEditViewCell />-->
 
-                                    <Frame BackgroundColor="Orange"
+                                    <Frame BackgroundColor="{DynamicResource tallyCountEntryColor}"
                                            CornerRadius="5"
                                            BorderColor="White"
                                            Margin="2,5,2,0"
@@ -60,6 +55,7 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="40" />
                                                 <ColumnDefinition Width="150" />
+                                                <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
@@ -80,21 +76,30 @@
                                                                              HorizontalOptions="Start"
                                                                              FontSize="Small" />
 
-                                            <Label Grid.Row="0"
-                                                   Grid.Column="2"
-                                                   Text="{Binding TreeCount, StringFormat='{}Tree Counts{0}'}"
-                                                   FontSize="Large"
-                                                   VerticalTextAlignment="Center" />
+                                            <StackLayout Grid.Row="0"
+                                                         Grid.Column="2"
+                                                         Orientation="Vertical">
+                                                <!--Tree Counts-->
+                                                <Label Text="{Binding TreeCount, StringFormat='{}Tree Count:{0}'}"
+                                                       FontSize="Small"
+                                                       VerticalTextAlignment="Center"
+                                                       Margin="0" />
 
+                                                <!--Kpi-->
+                                                <Label Text="{Binding KPI, StringFormat='{}Kpi:{0}'}"
+                                                       FontSize="Small"
+                                                       VerticalTextAlignment="Center"
+                                                       IsVisible="{Binding KPI, Converter={StaticResource intToBoolConverter}}"
+                                                       Margin="0" />
+                                            </StackLayout>
+
+                                            <!--Reson-->
                                             <Label Grid.Row="0"
                                                    Grid.Column="3"
                                                    Text="{Binding Reason}"
-                                                   FontSize="Large"
+                                                   FontSize="Small"
                                                    VerticalTextAlignment="Center" />
-
-
                                         </Grid>
-
                                     </Frame>
                                 </DataTemplate>
                             </cells:TreeDataTemplateSelector.TallyEditTemplate>
@@ -109,7 +114,7 @@
                                                        CommandParameter="{Binding TallyLedgerID}" />
                                         </SwipeView.LeftItems>
 
-                                        <Frame BackgroundColor="{StaticResource accent}"
+                                        <Frame BackgroundColor="{Binding CountOrMeasure, Converter={StaticResource countMeasureToColorConverter}}"
                                                CornerRadius="5"
                                                Margin="2,5,2,0"
                                                Padding="0">
@@ -142,11 +147,11 @@
                                                     <ColumnDefinition Width="50" />
                                                 </Grid.ColumnDefinitions>
 
-
                                                 <Image Grid.Row="0"
                                                        Grid.Column="0"
                                                        Source="ic_pine_tree_box_black_24dp.png" />
 
+                                                <!--Count Or Measure-->
                                                 <Label Grid.Row="0"
                                                        Grid.Column="1"
                                                        Text="{Binding CountOrMeasure}"
@@ -166,8 +171,7 @@
                                                                                  HorizontalOptions="Start"
                                                                                  FontSize="Small" />
 
-
-
+                                                <!--Tree Number-->
                                                 <Label Grid.Row="0"
                                                        Grid.Column="3"
                                                        Text="{Binding TreeNumber, StringFormat='{}Tree {0}'}"
@@ -176,6 +180,7 @@
                                                        VerticalTextAlignment="Center"
                                                        HorizontalOptions="Start" />
 
+                                                <!--Error and warnings-->
                                                 <StackLayout Grid.Row="0"
                                                              Grid.Column="5">
 
@@ -208,25 +213,21 @@
                                                     </Frame>
                                                 </StackLayout>
 
-                                                <!--<Label x:Name="CruiserInitialsLabel" 
+                                                <!--<Label x:Name="CruiserInitialsLabel"
                                Text="{Binding Tree.Initials}"
-                               HorizontalTextAlignment="Center" 
+                               HorizontalTextAlignment="Center"
                                VerticalTextAlignment="Center"
                                HorizontalOptions="EndAndExpand" />-->
-
                                             </Grid>
-
                                         </Frame>
 
-                                        <!--<cells:TallyEntryTreeViewCell >
+                                        <!--<cells:TallyEntryTreeViewCell>
                                             <cells:TallyEntryTreeViewCell.GestureRecognizers>
                                                 <TapGestureRecognizer x:Name="_treeCellTappedGesture" Command="{Binding BindingContext.SelectTallyEntryCommand, Source={Reference _page}}"
                                                                       CommandParameter="{Binding .}"
-                                                                      Tapped="_treeCellTappedGesture_Tapped"/>
+                                                                      Tapped="_treeCellTappedGesture_Tapped" />
                                             </cells:TallyEntryTreeViewCell.GestureRecognizers>
-                                            
                                         </cells:TallyEntryTreeViewCell>-->
-                                        
                                     </SwipeView>
                                 </DataTemplate>
                             </cells:TreeDataTemplateSelector.TreeItemTemplate>
@@ -273,88 +274,90 @@
                                             </Grid>
                                         </Frame>
 
-                                        <!--<cells:TallyEntryViewCell/>-->
-                                        
+                                        <!--<cells:TallyEntryViewCell />-->
                                     </SwipeView>
                                 </DataTemplate>
                             </cells:TreeDataTemplateSelector.BasicTemplate>
                         </cells:TreeDataTemplateSelector>
-
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <Grid x:Name="_treeEditPanel"
-                      AbsoluteLayout.LayoutFlags="WidthProportional"
-                      AbsoluteLayout.LayoutBounds="0,0,1,165"
-                      BackgroundColor="White"
-                      IsVisible="false"
-                      BindingContext="{Binding SelectedTreeViewModel}"
-                      BindingContextChanged="_treeEditPanel_BindingContextChanged">
-                    <!--default to not visable, when view cell expands visability will be set to true -->
+                <!--Tree Edit Panel-->
+                <Frame  x:Name="_treeEditPanel"
+                        IsVisible="false"
+                        RelativeLayout.XConstraint="0"
+                        RelativeLayout.YConstraint="0"
+                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                        Padding="0"
+                        BindingContext="{Binding SelectedTreeViewModel}"
+                        BindingContextChanged="_treeEditPanel_BindingContextChanged">
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="2" />
-                    </Grid.RowDefinitions>
+                    <Grid>
+                        <!--default to not visable, when view cell expands visability will be set to true -->
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="2" />
+                        </Grid.RowDefinitions>
 
-                    <Label Grid.ColumnSpan="3"
-                           Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
-                           TextColor="{StaticResource darkText}"
-                           FontSize="Large" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <ScrollView x:Name="_treeEditScrollView"
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="4"
-                                Orientation="Horizontal">
-                        <Grid x:Name="_treeEditControlGrid">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="19" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                        </Grid>
-                    </ScrollView>
+                        <Label Grid.ColumnSpan="3"
+                               Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
+                               TextColor="{StaticResource darkText}"
+                               FontSize="Large" />
 
-                    <Button  x:Name="_hideTreeEditPanelButton"
-                             Grid.Row="2"
-                             Grid.Column="0"
-                             Text="Hide"
-                             HorizontalOptions="Start"
-                             Clicked="_hideTreeEditPanelButton_Clicked" />
+                        <ScrollView x:Name="_treeEditScrollView"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="4"
+                                    Orientation="Horizontal">
+                            <Grid x:Name="_treeEditControlGrid">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                            </Grid>
+                        </ScrollView>
 
+                        <Button  x:Name="_hideTreeEditPanelButton"
+                                 Grid.Row="2"
+                                 Grid.Column="0"
+                                 Text="Hide"
+                                 HorizontalOptions="Start"
+                                 Clicked="_hideTreeEditPanelButton_Clicked" />
 
-                    <Button Grid.Row="2"
-                            Grid.Column="1"
-                            x:Name="_logsButton"
-                            Text="Logs"
-                            Command="{Binding ShowLogsCommand}"/>
+                        <Button Grid.Row="2"
+                                Grid.Column="1"
+                                x:Name="_logsButton"
+                                Text="Logs"
+                                Command="{Binding ShowLogsCommand}" />
 
-                    <Button Grid.Row="2"
-                            Grid.Column="2"
-                            x:Name="_editButton"
-                            Text="Edit"
-                            Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
-                            CommandParameter="{Binding TreeID}" />
+                        <Button Grid.Row="2"
+                                Grid.Column="2"
+                                x:Name="_editButton"
+                                Text="Edit"
+                                Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
+                                CommandParameter="{Binding TreeID}" />
 
-                    <!--<Button Grid.Row="2"
+                        <!--<Button Grid.Row="2"
                             Grid.Column="3"
                             x:Name="_untallyButton"
                             Text="Untally" />-->
 
-                    <BoxView Grid.Row="3"
-                             Grid.ColumnSpan="4"
-                             BackgroundColor="Black" />
-                </Grid>
-            </AbsoluteLayout>
+                        <BoxView Grid.Row="3"
+                                 Grid.ColumnSpan="4"
+                                 BackgroundColor="Black" />
+                    </Grid>
+                </Frame>
+            </RelativeLayout>
 
             <!-- tally buttons -->
             <CollectionView Grid.Row="1"
@@ -366,7 +369,9 @@
                             Margin="3,0">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical"
-                                     Span="4" HorizontalItemSpacing="3" VerticalItemSpacing="3" />
+                                     Span="4"
+                                     HorizontalItemSpacing="3"
+                                     VerticalItemSpacing="3" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <cells:TallyDataTemplateSelector>
@@ -376,7 +381,6 @@
                                 <Frame CornerRadius="5"
                                        BackgroundColor="Green"
                                        Margin="3"
-                                       HeightRequest="100"
                                        Padding="0">
                                     <Frame.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
@@ -386,16 +390,12 @@
                                     <Grid Padding="0">
 
                                         <Grid.RowDefinitions>
+                                            <!--Tally Settings Button-->
                                             <RowDefinition Height="Auto" />
                                             <!-- population info and menu button -->
                                             <RowDefinition Height="Auto" />
-                                            <!-- spacer -->
-                                            <RowDefinition Height="Auto" />
                                             <!-- tree count -->
                                             <RowDefinition Height="Auto" />
-                                            <!-- hotkey -->
-                                            <RowDefinition Height="*" />
-                                            <!-- bottom spacer -->
                                         </Grid.RowDefinitions>
 
                                         <Grid.ColumnDefinitions>
@@ -403,12 +403,14 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
+                                        <!--Tally Settings Button-->
                                         <ImageButton    x:Name="_showTallyMenuButton"
                                                         Grid.Column="1"
                                                         Grid.Row="0"
-                                                        Padding="0,3,3,0"
+                                                        Padding="10,3"
                                                         Command="{Binding BindingContext.ShowTallyMenuCommand, Source={Reference _page}}"
                                                         Source="ic_more_vert_black_24dp.png"
+                                                        BackgroundColor="Transparent"
                                                         CommandParameter="{Binding .}" />
 
                                         <local_ctrls:PopulationIndicator Grid.Column="0"
@@ -416,35 +418,35 @@
                                                                          Grid.Row="1"
                                                                          StratumCode="{Binding StratumCode}"
                                                                          SampleGroupCode="{Binding SampleGroupCode}"
-                                                                         Species="{Binding Species}"
+                                                                         Species="{Binding SpeciesCode}"
                                                                          LiveDead="{Binding LiveDead}"
-                                                                         Margin="5,5,0,0"
-                                                                         HeightRequest="20"
+                                                                         AltFontAttributes="Bold"
+                                                                         AltFontSize="Large"
                                                                          FontSize="Micro"
                                                                          HorizontalOptions="Center" />
+
 
                                         <Frame  Grid.Column="0"
                                                 Grid.Row="2"
                                                 Grid.ColumnSpan="2"
-                                                Padding="11,0,11,0"
-                                                Margin="0"
+                                                Padding="3,0"
+                                                Margin="0,0,0,2"
                                                 HorizontalOptions="Center"
                                                 BackgroundColor="White"
-                                                CornerRadius="10">
+                                                CornerRadius="5">
 
-                                            <Label Text="{Binding TreeCount}"
-                                                   HorizontalTextAlignment="Center"
-                                                   BackgroundColor="Transparent"
-                                                   TextColor="Black"
-                                                   WidthRequest="50" />
+                                            <StackLayout Orientation="Horizontal">
+                                                <Image Source="ic_pine_tree_box_black_18dp.png" />
+                                                <Label Text="{Binding TreeCount}"
+                                                       HorizontalTextAlignment="Center"
+                                                       BackgroundColor="Transparent"
+                                                       TextColor="Black" />
+
+                                                <Label Text="{Binding SumKPI, StringFormat='{}Kpi:{0}'}"
+                                                       TextColor="Black"
+                                                       IsVisible="{Binding SumKPI, Converter={StaticResource intToBoolConverter}}" />
+                                            </StackLayout>
                                         </Frame>
-
-                                        <Label  Grid.Column="0"
-                                                Grid.Row="3"
-                                                Grid.ColumnSpan="2"
-                                                IsVisible="False"
-                                                Text="{Binding TallyHotKey}"
-                                                HorizontalTextAlignment="Center" />
                                     </Grid>
                                 </Frame>
                             </DataTemplate>
@@ -461,10 +463,10 @@
                             HeightRequest="44"
                             Margin="2,1"
                             ItemsSource="{Binding StrataFilterOptions}"
-                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource hasDataConverter}}">
+                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal"
-                                       ItemSpacing="2"/>
+                                       ItemSpacing="2" />
                 </CollectionView.ItemsLayout>
 
                 <!--<CollectionView.ItemsSource>
@@ -490,7 +492,6 @@
                                 Command="{Binding BindingContext.StratumSelectedCommand, Source={x:Reference StratumFilterListView}}"
                                 CommandParameter="{Binding .}" />
                     </DataTemplate>
-
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Grid>

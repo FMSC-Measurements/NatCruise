@@ -1,8 +1,11 @@
-﻿using MahApps.Metro;
+﻿using CruiseDAL;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using NatCruise.Core.Services;
 using NatCruise.Data;
+using NatCruise.Design.Data;
+using NatCruise.Design.Services;
 using NatCruise.Design.Views;
 using NatCruise.Services;
 using NatCruise.Wpf.Navigation;
@@ -15,7 +18,6 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
 using System.Windows;
 
@@ -24,7 +26,7 @@ namespace NatCruise.Wpf
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : PrismApplication
+    public partial class App : PrismApplication, IAppService
     {
         private string[] StartupArgs { get; set; }
 
@@ -55,37 +57,63 @@ namespace NatCruise.Wpf
             var container = Container;
             var regionManager = container.Resolve<IRegionManager>();
             //regionManager.RegisterViewWithRegion(Regions.ContentRegion, typeof(CruiseMasterPage));
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SalePage));
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListPage));
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListPage));
-            regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailPage));
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SaleView));
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CruiseView));
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListView));
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListView));
+            regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailView));
 
-            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumDetailPage));
-            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(CuttingUnitStrataPage));
-            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(SampleGroupListPage));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumDetailView));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(CuttingUnitStrataView));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(SampleGroupListView));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumFieldSetupView));
 
-            regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SampleGroupDetailPage));
-            regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SubpopulationListPage));
+            regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SampleGroupDetailView));
+            regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SubpopulationListView));
 
             base.OnInitialized();
 
-            var startupArgs = StartupArgs;
+            //var startupArgs = StartupArgs;
 
-            if (startupArgs.Length > 0)
-            {
-                var arg1 = startupArgs[0];
-                try
-                {
-                    var path = Path.GetFullPath(arg1);
-                    if (File.Exists(path))
-                    {
-                        var mainWindowVM = base.MainWindow?.DataContext as MainWindowViewModel;
-                        mainWindowVM.OpenFile(path);
-                    }
-                }
-                catch
-                { }
-            }
+            //if (startupArgs.Length > 0)
+            //{
+            //    var arg1 = startupArgs[0];
+            //    try
+            //    {
+            //        var path = Path.GetFullPath(arg1);
+            //        if (File.Exists(path))
+            //        {
+            //            var mainWindowVM = base.MainWindow?.DataContext as MainWindowViewModel;
+            //            mainWindowVM.OpenFile(path);
+            //        }
+            //    }
+            //    catch
+            //    { }
+            //}
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterInstance<IAppService>(this);
+            containerRegistry.Register<IApplicationSettingService, WpfApplicationSettingService>();
+            containerRegistry.Register<IDialogService, WpfDialogService>();
+            containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();
+            containerRegistry.Register<IDeviceInfoService, WpfDeviceInfoService>();
+            containerRegistry.RegisterSingleton<ISetupInfoDataservice, SetupInfoDataservice>();
+            containerRegistry.RegisterInstance<ILoggingService>(new WpfLoggingService());
+            containerRegistry.RegisterInstance<IFileDialogService>(new WpfFileDialogService());
+            containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
+
+            var deviceInfo = Container.Resolve<IDeviceInfoService>();
+            var dataserviceProvider = new WpfDataserviceProvider((CruiseDatastore_V3)null, deviceInfo);
+            dataserviceProvider.RegisterDataservices(containerRegistry);
+            containerRegistry.RegisterInstance<IDataserviceProvider>(dataserviceProvider);
+
+            containerRegistry.RegisterDialog<NewCruiseView, NewCruiseViewModel>("NewCruise");
+
+            containerRegistry.RegisterForNavigation<CruiseMasterView>();
+            containerRegistry.RegisterForNavigation<CuttingUnitListView>();
+            containerRegistry.RegisterForNavigation<CuttingUnitDetailView>();
         }
 
         protected override void ConfigureViewModelLocator()
@@ -94,14 +122,13 @@ namespace NatCruise.Wpf
 
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
             {
-
                 var viewName = viewType.FullName;
                 viewName = viewName.Replace(".Views.", ".ViewModels.");
 
                 string viewAssemblyName = null;
-                if(viewName.StartsWith("NatCruise.Design"))
+                if (viewName.StartsWith("NatCruise.Design"))
                 {
-                    var assemblyName = Assembly.GetAssembly(typeof(CuttingUnitDetailPage)).FullName;
+                    //var assemblyName = Assembly.GetAssembly(typeof(CuttingUnitDetailPage)).FullName;
                     viewAssemblyName = "NatCruise.Design";
                 }
                 else
@@ -117,22 +144,8 @@ namespace NatCruise.Wpf
 
             //ViewModelLocationProvider.SetDefaultViewModelFactory((viewType) =>
             //{
-            //    var viewName = 
+            //    var viewName =
             //})
-        }
-
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterDialog<NewCruisePage, NewCruisePageViewModel>("NewCruise");
-
-            containerRegistry.RegisterForNavigation<CruiseMasterPage>();
-            containerRegistry.RegisterForNavigation<CuttingUnitListPage>();
-            containerRegistry.RegisterForNavigation<CuttingUnitDetailPage>();
-
-            containerRegistry.RegisterInstance<ILoggingService>(new WpfLoggingService());
-            containerRegistry.RegisterInstance<IDataserviceProvider>(new DataserviceProvider());
-            containerRegistry.RegisterInstance<IFileDialogService>(new WpfFileDialogService());
-            containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
         }
     }
 }

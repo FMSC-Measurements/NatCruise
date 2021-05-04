@@ -1,10 +1,11 @@
 ﻿using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
 {
-    public interface ITreeDatastore
+    public interface ITreeDatastore : IDataservice
     {
         string CreateMeasureTree(string unitCode, string stratumCode,
             string sampleGroupCode = null, string species = null, string liveDead = "L",
@@ -40,7 +41,7 @@ namespace NatCruise.Cruise.Services
 
         void ClearTreeAuditResolution(string treeID, string treeAuditRuleID);
 
-        bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null);
+        bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null, string stratumCode = null);
 
         void UpdateTreeInitials(string treeGuid, string value);
 

@@ -1,7 +1,9 @@
 ﻿using CruiseDAL;
 using FluentAssertions;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
+using NatCruise.Test;
 using System;
 using System.Linq;
 using Xunit;
@@ -26,7 +28,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var plotID = datastore.AddNewPlot(unitCode);
 
@@ -46,7 +48,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var plotID = datastore.AddNewPlot(unitCode);
 
@@ -98,7 +100,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, Initializer.DeviceID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 database.Execute(
                     $"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES ('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber});" +
@@ -135,7 +137,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 datastore.GetNextPlotNumber(unitCode).Should().Be(1, "unit with no plots, should return 1 for first plot number");
 
@@ -155,7 +157,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 datastore.IsPlotNumberAvalible(unitCode, plotNumber).Should().BeTrue("no plots in unit yet");
 
@@ -175,7 +177,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 datastore.GetPlotsByUnitCode(unitCode).Should().BeEmpty("we havn't added any plots yet");
 
@@ -192,7 +194,7 @@ namespace NatCruise.Cruise.Test.Services
             var plotNumber = 1;
             using(var db = CreateDatabase())
             {
-                var ds = new CuttingUnitDatastore(db, CruiseID);
+                var ds = new CuttingUnitDatastore(db, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(db, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
                 var plotid = ds.AddNewPlot(unitCode);
 
                 var plot_stratum = ds.GetPlot_Strata(unitCode, plotNumber).First();
@@ -225,7 +227,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 datastore.GetPlotsByUnitCode(unitCode).Should().BeEmpty("we havn't added any plots yet");
 
@@ -275,7 +277,7 @@ namespace NatCruise.Cruise.Test.Services
                 var cruiseID = CruiseID;
                 InitializeDatabase(database, cruiseID, saleID, units, strata, unit_strata, null, null, null, null);
 
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 datastore.GetPlotsByUnitCode(units[0]).Should().BeEmpty("we havn't added any plots yet");
 
@@ -319,7 +321,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
                     $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
@@ -340,7 +342,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
                     $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
@@ -369,7 +371,7 @@ namespace NatCruise.Cruise.Test.Services
                 var saleID = SaleID;
                 var cruiseID = CruiseID;
 
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
                 InitializeDatabase(database, cruiseID, saleID, units, null, null, null, null, null, null);
 
                 datastore.GetPlotStrataProxies(unit).Should().HaveCount(0);
@@ -398,7 +400,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var stratumPlot = new Plot_Stratum()
                 {
@@ -439,7 +441,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var stratumPlot = new Plot_Stratum()
                 {
@@ -481,7 +483,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var plotID = datastore.AddNewPlot(unitCode);
 
@@ -510,7 +512,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, cruiseID);
+                var datastore = new CuttingUnitDatastore(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var stratumPlot = new Plot_Stratum()
                 {
@@ -544,7 +546,7 @@ namespace NatCruise.Cruise.Test.Services
 
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var stratumPlot = new Plot_Stratum()
                 {
@@ -581,7 +583,7 @@ namespace NatCruise.Cruise.Test.Services
                 var saleID = SaleID;
                 var cruiseID = CruiseID;
 
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 InitializeDatabase(
                     database,
@@ -654,7 +656,7 @@ namespace NatCruise.Cruise.Test.Services
         {
             using (var database = CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID);
+                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
             }
         }
 

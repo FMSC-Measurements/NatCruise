@@ -1,10 +1,9 @@
-﻿using NatCruise.Data;
-using NatCruise.Design.Models;
+﻿using NatCruise.Design.Models;
 using System.Collections.Generic;
 
 namespace NatCruise.Design.Data 
 {
-    public interface ISetupInfoDataservice : IDataservice
+    public interface ISetupInfoDataservice 
     {
         IEnumerable<Region> GetRegions();
 
@@ -13,5 +12,13 @@ namespace NatCruise.Design.Data
         IEnumerable<Purpose> GetPurposes();
 
         IEnumerable<UOM> GetUOMCodes();
+
+        IEnumerable<District> GetDistricts(string region, string forest);
+
+        IEnumerable<FIASpecies> GetFIASpecies();
+
+        IEnumerable<Product> GetProducts();
+
+        IEnumerable<CruiseMethod> GetCruiseMethods();
     }
 }

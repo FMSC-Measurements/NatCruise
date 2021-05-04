@@ -7,6 +7,7 @@
                   xmlns:prism="http://prismlibrary.com"
                   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
                   mc:Ignorable="d"
                   IsPresented="True">
     <MasterDetailPage.Master>
@@ -21,7 +22,7 @@
                        Margin="10"
                        CornerRadius="0">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowSelectSale}" />
+                        <TapGestureRecognizer Command="{Binding ShowSelectSale}" Tapped="OnNavButtonClicked" />
                     </Frame.GestureRecognizers>
                     <StackLayout BackgroundColor="{StaticResource fs_brown}">
                         <StackLayout Orientation="Horizontal"
@@ -68,21 +69,27 @@
 
                         <Button Text="Sale"
                                 IsVisible="{Binding IsCruiseSelected}"
-                                Command="{Binding ShowSaleCommand}" />
+                                Command="{Binding ShowSaleCommand}"
+                                Clicked="OnNavButtonClicked"/>
                         <Button Text="Cutting Unit Info"
                                 IsVisible="{Binding IsCuttingUnitSelected}"
-                                Command="{Binding ShowUnitInfoCommand}" />
+                                Command="{Binding ShowUnitInfoCommand}"
+                                Clicked="OnNavButtonClicked"/>
                         <Button Text="Trees"
-                                IsVisible="{Binding IsCuttingUnitSelected}"
-                                Command="{Binding ShowTreesCommand}" />
+                                IsVisible="{Binding HasTreeStrata}"
+                                Command="{Binding ShowTreesCommand}"
+                                Clicked="OnNavButtonClicked"/>
                         <Button Text="Plots"
                                 IsVisible="{Binding HasPlotStrata}"
-                                Command="{Binding ShowPlotsCommand}" />
+                                Command="{Binding ShowPlotsCommand}"
+                                Clicked="OnNavButtonClicked"/>
                         <Button Text="Tally"
                                 IsVisible="{Binding HasTreeStrata}"
-                                Command="{Binding ShowTallyCommand}" />
+                                Command="{Binding ShowTallyCommand}"
+                                Clicked="OnNavButtonClicked"/>
                         <Button Text="Cruisers"
-                                Command="{Binding ShowCruisersCommand}" />
+                                Command="{Binding ShowCruisersCommand}"
+                                Clicked="OnNavButtonClicked"/>
                     </StackLayout>
                 </ScrollView>
 
@@ -142,10 +149,12 @@
                              HorizontalOptions="Center">
                     <Button BackgroundColor="Transparent"
                             Image="ic_settings_white_24dp.png"
-                            Command="{Binding ShowSettingsCommand}" />
-                    <Button BackgroundColor="Transparent"
+                            Command="{Binding ShowSettingsCommand}"
+                            Clicked="OnNavButtonClicked"/>
+                    <!--<Button BackgroundColor="Transparent"
                             Image="ic_feedback_white_24dp.png"
-                            Command="{Binding ShowFeedbackCommand}" />
+                            Command="{Binding ShowFeedbackCommand}"
+                            Clicked="OnNavButtonClicked"/>-->
                 </StackLayout>
             </StackLayout>
         </ContentPage>

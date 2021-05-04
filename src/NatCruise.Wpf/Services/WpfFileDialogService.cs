@@ -58,5 +58,32 @@ namespace NatCruise.Wpf.Services
                 return null;
             }
         }
+
+        public Task<string> SelectTemplateFileAsync()
+        {
+            return Task.Run(SelectTemplateFile);
+        }
+
+        public string SelectTemplateFile()
+        {
+            var dialog = new OpenFileDialog()
+            {
+                DefaultExt = "*.cut",
+                Filter = "v2 Template File (*.cut)|*.cut",
+            };
+
+            var result = dialog.ShowDialog();
+            if (result == true)
+            {
+                return dialog.FileName;
+            }
+            else
+            { return null; }
+        }
+
+        public Task<string> SelectBackupFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

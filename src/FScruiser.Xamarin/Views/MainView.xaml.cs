@@ -2,6 +2,7 @@
 using Prism.Navigation;
 using System;
 using System.Diagnostics;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -23,6 +24,15 @@ namespace FScruiser.XF.Views
             //var selectedIndex = _cuttingUnitPicker.SelectedIndex;
             //var selectedItem = _cuttingUnitPicker.ItemsSource[selectedIndex] as CuttingUnit_Ex;
             //vm.SelectedCuttingUnit = selectedItem;
+        }
+
+        private void OnNavButtonClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                IsPresented = false;
+            }
+            catch { }
         }
     }
 }

@@ -6,8 +6,6 @@ namespace NatCruise.Cruise.Data
 {
     public interface ISampleInfoDataservice : IDataservice
     {
-        Device CurrentDevice { get; }
-
         void CopySamplerStates(string deviceFrom, string deviceTo);
         SamplerState GetSamplerState(string stratumCode, string sampleGroupCode, string deviceID);
         //Device GetCurrentDevice();

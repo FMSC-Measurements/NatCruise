@@ -1,29 +1,23 @@
 ﻿using CruiseDAL;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Services;
-using NatCruise.Util;
-using FScruiser.XF.Events;
+using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using FScruiser.XF.Util;
 using Microsoft.AppCenter.Crashes;
-using Plugin.Permissions;
+using NatCruise.Core.Services;
+using NatCruise.Cruise.Data;
+using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using NatCruise.Services;
+using NatCruise.Util;
 using Prism;
-using Prism.Events;
 using Prism.Ioc;
-using Prism.Navigation;
 using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using NatCruise.Data;
-using FScruiser.XF.Data;
-using FScruiser.XF.Views;
-using FScruiser.XF.ViewModels;
-using NatCruise.Services;
 
 namespace FScruiser.XF
 {
@@ -34,6 +28,7 @@ namespace FScruiser.XF
         public const string CURRENT_NAV_PARAMS = "current_nav_params";
 
         private DataserviceProvider _dataserviceProvider;
+
         //private CruiseFileSelectedEvent _cruiseFileSelectedEvent;
         //private CruiseFileOpenedEvent _cruiseFileOpenedEvent;
         private ICruisersDataservice _cruisersDataservice;
@@ -43,13 +38,13 @@ namespace FScruiser.XF
 
         public IDataserviceProvider DataserviceProvider => _dataserviceProvider;
 
-        public IApplicationSettings Settings { get; } = new ApplicationSettings();
+        public IApplicationSettingService Settings { get; } = new XamarinApplicationSettingService();
 
         public App() : this(new XamarinPlatformInitializer())
         { }
 
         public App(IPlatformInitializer platformInitializer) : base(platformInitializer)
-        {  }
+        { }
 
         protected override async void OnInitialized()
         {
@@ -163,7 +158,6 @@ namespace FScruiser.XF
         //                //    await NavigationService.NavigateAsync("/Main/Navigation/CuttingUnits");
         //                //}
 
-
         //                await NavigationService.NavigateAsync("/Main/Navigation/CuttingUnits");
 
         //                MessagingCenter.Send<object, string>(this, Messages.CRUISE_FILE_OPENED, path);
@@ -237,7 +231,10 @@ namespace FScruiser.XF
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<IFileDialogService, XamarinFileDialogService>();
+            if(containerRegistry.IsRegistered<IFileDialogService>() == false)
+            {
+                containerRegistry.Register<IFileDialogService, XamarinFileDialogService>();
+            }
 
             if (containerRegistry.IsRegistered<IDataserviceProvider>() == false)
             {
@@ -249,8 +246,10 @@ namespace FScruiser.XF
                     var newDb = new CruiseDatastore_V3(cruiseDbPath, true);
                 }
 
+                _dataserviceProvider = new DataserviceProvider(cruiseDbPath, deviceInfo);
+                _dataserviceProvider.RegisterDataservices(containerRegistry);
 
-                containerRegistry.RegisterInstance<IDataserviceProvider>(_dataserviceProvider = new DataserviceProvider(deviceInfo, cruiseDbPath));
+                containerRegistry.RegisterInstance<IDataserviceProvider>(_dataserviceProvider);
             }
 
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)
@@ -282,6 +281,5 @@ namespace FScruiser.XF
                 await DialogService.DisplayAlertAsync(catigory, ex.ToString(), "Close");
             }
         }
-
     }
 }

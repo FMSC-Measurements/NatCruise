@@ -1,34 +1,23 @@
 ﻿using CruiseDAL;
-using NatCruise.Models;
+using CruiseDAL.V3.Models;
+using NatCruise.Core.Services;
+using Prism.Ioc;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Data
 {
     public abstract class DataserviceProviderBase : IDataserviceProvider
     {
         private string _cruiseID;
-        private CruiseDatastore_V3 _datastore;
-        private string _databasePath;
 
-        protected CruiseDatastore_V3 Datastore
-        {
-            get => _datastore;
-            set => _datastore = value;
-        }
+        public string DatabasePath => Database.Path;
 
-        public string DatabasePath
-        {
-            get => _databasePath;
-            set
-            {
-                _databasePath = value;
-            }
-        }
+        public CruiseDatastore_V3 Database { get; set; }
+        public IDeviceInfoService DeviceInfoService { get; }
+        public string DeviceID { get; }
+
 
         public string CruiseID
         {
@@ -42,22 +31,36 @@ namespace NatCruise.Data
 
         protected virtual void OnCruiseIDChanged(string value)
         {
-            
+            if (value != null)
+            {
+                InitCurrentDevice(DeviceInfoService);
+            }
         }
 
-        public DataserviceProviderBase(CruiseDatastore_V3 datastore)
+        public abstract void RegisterDataservices(IContainerRegistry containerRegistry);
+
+        public DataserviceProviderBase(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService)
         {
-            _datastore = datastore ?? throw new ArgumentNullException(nameof(datastore));
+            Database = database; //?? throw new ArgumentNullException(nameof(database));
+            DeviceInfoService = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
+            DeviceID = deviceInfoService.DeviceID;
         }
 
-        public DataserviceProviderBase(string databasePath)
+        public DataserviceProviderBase(string databasePath, IDeviceInfoService deviceInfoService)
         {
-            OpenDatabase(databasePath);
+            if (System.IO.File.Exists(databasePath) == false)
+            {
+                throw new FileNotFoundException("Cruise Database File Not Found", databasePath);
+            }
+            Database = new CruiseDatastore_V3(databasePath);
+            DeviceInfoService = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
+            DeviceID = deviceInfoService.DeviceID;
         }
 
-        public CruiseDatastore_V3 GetDatabase()
+        public DataserviceProviderBase(IDeviceInfoService deviceInfoService)
         {
-            return _datastore ?? new CruiseDatastore_V3(DatabasePath);
+            DeviceInfoService = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
+            DeviceID = deviceInfoService.DeviceID;
         }
 
         public abstract IDataservice GetDataservice(Type type);
@@ -67,14 +70,27 @@ namespace NatCruise.Data
             return (T)GetDataservice(typeof(T));
         }
 
-        public virtual void OpenDatabase(string databasePath)
+        protected Device InitCurrentDevice(IDeviceInfoService deviceInfoService)
         {
-            if(System.IO.File.Exists(databasePath) == false)
+            var deviceID = deviceInfoService.DeviceID;
+            var deviceName = deviceInfoService.DeviceName;
+            var cruiseID = CruiseID;
+
+            var device = Database.Query<Device>("SELECT * FROM Device WHERE DeviceID = @p1 AND CruiseID = @p2;", deviceID, cruiseID).FirstOrDefault();
+
+            if (device == null)
             {
-                throw new FileNotFoundException("Cruise Database File Not Found", databasePath);
+                device = new Device
+                {
+                    CruiseID = cruiseID,
+                    DeviceID = deviceID,
+                    Name = deviceName,
+                };
+
+                Database.Insert(device);
             }
 
-            DatabasePath = databasePath;
+            return device;
         }
     }
 }
