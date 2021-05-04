@@ -151,10 +151,10 @@
                             Image="ic_settings_white_24dp.png"
                             Command="{Binding ShowSettingsCommand}"
                             Clicked="OnNavButtonClicked"/>
-                    <Button BackgroundColor="Transparent"
+                    <!--<Button BackgroundColor="Transparent"
                             Image="ic_feedback_white_24dp.png"
                             Command="{Binding ShowFeedbackCommand}"
-                            Clicked="OnNavButtonClicked"/>
+                            Clicked="OnNavButtonClicked"/>-->
                 </StackLayout>
             </StackLayout>
         </ContentPage>
