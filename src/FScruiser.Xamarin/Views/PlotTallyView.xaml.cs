@@ -31,10 +31,18 @@ namespace FScruiser.XF.Views
             var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
             if (vm != null)
             {
-                _treeEditControlGrid.Children.Clear();
                 vm.Load();
-                var editControls = MakeEditControls(vm.TreeFieldValues);
-                _treeEditControlGrid.Children.AddRange(editControls);
+                vm.IsLoading = true; // prevent changing controls from triggering prop changed events
+                try
+                {
+                    _treeEditControlGrid.Children.Clear();
+                    var editControls = MakeEditControls(vm.TreeFieldValues);
+                    _treeEditControlGrid.Children.AddRange(editControls);
+                }
+                finally
+                {
+                    vm.IsLoading = false;
+                }
             }
         }
 
@@ -65,9 +73,17 @@ namespace FScruiser.XF.Views
             var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
             if (vm != null)
             {
-                _treeEditControlGrid.Children.Clear();
-                var editControls = MakeEditControls(vm.TreeFieldValues);
-                _treeEditControlGrid.Children.AddRange(editControls);
+                vm.IsLoading = true; // prevent changing controls from triggering prop changed events
+                try
+                {
+                    _treeEditControlGrid.Children.Clear();
+                    var editControls = MakeEditControls(vm.TreeFieldValues);
+                    _treeEditControlGrid.Children.AddRange(editControls);
+                }
+                finally
+                {
+                    vm.IsLoading = false;
+                }
             }
             else
             {
