@@ -517,10 +517,10 @@ UPSERT_TREEMEASURMENT_COMMAND,
         public void SetTreeAuditResolution(string treeID, string treeAuditRuleID, string resolution, string initials)
         {
             Database.Execute("INSERT OR REPLACE INTO TreeAuditResolution " +
-                "(TreeID, TreeAuditRuleID, Resolution, Initials)" +
+                "(TreeID, CruiseID, TreeAuditRuleID, Resolution, Initials)" +
                 "VALUES" +
-                "(@p1, @p2, @p3, @p4);"
-                , treeID, treeAuditRuleID, resolution, initials);
+                "(@p1, @p2, @p3, @p4, @p5);"
+                , treeID, CruiseID, treeAuditRuleID, resolution, initials);
         }
 
         public void ClearTreeAuditResolution(string treeID, string treeAuditRuleID)
