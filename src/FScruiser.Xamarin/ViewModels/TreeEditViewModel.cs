@@ -39,7 +39,7 @@ namespace FScruiser.XF.ViewModels
         private string _initials;
         private string _cruiseMethod;
 
-        protected bool IsLoading { get; set; }
+        public bool IsLoading { get; set; }
         protected ICuttingUnitDatastore Datastore { get; }
         public ICruisersDataservice CruisersDataservice { get; }
         protected ICruiseDialogService DialogService { get; }
