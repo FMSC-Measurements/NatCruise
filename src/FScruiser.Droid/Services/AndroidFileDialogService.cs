@@ -52,9 +52,39 @@ namespace FScruiser.Droid.Services
             }
         }
 
-        public Task<string> SelectTemplateFileAsync()
+        public async override Task<string> SelectBackupFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
         {
-            throw new NotImplementedException();
+            var action = Intent.ActionCreateDocument;
+            var intent = new Intent(action);
+            intent.SetType("application/x.crz3db");
+
+            if (string.IsNullOrWhiteSpace(defaultFileName) == false)
+            {
+                intent.PutExtra(Intent.ExtraTitle, defaultFileName);
+            }
+
+            var requestCode = CREATE_FILE_REQUESTCODE;
+            intent.PutExtra("request_code", requestCode);
+
+            var createIntent = Intent.CreateChooser(intent, "Select Backup File Destination");
+
+            try
+            {
+                string resultPath = null;
+                void OnResult(Intent intent)
+                {
+                    resultPath = intent.Data.ToString();
+                }
+
+                await Activity.StartAsync(createIntent, requestCode, onResult: OnResult);
+
+                return resultPath;
+            }
+            catch (OperationCanceledException)
+            {
+                return null;
+            }
         }
+
     }
 }

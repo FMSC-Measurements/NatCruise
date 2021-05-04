@@ -27,6 +27,11 @@ namespace FScruiser.XF.Services
             return NavigationService.GoBackAsync();
         }
 
+        public Task ShowBlank()
+        {
+            return NavigationService.NavigateAsync("Blank");
+        }
+
         public Task<INavigationResult> NavigateAsync(string path, NavigationParameters navparams)
         {
             return NavigationService.NavigateAsync(path, navparams);
