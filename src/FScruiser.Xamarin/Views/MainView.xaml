@@ -7,6 +7,7 @@
                   xmlns:prism="http://prismlibrary.com"
                   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
                   mc:Ignorable="d"
                   IsPresented="True">
     <MasterDetailPage.Master>
@@ -75,7 +76,7 @@
                                 Command="{Binding ShowUnitInfoCommand}"
                                 Clicked="OnNavButtonClicked"/>
                         <Button Text="Trees"
-                                IsVisible="{Binding IsCuttingUnitSelected}"
+                                IsVisible="{Binding HasTreeStrata}"
                                 Command="{Binding ShowTreesCommand}"
                                 Clicked="OnNavButtonClicked"/>
                         <Button Text="Plots"
