@@ -7,28 +7,27 @@
     <ContentPage.Content>
         <StackLayout Padding="5">
             <StackLayout>
-                <StackLayout
-                    Orientation="Horizontal">
-                    
-                    <Label 
-                        Text="Analitics" 
-                        VerticalTextAlignment="Center"/>
-                    
-                    <Switch IsToggled="{Binding AppSettings.EnableAnalitics}"/>
-                    
+                <StackLayout Orientation="Horizontal">
+
+                    <Label Text="Analitics"
+                           VerticalTextAlignment="Center" />
+
+                    <Switch IsToggled="{Binding AppSettings.EnableAnalitics}" />
+
                 </StackLayout>
-                <StackLayout
-                    Orientation="Horizontal">
-                    
-                    <Label 
-                        Text="Crash/Error Reports" 
-                        VerticalTextAlignment="Center"/>
-                    
-                    <Switch IsToggled="{Binding AppSettings.EnableCrashReports}"/>
-                    
+                <StackLayout Orientation="Horizontal">
+
+                    <Label Text="Crash/Error Reports"
+                           VerticalTextAlignment="Center" />
+
+                    <Switch IsToggled="{Binding AppSettings.EnableCrashReports}" />
+
                 </StackLayout>
             </StackLayout>
-            <Button Text="Reset Database" Command="{Binding ResetDatabaseCommand}"/>
+            <Button Text="Reset Database"
+                    Command="{Binding ResetDatabaseCommand}" />
+            <Button Text="Backup Database"
+                    Command="{Binding BackupDatabaseCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
