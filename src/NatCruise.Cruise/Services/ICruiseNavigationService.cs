@@ -8,6 +8,8 @@ namespace FScruiser.XF.Services
     {
         Task ShowImport();
 
+        Task ShowBlank();
+
         Task ShowManageCruisers();
 
         Task ShowCruiseLandingLayout();
