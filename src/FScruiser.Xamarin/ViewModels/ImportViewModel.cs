@@ -66,7 +66,7 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand BrowseFileCommand => new DelegateCommand(async () => await BrowseCruiseFileAsync());
 
-        public ICommand SelectCruiseCommand => new DelegateCommand<Cruise>(async (cruise) => await SelectCruiseForImport(cruise));
+        public ICommand SelectCruiseCommand => new DelegateCommand<Cruise>((cruise) => SelectCruiseForImport(cruise));
 
         public ICommand ImportCruiseCommand => new DelegateCommand(async () => await ImportCruise());
 
@@ -120,29 +120,27 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public async Task SelectCruiseForImport(Cruise cruise)
+        public void SelectCruiseForImport(Cruise cruise)
         {
             if (cruise is null) { throw new ArgumentNullException(nameof(cruise)); }
 
             var cruiseID = cruise.CruiseID;
             var importPath = ImportPath ?? throw new NullReferenceException("ImportPath was null");
-            if (await AnalizeCruiseAsync(importPath, cruiseID) == false)
+            if (AnalizeCruise(importPath, cruiseID, out var errors) == false)
             {
                 SelectedCruise = null;
-                DialogService.ShowNotification("Cruise Can Not Be Imported");
+                var errorStr = String.Join(Environment.NewLine, errors);
+                DialogService.ShowNotification(errorStr, "Cruise Can Not Be Imported");
                 return;
             }
 
             SelectedCruise = cruise;
         }
 
-        public Task<bool> AnalizeCruiseAsync(string path, string cruise)
+        public bool AnalizeCruise(string path, string cruiseID, out IEnumerable<string> errors)
         {
-            return Task.Run(() => AnalizeCruise(path, cruise));
-        }
-
-        public bool AnalizeCruise(string path, string cruiseID)
-        {
+            var eList = new List<string>();
+            errors = eList;
             var db = DataserviceProvider.Database;
             using (var importDb = new CruiseDatastore_V3(path))
             {
@@ -150,21 +148,31 @@ namespace FScruiser.XF.ViewModels
 
                 var cruiseConflicts = cruiseChecker.GetCruiseConflicts(importDb, db, cruiseID);
                 var isCruiseInConflict = cruiseConflicts.Any();
+                if(isCruiseInConflict)
+                { eList.Add("Cruise Number Conflict"); }
 
                 var saleConflicts = cruiseChecker.GetSaleConflicts(importDb, db, cruiseID);
                 var isSaleInConflict = saleConflicts.Any();
+                if(isSaleInConflict)
+                { eList.Add("Sale Number Conflict"); }
 
                 var plotConflicts = cruiseChecker.GetPlotConflicts(importDb, db, cruiseID);
-                var treeConflicts = cruiseChecker.GetTreeConflicts(importDb, db, cruiseID);
-                var logConflicts = cruiseChecker.GetLogConflicts(importDb, db, cruiseID);
-                var hasDesignKeyChanges = cruiseChecker.HasDesignKeyChanges(importDb, db, cruiseID);
+                if(plotConflicts.Any())
+                { eList.Add($"{plotConflicts.Count()} Plot Conflict(s)"); }
 
-                return plotConflicts.Count() == 0
-                    && treeConflicts.Count() == 0
-                    && logConflicts.Count() == 0
-                    && !hasDesignKeyChanges
-                    && !isCruiseInConflict
-                    && !isSaleInConflict;
+                var treeConflicts = cruiseChecker.GetTreeConflicts(importDb, db, cruiseID);
+                if(treeConflicts.Any())
+                { eList.Add($"{treeConflicts.Count()} Tree Conflict(s)"); }
+
+                var logConflicts = cruiseChecker.GetLogConflicts(importDb, db, cruiseID);
+                if(logConflicts.Any())
+                { eList.Add($"{logConflicts.Count()} Log Conflict(s)"); }
+
+                var hasDesignKeyChanges = cruiseChecker.HasDesignKeyChanges(importDb, db, cruiseID);
+                if(hasDesignKeyChanges)
+                { eList.Add("Has chages in design key values"); }
+
+                return !errors.Any() ;
             }
         }
 

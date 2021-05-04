@@ -13,7 +13,11 @@
                    IsReadOnly="True"/>
             <Button Text="Browse"
                     Command="{Binding BrowseFileCommand}" />
-            <ListView ItemsSource="{Binding Cruises}"
+            <AbsoluteLayout>
+            <ListView
+                AbsoluteLayout.LayoutBounds="1,1,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                ItemsSource="{Binding Cruises}"
                       SelectionMode="Single">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -23,6 +27,10 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+                <ActivityIndicator AbsoluteLayout.LayoutBounds=".5,.5" AbsoluteLayout.LayoutFlags="PositionProportional" Color="{StaticResource primary_500}"
+                                   IsRunning="{Binding IsWorking}" />
+            </AbsoluteLayout>
             <Button Text="Import"
                     Command="{Binding ImportCruiseCommand}"
                     IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"/>
