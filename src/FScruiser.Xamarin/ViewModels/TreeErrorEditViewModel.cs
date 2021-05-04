@@ -4,22 +4,29 @@ using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using Prism.Common;
 using Prism.Navigation;
+using System;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeErrorEditViewModel : XamarinViewModelBase, INavigatedAware
+    public class TreeErrorEditViewModel : XamarinViewModelBase
     {
         private int _treeNumber;
         private TreeError _treeError;
         private string _treeAuditRuleID;
+        private ICommand _saveCommand;
 
-        public TreeErrorEditViewModel(IDataserviceProvider datastoreProvider)
+        public TreeErrorEditViewModel(IDataserviceProvider datastoreProvider, ICruiseDialogService dialogService)
         {
             Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
-        private ICuttingUnitDatastore Datastore { get; set; }
+        public ICommand SaveCommand => _saveCommand ??= new Command(Save);
 
+        private ICuttingUnitDatastore Datastore { get; set; }
+        public ICruiseDialogService DialogService { get; }
         public int TreeNumber { get => _treeNumber; set => SetProperty(ref _treeNumber, value); }
 
         protected TreeError TreeError
@@ -94,33 +101,6 @@ namespace FScruiser.XF.ViewModels
         //    return true;
         //}
 
-        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
-        {
-            // do nothing
-        }
-
-        public void OnNavigatedFrom(INavigationParameters parameters)
-        {
-            var isResolved = IsResolved;
-            var treeError = TreeError;
-            if (treeError == null) { return; }
-            var treeID = treeError.TreeID;
-            var treeAuditRuleID = treeError.TreeAuditRuleID;
-            var remarks = Resolution;
-            var sig = Initials;
-
-            if (isResolved == true)
-            {
-                if (remarks == null) { return; }
-                if (sig == null) { return; }
-                Datastore.SetTreeAuditResolution(treeID, treeAuditRuleID, remarks, sig);
-            }
-            else
-            {
-                Datastore.ClearTreeAuditResolution(treeID, treeAuditRuleID);
-            }
-        }
-
         protected override void Load(IParameters parameters)
         {
             if (parameters is null) { throw new System.ArgumentNullException(nameof(parameters)); }
@@ -134,6 +114,36 @@ namespace FScruiser.XF.ViewModels
 
             TreeError = treeError;
             TreeNumber = treeNumber.GetValueOrDefault();
+        }
+
+        public void Save()
+        {
+            var isResolved = IsResolved;
+            var treeError = TreeError;
+            if (treeError == null) { return; }
+            var treeID = treeError.TreeID;
+            var treeAuditRuleID = treeError.TreeAuditRuleID;
+            var remarks = Resolution;
+            var sig = Initials;
+
+            if (isResolved == true)
+            {
+                if (remarks == null)
+                {
+                    DialogService.ShowMessageAsync("Remarks required");
+                    return;
+                }
+                if (sig == null)
+                {
+                    DialogService.ShowMessageAsync("Initials required");
+                    return;
+                }
+                Datastore.SetTreeAuditResolution(treeID, treeAuditRuleID, remarks, sig);
+            }
+            else
+            {
+                Datastore.ClearTreeAuditResolution(treeID, treeAuditRuleID);
+            }
         }
     }
 }

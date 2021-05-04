@@ -6,6 +6,7 @@
              Title="Tree Error">
     <ContentPage.Content>
 
+        <StackLayout>
         <Grid>
             <Grid.Resources>
                 
@@ -54,7 +55,7 @@
 
             <Label Grid.Row="2"
                    Grid.Column="0"
-                   Text="Remarks" />
+                   Text="Remarks*" />
 
             <Editor Grid.Row="3"
                     Grid.Column="0"
@@ -74,6 +75,10 @@
                    WidthRequest="100"
                    IsEnabled="{Binding IsResolved}" />
         </Grid>
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Save" Command="{Binding SaveCommand}" />
+            </StackLayout>
+        </StackLayout>
 
     </ContentPage.Content>
 </ContentPage>
