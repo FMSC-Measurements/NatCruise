@@ -3,6 +3,7 @@ using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using Prism.Commands;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
@@ -12,6 +13,7 @@ namespace NatCruise.Design.ViewModels
         private ICommand _addStratumCommand;
         private ICommand _removeStratumCommand;
         private ObservableCollection<Stratum> _strata;
+        private Stratum _selectedStratum;
 
         public StratumListViewModel(IDataserviceProvider dataserviceProvider)
         {
@@ -26,6 +28,12 @@ namespace NatCruise.Design.ViewModels
         {
             get => _strata;
             protected set => SetProperty(ref _strata, value);
+        }
+
+        public Stratum SelectedStratum
+        {
+            get => _selectedStratum;
+            set => SetProperty(ref _selectedStratum, value);
         }
 
         public override void Load()
@@ -47,13 +55,28 @@ namespace NatCruise.Design.ViewModels
 
             StratumDataservice.AddStratum(newStratum);
             Strata.Add(newStratum);
+            SelectedStratum = newStratum;
         }
 
         public void RemoveStratum(Stratum stratum)
         {
-            StratumDataservice.DeleteStratum(stratum);
+            if (stratum is null) { throw new System.ArgumentNullException(nameof(stratum)); }
+            var strata = Strata;
 
-            Strata.Remove(stratum);
+            StratumDataservice.DeleteStratum(stratum);
+            var index = strata.IndexOf(stratum);
+            if (index < 0) { return; }
+            strata.RemoveAt(index);
+
+            if (index <= strata.Count - 1)
+            {
+                var newSelectedStratum = strata[index];
+                SelectedStratum = newSelectedStratum;
+            }
+            else
+            {
+                SelectedStratum = strata.LastOrDefault();
+            }
         }
     }
 }
