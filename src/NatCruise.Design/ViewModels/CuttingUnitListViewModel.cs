@@ -4,6 +4,7 @@ using NatCruise.Design.Models;
 using Prism.Commands;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
@@ -13,6 +14,7 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand<CuttingUnit> _removeCuttingUnitCommand;
         private DelegateCommand<string> _addCuttingUnitCommand;
         private ObservableCollection<CuttingUnit> _cuttingUnits;
+        private CuttingUnit _selectedUnit;
 
         public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider)
         {
@@ -28,6 +30,12 @@ namespace NatCruise.Design.ViewModels
         {
             get => _cuttingUnits;
             protected set => SetProperty(ref _cuttingUnits, value);
+        }
+
+        public CuttingUnit SelectedUnit
+        {
+            get => _selectedUnit;
+            set => SetProperty(ref _selectedUnit, value);
         }
 
         public ICommand AddCuttingUnitCommand => _addCuttingUnitCommand ?? (_addCuttingUnitCommand = new DelegateCommand<string>(AddCuttingUnit));
@@ -52,14 +60,28 @@ namespace NatCruise.Design.ViewModels
 
             UnitDataservice.AddCuttingUnit(newUnit);
             CuttingUnits.Add(newUnit);
+            SelectedUnit = newUnit;
         }
 
         public void RemoveCuttingUnit(CuttingUnit unit)
         {
             if (unit == null) { return; }
+            var cuttingUnits = CuttingUnits;
 
             UnitDataservice.DeleteCuttingUnit(unit);
-            CuttingUnits.Remove(unit);
+            var index = cuttingUnits.IndexOf(unit);
+            cuttingUnits.Remove(unit);
+
+            if (index < 0) { return; }
+            if (index <= cuttingUnits.Count - 1)
+            {
+                var newSelectedUnit = cuttingUnits[index];
+                SelectedUnit = newSelectedUnit;
+            }
+            else
+            {
+                SelectedUnit = cuttingUnits.LastOrDefault();
+            }
         }
     }
 }
