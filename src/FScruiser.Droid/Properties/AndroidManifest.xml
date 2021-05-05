@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" android:versionName="0.25" package="com.FMSC.FScruiser" android:versionCode="25">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" android:versionName="0.26" package="com.FMSC.FScruiser" android:versionCode="26">
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<application android:label="FScruiser" android:theme="@style/MyTheme.Splash"></application>
-	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29" />
+	<uses-sdk android:minSdkVersion="22" android:targetSdkVersion="29" />
 </manifest>
