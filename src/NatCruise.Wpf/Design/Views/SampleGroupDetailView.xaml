@@ -50,7 +50,7 @@
             </ResourceDictionary>
         </WrapPanel.Resources>
 
-        <Grid>
+        <Grid Margin="5">
             <Grid.Resources>
                 <ResourceDictionary>
 
@@ -92,7 +92,7 @@
                       Grid.Row="2"
                       Grid.Column="1"
                       ToolTip="Primary Product"
-                      ItemsSource="{Binding ProductOptions}"
+                      ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
                       SelectedValuePath="ProductCode"
                       SelectedValue="{Binding SampleGroup.PrimaryProduct}"/>
             <Label Content="Secondary Product"
@@ -102,18 +102,18 @@
                       Grid.Row="3"
                       Grid.Column="1"
                       ToolTip="Secondary Product"
-                      ItemsSource="{Binding ProductOptions}"
+                      ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
                       SelectedValuePath="ProductCode"
-                      SelectedValue="{Binding SampleGroup.SecondaryProduct}"/>
+                      SelectedValue="{Binding SampleGroup.SecondaryProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}"/>
             <Label Content="Biomas Product"
                    Grid.Row="4" />
             <ComboBox HorizontalAlignment="Left"
                       Grid.Row="4"
                       Grid.Column="1"
                       ToolTip="Biomas Product"
-                      ItemsSource="{Binding ProductOptions}"
+                      ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
                       SelectedValuePath="ProductCode"
-                      SelectedValue="{Binding SampleGroup.BiomassProduct}"/>
+                      SelectedValue="{Binding SampleGroup.BiomassProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}"/>
             <Label Content="Live/Dead Default"
                    Grid.Row="5"
                    Grid.RowSpan="2" />
@@ -143,7 +143,8 @@
         </Grid>
 
         <GroupBox Header="Sampleing Frequency Options"
-                  Visibility="{Binding IsFrequencyBased, Converter={StaticResource isVisableConverter}, FallbackValue=Visible}">
+                  Visibility="{Binding IsFrequencyBased, Converter={StaticResource isVisableConverter}, FallbackValue=Visible}"
+                  Margin="5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -168,7 +169,8 @@
         </GroupBox>
 
         <GroupBox Header="3P/F3P/P3P Options"
-                  Visibility="{Binding Is3P, Converter={StaticResource isVisableConverter}, FallbackValue=Visible}">
+                  Visibility="{Binding Is3P, Converter={StaticResource isVisableConverter}, FallbackValue=Visible}"
+                  Margin="5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -206,7 +208,8 @@
         </GroupBox>
 
         <GroupBox Header="Variable Radius"
-                  Visibility="{Binding IsVariableRadious, Converter={StaticResource isVisableConverter}, FallbackValue=Visible}">
+                  Visibility="{Binding IsVariableRadious, Converter={StaticResource isVisableConverter}, FallbackValue=Visible}"
+                  Margin="5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
