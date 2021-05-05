@@ -53,9 +53,9 @@
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
     <MandroidI18n />
     <AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
-    <AndroidLinkTool>r8</AndroidLinkTool>
     <AndroidDexTool>d8</AndroidDexTool>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <AndroidUseAapt2>true</AndroidUseAapt2>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Profile|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
