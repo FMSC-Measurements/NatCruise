@@ -12,11 +12,10 @@ namespace NatCruise.Design.ViewModels
     {
         protected readonly string[] Frequency_Based_CruiseMethods = new[] {CruiseMethods.STR, CruiseMethods.PCM, CruiseMethods.FCM, CruiseMethods.S3P, };
         protected readonly string[] SampleSelector_Type_Options = new[] { CruiseMethods.BLOCK_SAMPLER_TYPE, CruiseMethods.SYSTEMATIC_SAMPLER_TYPE, };
-        protected readonly string[] Supports_SamplerType_Selection = new[] { CruiseMethods.STR, CruiseMethods.PCM, CruiseMethods.FCM, }; 
+        protected readonly string[] Supports_SamplerType_Selection = new[] { CruiseMethods.STR, }; 
 
         private SampleGroup _sampleGroup;
         private string _method;
-        private IEnumerable<string> _sampleSelectorTypeOptions;
         private IEnumerable<Product> _productOptions;
 
         public SampleGroupDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo)
