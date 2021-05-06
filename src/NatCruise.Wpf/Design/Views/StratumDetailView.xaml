@@ -13,18 +13,6 @@
              IsEnabled="{Binding Stratum, Converter={StaticResource NotNullConverter}}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style TargetType="GroupBox"
-                   BasedOn="{StaticResource {x:Type GroupBox}}">
-                <!--<Setter Property="FontSize"
-                        Value="10" />-->
-
-                <!--<Setter Property="Margin"
-                        Value="10" />-->
-
-                <Setter Property="VerticalAlignment"
-                        Value="Top" />
-            </Style>
-
             <Style TargetType="TextBox"
                    BasedOn="{StaticResource {x:Type TextBox}}">
                 <Setter Property="Margin"
@@ -54,7 +42,7 @@
     <WrapPanel Margin="50, 32"
                Background="{StaticResource brush_background}">
 
-        <Grid>
+        <Grid Margin="5">
 
             <Grid.Resources>
                 <ResourceDictionary>
@@ -119,7 +107,8 @@
 
         <GroupBox Header="Plot Options"
                   Visibility="{Binding IsPlot, Converter={StaticResource IsVisableConverter}}"
-                  FontSize="12">
+                  Margin="5"
+                  VerticalAlignment="Top">
             <Grid>
                 <Grid.Resources>
                     <ResourceDictionary>
