@@ -77,7 +77,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -107,17 +106,9 @@
                       SelectedValuePath="Method"
                       ItemsSource="{Binding Methods}" />
 
+            <Label Grid.Row="5">Yield Component</Label>
 
-            <Label Grid.Row="5">FBS Code</Label>
-
-            <TextBox Grid.Row="5"
-                     Grid.Column="1"
-                     ToolTip="FBS Code"
-                     Text="{Binding Stratum.FBSCode}" />
-
-            <Label Grid.Row="6">Yield Component</Label>
-
-            <ComboBox Grid.Row="6"
+            <ComboBox Grid.Row="5"
                      Grid.Column="1"
                      ToolTip="Yield Component"
                      ItemsSource="{Binding YieldComponentOptions}"
