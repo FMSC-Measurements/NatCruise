@@ -117,10 +117,11 @@
 
             <Label Grid.Row="6">Yield Component</Label>
 
-            <TextBox Grid.Row="6"
+            <ComboBox Grid.Row="6"
                      Grid.Column="1"
                      ToolTip="Yield Component"
-                     Text="{Binding Stratum.YieldComponent}" />
+                     ItemsSource="{Binding YieldComponentOptions}"
+                     SelectedItem="{Binding Stratum.YieldComponent, FallbackValue='CL'}" />
 
         </Grid>
 

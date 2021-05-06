@@ -51,6 +51,7 @@ namespace NatCruise.Design.ViewModels
             var newStratum = new Stratum
             {
                 StratumCode = code,
+                YieldComponent = "CL",
             };
 
             StratumDataservice.AddStratum(newStratum);
