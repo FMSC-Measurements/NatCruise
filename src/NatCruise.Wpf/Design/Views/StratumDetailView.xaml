@@ -13,12 +13,13 @@
              IsEnabled="{Binding Stratum, Converter={StaticResource NotNullConverter}}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style TargetType="GroupBox">
-                <Setter Property="FontSize"
-                        Value="10" />
+            <Style TargetType="GroupBox"
+                   BasedOn="{StaticResource {x:Type GroupBox}}">
+                <!--<Setter Property="FontSize"
+                        Value="10" />-->
 
-                <Setter Property="Margin"
-                        Value="10" />
+                <!--<Setter Property="Margin"
+                        Value="10" />-->
 
                 <Setter Property="VerticalAlignment"
                         Value="Top" />
@@ -116,7 +117,7 @@
 
         </Grid>
 
-        <GroupBox Header="Plot"
+        <GroupBox Header="Plot Options"
                   Visibility="{Binding IsPlot, Converter={StaticResource IsVisableConverter}}"
                   FontSize="12">
             <Grid>
@@ -142,6 +143,7 @@
                 </Grid.Resources>
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -181,14 +183,16 @@
                          ToolTip="KZ (3PPNT)"
                          Text="{Binding Stratum.KZ3PPNT}"
                          Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"/>
+
+                <Label Grid.Column="0" Grid.Row="3" Content="FIXCNT Field"
+                       Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
+                    <ComboBox Grid.Column="1" Grid.Row="3" Width="100"
+                          ItemsSource="{Binding TreeFieldOptions}"
+                          SelectedValue="{Binding Stratum.FixCNTField}"
+                          SelectedValuePath="Field"
+                          Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
             </Grid>
         </GroupBox>
-        <StackPanel Width="200"
-                    Height="36"
-                    Orientation="Horizontal"
-                    Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}">
-            <Label Content="FIXCNT Field" />
-            <ComboBox Width="100" ItemsSource="{Binding TreeFieldOptions}" SelectedValue="{Binding Stratum.FixCNTField}" SelectedValuePath="Field" />
-        </StackPanel>
+
     </WrapPanel>
 </UserControl>

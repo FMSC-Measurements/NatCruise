@@ -12,6 +12,7 @@ namespace NatCruise.Design.ViewModels
     public class StratumDetailViewModel : ViewModelBase
     {
         public readonly string[] YealdComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
+        public readonly string[] Fixed_Size_Plot_Methods = new string[] { CruiseMethods.FIX, CruiseMethods.FCM, CruiseMethods.F3P, CruiseMethods.FIXCNT };
 
         private Stratum _stratum;
         private IEnumerable<CruiseMethod> _methods;
@@ -82,18 +83,11 @@ namespace NatCruise.Design.ViewModels
 
         public IEnumerable<string> YieldComponentOptions => YealdComponent_Options;
 
-        public bool IsPlot => CruiseMethods.PLOT_METHODS.Contains(Stratum?.Method);
+        public bool IsPlot => CruiseMethods.PLOT_METHODS.Contains(Stratum?.Method) || Stratum?.Method == CruiseMethods.FIXCNT;
 
         public bool IsVariableRariousePlot => CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(Stratum?.Method);
 
-        public bool IsFixedSizePlot
-        {
-            get
-            {
-                var method = Stratum?.Method;
-                return method == CruiseMethods.FIX || method == CruiseMethods.FCM || method == CruiseMethods.F3P;
-            }
-        }
+        public bool IsFixedSizePlot => Fixed_Size_Plot_Methods.Contains(Stratum?.Method);
 
         public bool Is3PPNT => Stratum?.Method == CruiseMethods.THREEPPNT;
 
