@@ -11,6 +11,8 @@ namespace NatCruise.Design.ViewModels
 {
     public class StratumDetailViewModel : ViewModelBase
     {
+        public readonly string[] YealdComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
+
         private Stratum _stratum;
         private IEnumerable<CruiseMethod> _methods;
         private IEnumerable<TreeField> _treefieldOptions;
@@ -77,6 +79,8 @@ namespace NatCruise.Design.ViewModels
             get => _treefieldOptions;
             protected set => SetProperty(ref _treefieldOptions, value);
         }
+
+        public IEnumerable<string> YieldComponentOptions => YealdComponent_Options;
 
         public bool IsPlot => CruiseMethods.PLOT_METHODS.Contains(Stratum?.Method);
 
