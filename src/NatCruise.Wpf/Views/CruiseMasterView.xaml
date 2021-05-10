@@ -53,6 +53,8 @@
             <Button x:Name="_auditRuleButton"
                     Content="Audit Rule"
                     Click="_auditRuleButton_Click" />
+            <Button Content="Tree Default Values"
+                    Click="_tdv_Click" />
         </StackPanel>
 
         <ContentControl x:Name="_cruiseContentPanel"
