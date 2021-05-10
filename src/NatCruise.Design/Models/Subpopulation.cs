@@ -7,6 +7,9 @@ namespace NatCruise.Design.Models
     public class Subpopulation : BindableBase
     {
         private string _liveDead;
+        private int _interval;
+        private int _min;
+        private int _max;
 
         [PrimaryKeyField("Subpopulation_CN")]
         public int Subpopulation_CN { get; set; }
@@ -29,5 +32,36 @@ namespace NatCruise.Design.Models
             get => _liveDead;
             set => SetProperty(ref _liveDead, value);
         }
+
+        public int IntervalSize
+        {
+            get => _interval;
+            set
+            {
+                if (value < 0) { return; }
+                SetProperty(ref _interval, value);
+            }
+        }
+
+        public int Min
+        {
+            get => _min;
+            set
+            {
+                if(value < 0) { return; }
+                SetProperty(ref _min, value);
+            }
+        }
+
+        public int Max
+        {
+            get => _max;
+            set
+            {
+                if (value < 0) { return; }
+                SetProperty(ref _max, value);
+            }
+        }
+
     }
 }

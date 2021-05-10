@@ -1,12 +1,12 @@
-﻿using NatCruise.Data;
-using NatCruise.Services;
+﻿using CruiseDAL.Schema;
+using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Services;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace NatCruise.Design.ViewModels
 {
@@ -17,6 +17,7 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand<Subpopulation> _removeSubpopulationCommand;
         private ObservableCollection<Subpopulation> _subPopulations;
         private IEnumerable<string> _speciesOptions;
+        private bool _isFixCNT;
 
         public SubpopulationListViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
         {
@@ -51,6 +52,8 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
+        public bool IsFixCNT => SampleGroup?.CruiseMethod == CruiseMethods.FIXCNT;
+
         public ObservableCollection<Subpopulation> Subpopulations
         {
             get => _subPopulations;
@@ -73,7 +76,7 @@ namespace NatCruise.Design.ViewModels
             if (oldSubPopulations == null) { return; }
 
             foreach (var sp in oldSubPopulations)
-            { sp.PropertyChanged -= Sp_PropertyChanged; }
+            { sp.PropertyChanged += Sp_PropertyChanged; }
         }
 
         private void OnSubpopulationsChanging(ObservableCollection<Subpopulation> subPopulations)
@@ -81,7 +84,7 @@ namespace NatCruise.Design.ViewModels
             if (subPopulations == null) { return; }
 
             foreach (var sp in subPopulations)
-            { sp.PropertyChanged += Sp_PropertyChanged; }
+            { sp.PropertyChanged -= Sp_PropertyChanged; }
         }
 
         private void Sp_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -99,8 +102,20 @@ namespace NatCruise.Design.ViewModels
                 }
                 else
                 {
-                    UpdateSubpopulation(subpopulation);
+                    if (SubpopulationDataservice.Exists(subpopulation.StratumCode, subpopulation.SampleGroupCode, subpopulation.SpeciesCode, liveDead))
+                    {
+                        DialogService.ShowNotification($"Subpopulation already exists");
+                        //NotificationRequest.Raise(new Notification { Content = $"Subpopulation: {species} already exists", Title = "!" });
+                        return;
+                    }
+                    SubpopulationDataservice.UpdateSubpopulation(subpopulation);
                 }
+            }
+            if (propertyName == nameof(Subpopulation.IntervalSize)
+                || propertyName == nameof(Subpopulation.Min)
+                || propertyName == nameof(Subpopulation.Max))
+            {
+                SubpopulationDataservice.UpsertFixCNTTallyPopulation(subpopulation);
             }
         }
 
@@ -123,11 +138,11 @@ namespace NatCruise.Design.ViewModels
             }
             else
             {
-
                 var subpopulations = SubpopulationDataservice.GetSubpopulations(value.StratumCode, value.SampleGroupCode);
                 Subpopulations = new ObservableCollection<Subpopulation>(subpopulations);
             }
 
+            RaisePropertyChanged(nameof(IsFixCNT));
             RefreshSpeciesOptions();
         }
 
@@ -141,7 +156,7 @@ namespace NatCruise.Design.ViewModels
         public void AddSubpopulation(string species)
         {
             var sampleGroup = SampleGroup;
-            var liveDead = sampleGroup.DefaultLiveDead;
+            var liveDead = sampleGroup.DefaultLiveDead ?? "L";
             if (SubpopulationDataservice.Exists(sampleGroup.StratumCode, sampleGroup.SampleGroupCode, species, liveDead))
             {
                 liveDead = (liveDead.Equals("L", StringComparison.InvariantCultureIgnoreCase)) ? "D" : "L";
@@ -157,7 +172,7 @@ namespace NatCruise.Design.ViewModels
             {
                 StratumCode = SampleGroup.StratumCode,
                 SampleGroupCode = SampleGroup.SampleGroupCode,
-                LiveDead = SampleGroup.DefaultLiveDead ?? "L",
+                LiveDead = liveDead,
                 SpeciesCode = species,
             };
 

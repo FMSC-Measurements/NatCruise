@@ -59,17 +59,31 @@ INSERT INTO Subpopulation (
         public bool Exists(string stratumCode, string sampleGroupCode, string species, string livedead)
         {
             return Database.ExecuteScalar<int>(
-                "SELECT count(*) FROM Subpopulation " +
-                "WHERE StratumCode = @p1 AND SampleGroupCode = @p2 " +
-                "AND ifNull(SpeciesCode, '') = ifNull(@p3, '') " +
-                "AND ifNull(LiveDead, '') = ifNull(@p4, '')" +
-                "AND CruiseID = @p5;",
+@"SELECT count(*) FROM Subpopulation
+WHERE StratumCode = @p1
+AND SampleGroupCode = @p2
+AND ifNull(SpeciesCode, '') = ifNull(@p3, '')
+AND ifNull(LiveDead, '') = ifNull(@p4, '')
+AND CruiseID = @p5;",
                 stratumCode, sampleGroupCode, species, livedead, CruiseID) > 0;
         }
 
         public IEnumerable<Subpopulation> GetSubpopulations(string stratumCode, string sampleGroupCode)
         {
-            return Database.Query<Subpopulation>("SELECT sp.* FROM SubPopulation AS sp WHERE StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID = @p3;",
+            return Database.Query<Subpopulation>(
+@"SELECT
+    sp.SubPopulationID,
+    sp.CruiseID,
+    sp.StratumCode,
+    sp.SampleGroupCode,
+    sp.SpeciesCode,
+    sp.LiveDead,
+    fctp.IntervalSize,
+    fctp.Min,
+    fctp.Max
+FROM SubPopulation AS sp
+LEFT JOIN FixCNTTallyPopulation AS fctp USING (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
+WHERE StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID = @p3;",
                 stratumCode, sampleGroupCode, CruiseID);
         }
 
@@ -85,6 +99,55 @@ INSERT INTO Subpopulation (
 @"UPDATE Subpopulation SET
     LiveDead =  @LiveDead
 WHERE SubpopulationID = @SubpopulationID;", subpopulation);
+        }
+
+        public void UpsertFixCNTTallyPopulation(Subpopulation subpopulation)
+        {
+            Database.Execute2(
+@"INSERT INTO FixCNTTallyPopulation (
+    CruiseID,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    IntervalSize,
+    Min,
+    Max,
+    CreatedBy
+) VALUES (
+    @CruiseID,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    @IntervalSize,
+    @Min,
+    @Max,
+    @DeviceID
+)
+ON CONFLICT (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) DO
+UPDATE SET
+    IntervalSize = @IntervalSize,
+    Min = @Min,
+    Max = @Max,
+    ModifiedBy = @DeviceID
+WHERE CruiseID = @CruiseID
+    AND StratumCode = @StratumCode
+    AND SampleGroupCode = @SampleGroupCode
+    AND SpeciesCode = @SpeciesCode
+    AND LiveDead = @LiveDead;", new
+{
+    CruiseID,
+    subpopulation.StratumCode,
+    subpopulation.SampleGroupCode,
+    subpopulation.SpeciesCode,
+    subpopulation.LiveDead,
+    subpopulation.IntervalSize,
+    subpopulation.Min,
+    subpopulation.Max,
+    DeviceID,
+});
+
         }
     }
 }
