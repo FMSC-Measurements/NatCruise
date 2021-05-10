@@ -77,21 +77,21 @@
                    Grid.Column="0">Code*</Label>
             <TextBox Grid.Row="0"
                      Grid.Column="1"
-                     Text="{Binding Stratum.StratumCode}" />
+                     Text="{Binding StratumCode}" />
 
             <Label Grid.Row="1">Description</Label>
 
             <TextBox Grid.Row="1"
                      Grid.Column="1"
                      Width="100"
-                     Text="{Binding Stratum.Description}" />
+                     Text="{Binding Description}" />
 
             <Label Grid.Row="2"
                    Grid.Column="0">Method*</Label>
 
             <ComboBox Grid.Row="2"
                       Grid.Column="1"
-                      SelectedValue="{Binding Stratum.Method}"
+                      SelectedValue="{Binding Method}"
                       SelectedValuePath="Method"
                       ItemsSource="{Binding Methods}" />
 
@@ -101,7 +101,7 @@
                      Grid.Column="1"
                      ToolTip="Yield Component"
                      ItemsSource="{Binding YieldComponentOptions}"
-                     SelectedItem="{Binding Stratum.YieldComponent, FallbackValue='CL'}" />
+                     SelectedItem="{Binding YieldComponent, FallbackValue='CL'}" />
 
         </Grid>
 
@@ -151,7 +151,7 @@
                          Grid.Column="1"
                          ToolTip="Basal Area Factor"
                          Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
-                         Text="{Binding Stratum.BasalAreaFactor}" />
+                         Text="{Binding BasalAreaFactor}" />
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
@@ -160,7 +160,7 @@
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          ToolTip="Fixed Plot Size"
-                         Text="{Binding Stratum.FixedPlotSize}"
+                         Text="{Binding FixedPlotSize}"
                          Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"/>
 
                 <Label Grid.Row="2"
@@ -170,14 +170,14 @@
                 <TextBox Grid.Row="2"
                          Grid.Column="1"
                          ToolTip="KZ (3PPNT)"
-                         Text="{Binding Stratum.KZ3PPNT}"
+                         Text="{Binding KZ3PPNT}"
                          Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"/>
 
                 <Label Grid.Column="0" Grid.Row="3" Content="FIXCNT Field"
                        Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
                     <ComboBox Grid.Column="1" Grid.Row="3" Width="100"
                           ItemsSource="{Binding TreeFieldOptions}"
-                          SelectedValue="{Binding Stratum.FixCNTField}"
+                          SelectedValue="{Binding FixCNTField}"
                           SelectedValuePath="Field"
                           Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
             </Grid>

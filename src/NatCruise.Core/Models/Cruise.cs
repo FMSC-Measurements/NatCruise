@@ -9,6 +9,7 @@ namespace NatCruise.Models
         private string _remarks;
         private string _cruiseNumber;
         private bool? _useCrossStrataPlotTreeNumbering;
+        private string _defaultUOM;
 
         [PrimaryKeyField]
         public string Cruise_CN { get; set; }
@@ -41,6 +42,12 @@ namespace NatCruise.Models
         {
             get => _useCrossStrataPlotTreeNumbering;
             set => SetProperty(ref _useCrossStrataPlotTreeNumbering, value);
+        }
+
+        public string DefaultUOM
+        {
+            get => _defaultUOM;
+            set => SetProperty(ref _defaultUOM, value);
         }
 
         [Field(SQLExpression = "s.Name", Alias = "SaleName")]

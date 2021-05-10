@@ -2,6 +2,7 @@
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Design.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace NatCruise.Design.ViewModels
 {
-    public class StratumDetailViewModel : ViewModelBase
+    public class StratumDetailViewModel : ValidationViewModelBase
     {
         public readonly string[] YealdComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
         public readonly string[] Fixed_Size_Plot_Methods = new string[] { CruiseMethods.FIX, CruiseMethods.FCM, CruiseMethods.F3P, CruiseMethods.FIXCNT };
@@ -18,7 +19,8 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<CruiseMethod> _methods;
         private IEnumerable<TreeField> _treefieldOptions;
 
-        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupDataservice)
+        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupDataservice, StratumValidator validator)
+            : base(validator)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
 
@@ -49,22 +51,106 @@ namespace NatCruise.Design.ViewModels
             get => _stratum;
             set
             {
-                if (_stratum != null) { _stratum.PropertyChanged -= Stratum_PropertyChanged; }
                 _stratum = value;
-                OnStratumChanged(value);
+                if (value != null)
+                {
+                    var stratumCode = value.StratumCode;
+                    CuttingUnits = StratumDataservice.GetCuttingUnitCodesByStratum(stratumCode);
+                }
                 RaisePropertyChanged();
+                RaisePropertyChanged(nameof(StratumCode));
+                RaisePropertyChanged(nameof(Description));
+                RaisePropertyChanged(nameof(Method));
+                RaisePropertyChanged(nameof(BasalAreaFactor));
+                RaisePropertyChanged(nameof(FixedPlotSize));
+                RaisePropertyChanged(nameof(KZ3PPNT));
+                RaisePropertyChanged(nameof(SamplingFrequency));
+                //RaisePropertyChanged(nameof(HotKey));
+                //RaisePropertyChanged(nameof(FBSCode));
+                RaisePropertyChanged(nameof(YieldComponent));
+                RaisePropertyChanged(nameof(FixCNTField));
+
+                NotifyCruiseMethodChanged();
             }
         }
 
-        private void OnStratumChanged(Stratum stratum)
+        protected void NotifyCruiseMethodChanged()
         {
-            NotifyCruiseMethodChanged();
-            if (stratum != null)
+            RaisePropertyChanged(nameof(IsPlot));
+            RaisePropertyChanged(nameof(IsFixedSizePlot));
+            RaisePropertyChanged(nameof(IsVariableRariousePlot));
+            RaisePropertyChanged(nameof(Is3PPNT));
+            RaisePropertyChanged(nameof(IsFixCNT));
+        }
+
+        public string StratumCode
+        {
+            get => Stratum?.StratumCode;
+            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.StratumCode = x, st => StratumDataservice.UpdateStratum(st));
+        }
+
+        public string Description
+        {
+            get => Stratum?.Description;
+            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.Description = x, st => StratumDataservice.UpdateStratum(st));
+        }
+
+        public string Method
+        {
+            get => Stratum?.Method;
+            set
             {
-                var stratumCode = Stratum.StratumCode;
-                CuttingUnits = StratumDataservice.GetCuttingUnitCodesByStratum(stratumCode);
-                stratum.PropertyChanged += Stratum_PropertyChanged;
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.Method = x, st => StratumDataservice.UpdateStratum(st));
+                NotifyCruiseMethodChanged();
             }
+        }
+
+        public double BasalAreaFactor
+        {
+            get => Stratum?.BasalAreaFactor ?? default(double);
+            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.BasalAreaFactor = x, st => StratumDataservice.UpdateStratum(st));
+        }
+
+        public double FixedPlotSize
+        {
+            get => Stratum?.FixedPlotSize ?? default(double);
+            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.FixedPlotSize = x, st => StratumDataservice.UpdateStratum(st));
+        }
+
+        public int KZ3PPNT
+        {
+            get => Stratum?.KZ3PPNT ?? default(int);
+            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.KZ3PPNT = x, st => StratumDataservice.UpdateStratum(st));
+        }
+
+        public int SamplingFrequency
+        {
+            get => Stratum?.SamplingFrequency ?? default(int);
+            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.SamplingFrequency = x, st => StratumDataservice.UpdateStratum(st));
+        }
+
+        //public string HotKey
+        //{
+        //    get => Stratum?.HotKey;
+        //    set => SetPropertyAndValidate(Stratum, value, (st, x) => st.HotKey = x, st => StratumDataservice.UpdateStratum(st));
+        //}
+
+        //public string FBSCode
+        //{
+        //    get => Stratum?.FBSCode;
+        //    set => SetPropertyAndValidate(Stratum, value, (st, x) => st.FBSCode = x, st => StratumDataservice.UpdateStratum(st));
+        //}
+
+        public string YieldComponent
+        {
+            get => Stratum?.YieldComponent;
+            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.YieldComponent = x, st => StratumDataservice.UpdateStratum(st));
+        }
+
+        public string FixCNTField
+        {
+            get => Stratum?.FixCNTField;
+            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.FixCNTField = x, st => StratumDataservice.UpdateStratum(st));
         }
 
         public IEnumerable<string> CuttingUnits { get; set; }
@@ -92,27 +178,5 @@ namespace NatCruise.Design.ViewModels
         public bool Is3PPNT => Stratum?.Method == CruiseMethods.THREEPPNT;
 
         public bool IsFixCNT => Stratum?.Method == CruiseMethods.FIXCNT;
-
-        protected void NotifyCruiseMethodChanged()
-        {
-            RaisePropertyChanged(nameof(IsPlot));
-            RaisePropertyChanged(nameof(IsFixedSizePlot));
-            RaisePropertyChanged(nameof(IsVariableRariousePlot));
-            RaisePropertyChanged(nameof(Is3PPNT));
-            RaisePropertyChanged(nameof(IsFixCNT));
-        }
-
-        private void Stratum_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var stratum = Stratum;
-
-            if (stratum == null) { return; }
-            StratumDataservice.UpdateStratum(stratum);
-
-            if (e.PropertyName == nameof(Stratum.Method))
-            {
-                NotifyCruiseMethodChanged();
-            }
-        }
     }
 }
