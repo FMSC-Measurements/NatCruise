@@ -139,5 +139,8 @@ namespace NatCruise.Design.Models
             get => _smallFPS;
             set => SetProperty(ref _smallFPS, value);
         }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public string CruiseMethod { get; set; }
     }
 }

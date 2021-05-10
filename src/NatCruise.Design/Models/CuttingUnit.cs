@@ -27,7 +27,11 @@ namespace NatCruise.Design.Models
         public double Area
         {
             get => _area;
-            set => SetProperty(ref _area, value);
+            set
+            {
+                if(value < 0) { return; }
+                SetProperty(ref _area, value);
+            }
         }
 
         public string Description

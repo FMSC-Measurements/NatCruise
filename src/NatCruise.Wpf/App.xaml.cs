@@ -6,6 +6,7 @@ using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Services;
+using NatCruise.Design.Validation;
 using NatCruise.Design.Views;
 using NatCruise.Services;
 using NatCruise.Wpf.Navigation;
@@ -114,6 +115,14 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterForNavigation<CruiseMasterView>();
             containerRegistry.RegisterForNavigation<CuttingUnitListView>();
             containerRegistry.RegisterForNavigation<CuttingUnitDetailView>();
+
+
+            // register validators
+            containerRegistry.Register<CruiseValidator>();
+            containerRegistry.Register<CuttingUnitValidator>();
+            containerRegistry.Register<SaleValidator>();
+            containerRegistry.Register<SampleGroupValidator>();
+            containerRegistry.Register<StratumValidator>();
         }
 
         protected override void ConfigureViewModelLocator()

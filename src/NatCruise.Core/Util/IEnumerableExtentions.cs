@@ -41,6 +41,32 @@ namespace NatCruise.Util
             return e == null || e.Any() == false;
         }
 
+        public static Dictionary<TKey,IEnumerable<TValue>> ToCollectionDictionary<TKey, TValue>(this IEnumerable<TValue> @this, Func<TValue, TKey> keySelector)
+        {
+            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+            if (keySelector is null) { throw new ArgumentNullException(nameof(keySelector)); }
+
+            var dict = new Dictionary<TKey, IEnumerable<TValue>>();
+
+            foreach(var i in @this)
+            {
+                var key = keySelector(i);
+
+                if(dict.ContainsKey(key) == false)
+                {
+                    var list = new List<TValue>();
+                    list.Add(i);
+                    dict.Add(key, list);
+                }
+                else
+                {
+                    var list = (List<TValue>)dict[key];
+                    list.Add(i);
+                }
+            }
+            return dict;
+        }
+
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> @this)
         {
             if (@this is ObservableCollection<T> c) { return c; }
