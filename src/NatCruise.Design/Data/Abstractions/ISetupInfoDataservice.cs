@@ -20,5 +20,7 @@ namespace NatCruise.Design.Data
         IEnumerable<Product> GetProducts();
 
         IEnumerable<CruiseMethod> GetCruiseMethods();
+
+        IEnumerable<LoggingMethod> GetLoggingMethods();
     }
 }
