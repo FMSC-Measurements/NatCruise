@@ -13,66 +13,86 @@
              Background="White">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="18*" />
-            <RowDefinition Height="7*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <DataGrid x:Name="_selectorDataGrid" SelectionMode="Single"
+
+        <Expander Header="Add Population to Audit Rule "
+                  IsExpanded="True"
+                  Grid.Row="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="157*" />
+                    <ColumnDefinition Width="143*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15*" />
+                    <RowDefinition Height="16*" />
+                    <RowDefinition Height="32*" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="0"
+                            Grid.Column="0">
+                    <Label Content="Species" />
+                    <ComboBox ItemsSource="{Binding SpeciesOptions, Converter={StaticResource PrependAnyConverter}}"
+                              SelectedItem="{Binding NewRuleSelector.SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="0"
+                            Grid.Column="1">
+                    <Label Content="Live/Dead" />
+                    <ComboBox ItemsSource="{Binding LiveDeadOptions, Converter={StaticResource PrependAnyConverter}}"
+                              SelectedValue="{Binding NewRuleSelector.LiveDead, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="1"
+                            Grid.Column="0">
+                    <Label Content="Product" />
+                    <ComboBox ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependAnyConverter}}"
+                              SelectedValuePath="ProductCode"
+                              SelectedValue="{Binding NewRuleSelector.Product, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                </StackPanel>
+
+
+                <StackPanel  Grid.Row="1"
+                             Grid.Column="1"
+                             Orientation="Horizontal">
+                    <Button Content="Add"
+                            Command="{Binding AddNewRuleSelectorCommand}"
+                            VerticalAlignment="Center" />
+
+                </StackPanel>
+            </Grid>
+        </Expander>
+
+        <DataGrid x:Name="_selectorDataGrid"
+                  Grid.Row="1"
+                  SelectionMode="Single"
                   ItemsSource="{Binding Selectors}"
-                  AutoGenerateColumns="False">
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Species"
-                                    Binding="{Binding SpeciesCode}"
+                                    Binding="{Binding SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}"
                                     IsReadOnly="True" />
                 <DataGridTextColumn Header="LiveDead"
-                                    Binding="{Binding LiveDead}"
+                                    Binding="{Binding LiveDead, Converter={StaticResource ReplaceAnyWithNullConverter}}"
                                     IsReadOnly="True" />
                 <DataGridTextColumn Header="Product"
-                                    Binding="{Binding PrimaryProduct}"
+                                    Binding="{Binding PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}"
                                     IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="157*" />
-                <ColumnDefinition Width="143*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="15*" />
-                <RowDefinition Height="16*" />
-                <RowDefinition Height="32*" />
-            </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal"
-                        Grid.Row="0"
-                        Grid.Column="0">
-                <Label Content="Species" />
-                <ComboBox ItemsSource="{Binding SpeciesOptions}"
-                          SelectedItem="{Binding NewRuleSelector.Species}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"
-                        Grid.Row="0"
-                        Grid.Column="1">
-                <Label Content="Live/Dead" />
-                <ComboBox ItemsSource="{Binding LiveDeadOptions}"
-                          SelectedValue="{Binding NewRuleSelector.LiveDead}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"
-                        Grid.Row="1"
-                        Grid.Column="0">
-                <Label Content="Product" />
-                <ComboBox ItemsSource="{Binding ProductOptions}"
-                          SelectedValue="{Binding NewRuleSelector.Product}" />
-            </StackPanel>
+        
 
-            <StackPanel Grid.Row="1"
-                        Grid.Column="1"
-                        Orientation="Horizontal">
-                <Button Content="+"
-                        Command="{Binding AddNewRuleSelectorCommand}" />
-                <Button Content="-"
-                        Command="{Binding DeleteRuleSelectorCommand}"
-                        CommandParameter="{Binding SelectedItem, ElementName=_selectorDataGrid}"/>
-            </StackPanel>
-        </Grid>
+        <Button Grid.Row="2"
+                Content="Delete"
+                Command="{Binding DeleteRuleSelectorCommand}"
+                CommandParameter="{Binding SelectedItem, ElementName=_selectorDataGrid}"
+                IsEnabled="{Binding SelectedItem, ElementName=_selectorDataGrid, Converter={StaticResource NotNullConverter}}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right" />
 
     </Grid>
 </UserControl>
