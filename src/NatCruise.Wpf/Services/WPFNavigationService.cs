@@ -78,11 +78,17 @@ namespace NatCruise.Wpf.Services
             return Task.CompletedTask;
         }
 
-        
         public Task ShowAuditRules()
         {
             RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(TreeAuditRuleListView));
             return Task.CompletedTask;
         }
+
+        public Task ShowTreeDefaultValues()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(TreeDefaultValueListView));
+            return Task.CompletedTask;
+        }
+
     }
 }

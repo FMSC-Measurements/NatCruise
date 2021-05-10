@@ -20,5 +20,7 @@ namespace NatCruise.Design.Services
         Task ShowCruiseLandingLayout();
 
         Task ShowAuditRules();
+
+        Task ShowTreeDefaultValues();
     }
 }

@@ -74,6 +74,9 @@ namespace NatCruise.Wpf
 
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(TreeAuditRuleListView));
             regionManager.RegisterViewWithRegion(Regions.TreeAuditSelectors, typeof(TreeAuditSelectorsView));
+
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(TreeDefaultValueListView));
+
             base.OnInitialized();
 
             //var startupArgs = StartupArgs;

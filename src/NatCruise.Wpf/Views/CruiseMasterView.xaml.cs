@@ -58,5 +58,10 @@ namespace NatCruise.Wpf.Views
         {
             NavigationService.ShowAuditRules();
         }
+
+        private void _tdv_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.ShowTreeDefaultValues();
+        }
     }
 }
