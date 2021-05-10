@@ -89,7 +89,9 @@
 
                     <ListView Grid.Row="1"
                               x:Name="_sampleGroupListView"
-                              ItemsSource="{Binding SampleGroups}">
+                              ItemsSource="{Binding SampleGroups}"
+                              SelectedItem="{Binding SelectedSampleGroup}"
+                              SelectionMode="Single">
                         <ListView.View>
                             <GridView AllowsColumnReorder="False"
                                       ColumnHeaderToolTip="Sample Groups">
@@ -109,7 +111,7 @@
             <TabControl Grid.Column="1"
                         Margin="5,5,0,0"
                         prism:RegionManager.RegionName="{x:Static nav:Regions.SampleGroupDetailsRegion}"
-                        prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_sampleGroupListView}">
+                        prism:RegionManager.RegionContext="{Binding SelectedSampleGroup}">
                 <TabControl.Resources>
                     <Style TargetType="{x:Type TabItem}"
                            BasedOn="{StaticResource {x:Type TabItem}}">

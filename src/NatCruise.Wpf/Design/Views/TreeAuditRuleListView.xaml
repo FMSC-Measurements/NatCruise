@@ -1,0 +1,107 @@
+﻿<UserControl x:Class="NatCruise.Design.Views.TreeAuditRuleListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
+             xmlns:local="clr-namespace:NatCruise.Design.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Background="White"
+             x:Name="_page">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="263*" />
+            <ColumnDefinition Width="3" />
+            <ColumnDefinition Width="137*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Expander Header="Add Audit Rule" IsExpanded="True">
+        <StackPanel Grid.Row="0"
+                    Orientation="Vertical">
+
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Margin"
+                                Value="3,0" />
+                    </Style>
+                </StackPanel.Resources>
+                <StackPanel>
+                    <Label Content="Tree Field"
+                           FontSize="9" />
+                    <ComboBox SelectedValue="{Binding NewTreeAuditRule.Field}"
+                              ItemsSource="{Binding TreeFieldOptions}"
+                              SelectedValuePath="Field"
+                              Width="100" />
+                </StackPanel>
+                <StackPanel>
+                    <Label Content="Min"
+                           FontSize="9" />
+                    <TextBox Text="{Binding NewTreeAuditRule.Min}"
+                             Width="100" />
+                </StackPanel>
+                <StackPanel>
+                    <Label Content="Max"
+                           FontSize="9" />
+                    <TextBox Text="{Binding NewTreeAuditRule.Max}"
+                             Width="100" />
+                </StackPanel>
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel>
+                    <Label Content="Description"
+                           FontSize="9" />
+                    <TextBox Text="{Binding NewTreeAuditRule.Description}"
+                             Width="250" />
+                </StackPanel>
+                <Button Content="Add"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Command="{Binding AddNewTreeAuditRuleCommand}" />
+                
+            </StackPanel>
+        </StackPanel>
+        </Expander>
+
+        <DataGrid Grid.Row="1" x:Name="_treeAuditRuleDataGrid"
+                  ItemsSource="{Binding TreeAuditRules}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Tree Field"
+                                        Binding="{Binding Field}" />
+                <DataGridTextColumn Header="Min"
+                                    Binding="{Binding Min}" />
+                <DataGridTextColumn Header="Max"
+                                    Binding="{Binding Max}" />
+                <DataGridTextColumn Header="Description"
+                                    Binding="{Binding Description}"
+                                    Width="400" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" Grid.Column="0" Content="Delete"
+                VerticalAlignment="Center"
+                Command="{Binding DeleteTreeAuditRuleCommand}"
+                CommandParameter="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid}"
+                HorizontalAlignment="Right"
+                IsEnabled="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid, Converter={StaticResource NotNullConverter}}"/>
+
+        <ContentControl Grid.Row="0"
+                        Grid.Column="2"
+                        Grid.RowSpan="3"
+                        prism:RegionManager.RegionName="{x:Static nav:Regions.TreeAuditSelectors}"
+                        prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid}"
+                        Background="LightGray" />
+    </Grid>
+</UserControl>

@@ -1,15 +1,32 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
+using Prism.Mvvm;
 
 namespace NatCruise.Design.Models
 {
     [Table("TreeAuditRuleSelector")]
-    public class TreeAuditRuleSelector
+    public class TreeAuditRuleSelector : BindableBase
     {
-        public string SpeciesCode { get; set; }
+        private string _speciesCode;
+        private string _liveDead;
+        private string _primaryProduct;
 
-        public string LiveDead { get; set; }
+        public string SpeciesCode
+        {
+            get => _speciesCode;
+            set => SetProperty(ref _speciesCode, value);
+        }
 
-        public string PrimaryProduct { get; set; }
+        public string LiveDead
+        {
+            get => _liveDead;
+            set => SetProperty(ref _liveDead, value);
+        }
+
+        public string PrimaryProduct
+        {
+            get => _primaryProduct;
+            set => SetProperty(ref _primaryProduct, value);
+        }
 
         public string TreeAuditRuleID { get; set; }
     }

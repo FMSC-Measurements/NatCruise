@@ -4,6 +4,7 @@ using NatCruise.Design.Models;
 using Prism.Commands;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
@@ -14,6 +15,7 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand<SampleGroup> _removeSampleGroupCommand;
         private ObservableCollection<SampleGroup> _sampleGroups;
         private Stratum _stratum;
+        private SampleGroup _selectedSampleGroup;
 
         public SampleGroupListViewModel(IDataserviceProvider datastoreProvider)
         {
@@ -51,6 +53,12 @@ namespace NatCruise.Design.ViewModels
             protected set => SetProperty(ref _sampleGroups, value);
         }
 
+        public SampleGroup SelectedSampleGroup
+        {
+            get => _selectedSampleGroup;
+            set => SetProperty(ref _selectedSampleGroup, value);
+        }
+
         public void AddSampleGroup(string code)
         {
             var newSampleGroup = new SampleGroup()
@@ -62,12 +70,28 @@ namespace NatCruise.Design.ViewModels
 
             SampleGroupDataservice.AddSampleGroup(newSampleGroup);
             SampleGroups.Add(newSampleGroup);
+            SelectedSampleGroup = newSampleGroup;
         }
 
         public void RemoveSampleGroup(SampleGroup sampleGroup)
         {
-            SampleGroups.Remove(sampleGroup);
+            if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
+            var sampleGroups = SampleGroups;
+
             SampleGroupDataservice.DeleteSampleGroup(sampleGroup);
+            var index = sampleGroups.IndexOf(sampleGroup);
+            sampleGroups.Remove(sampleGroup);
+
+            if (index < 0) { return; }
+            if (index <= sampleGroups.Count - 1)
+            {
+                var newSelectedSg = sampleGroups[index];
+                SelectedSampleGroup = newSelectedSg;
+            }
+            else
+            {
+                SelectedSampleGroup = sampleGroups.LastOrDefault();
+            }
         }
     }
 }
