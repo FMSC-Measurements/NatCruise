@@ -17,5 +17,7 @@ namespace NatCruise.Design.Data
         void DeleteSubpopulation(Subpopulation subpopulation);
 
         void UpdateSubpopulation(Subpopulation subpopulation);
+
+        void UpsertFixCNTTallyPopulation(Subpopulation subpopulation);
     }
 }

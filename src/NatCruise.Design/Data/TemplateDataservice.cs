@@ -333,7 +333,7 @@ WHERE TreeAuditRuleID = @TreeAuditRule;",
 
         public void DeleteTreeDefaultValue(TreeDefaultValue tdv)
         {
-            Database.Execute2("DELETE FROM TreeDefaultValue WHERE CruiseID = @CruiseID AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, ''))",
+            Database.Execute2("DELETE FROM TreeDefaultValue WHERE CruiseID = @CruiseID AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '')",
                 new
                 {
                     CruiseID,
@@ -344,7 +344,7 @@ WHERE TreeAuditRuleID = @TreeAuditRule;",
 
         public void UpsertTreeDefaultValue(TreeDefaultValue tdv)
         {
-            Database.Execute2(
+            var changes = Database.Execute2(
 @"INSERT INTO TreeDefaultValue (
     CruiseID,
     SpeciesCode,
@@ -402,7 +402,10 @@ UPDATE SET
     BarkThicknessRatio = @BarkThicknessRatio,
     AverageZ = @AverageZ,
     ReferenceHeightPercent = @ReferenceHeightPercent,
-    CreatedBy = @CreatedBy;",
+    CreatedBy = @DeviceID
+WHERE CruiseID = @CruiseID
+AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '')
+AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '');",
             new
             {
                 CruiseID,
@@ -425,6 +428,7 @@ UPDATE SET
                 tdv.ReferenceHeightPercent,
                 DeviceID,
             });
+            if(changes == 0) { throw new Exception("Expected changes to be greater than 0"); }
         }
         #endregion
 

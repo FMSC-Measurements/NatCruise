@@ -83,6 +83,7 @@
                 <ListView Grid.Row="1"
                           x:Name="_stratumListView"
                           ItemsSource="{Binding Strata}"
+                          SelectedItem="{Binding SelectedStratum}"
                           SelectionMode="Single">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False"
@@ -113,7 +114,7 @@
 
         <TabControl Grid.Column="1"
                     prism:RegionManager.RegionName="{x:Static nav:Regions.StratumDetailsRegion}"
-                    prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_stratumListView}"
+                    prism:RegionManager.RegionContext="{Binding SelectedStratum}"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch">
             <TabControl.Resources>

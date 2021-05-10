@@ -13,17 +13,6 @@
              IsEnabled="{Binding Stratum, Converter={StaticResource NotNullConverter}}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style TargetType="GroupBox">
-                <Setter Property="FontSize"
-                        Value="10" />
-
-                <Setter Property="Margin"
-                        Value="10" />
-
-                <Setter Property="VerticalAlignment"
-                        Value="Top" />
-            </Style>
-
             <Style TargetType="TextBox"
                    BasedOn="{StaticResource {x:Type TextBox}}">
                 <Setter Property="Margin"
@@ -53,7 +42,7 @@
     <WrapPanel Margin="50, 32"
                Background="{StaticResource brush_background}">
 
-        <Grid>
+        <Grid Margin="5">
 
             <Grid.Resources>
                 <ResourceDictionary>
@@ -77,7 +66,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -89,44 +77,38 @@
                    Grid.Column="0">Code*</Label>
             <TextBox Grid.Row="0"
                      Grid.Column="1"
-                     Text="{Binding Stratum.StratumCode}" />
+                     Text="{Binding StratumCode}" />
 
             <Label Grid.Row="1">Description</Label>
 
             <TextBox Grid.Row="1"
                      Grid.Column="1"
                      Width="100"
-                     Text="{Binding Stratum.Description}" />
+                     Text="{Binding Description}" />
 
             <Label Grid.Row="2"
                    Grid.Column="0">Method*</Label>
 
             <ComboBox Grid.Row="2"
                       Grid.Column="1"
-                      SelectedValue="{Binding Stratum.Method}"
+                      SelectedValue="{Binding Method}"
                       SelectedValuePath="Method"
                       ItemsSource="{Binding Methods}" />
 
+            <Label Grid.Row="5">Yield Component</Label>
 
-            <Label Grid.Row="5">FBS Code</Label>
-
-            <TextBox Grid.Row="5"
-                     Grid.Column="1"
-                     ToolTip="FBS Code"
-                     Text="{Binding Stratum.FBSCode}" />
-
-            <Label Grid.Row="6">Yield Component</Label>
-
-            <TextBox Grid.Row="6"
+            <ComboBox Grid.Row="5"
                      Grid.Column="1"
                      ToolTip="Yield Component"
-                     Text="{Binding Stratum.YieldComponent}" />
+                     ItemsSource="{Binding YieldComponentOptions}"
+                     SelectedItem="{Binding YieldComponent, FallbackValue='CL'}" />
 
         </Grid>
 
-        <GroupBox Header="Plot"
+        <GroupBox Header="Plot Options"
                   Visibility="{Binding IsPlot, Converter={StaticResource IsVisableConverter}}"
-                  FontSize="12">
+                  Margin="5"
+                  VerticalAlignment="Top">
             <Grid>
                 <Grid.Resources>
                     <ResourceDictionary>
@@ -153,6 +135,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -168,7 +151,7 @@
                          Grid.Column="1"
                          ToolTip="Basal Area Factor"
                          Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
-                         Text="{Binding Stratum.BasalAreaFactor}" />
+                         Text="{Binding BasalAreaFactor}" />
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
@@ -177,7 +160,7 @@
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          ToolTip="Fixed Plot Size"
-                         Text="{Binding Stratum.FixedPlotSize}"
+                         Text="{Binding FixedPlotSize}"
                          Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"/>
 
                 <Label Grid.Row="2"
@@ -187,16 +170,18 @@
                 <TextBox Grid.Row="2"
                          Grid.Column="1"
                          ToolTip="KZ (3PPNT)"
-                         Text="{Binding Stratum.KZ3PPNT}"
+                         Text="{Binding KZ3PPNT}"
                          Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"/>
+
+                <Label Grid.Column="0" Grid.Row="3" Content="FIXCNT Field"
+                       Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
+                    <ComboBox Grid.Column="1" Grid.Row="3" Width="100"
+                          ItemsSource="{Binding TreeFieldOptions}"
+                          SelectedValue="{Binding FixCNTField}"
+                          SelectedValuePath="Field"
+                          Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
             </Grid>
         </GroupBox>
-        <StackPanel Width="200"
-                    Height="36"
-                    Orientation="Horizontal"
-                    Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}">
-            <Label Content="FIXCNT Field" />
-            <ComboBox Width="100" ItemsSource="{Binding TreeFieldOptions}" SelectedValue="{Binding Stratum.FixCNTField}" SelectedValuePath="Field" />
-        </StackPanel>
+
     </WrapPanel>
 </UserControl>

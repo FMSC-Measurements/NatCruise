@@ -80,6 +80,7 @@
                     <ListView Grid.Row="1"
                               x:Name="_cuttingUnitListView"
                               ItemsSource="{Binding CuttingUnits}"
+                              SelectedItem="{Binding SelectedUnit}"
                               SelectionMode="Single">
                         <!--<ListView.Resources>
                         <Style TargetType="ListViewItem">
@@ -109,7 +110,7 @@
             </Border>
 
             <ContentControl prism:RegionManager.RegionName="{x:Static nav:Regions.CuttingUnitDetailsRegion}"
-                            prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_cuttingUnitListView}"
+                            prism:RegionManager.RegionContext="{Binding SelectedUnit}"
                             VerticalAlignment="Stretch" />
 
         </StackPanel>

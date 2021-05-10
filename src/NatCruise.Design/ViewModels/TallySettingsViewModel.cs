@@ -8,7 +8,7 @@ namespace NatCruise.Design.ViewModels
 {
     public class TallySettingsViewModel : ViewModelBase
     {
-        readonly string[] HOTKEY_OPTIONS = new[] {  "A","B","C","D","E","F",
+        private readonly string[] HOTKEY_OPTIONS = new[] {  "A","B","C","D","E","F",
                                                     "G","H","I","J","K","L",
                                                     "M","N","O","P","Q","R",
                                                     "S","T","U","V","W","X","Y","Z",
@@ -94,8 +94,6 @@ namespace NatCruise.Design.ViewModels
             if (oldSampleGroup == null) { return; }
             oldSampleGroup.PropertyChanged -= SampleGroup_PropertyChanged;
         }
-
-        
 
         private void OnSampleGroupChanged(SampleGroup newSampleGroup)
         {

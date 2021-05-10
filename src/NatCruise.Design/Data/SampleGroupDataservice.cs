@@ -116,7 +116,7 @@ namespace NatCruise.Design.Data
 
         public IEnumerable<SampleGroup> GetSampleGroups(string stratumCode)
         {
-            return Database.Query<SampleGroup>("SELECT sg.* FROM SampleGroup AS sg WHERE StratumCode = @p1 AND CruiseID = @p2;", stratumCode, CruiseID);
+            return Database.Query<SampleGroup>("SELECT sg.*, st.Method AS CruiseMethod FROM SampleGroup AS sg JOIN Stratum AS st USING (StratumCode, CruiseID) WHERE sg.StratumCode = @p1 AND sg.CruiseID = @p2;", stratumCode, CruiseID);
         }
 
         public void SetTallyBySubPop(bool tallyBySubpop, string stratumCode, string sampleGroupCode)

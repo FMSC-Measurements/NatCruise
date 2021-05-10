@@ -19,6 +19,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -30,43 +31,55 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        
+               
+        
         <Label Content="Cruise Info"
                Background="{StaticResource brush_accent}"
                HorizontalAlignment="Stretch"
                Grid.ColumnSpan="4"
-               Grid.Row="1"
+               Grid.Row="0"
                Grid.Column="1"
                Margin="0,0,0,10" />
 
+        <Label Content="Cruise Number" 
+               Grid.Row="1"
+               Grid.Column="1"
+               VerticalAlignment="Top"/>
+        <TextBox Grid.Row="1"
+                 Grid.Column="2"
+                 Text="{Binding CruiseNumber}"
+                 IsReadOnly="True"/>
+
         <ComboBox HorizontalAlignment="Left"
-                  SelectedValue="{Binding Cruise.Purpose}"
+                  SelectedValue="{Binding Purpose}"
                   SelectedValuePath="PurposeCode"
                   ItemsSource="{Binding PurposeOptions}"
                   Grid.Column="2"
-                  Grid.Row="2"
+                  Grid.Row="3"
                   Width="100"
                   VerticalAlignment="Center" />
         <Label Content="Purpose"
-               Grid.Row="2"
+               Grid.Row="3"
                Grid.Column="1"
                VerticalAlignment="Top" />
 
         <Label Content="Number Plot Trees Sequentialy Across Strata"
                Grid.Column="1"
-               Grid.Row="3" />
-        <CheckBox IsChecked="{Binding Cruise.UseCrossStrataPlotTreeNumbering}"
+               Grid.Row="4" />
+        <CheckBox IsChecked="{Binding UseCrossStrataPlotTreeNumbering}"
                   Grid.Column="2"
-                  Grid.Row="3" />
+                  Grid.Row="4" />
 
         <Label Content="Remarks"
-               Grid.Row="4"
+               Grid.Row="5"
                Grid.Column="1"
                VerticalAlignment="Top" />
 
         <TextBox HorizontalAlignment="Stretch"
-                 Text="{Binding Cruise.Remarks}"
+                 Text="{Binding Remarks}"
                  Grid.Column="1"
-                 Grid.Row="5"
+                 Grid.Row="6"
                  Height="200"
                  AcceptsReturn="True"
                  VerticalAlignment="Stretch"

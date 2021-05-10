@@ -5,58 +5,128 @@ using Prism.Mvvm;
 using System;
 using System.ComponentModel;
 using NatCruise.Services;
+using NatCruise.Design.Validation;
+using System.Collections.Generic;
 
 namespace NatCruise.Design.ViewModels
 {
-    public class CuttingUnitDetailViewModel : BindableBase
+    public class CuttingUnitDetailViewModel : ValidationViewModelBase
     {
         private CuttingUnit _cuttingUnit;
+        private IEnumerable<LoggingMethod> _loggingMethodOptions;
 
-        public CuttingUnitDetailViewModel(IDataserviceProvider dataserviceProvider, ILoggingService loggingService)
+        public CuttingUnitDetailViewModel(IDataserviceProvider dataserviceProvider, ILoggingService loggingService, ISetupInfoDataservice setupInfoDataservice, CuttingUnitValidator validator)
+            : base(validator)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
 
             LoggingService = loggingService;
             var unitDataservice = dataserviceProvider.GetDataservice<ICuttingUnitDataservice>();
             UnitDataservice = unitDataservice ?? throw new ArgumentNullException(nameof(unitDataservice));
+            SetupDataservice = setupInfoDataservice ?? throw new ArgumentNullException(nameof(setupInfoDataservice));
         }
 
         protected ILoggingService LoggingService { get; }
         protected ICuttingUnitDataservice UnitDataservice { get; }
+        protected ISetupInfoDataservice SetupDataservice { get; }
 
         public CuttingUnit CuttingUnit
         {
             get => _cuttingUnit;
             set
             {
-                OnCuttingUnitChanging(_cuttingUnit);
+                //OnCuttingUnitChanging(_cuttingUnit);
                 SetProperty(ref _cuttingUnit, value);
-                OnCuttingUnitChanged(value);
+
+                RaisePropertyChanged(nameof(CuttingUnitCode));
+                RaisePropertyChanged(nameof(Area));
+                RaisePropertyChanged(nameof(Description));
+                RaisePropertyChanged(nameof(LoggingMethod));
+                RaisePropertyChanged(nameof(PaymentUnit));
+                RaisePropertyChanged(nameof(Remarks));
+                RaisePropertyChanged(nameof(Rx));
+
+                //OnCuttingUnitChanged(value);
             }
         }
 
-        private void OnCuttingUnitChanged(CuttingUnit value)
+        //private void OnCuttingUnitChanged(CuttingUnit value)
+        //{
+        //    if (value == null) { return; }
+        //    value.PropertyChanged += CuttingUnit_PropertyChanged;
+        //}
+
+        //private void OnCuttingUnitChanging(CuttingUnit oldCuttingUnit)
+        //{
+        //    if (oldCuttingUnit == null) { return; }
+        //    oldCuttingUnit.PropertyChanged -= CuttingUnit_PropertyChanged;
+        //}
+
+        public string CuttingUnitCode
         {
-            if (value == null) { return; }
-            value.PropertyChanged += CuttingUnit_PropertyChanged;
+            get => CuttingUnit?.CuttingUnitCode;
+            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.CuttingUnitCode = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
         }
 
-        private void OnCuttingUnitChanging(CuttingUnit oldCuttingUnit)
+        public double Area
         {
-            if (oldCuttingUnit == null) { return; }
-            oldCuttingUnit.PropertyChanged -= CuttingUnit_PropertyChanged;
+            get => CuttingUnit?.Area ?? default(double);
+            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Area = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
         }
 
-        private void CuttingUnit_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public string Description
         {
-            var cuttingUnit = CuttingUnit;
-            if (object.ReferenceEquals(cuttingUnit, sender) == false)
-            {
-                LoggingService?.LogEvent("cuttingUnit property changed target doesn't match VM cuttingUnit");
-                return;
-            }
-
-            UnitDataservice.UpdateCuttingUnit(cuttingUnit);
+            get => CuttingUnit?.Description;
+            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Description = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
         }
+
+        public string LoggingMethod
+        {
+            get => CuttingUnit?.LoggingMethod;
+            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.LoggingMethod = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+        }
+
+        public string PaymentUnit
+        {
+            get => CuttingUnit?.PaymentUnit;
+            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.PaymentUnit = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+        }
+
+        public string Remarks
+        {
+            get => CuttingUnit?.Remarks;
+            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Remarks = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+        }
+
+        public string Rx
+        {
+            get => CuttingUnit?.Rx;
+            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Rx = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+        }
+
+        public IEnumerable<LoggingMethod> LoggingMethodOptions
+        {
+            get => _loggingMethodOptions;
+            set => SetProperty(ref _loggingMethodOptions, value);
+        }
+
+        public override void Load()
+        {
+            base.Load();
+
+            LoggingMethodOptions = SetupDataservice.GetLoggingMethods();
+        }
+
+        //private void CuttingUnit_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        //{
+        //    var cuttingUnit = CuttingUnit;
+        //    if (object.ReferenceEquals(cuttingUnit, sender) == false)
+        //    {
+        //        LoggingService?.LogEvent("cuttingUnit property changed target doesn't match VM cuttingUnit");
+        //        return;
+        //    }
+
+        //    UnitDataservice.UpdateCuttingUnit(cuttingUnit);
+        //}
     }
 }

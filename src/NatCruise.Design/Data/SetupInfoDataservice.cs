@@ -54,5 +54,10 @@ namespace NatCruise.Design.Data
         {
             return Database.From<CruiseMethod>().Query().ToArray();
         }
+
+        public IEnumerable<LoggingMethod> GetLoggingMethods()
+        {
+            return Database.From<LoggingMethod>().Query().ToArray();
+        }
     }
 }

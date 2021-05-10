@@ -2,18 +2,19 @@
 using NatCruise.Data.Abstractions;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Design.Validation;
 using NatCruise.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace NatCruise.Design.ViewModels
 {
-    public class SaleViewModel : ViewModelBase
+    public class SaleViewModel : ValidationViewModelBase
     {
         private Sale _sale;
 
-        public SaleViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo)
+        public SaleViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, SaleValidator saleValidator)
+            : base(saleValidator)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
 
@@ -29,29 +30,72 @@ namespace NatCruise.Design.ViewModels
             get => _sale;
             set
             {
-                if(_sale != null) { _sale.PropertyChanged -= Sale_PropertyChanged; }
                 _sale = value;
                 // update forest options after seting _sale but before raising sale property changed
                 // otherwise it causes binding issues
-                RaisePropertyChanged(nameof(ForestOptions)); 
-                RaisePropertyChanged();
-                if(value != null) { _sale.PropertyChanged += Sale_PropertyChanged; }
+                RaisePropertyChanged(nameof(ForestOptions));
+                RaisePropertyChanged(nameof(Sale));
+                RaisePropertyChanged(nameof(SaleNumber));
+                RaisePropertyChanged(nameof(Name));
+                RaisePropertyChanged(nameof(Region));
+                RaisePropertyChanged(nameof(Forest));
+                RaisePropertyChanged(nameof(District));
+                RaisePropertyChanged(nameof(CalendarYear));
+                RaisePropertyChanged(nameof(Remarks));
             }
         }
 
-        private void Sale_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public string SaleNumber
         {
-            var sale = sender as Sale;
+            get => Sale?.SaleNumber;
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.SaleNumber = x, s => SaleDataservice.UpdateSale(s));
+        }
 
-            if (ValidateSale(sale))
+        public string Name
+        {
+            get => Sale?.Name;
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Name = x, s => SaleDataservice.UpdateSale(s));
+        }
+
+        public string Region
+        {
+            get => Sale?.Region;
+            set
             {
-                SaleDataservice.UpdateSale(sale);
-            }
-            if(e.PropertyName == nameof(Sale.Region))
-            {
+                SetPropertyAndValidate(Sale, value, (s, x) => s.Region = x, s => SaleDataservice.UpdateSale(s));
                 RaisePropertyChanged(nameof(ForestOptions));
             }
         }
+
+        public string Forest
+        {
+            get => Sale?.Forest;
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Forest = x, s => SaleDataservice.UpdateSale(s));
+        }
+
+        public string District
+        {
+            get => Sale?.District;
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.District = x, s => SaleDataservice.UpdateSale(s));
+        }
+
+        public int CalendarYear
+        {
+            get => Sale?.CalendarYear ?? default(int);
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.CalendarYear = x, s => SaleDataservice.UpdateSale(s));
+        }
+
+        public string Remarks
+        {
+            get => Sale?.Remarks;
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Remarks = x, s => SaleDataservice.UpdateSale(s));
+        }
+
+        //public string DefaultUOM
+        //{
+        //    get => Sale?.DefaultUOM;
+        //    set => SetPropertyAndValidate(Sale, value, (s, x) => s.DefaultUOM = x, s => SaleDataservice.UpdateSale(s));
+        //}
 
         public IEnumerable<Purpose> PurposeOptions => SetupinfoDataservice.GetPurposes();
 
@@ -64,12 +108,6 @@ namespace NatCruise.Design.ViewModels
             base.Load();
 
             Sale = SaleDataservice.GetSale();
-        }
-
-        public bool ValidateSale(Sale sale)
-        {
-            return string.IsNullOrWhiteSpace(sale.Name) == false
-                && string.IsNullOrWhiteSpace(sale.SaleNumber) == false;
         }
     }
 }
