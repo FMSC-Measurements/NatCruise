@@ -333,7 +333,7 @@ WHERE TreeAuditRuleID = @TreeAuditRule;",
 
         public void DeleteTreeDefaultValue(TreeDefaultValue tdv)
         {
-            Database.Execute2("DELETE FROM TreeDefaultValue WHERE CruiseID = @CruiseID AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, ''))",
+            Database.Execute2("DELETE FROM TreeDefaultValue WHERE CruiseID = @CruiseID AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '')",
                 new
                 {
                     CruiseID,

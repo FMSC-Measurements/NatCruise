@@ -12,46 +12,60 @@
              Background="White">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="101*" />
-            <RowDefinition Height="349*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <DataGrid x:Name="_tdvDataGrid" Grid.Row="1" AutoGenerateColumns="True"
-                  SelectionMode="Single"
-                  ItemsSource="{Binding TreeDefaultValues}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Species"
-                                    Binding="{Binding SpeciesCode}" />
-                <DataGridTextColumn Header="Product"
-                                    Binding="{Binding PrimaryProduct}" />
-                <DataGridTextColumn Header="CreatedBy"
-                                    Binding="{Binding CreatedBy}" Visibility="Collapsed"/>
-
-            </DataGrid.Columns>
-        </DataGrid>
+        
+        <Expander Grid.Row="0" Header="Create Tree Default Value Set" IsExpanded="True">
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <StackPanel>
                 <Label Content="Species" />
-                <ComboBox ItemsSource="{Binding SpeciesCodeOptions}"
-                          SelectedValue="{Binding NewTreeDefaultValue.SpeciesCode}"
+                    <ComboBox ItemsSource="{Binding SpeciesCodeOptions, Converter={StaticResource PrependAnyConverter}}"
+                              SelectedValue="{Binding NewTreeDefaultValue.SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}"
                           Width="75" />
             </StackPanel>
 
             <StackPanel>
                 <Label Content="Product" />
-                <ComboBox ItemsSource="{Binding ProductOptions}"
-                          SelectedValue="{Binding NewTreeDefaultValue.PrimaryProduct}"
+                <ComboBox ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependAnyConverter}}"
+                          SelectedValue="{Binding NewTreeDefaultValue.PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}"
                           SelectedValuePath="ProductCode"
                           Width="75" />
             </StackPanel>
 
-            <Button Content="Add"
-                    Command="{Binding AddNewTreeDefaultValue}" 
-                    VerticalAlignment="Center"/>
-            <Button Content="Delete"
-                    Command="{Binding DeleteTreeDefaultValue}"
-                    CommandParameter="{Binding SelectedItem, ElementName=_tdvDataGrid}"
-                    VerticalAlignment="Center"/>
+            <Button Margin="3,0" Content="Add"
+                        Command="{Binding AddNewTreeDefaultValueCommand}" 
+                    VerticalAlignment="Bottom"/>
+            
         </StackPanel>
+        </Expander>
+
+        <DataGrid x:Name="_tdvDataGrid"
+                  Grid.Row="1"
+                  AutoGenerateColumns="True"
+                  AutoGeneratingColumn="_tdvDataGrid_AutoGeneratingColumn"
+                  SelectionMode="Single"
+                  CanUserAddRows="False"
+                  ItemsSource="{Binding TreeDefaultValues}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Species"
+                                    Binding="{Binding SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                <DataGridTextColumn Header="Product"
+                                    Binding="{Binding PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                <DataGridTextColumn Header="CreatedBy"
+                                    Binding="{Binding CreatedBy}"
+                                    Visibility="Collapsed" />
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" Content="Delete"
+                Command="{Binding DeleteTreeDefaultValueCommand}"
+                CommandParameter="{Binding SelectedItem, ElementName=_tdvDataGrid}"
+                IsEnabled="{Binding SelectedItem, ElementName=_tdvDataGrid, Converter={StaticResource NotNullConverter}}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Stretch"/>
 
 
     </Grid>

@@ -21,7 +21,7 @@
         <DockPanel Background="{StaticResource brush_background}">
         <StackPanel DockPanel.Dock="Left"
                     Background="{StaticResource brush_fs_brown}"
-                    Width="100">
+                    Width="150">
             <StackPanel.Resources>
                 <ResourceDictionary>
                     <!--<ResourceDictionary.MergedDictionaries>
@@ -51,7 +51,7 @@
             <Button x:Name="_unitsButton" Click="_unitsButton_Click">Units</Button>
             <Button x:Name="_strataButton" Click="_strataButton_Click">Strata</Button>
             <Button x:Name="_auditRuleButton"
-                    Content="Audit Rule"
+                    Content="Audit Rules"
                     Click="_auditRuleButton_Click" />
             <Button Content="Tree Default Values"
                     Click="_tdv_Click" />

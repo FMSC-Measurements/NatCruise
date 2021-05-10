@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Design.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,17 @@ namespace NatCruise.Design.Views
         public TreeDefaultValueListView()
         {
             InitializeComponent();
+        }
+
+        private void _tdvDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            e.Cancel =
+            new[]
+            {
+                nameof(TreeDefaultValue.SpeciesCode),
+                nameof(TreeDefaultValue.PrimaryProduct),
+                nameof(TreeDefaultValue.CreatedBy),
+            }.Contains(e.PropertyName);
         }
     }
 }
