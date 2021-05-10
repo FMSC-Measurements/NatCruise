@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <Version>0.3.0</Version>
+    <Version>$(FScruiserVersion)</Version>
     <Authors>Benjamin Campbell</Authors>
     <AssemblyTitle>National Cruise System</AssemblyTitle>
   </PropertyGroup>
   
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <UseWPF>true</UseWPF>
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <ApplicationIcon>Resources\cruisetree_setup.ico</ApplicationIcon>
@@ -23,7 +23,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\fsmeasicon98x56.gif" />
-    <Resource Include="Resources\Icon.bmp" />
+    <Resource Include="Resources\Icon.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\logs.jpg" />
   </ItemGroup>
 
