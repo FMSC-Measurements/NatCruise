@@ -1,18 +1,40 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
+using Prism.Mvvm;
 
 namespace NatCruise.Design.Models
 {
     [Table("TreeAuditRule")]
-    public class TreeAuditRule
+    public class TreeAuditRule : BindableBase
     {
+        private string _field;
+        private double? _min;
+        private double? _max;
+        private string _description;
+
         public string TreeAuditRuleID { get; set; }
 
-        public string Field { get; set; }
+        public string Field
+        {
+            get => _field;
+            set => SetProperty(ref _field, value);
+        }
 
-        public double? Min { get; set; }
+        public double? Min
+        {
+            get => _min;
+            set => SetProperty(ref _min, value);
+        }
 
-        public double? Max { get; set; }
+        public double? Max
+        {
+            get => _max;
+            set => SetProperty(ref _max, value);
+        }
 
-        public string Description { get; set; }
+        public string Description
+        {
+            get => _description;
+            set => SetProperty(ref _description, value);
+        }
     }
 }

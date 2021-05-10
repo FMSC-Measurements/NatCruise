@@ -50,6 +50,9 @@
                     Click="_cruiseButton_Click" />
             <Button x:Name="_unitsButton" Click="_unitsButton_Click">Units</Button>
             <Button x:Name="_strataButton" Click="_strataButton_Click">Strata</Button>
+            <Button x:Name="_auditRuleButton"
+                    Content="Audit Rule"
+                    Click="_auditRuleButton_Click" />
         </StackPanel>
 
         <ContentControl x:Name="_cruiseContentPanel"
