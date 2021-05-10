@@ -1,5 +1,6 @@
 ﻿using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,15 +8,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
 {
     public class TreeDefaultValueListViewModel : ViewModelBase
     {
         private ObservableCollection<TreeDefaultValue> _treeDefaultValues;
-        private TreeDefaultValue _newTreeDefaultValue;
+        private TreeDefaultValue _newTreeDefaultValue = new TreeDefaultValue();
         private IEnumerable<string> _speciesCodeOptions;
         private IEnumerable<Product> _productOptions;
+        private ICommand _addNewTreeDefaultValueCommand;
+        private ICommand _deleteTreeDefaultValueCommand;
 
         public TreeDefaultValueListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupInfoDataservice)
         {
@@ -25,6 +29,9 @@ namespace NatCruise.Design.ViewModels
 
         public ITemplateDataservice TemplateDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
+
+        public ICommand AddNewTreeDefaultValueCommand => _addNewTreeDefaultValueCommand ?? new DelegateCommand(AddNewTreeDefaultValue);
+        public ICommand DeleteTreeDefaultValueCommand => _deleteTreeDefaultValueCommand ?? new DelegateCommand<TreeDefaultValue>(DeleteTreeDefaultValue);
 
         public ObservableCollection<TreeDefaultValue> TreeDefaultValues
         {
@@ -81,7 +88,7 @@ namespace NatCruise.Design.ViewModels
             TemplateDataservice.AddTreeDefaultValue(newTDV);
             TreeDefaultValues.Add(newTDV);
             newTDV.PropertyChanged += TreeDefaultValue_PropertyChanged;
-            NewTreeDefaultValue = null;
+            NewTreeDefaultValue = new TreeDefaultValue();
         }
 
         public void DeleteTreeDefaultValue(TreeDefaultValue tdv)
