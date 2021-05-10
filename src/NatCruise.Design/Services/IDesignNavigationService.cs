@@ -18,5 +18,7 @@ namespace NatCruise.Design.Services
         Task ShowCuttingUnitList();
 
         Task ShowCruiseLandingLayout();
+
+        Task ShowAuditRules();
     }
 }
