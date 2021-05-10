@@ -15,29 +15,17 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="263*" />
+            <ColumnDefinition Width="3" />
             <ColumnDefinition Width="137*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="21*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="370*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <DataGrid Grid.Row="2" x:Name="_treeAuditRuleDataGrid"
-                  ItemsSource="{Binding TreeAuditRules}"
-                  AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Tree Field"
-                                        Binding="{Binding Field}" />
-                <DataGridTextColumn Header="Min"
-                                    Binding="{Binding Min}" />
-                <DataGridTextColumn Header="Max"
-                                    Binding="{Binding Max}" />
-                <DataGridTextColumn Header="Description"
-                                    Binding="{Binding Description}"
-                                    Width="400" />
-            </DataGrid.Columns>
-        </DataGrid>
-        <StackPanel Grid.Row="1"
+
+        <Expander Header="Add Audit Rule" IsExpanded="True">
+        <StackPanel Grid.Row="0"
                     Orientation="Vertical">
 
             <StackPanel Orientation="Horizontal">
@@ -80,14 +68,37 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
                         Command="{Binding AddNewTreeAuditRuleCommand}" />
-                <Button Content="Delete"
-                        VerticalAlignment="Center"
-                        Command="{Binding DeleteTreeAuditRuleCommand}" />
+                
             </StackPanel>
         </StackPanel>
+        </Expander>
+
+        <DataGrid Grid.Row="1" x:Name="_treeAuditRuleDataGrid"
+                  ItemsSource="{Binding TreeAuditRules}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Tree Field"
+                                        Binding="{Binding Field}" />
+                <DataGridTextColumn Header="Min"
+                                    Binding="{Binding Min}" />
+                <DataGridTextColumn Header="Max"
+                                    Binding="{Binding Max}" />
+                <DataGridTextColumn Header="Description"
+                                    Binding="{Binding Description}"
+                                    Width="400" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" Grid.Column="0" Content="Delete"
+                VerticalAlignment="Center"
+                Command="{Binding DeleteTreeAuditRuleCommand}"
+                CommandParameter="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid}"
+                HorizontalAlignment="Right"
+                IsEnabled="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid, Converter={StaticResource NotNullConverter}}"/>
 
         <ContentControl Grid.Row="0"
-                        Grid.Column="1"
+                        Grid.Column="2"
                         Grid.RowSpan="3"
                         prism:RegionManager.RegionName="{x:Static nav:Regions.TreeAuditSelectors}"
                         prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid}"

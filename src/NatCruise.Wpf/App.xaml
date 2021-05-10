@@ -20,6 +20,11 @@
             <converters:ReplaceNullConverter x:Key="ReplaceNoneWithNullConverter"
                                              Value="-none-" />
 
+            <converters:PrependConverter x:Key="PrependAnyConverter"
+                                         Value="Any" />
+            <converters:ReplaceNullConverter x:Key="ReplaceAnyWithNullConverter"
+                                             Value="Any" />
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
