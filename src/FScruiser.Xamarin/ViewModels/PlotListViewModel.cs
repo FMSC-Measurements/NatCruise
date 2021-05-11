@@ -18,8 +18,13 @@ namespace FScruiser.XF.ViewModels
         private ICommand _addPlotCommand;
         private Command<Plot> _editPlotCommand;
         private ICommand _deletePlotCommand;
+        private string _unitCode;
 
-        public string UnitCode { get; set; }
+        public string UnitCode
+        {
+            get => _unitCode;
+            set => SetProperty(ref _unitCode, value);
+        }
 
         public bool HasFixCNTStrata { get; set; }
 
