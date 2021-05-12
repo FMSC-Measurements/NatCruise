@@ -65,7 +65,13 @@ namespace NatCruise.Cruise.Services
                     var result = ((IFrequencyBasedSelecter)sampler).Sample();
                     tallyAction = CreateTally(unitCode, pop, result);
                 }
-                tallyAction.SamplerState = new SamplerState(sampler);
+
+                // don't persist state of zeroFrequencySelecter
+                // TODO update how sample state gets persisted to make this code cleaner
+                if ((sampler is ZeroFrequencySelecter) == false)
+                {
+                    tallyAction.SamplerState = new SamplerState(sampler);
+                }
             }
 
             if (tallyAction != null)
@@ -131,7 +137,6 @@ namespace NatCruise.Cruise.Services
                 tallyAction = CreateTally(unitCode, pop, SampleResult.I);
             }
 
-            tallyAction.SamplerState = new SamplerState(sampler);
             return tallyAction;
         }
 

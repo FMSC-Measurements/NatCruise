@@ -22,10 +22,6 @@ namespace NatCruise
             set
             {
                 _errors = value;
-                if (value != null)
-                {
-                    RaiseErrorsChanged(null);
-                }
             }
         }
 
@@ -50,8 +46,9 @@ namespace NatCruise
 
         protected void RaiseErrorsChanged([CallerMemberName] string propertyName = null)
         {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
             RaisePropertyChanged(nameof(HasErrors));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+            
         }
 
         protected void SetPropertyAndValidate<TModel, T>(TModel model, T value, Action<TModel, T> setter, Action<TModel> validated, [CallerMemberName] string propName = null)
@@ -70,15 +67,23 @@ namespace NatCruise
             Errors[propName] = results.Errors;
             RaiseErrorsChanged(propName);
 
-            if(results.IsValid)
+            if(false == results.Errors.Any(x => x.Severity == Severity.Error))
             { validated?.Invoke(model); }
         }
 
         protected void ValidateAll<TModel>(TModel model)
         {
-            var results = Validator.Validate(new ValidationContext<TModel>(model));
-            var errorDict = results.Errors.ToCollectionDictionary(x => x.PropertyName);
-            Errors = errorDict;
+            if (model != null)
+            {
+                var results = Validator.Validate(new ValidationContext<TModel>(model));
+                var errorDict = results.Errors.ToCollectionDictionary(x => x.PropertyName);
+                Errors = errorDict;
+            }
+            else
+            {
+                Errors = null;
+            }
+            
         }
     }
 }

@@ -100,6 +100,8 @@ namespace NatCruise.Data
 @"UPDATE Cruise SET 
     Purpose = @Purpose,
     Remarks = @Remarks,
+    DefaultUOM = @DefaultUOM,
+    UseCrossStrataPlotTreeNumbering = @UseCrossStrataPlotTreeNumbering,
     ModifiedBy = @DeviceID
 WHERE CruiseID = @CruiseID",
                 new
@@ -107,6 +109,8 @@ WHERE CruiseID = @CruiseID",
                     cruise.CruiseID,
                     cruise.Purpose,
                     cruise.Remarks,
+                    cruise.DefaultUOM,
+                    cruise.UseCrossStrataPlotTreeNumbering,
                     DeviceID,
                 });
         }

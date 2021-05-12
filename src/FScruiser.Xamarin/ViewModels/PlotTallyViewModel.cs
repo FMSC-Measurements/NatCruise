@@ -34,7 +34,7 @@ namespace FScruiser.XF.ViewModels
 
         public event EventHandler TreeAdded;
 
-        public string Title => $"Unit {UnitCode} Plot {PlotNumber}";
+        public string Title => $"Unit {UnitCode} Plot {Plot?.PlotNumber}";
 
         public ICuttingUnitDatastore Dataservice { get; }
         public ICruiseDialogService DialogService { get; }
@@ -203,6 +203,8 @@ namespace FScruiser.XF.ViewModels
 
             // refresh selected tree incase coming back from TreeEdit page
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
+
+            RaisePropertyChanged(nameof(Title));
         }
 
         public async Task TallyAsync(TallyPopulation_Plot pop)

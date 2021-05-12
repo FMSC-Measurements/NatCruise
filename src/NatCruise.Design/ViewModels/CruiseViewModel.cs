@@ -13,6 +13,7 @@ namespace NatCruise.Design.ViewModels
     {
         private Cruise _cruise;
         private IEnumerable<Purpose> _purposeOptions;
+        private IEnumerable<UOM> _uomOptions;
 
         public CruiseViewModel(ISaleDataservice saleDataservice, ISetupInfoDataservice setupInfo, CruiseValidator validator)
             : base(validator)
@@ -21,6 +22,7 @@ namespace NatCruise.Design.ViewModels
             SetupDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
 
             PurposeOptions = SetupDataservice.GetPurposes();
+            UOMOptions = SetupDataservice.GetUOMCodes();
         }
 
         private ISaleDataservice SaleDataservice { get; }
@@ -32,16 +34,14 @@ namespace NatCruise.Design.ViewModels
             get => _cruise;
             set
             {
-                //OnCruiseChanging(_cruise, value);
                 SetProperty(ref _cruise, value);
+                ValidateAll(value);
 
                 RaisePropertyChanged(nameof(CruiseNumber));
                 RaisePropertyChanged(nameof(Purpose));
                 RaisePropertyChanged(nameof(Remarks));
                 RaisePropertyChanged(nameof(UseCrossStrataPlotTreeNumbering));
                 RaisePropertyChanged(nameof(DefaultUOM));
-
-                //OnCruiseChanged(value);
             }
         }
 
@@ -73,6 +73,12 @@ namespace NatCruise.Design.ViewModels
         {
             get => Cruise?.DefaultUOM;
             set => SetPropertyAndValidate(Cruise, value, (c, x) => c.DefaultUOM = x, crz => SaleDataservice.UpdateCruise(crz));
+        }
+
+        public IEnumerable<UOM> UOMOptions
+        {
+            get => _uomOptions;
+            set => SetProperty(ref _uomOptions, value);
         }
 
         public IEnumerable<Purpose> PurposeOptions
