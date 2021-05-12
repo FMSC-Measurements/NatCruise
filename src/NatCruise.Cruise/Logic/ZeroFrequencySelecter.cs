@@ -5,6 +5,12 @@ namespace NatCruise.Cruise.Logic
 {
     public class ZeroFrequencySelecter : IFrequencyBasedSelecter
     {
+        public ZeroFrequencySelecter(string stratumCode, string sampleGroupCode)
+        {
+            StratumCode = stratumCode;
+            SampleGroupCode = sampleGroupCode;
+        }
+
         public int Frequency
         {
             get => 0;
