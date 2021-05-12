@@ -51,7 +51,7 @@
                     <Label Content="Product" />
                     <ComboBox ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependAnyConverter}}"
                               SelectedValuePath="ProductCode"
-                              SelectedValue="{Binding NewRuleSelector.Product, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                              SelectedValue="{Binding NewRuleSelector.PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
                 </StackPanel>
 
 

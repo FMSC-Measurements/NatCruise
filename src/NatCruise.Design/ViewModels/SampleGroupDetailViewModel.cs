@@ -48,6 +48,7 @@ namespace NatCruise.Design.ViewModels
                 //OnSampleGroupChanging(_sampleGroup);
                 SetProperty(ref _sampleGroup, value);
                 //OnSampleGroupChanged(value);
+                ValidateAll(value);
 
                 RaisePropertyChanged(nameof(SampleGroupCode));
                 RaisePropertyChanged(nameof(Description));
@@ -110,8 +111,8 @@ namespace NatCruise.Design.ViewModels
 
         public string PrimaryProduct
         {
-            get => SampleGroup?.UOM;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.UOM = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            get => SampleGroup?.PrimaryProduct;
+            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.PrimaryProduct = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
         }
 
         public string SecondaryProduct

@@ -57,6 +57,7 @@ namespace NatCruise.Design.ViewModels
                     var stratumCode = value.StratumCode;
                     CuttingUnits = StratumDataservice.GetCuttingUnitCodesByStratum(stratumCode);
                 }
+                ValidateAll(value);
                 RaisePropertyChanged();
                 RaisePropertyChanged(nameof(StratumCode));
                 RaisePropertyChanged(nameof(Description));

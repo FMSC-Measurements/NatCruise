@@ -35,8 +35,8 @@ namespace NatCruise.Design.ViewModels
             get => _cuttingUnit;
             set
             {
-                //OnCuttingUnitChanging(_cuttingUnit);
                 SetProperty(ref _cuttingUnit, value);
+                ValidateAll(value);
 
                 RaisePropertyChanged(nameof(CuttingUnitCode));
                 RaisePropertyChanged(nameof(Area));
@@ -45,8 +45,6 @@ namespace NatCruise.Design.ViewModels
                 RaisePropertyChanged(nameof(PaymentUnit));
                 RaisePropertyChanged(nameof(Remarks));
                 RaisePropertyChanged(nameof(Rx));
-
-                //OnCuttingUnitChanged(value);
             }
         }
 
