@@ -35,15 +35,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _stratum, value);
-                OnStratumChanged(value);
-            }
-        }
-
-        protected void OnStratumChanged(Stratum stratum)
-        {
-            if (stratum != null)
-            {
-                SampleGroups = new ObservableCollection<SampleGroup>(SampleGroupDataservice.GetSampleGroups(stratum.StratumCode));
+                LoadSampleGroups(value);
             }
         }
 
@@ -65,6 +57,7 @@ namespace NatCruise.Design.ViewModels
             {
                 SampleGroupCode = code,
                 StratumCode = Stratum.StratumCode,
+                CruiseMethod = Stratum.Method,
                 DefaultLiveDead = "L",
             };
 
@@ -92,6 +85,21 @@ namespace NatCruise.Design.ViewModels
             {
                 SelectedSampleGroup = sampleGroups.LastOrDefault();
             }
+        }
+
+        protected void LoadSampleGroups(Stratum stratum)
+        {
+            if (stratum != null)
+            {
+                SampleGroups = new ObservableCollection<SampleGroup>(SampleGroupDataservice.GetSampleGroups(stratum.StratumCode));
+            }
+        }
+
+        public override void Load()
+        {
+            base.Load();
+
+            LoadSampleGroups(Stratum);
         }
     }
 }

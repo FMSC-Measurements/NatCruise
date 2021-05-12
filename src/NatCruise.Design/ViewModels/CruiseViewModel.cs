@@ -32,16 +32,14 @@ namespace NatCruise.Design.ViewModels
             get => _cruise;
             set
             {
-                //OnCruiseChanging(_cruise, value);
                 SetProperty(ref _cruise, value);
+                ValidateAll(value);
 
                 RaisePropertyChanged(nameof(CruiseNumber));
                 RaisePropertyChanged(nameof(Purpose));
                 RaisePropertyChanged(nameof(Remarks));
                 RaisePropertyChanged(nameof(UseCrossStrataPlotTreeNumbering));
                 RaisePropertyChanged(nameof(DefaultUOM));
-
-                //OnCruiseChanged(value);
             }
         }
 

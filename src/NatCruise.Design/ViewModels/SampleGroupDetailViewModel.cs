@@ -48,6 +48,7 @@ namespace NatCruise.Design.ViewModels
                 //OnSampleGroupChanging(_sampleGroup);
                 SetProperty(ref _sampleGroup, value);
                 //OnSampleGroupChanged(value);
+                ValidateAll(value);
 
                 RaisePropertyChanged(nameof(SampleGroupCode));
                 RaisePropertyChanged(nameof(Description));
