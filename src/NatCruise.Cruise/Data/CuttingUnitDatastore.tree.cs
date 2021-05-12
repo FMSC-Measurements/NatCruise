@@ -237,7 +237,9 @@ INSERT INTO TallyLedger (
                     "tfs.DefaultValueInt, " +
                     "tfs.DefaultValueReal, " +
                     "tfs.DefaultValueBool, " +
-                    "tfs.DefaultValueText " +
+                    "tfs.DefaultValueText, " +
+                    "tfs.IsHidden, " +
+                    "tfs.IsLocked " +
                 "FROM Tree AS t " +
                 "JOIN TreeFieldSetup AS tfs ON t.StratumCode = tfs.StratumCode AND t.CruiseID = tfs.CruiseID AND (tfs.SampleGroupCode IS NULL OR t.SampleGroupCode = tfs.SampleGroupCode) " +
                 "LEFT JOIN TreeFieldHeading AS tfh USING (Field, CruiseID) " +

@@ -119,15 +119,15 @@ namespace NatCruise.Cruise.Models
                 switch (DBType)
                 {
                     case "REAL":
-                        { return DefaultValueReal.ToString(); }
+                        { return DefaultValueReal?.ToString(); }
                     case "INT":
                     case "INTEGER":
-                        { return DefaultValueInt.ToString(); }
+                        { return DefaultValueInt?.ToString(); }
                     case "TEXT":
                         { return DefaultValueText; }
                     case "BOOL":
                     case "BOOLEAN":
-                        { return DefaultValueBool.ToString(); }
+                        { return DefaultValueBool?.ToString(); }
                     default:
                         return null;
                 }

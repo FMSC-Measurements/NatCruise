@@ -103,43 +103,67 @@ namespace FScruiser.XF.Views
                 .Column(0)
                 .Row(1));
 
-            controls.Add(new Label
-            { Text = "L/D" }
-            .Column(1)
-            .Row(0));
 
-            var ldPicker = new ValuePicker();
-            AjustEditView(ldPicker);
-
-            controls.Add(ldPicker
-                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.LiveDead))
-                .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.LiveDeadOptions))
-                .Column(1)
-                .Row(1));
-
-            int counter = 2;
+            int counter = 1;
             foreach (var field in treeFieldValues)
             {
-                if(field.IsHidden || field.IsLocked) { continue; }
-                var fieldLabel = new Label()
-                {
-                    Text = field.Heading
-                }
-                .Column(counter)
-                .Row(0);
+                if (field.IsHidden || field.IsLocked) { continue; }
 
-                var editControl = Util.TreeEditControlFactory.MakeEditView(field)
+                if (field.Field == nameof(TreeEditViewModel.LiveDead))
+                {
+                    controls.Add(new Label
+                    { Text = "L/D" }
+            .Column(counter)
+            .Row(0));
+
+                    var ldPicker = new ValuePicker();
+                    AjustEditView(ldPicker);
+
+                    controls.Add(ldPicker
+                        .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.LiveDead))
+                        .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.LiveDeadOptions))
+                        .Column(counter)
+                        .Row(1));
+                }
+                else if (field.Field == nameof(TreeEditViewModel.Initials))
+                {
+                    var fieldLabel = new Label()
+                    {
+                        Text = field.Heading
+                    }
                     .Column(counter)
-                    .Row(1);
-                AjustEditView(editControl);
+                    .Row(0);
 
-                if (editControl is Entry entry)
-                {
-                    entry.Completed += _entry_Completed;
+                    var initPicker = new ValuePicker()
+                        .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Initials))
+                        .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.Cruisers));
+                    AjustEditView(initPicker);
+
+                    controls.Add(initPicker.Column(counter).Row(1));
                 }
+                else
+                {
+                    var fieldLabel = new Label()
+                    {
+                        Text = field.Heading
+                    }
+                    .Column(counter)
+                    .Row(0);
 
-                controls.Add(fieldLabel);
-                controls.Add(editControl);
+                    var editControl = Util.TreeEditControlFactory.MakeEditView(field)
+                        .Column(counter)
+                        .Row(1);
+                    AjustEditView(editControl);
+
+
+                    if (editControl is Entry entry)
+                    {
+                        entry.Completed += _entry_Completed;
+                    }
+
+                    controls.Add(fieldLabel);
+                    controls.Add(editControl);
+                }
                 counter++;
             }
 
