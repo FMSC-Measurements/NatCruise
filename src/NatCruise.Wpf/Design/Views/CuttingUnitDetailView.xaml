@@ -30,6 +30,13 @@
                     <Setter Property="HorizontalAlignment"
                             Value="Right" />
                 </Style>
+                <Style TargetType="ComboBox"
+                       BasedOn="{StaticResource {x:Type ComboBox}}">
+                    <Setter Property="Margin"
+                            Value="0,0,0,10" />
+                </Style>
+                
+
             </ResourceDictionary>
         </Grid.Resources>
 
@@ -81,7 +88,7 @@
                   Grid.Column="1"
                   SelectedValue="{Binding LoggingMethod}"
                   ItemsSource="{Binding LoggingMethodOptions}"
-                  SelectedValuePath="LoggingMethodCode}" />
+                  SelectedValuePath="LoggingMethodCode" />
 
         <Label Grid.Row="4"
                Grid.Column="0"
