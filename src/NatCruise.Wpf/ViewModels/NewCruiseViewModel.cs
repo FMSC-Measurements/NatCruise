@@ -164,7 +164,7 @@ namespace NatCruise.Wpf.ViewModels
                     };
 
                     var purpose = Purpose;
-                    var cruiseNumber = (purpose == "TS") ? SaleNumber : SaleNumber + Purpose;
+                    var cruiseNumber = (purpose == "TS" || purpose == "Timber Sale") ? SaleNumber + "TS" : SaleNumber;
                     var cruiseID = Guid.NewGuid().ToString();
                     var cruise = new CruiseDAL.V3.Models.Cruise()
                     {
@@ -173,6 +173,7 @@ namespace NatCruise.Wpf.ViewModels
                         CruiseNumber = cruiseNumber,
                         Purpose = Purpose,
                         UseCrossStrataPlotTreeNumbering = UseCrossStrataPlotTreeNumbering,
+                        DefaultUOM = UOM,
                     };
 
                     var database = new CruiseDatastore_V3(fileInfo.FullName, true);
