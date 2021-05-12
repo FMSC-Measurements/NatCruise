@@ -154,14 +154,14 @@
                        Grid.Row="0"
                        Margin="0,0,0,9" />
                 <TextBox Grid.Column="1"
-                         Text="{Binding SampleGroup.SamplingFrequency}"
+                         Text="{Binding SamplingFrequency}"
                          Margin="0,0,0,9" />
                 <Label Content="Insurance Frequency"
                        Grid.Row="1"
                        Margin="0,1,0,8" />
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
-                         Text="{Binding SampleGroup.InsuranceFrequency}"
+                         Text="{Binding InsuranceFrequency}"
                          Margin="0,1,0,8" />
 
                 <Label Content="Sample Selector Type"
