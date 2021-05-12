@@ -22,7 +22,7 @@ namespace NatCruise.Design.Validation
 
             RuleFor(x => x.DefaultUOM)
                 .NotEmpty()
-                .WithSeverity(Severity.Warning);
+                .WithSeverity(Severity.Error);
         }
     }
 }
