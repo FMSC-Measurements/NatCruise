@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using FMSC.Sampling;
+using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using System;
@@ -70,7 +71,16 @@ namespace NatCruise.Cruise.Services
 
                 if (tree != null)
                 {
-                    PlotDataservice.InsertTree(tree, new SamplerState(sampler));
+                    // don't persist state of zeroFrequencySelecter
+                    // TODO update how sample state gets persisted to make this code cleaner
+                    if ((sampler is ZeroFrequencySelecter) == false)
+                    {
+                        PlotDataservice.InsertTree(tree, new SamplerState(sampler));
+                    }
+                    else
+                    {
+                        PlotDataservice.InsertTree(tree, null);
+                    }
                 }
             }
 
