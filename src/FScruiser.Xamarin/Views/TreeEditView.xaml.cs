@@ -6,12 +6,15 @@ using System.Linq;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using FScruiser.XF.ViewModels;
 
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TreeEditView : ContentPage
     {
+        static readonly string[] PRECONFIGED_TREE_FIELDS = new[] { nameof(TreeEditViewModel.Initials), nameof(TreeEditViewModel.Remarks) };
+
 
         #region TreeNumber
 
@@ -19,12 +22,12 @@ namespace FScruiser.XF.Views
         /// Identifies the <see cref="TreeNumber"/> bindable property.
         /// </summary>
         public static readonly BindableProperty TreeNumberProperty =
-            BindableProperty.Create(nameof(TreeNumber),
-              typeof(int?),
-              typeof(TreeEditView),
-              defaultValue: default(int?),
-              defaultBindingMode: BindingMode.TwoWay,
-              propertyChanged: (bindable, oldValue, newValue) => ((TreeEditView)bindable).OnTreeNumberChanged((int?)oldValue, (int?)newValue));
+                BindableProperty.Create(nameof(TreeNumber),
+                  typeof(int?),
+                  typeof(TreeEditView),
+                  defaultValue: default(int?),
+                  defaultBindingMode: BindingMode.TwoWay,
+                  propertyChanged: (bindable, oldValue, newValue) => ((TreeEditView)bindable).OnTreeNumberChanged((int?)oldValue, (int?)newValue));
 
         /// <summary>
         /// Invoked after changes have been applied to the <see cref="TreeNumber"/> property.
@@ -104,7 +107,7 @@ namespace FScruiser.XF.Views
             }
         }
 
-        private View MakeTreeFields(IEnumerable<TreeFieldValue> treeFields)
+        private View MakeTreeFields(IEnumerable<TreeFieldValue> treeFields, bool showHidden = false)
         {
             if (treeFields == null) { throw new ArgumentNullException(nameof(treeFields)); }
 
@@ -115,7 +118,8 @@ namespace FScruiser.XF.Views
             var index = 0;
             foreach (var field in treeFields)
             {
-                if(string.Compare(field.Field, "initials", true) == 0) { continue; }
+                if (PRECONFIGED_TREE_FIELDS.Contains(field.Field)) { continue; }
+                if (field.IsHidden && !showHidden) { continue; }
 
                 grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 
@@ -135,10 +139,7 @@ namespace FScruiser.XF.Views
                 {
                     entry.Completed += _entry_Completed;
                     entry.IsReadOnly = field.IsLocked || field.IsHidden;
-                    entry.Placeholder = field.StrDefaultValue;
-                    
                 }
-                editView.IsVisible = !field.IsHidden;
                 editView.IsEnabled = !field.IsLocked;
 
                 grid.Children.Add(editView, 1, index);
