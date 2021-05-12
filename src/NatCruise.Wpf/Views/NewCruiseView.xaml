@@ -190,7 +190,7 @@
             <ComboBox Grid.Row="9"
                       Grid.Column="2"
                       ItemsSource="{Binding UOMOptions}"
-                      SelectedItem="{Binding DefaultUOM}"
+                      SelectedValue="{Binding UOM}"
                       SelectedValuePath="UOMCode"
                       HorizontalAlignment="Right"
                       Width="120"
