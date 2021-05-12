@@ -12,6 +12,8 @@ namespace NatCruise.Design.ViewModels
     public class SaleViewModel : ValidationViewModelBase
     {
         private Sale _sale;
+        private IEnumerable<Forest> _forestOptions;
+        private bool _isLoadingForestOptions = false;
 
         public SaleViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, SaleValidator saleValidator)
             : base(saleValidator)
@@ -31,9 +33,8 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 _sale = value;
-                // update forest options after seting _sale but before raising sale property changed
-                // otherwise it causes binding issues
-                RaisePropertyChanged(nameof(ForestOptions));
+
+                ValidateAll(value);
                 RaisePropertyChanged(nameof(Sale));
                 RaisePropertyChanged(nameof(SaleNumber));
                 RaisePropertyChanged(nameof(Name));
@@ -48,13 +49,13 @@ namespace NatCruise.Design.ViewModels
         public string SaleNumber
         {
             get => Sale?.SaleNumber;
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.SaleNumber = x, s => SaleDataservice.UpdateSale(s));
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.SaleNumber = x, s => SaleDataservice?.UpdateSale(s));
         }
 
         public string Name
         {
             get => Sale?.Name;
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Name = x, s => SaleDataservice.UpdateSale(s));
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Name = x, s => SaleDataservice?.UpdateSale(s));
         }
 
         public string Region
@@ -62,33 +63,43 @@ namespace NatCruise.Design.ViewModels
             get => Sale?.Region;
             set
             {
-                SetPropertyAndValidate(Sale, value, (s, x) => s.Region = x, s => SaleDataservice.UpdateSale(s));
-                RaisePropertyChanged(nameof(ForestOptions));
+                var sale = Sale;
+                var curValue = sale?.Region;
+                if (curValue != value)
+                {
+                    SetPropertyAndValidate(sale, value, (s, x) => s.Region = x, s => SaleDataservice?.UpdateSale(s));
+                    UpdateForestOptions(sale);
+                    Forest = null;
+                }
             }
         }
 
         public string Forest
         {
             get => Sale?.Forest;
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Forest = x, s => SaleDataservice.UpdateSale(s));
+            set
+            {
+                if (_isLoadingForestOptions) { return; }
+                SetPropertyAndValidate(Sale, value, (s, x) => s.Forest = x, s => SaleDataservice?.UpdateSale(s));
+            }
         }
 
         public string District
         {
             get => Sale?.District;
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.District = x, s => SaleDataservice.UpdateSale(s));
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.District = x, s => SaleDataservice?.UpdateSale(s));
         }
 
         public int CalendarYear
         {
             get => Sale?.CalendarYear ?? default(int);
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.CalendarYear = x, s => SaleDataservice.UpdateSale(s));
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.CalendarYear = x, s => SaleDataservice?.UpdateSale(s));
         }
 
         public string Remarks
         {
             get => Sale?.Remarks;
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Remarks = x, s => SaleDataservice.UpdateSale(s));
+            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Remarks = x, s => SaleDataservice?.UpdateSale(s));
         }
 
         //public string DefaultUOM
@@ -101,13 +112,33 @@ namespace NatCruise.Design.ViewModels
 
         public IEnumerable<Region> RegionOptions => SetupinfoDataservice.GetRegions();
 
-        public IEnumerable<Forest> ForestOptions => SetupinfoDataservice.GetForests(Sale?.Region ?? "");
+        public IEnumerable<Forest> ForestOptions
+        {
+            get => _forestOptions;
+            set => SetProperty(ref _forestOptions, value);
+        }
+
+        protected void UpdateForestOptions(Sale sale)
+        {
+            _isLoadingForestOptions = true;
+            try
+            {
+                var region = sale?.Region;
+                ForestOptions = SetupinfoDataservice.GetForests(region ?? "");
+            }
+            finally
+            {
+                _isLoadingForestOptions = false;
+            }
+        }
 
         public override void Load()
         {
             base.Load();
 
-            Sale = SaleDataservice.GetSale();
+            var sale = SaleDataservice.GetSale();
+            UpdateForestOptions(sale);
+            Sale = sale;
         }
     }
 }
