@@ -56,9 +56,7 @@
                              mah:TextBoxHelper.Watermark="Code" />
                     <Button Grid.Row="0"
                             Grid.Column="1"
-                            Content="+"
-                            Foreground="{StaticResource brush_text_dark}"
-                            Background="{StaticResource brush_addItem}"
+                            Style="{StaticResource AddButton}"
                             IsEnabled="{Binding Text, ElementName=_stratumCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
@@ -70,9 +68,7 @@
                     </Button>
                     <Button Grid.Row="0"
                             Grid.Column="2"
-                            Content="-"
-                            Background="{StaticResource brush_removeItem}"
-                            Foreground="{StaticResource brush_text_dark}"
+                            Style="{StaticResource RemoveButton}"
                             Command="{Binding RemoveStratumCommand}"
                             CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}"
                             IsEnabled="{Binding SelectedItem, ElementName=_stratumListView, Converter={StaticResource NotNullConverter}}"/>

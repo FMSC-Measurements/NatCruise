@@ -33,7 +33,10 @@
                   ItemsSource="{Binding Subpopulations}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
-                  CanUserReorderColumns="False">
+                  CanUserReorderColumns="False"
+                  CanUserDeleteRows="False"
+                  CanUserResizeColumns="False"
+                  CanUserResizeRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Species"
                                     IsReadOnly="True"
@@ -70,10 +73,8 @@
             <controls:AutoCompleteBox x:Name="_speciesTextBox"
                                       ItemsSource="{Binding SpeciesOptions}"/>
             <Button x:Name="_addSpeciesButton"
-                    Background="{StaticResource brush_addItem}"
-                    Foreground="{StaticResource brush_text_dark}"
+                    Style="{StaticResource AddButton}"
                     Grid.Column="1"
-                    Content="+"
                     IsEnabled="{Binding Text, ElementName=_speciesTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -84,13 +85,11 @@
                 </i:Interaction.Triggers>
             </Button>
             <Button x:Name="_removeSpeciesButton"
-                    Background="{StaticResource brush_removeItem}"
-                    Foreground="{StaticResource brush_text_dark}"
+                    Style="{StaticResource RemoveButton}"
                     Command="{Binding RemoveSubpopulationCommand}"
                     CommandParameter="{Binding SelectedItem, Source={x:Reference _subpopListView} }"
-                    Content="-"
                     Grid.Column="2"
-                    IsEnabled="{Binding SelectedItem, ElementName=_subpopListView, Converter={StaticResource NotNullConverter}}"/>
+                    IsEnabled="{Binding SelectedItem, ElementName=_subpopListView, Converter={StaticResource NotNullConverter}}" />
 
         </Grid>
 
