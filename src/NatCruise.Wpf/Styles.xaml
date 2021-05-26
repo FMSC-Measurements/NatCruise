@@ -1,0 +1,36 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:Class="NatCruise.Wpf.Styles">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    
+    <Style x:Key="AddButton"
+           TargetType="Button"
+           BasedOn="{StaticResource MetroFlatButton}">
+        <Setter Property="Content"
+                Value="+" />
+        <Setter Property="Foreground"
+                Value="{StaticResource brush_text_dark}" />
+        <Setter Property="Background"
+                Value="{StaticResource brush_addItem}" />
+        <Setter Property="Margin"
+                Value="3,0,0,0" />
+    </Style>
+
+    <Style x:Key="RemoveButton"
+           TargetType="Button"
+           BasedOn="{StaticResource MetroFlatButton}">
+        <Setter Property="Content"
+                Value="+" />
+        <Setter Property="Foreground"
+                Value="{StaticResource brush_text_dark}" />
+        <Setter Property="Background"
+                Value="{StaticResource brush_removeItem}" />
+    </Style>
+</ResourceDictionary>
