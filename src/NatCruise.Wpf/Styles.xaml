@@ -27,10 +27,12 @@
            TargetType="Button"
            BasedOn="{StaticResource MetroFlatButton}">
         <Setter Property="Content"
-                Value="+" />
+                Value="-" />
         <Setter Property="Foreground"
                 Value="{StaticResource brush_text_dark}" />
         <Setter Property="Background"
                 Value="{StaticResource brush_removeItem}" />
+        <Setter Property="Margin"
+                Value="3,0,0,0" />
     </Style>
 </ResourceDictionary>
