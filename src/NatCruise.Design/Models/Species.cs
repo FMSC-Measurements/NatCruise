@@ -1,14 +1,31 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
+using Prism.Mvvm;
 
 namespace NatCruise.Design.Models
 {
     [Table("Species")]
-    public class Species
+    public class Species : BindableBase
     {
-        public string SpeciesCode { get; set; }
+        private string _speciesCode;
+        private string _contractSpecies;
+        private string _fiaCode;
 
-        public string ContractSpecies { get; set; }
+        public string SpeciesCode
+        {
+            get => _speciesCode;
+            set => SetProperty(ref _speciesCode, value);
+        }
 
-        public string FIACode { get; set; }
+        public string ContractSpecies
+        {
+            get => _contractSpecies;
+            set => SetProperty(ref _contractSpecies, value);
+        }
+
+        public string FIACode
+        {
+            get => _fiaCode;
+            set => SetProperty(ref _fiaCode, value);
+        }
     }
 }

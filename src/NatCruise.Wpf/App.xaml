@@ -5,6 +5,8 @@
                         xmlns:converters="clr-namespace:NatCruise.Wpf.Converters">
     <Application.Resources>
         <ResourceDictionary>
+            
+
             <converters:IsNullConverter x:Key="NotNullConverter"
                                         Invert="True" />
             <converters:IsNullOrWhiteSpaceConverter x:Key="NotNullOrWhiteSpaceConverter"
@@ -26,16 +28,12 @@
                                              Value="Any" />
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-
                 <ResourceDictionary Source="Colors.xaml" />
                 <ResourceDictionary Source="Images.xaml" />
+                <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

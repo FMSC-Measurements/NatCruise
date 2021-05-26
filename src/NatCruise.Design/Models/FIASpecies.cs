@@ -13,5 +13,10 @@ namespace NatCruise.Design.Models
         public string FIACode { get; set; }
 
         public string CommonName { get; set; }
+
+        public override string ToString()
+        {
+            return $"{FIACode} - {CommonName}";
+        }
     }
 }

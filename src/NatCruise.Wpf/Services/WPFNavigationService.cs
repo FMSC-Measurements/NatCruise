@@ -90,5 +90,11 @@ namespace NatCruise.Wpf.Services
             return Task.CompletedTask;
         }
 
+        public Task ShowSpecies()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(SpeciesListView));
+            return Task.CompletedTask;
+        }
+
     }
 }

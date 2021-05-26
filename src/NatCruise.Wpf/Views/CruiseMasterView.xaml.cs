@@ -63,5 +63,10 @@ namespace NatCruise.Wpf.Views
         {
             NavigationService.ShowTreeDefaultValues();
         }
+
+        private void _speciesButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.ShowSpecies();
+        }
     }
 }
