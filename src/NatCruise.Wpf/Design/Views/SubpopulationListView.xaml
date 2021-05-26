@@ -8,7 +8,6 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
-             xmlns:controls="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
              prism:ViewModelLocator.AutoWireViewModel="True"
              ToolTip="Subpopulations"
              mc:Ignorable="d"
@@ -70,8 +69,9 @@
                             Value="16" />
                 </Style>
             </Grid.Resources>
-            <controls:AutoCompleteBox x:Name="_speciesTextBox"
-                                      ItemsSource="{Binding SpeciesOptions}"/>
+            <ComboBox x:Name="_speciesTextBox"
+                      ItemsSource="{Binding SpeciesOptions}"
+                      IsEditable="True" />
             <Button x:Name="_addSpeciesButton"
                     Style="{StaticResource AddButton}"
                     Grid.Column="1"
