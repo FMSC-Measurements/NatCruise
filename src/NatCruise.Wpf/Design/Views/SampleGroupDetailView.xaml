@@ -75,10 +75,10 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Content="Code*" />
-            <TextBox HorizontalAlignment="Left"
-                     Grid.Column="1"
+            <TextBox Grid.Column="1"
                      ToolTip="Sample Group Code"
                      Text="{Binding SampleGroupCode}" />
             <Label Content="Description&#xD;&#xA;"
@@ -91,8 +91,7 @@
                      Text="{Binding Description}" />
             <Label Content="Primary Product*"
                    Grid.Row="2" />
-            <ComboBox HorizontalAlignment="Left"
-                      Grid.Row="2"
+            <ComboBox Grid.Row="2"
                       Grid.Column="1"
                       ToolTip="Primary Product"
                       ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
@@ -101,8 +100,7 @@
             <Label Content="Secondary Product"
                    Grid.Column="0"
                    Grid.Row="3" />
-            <ComboBox HorizontalAlignment="Left"
-                      Grid.Row="3"
+            <ComboBox Grid.Row="3"
                       Grid.Column="1"
                       ToolTip="Secondary Product"
                       ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
@@ -110,29 +108,40 @@
                       SelectedValue="{Binding SecondaryProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
             <Label Content="Biomas Product"
                    Grid.Row="4" />
-            <ComboBox HorizontalAlignment="Left"
-                      Grid.Row="4"
+            <ComboBox Grid.Row="4"
                       Grid.Column="1"
                       ToolTip="Biomas Product"
                       ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
                       SelectedValuePath="ProductCode"
                       SelectedValue="{Binding BiomassProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
             <Label Content="Live/Dead Default"
-                   Grid.Row="5"
-                   Grid.RowSpan="2" />
-            <ComboBox HorizontalAlignment="Left"
-                      Grid.Row="5"
+                   Grid.Row="6" />
+            <ComboBox Grid.Row="6"
                       Grid.Column="1"
-                      ItemsSource="{Binding DefaultLiveDeadOptions}"
                       ToolTip="Default Live Dead Value"
-                      SelectedItem="{Binding DefaultLiveDead}" />
+                      SelectedValue="{Binding DefaultLiveDead}">
+                <ComboBoxItem>L</ComboBoxItem>
+                <ComboBoxItem>D</ComboBoxItem>
+            </ComboBox>
+
+
+            <Label Content="Cut/Leave"
+                   Grid.Row="5"
+                   Grid.Column="0" />
+            <ComboBox SelectedValue="{Binding CutLeave}"
+                      Grid.Row="5"
+                      Grid.Column="1">
+                <ComboBoxItem>C</ComboBoxItem>
+                <ComboBoxItem>L</ComboBoxItem>
+            </ComboBox>
+
             <CheckBox Content="Tally By Species"
-                      Grid.Row="6"
+                      Grid.Row="7"
                       Grid.Column="1"
                       ToolTip="Tally By Species"
                       IsChecked="{Binding TallyBySubPop}" />
 
-            
+
 
         </Grid>
 
@@ -173,7 +182,7 @@
                           ItemsSource="{Binding SampleSelectorTypeOptions}"
                           SelectedItem="{Binding SampleSelectorType}"
                           Visibility="{Binding CanSelectSampleSelectorType, Converter={StaticResource isVisableConverter}}"
-                          Margin="3.5,0,3.5,10"/>
+                          Margin="3.5,0,3.5,10" />
 
             </Grid>
         </GroupBox>

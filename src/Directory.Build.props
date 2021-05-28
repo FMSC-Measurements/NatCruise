@@ -5,7 +5,7 @@
   </PropertyGroup>
   
  <PropertyGroup Label="Custom Properties">
-   <FScruiserVersion>0.29.0.0</FScruiserVersion>
+   <FScruiserVersion>0.30.0.0</FScruiserVersion>
  </PropertyGroup>
   
   <PropertyGroup Label="Dependancy Versions">
