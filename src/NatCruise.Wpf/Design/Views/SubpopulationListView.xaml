@@ -80,7 +80,7 @@
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding AddSubpopulationCommand}"
                                                CommandParameter="{Binding Text, Source={x:Reference _speciesTextBox}}" />
-                        <triggers:ClearAutoCompleteBoxAction TargetName="_speciesTextBox" />
+                        <triggers:ClearComboBoxTextAction TargetName="_speciesTextBox" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
