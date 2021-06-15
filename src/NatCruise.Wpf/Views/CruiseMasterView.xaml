@@ -60,7 +60,9 @@
                     Click="_auditRuleButton_Click" />
             <Button Content="Tree Default Values"
                     Click="_tdv_Click" />
-            
+            <Button Content="Design Templates"
+                    Click="_designTemplatesButton_Click" />
+
         </StackPanel>
 
                 <ContentControl x:Name="_cruiseContentPanel"

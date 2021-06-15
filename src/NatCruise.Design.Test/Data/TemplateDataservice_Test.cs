@@ -3,10 +3,7 @@ using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Test;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,6 +16,7 @@ namespace NatCruise.Design.Test.Data
         }
 
         #region species
+
         [Fact]
         public void AddSpecies()
         {
@@ -75,10 +73,103 @@ namespace NatCruise.Design.Test.Data
             var spAgain = db.From<Species>().Where("SpeciesCode = @p1").Query(speciesCode).Single();
             spAgain.Should().BeEquivalentTo(sp);
         }
+
+        #endregion species
+
+
+
+        #region SampleGroupDefaults
+
+        [Fact]
+        public void GetSampleGroupDefaults()
+        {
+            var initializer = new DatastoreInitializer();
+            using var db = initializer.CreateDatabase();
+            var ds = new TemplateDataservice(db, initializer.CruiseID, initializer.DeviceID);
+
+            var sgds = ds.GetSampleGroupDefaults();
+        }
+
+        [Fact]
+        public void AddSampleGroupDefault()
+        {
+            var initializer = new DatastoreInitializer();
+            using var db = initializer.CreateDatabase();
+            var ds = new TemplateDataservice(db, initializer.CruiseID, initializer.DeviceID);
+
+            var newSgd = new SampleGroupDefault()
+            {
+                SampleGroupDefaultID = Guid.NewGuid().ToString(),
+                Description = Rand.Word(),
+            };
+
+            ds.AddSampleGroupDefault(newSgd);
+
+            var sgdAgian = ds.GetSampleGroupDefaults().Single();
+            sgdAgian.Should().BeEquivalentTo(newSgd);
+        }
+
+        [Fact]
+        public void UpdateSampleGroupDefault()
+        {
+            var initializer = new DatastoreInitializer();
+            using var db = initializer.CreateDatabase();
+            var ds = new TemplateDataservice(db, initializer.CruiseID, initializer.DeviceID);
+
+            var newSgd = new SampleGroupDefault()
+            {
+                SampleGroupDefaultID = Guid.NewGuid().ToString(),
+                Description = Rand.Word(),
+            };
+
+            ds.AddSampleGroupDefault(newSgd);
+
+            newSgd.Description = Rand.Word();
+            ds.UpdateSampleGroupDefault(newSgd);
+
+            var sgdAgain = ds.GetSampleGroupDefaults().Single();
+
+            sgdAgain.Should().BeEquivalentTo(newSgd);
+        }
+
+        #endregion SampleGroupDefaults
+
+
+        #region TreeFieldSetupDefault
+
+        [Fact]
+        public void DeleteTreeFieldSetupDefault()
+        {
+            var initializer = new DatastoreInitializer();
+            using var db = initializer.CreateDatabase();
+            var ds = new TemplateDataservice(db, initializer.CruiseID, initializer.DeviceID);
+
+            var stdID = Guid.NewGuid().ToString();
+            var std = new StratumDefault()
+            {
+                StratumDefaultID = stdID,
+                Description = "something",
+            };
+
+            ds.AddStratumDefault(std);
+
+            var tfsd = new TreeFieldSetupDefault()
+            {
+                StratumDefaultID = stdID,
+                Field = "DBH",
+            };
+
+            ds.AddTreeFieldSetupDefault(tfsd);
+
+            var tfsdAgain = ds.GetTreeFieldSetupDefaults(stdID).Single();
+            tfsdAgain.Should().NotBeNull();
+
+            ds.DeleteTreeFieldSetupDefault(tfsd);
+
+            ds.GetTreeFieldSetupDefaults(stdID).Should().BeEmpty();
+
+        }
         #endregion
 
-        #region TreeAuditRules
-
-        #endregion
     }
 }

@@ -80,6 +80,11 @@ namespace NatCruise.Wpf
 
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SpeciesListView));
 
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumProfileListView));
+            regionManager.RegisterViewWithRegion(Regions.StratumTemplateRegion, typeof(StratumTemplateDetailsView));
+            regionManager.RegisterViewWithRegion(Regions.StratumTemplateRegion, typeof(StratumTemplateFieldsView));
+            
+
             base.OnInitialized();
 
             //var startupArgs = StartupArgs;
