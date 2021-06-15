@@ -96,5 +96,10 @@ namespace NatCruise.Wpf.Services
             return Task.CompletedTask;
         }
 
+        public Task ShowDesignTemplates()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumProfileListView));
+            return Task.CompletedTask;
+        }
     }
 }

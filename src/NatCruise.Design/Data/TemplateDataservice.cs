@@ -546,11 +546,125 @@ WHERE CruiseID = @CruiseID AND Field = @Field;",
 
             Database.Insert(std);
         }
+
+        public void UpdateStratumDefault(StratumDefault std)
+        {
+            if (std is null) { throw new ArgumentNullException(nameof(std)); }
+
+            Database.Execute2(
+@"UPDATE StratumDefault SET
+    Region = @Region,
+    Forest = @Forest,
+    District = @District,
+    StratumCode = @StratumCode,
+    Description = @Description,
+    Method = @Method,
+    BasalAreaFactor = @BasalAreaFactor,
+    FixedPlotSize = @FixedPlotSize,
+    KZ3PPNT = @KZ3PPNT,
+    SamplingFrequency = @SamplingFrequency,
+    Hotkey = @Hotkey,
+    FBSCode = @FBSCode,
+    YieldComponent = @YieldComponent,
+    FixCNTField = @FixCNTField
+WHERE StratumDefaultID = @StratumDefaultID;
+", std);
+        }
+        #endregion
+
+        #region SampleGroupDefaults
+        public IEnumerable<SampleGroupDefault> GetSampleGroupDefaults()
+        {
+            return Database.From<SampleGroupDefault>().Query().ToArray();
+        }
+
+        public void AddSampleGroupDefault(SampleGroupDefault sgd)
+        {
+            Database.Execute2(
+@"INSERT INTO SampleGroupDefault (
+    SampleGroupDefaultID,
+    Region,
+    Forest,
+    District,
+    SampleGroupCode,
+    CutLeave,
+    UOM,
+    PrimaryProduct,
+    SecondaryProduct,
+    BiomassProduct,
+    DefaultLiveDead,
+    SamplingFrequency,
+    InsuranceFrequency,
+    KZ,
+    BigBAF,
+    TallyBySubPop,
+    UseExternalSampler,
+    TallyMethod,
+    Description,
+    MinKPI,
+    MaxKPI,
+    SmallFPS
+) VALUES (
+    @SampleGroupDefaultID,
+    @Region,
+    @Forest,
+    @District,
+    @SampleGroupCode,
+    @CutLeave,
+    @UOM,
+    @PrimaryProduct,
+    @SecondaryProduct,
+    @BiomassProduct,
+    @DefaultLiveDead,
+    @SamplingFrequency,
+    @InsuranceFrequency,
+    @KZ,
+    @BigBAF,
+    @TallyBySubPop,
+    @UseExternalSampler,
+    @TallyMethod,
+    @Description,
+    @MinKPI,
+    @MaxKPI,
+    @SmallFPS
+)", sgd);
+        }
+
+        public void UpdateSampleGroupDefault(SampleGroupDefault sgd)
+        {
+            Database.Execute2(
+@"UPDATE SampleGroupDefault SET 
+    Region = @Region,
+    Forest = @Forest,
+    District = @District,
+    SampleGroupCode = @SampleGroupCode,
+    CutLeave = @CutLeave,
+    UOM = @UOM,
+    PrimaryProduct = @PrimaryProduct,
+    SecondaryProduct = @SecondaryProduct,
+    BiomassProduct = @BiomassProduct,
+    DefaultLiveDead = @DefaultLiveDead,
+    SamplingFrequency = @SamplingFrequency,
+    InsuranceFrequency = @InsuranceFrequency,
+    KZ = @KZ,
+    BigBAF = @BigBAF,
+    TallyBySubPop = @TallyBySubPop,
+    UseExternalSampler = @UseExternalSampler,
+    TallyMethod = @TallyMethod,
+    Description = @Description,
+    MinKPI = @MinKPI,
+    MaxKPI = @MaxKPI,
+    SmallFPS = @SmallFPS
+    WHERE SampleGroupDefaultID = @SampleGroupDefaultID;", sgd);
+        }
+
         #endregion
 
         #region TreeFieldSetupDefault
         public IEnumerable<TreeFieldSetupDefault> GetTreeFieldSetupDefaults(string stratumDefaultID)
         {
+            if (string.IsNullOrWhiteSpace(stratumDefaultID)) { throw new ArgumentException($"'{nameof(stratumDefaultID)}' cannot be null or whitespace.", nameof(stratumDefaultID)); }
+
             return Database.From<TreeFieldSetupDefault>()
                 .Where("StratumDefaultID =  @p1")
                 .Query(stratumDefaultID).ToArray();
@@ -558,6 +672,8 @@ WHERE CruiseID = @CruiseID AND Field = @Field;",
 
         public void AddTreeFieldSetupDefault(TreeFieldSetupDefault tfsd)
         {
+            if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
+
             Database.Execute2(
 @"INSERT INTO TreeFieldSetupDefault (
     StratumDefaultID,
@@ -586,6 +702,8 @@ WHERE CruiseID = @CruiseID AND Field = @Field;",
 
         public void UpsertTreeFieldSetupDefault(TreeFieldSetupDefault tfsd)
         {
+            if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
+
             Database.Execute2(
 @"INSERT INTO TreeFieldSetupDefault (
     StratumDefaultID,
@@ -620,6 +738,17 @@ UPDATE SET
     DefaultValueBool = @DefaultValueBool,
     DefaultValueText = @DefaultValueText
 WHERE ifnull(StratumDefaultID, '') = ifnull(@StratumDefaultID, '')
+    AND ifnull(SampleGroupDefaultID, '') = ifnull(@SampleGroupDefaultID, '')
+    AND Field = @Field;", tfsd);
+        }
+
+        public void DeleteTreeFieldSetupDefault(TreeFieldSetupDefault tfsd)
+        {
+            if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
+
+            Database.Execute2(
+@"DELETE FROM TreeFieldSetupDefault
+    WHERE ifnull(StratumDefaultID, '') = ifnull(@StratumDefaultID, '')
     AND ifnull(SampleGroupDefaultID, '') = ifnull(@SampleGroupDefaultID, '')
     AND Field = @Field;", tfsd);
         }

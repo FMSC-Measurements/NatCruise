@@ -68,5 +68,10 @@ namespace NatCruise.Wpf.Views
         {
             NavigationService.ShowSpecies();
         }
+
+        private void _designTemplatesButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.ShowDesignTemplates();
+        }
     }
 }

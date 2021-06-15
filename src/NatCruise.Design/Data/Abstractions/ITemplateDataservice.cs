@@ -70,6 +70,17 @@ namespace NatCruise.Design.Data
         IEnumerable<StratumDefault> GetTreeFieldSetupStratumDefaults();
 
         void AddStratumDefault(StratumDefault std);
+
+        void UpdateStratumDefault(StratumDefault std);
+        #endregion
+
+        #region SampleGroupDefaults
+        IEnumerable<SampleGroupDefault> GetSampleGroupDefaults();
+
+        void AddSampleGroupDefault(SampleGroupDefault sgd);
+
+        void UpdateSampleGroupDefault(SampleGroupDefault sgd);
+
         #endregion
 
         #region TreeFieldSetupDefault
@@ -78,6 +89,8 @@ namespace NatCruise.Design.Data
         void AddTreeFieldSetupDefault(TreeFieldSetupDefault tfsd);
 
         void UpsertTreeFieldSetupDefault(TreeFieldSetupDefault tfsd);
+
+        void DeleteTreeFieldSetupDefault(TreeFieldSetupDefault tfsd);
         #endregion
 
         #region LogFieldSetupDefault

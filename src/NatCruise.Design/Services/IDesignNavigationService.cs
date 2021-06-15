@@ -24,5 +24,7 @@ namespace NatCruise.Design.Services
         Task ShowTreeDefaultValues();
 
         Task ShowSpecies();
+
+        Task ShowDesignTemplates();
     }
 }
