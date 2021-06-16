@@ -5,7 +5,7 @@
                         xmlns:converters="clr-namespace:NatCruise.Wpf.Converters">
     <Application.Resources>
         <ResourceDictionary>
-            
+
 
             <converters:IsNullConverter x:Key="NotNullConverter"
                                         Invert="True" />
@@ -27,13 +27,24 @@
             <converters:ReplaceNullConverter x:Key="ReplaceAnyWithNullConverter"
                                              Value="Any" />
 
+            <converters:CruiseMethodToVisableConverter x:Key="IsPlotMethodConverter"
+                                                       MethodMap="PlotMethods" />
+            <converters:CruiseMethodToVisableConverter x:Key="IsFixedSizePlotMethodConverter"
+                                                       MethodMap="FixedSizePlotMethods" />
+            <converters:CruiseMethodToVisableConverter x:Key="IsVariableRadiousPlotMethodConverter"
+                                                       MethodMap="VariableRadiousPlotMethods" />
+            <converters:CruiseMethodToVisableConverter x:Key="Is3PPNTMethodConverter"
+                                                       MethodMap="ThreePPNT" />
+            <converters:CruiseMethodToVisableConverter x:Key="IsFixCNTMethodConverter"
+                                                       MethodMap="FIXCNT" />
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Colors.xaml" />
                 <ResourceDictionary Source="Images.xaml" />
                 <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            
+
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
