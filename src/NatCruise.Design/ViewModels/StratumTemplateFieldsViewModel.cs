@@ -25,6 +25,8 @@ namespace NatCruise.Design.ViewModels
         public StratumTemplateFieldsViewModel(ITemplateDataservice templateDataservice)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+
+            TreeFields = TemplateDataservice.GetTreeFields();
         }
 
         public ICommand AddCommand => _addCommand ??= new DelegateCommand<TreeField>(AddTreeFieldSetup);
@@ -35,7 +37,11 @@ namespace NatCruise.Design.ViewModels
         public IEnumerable<TreeField> TreeFields
         {
             get => _treeFields;
-            set => SetProperty(ref _treeFields, value);
+            set
+            {
+                SetProperty(ref _treeFields, value);
+                RaisePropertyChanged(nameof(AvalibleTreeFields));
+            }
         }
 
         public IEnumerable<TreeField> AvalibleTreeFields
@@ -127,14 +133,8 @@ namespace NatCruise.Design.ViewModels
 
         private void SelectedTreeFieldSetup_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Load()
-        {
-            base.Load();
-
-            TreeFields = TemplateDataservice.GetTreeFields();
+            var tfsd = (TreeFieldSetupDefault)sender;
+            TemplateDataservice.UpsertTreeFieldSetupDefault(tfsd);
         }
 
         public void AddTreeFieldSetup(TreeField treeField)

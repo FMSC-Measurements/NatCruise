@@ -5,9 +5,9 @@ namespace NatCruise.Design.Views
     /// <summary>
     /// Interaction logic for StratumProfileListView.xaml
     /// </summary>
-    public partial class StratumProfileListView : UserControl
+    public partial class StratumTemplateListView : UserControl
     {
-        public StratumProfileListView()
+        public StratumTemplateListView()
         {
             InitializeComponent();
         }

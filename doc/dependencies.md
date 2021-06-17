@@ -19,6 +19,7 @@ used to generate secrets.local.cs prior to build
 
  - `MahApps.Metro`
 UI skinning framework. Needed to smooth out UI differences when running in windows 7. Also helps make things look pretty.
+Watter mark on textboxes
 
  - `DotNetProjects.WpfToolkit.Input`
 for AutoCompleteTextBox control

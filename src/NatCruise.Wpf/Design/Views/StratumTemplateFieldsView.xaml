@@ -20,14 +20,14 @@
             <RowDefinition Height="83*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="43*" />
-            <ColumnDefinition Width="157*" />
+            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="91*" />
-                <ColumnDefinition Width="38*" />
-                <ColumnDefinition Width="43*" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <ComboBox x:Name="_treeFieldCombobox"  ItemsSource="{Binding AvalibleTreeFields}" />
             <Button Style="{StaticResource AddButton}"
@@ -37,8 +37,8 @@
                     CommandParameter="{Binding SelectedItem, ElementName=_treeFieldCombobox}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding ApplyStratumDefaultCommand}"
-                                               CommandParameter="{Binding SelectedItem, ElementName=_stratumDefaultsComboBox}" />
+                        <i:InvokeCommandAction Command="{Binding AddCommand}"
+                                               CommandParameter="{Binding SelectedItem, ElementName=_treeFieldCombobox}" />
                         <triggers:ClearComboBoxAction TargetName="_treeFieldCombobox" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
