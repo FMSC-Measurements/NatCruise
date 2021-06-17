@@ -443,7 +443,8 @@ AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '');",
     DbType,
     IsTreeMeasurmentField
 FROM TreeField AS tf
-LEFT JOIN TreeFieldHeading AS tfh ON tf.Field = tfh.Field AND tfh.CruiseID = @p1;", CruiseID).ToArray();
+LEFT JOIN TreeFieldHeading AS tfh ON tf.Field = tfh.Field AND tfh.CruiseID = @p1
+ORDER BY tf.Field;", CruiseID).ToArray();
 
         }
 

@@ -21,6 +21,8 @@ namespace NatCruise.Design.ViewModels
         {
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+
+            Methods = SetupDataservice.GetCruiseMethods().ToArray();
         }
 
         public ISetupInfoDataservice SetupDataservice { get; }
@@ -55,13 +57,6 @@ namespace NatCruise.Design.ViewModels
                     value.PropertyChanged += StratumDefault_PropertyChanged;
                 }
             }
-        }
-
-        public override void Load()
-        {
-            base.Load();
-
-            Methods = SetupDataservice.GetCruiseMethods().ToArray();
         }
 
         private void StratumDefault_PropertyChanged(object sender, PropertyChangedEventArgs e)

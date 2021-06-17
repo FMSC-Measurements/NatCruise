@@ -98,7 +98,7 @@ namespace NatCruise.Wpf.Services
 
         public Task ShowDesignTemplates()
         {
-            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumProfileListView));
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumTemplateListView));
             return Task.CompletedTask;
         }
     }

@@ -68,7 +68,7 @@
                          Text="{Binding StratumDefault.StratumCode}" />
 
                 <Label Grid.Row="0"
-                       Content="Profile Name" />
+                       Content="Template Name" />
 
                 <TextBox Grid.Row="0"
                          Grid.Column="1"

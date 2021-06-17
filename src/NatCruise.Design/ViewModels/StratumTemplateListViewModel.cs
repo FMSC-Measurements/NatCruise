@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
 {
-    public class StratumProfileListViewModel : ViewModelBase
+    public class StratumTemplateListViewModel : ViewModelBase
     {
         public readonly string[] YealdComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
 
@@ -24,7 +24,7 @@ namespace NatCruise.Design.ViewModels
 
         protected ITemplateDataservice TemplateDataservice { get; }
 
-        public StratumProfileListViewModel(ITemplateDataservice templateDataservice, ISaleDataservice saleDataservice, ISetupInfoDataservice setupDataservice, IDialogService dialogService)
+        public StratumTemplateListViewModel(ITemplateDataservice templateDataservice, ISaleDataservice saleDataservice, ISetupInfoDataservice setupDataservice, IDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -104,8 +104,6 @@ namespace NatCruise.Design.ViewModels
             var sale = SaleDataservice.GetSale();
             Region = sale.Region;
             Forest = sale.Forest;
-
-            
 
             var stratumDefaults = TemplateDataservice.GetStratumDefaults();
             StratumDefaults = new ObservableCollection<StratumDefault>(stratumDefaults);
