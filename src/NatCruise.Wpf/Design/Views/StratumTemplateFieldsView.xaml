@@ -32,9 +32,7 @@
             <ComboBox x:Name="_treeFieldCombobox"  ItemsSource="{Binding AvalibleTreeFields}" />
             <Button Style="{StaticResource AddButton}"
                     Grid.Column="1"
-                    IsEnabled="{Binding SelectedItem, ElementName=_treeFieldCombobox, Converter={StaticResource NotNullConverter}}"
-                    Command="{Binding AddCommand}"
-                    CommandParameter="{Binding SelectedItem, ElementName=_treeFieldCombobox}">
+                    IsEnabled="{Binding SelectedItem, ElementName=_treeFieldCombobox, Converter={StaticResource NotNullConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding AddCommand}"

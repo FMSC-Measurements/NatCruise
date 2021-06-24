@@ -65,7 +65,7 @@
                        Content="Code" />
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
-                         Text="{Binding StratumDefault.StratumCode}" />
+                         Text="{Binding StratumTemplate.StratumCode}" />
 
                 <Label Grid.Row="0"
                        Content="Template Name" />
@@ -73,7 +73,8 @@
                 <TextBox Grid.Row="0"
                          Grid.Column="1"
                          Width="100"
-                         Text="{Binding StratumDefault.Description}" />
+                         IsReadOnly="True"
+                         Text="{Binding StratumTemplate.StratumTemplateName}" />
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
@@ -81,7 +82,7 @@
 
                 <ComboBox Grid.Row="2"
                           Grid.Column="1"
-                          SelectedValue="{Binding StratumDefault.Method}"
+                          SelectedValue="{Binding StratumTemplate.Method}"
                           SelectedValuePath="Method"
                           ItemsSource="{Binding Methods}" />
 
@@ -92,11 +93,11 @@
                           Grid.Column="1"
                           ToolTip="Yield Component"
                           ItemsSource="{Binding YieldComponentOptions}"
-                          SelectedItem="{Binding StratumDefault.YieldComponent, FallbackValue=CL}" />
+                          SelectedItem="{Binding StratumTemplate.YieldComponent, FallbackValue=CL}" />
             </Grid>
 
             <GroupBox Header="Plot Options"
-                      Visibility="{Binding StratumDefault.Method, Converter={StaticResource IsPlotMethodConverter}, FallbackValue=Hidden}"
+                      Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsPlotMethodConverter}, FallbackValue=Hidden}"
                       Margin="5"
                       VerticalAlignment="Top">
 
@@ -125,32 +126,32 @@
                     </StackPanel.Resources>
 
                     <StackPanel Orientation="Horizontal"
-                                Visibility="{Binding StratumDefault.Method, Converter={StaticResource IsVariableRadiousPlotMethodConverter}}">
+                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsVariableRadiousPlotMethodConverter}}">
                         <Label Content="BAF" />
                         <TextBox ToolTip="Basal Area Factor"
-                                 Text="{Binding StratumDefault.BasalAreaFactor}" />
+                                 Text="{Binding StratumTemplate.BasalAreaFactor}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
-                                Visibility="{Binding StratumDefault.Method, Converter={StaticResource IsFixedSizePlotMethodConverter}}">
+                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsFixedSizePlotMethodConverter}}">
                         <Label Content="FPS" />
                         <TextBox ToolTip="Fixed Plot Size"
-                                 Text="{Binding StratumDefault.FixedPlotSize}" />
+                                 Text="{Binding StratumTemplate.FixedPlotSize}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
-                                Visibility="{Binding StratumDefault.Method, Converter={StaticResource Is3PPNTMethodConverter}}">
+                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource Is3PPNTMethodConverter}}">
                         <Label Content="KZ (3PPNT)" />
                         <TextBox ToolTip="KZ (3PPNT)"
-                                 Text="{Binding StratumDefault.KZ3PPNT}" />
+                                 Text="{Binding StratumTemplate.KZ3PPNT}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
-                                Visibility="{Binding StratumDefault.Method, Converter={StaticResource IsFixCNTMethodConverter}}">
+                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsFixCNTMethodConverter}}">
                         <Label Content="FIXCNT Field" />
                         <ComboBox Width="100"
                                   ItemsSource="{Binding TreeFieldOptions}"
-                                  SelectedValue="{Binding StratumDefault.FixCNTField}"
+                                  SelectedValue="{Binding StratumTemplate.FixCNTField}"
                                   SelectedValuePath="Field" />
                     </StackPanel>
                 </StackPanel>

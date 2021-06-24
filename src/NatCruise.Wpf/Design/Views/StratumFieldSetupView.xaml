@@ -28,29 +28,29 @@
               Grid.Column="0"
               Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition  Width="149"/>
-                <ColumnDefinition Width="173"/>
-                <ColumnDefinition Width="47"/>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition  Width="162" />
+                <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="47" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Label Content="Create Fields Using Profile"
+            <Label Content="Setup Fields Using Template"
                    Grid.Column="0" />
             <ComboBox x:Name="_stratumDefaultsComboBox"
                       Grid.Column="1"
-                      ItemsSource="{Binding StratumDefaults}" />
+                      ItemsSource="{Binding StratumTemplates}" />
             <Button Grid.Column="2"
                     Content="Apply"
                     IsEnabled="{Binding SelectedItem, ElementName=_stratumDefaultsComboBox, Converter={StaticResource NotNullConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding ApplyStratumDefaultCommand}"
+                        <i:InvokeCommandAction Command="{Binding ApplyStratumTemplateCommand}"
                                                CommandParameter="{Binding SelectedItem, ElementName=_stratumDefaultsComboBox}" />
                         <triggers:ClearComboBoxAction TargetName="_stratumDefaultsComboBox" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
         </Grid>
-        
+
         <Border Grid.Column="0"
                 Grid.Row="1"
                 BorderBrush="{StaticResource brush_shade_black_30}"
@@ -140,7 +140,7 @@
                 <ColumnDefinition Width="7*" />
             </Grid.ColumnDefinitions>
 
-            
+
 
             <Label Content="Default Value"
                    Grid.Row="1"

@@ -187,5 +187,46 @@ COMMIT;",
                 });
 
         }
+
+        public void SetTreeFieldsFromStratumTemplate(string stratumCode, string stratumTemplateName)
+        {
+            Database.Execute2(
+@"BEGIN;
+Delete FROM TreeFieldSetup WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode IS  NULL;
+
+INSERT INTO TreeFieldSetup (
+    CruiseID,
+    StratumCode,
+    Field,
+    FieldOrder,
+    IsHidden,
+    IsLocked,
+    DefaultValueInt,
+    DefaultValueReal,
+    DefaultValueBool,
+    DefaultValueText
+)
+SELECT
+    @CruiseID,
+    @StratumCode,
+    sttfs.Field,
+    sttfs.FieldOrder,
+    sttfs.IsHidden,
+    sttfs.IsLocked,
+    sttfs.DefaultValueInt,
+    sttfs.DefaultValueReal,
+    sttfs.DefaultValueBool,
+    sttfs.DefaultValueText
+FROM StratumTemplateTreeFieldSetup AS sttfs
+WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID;
+
+COMMIT;",
+                new
+                {
+                    CruiseID,
+                    StratumCode = stratumCode,
+                    StratumTemplateName = stratumTemplateName,
+                });
+        }
     }
 }

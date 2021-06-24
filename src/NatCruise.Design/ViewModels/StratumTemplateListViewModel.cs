@@ -16,9 +16,9 @@ namespace NatCruise.Design.ViewModels
     {
         public readonly string[] YealdComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
 
-        private ICommand _addStratumDefaultCommand;
-        private ObservableCollection<StratumDefault> _stratumDefaults;
-        private StratumDefault _seletedStratumDefault;
+        private ICommand _addStratumTemplateCommand;
+        private ObservableCollection<StratumTemplate> _stratumTemplates;
+        private StratumTemplate _seletedStratumTemplate;
         private IEnumerable<string> _methods;
         private IEnumerable<TreeField> _treefieldOptions;
 
@@ -38,45 +38,45 @@ namespace NatCruise.Design.ViewModels
         public string Region { get; protected set; }
         public string Forest { get; protected set; }
 
-        public ICommand AddStratumDefaultCommand => _addStratumDefaultCommand ??= new DelegateCommand<string>(AddStratumDefault);
+        public ICommand AddStratumTemplateCommand => _addStratumTemplateCommand ??= new DelegateCommand<string>(AddStratumTemplate);
 
-        public ObservableCollection<StratumDefault> StratumDefaults
+        public ObservableCollection<StratumTemplate> StratumTemplates
         {
-            get => _stratumDefaults;
+            get => _stratumTemplates;
             protected set
             {
-                if (_stratumDefaults != null)
+                if (_stratumTemplates != null)
                 {
-                    foreach (var i in _stratumDefaults)
+                    foreach (var i in _stratumTemplates)
                     {
-                        i.PropertyChanged -= StratumDefault_PropertyChanged;
+                        i.PropertyChanged -= StratumTemplate_PropertyChanged;
                     }
                 }
 
-                SetProperty(ref _stratumDefaults, value);
+                SetProperty(ref _stratumTemplates, value);
                 if (value != null)
                 {
                     foreach (var i in value)
                     {
-                        i.PropertyChanged += StratumDefault_PropertyChanged;
+                        i.PropertyChanged += StratumTemplate_PropertyChanged;
                     }
                 }
             }
         }
 
-        private void StratumDefault_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void StratumTemplate_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var std = sender as StratumDefault;
-            if (std != null)
+            var st = sender as StratumTemplate;
+            if (st != null)
             {
-                TemplateDataservice.UpdateStratumDefault(std);
+                TemplateDataservice.UpsertStratumTemplate(st);
             }
         }
 
-        public StratumDefault SelectedStratumDefault
+        public StratumTemplate SelectedStratumTemplate
         {
-            get => _seletedStratumDefault;
-            set => SetProperty(ref _seletedStratumDefault, value);
+            get => _seletedStratumTemplate;
+            set => SetProperty(ref _seletedStratumTemplate, value);
         }
 
         public IEnumerable<string> Methods
@@ -105,25 +105,25 @@ namespace NatCruise.Design.ViewModels
             Region = sale.Region;
             Forest = sale.Forest;
 
-            var stratumDefaults = TemplateDataservice.GetStratumDefaults();
-            StratumDefaults = new ObservableCollection<StratumDefault>(stratumDefaults);
+            var stratumTemplate = TemplateDataservice.GetStratumTemplates();
+            StratumTemplates = new ObservableCollection<StratumTemplate>(stratumTemplate);
         }
 
-        public void AddStratumDefault(string description)
+        public void AddStratumTemplate(string name)
         {
-            if (!StratumDefaults.Any(x => description.Equals(x.Description, StringComparison.OrdinalIgnoreCase)))
+            if (!StratumTemplates.Any(x => name.Equals(x.StratumTemplateName, StringComparison.OrdinalIgnoreCase)))
             {
-                var newStratumDefault = new StratumDefault
+                var newStratumTemplate = new StratumTemplate
                 {
-                    Description = description
+                    StratumTemplateName = name
                 };
 
-                TemplateDataservice.AddStratumDefault(newStratumDefault);
-                StratumDefaults.Add(newStratumDefault);
+                TemplateDataservice.UpsertStratumTemplate(newStratumTemplate);
+                StratumTemplates.Add(newStratumTemplate);
             }
             else
             {
-                DialogService.ShowNotification("Profile Already Exists");
+                DialogService.ShowNotification("Template Already Exists");
             }
         }
     }

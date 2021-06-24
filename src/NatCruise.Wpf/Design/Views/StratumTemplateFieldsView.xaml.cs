@@ -22,8 +22,8 @@ namespace NatCruise.Design.Views
         private void Context_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var context = (ObservableObject<object>)sender;
-            var selectedStratumTemplate = (StratumDefault)context.Value;
-            (DataContext as StratumTemplateFieldsViewModel).StratumDefault = selectedStratumTemplate;
+            var selectedStratumTemplate = (StratumTemplate)context.Value;
+            (DataContext as StratumTemplateFieldsViewModel).StratumTemplate = selectedStratumTemplate;
         }
     }
 }

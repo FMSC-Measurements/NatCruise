@@ -527,38 +527,48 @@ WHERE CruiseID = @CruiseID AND Field = @Field;",
         }
         #endregion
 
+        #region StratumTemplate
 
-        #region StratumDefault
-        public IEnumerable<StratumDefault> GetStratumDefaults()
+        public IEnumerable<StratumTemplate> GetStratumTemplates()
         {
-            return Database.From<StratumDefault>().Query().ToArray();
+            return Database
+                .From<StratumTemplate>()
+                .Where("CruiseID = @p1")
+                .Query(CruiseID).ToArray();
         }
 
-        public IEnumerable<StratumDefault> GetTreeFieldSetupStratumDefaults()
+        public void UpsertStratumTemplate(StratumTemplate st)
         {
-            return Database.From<StratumDefault>()
-                .Where("EXISTS (SELECT * FROM TreeFieldSetupDefault AS tfsd WHERE tfsd.StratumDefaultID = StratumDefault.StratumDefaultID AND tfsd.SampleGroupDefaultID IS NULL)")
-                .Query().ToArray();
-        }
-
-        public void AddStratumDefault(StratumDefault std)
-        {
-            if (string.IsNullOrEmpty(std.StratumDefaultID)) { throw new ArgumentException("Value was null or empty", nameof(std)); }
-
-            Database.Insert(std);
-        }
-
-        public void UpdateStratumDefault(StratumDefault std)
-        {
-            if (std is null) { throw new ArgumentNullException(nameof(std)); }
-
             Database.Execute2(
-@"UPDATE StratumDefault SET
-    Region = @Region,
-    Forest = @Forest,
-    District = @District,
+@"INSERT INTO StratumTemplate (
+    StratumTemplateName,
+    CruiseID,
+    StratumCode,
+    Method,
+    BasalAreaFactor,
+    FixedPlotSize,
+    KZ3PPNT,
+    SamplingFrequency,
+    Hotkey,
+    FBSCode,
+    YieldComponent,
+    FixCNTField
+) VALUES (
+    @StratumTemplateName,
+    @CruiseID,
+    @StratumCode,
+    @Method,
+    @BasalAreaFactor,
+    @FixedPlotSize,
+    @KZ3PPNT,
+    @SamplingFrequency,
+    @Hotkey,
+    @FBSCode,
+    @YieldComponent,
+    @FixCNTField
+) ON CONFLICT (StratumTemplateName, CruiseID) DO
+UPDATE SET 
     StratumCode = @StratumCode,
-    Description = @Description,
     Method = @Method,
     BasalAreaFactor = @BasalAreaFactor,
     FixedPlotSize = @FixedPlotSize,
@@ -568,237 +578,412 @@ WHERE CruiseID = @CruiseID AND Field = @Field;",
     FBSCode = @FBSCode,
     YieldComponent = @YieldComponent,
     FixCNTField = @FixCNTField
-WHERE StratumDefaultID = @StratumDefaultID;
-", std);
-        }
-        #endregion
-
-        #region SampleGroupDefaults
-        public IEnumerable<SampleGroupDefault> GetSampleGroupDefaults()
-        {
-            return Database.From<SampleGroupDefault>().Query().ToArray();
-        }
-
-        public void AddSampleGroupDefault(SampleGroupDefault sgd)
-        {
-            Database.Execute2(
-@"INSERT INTO SampleGroupDefault (
-    SampleGroupDefaultID,
-    Region,
-    Forest,
-    District,
-    SampleGroupCode,
-    CutLeave,
-    UOM,
-    PrimaryProduct,
-    SecondaryProduct,
-    BiomassProduct,
-    DefaultLiveDead,
-    SamplingFrequency,
-    InsuranceFrequency,
-    KZ,
-    BigBAF,
-    TallyBySubPop,
-    UseExternalSampler,
-    TallyMethod,
-    Description,
-    MinKPI,
-    MaxKPI,
-    SmallFPS
-) VALUES (
-    @SampleGroupDefaultID,
-    @Region,
-    @Forest,
-    @District,
-    @SampleGroupCode,
-    @CutLeave,
-    @UOM,
-    @PrimaryProduct,
-    @SecondaryProduct,
-    @BiomassProduct,
-    @DefaultLiveDead,
-    @SamplingFrequency,
-    @InsuranceFrequency,
-    @KZ,
-    @BigBAF,
-    @TallyBySubPop,
-    @UseExternalSampler,
-    @TallyMethod,
-    @Description,
-    @MinKPI,
-    @MaxKPI,
-    @SmallFPS
-)", sgd);
+WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID;",
+            new
+            {
+                CruiseID,
+                st.StratumTemplateName,
+                st.StratumCode,
+                st.Method,
+                st.BasalAreaFactor,
+                st.FixedPlotSize,
+                st.KZ3PPNT,
+                st.SamplingFrequency,
+                st.Hotkey,
+                st.FBSCode,
+                st.YieldComponent,
+                st.FixCNTField,
+            });
         }
 
-        public void UpdateSampleGroupDefault(SampleGroupDefault sgd)
+        public void DeleteStratumTemplate(StratumTemplate st)
         {
-            Database.Execute2(
-@"UPDATE SampleGroupDefault SET 
-    Region = @Region,
-    Forest = @Forest,
-    District = @District,
-    SampleGroupCode = @SampleGroupCode,
-    CutLeave = @CutLeave,
-    UOM = @UOM,
-    PrimaryProduct = @PrimaryProduct,
-    SecondaryProduct = @SecondaryProduct,
-    BiomassProduct = @BiomassProduct,
-    DefaultLiveDead = @DefaultLiveDead,
-    SamplingFrequency = @SamplingFrequency,
-    InsuranceFrequency = @InsuranceFrequency,
-    KZ = @KZ,
-    BigBAF = @BigBAF,
-    TallyBySubPop = @TallyBySubPop,
-    UseExternalSampler = @UseExternalSampler,
-    TallyMethod = @TallyMethod,
-    Description = @Description,
-    MinKPI = @MinKPI,
-    MaxKPI = @MaxKPI,
-    SmallFPS = @SmallFPS
-    WHERE SampleGroupDefaultID = @SampleGroupDefaultID;", sgd);
+            Database.Execute("DELETE FROM StratumTemplate WHERE StratumTemplateName = @p1 AND CruiseID = @p2;", st.StratumTemplateName, CruiseID);
         }
+
 
         #endregion
 
-        #region TreeFieldSetupDefault
-        public IEnumerable<TreeFieldSetupDefault> GetTreeFieldSetupDefaults(string stratumDefaultID)
+        #region StratumTemplateTreeFieldSetup
+        public IEnumerable<StratumTemplateTreeFieldSetup> GetStratumTemplateTreeFieldSetups(string stratumTemplateName)
         {
-            if (string.IsNullOrWhiteSpace(stratumDefaultID)) { throw new ArgumentException($"'{nameof(stratumDefaultID)}' cannot be null or whitespace.", nameof(stratumDefaultID)); }
-
-            return Database.From<TreeFieldSetupDefault>()
-                .Where("StratumDefaultID =  @p1")
-                .Query(stratumDefaultID).ToArray();
+            return Database.From<StratumTemplateTreeFieldSetup>()
+                .Where("StratumTemplateName = @p1 AND CruiseID = @p2")
+                .Query(stratumTemplateName, CruiseID).ToArray();
         }
 
-        public void AddTreeFieldSetupDefault(TreeFieldSetupDefault tfsd)
+        public void UpsertStratumTemplateTreeFieldSetup(StratumTemplateTreeFieldSetup stfs)
         {
-            if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
-
             Database.Execute2(
-@"INSERT INTO TreeFieldSetupDefault (
-    StratumDefaultID,
-    SampleGroupDefaultID,
+@"INSERT INTO StratumTemplateTreeFieldSetup (
+    StratumTemplateName,
+    CruiseID,
     Field,
     FieldOrder,
     IsHidden,
     IsLocked,
-    DefaultValueInt,
+    DefaultValueInt, 
     DefaultValueReal,
     DefaultValueBool,
     DefaultValueText
 ) VALUES (
-    @StratumDefaultID,
-    @SampleGroupDefaultID,
+    @StratumTemplateName,
+    @CruiseID,
     @Field,
     @FieldOrder,
     @IsHidden,
     @IsLocked,
-    @DefaultValueInt,
+    @DefaultValueInt, 
     @DefaultValueReal,
     @DefaultValueBool,
     @DefaultValueText
-);", tfsd);
-        }
-
-        public void UpsertTreeFieldSetupDefault(TreeFieldSetupDefault tfsd)
-        {
-            if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
-
-            Database.Execute2(
-@"INSERT INTO TreeFieldSetupDefault (
-    StratumDefaultID,
-    SampleGroupDefaultID,
-    Field,
-    FieldOrder,
-    IsHidden,
-    IsLocked,
-    DefaultValueInt,
-    DefaultValueReal,
-    DefaultValueBool,
-    DefaultValueText
-) VALUES (
-    @StratumDefaultID,
-    @SampleGroupDefaultID,
-    @Field,
-    @FieldOrder,
-    @IsHidden,
-    @IsLocked,
-    @DefaultValueInt,
-    @DefaultValueReal,
-    @DefaultValueBool,
-    @DefaultValueText
-)
-ON CONFLICT (ifnull(StratumDefaultID, ''), ifnull(SampleGroupDefaultID, ''), Field) DO
+) ON CONFLICT (StratumTemplateName, CruiseID, Field) DO
 UPDATE SET
     FieldOrder = @FieldOrder,
     IsHidden = @IsHidden,
     IsLocked = @IsLocked,
-    DefaultValueInt = @DefaultValueInt,
+    DefaultValueInt = @DefaultValueInt, 
     DefaultValueReal = @DefaultValueReal,
     DefaultValueBool = @DefaultValueBool,
     DefaultValueText = @DefaultValueText
-WHERE ifnull(StratumDefaultID, '') = ifnull(@StratumDefaultID, '')
-    AND ifnull(SampleGroupDefaultID, '') = ifnull(@SampleGroupDefaultID, '')
-    AND Field = @Field;", tfsd);
+WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID AND Field = @Field;",
+            new
+            {
+                stfs.StratumTemplateName,
+                CruiseID,
+                stfs.Field,
+                stfs.FieldOrder,
+                stfs.IsHidden,
+                stfs.IsLocked,
+                stfs.DefaultValueInt,
+                stfs.DefaultValueReal,
+                stfs.DefaultValueText,
+                stfs.DefaultValueBool,
+            });
         }
 
-        public void DeleteTreeFieldSetupDefault(TreeFieldSetupDefault tfsd)
+        public void DeleteStratumTemplateTreeFieldSetup(StratumTemplateTreeFieldSetup stfs)
         {
-            if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
-
-            Database.Execute2(
-@"DELETE FROM TreeFieldSetupDefault
-    WHERE ifnull(StratumDefaultID, '') = ifnull(@StratumDefaultID, '')
-    AND ifnull(SampleGroupDefaultID, '') = ifnull(@SampleGroupDefaultID, '')
-    AND Field = @Field;", tfsd);
+            Database.Execute("DELETE FROM StratumTemplateTreeFieldSetup StratumTemplateName = @p1 AND CruiseID = @p2 AND Field = @p3;", stfs.StratumTemplateName, CruiseID, stfs.Field);
         }
+
         #endregion
 
-        #region LogFieldSetupDefault
-        public IEnumerable<LogFieldSetupDefault> GetLogFieldSetupDefaults()
+        #region StratumTemplateLogFieldSetup
+
+        public IEnumerable<StratumTemplateLogFieldSetup> GetStratumTemplateLogFieldSetup(string stratumTemplateName)
         {
-            return Database.From<LogFieldSetupDefault>().Query().ToArray();
+            return Database.From<StratumTemplateLogFieldSetup>()
+                .Where("StratumTemplateName = @p1 AND CruiseID = @p2")
+                .Query(stratumTemplateName, CruiseID).ToArray();
         }
 
-        public IEnumerable<LogFieldSetupDefault> GetLogFieldSetupDefaults(string stratumDefaultID)
+        public void UpsertStratumTemplateLogFieldSetup(StratumTemplateLogFieldSetup stlfs)
         {
-            return Database.From<LogFieldSetupDefault>()
-                .Where("StratumDefaultID = @p1").Query(stratumDefaultID).ToArray();
-        }
-
-        public void AddLogFieldSetupDefault(LogFieldSetupDefault lfsd)
-        {
-            Database.Execute2(
-@"INSERT INTO LogFieldSetupDefault (
-    StratumDefaultID,
+            Database.Execute(
+@"INSERT INTO StratumTemplateLogFieldSetup (
+    StratumTemplateName,
+    CruiseID,
     Field,
     FieldOrder
 ) VALUES (
-    @StratumDefaultID,
+    @StratumTemplateName,
+    @CruiseID,
     @Field,
     @FieldOrder
-);", lfsd);
+) ON CONFLICT (StratumTemplateName, CruiseID, Field) DO
+UPDATE StratumTemplateLogFieldSetup SET
+        FieldOrder = @FieldOrder
+WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID AND Field = @Field;",
+            new
+            {
+                stlfs.StratumTemplateName,
+                CruiseID,
+                stlfs.Field,
+                stlfs.FieldOrder,
+            });
         }
 
-        public void UpsertLogFieldSetupDefault(LogFieldSetupDefault lfsd)
+        public void DeleteStratumTemplateLogFieldSetup(StratumTemplateLogFieldSetup stlfs)
         {
-            Database.Execute2(
-@"INSERT INTO LogFieldSetupDefault (
-    StratumDefaultID,
-    Field,
-    FieldOrder
-) VALUES (
-    @StratumDefaultID,
-    @Field,
-    @FieldOrder
-)
-ON CONFLICT (StratumDefaultID, Field) DO
-UPDATE SET
-    FieldOrder = @FieldOrder
-WHERE StratumDefaultID = @StratumDefaultID AND Field = @Field;", lfsd);
+            Database.Execute("DELETE FROM StratumTemplateLogFieldSetup WHERE StratumTemplateName = @p1 AND CruiseID = @p2 AND Field = @p3;"
+                , stlfs.StratumTemplateName, CruiseID, stlfs.Field);
         }
+
         #endregion
+
+
+//        #region StratumDefault
+//        public IEnumerable<StratumDefault> GetStratumDefaults()
+//        {
+//            return Database.From<StratumDefault>().Query().ToArray();
+//        }
+
+//        public IEnumerable<StratumDefault> GetTreeFieldSetupStratumDefaults()
+//        {
+//            return Database.From<StratumDefault>()
+//                .Where("EXISTS (SELECT * FROM TreeFieldSetupDefault AS tfsd WHERE tfsd.StratumDefaultID = StratumDefault.StratumDefaultID AND tfsd.SampleGroupDefaultID IS NULL)")
+//                .Query().ToArray();
+//        }
+
+//        public void AddStratumDefault(StratumDefault std)
+//        {
+//            if (string.IsNullOrEmpty(std.StratumDefaultID)) { throw new ArgumentException("Value was null or empty", nameof(std)); }
+
+//            Database.Insert(std);
+//        }
+
+//        public void UpdateStratumDefault(StratumDefault std)
+//        {
+//            if (std is null) { throw new ArgumentNullException(nameof(std)); }
+
+//            Database.Execute2(
+//@"UPDATE StratumDefault SET
+//    Region = @Region,
+//    Forest = @Forest,
+//    District = @District,
+//    StratumCode = @StratumCode,
+//    Description = @Description,
+//    Method = @Method,
+//    BasalAreaFactor = @BasalAreaFactor,
+//    FixedPlotSize = @FixedPlotSize,
+//    KZ3PPNT = @KZ3PPNT,
+//    SamplingFrequency = @SamplingFrequency,
+//    Hotkey = @Hotkey,
+//    FBSCode = @FBSCode,
+//    YieldComponent = @YieldComponent,
+//    FixCNTField = @FixCNTField
+//WHERE StratumDefaultID = @StratumDefaultID;
+//", std);
+//        }
+//        #endregion
+
+//        #region SampleGroupDefaults
+//        public IEnumerable<SampleGroupDefault> GetSampleGroupDefaults()
+//        {
+//            return Database.From<SampleGroupDefault>().Query().ToArray();
+//        }
+
+//        public void AddSampleGroupDefault(SampleGroupDefault sgd)
+//        {
+//            Database.Execute2(
+//@"INSERT INTO SampleGroupDefault (
+//    SampleGroupDefaultID,
+//    Region,
+//    Forest,
+//    District,
+//    SampleGroupCode,
+//    CutLeave,
+//    UOM,
+//    PrimaryProduct,
+//    SecondaryProduct,
+//    BiomassProduct,
+//    DefaultLiveDead,
+//    SamplingFrequency,
+//    InsuranceFrequency,
+//    KZ,
+//    BigBAF,
+//    TallyBySubPop,
+//    UseExternalSampler,
+//    TallyMethod,
+//    Description,
+//    MinKPI,
+//    MaxKPI,
+//    SmallFPS
+//) VALUES (
+//    @SampleGroupDefaultID,
+//    @Region,
+//    @Forest,
+//    @District,
+//    @SampleGroupCode,
+//    @CutLeave,
+//    @UOM,
+//    @PrimaryProduct,
+//    @SecondaryProduct,
+//    @BiomassProduct,
+//    @DefaultLiveDead,
+//    @SamplingFrequency,
+//    @InsuranceFrequency,
+//    @KZ,
+//    @BigBAF,
+//    @TallyBySubPop,
+//    @UseExternalSampler,
+//    @TallyMethod,
+//    @Description,
+//    @MinKPI,
+//    @MaxKPI,
+//    @SmallFPS
+//)", sgd);
+//        }
+
+//        public void UpdateSampleGroupDefault(SampleGroupDefault sgd)
+//        {
+//            Database.Execute2(
+//@"UPDATE SampleGroupDefault SET 
+//    Region = @Region,
+//    Forest = @Forest,
+//    District = @District,
+//    SampleGroupCode = @SampleGroupCode,
+//    CutLeave = @CutLeave,
+//    UOM = @UOM,
+//    PrimaryProduct = @PrimaryProduct,
+//    SecondaryProduct = @SecondaryProduct,
+//    BiomassProduct = @BiomassProduct,
+//    DefaultLiveDead = @DefaultLiveDead,
+//    SamplingFrequency = @SamplingFrequency,
+//    InsuranceFrequency = @InsuranceFrequency,
+//    KZ = @KZ,
+//    BigBAF = @BigBAF,
+//    TallyBySubPop = @TallyBySubPop,
+//    UseExternalSampler = @UseExternalSampler,
+//    TallyMethod = @TallyMethod,
+//    Description = @Description,
+//    MinKPI = @MinKPI,
+//    MaxKPI = @MaxKPI,
+//    SmallFPS = @SmallFPS
+//    WHERE SampleGroupDefaultID = @SampleGroupDefaultID;", sgd);
+//        }
+
+//        #endregion
+
+//        #region TreeFieldSetupDefault
+//        public IEnumerable<TreeFieldSetupDefault> GetTreeFieldSetupDefaults(string stratumDefaultID)
+//        {
+//            if (string.IsNullOrWhiteSpace(stratumDefaultID)) { throw new ArgumentException($"'{nameof(stratumDefaultID)}' cannot be null or whitespace.", nameof(stratumDefaultID)); }
+
+//            return Database.From<TreeFieldSetupDefault>()
+//                .Where("StratumDefaultID =  @p1")
+//                .Query(stratumDefaultID).ToArray();
+//        }
+
+//        public void AddTreeFieldSetupDefault(TreeFieldSetupDefault tfsd)
+//        {
+//            if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
+
+//            Database.Execute2(
+//@"INSERT INTO TreeFieldSetupDefault (
+//    StratumDefaultID,
+//    SampleGroupDefaultID,
+//    Field,
+//    FieldOrder,
+//    IsHidden,
+//    IsLocked,
+//    DefaultValueInt,
+//    DefaultValueReal,
+//    DefaultValueBool,
+//    DefaultValueText
+//) VALUES (
+//    @StratumDefaultID,
+//    @SampleGroupDefaultID,
+//    @Field,
+//    @FieldOrder,
+//    @IsHidden,
+//    @IsLocked,
+//    @DefaultValueInt,
+//    @DefaultValueReal,
+//    @DefaultValueBool,
+//    @DefaultValueText
+//);", tfsd);
+//        }
+
+//        public void UpsertTreeFieldSetupDefault(TreeFieldSetupDefault tfsd)
+//        {
+//            if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
+
+//            Database.Execute2(
+//@"INSERT INTO TreeFieldSetupDefault (
+//    StratumDefaultID,
+//    SampleGroupDefaultID,
+//    Field,
+//    FieldOrder,
+//    IsHidden,
+//    IsLocked,
+//    DefaultValueInt,
+//    DefaultValueReal,
+//    DefaultValueBool,
+//    DefaultValueText
+//) VALUES (
+//    @StratumDefaultID,
+//    @SampleGroupDefaultID,
+//    @Field,
+//    @FieldOrder,
+//    @IsHidden,
+//    @IsLocked,
+//    @DefaultValueInt,
+//    @DefaultValueReal,
+//    @DefaultValueBool,
+//    @DefaultValueText
+//)
+//ON CONFLICT (ifnull(StratumDefaultID, ''), ifnull(SampleGroupDefaultID, ''), Field) DO
+//UPDATE SET
+//    FieldOrder = @FieldOrder,
+//    IsHidden = @IsHidden,
+//    IsLocked = @IsLocked,
+//    DefaultValueInt = @DefaultValueInt,
+//    DefaultValueReal = @DefaultValueReal,
+//    DefaultValueBool = @DefaultValueBool,
+//    DefaultValueText = @DefaultValueText
+//WHERE ifnull(StratumDefaultID, '') = ifnull(@StratumDefaultID, '')
+//    AND ifnull(SampleGroupDefaultID, '') = ifnull(@SampleGroupDefaultID, '')
+//    AND Field = @Field;", tfsd);
+//        }
+
+//        public void DeleteTreeFieldSetupDefault(TreeFieldSetupDefault tfsd)
+//        {
+//            if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
+
+//            Database.Execute2(
+//@"DELETE FROM TreeFieldSetupDefault
+//    WHERE ifnull(StratumDefaultID, '') = ifnull(@StratumDefaultID, '')
+//    AND ifnull(SampleGroupDefaultID, '') = ifnull(@SampleGroupDefaultID, '')
+//    AND Field = @Field;", tfsd);
+//        }
+//        #endregion
+
+//        #region LogFieldSetupDefault
+//        public IEnumerable<LogFieldSetupDefault> GetLogFieldSetupDefaults()
+//        {
+//            return Database.From<LogFieldSetupDefault>().Query().ToArray();
+//        }
+
+//        public IEnumerable<LogFieldSetupDefault> GetLogFieldSetupDefaults(string stratumDefaultID)
+//        {
+//            return Database.From<LogFieldSetupDefault>()
+//                .Where("StratumDefaultID = @p1").Query(stratumDefaultID).ToArray();
+//        }
+
+//        public void AddLogFieldSetupDefault(LogFieldSetupDefault lfsd)
+//        {
+//            Database.Execute2(
+//@"INSERT INTO LogFieldSetupDefault (
+//    StratumDefaultID,
+//    Field,
+//    FieldOrder
+//) VALUES (
+//    @StratumDefaultID,
+//    @Field,
+//    @FieldOrder
+//);", lfsd);
+//        }
+
+//        public void UpsertLogFieldSetupDefault(LogFieldSetupDefault lfsd)
+//        {
+//            Database.Execute2(
+//@"INSERT INTO LogFieldSetupDefault (
+//    StratumDefaultID,
+//    Field,
+//    FieldOrder
+//) VALUES (
+//    @StratumDefaultID,
+//    @Field,
+//    @FieldOrder
+//)
+//ON CONFLICT (StratumDefaultID, Field) DO
+//UPDATE SET
+//    FieldOrder = @FieldOrder
+//WHERE StratumDefaultID = @StratumDefaultID AND Field = @Field;", lfsd);
+//        }
+//        #endregion
 
         #region Reports
         public IEnumerable<Reports> GetReports()
