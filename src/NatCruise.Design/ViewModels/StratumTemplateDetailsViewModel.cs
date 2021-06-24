@@ -13,7 +13,7 @@ namespace NatCruise.Design.ViewModels
     {
         public readonly string[] YealdComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
 
-        private StratumDefault _stratumDefault;
+        private StratumTemplate _stratumTemplate;
         private IEnumerable<TreeField> _treefieldOptions;
         private IEnumerable<CruiseMethod> _methods;
 
@@ -42,29 +42,29 @@ namespace NatCruise.Design.ViewModels
             set => SetProperty(ref _methods, value);
         }
 
-        public StratumDefault StratumDefault
+        public StratumTemplate StratumTemplate
         {
-            get => _stratumDefault;
+            get => _stratumTemplate;
             set
             {
-                if(_stratumDefault != null)
+                if(_stratumTemplate != null)
                 {
-                    _stratumDefault.PropertyChanged -= StratumDefault_PropertyChanged;
+                    _stratumTemplate.PropertyChanged -= StratumTemplate_PropertyChanged;
                 }
-                SetProperty(ref _stratumDefault, value);
+                SetProperty(ref _stratumTemplate, value);
                 if(value != null)
                 {
-                    value.PropertyChanged += StratumDefault_PropertyChanged;
+                    value.PropertyChanged += StratumTemplate_PropertyChanged;
                 }
             }
         }
 
-        private void StratumDefault_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void StratumTemplate_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var std = sender as StratumDefault;
-            if (std != null)
+            var st = sender as StratumTemplate;
+            if (st != null)
             {
-                TemplateDataservice.UpdateStratumDefault(std);
+                TemplateDataservice.UpsertStratumTemplate(st);
             }
         }
     }
