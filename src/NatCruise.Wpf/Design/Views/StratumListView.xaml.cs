@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using NatCruise.Design.Models;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace NatCruise.Design.Views
 {
@@ -23,6 +11,22 @@ namespace NatCruise.Design.Views
         public StratumListView()
         {
             InitializeComponent();
+        }
+
+        private void _stratumTemplateCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                var template = e.AddedItems[0] as StratumTemplate;
+                if (template != null)
+                {
+                    if(!string.IsNullOrWhiteSpace(template.StratumCode))
+                    {
+                        _stratumCodeTextBox.Text = template.StratumCode;
+                    }
+                    _stratumCodeTextBox.Focus();
+                }
+            }
         }
     }
 }
