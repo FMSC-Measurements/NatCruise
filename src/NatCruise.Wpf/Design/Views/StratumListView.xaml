@@ -28,10 +28,20 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0"
+                <ComboBox x:Name="_stratumTemplateCombobox"
+                          Grid.Row="0"
+                          ItemsSource="{Binding StratumTemplateOptions}"
+                          SelectedItem="{Binding SelectedStratumTemplate}"
+                          SelectionChanged="_stratumTemplateCombobox_SelectionChanged"
+                          mah:TextBoxHelper.UseFloatingWatermark="True"
+                          mah:TextBoxHelper.Watermark="Stratum Template">
+                </ComboBox>
+
+                <Grid Grid.Row="1"
                       VerticalAlignment="Stretch">
                     <Grid.Resources>
                         <Style TargetType="{x:Type Button}"
@@ -63,6 +73,7 @@
                                 <i:InvokeCommandAction Command="{Binding AddStratumCommand}"
                                                        CommandParameter="{Binding Text, Source={x:Reference _stratumCodeTextBox}}" />
                                 <triggers:ClearTextBoxAction TargetName="_stratumCodeTextBox" />
+                                <triggers:ClearComboBoxTextAction TargetName="_stratumTemplateCombobox" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>
@@ -76,7 +87,7 @@
 
                 </Grid>
 
-                <ListView Grid.Row="1"
+                <ListView Grid.Row="2"
                           x:Name="_stratumListView"
                           ItemsSource="{Binding Strata}"
                           SelectedItem="{Binding SelectedStratum}"
@@ -124,6 +135,7 @@
             </TabControl.Resources>
 
         </TabControl>
+        
 
         <!--<ContentControl />-->
 

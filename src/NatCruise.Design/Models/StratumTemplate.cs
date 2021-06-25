@@ -6,10 +6,10 @@ namespace NatCruise.Design.Models
     {
         private string _stratumCode;
         private string _method;
-        private double? _basalAreaFactor;
-        private double? _fixedPlotSize;
-        private int? _kz3ppnt;
-        private int? _samplingFrequency;
+        private double _basalAreaFactor;
+        private double _fixedPlotSize;
+        private int _kz3ppnt;
+        private int _samplingFrequency;
         private string _hotKey;
         private string _fbsCode;
         private string _yieldComponent;
@@ -34,25 +34,25 @@ namespace NatCruise.Design.Models
             set => SetProperty(ref _method, value);
         }
 
-        public double? BasalAreaFactor
+        public double BasalAreaFactor
         {
             get => _basalAreaFactor;
             set => SetProperty(ref _basalAreaFactor, value);
         }
 
-        public double? FixedPlotSize
+        public double FixedPlotSize
         {
             get => _fixedPlotSize;
             set => SetProperty(ref _fixedPlotSize, value);
         }
 
-        public int? KZ3PPNT
+        public int KZ3PPNT
         {
             get => _kz3ppnt;
             set => SetProperty(ref _kz3ppnt, value);
         }
 
-        public int? SamplingFrequency
+        public int SamplingFrequency
         {
             get => _samplingFrequency;
             set => SetProperty(ref _samplingFrequency, value);
