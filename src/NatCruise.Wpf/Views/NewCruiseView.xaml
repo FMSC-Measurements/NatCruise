@@ -131,7 +131,6 @@
                       Grid.Row="8"
                       Margin="30,0,0,10"
                       SelectedValue="{Binding Purpose}"
-                      SelectedValuePath="PurposeCode"
                       ItemsSource="{Binding PurposeOptions}" />
             <Label Content="Region"
                    HorizontalAlignment="Left"
