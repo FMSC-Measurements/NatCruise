@@ -164,7 +164,7 @@ namespace NatCruise.Wpf.ViewModels
                     };
 
                     var purpose = Purpose;
-                    var cruiseNumber = (purpose == "TS" || purpose == "Timber Sale") ? SaleNumber + "TS" : SaleNumber;
+                    var cruiseNumber = SaleNumber;
                     var cruiseID = Guid.NewGuid().ToString();
                     var cruise = new CruiseDAL.V3.Models.Cruise()
                     {
@@ -230,22 +230,22 @@ namespace NatCruise.Wpf.ViewModels
                 dest.AddTreeDefaultValue(tdv);
             }
 
-            var stratumDefaults = src.GetStratumDefaults();
+            var stratumTemplate = src.GetStratumTemplates();
 
-            foreach (var sd in stratumDefaults)
+            foreach (var st in stratumTemplate)
             {
-                dest.AddStratumDefault(sd);
+                dest.UpsertStratumTemplate(st);
 
-                var treeFieldSetupDefaults = src.GetTreeFieldSetupDefaults(sd.StratumDefaultID);
+                var treeFieldSetupDefaults = src.GetStratumTemplateTreeFieldSetups(st.StratumTemplateName);
                 foreach (var tfsd in treeFieldSetupDefaults)
                 {
-                    dest.AddTreeFieldSetupDefault(tfsd);
+                    dest.UpsertStratumTemplateTreeFieldSetup(tfsd);
                 }
 
-                var logFieldSetupDefaults = src.GetLogFieldSetupDefaults(sd.StratumDefaultID);
+                var logFieldSetupDefaults = src.GetStratumTemplateLogFieldSetup(st.StratumTemplateName);
                 foreach (var lfsd in logFieldSetupDefaults)
                 {
-                    dest.AddLogFieldSetupDefault(lfsd);
+                    dest.UpsertStratumTemplateLogFieldSetup(lfsd);
                 }
             }
 
