@@ -76,8 +76,6 @@ namespace NatCruise.Design.Test.Data
 
         #endregion species
 
-
-
         #region SampleGroupDefaults
 
         [Fact]
@@ -133,43 +131,5 @@ namespace NatCruise.Design.Test.Data
         }
 
         #endregion SampleGroupDefaults
-
-
-        #region TreeFieldSetupDefault
-
-        [Fact]
-        public void DeleteTreeFieldSetupDefault()
-        {
-            var initializer = new DatastoreInitializer();
-            using var db = initializer.CreateDatabase();
-            var ds = new TemplateDataservice(db, initializer.CruiseID, initializer.DeviceID);
-
-            var stdID = Guid.NewGuid().ToString();
-            var std = new StratumDefault()
-            {
-                StratumDefaultID = stdID,
-                Description = "something",
-            };
-
-            ds.AddStratumDefault(std);
-
-            var tfsd = new TreeFieldSetupDefault()
-            {
-                StratumDefaultID = stdID,
-                Field = "DBH",
-            };
-
-            ds.AddTreeFieldSetupDefault(tfsd);
-
-            var tfsdAgain = ds.GetTreeFieldSetupDefaults(stdID).Single();
-            tfsdAgain.Should().NotBeNull();
-
-            ds.DeleteTreeFieldSetupDefault(tfsd);
-
-            ds.GetTreeFieldSetupDefaults(stdID).Should().BeEmpty();
-
-        }
-        #endregion
-
     }
 }
