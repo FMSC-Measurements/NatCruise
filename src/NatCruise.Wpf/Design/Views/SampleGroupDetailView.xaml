@@ -1,11 +1,11 @@
 ﻿<UserControl x:Class="NatCruise.Design.Views.SampleGroupDetailView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
              ToolTip="Sample Group Details"
              mc:Ignorable="d"
@@ -16,9 +16,12 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="isVisableConverter" />
+            <converters:CruiseMethodToVisableConverter x:Key="IsNotPlotMethodConverter"
+                                                       TrueValue="Collapsed"
+                                                       FalseValue="Visible"
+                                                       MethodMap="PlotMethods" />
         </ResourceDictionary>
     </UserControl.Resources>
-
 
     <WrapPanel Background="{StaticResource brush_background}"
                Margin="0,0,0,-99">
@@ -59,7 +62,6 @@
               VerticalAlignment="Top">
             <Grid.Resources>
                 <ResourceDictionary>
-
                 </ResourceDictionary>
             </Grid.Resources>
 
@@ -131,7 +133,6 @@
                 </ComboBox.ItemsSource>
             </ComboBox>
 
-
             <Label Content="Cut/Leave"
                    Grid.Row="5"
                    Grid.Column="0" />
@@ -151,13 +152,10 @@
                       Grid.Column="1"
                       ToolTip="Tally By Species"
                       IsChecked="{Binding TallyBySubPop}" />
-
-
-
         </Grid>
 
         <GroupBox Header="Sampleing Frequency Options"
-                  Visibility="{Binding CruiseMethod, Converter={StaticResource IsFrequencySampleVisibilityConverter}, FallbackValue=Visible}"
+                  Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsFrequencySampleVisibilityConverter}, FallbackValue=Visible}"
                   Margin="5"
                   Height="148"
                   VerticalAlignment="Top">
@@ -173,24 +171,22 @@
                     <TextBox Text="{Binding SamplingFrequency}" />
                 </StackPanel>
 
-
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsNotPlotMethodConverter}, FallbackValue=Visible}">
                     <Label Content="Insurance Frequency" />
                     <TextBox Text="{Binding InsuranceFrequency}" />
                 </StackPanel>
 
-
                 <StackPanel Orientation="Horizontal"
-                            Visibility="{Binding CruiseMethod, Converter={StaticResource IsSTRVisibilityConverter}, FallbackValue=Visible}">
+                            Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsSTRVisibilityConverter}, FallbackValue=Visible}">
                     <Label Content="Sample Selector Type" />
                     <ComboBox ItemsSource="{Binding SampleSelectorTypeOptions}"
                               SelectedItem="{Binding SampleSelectorType}" />
                 </StackPanel>
-
             </StackPanel>
         </GroupBox>
         <GroupBox Header="3P/F3P/P3P Options"
-                  Visibility="{Binding CruiseMethod, Converter={StaticResource IsThreePMethodsVisibilityConverter}, FallbackValue=Visible}"
+                  Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsThreePMethodsVisibilityConverter}, FallbackValue=Visible}"
                   Margin="5"
                   Height="180"
                   VerticalAlignment="Top">
@@ -207,7 +203,8 @@
                              ToolTip="KZ" />
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsNotPlotMethodConverter}, FallbackValue=Visible}">
                     <Label Content="Insurance Frequency" />
                     <TextBox ToolTip="Insurance Frequency"
                              Text="{Binding InsuranceFrequency}" />
@@ -226,7 +223,7 @@
         </GroupBox>
 
         <GroupBox Header="Variable Radius"
-                  Visibility="{Binding CruiseMethod, Converter={StaticResource IsVariableRadiousPlotMethodVisibilityConverter}, FallbackValue=Visible}"
+                  Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsVariableRadiousPlotMethodVisibilityConverter}, FallbackValue=Visible}"
                   Margin="5"
                   VerticalAlignment="Top">
             <Grid>
@@ -245,7 +242,6 @@
                 <TextBox Text="{Binding BigBAF}"
                          ToolTip="Big BAF"
                          Grid.Column="1" />
-
             </Grid>
         </GroupBox>
     </WrapPanel>
