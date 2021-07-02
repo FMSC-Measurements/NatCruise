@@ -1,13 +1,12 @@
 ﻿<UserControl x:Class="NatCruise.Design.Views.SubpopulationListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:NatCruise.Design.Views"
-             xmlns:prism="http://prismlibrary.com/"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              prism:ViewModelLocator.AutoWireViewModel="True"
              ToolTip="Subpopulations"
              mc:Ignorable="d"
@@ -16,8 +15,8 @@
              IsEnabled="{Binding SampleGroup, Converter={StaticResource NotNullConverter}}">
     <Grid Background="{StaticResource brush_background}">
         <Grid.RowDefinitions>
-            <RowDefinition />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -25,8 +24,48 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <Grid Grid.Row="0"
+              Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="40" />
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}"
+                       BasedOn="{StaticResource MetroFlatButton}">
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+                    <Setter Property="FontSize"
+                            Value="16" />
+                </Style>
+            </Grid.Resources>
+            <ComboBox x:Name="_speciesTextBox"
+                      ItemsSource="{Binding SpeciesOptions}"
+                      IsEditable="True"
+                      IsTextSearchCaseSensitive="False" />
+            <Button x:Name="_addSpeciesButton"
+                    Style="{StaticResource AddButton}"
+                    Grid.Column="1"
+                    IsEnabled="{Binding Text, ElementName=_speciesTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding AddSubpopulationCommand}"
+                                               CommandParameter="{Binding Text, Source={x:Reference _speciesTextBox}}" />
+                        <triggers:ClearComboBoxTextAction TargetName="_speciesTextBox" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button x:Name="_removeSpeciesButton"
+                    Style="{StaticResource RemoveButton}"
+                    Command="{Binding RemoveSubpopulationCommand}"
+                    CommandParameter="{Binding SelectedItem, Source={x:Reference _subpopListView} }"
+                    Grid.Column="2"
+                    IsEnabled="{Binding SelectedItem, ElementName=_subpopListView, Converter={StaticResource NotNullConverter}}" />
+        </Grid>
+
         <DataGrid x:Name="_subpopListView"
-                  Grid.Row="0"
+                  Grid.Row="1"
                   Grid.Column="0"
                   SelectionMode="Single"
                   ItemsSource="{Binding Subpopulations}"
@@ -53,51 +92,12 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Grid Grid.Row="1"
-              Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="40" />
-            </Grid.ColumnDefinitions>
-            <Grid.Resources>
-                <Style TargetType="{x:Type Button}"
-                       BasedOn="{StaticResource MetroFlatButton}">
-                    <Setter Property="FontWeight"
-                            Value="Bold" />
-                    <Setter Property="FontSize"
-                            Value="16" />
-                </Style>
-            </Grid.Resources>
-            <ComboBox x:Name="_speciesTextBox"
-                      ItemsSource="{Binding SpeciesOptions}"
-                      IsEditable="True" />
-            <Button x:Name="_addSpeciesButton"
-                    Style="{StaticResource AddButton}"
-                    Grid.Column="1"
-                    IsEnabled="{Binding Text, ElementName=_speciesTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding AddSubpopulationCommand}"
-                                               CommandParameter="{Binding Text, Source={x:Reference _speciesTextBox}}" />
-                        <triggers:ClearComboBoxTextAction TargetName="_speciesTextBox" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-            <Button x:Name="_removeSpeciesButton"
-                    Style="{StaticResource RemoveButton}"
-                    Command="{Binding RemoveSubpopulationCommand}"
-                    CommandParameter="{Binding SelectedItem, Source={x:Reference _subpopListView} }"
-                    Grid.Column="2"
-                    IsEnabled="{Binding SelectedItem, ElementName=_subpopListView, Converter={StaticResource NotNullConverter}}" />
-
-        </Grid>
-
-        <WrapPanel Grid.Column="1">
+        <WrapPanel Grid.RowSpan="2"
+                   Grid.Column="1">
             <GroupBox Grid.Column="1"
                       Header="FixNT"
                       Margin="3"
-                      Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}">
+                      Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsFixCNTMethodVisibilityConverter}, FallbackValue=Visible}">
                 <Grid DataContext="{Binding SelectedItem, ElementName=_subpopListView}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -125,10 +125,8 @@
                     <TextBox Text="{Binding Max}"
                              Grid.Column="1"
                              Grid.Row="2" />
-
                 </Grid>
             </GroupBox>
         </WrapPanel>
-
     </Grid>
 </UserControl>
