@@ -97,7 +97,7 @@
             </Grid>
 
             <GroupBox Header="Plot Options"
-                      Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsPlotMethodConverter}, FallbackValue=Hidden}"
+                      Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsPlotMethodVisibilityConverter}, FallbackValue=Visible}"
                       Margin="5"
                       VerticalAlignment="Top">
 
@@ -126,28 +126,28 @@
                     </StackPanel.Resources>
 
                     <StackPanel Orientation="Horizontal"
-                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsVariableRadiousPlotMethodConverter}}">
+                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsVariableRadiousPlotMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="BAF" />
                         <TextBox ToolTip="Basal Area Factor"
                                  Text="{Binding StratumTemplate.BasalAreaFactor}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
-                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsFixedSizePlotMethodConverter}}">
+                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsFixedSizePlotMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="FPS" />
                         <TextBox ToolTip="Fixed Plot Size"
                                  Text="{Binding StratumTemplate.FixedPlotSize}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
-                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource Is3PPNTMethodConverter}}">
+                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource Is3PPNTMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="KZ (3PPNT)" />
                         <TextBox ToolTip="KZ (3PPNT)"
                                  Text="{Binding StratumTemplate.KZ3PPNT}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
-                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsFixCNTMethodConverter}}">
+                                Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsFixCNTMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="FIXCNT Field" />
                         <ComboBox Width="100"
                                   ItemsSource="{Binding TreeFieldOptions}"

@@ -27,16 +27,22 @@
             <converters:ReplaceNullConverter x:Key="ReplaceAnyWithNullConverter"
                                              Value="Any" />
 
-            <converters:CruiseMethodToVisableConverter x:Key="IsPlotMethodConverter"
+            <converters:CruiseMethodToVisableConverter x:Key="IsPlotMethodVisibilityConverter"
                                                        MethodMap="PlotMethods" />
-            <converters:CruiseMethodToVisableConverter x:Key="IsFixedSizePlotMethodConverter"
+            <converters:CruiseMethodToVisableConverter x:Key="IsFixedSizePlotMethodVisibilityConverter"
                                                        MethodMap="FixedSizePlotMethods" />
-            <converters:CruiseMethodToVisableConverter x:Key="IsVariableRadiousPlotMethodConverter"
+            <converters:CruiseMethodToVisableConverter x:Key="IsVariableRadiousPlotMethodVisibilityConverter"
                                                        MethodMap="VariableRadiousPlotMethods" />
-            <converters:CruiseMethodToVisableConverter x:Key="Is3PPNTMethodConverter"
+            <converters:CruiseMethodToVisableConverter x:Key="Is3PPNTMethodVisibilityConverter"
                                                        MethodMap="ThreePPNT" />
-            <converters:CruiseMethodToVisableConverter x:Key="IsFixCNTMethodConverter"
+            <converters:CruiseMethodToVisableConverter x:Key="IsFixCNTMethodVisibilityConverter"
                                                        MethodMap="FIXCNT" />
+            <converters:CruiseMethodToVisableConverter x:Key="IsFrequencySampleVisibilityConverter"
+                                                       MethodMap="FrequencySampleMethods" />
+            <converters:CruiseMethodToVisableConverter x:Key="IsSTRVisibilityConverter"
+                                                       MethodMap="STR" />
+            <converters:CruiseMethodToVisableConverter x:Key="IsThreePMethodsVisibilityConverter"
+                                                       MethodMap="ThreePMethods" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Colors.xaml" />
