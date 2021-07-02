@@ -11,12 +11,10 @@ namespace NatCruise.Design.ViewModels
 {
     public class SampleGroupDetailViewModel : ValidationViewModelBase
     {
-        protected readonly string[] Frequency_Based_CruiseMethods = new[] {CruiseMethods.STR, CruiseMethods.PCM, CruiseMethods.FCM, CruiseMethods.S3P, };
         protected readonly string[] SampleSelector_Type_Options = new[] { CruiseMethods.BLOCK_SAMPLER_TYPE, CruiseMethods.SYSTEMATIC_SAMPLER_TYPE, };
-        protected readonly string[] Supports_SamplerType_Selection = new[] { CruiseMethods.STR, }; 
+        protected readonly string[] Supports_SamplerType_Selection = new[] { CruiseMethods.STR, };
 
         private SampleGroup _sampleGroup;
-        private string _method;
         private IEnumerable<Product> _productOptions;
 
         public SampleGroupDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, SampleGroupValidator validator)
@@ -32,7 +30,7 @@ namespace NatCruise.Design.ViewModels
         public ISampleGroupDataservice SampleGroupDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
 
-        public IEnumerable<string> DefaultLiveDeadOptions { get; } = new[] { "L", "D" };
+        public IEnumerable<string> SampleSelectorTypeOptions => SampleSelector_Type_Options;
 
         public IEnumerable<Product> ProductOptions
         {
@@ -68,14 +66,9 @@ namespace NatCruise.Design.ViewModels
                 RaisePropertyChanged(nameof(MaxKPI));
                 RaisePropertyChanged(nameof(SmallFPS));
                 RaisePropertyChanged(nameof(SampleSelectorType));
-                RaisePropertyChanged(nameof(CruiseMethod));
 
-                RaisePropertyChanged(nameof(IsSTR));
-                RaisePropertyChanged(nameof(Is3P));
-                RaisePropertyChanged(nameof(IsVariableRadious));
-                RaisePropertyChanged(nameof(CanSelectSampleSelectorType));
+                RaisePropertyChanged(nameof(CruiseMethod));
                 RaisePropertyChanged(nameof(DefaultSampleSelectorType));
-                RaisePropertyChanged(nameof(IsFrequencyBased));
             }
         }
 
@@ -196,76 +189,21 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
-
         public string CruiseMethod => SampleGroup?.CruiseMethod;
-
-
-        public string Method
-        {
-            get => _method;
-            protected set
-            {
-                SetProperty(ref _method, value);
-            }
-        }
-
-        public bool IsSTR => Method == CruiseMethods.STR;
-        public bool IsFrequencyBased => Frequency_Based_CruiseMethods.Contains(CruiseMethod);
-        public bool Is3P => CruiseMethods.THREE_P_METHODS.Contains(CruiseMethod) || CruiseMethod == CruiseMethods.S3P;
-
-        public bool IsVariableRadious => CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(CruiseMethod);
-
-        public IEnumerable<string> SampleSelectorTypeOptions => SampleSelector_Type_Options;
 
         public string DefaultSampleSelectorType
         {
             get
             {
-                if(Method == CruiseMethods.STR)
+                var method = CruiseMethod;
+                if (method == CruiseMethods.STR)
                 { return CruiseMethods.BLOCK_SAMPLER_TYPE; }
-                else if (Method == CruiseMethods.PCM || Method == CruiseMethods.FCM)
+                else if (method == CruiseMethods.PCM || method == CruiseMethods.FCM)
                 { return CruiseMethods.SYSTEMATIC_SAMPLER_TYPE; }
                 return null;
             }
         }
 
         public bool CanSelectSampleSelectorType => Supports_SamplerType_Selection.Contains(CruiseMethod);
-
-        
-
-        //protected override void Refresh(CruiseManagerNavigationParamiters navParams)
-        //{
-        //    var sampleGroupCode = navParams.SampleGroupCode;
-        //    var stratum = navParams.StratumCode;
-
-        //    SampleGroup = SampleGroupDataservice.GetSampleGroup(stratum, sampleGroupCode);
-
-        //    Method = SampleGroupDataservice.GetMethod(stratum);
-        //    RaisePropertyChanged(nameof(Is3P));
-        //    RaisePropertyChanged(nameof(IsSTR));
-        //    RaisePropertyChanged(nameof(IsVariableRadious));
-        //}
-
-        public override void Load()
-        {
-            var sampleGroup = SampleGroup;
-            if (sampleGroup == null) { return; }
-
-            //switch (method)
-            //{
-            //    case CruiseMethods.STR:
-            //    case CruiseMethods.PCM:
-            //    case CruiseMethods.FCM:
-            //        {
-            //            SampleSelectorTypeOptions = new[]
-            //              {
-            //                SampleGroupTableDefinition.SAMPLESELECTORTYPE_BLOCKSELECTER,
-            //                SampleGroupTableDefinition.SAMPLESELECTORTYPE_SYSTEMATICSELECTER,
-            //                SampleGroupTableDefinition.SAMPLESELECTORTYPE_CLICKERSELECTER
-            //            };
-            //            break;
-            //        }
-            //}
-        }
     }
 }
