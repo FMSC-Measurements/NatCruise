@@ -241,7 +241,7 @@ UPDATE SET
     Min = @Min,
     Max = @Max,
     Description = @Description
-WHERE TreeAuditRuleID = @TreeAuditRule;",
+WHERE TreeAuditRuleID = @TreeAuditRuleID;",
     new
     {
         CruiseID,
