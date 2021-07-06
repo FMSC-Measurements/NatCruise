@@ -46,13 +46,13 @@
                 <StackPanel>
                     <Label Content="Min"
                            FontSize="9" />
-                    <TextBox Text="{Binding NewTreeAuditRule.Min}"
+                    <TextBox Text="{Binding NewTreeAuditRule.Min, StringFormat={}{0:F}}"
                              Width="100" />
                 </StackPanel>
                 <StackPanel>
                     <Label Content="Max"
                            FontSize="9" />
-                    <TextBox Text="{Binding NewTreeAuditRule.Max}"
+                        <TextBox Text="{Binding NewTreeAuditRule.Max, StringFormat={}{0:F}}"
                              Width="100" />
                 </StackPanel>
 
@@ -81,9 +81,9 @@
                 <DataGridTextColumn Header="Tree Field"
                                         Binding="{Binding Field}" />
                 <DataGridTextColumn Header="Min"
-                                    Binding="{Binding Min}" />
+                                    Binding="{Binding Min, StringFormat={}{0:F}}" />
                 <DataGridTextColumn Header="Max"
-                                    Binding="{Binding Max}" />
+                                    Binding="{Binding Max, StringFormat={}{0:F}}" />
                 <DataGridTextColumn Header="Description"
                                     Binding="{Binding Description}"
                                     Width="400" />
