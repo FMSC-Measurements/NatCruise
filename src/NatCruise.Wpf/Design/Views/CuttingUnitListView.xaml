@@ -9,6 +9,7 @@
              x:Class="NatCruise.Design.Views.CuttingUnitListView"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              mc:Ignorable="d"
              d:DesignHeight="450"

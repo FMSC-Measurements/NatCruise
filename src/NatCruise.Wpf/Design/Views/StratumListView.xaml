@@ -10,6 +10,7 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Design.Views.StratumListView"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -82,7 +83,7 @@
                             Style="{StaticResource RemoveButton}"
                             Command="{Binding RemoveStratumCommand}"
                             CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}"
-                            IsEnabled="{Binding SelectedItem, ElementName=_stratumListView, Converter={StaticResource NotNullConverter}}"/>
+                            IsEnabled="{Binding SelectedItem, ElementName=_stratumListView, Converter={StaticResource NotNullConverter}}" />
 
 
                 </Grid>
@@ -135,7 +136,7 @@
             </TabControl.Resources>
 
         </TabControl>
-        
+
 
         <!--<ContentControl />-->
 
