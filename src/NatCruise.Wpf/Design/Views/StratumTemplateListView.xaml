@@ -7,6 +7,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
