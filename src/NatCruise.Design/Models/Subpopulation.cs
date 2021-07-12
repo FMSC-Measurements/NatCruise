@@ -11,9 +11,6 @@ namespace NatCruise.Design.Models
         private int _min;
         private int _max;
 
-        [PrimaryKeyField("Subpopulation_CN")]
-        public int Subpopulation_CN { get; set; }
-
         [Field(PersistanceFlags = PersistanceFlags.OnInsert)]
         public string SubpopulationID { get; set; }
 

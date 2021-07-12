@@ -60,14 +60,16 @@ namespace NatCruise.Wpf
             //regionManager.RegisterViewWithRegion(Regions.ContentRegion, typeof(CruiseMasterPage));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SaleView));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CruiseView));
+
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListView));
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListView));
             regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailView));
 
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListView));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumDetailView));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumFieldSetupView));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(CuttingUnitStrataView));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(SampleGroupListView));
-            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumFieldSetupView));
+            
 
             regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SampleGroupDetailView));
             regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SubpopulationListView));
@@ -76,6 +78,13 @@ namespace NatCruise.Wpf
             regionManager.RegisterViewWithRegion(Regions.TreeAuditSelectors, typeof(TreeAuditSelectorsView));
 
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(TreeDefaultValueListView));
+
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SpeciesListView));
+
+            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumTemplateListView));
+            regionManager.RegisterViewWithRegion(Regions.StratumTemplateRegion, typeof(StratumTemplateDetailsView));
+            regionManager.RegisterViewWithRegion(Regions.StratumTemplateRegion, typeof(StratumTemplateFieldsView));
+            
 
             base.OnInitialized();
 

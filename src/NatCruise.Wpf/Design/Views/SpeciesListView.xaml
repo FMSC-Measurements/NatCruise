@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="NatCruise.Design.Views.SpeciesListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:Name="_page">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="fiaOptions"
+                              Source="{Binding FIAOptions}" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="99*" />
+            <ColumnDefinition Width="315*" />
+            <ColumnDefinition Width="386*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="68*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="316*" />
+            <RowDefinition Height="33*" />
+        </Grid.RowDefinitions>
+        <DataGrid Grid.Column="1"
+                  Grid.Row="2"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeRows="False"
+                  CanUserResizeColumns="False"
+                  x:Name="_speciesDatagrid"
+                  ItemsSource="{Binding Species}">
+            <DataGrid.Resources>
+                
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Species"
+                                    Binding="{Binding SpeciesCode}"
+                                    IsReadOnly="True" />
+                <DataGridTextColumn Header="Contract Species"
+                                    Binding="{Binding ContractSpecies}" />
+                <DataGridComboBoxColumn Header="FIA Code"
+                                        SelectedValueBinding="{Binding FIACode}"
+                                        SelectedValuePath="FIACode"
+                                        ItemsSource="{Binding Source={StaticResource fiaOptions}}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Column="1"
+                    Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="0,2">
+            <TextBox x:Name="_newSpeciesTextBox"
+                     mah:TextBoxHelper.Watermark="Species Code"
+                     Width="100"
+                     />
+            <Button Style="{StaticResource AddButton}"
+                    Command="{Binding AddSpeciesCommand}"
+                    CommandParameter="{Binding Text, ElementName=_newSpeciesTextBox}"/>
+        </StackPanel>
+        <Grid Grid.Column="2"
+              Grid.Row="2"
+              Background="White"
+              DataContext="{Binding SelectedItem, ElementName=_speciesDatagrid}"
+              IsEnabled="{Binding  SelectedItem, ElementName=_speciesDatagrid, Converter={StaticResource NotNullConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30*" />
+                <RowDefinition Height="29*" />
+                <RowDefinition Height="228*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="126*" />
+                <ColumnDefinition Width="131*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Species Code"
+                   Grid.Column="1"
+                   Grid.Row="1" />
+            <TextBox Grid.Column="2"
+                     Grid.Row="1"
+                     Text="{Binding SpeciesCode}"
+                     Margin="0,2"/>
+            <Label Content="Contract Species"
+                   Grid.Column="1"
+                   Grid.Row="2" />
+            <TextBox Grid.Column="2"
+                     Grid.Row="2"
+                     Text="{Binding ContractSpecies}"
+                     Margin="0,2"/>
+            <Label Content="FIA Code"
+                   Grid.Column="1"
+                   Grid.Row="3" />
+            <ComboBox Grid.Column="2"
+                      Grid.Row="3"
+                      ItemsSource="{Binding DataContext.FIAOptions, ElementName=_page}"
+                      SelectedValue="{Binding FIACode}"
+                      SelectedValuePath="FIACode"
+                      Margin="0,2"/>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

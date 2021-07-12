@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace NatCruise.Design.Views
 {
     /// <summary>
-    /// Interaction logic for TallySettingsPage.xaml
+    /// Interaction logic for SpeciesListView.xaml
     /// </summary>
-    public partial class TallySettingsView : UserControl
+    public partial class SpeciesListView : UserControl
     {
-        public TallySettingsView()
+        public SpeciesListView()
         {
             InitializeComponent();
         }

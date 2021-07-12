@@ -146,7 +146,7 @@ WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND ifnull(SampleGroup
                 CruiseID, tfs.StratumCode, tfs.SampleGroupCode, tfs.Field.Field);
         }
 
-        public void SetTreeFieldsFromStratumDefault(string stratumCode, StratumDefault sd)
+        public void SetTreeFieldsFromStratumTemplate(string stratumCode, string stratumTemplateName)
         {
             Database.Execute2(
 @"BEGIN;
@@ -167,25 +167,24 @@ INSERT INTO TreeFieldSetup (
 SELECT
     @CruiseID,
     @StratumCode,
-    tfsd.Field,
-    tfsd.FieldOrder,
-    tfsd.IsHidden,
-    tfsd.IsLocked,
-    tfsd.DefaultValueInt,
-    tfsd.DefaultValueReal,
-    tfsd.DefaultValueBool,
-    tfsd.DefaultValueText
-FROM TreeFieldSetupDefault AS tfsd
-WHERE StratumDefaultID = @StratumDefaultID AND SampleGroupDefaultID IS NULL;
+    sttfs.Field,
+    sttfs.FieldOrder,
+    sttfs.IsHidden,
+    sttfs.IsLocked,
+    sttfs.DefaultValueInt,
+    sttfs.DefaultValueReal,
+    sttfs.DefaultValueBool,
+    sttfs.DefaultValueText
+FROM StratumTemplateTreeFieldSetup AS sttfs
+WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID;
 
 COMMIT;",
                 new
                 {
                     CruiseID,
                     StratumCode = stratumCode,
-                    sd.StratumDefaultID
+                    StratumTemplateName = stratumTemplateName,
                 });
-
         }
     }
 }

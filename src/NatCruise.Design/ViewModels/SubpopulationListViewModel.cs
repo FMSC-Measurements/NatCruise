@@ -52,8 +52,6 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
-        public bool IsFixCNT => SampleGroup?.CruiseMethod == CruiseMethods.FIXCNT;
-
         public ObservableCollection<Subpopulation> Subpopulations
         {
             get => _subPopulations;
@@ -142,7 +140,6 @@ namespace NatCruise.Design.ViewModels
                 Subpopulations = new ObservableCollection<Subpopulation>(subpopulations);
             }
 
-            RaisePropertyChanged(nameof(IsFixCNT));
             RefreshSpeciesOptions();
         }
 

@@ -23,7 +23,7 @@ namespace NatCruise.Wpf.ViewModels
         private string _region;
         private string _forest;
         private string _district;
-        private string _purpose;
+        private Purpose _purpose;
         private string _uom;
         private bool _useCrossStrataPlotTreeNumbering = true;
         private string _templatePath;
@@ -81,7 +81,7 @@ namespace NatCruise.Wpf.ViewModels
             set => SetProperty(ref _district, value);
         }
 
-        public string Purpose
+        public Purpose Purpose
         {
             get => _purpose;
             set => SetProperty(ref _purpose, value);
@@ -164,14 +164,14 @@ namespace NatCruise.Wpf.ViewModels
                     };
 
                     var purpose = Purpose;
-                    var cruiseNumber = (purpose == "TS" || purpose == "Timber Sale") ? SaleNumber + "TS" : SaleNumber;
+                    var cruiseNumber = (purpose.ShortCode.Equals("TS")) ? SaleNumber : SaleNumber + purpose.ShortCode;
                     var cruiseID = Guid.NewGuid().ToString();
                     var cruise = new CruiseDAL.V3.Models.Cruise()
                     {
                         CruiseID = cruiseID,
                         SaleID = saleID,
                         CruiseNumber = cruiseNumber,
-                        Purpose = Purpose,
+                        Purpose = purpose.PurposeCode,
                         UseCrossStrataPlotTreeNumbering = UseCrossStrataPlotTreeNumbering,
                         DefaultUOM = UOM,
                     };
@@ -230,22 +230,22 @@ namespace NatCruise.Wpf.ViewModels
                 dest.AddTreeDefaultValue(tdv);
             }
 
-            var stratumDefaults = src.GetStratumDefaults();
+            var stratumTemplate = src.GetStratumTemplates();
 
-            foreach (var sd in stratumDefaults)
+            foreach (var st in stratumTemplate)
             {
-                dest.AddStratumDefault(sd);
+                dest.UpsertStratumTemplate(st);
 
-                var treeFieldSetupDefaults = src.GetTreeFieldSetupDefaults(sd.StratumDefaultID);
+                var treeFieldSetupDefaults = src.GetStratumTemplateTreeFieldSetups(st.StratumTemplateName);
                 foreach (var tfsd in treeFieldSetupDefaults)
                 {
-                    dest.AddTreeFieldSetupDefault(tfsd);
+                    dest.UpsertStratumTemplateTreeFieldSetup(tfsd);
                 }
 
-                var logFieldSetupDefaults = src.GetLogFieldSetupDefaults(sd.StratumDefaultID);
+                var logFieldSetupDefaults = src.GetStratumTemplateLogFieldSetup(st.StratumTemplateName);
                 foreach (var lfsd in logFieldSetupDefaults)
                 {
-                    dest.AddLogFieldSetupDefault(lfsd);
+                    dest.UpsertStratumTemplateLogFieldSetup(lfsd);
                 }
             }
 

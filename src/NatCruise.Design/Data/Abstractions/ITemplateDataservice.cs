@@ -7,6 +7,7 @@ namespace NatCruise.Design.Data
     public interface ITemplateDataservice : IDataservice
     {
         #region species
+
         IEnumerable<Species> GetSpecies();
 
         void AddSpecies(Species sp);
@@ -18,9 +19,11 @@ namespace NatCruise.Design.Data
         IEnumerable<string> GetSpeciesCodes();
 
         void AddSpeciesCode(string speciesCode);
-        #endregion
+
+        #endregion species
 
         #region TreeDefaultValues
+
         IEnumerable<TreeDefaultValue> GetTreeDefaultValues();
 
         void AddTreeDefaultValue(TreeDefaultValue tdv);
@@ -28,9 +31,11 @@ namespace NatCruise.Design.Data
         void UpsertTreeDefaultValue(TreeDefaultValue tdv);
 
         void DeleteTreeDefaultValue(TreeDefaultValue tdv);
-        #endregion
+
+        #endregion TreeDefaultValues
 
         #region TreeAuditRules
+
         IEnumerable<TreeAuditRule> GetTreeAuditRules();
 
         IEnumerable<TreeAuditRule> GetTreeAuditRules(string species, string prod, string livedead);
@@ -40,9 +45,11 @@ namespace NatCruise.Design.Data
         void UpsertTreeAuditRule(TreeAuditRule tar);
 
         void DeleteTreeAuditRule(TreeAuditRule tar);
-        #endregion
+
+        #endregion TreeAuditRules
 
         #region TreeAuditRules
+
         IEnumerable<TreeAuditRuleSelector> GetRuleSelectors();
 
         IEnumerable<TreeAuditRuleSelector> GetRuleSelectors(string tarID);
@@ -50,60 +57,119 @@ namespace NatCruise.Design.Data
         void AddRuleSelector(TreeAuditRuleSelector tars);
 
         void DeleteRuleSelector(TreeAuditRuleSelector tars);
-        #endregion
+
+        #endregion TreeAuditRules
 
         #region TreeFields
+
         IEnumerable<TreeField> GetTreeFields();
 
         void UpdateTreeField(TreeField treeField);
-        #endregion
+
+        #endregion TreeFields
 
         #region LogFields
+
         IEnumerable<LogField> GetLogFields();
 
         void UpdateLogField(LogField lf);
-        #endregion
 
-        #region StratumDefault
-        IEnumerable<StratumDefault> GetStratumDefaults();
+        #endregion LogFields
 
-        IEnumerable<StratumDefault> GetTreeFieldSetupStratumDefaults();
+        #region StratumTemplate
 
-        void AddStratumDefault(StratumDefault std);
-        #endregion
+        IEnumerable<StratumTemplate> GetStratumTemplates();
 
-        #region TreeFieldSetupDefault
-        IEnumerable<TreeFieldSetupDefault> GetTreeFieldSetupDefaults(string stratumDefaultID);
+        void UpsertStratumTemplate(StratumTemplate st);
 
-        void AddTreeFieldSetupDefault(TreeFieldSetupDefault tfsd);
+        void DeleteStratumTemplate(StratumTemplate st);
 
-        void UpsertTreeFieldSetupDefault(TreeFieldSetupDefault tfsd);
-        #endregion
+        #endregion StratumTemplate
 
-        #region LogFieldSetupDefault
-        IEnumerable<LogFieldSetupDefault> GetLogFieldSetupDefaults();
+        #region StratumTemplateTreeFieldSetup
 
-        IEnumerable<LogFieldSetupDefault> GetLogFieldSetupDefaults(string stratumDefaultID);
+        IEnumerable<StratumTemplateTreeFieldSetup> GetStratumTemplateTreeFieldSetups(string stratumTemplateName);
 
-        void AddLogFieldSetupDefault(LogFieldSetupDefault lfsd);
+        void UpsertStratumTemplateTreeFieldSetup(StratumTemplateTreeFieldSetup stfs);
 
-        void UpsertLogFieldSetupDefault(LogFieldSetupDefault lfsd);
-        #endregion
+        void DeleteStratumTemplateTreeFieldSetup(StratumTemplateTreeFieldSetup stfs);
+
+        #endregion StratumTemplateTreeFieldSetup
+
+        #region StratumTemplateLogFieldSetup
+
+        IEnumerable<StratumTemplateLogFieldSetup> GetStratumTemplateLogFieldSetup(string stratumTemplateName);
+
+        void UpsertStratumTemplateLogFieldSetup(StratumTemplateLogFieldSetup stlfs);
+
+        void DeleteStratumTemplateLogFieldSetup(StratumTemplateLogFieldSetup stlfs);
+
+        #endregion StratumTemplateLogFieldSetup
+
+        //#region StratumDefault
+
+        //IEnumerable<StratumDefault> GetStratumDefaults();
+
+        //IEnumerable<StratumDefault> GetTreeFieldSetupStratumDefaults();
+
+        //void AddStratumDefault(StratumDefault std);
+
+        //void UpdateStratumDefault(StratumDefault std);
+
+        //#endregion StratumDefault
+
+        //#region SampleGroupDefaults
+
+        //IEnumerable<SampleGroupDefault> GetSampleGroupDefaults();
+
+        //void AddSampleGroupDefault(SampleGroupDefault sgd);
+
+        //void UpdateSampleGroupDefault(SampleGroupDefault sgd);
+
+        //#endregion SampleGroupDefaults
+
+        //#region TreeFieldSetupDefault
+
+        //IEnumerable<TreeFieldSetupDefault> GetTreeFieldSetupDefaults(string stratumDefaultID);
+
+        //void AddTreeFieldSetupDefault(TreeFieldSetupDefault tfsd);
+
+        //void UpsertTreeFieldSetupDefault(TreeFieldSetupDefault tfsd);
+
+        //void DeleteTreeFieldSetupDefault(TreeFieldSetupDefault tfsd);
+
+        //#endregion TreeFieldSetupDefault
+
+        //#region LogFieldSetupDefault
+
+        //IEnumerable<LogFieldSetupDefault> GetLogFieldSetupDefaults();
+
+        //IEnumerable<LogFieldSetupDefault> GetLogFieldSetupDefaults(string stratumDefaultID);
+
+        //void AddLogFieldSetupDefault(LogFieldSetupDefault lfsd);
+
+        //void UpsertLogFieldSetupDefault(LogFieldSetupDefault lfsd);
+
+        //#endregion LogFieldSetupDefault
 
         #region Reports
+
         IEnumerable<Reports> GetReports();
 
         void AddReport(Reports report);
 
         void UpsertReport(Reports report);
-        #endregion
+
+        #endregion Reports
 
         #region VolumeEquation
+
         IEnumerable<VolumeEquation> GetVolumeEquations();
 
         void AddVolumeEquation(VolumeEquation ve);
 
         void UpsertVolumeEquation(VolumeEquation ve);
-        #endregion
+
+        #endregion VolumeEquation
     }
 }

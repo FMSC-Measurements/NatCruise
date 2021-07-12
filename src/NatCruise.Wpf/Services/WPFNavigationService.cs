@@ -50,6 +50,7 @@ namespace NatCruise.Wpf.Services
 
         public Task ShowCruise()
         {
+
             RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(CruiseView));
             return Task.CompletedTask;
         }
@@ -74,6 +75,7 @@ namespace NatCruise.Wpf.Services
 
         public Task ShowCruiseLandingLayout()
         {
+            RegionManager.Regions[Regions.ContentRegion].RemoveAll();
             RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterView));
             return Task.CompletedTask;
         }
@@ -90,5 +92,16 @@ namespace NatCruise.Wpf.Services
             return Task.CompletedTask;
         }
 
+        public Task ShowSpecies()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(SpeciesListView));
+            return Task.CompletedTask;
+        }
+
+        public Task ShowDesignTemplates()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumTemplateListView));
+            return Task.CompletedTask;
+        }
     }
 }

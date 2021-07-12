@@ -3,10 +3,7 @@ using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Test;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,6 +16,7 @@ namespace NatCruise.Design.Test.Data
         }
 
         #region species
+
         [Fact]
         public void AddSpecies()
         {
@@ -75,10 +73,7 @@ namespace NatCruise.Design.Test.Data
             var spAgain = db.From<Species>().Where("SpeciesCode = @p1").Query(speciesCode).Single();
             spAgain.Should().BeEquivalentTo(sp);
         }
-        #endregion
 
-        #region TreeAuditRules
-
-        #endregion
+        #endregion species
     }
 }
