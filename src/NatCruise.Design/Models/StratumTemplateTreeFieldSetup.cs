@@ -3,8 +3,8 @@ using Prism.Mvvm;
 
 namespace NatCruise.Design.Models
 {
-    [Table("TreeFieldSetupDefault")]
-    public class TreeFieldSetupDefault : BindableBase
+    [Table("StratumTemplateTreeFieldSetup")]
+    public class StratumTemplateTreeFieldSetup : BindableBase
     {
         private string _field;
         private bool _isHidden;
@@ -14,9 +14,7 @@ namespace NatCruise.Design.Models
         private bool? _defaultValueBool;
         private string _defaultValueText;
 
-        public string StratumDefaultID { get; set; }
-
-        public string SampleGroupDefaultID { get; set; }
+        public string StratumTemplateName { get; set; }
 
         public string Field
         {

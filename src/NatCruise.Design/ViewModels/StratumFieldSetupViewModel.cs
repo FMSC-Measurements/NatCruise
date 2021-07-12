@@ -17,7 +17,7 @@ namespace NatCruise.Design.ViewModels
         private ObservableCollection<TreeFieldSetup> _fieldSetups;
         private IEnumerable<TreeField> _treeFields;
         private TreeFieldSetup _selectedTreeFieldSetup;
-        private IEnumerable<StratumDefault> _stratumDefaults;
+        private IEnumerable<StratumTemplate> _stratumTemplates;
 
         public StratumFieldSetupViewModel(IDataserviceProvider dataserviceProvider)
         {
@@ -47,10 +47,10 @@ namespace NatCruise.Design.ViewModels
             LoadFieldSetups();
         }
 
-        public IEnumerable<StratumDefault> StratumDefaults
+        public IEnumerable<StratumTemplate> StratumTemplates
         {
-            get => _stratumDefaults;
-            set => SetProperty(ref _stratumDefaults, value);
+            get => _stratumTemplates;
+            set => SetProperty(ref _stratumTemplates, value);
         }
 
         public ICommand AddTreeFieldCommand => new DelegateCommand<TreeField>(AddTreeField);
@@ -61,7 +61,7 @@ namespace NatCruise.Design.ViewModels
 
         public ICommand MoveDownCommand => new DelegateCommand(MoveDown);
 
-        public ICommand ApplyStratumDefaultCommand => new DelegateCommand<StratumDefault>(ApplyStratumDefault);
+        public ICommand ApplyStratumTemplateCommand => new DelegateCommand<StratumTemplate>(ApplyStratumTemplate);
 
         public ObservableCollection<TreeFieldSetup> FieldSetups
         {
@@ -128,12 +128,12 @@ namespace NatCruise.Design.ViewModels
         public bool IsDefaultBoolean => string.Compare(SelectedTreeFieldSetup?.Field?.DbType, "BOOLEAN", true) == 0;
         public bool IsDefaultText => string.Compare(SelectedTreeFieldSetup?.Field?.DbType, "TEXT", true) == 0;
 
-        public void ApplyStratumDefault(StratumDefault sd)
+        public void ApplyStratumTemplate(StratumTemplate st)
         {
-            if (sd == null) { return; }
+            if (st == null) { return; }
             var stratumCode = Stratum.StratumCode;
 
-            FieldSetupDataservice.SetTreeFieldsFromStratumDefault(stratumCode, sd);
+            FieldSetupDataservice.SetTreeFieldsFromStratumTemplate(stratumCode, st.StratumTemplateName);
             LoadFieldSetups();
         }
 
@@ -200,7 +200,7 @@ namespace NatCruise.Design.ViewModels
         {
             base.Load();
             TreeFields = TemplateDataservice.GetTreeFields();
-            StratumDefaults = TemplateDataservice.GetTreeFieldSetupStratumDefaults();
+            StratumTemplates = TemplateDataservice.GetStratumTemplates();
         }
 
         protected void LoadFieldSetups()

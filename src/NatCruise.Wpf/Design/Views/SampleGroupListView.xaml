@@ -10,6 +10,7 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Design.Views.SampleGroupListView"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              Tag="Sample Groups"
              mc:Ignorable="d"
              d:DesignHeight="448.881"
@@ -53,9 +54,7 @@
                                  Grid.Column="0"
                                  mah:TextBoxHelper.Watermark="Code" />
                         <Button Grid.Column="1"
-                                Content="+"
-                                Background="{StaticResource brush_addItem}"
-                                Foreground="{StaticResource brush_text_dark}"
+                                Style="{StaticResource AddButton}"
                                 IsEnabled="{Binding Text, ElementName=_sampleGroupCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
@@ -66,9 +65,7 @@
                             </i:Interaction.Triggers>
                         </Button>
                         <Button  Grid.Column="2"
-                                 Content="-"
-                                 Background="{StaticResource brush_removeItem}"
-                                 Foreground="{StaticResource brush_text_dark}"
+                                 Style="{StaticResource RemoveButton}"
                                  Command="{Binding RemoveSampleGroupCommand}"
                                  CommandParameter="{Binding SelectedItem, ElementName=_sampleGroupListView}"
                                  IsEnabled="{Binding SelectedItem, ElementName=_sampleGroupListView, Converter={StaticResource NotNullConverter}}"/>

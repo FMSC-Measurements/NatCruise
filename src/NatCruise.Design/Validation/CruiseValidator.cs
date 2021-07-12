@@ -19,6 +19,10 @@ namespace NatCruise.Design.Validation
             RuleFor(x => x.Purpose)
                 .NotEmpty()
                 .WithSeverity(Severity.Error);
+
+            RuleFor(x => x.DefaultUOM)
+                .NotEmpty()
+                .WithSeverity(Severity.Error);
         }
     }
 }

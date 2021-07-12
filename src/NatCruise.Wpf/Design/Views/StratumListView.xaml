@@ -10,6 +10,7 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Design.Views.StratumListView"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -28,10 +29,20 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0"
+                <ComboBox x:Name="_stratumTemplateCombobox"
+                          Grid.Row="0"
+                          ItemsSource="{Binding StratumTemplateOptions}"
+                          SelectedItem="{Binding SelectedStratumTemplate}"
+                          SelectionChanged="_stratumTemplateCombobox_SelectionChanged"
+                          mah:TextBoxHelper.UseFloatingWatermark="True"
+                          mah:TextBoxHelper.Watermark="Stratum Template">
+                </ComboBox>
+
+                <Grid Grid.Row="1"
                       VerticalAlignment="Stretch">
                     <Grid.Resources>
                         <Style TargetType="{x:Type Button}"
@@ -56,31 +67,28 @@
                              mah:TextBoxHelper.Watermark="Code" />
                     <Button Grid.Row="0"
                             Grid.Column="1"
-                            Content="+"
-                            Foreground="{StaticResource brush_text_dark}"
-                            Background="{StaticResource brush_addItem}"
+                            Style="{StaticResource AddButton}"
                             IsEnabled="{Binding Text, ElementName=_stratumCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <i:InvokeCommandAction Command="{Binding AddStratumCommand}"
                                                        CommandParameter="{Binding Text, Source={x:Reference _stratumCodeTextBox}}" />
                                 <triggers:ClearTextBoxAction TargetName="_stratumCodeTextBox" />
+                                <triggers:ClearComboBoxTextAction TargetName="_stratumTemplateCombobox" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>
                     <Button Grid.Row="0"
                             Grid.Column="2"
-                            Content="-"
-                            Background="{StaticResource brush_removeItem}"
-                            Foreground="{StaticResource brush_text_dark}"
+                            Style="{StaticResource RemoveButton}"
                             Command="{Binding RemoveStratumCommand}"
                             CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}"
-                            IsEnabled="{Binding SelectedItem, ElementName=_stratumListView, Converter={StaticResource NotNullConverter}}"/>
+                            IsEnabled="{Binding SelectedItem, ElementName=_stratumListView, Converter={StaticResource NotNullConverter}}" />
 
 
                 </Grid>
 
-                <ListView Grid.Row="1"
+                <ListView Grid.Row="2"
                           x:Name="_stratumListView"
                           ItemsSource="{Binding Strata}"
                           SelectedItem="{Binding SelectedStratum}"
@@ -128,6 +136,7 @@
             </TabControl.Resources>
 
         </TabControl>
+
 
         <!--<ContentControl />-->
 

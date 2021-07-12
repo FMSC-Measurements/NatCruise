@@ -22,5 +22,9 @@ namespace NatCruise.Design.Services
         Task ShowAuditRules();
 
         Task ShowTreeDefaultValues();
+
+        Task ShowSpecies();
+
+        Task ShowDesignTemplates();
     }
 }

@@ -53,7 +53,7 @@ INSERT INTO Subpopulation (
 
         public void DeleteSubpopulation(Subpopulation subpopulation)
         {
-            Database.Execute("DELETE FROM Subpopulation WHERE Subpopulation_CN = @p1;", subpopulation.Subpopulation_CN);
+            Database.Execute("DELETE FROM Subpopulation WHERE SubpopulationID = @p1;", subpopulation.SubpopulationID);
         }
 
         public bool Exists(string stratumCode, string sampleGroupCode, string species, string livedead)
@@ -72,6 +72,7 @@ AND CruiseID = @p5;",
         {
             return Database.Query<Subpopulation>(
 @"SELECT
+    
     sp.SubPopulationID,
     sp.CruiseID,
     sp.StratumCode,

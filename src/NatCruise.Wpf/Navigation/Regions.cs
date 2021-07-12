@@ -8,5 +8,6 @@
         public const string SampleGroupDetailsRegion = "SampleGroupDetailsRegion";
         public const string CruiseContentRegion = "CruiseContentRegion";
         public const string TreeAuditSelectors = "TreeAuditSelectors";
+        public const string StratumTemplateRegion = "StratumTemplateRegion";
     }
 }

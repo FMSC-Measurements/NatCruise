@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="NatCruise.Design.Views.StratumTemplateListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Background="White">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="_addProfileTextBox"
+                         mah:TextBoxHelper.Watermark="Stratum Template Name"
+                         Grid.Column="0"
+                         HorizontalAlignment="Stretch" />
+                <Button Style="{StaticResource AddButton}"
+                        Command="{Binding AddStratumTemplateCommand}"
+                        CommandParameter="{Binding Text, ElementName=_addProfileTextBox}"
+                        IsEnabled="{Binding Text, ElementName=_addProfileTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
+                        Grid.Column="1" />
+            </Grid>
+
+            <ListBox x:Name="_stratumDefaultsListBox"
+                     Grid.Row="1"
+                     Grid.ColumnSpan="2"
+                     ItemsSource="{Binding StratumTemplates}"
+                     DisplayMemberPath="StratumTemplateName"
+                     SelectedItem="{Binding SelectedStratumTemplate}" />
+        </Grid>
+        <TabControl Grid.Column="1"
+                    prism:RegionManager.RegionName="{x:Static nav:Regions.StratumTemplateRegion}"
+                    prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_stratumDefaultsListBox}">
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabItem}"
+                       BasedOn="{StaticResource {x:Type TabItem}}">
+                    <Setter Property="Header"
+                            Value="{Binding Tag}" />
+                    <Setter Property="HorizontalContentAlignment"
+                            Value="Left" />
+                </Style>
+            </TabControl.Resources>
+        </TabControl>
+    </Grid>
+</UserControl>
