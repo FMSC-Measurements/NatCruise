@@ -22,7 +22,9 @@ namespace FScruiser.XF.ViewModels
 
         public IFixCNTDataservice FixCNTDataservice { get; }
 
-        public ICommand ProcessTallyCommand => _processTallyCommand ?? (_processTallyCommand = new Command<FixCNTTallyBucket>(ProcessTally));
+        public ICommand ProcessTallyCommand => _processTallyCommand ??= new Command<FixCNTTallyBucket>(ProcessTally);
+
+        public bool OneTreePerTally { get; protected set; } = true;
 
         public bool IsUntallyEnabled
         {
@@ -37,52 +39,74 @@ namespace FScruiser.XF.ViewModels
         {
         }
 
-        public FixCNTTallyViewModel(IDataserviceProvider datastoreProvider)
+        public FixCNTTallyViewModel(IFixCNTDataservice fixCNTDataservice)
         {
-            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
-
-            FixCNTDataservice = datastoreProvider.GetDataservice<IFixCNTDataservice>() ?? throw new ArgumentNullException(nameof(FixCNTDataservice));
+            FixCNTDataservice = fixCNTDataservice ?? throw new ArgumentNullException(nameof(fixCNTDataservice));
+            OneTreePerTally = fixCNTDataservice.GetOneTreePerTallyOption();
         }
 
         public void Tally(FixCNTTallyBucket tallyBucket)
         {
             var tallyPop = tallyBucket.TallyPopulation;
 
-            FixCNTDataservice.IncrementFixCNTTreeCount(
-                Unit,
-                PlotNumber,
-                tallyPop.StratumCode,
-                tallyPop.SampleGroupCode,
-                tallyPop.SpeciesCode,
-                tallyPop.LiveDead,
-                tallyPop.FieldName,
-                tallyBucket.Value);
+            if (OneTreePerTally)
+            {
+                FixCNTDataservice.AddFixCNTTree(
+                    Unit,
+                    PlotNumber,
+                    tallyPop.StratumCode,
+                    tallyPop.SampleGroupCode,
+                    tallyPop.SpeciesCode,
+                    tallyPop.LiveDead,
+                    tallyPop.FieldName,
+                    tallyBucket.Value);
+            }
+            else
+            {
+                FixCNTDataservice.IncrementFixCNTTreeCount(
+                    Unit,
+                    PlotNumber,
+                    tallyPop.StratumCode,
+                    tallyPop.SampleGroupCode,
+                    tallyPop.SpeciesCode,
+                    tallyPop.LiveDead,
+                    tallyPop.FieldName,
+                    tallyBucket.Value);
+            }
+
+            
 
             tallyBucket.TreeCount += 1;
         }
-
-        //public void Tally(string species, Double midValue)
-        //{
-        //    var tallyPopulation = TallyPopulations.Where(x => x.Species == species).First();
-
-        //    var bucket = tallyPopulation.Buckets.Where(x => x.Value == midValue).Single();
-
-        //    Tally(bucket);
-        //}
 
         public void UnTally(FixCNTTallyBucket tallyBucket)
         {
             var tallyPop = tallyBucket.TallyPopulation;
 
-            FixCNTDataservice.DecrementFixCNTTreeCount(
-                Unit,
-                PlotNumber,
-                tallyPop.StratumCode,
-                tallyPop.SampleGroupCode,
-                tallyPop.SpeciesCode,
-                tallyPop.LiveDead,
-                tallyPop.FieldName,
-                tallyBucket.Value);
+            if (OneTreePerTally)
+            {
+                FixCNTDataservice.RemoveFixCNTTree(
+                    Unit,
+                    PlotNumber,
+                    tallyPop.StratumCode,
+                    tallyPop.SampleGroupCode,
+                    tallyPop.SpeciesCode,
+                    tallyPop.LiveDead,
+                    tallyPop.FieldName,
+                    tallyBucket.Value);
+            }
+            else
+            {
+                FixCNTDataservice.DecrementFixCNTTreeCount(
+                    Unit,
+                    PlotNumber,
+                    tallyPop.StratumCode,
+                    tallyPop.SampleGroupCode,
+                    tallyPop.SpeciesCode,
+                    tallyPop.LiveDead,
+                    tallyPop.FieldName,
+                    tallyBucket.Value);
+            }
 
             tallyBucket.TreeCount = Math.Max(0, tallyBucket.TreeCount - 1);
         }
