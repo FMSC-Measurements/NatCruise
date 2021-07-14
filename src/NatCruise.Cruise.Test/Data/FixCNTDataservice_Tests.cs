@@ -130,5 +130,88 @@ namespace NatCruise.Cruise.Core.Test.Data
                     .Should().Be(0);
             }
         }
+
+        [Fact]
+        public void AddFixCNTTree()
+        {
+            var unitCode = Units.First();
+            var plotNumber = 1;
+            var fieldName = "DBH";
+            var value = 10;
+
+            var subpop = Subpops.First();
+
+            var sgCode = subpop.SampleGroupCode;
+            var stCode = subpop.StratumCode;
+            var sp = subpop.SpeciesCode;
+            var ld = subpop.LiveDead;
+
+            using (var database = CreateDatabase())
+            {
+                var plotds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+
+                var plotID = plotds.AddNewPlot(unitCode);
+
+                var ds = new FixCNTDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
+                    .Should().Be(0);
+
+                ds.AddFixCNTTree(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value);
+                ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
+                    .Should().Be(1);
+
+                ds.AddFixCNTTree(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value);
+                ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
+                    .Should().Be(2);
+
+                var plotTrees = plotds.GetPlotTreeProxies(unitCode, plotNumber);
+                plotTrees.Should().HaveCount(2);
+            }
+        }
+
+        [Fact]
+        public void RemoveFixCNTTree()
+        {
+            var unitCode = Units.First();
+            var plotNumber = 1;
+            var fieldName = "DBH";
+            var value = 10;
+
+            var subpop = Subpops.First();
+
+            var sgCode = subpop.SampleGroupCode;
+            var stCode = subpop.StratumCode;
+            var sp = subpop.SpeciesCode;
+            var ld = subpop.LiveDead;
+
+            using (var database = CreateDatabase())
+            {
+                var plotds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+
+                var plotID = plotds.AddNewPlot(unitCode);
+
+                var ds = new FixCNTDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
+                    .Should().Be(0);
+
+                ds.AddFixCNTTree(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value);
+                ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
+                    .Should().Be(1);
+
+                ds.AddFixCNTTree(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value);
+                ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
+                    .Should().Be(2);
+
+                var plotTrees = plotds.GetPlotTreeProxies(unitCode, plotNumber);
+                plotTrees.Should().HaveCount(2);
+
+                ds.RemoveFixCNTTree(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value);
+                ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
+                    .Should().Be(1);
+                plotds.GetPlotTreeProxies(unitCode, plotNumber).Should().HaveCount(1);
+            }
+        }
     }
 }

@@ -21,6 +21,11 @@ namespace NatCruise.Cruise.Data
         {
         }
 
+        public bool GetOneTreePerTallyOption()
+        {
+            return true;
+        }
+
         public void IncrementFixCNTTreeCount(string unitCode, int plotNumber, string stratumCode,
             string sgCode, string species, string liveDead,
             string fieldName, double value)
@@ -128,6 +133,61 @@ namespace NatCruise.Cruise.Data
                         LiveDead = liveDead,
                     });
             }
+        }
+
+        public void AddFixCNTTree(string unitCode, int plotNumber, string stratumCode,
+            string sgCode, string species, string liveDead,
+            string fieldName, double value)
+        {
+            var treeID = CreateFixCNTTallyTree(unitCode, plotNumber, stratumCode, sgCode, species, liveDead, fieldName, value);
+
+            var tallyLedgerID = Guid.NewGuid();
+
+            Database.Execute2(
+@"INSERT INTO TallyLedger (
+    TallyLedgerID,
+    TreeID,
+    CruiseID,
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    TreeCount
+) VALUES (
+    @TallyLedgerID,
+    @TreeID,
+    @CruiseID,
+    @CuttingUnitCode,
+    @PlotNumber,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    1 -- TreeCount
+);",
+                new
+                {
+                    CruiseID,
+                    TallyLedgerID = tallyLedgerID,
+                    TreeID = treeID,
+                    CuttingUnitCode = unitCode,
+                    PlotNumber = plotNumber,
+                    StratumCode = stratumCode,
+                    SampleGroupCode = sgCode,
+                    SpeciesCode = species,
+                    LiveDead = liveDead,
+                });
+        }
+
+        public void RemoveFixCNTTree(string unitCode, int plotNumber, string stratumCode,
+            string sgCode, string species, string liveDead,
+            string fieldName, double value)
+        {
+            var treeID = GetFixCNTTallyTreeID(unitCode, plotNumber, stratumCode, sgCode, species, liveDead, fieldName, value);
+
+            Database.Execute("DELETE FROM Tree WHERE TreeID = @p1;", treeID);
         }
 
         protected string CreateFixCNTTallyTree(string unitCode, int plotNumber,
