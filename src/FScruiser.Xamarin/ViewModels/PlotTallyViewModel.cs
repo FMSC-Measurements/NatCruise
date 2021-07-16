@@ -1,8 +1,8 @@
 ﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using NatCruise.Util;
 using Prism.Common;
 using Prism.Ioc;
@@ -36,7 +36,10 @@ namespace FScruiser.XF.ViewModels
 
         public string Title => $"Unit {UnitCode} Plot {Plot?.PlotNumber}";
 
-        public ICuttingUnitDatastore Dataservice { get; }
+        public ICuttingUnitDataservice Dataservice { get; }
+        public ITreeDataservice TreeDataservice { get; }
+        public IPlotDataservice PlotDataservice { get; }
+        public ITallyPopulationDataservice TallyPopulationDataservice { get; }
         public ICruiseDialogService DialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
 
@@ -57,16 +60,19 @@ namespace FScruiser.XF.ViewModels
 
         public PlotTallyViewModel(ICruiseNavigationService navigationService,
             ICruiseDialogService dialogService,
-            IDataserviceProvider datastoreProvider,
+            ITreeDataservice treeDataservice,
+            IPlotDataservice plotDataservice,
+            ITallyPopulationDataservice tallyPopulationDataservice,
+            ISampleSelectorDataService sampleSelectorDataservice,
             ISoundService soundService,
             ITallySettingsDataService tallySettings,
             IContainerProvider containerProvider,
             IPlotTallyService tallyService)
         {
-            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
-
-            Dataservice = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
-            SampleSelectorDataService = datastoreProvider.GetDataservice<ISampleSelectorDataService>();
+            TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
+            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
+            TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
+            SampleSelectorDataService = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             TallySettings = tallySettings ?? throw new ArgumentNullException(nameof(tallySettings));
@@ -186,16 +192,16 @@ namespace FScruiser.XF.ViewModels
             Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
-                plot = Dataservice.GetPlot(plotID);
+                plot = PlotDataservice.GetPlot(plotID);
             }
             else
             {
-                plot = Dataservice.GetPlot(unitCode, plotNumber);
+                plot = PlotDataservice.GetPlot(unitCode, plotNumber);
             }
 
-            TallyPopulations = Dataservice.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
-            Strata = Dataservice.GetPlotStrataProxies(plot.CuttingUnitCode).ToArray();
-            Trees = Dataservice.GetPlotTreeProxies(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
+            TallyPopulations = TallyPopulationDataservice.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
+            Strata = PlotDataservice.GetPlotStrataProxies(plot.CuttingUnitCode).ToArray();
+            Trees = PlotDataservice.GetPlotTreeProxies(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
 
             Plot = plot;
             PlotNumber = plot.PlotNumber;
@@ -227,7 +233,7 @@ namespace FScruiser.XF.ViewModels
 
             _trees.Add(tree);
             OnTreeAdded();
-            
+
             if (tree.CountOrMeasure == "M")
             {
                 await soundService.SignalMeasureTreeAsync();
@@ -259,14 +265,14 @@ namespace FScruiser.XF.ViewModels
 
         public void DeleteTree(string tree_guid)
         {
-            Dataservice.DeleteTree(tree_guid);
+            TreeDataservice.DeleteTree(tree_guid);
             var tree = Trees.Where(x => x.TreeID == tree_guid).Single();
             Trees.Remove(tree);
         }
 
         public void DeleteTree(TreeStub_Plot tree)
         {
-            Dataservice.DeleteTree(tree.TreeID);
+            TreeDataservice.DeleteTree(tree.TreeID);
             Trees.Remove(tree);
         }
     }

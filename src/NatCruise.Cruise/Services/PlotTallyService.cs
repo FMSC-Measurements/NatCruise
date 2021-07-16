@@ -1,8 +1,8 @@
 ﻿using CruiseDAL.Schema;
 using FMSC.Sampling;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
-using NatCruise.Data;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,14 +15,13 @@ namespace NatCruise.Cruise.Services
 
         public ISampleSelectorDataService SampleSelectorDataservice { get; }
         public ICruiseDialogService DialogService { get; }
-        public IPlotDatastore PlotDataservice { get; }
+        public IPlotTallyDataservice PlotTallyDataservice { get; }
 
-        public PlotTallyService(ICruiseDialogService dialogService, IPlotDatastore plotDataservice, ISampleSelectorDataService sampleSelectorDataservice)
+        public PlotTallyService(ICruiseDialogService dialogService, IPlotTallyDataservice plotTallyDataservice, ISampleSelectorDataService sampleSelectorDataservice)
         {
-            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
+            PlotTallyDataservice = plotTallyDataservice ?? throw new ArgumentNullException(nameof(plotTallyDataservice));
             SampleSelectorDataservice = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            
         }
 
         public async Task<TreeStub_Plot> TallyAsync(TallyPopulation_Plot pop,
@@ -36,7 +35,7 @@ namespace NatCruise.Cruise.Services
             if (SINGLE_STAGE_PLOT.Contains(pop.Method))
             {
                 tree = CreateTree(unitCode, plot, pop, "M");
-                PlotDataservice.InsertTree(tree, (SamplerState)null);
+                PlotTallyDataservice.InsertTree(tree, (SamplerState)null);
                 return tree;
             }
             else
@@ -75,11 +74,11 @@ namespace NatCruise.Cruise.Services
                     // TODO update how sample state gets persisted to make this code cleaner
                     if ((sampler is ZeroFrequencySelecter) == false)
                     {
-                        PlotDataservice.InsertTree(tree, new SamplerState(sampler));
+                        PlotTallyDataservice.InsertTree(tree, new SamplerState(sampler));
                     }
                     else
                     {
-                        PlotDataservice.InsertTree(tree, null);
+                        PlotTallyDataservice.InsertTree(tree, null);
                     }
                 }
             }

@@ -3,7 +3,7 @@ using CruiseDAL.V3.Models;
 using NatCruise.Test;
 using Xunit.Abstractions;
 
-namespace NatCruise.Cruise.Test.Services
+namespace NatCruise.Cruise.Test.Data
 {
     public class Datastore_TestBase : TestBase
     {

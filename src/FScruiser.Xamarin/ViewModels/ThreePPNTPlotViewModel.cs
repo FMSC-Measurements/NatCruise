@@ -1,8 +1,8 @@
 ﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using Prism.Common;
 using System;
 using System.Windows.Input;
@@ -42,18 +42,19 @@ namespace FScruiser.XF.ViewModels
         public ICommand CancelCommand => _cancelCommand ?? (_cancelCommand = new Command(Cancel));
 
         protected ICruiseNavigationService NavigationService { get; }
-        protected ICuttingUnitDatastore Datastore { get; }
+        protected IPlotDataservice PlotDataservice { get; }
+        protected IPlotTallyDataservice PlotTallyDataservice { get; }
         protected ICruiseDialogService DialogService { get; }
 
         public Plot_Stratum StratumPlot { get; protected set; }
 
         public ThreePPNTPlotViewModel(ICruiseNavigationService navigationService,
-            IDataserviceProvider datastoreProvider,
+            IPlotDataservice plotDataservice,
+            IPlotTallyDataservice plotTallyDataservice,
             ICruiseDialogService dialogService)
         {
-            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
-
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
+            PlotTallyDataservice = plotTallyDataservice ?? throw new ArgumentNullException(nameof(plotTallyDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
@@ -66,7 +67,7 @@ namespace FScruiser.XF.ViewModels
             var unit = parameters.GetValue<string>(NavParams.UNIT);
             var plotNum = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
-            var plotStratum = Datastore.GetPlot_Stratum(unit, stratumCode, plotNum);
+            var plotStratum = PlotDataservice.GetPlot_Stratum(unit, stratumCode, plotNum);
             StratumPlot = plotStratum;
         }
 
@@ -101,7 +102,7 @@ namespace FScruiser.XF.ViewModels
                 return;
             }
 
-            var datastore = Datastore;
+            var datastore = PlotDataservice;
 
             var plotStratum = StratumPlot;
             var unit = plotStratum.CuttingUnitCode;
@@ -118,7 +119,7 @@ namespace FScruiser.XF.ViewModels
             {
                 for (var i = 0; i < TreeCount; i++)
                 {
-                    datastore.CreatePlotTree(unit, plotNumber, stratumCode, treeCount: 1, countMeasure: "M");
+                    PlotTallyDataservice.CreatePlotTree(unit, plotNumber, stratumCode, treeCount: 1, countMeasure: "M");
                 }
 
                 await DialogService.ShowMessageAsync("Measure Plot");
@@ -127,7 +128,7 @@ namespace FScruiser.XF.ViewModels
             }
             else
             {
-                datastore.CreatePlotTree(unit, plotNumber, stratumCode, treeCount: TreeCount, countMeasure: "C");
+                PlotTallyDataservice.CreatePlotTree(unit, plotNumber, stratumCode, treeCount: TreeCount, countMeasure: "C");
 
                 await DialogService.ShowMessageAsync("Count Plot");
             }

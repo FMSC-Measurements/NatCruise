@@ -1,8 +1,7 @@
 ﻿using FScruiser.XF.Constants;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using Prism.Common;
 using Prism.Navigation;
 using System;
@@ -27,7 +26,7 @@ namespace FScruiser.XF.ViewModels
         private bool _isToFace = true;
         private bool _isVariableRadius;
 
-        public ICuttingUnitDatastore Datastore { get; }
+        public IPlotDataservice PlotDataservice { get; }
 
         public Plot_Stratum Plot { get; set; }
 
@@ -162,9 +161,9 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public LimitingDistanceViewModel(IDataserviceProvider datastoreProvider)
+        public LimitingDistanceViewModel(IPlotDataservice plotDataservice)
         {
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
         }
 
         void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
@@ -188,7 +187,7 @@ namespace FScruiser.XF.ViewModels
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
-            var plot = Datastore.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
+            var plot = PlotDataservice.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
 
             if (plot != null)
             {
@@ -247,7 +246,7 @@ namespace FScruiser.XF.ViewModels
             var report = GenerateReport();
             if (!string.IsNullOrEmpty(report))
             {
-                Datastore.AddPlotRemark(plot.CuttingUnitCode, plot.PlotNumber, report);
+                PlotDataservice.AddPlotRemark(plot.CuttingUnitCode, plot.PlotNumber, report);
             }
         }
     }

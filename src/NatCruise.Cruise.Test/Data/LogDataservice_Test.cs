@@ -1,10 +1,8 @@
 ﻿using Bogus;
-using CruiseDAL;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
 using NatCruise.Test;
 using System;
 using System.Collections.Generic;
@@ -12,25 +10,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
-namespace NatCruise.Cruise.Test.Services
+namespace NatCruise.Cruise.Test.Data
 {
-    public class CuttingUnitDatastore_Test_Logs : Datastore_TestBase
+    public class LogDataservice_Test
     {
-        public CuttingUnitDatastore_Test_Logs(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [Fact]
         public void InsertLog_test()
         {
-            using (var database = CreateDatabase())
+            var init = new DatastoreInitializer();
+            using (var database = init.CreateDatabase())
             {
-                
-                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
-                var tree_guid = datastore.CreateMeasureTree("u1", "st1", "sg1");
+                var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
+                var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
+
+                var tree_guid = treeDS.CreateMeasureTree("u1", "st1", "sg1");
 
                 var log = new Log() { TreeID = tree_guid };
 
@@ -65,11 +60,14 @@ namespace NatCruise.Cruise.Test.Services
         [Fact]
         public void UpdateLog_test()
         {
-            using (var database = CreateDatabase())
+            var init = new DatastoreInitializer();
+            using (var database = init.CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
-                var tree_guid = datastore.CreateMeasureTree("u1", "st1", "sg1");
+                var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
+                var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
+
+                var tree_guid = treeDS.CreateMeasureTree("u1", "st1", "sg1");
 
                 var log = new Log() { TreeID = tree_guid, LogNumber = 1 };
                 datastore.InsertLog(log);
@@ -108,11 +106,14 @@ namespace NatCruise.Cruise.Test.Services
         [Fact]
         public void DeleteLog_test()
         {
-            using (var database = CreateDatabase())
+            var init = new DatastoreInitializer();
+            using (var database = init.CreateDatabase())
             {
-                var datastore = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
-                var treeID = datastore.CreateMeasureTree("u1", "st1", "sg1");
+                var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
+                var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
+
+                var treeID = treeDS.CreateMeasureTree("u1", "st1", "sg1");
 
                 var log = new Log() { TreeID = treeID, LogNumber = 1 };
                 datastore.InsertLog(log);

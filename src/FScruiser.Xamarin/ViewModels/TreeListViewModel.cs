@@ -1,8 +1,8 @@
 ﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using NatCruise.Util;
 using Prism.Common;
 using System;
@@ -48,21 +48,21 @@ namespace FScruiser.XF.ViewModels
             set => SetProperty(ref _unitCode, value);
         }
 
-        public ICuttingUnitDatastore Datastore { get; set; }
-
-        public ICruiseDialogService DialogService { get; set; }
-        public ICruiseNavigationService NavigationService { get; protected set; }
+        protected ICuttingUnitDataservice CuttingUnitDatastore { get; }
+        protected ITreeDataservice TreeDataservice { get; }
+        protected ICruiseDialogService DialogService { get; }
+        protected ICruiseNavigationService NavigationService { get; }
 
         public event EventHandler TreeAdded;
 
         public TreeListViewModel(
             ICruiseDialogService dialogService,
             ICruiseNavigationService navigationService,
-            IDataserviceProvider datastoreProvider)
+            ICuttingUnitDataservice cuttingUnitDatastore,
+            ITreeDataservice treeDataservice)
         {
-            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
-
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            CuttingUnitDatastore = cuttingUnitDatastore ?? throw new ArgumentNullException(nameof(cuttingUnitDatastore));
+            TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
@@ -73,28 +73,26 @@ namespace FScruiser.XF.ViewModels
 
             var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
 
-            Trees = Datastore.GetTreeStubsByUnitCode(unitCode).ToObservableCollection();
+            Trees = TreeDataservice.GetTreeStubsByUnitCode(unitCode).ToObservableCollection();
 
-            StratumCodes = Datastore.GetStrataProxiesByUnitCode(UnitCode).Select(x => x.StratumCode).ToArray();
+            StratumCodes = CuttingUnitDatastore.GetStrataProxiesByUnitCode(UnitCode).Select(x => x.StratumCode).ToArray();
         }
 
         public async void AddTreeAsync()
         {
-            var datastore = Datastore;
-
             var stratumCode = await DialogService.AskValueAsync("Select Stratum", StratumCodes);
 
             if (stratumCode != null)
             {
-                var sampleGroups = datastore.GetSampleGroupCodes(stratumCode).OrEmpty()
+                var sampleGroups = CuttingUnitDatastore.GetSampleGroupCodes(stratumCode).OrEmpty()
                     .ToArray();
 
                 var sampleGroupCode = await DialogService.AskValueAsync("Select Sample Group", sampleGroups);
 
                 if (sampleGroupCode != null)
                 {
-                    var tree_guid = datastore.CreateMeasureTree(UnitCode, stratumCode, sampleGroupCode);
-                    var newTree = datastore.GetTreeStub(tree_guid);
+                    var tree_guid = TreeDataservice.CreateMeasureTree(UnitCode, stratumCode, sampleGroupCode);
+                    var newTree = TreeDataservice.GetTreeStub(tree_guid);
                     _trees.Add(newTree);
                     OnTreeAdded(null);
                 }
@@ -115,7 +113,7 @@ namespace FScruiser.XF.ViewModels
         {
             if (tree == null) { return; }
 
-            Datastore.DeleteTree(tree.TreeID);
+            TreeDataservice.DeleteTree(tree.TreeID);
         }
 
         public Task ShowLogsAsync(TreeStub tree)

@@ -1,37 +1,28 @@
 ﻿using CruiseDAL;
-using CruiseDAL.Schema;
-using FMSC.ORM.Core.SQL.QueryBuilder;
-using FMSC.ORM.EntityModel.Attributes;
-using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Cruise.Data
 {
-    public partial class CuttingUnitDatastore : CruiseDataserviceBase, ICuttingUnitDatastore
+    public partial class CuttingUnitDatastore : CruiseDataserviceBase, ICuttingUnitDataservice
     {
         //protected readonly string PLOT_METHODS = String.Join(", ", CruiseMethods.PLOT_METHODS
         //    .Append(CruiseMethods.THREEPPNT)
         //    .Append(CruiseMethods.FIXCNT)
         //    .Select(x => "'" + x + "'").ToArray());
 
-        public CuttingUnitDatastore(string path, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice)
-            : base (path, cruiseID, deviceID)
+        public CuttingUnitDatastore(string path, string cruiseID, string deviceID)
+            : base(path, cruiseID, deviceID)
         {
-            SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        public CuttingUnitDatastore(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice)
+        public CuttingUnitDatastore(CruiseDatastore_V3 database, string cruiseID, string deviceID)
             : base(database, cruiseID, deviceID)
         {
-            SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
-
-        public ISampleInfoDataservice SampleInfoDataservice { get; }
 
         #region units
 
@@ -116,18 +107,6 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 "FROM Stratum AS st " +
                 "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
                 "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)",
-                new object[] { unitCode, CruiseID })
-                .ToArray();
-        }
-
-        public IEnumerable<StratumProxy> GetPlotStrataProxies(string unitCode)
-        {
-            return Database.Query<StratumProxy>(
-                "SELECT " +
-                "st.* " +
-                "FROM Stratum AS st " +
-                "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
-                "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)",
                 new object[] { unitCode, CruiseID })
                 .ToArray();
         }
@@ -335,7 +314,6 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
         //        new object[] { unitCode }).ToArray();
         //}
 
-
         // TODO come back to this
         public IEnumerable<TreeFieldSetup> GetTreeFieldsBySampleGroup(string stratumCode, string sampleGroup)
         {
@@ -443,8 +421,6 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
                 cuttingUnitCode, CruiseID).ToArray();
         }
 
-       
-
         //public IEnumerable<TreeAuditRule> GetTreeAuditRules(string stratum, string sampleGroup, string species, string livedead)
         //{
         //    return Database.Query<TreeAuditRule>("SELECT * FROM TreeAuditValue " +
@@ -479,335 +455,333 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
 
         #region Tally Entry
 
-//        const string QUERY_TALLYENTRY_BASE =
-//            "SELECT " +
-//                    "tl.TreeID, " +
-//                    "tl.TallyLedgerID, " +
-//                    "tl.CuttingUnitCode, " +
-//                    "tl.StratumCode, " +
-//                    "tl.SampleGroupCode, " +
-//                    "tl.Species, " +
-//                    "tl.LiveDead, " +
-//                    "tl.TreeCount, " +
-//                    "tl.Reason, " +
-//                    "tl.KPI, " +
-//                    "tl.EntryType, " +
-//                    "tl.Remarks, " +
-//                    "tl.Signature, " +
-//                    "tl.CreatedDate, " +
-//                    "t.TreeNumber, " +
-//                    "t.CountOrMeasure, " +
-//                    "tl.STM, " +
-//                    "(SELECT count(*) FROM TreeError AS te WHERE tl.TreeID IS NOT NULL AND Level = 'E' AND te.TreeID = tl.TreeID AND Resolution IS NULL) AS ErrorCount, " +
-//                    "(SELECT count(*) FROM TreeError AS te WHERE tl.TreeID IS NOT NULL AND Level = 'W' AND te.TreeID = tl.TreeID AND Resolution IS NULL) AS WarningCount " +
-//                "FROM TallyLedger AS tl " +
-//                "LEFT JOIN Tree_V3 AS t USING (TreeID) ";
+        //        const string QUERY_TALLYENTRY_BASE =
+        //            "SELECT " +
+        //                    "tl.TreeID, " +
+        //                    "tl.TallyLedgerID, " +
+        //                    "tl.CuttingUnitCode, " +
+        //                    "tl.StratumCode, " +
+        //                    "tl.SampleGroupCode, " +
+        //                    "tl.Species, " +
+        //                    "tl.LiveDead, " +
+        //                    "tl.TreeCount, " +
+        //                    "tl.Reason, " +
+        //                    "tl.KPI, " +
+        //                    "tl.EntryType, " +
+        //                    "tl.Remarks, " +
+        //                    "tl.Signature, " +
+        //                    "tl.CreatedDate, " +
+        //                    "t.TreeNumber, " +
+        //                    "t.CountOrMeasure, " +
+        //                    "tl.STM, " +
+        //                    "(SELECT count(*) FROM TreeError AS te WHERE tl.TreeID IS NOT NULL AND Level = 'E' AND te.TreeID = tl.TreeID AND Resolution IS NULL) AS ErrorCount, " +
+        //                    "(SELECT count(*) FROM TreeError AS te WHERE tl.TreeID IS NOT NULL AND Level = 'W' AND te.TreeID = tl.TreeID AND Resolution IS NULL) AS WarningCount " +
+        //                "FROM TallyLedger AS tl " +
+        //                "LEFT JOIN Tree_V3 AS t USING (TreeID) ";
 
-//        public TallyEntry GetTallyEntry(string tallyLedgerID)
-//        {
-//            return Database.Query<TallyEntry>(
-//                QUERY_TALLYENTRY_BASE +
-//                "WHERE tl.TallyLedgerID = @p1;",
-//                new object[] { tallyLedgerID })
-//                .FirstOrDefault();
-//        }
+        //        public TallyEntry GetTallyEntry(string tallyLedgerID)
+        //        {
+        //            return Database.Query<TallyEntry>(
+        //                QUERY_TALLYENTRY_BASE +
+        //                "WHERE tl.TallyLedgerID = @p1;",
+        //                new object[] { tallyLedgerID })
+        //                .FirstOrDefault();
+        //        }
 
-//        public IEnumerable<TallyEntry> GetTallyEntriesByUnitCode(string unitCode)
-//        {
-//            return Database.Query<TallyEntry>(
-//                QUERY_TALLYENTRY_BASE +
-//                "WHERE tl.CuttingUnitCode = @p1 AND tl.PlotNumber IS NULL " +
-//                "ORDER BY tl.CreatedDate DESC;",
-//                new object[] { unitCode })
-//                .ToArray();
+        //        public IEnumerable<TallyEntry> GetTallyEntriesByUnitCode(string unitCode)
+        //        {
+        //            return Database.Query<TallyEntry>(
+        //                QUERY_TALLYENTRY_BASE +
+        //                "WHERE tl.CuttingUnitCode = @p1 AND tl.PlotNumber IS NULL " +
+        //                "ORDER BY tl.CreatedDate DESC;",
+        //                new object[] { unitCode })
+        //                .ToArray();
 
-//            //From<TallyEntry>()
-//            ////.Where("UnitCode = @p1 AND PlotNumber IS NULL ")
-//            //.Where("UnitCode = @p1")
-//            //.OrderBy("TimeStamp DESC")
-//            //.Limit(NUMBER_OF_TALLY_ENTRIES_PERPAGE, 0 * NUMBER_OF_TALLY_ENTRIES_PERPAGE)
-//            //.Query(unitCode);
-//        }
+        //            //From<TallyEntry>()
+        //            ////.Where("UnitCode = @p1 AND PlotNumber IS NULL ")
+        //            //.Where("UnitCode = @p1")
+        //            //.OrderBy("TimeStamp DESC")
+        //            //.Limit(NUMBER_OF_TALLY_ENTRIES_PERPAGE, 0 * NUMBER_OF_TALLY_ENTRIES_PERPAGE)
+        //            //.Query(unitCode);
+        //        }
 
-//        public IEnumerable<TallyEntry> GetTallyEntries(string unitCode, int plotNumber)
-//        {
-//            return Database.Query<TallyEntry>(
-//                QUERY_TALLYENTRY_BASE +
-//                "WHERE tl.CuttingUnitCode = @p1" +
-//                "AND tl.PolotNumber = @p2;",
-//                new object[] { unitCode, plotNumber })
-//                .ToArray();
+        //        public IEnumerable<TallyEntry> GetTallyEntries(string unitCode, int plotNumber)
+        //        {
+        //            return Database.Query<TallyEntry>(
+        //                QUERY_TALLYENTRY_BASE +
+        //                "WHERE tl.CuttingUnitCode = @p1" +
+        //                "AND tl.PolotNumber = @p2;",
+        //                new object[] { unitCode, plotNumber })
+        //                .ToArray();
 
-//            //return Database.From<TallyEntry>()
-//            //    .LeftJoin("Tree", "USING (Tree_GUID)")
-//            //    .Where("UnitCode = @p1 AND PlotNumber = @p2 ")
-//            //    .OrderBy("TimeStamp DESC")
-//            //    .Query(unitCode, plotNumber);
-//        }
+        //            //return Database.From<TallyEntry>()
+        //            //    .LeftJoin("Tree", "USING (Tree_GUID)")
+        //            //    .Where("UnitCode = @p1 AND PlotNumber = @p2 ")
+        //            //    .OrderBy("TimeStamp DESC")
+        //            //    .Query(unitCode, plotNumber);
+        //        }
 
-//        public void InsertTallyLedger(TallyLedger tallyLedger)
-//        {
-//            var tallyLedgerID = tallyLedger.TallyLedgerID ?? Guid.NewGuid().ToString();
+        //        public void InsertTallyLedger(TallyLedger tallyLedger)
+        //        {
+        //            var tallyLedgerID = tallyLedger.TallyLedgerID ?? Guid.NewGuid().ToString();
 
-//            Database.Execute2(
-//                "INSERT INTO TallyLedger (" +
-//                    "TallyLedgerID, " +
-//                    "CuttingUnitCode, " +
-//                    "StratumCode, " +
-//                    "SampleGroupCode, " +
-//                    "PlotNumber, " +
-//                    "Species, " +
-//                    "LiveDead," +
-//                    "TreeCount, " +
-//                    "KPI, " +
-//                    "ThreePRandomValue, " +
-//                    "TreeID, " +
-//                    "CreatedBy, " +
-//                    "Reason, " +
-//                    "Signature, " +
-//                    "Remarks, " +
-//                    "EntryType" +
-//                ") VALUES ( " +
-//                    "@TallyLedgerID, " +
-//                    "@CuttingUnitCode, " +
-//                    "@StratumCode, " +
-//                    "@SampleGroupCode, " +
-//                    "@PlotNumber, " +
-//                    "@Species, " +
-//                    "@LiveDead, " +
-//                    "@TreeCount, " +
-//                    "@KPI, " +
-//                    "@ThreePRandomValue, " +
-//                    "@TreeID, " +
-//                    "@CreatedBy, " +
-//                    "@Reason, " +
-//                    "@Signature, " +
-//                    "@Remarks, " +
-//                    "@EntryType" +
-//                ");",
-//                new
-//                {
-//                    TallyLedgerID = tallyLedgerID,
-//                    tallyLedger.CuttingUnitCode,
-//                    tallyLedger.StratumCode,
-//                    tallyLedger.SampleGroupCode,
-//                    tallyLedger.PlotNumber,
-//                    tallyLedger.Species,
-//                    tallyLedger.LiveDead,
-//                    tallyLedger.TreeCount,
-//                    tallyLedger.KPI,
-//                    tallyLedger.ThreePRandomValue,
-//                    tallyLedger.TreeID,
-//                    tallyLedger.CreatedBy,
-//                    tallyLedger.Reason,
-//                    tallyLedger.Signature,
-//                    tallyLedger.Remarks,
-//                    tallyLedger.EntryType,
-//                });
+        //            Database.Execute2(
+        //                "INSERT INTO TallyLedger (" +
+        //                    "TallyLedgerID, " +
+        //                    "CuttingUnitCode, " +
+        //                    "StratumCode, " +
+        //                    "SampleGroupCode, " +
+        //                    "PlotNumber, " +
+        //                    "Species, " +
+        //                    "LiveDead," +
+        //                    "TreeCount, " +
+        //                    "KPI, " +
+        //                    "ThreePRandomValue, " +
+        //                    "TreeID, " +
+        //                    "CreatedBy, " +
+        //                    "Reason, " +
+        //                    "Signature, " +
+        //                    "Remarks, " +
+        //                    "EntryType" +
+        //                ") VALUES ( " +
+        //                    "@TallyLedgerID, " +
+        //                    "@CuttingUnitCode, " +
+        //                    "@StratumCode, " +
+        //                    "@SampleGroupCode, " +
+        //                    "@PlotNumber, " +
+        //                    "@Species, " +
+        //                    "@LiveDead, " +
+        //                    "@TreeCount, " +
+        //                    "@KPI, " +
+        //                    "@ThreePRandomValue, " +
+        //                    "@TreeID, " +
+        //                    "@CreatedBy, " +
+        //                    "@Reason, " +
+        //                    "@Signature, " +
+        //                    "@Remarks, " +
+        //                    "@EntryType" +
+        //                ");",
+        //                new
+        //                {
+        //                    TallyLedgerID = tallyLedgerID,
+        //                    tallyLedger.CuttingUnitCode,
+        //                    tallyLedger.StratumCode,
+        //                    tallyLedger.SampleGroupCode,
+        //                    tallyLedger.PlotNumber,
+        //                    tallyLedger.Species,
+        //                    tallyLedger.LiveDead,
+        //                    tallyLedger.TreeCount,
+        //                    tallyLedger.KPI,
+        //                    tallyLedger.ThreePRandomValue,
+        //                    tallyLedger.TreeID,
+        //                    tallyLedger.CreatedBy,
+        //                    tallyLedger.Reason,
+        //                    tallyLedger.Signature,
+        //                    tallyLedger.Remarks,
+        //                    tallyLedger.EntryType,
+        //                });
 
-//            tallyLedger.TallyLedgerID = tallyLedgerID;
-//        }
+        //            tallyLedger.TallyLedgerID = tallyLedgerID;
+        //        }
 
-//        public Task<TallyEntry> InsertTallyActionAsync(TallyAction tallyAction)
-//        {
-//            return Task.Factory.StartNew(() => InsertTallyAction(tallyAction));
-//        }
+        //        public Task<TallyEntry> InsertTallyActionAsync(TallyAction tallyAction)
+        //        {
+        //            return Task.Factory.StartNew(() => InsertTallyAction(tallyAction));
+        //        }
 
-//        public TallyEntry InsertTallyAction(TallyAction atn)
-//        {
-//            if (atn.IsInsuranceSample == true && atn.IsSample == false) { throw new InvalidOperationException("If action is insurance sample it must be sample aswell"); }
+        //        public TallyEntry InsertTallyAction(TallyAction atn)
+        //        {
+        //            if (atn.IsInsuranceSample == true && atn.IsSample == false) { throw new InvalidOperationException("If action is insurance sample it must be sample aswell"); }
 
-//            Database.BeginTransaction();
-//            try
-//            {
-//                var tallyEntry = new TallyEntry(atn);
+        //            Database.BeginTransaction();
+        //            try
+        //            {
+        //                var tallyEntry = new TallyEntry(atn);
 
-//                tallyEntry.TallyLedgerID = Guid.NewGuid().ToString();
+        //                tallyEntry.TallyLedgerID = Guid.NewGuid().ToString();
 
-//                if (atn.IsSample)
-//                {
-//                    tallyEntry.TreeID = tallyEntry.TallyLedgerID;
+        //                if (atn.IsSample)
+        //                {
+        //                    tallyEntry.TreeID = tallyEntry.TallyLedgerID;
 
-//                    tallyEntry.TreeNumber = Database.ExecuteScalar2<int>(
-//                        "SELECT " +
-//                        "ifnull(max(TreeNumber), 0) + 1 " +
-//                        "FROM Tree_V3 " +
-//                        "WHERE CuttingUnitCode = @CuttingUnitCode " +
-//                        "AND ifnull(PlotNumber, -1) = ifnull(@PlotNumber, -1)",
-//                        new { atn.CuttingUnitCode, atn.PlotNumber });
+        //                    tallyEntry.TreeNumber = Database.ExecuteScalar2<int>(
+        //                        "SELECT " +
+        //                        "ifnull(max(TreeNumber), 0) + 1 " +
+        //                        "FROM Tree_V3 " +
+        //                        "WHERE CuttingUnitCode = @CuttingUnitCode " +
+        //                        "AND ifnull(PlotNumber, -1) = ifnull(@PlotNumber, -1)",
+        //                        new { atn.CuttingUnitCode, atn.PlotNumber });
 
-//                    Database.Execute2(
-//                        "INSERT INTO Tree_V3 ( " +
-//                            "TreeID, " +
-//                            "CuttingUnitCode, " +
-//                            "PlotNumber, " +
-//                            "StratumCode, " +
-//                            "SampleGroupCode, " +
-//                            "Species, " +
-//                            "LiveDead, " +
-//                            "TreeNumber, " +
-//                            "CountOrMeasure, " +
-//                            "CreatedBy " +
-//                        ") VALUES ( " +
-//                            "@TreeID, " +
-//                            "@CuttingUnitCode, " +
-//                            "@PlotNumber, " +
-//                            "@StratumCode, " +
-//                            "@SampleGroupCode, " +
-//                            "@Species, " +
-//                            "@LiveDead, " +
-//                            "@TreeNumber," +
-//                            "@CountOrMeasure," +
-//                            "@UserName " +
-//                        ");" +
-//                        "INSERT INTO TreeMeasurment (" +
-//                            "TreeID" +
-//                        ") VALUES ( " +
-//                            "@TreeID" +
-//                        ");",
-//                        new
-//                        {
-//                            tallyEntry.TreeID,
-//                            tallyEntry.TreeNumber,
-//                            atn.CuttingUnitCode,
-//                            atn.PlotNumber,
-//                            atn.StratumCode,
-//                            atn.SampleGroupCode,
-//                            atn.Species,
-//                            atn.LiveDead,
-//                            tallyEntry.CountOrMeasure,
-//                            UserName,
-//                        });
-//                }
+        //                    Database.Execute2(
+        //                        "INSERT INTO Tree_V3 ( " +
+        //                            "TreeID, " +
+        //                            "CuttingUnitCode, " +
+        //                            "PlotNumber, " +
+        //                            "StratumCode, " +
+        //                            "SampleGroupCode, " +
+        //                            "Species, " +
+        //                            "LiveDead, " +
+        //                            "TreeNumber, " +
+        //                            "CountOrMeasure, " +
+        //                            "CreatedBy " +
+        //                        ") VALUES ( " +
+        //                            "@TreeID, " +
+        //                            "@CuttingUnitCode, " +
+        //                            "@PlotNumber, " +
+        //                            "@StratumCode, " +
+        //                            "@SampleGroupCode, " +
+        //                            "@Species, " +
+        //                            "@LiveDead, " +
+        //                            "@TreeNumber," +
+        //                            "@CountOrMeasure," +
+        //                            "@UserName " +
+        //                        ");" +
+        //                        "INSERT INTO TreeMeasurment (" +
+        //                            "TreeID" +
+        //                        ") VALUES ( " +
+        //                            "@TreeID" +
+        //                        ");",
+        //                        new
+        //                        {
+        //                            tallyEntry.TreeID,
+        //                            tallyEntry.TreeNumber,
+        //                            atn.CuttingUnitCode,
+        //                            atn.PlotNumber,
+        //                            atn.StratumCode,
+        //                            atn.SampleGroupCode,
+        //                            atn.Species,
+        //                            atn.LiveDead,
+        //                            tallyEntry.CountOrMeasure,
+        //                            UserName,
+        //                        });
+        //                }
 
-//                Database.Execute2(
-//                    "INSERT INTO TallyLedger ( " +
-//                        "TreeID, " +
-//                        "TallyLedgerID, " +
-//                        "CuttingUnitCode, " +
-//                        "PlotNumber, " +
-//                        "StratumCode, " +
-//                        "SampleGroupCode, " +
-//                        "Species, " +
-//                        "LiveDead, " +
-//                        "TreeCount, " +
-//                        "KPI, " +
-//                        "STM, " +
-//                        "ThreePRandomValue, " +
-//                        "EntryType, " +
-//                        "CreatedBy" +
-//                    ") VALUES ( " +
-//                        "@TreeID, " +
-//                        "@TallyLedgerID, " +
-//                        "@CuttingUnitCode, " +
-//                        "@PlotNumber, " +
-//                        "@StratumCode, " +
-//                        "@SampleGroupCode, " +
-//                        "@Species, " +
-//                        "@LiveDead, " +
-//                        "@TreeCount, " +
-//                        "@KPI, " +
-//                        "@STM, " +
-//                        "@ThreePRandomValue," +
-//                        "@EntryType," +
-//                        "@CreatedBy" +
-//                    ");",
-//                    new
-//                    {
-//                        tallyEntry.TreeID,
-//                        tallyEntry.TallyLedgerID,
-//                        atn.CuttingUnitCode,
-//                        atn.PlotNumber,
-//                        atn.StratumCode,
-//                        atn.SampleGroupCode,
-//                        atn.Species,
-//                        atn.LiveDead,
-//                        atn.TreeCount,
-//                        atn.KPI,
-//                        atn.STM,
-//                        atn.ThreePRandomValue,
-//                        atn.EntryType,
-//                        CreatedBy = UserName,
-//                    });
+        //                Database.Execute2(
+        //                    "INSERT INTO TallyLedger ( " +
+        //                        "TreeID, " +
+        //                        "TallyLedgerID, " +
+        //                        "CuttingUnitCode, " +
+        //                        "PlotNumber, " +
+        //                        "StratumCode, " +
+        //                        "SampleGroupCode, " +
+        //                        "Species, " +
+        //                        "LiveDead, " +
+        //                        "TreeCount, " +
+        //                        "KPI, " +
+        //                        "STM, " +
+        //                        "ThreePRandomValue, " +
+        //                        "EntryType, " +
+        //                        "CreatedBy" +
+        //                    ") VALUES ( " +
+        //                        "@TreeID, " +
+        //                        "@TallyLedgerID, " +
+        //                        "@CuttingUnitCode, " +
+        //                        "@PlotNumber, " +
+        //                        "@StratumCode, " +
+        //                        "@SampleGroupCode, " +
+        //                        "@Species, " +
+        //                        "@LiveDead, " +
+        //                        "@TreeCount, " +
+        //                        "@KPI, " +
+        //                        "@STM, " +
+        //                        "@ThreePRandomValue," +
+        //                        "@EntryType," +
+        //                        "@CreatedBy" +
+        //                    ");",
+        //                    new
+        //                    {
+        //                        tallyEntry.TreeID,
+        //                        tallyEntry.TallyLedgerID,
+        //                        atn.CuttingUnitCode,
+        //                        atn.PlotNumber,
+        //                        atn.StratumCode,
+        //                        atn.SampleGroupCode,
+        //                        atn.Species,
+        //                        atn.LiveDead,
+        //                        atn.TreeCount,
+        //                        atn.KPI,
+        //                        atn.STM,
+        //                        atn.ThreePRandomValue,
+        //                        atn.EntryType,
+        //                        CreatedBy = UserName,
+        //                    });
 
+        //                Database.CommitTransaction();
 
+        //                return tallyEntry;
+        //            }
+        //            catch
+        //            {
+        //                Database.RollbackTransaction();
+        //                throw;
+        //            }
+        //        }
 
-//                Database.CommitTransaction();
+        //        public void UpsertSamplerState(SamplerState samplerState)
+        //        {
+        //            var deviceID = DeviceInfo.GetUniqueDeviceID();
 
-//                return tallyEntry;
-//            }
-//            catch
-//            {
-//                Database.RollbackTransaction();
-//                throw;
-//            }
-//        }
+        //            Database.Execute2(
+        //@"INSERT INTO SamplerState (
+        //    DeviceID,
+        //    StratumCode,
+        //    SampleGroupCode,
+        //    SampleSelectorType,
+        //    BlockState,
+        //    SystematicIndex,
+        //    Counter,
+        //    InsuranceIndex,
+        //    InsuranceCounter
+        //) VALUES (
+        //    @DeviceID,
+        //    @StratumCode,
+        //    @SampleGroupCode,
+        //    @SampleSelectorType,
+        //    @BlockState,
+        //    @SystematicIndex,
+        //    @Counter,
+        //    @InsuranceIndex,
+        //    @InsuranceCounter
+        //)
+        //ON CONFLICT (DeviceID, StratumCode, SampleGroupCode) DO
+        //UPDATE SET
+        //        BlockState = @BlockState,
+        //        SystematicIndex = @SystematicIndex,
+        //        Counter = @Counter,
+        //        InsuranceIndex = @InsuranceIndex,
+        //        InsuranceCounter = @InsuranceCounter
+        //    WHERE DeviceID = @DeviceID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode;",
+        //                new
+        //                {
+        //                    DeviceID = deviceID,
+        //                    samplerState.BlockState,
+        //                    samplerState.Counter,
+        //                    samplerState.InsuranceCounter,
+        //                    samplerState.InsuranceIndex,
+        //                    samplerState.SystematicIndex,
+        //                    samplerState.SampleSelectorType,
+        //                    samplerState.SampleGroupCode,
+        //                    samplerState.StratumCode,
+        //                }
+        //            );
+        //        }
 
-//        public void UpsertSamplerState(SamplerState samplerState)
-//        {
-//            var deviceID = DeviceInfo.GetUniqueDeviceID();
+        //        public void DeleteTallyEntry(string tallyLedgerID)
+        //        {
+        //            Database.BeginTransaction();
+        //            try
+        //            {
+        //                Database.Execute("DELETE FROM TREE_V3 WHERE TreeID IN (SELECT TreeID FROM TallyLedger WHERE TallyLedgerID = @p1);", tallyLedgerID);
+        //                Database.Execute("DELETE FROM TallyLedger WHERE TallyLedgerID = @p1;", tallyLedgerID);
 
-//            Database.Execute2(
-//@"INSERT INTO SamplerState (
-//    DeviceID,
-//    StratumCode,
-//    SampleGroupCode,
-//    SampleSelectorType,
-//    BlockState,
-//    SystematicIndex,
-//    Counter,
-//    InsuranceIndex,
-//    InsuranceCounter
-//) VALUES (
-//    @DeviceID,
-//    @StratumCode,
-//    @SampleGroupCode,
-//    @SampleSelectorType,
-//    @BlockState,
-//    @SystematicIndex,
-//    @Counter,
-//    @InsuranceIndex,
-//    @InsuranceCounter
-//)
-//ON CONFLICT (DeviceID, StratumCode, SampleGroupCode) DO
-//UPDATE SET
-//        BlockState = @BlockState,
-//        SystematicIndex = @SystematicIndex,
-//        Counter = @Counter,
-//        InsuranceIndex = @InsuranceIndex,
-//        InsuranceCounter = @InsuranceCounter
-//    WHERE DeviceID = @DeviceID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode;",
-//                new
-//                {
-//                    DeviceID = deviceID,
-//                    samplerState.BlockState,
-//                    samplerState.Counter,
-//                    samplerState.InsuranceCounter,
-//                    samplerState.InsuranceIndex,
-//                    samplerState.SystematicIndex,
-//                    samplerState.SampleSelectorType,
-//                    samplerState.SampleGroupCode,
-//                    samplerState.StratumCode,
-//                }
-//            );
-//        }
-
-//        public void DeleteTallyEntry(string tallyLedgerID)
-//        {
-//            Database.BeginTransaction();
-//            try
-//            {
-//                Database.Execute("DELETE FROM TREE_V3 WHERE TreeID IN (SELECT TreeID FROM TallyLedger WHERE TallyLedgerID = @p1);", tallyLedgerID);
-//                Database.Execute("DELETE FROM TallyLedger WHERE TallyLedgerID = @p1;", tallyLedgerID);
-
-//                Database.CommitTransaction();
-//            }
-//            catch
-//            {
-//                Database.RollbackTransaction();
-//                throw;
-//            }
-//        }
+        //                Database.CommitTransaction();
+        //            }
+        //            catch
+        //            {
+        //                Database.RollbackTransaction();
+        //                throw;
+        //            }
+        //        }
 
         #endregion Tally Entry
 

@@ -39,27 +39,24 @@ namespace NatCruise.Cruise.Data
             var database = Database;
             var deviceID = DeviceID;
 
-            // all dataservices below should return null if cruiseDatastore is null
-            // note: I am skeptical about wheather this method should return null at all
-            //      I think it should throw if the dataservice type can't be found
-            //      I almost think it should throw if the datastore is null, but I also think it should be
-            //      on the classes that relie on the dataservice provider to determin if the dataservice they requested
-            //      is esential and throw if null, or allow for null to be returned and check for it.
 
-            if (typeof(ICuttingUnitDatastore).IsAssignableFrom(type))
-            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+            if(cruiseID == null)
+            { throw new InvalidOperationException("DataserviceProvider: no cruise selected"); }
 
-            if (typeof(IPlotDatastore).IsAssignableFrom(type))
-            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+            if (typeof(ICuttingUnitDataservice).IsAssignableFrom(type))
+            { return new CuttingUnitDatastore(database, cruiseID, deviceID); }
 
-            if (typeof(ITreeDatastore).IsAssignableFrom(type))
-            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+            if (typeof(IPlotDataservice).IsAssignableFrom(type))
+            { return new PlotDataservice(database, cruiseID, deviceID); }
 
-            if (typeof(ILogDatastore).IsAssignableFrom(type))
-            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+            if (typeof(ITreeDataservice).IsAssignableFrom(type))
+            { return new TreeDataservice(database, cruiseID, deviceID); }
 
-            if (typeof(ICuttingUnitDatastore).IsAssignableFrom(type))
-            { return new CuttingUnitDatastore(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+            if (typeof(ILogDataservice).IsAssignableFrom(type))
+            { return new LogDataservice(database, cruiseID, deviceID); }
+
+            if (typeof(IPlotTallyDataservice).IsAssignableFrom(type))
+            { return new PlotTallyDataservice(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
 
             if (typeof(ISampleSelectorDataService).IsAssignableFrom(type))
             { return SampleSelectorDataService; }
@@ -93,14 +90,15 @@ namespace NatCruise.Cruise.Data
 
         public override void RegisterDataservices(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<ICuttingUnitDatastore>(x => GetDataservice<ICuttingUnitDatastore>());
-            containerRegistry.Register<IPlotDatastore>(x => GetDataservice<IPlotDatastore>());
-            containerRegistry.Register<ITreeDatastore>(x => GetDataservice<ITreeDatastore>());
-            containerRegistry.Register<ILogDatastore>(x => GetDataservice<ILogDatastore>());
+            containerRegistry.Register<ICuttingUnitDataservice>(x => GetDataservice<ICuttingUnitDataservice>());
+            containerRegistry.Register<IPlotDataservice>(x => GetDataservice<IPlotDataservice>());
+            containerRegistry.Register<ITreeDataservice>(x => GetDataservice<ITreeDataservice>());
+            containerRegistry.Register<ILogDataservice>(x => GetDataservice<ILogDataservice>());
             containerRegistry.Register<ISampleSelectorDataService>(x => GetDataservice<ISampleSelectorDataService>());
             containerRegistry.Register<ISaleDataservice>(x => GetDataservice<ISaleDataservice>());
             containerRegistry.Register<IFixCNTDataservice>(x => GetDataservice<IFixCNTDataservice>());
             containerRegistry.Register<ITallyDataservice>(x => GetDataservice<ITallyDataservice>());
+            containerRegistry.Register<IPlotTallyDataservice>(e => GetDataservice<IPlotTallyDataservice>());
             containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
             containerRegistry.Register<ISampleInfoDataservice>(x => GetDataservice<ISampleInfoDataservice>());
         }

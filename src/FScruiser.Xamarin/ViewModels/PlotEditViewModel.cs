@@ -1,8 +1,7 @@
 ﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using NatCruise.Services;
 using Prism.Common;
 using System;
@@ -84,14 +83,14 @@ namespace FScruiser.XF.ViewModels
             //    }
             //}
 
-            Datastore.UpdatePlotNumber(Plot.PlotID, plotNumber);
+            PlotDataservice.UpdatePlotNumber(Plot.PlotID, plotNumber);
 
             RaisePropertyChanged(nameof(PlotNumber));
         }
 
         private bool OnPlotNumberChanging(int oldValue, int newValue)
         {
-            if (Datastore.IsPlotNumberAvalible(UnitCode, newValue))
+            if (PlotDataservice.IsPlotNumberAvalible(UnitCode, newValue))
             {
                 return true;
             }
@@ -123,9 +122,9 @@ namespace FScruiser.XF.ViewModels
             // we need to assure that the old and new values are different
             if (oldValue == newValue) { return; }
 
-            if (Datastore.IsPlotNumberAvalible(UnitCode, newValue))
+            if (PlotDataservice.IsPlotNumberAvalible(UnitCode, newValue))
             {
-                Datastore.UpdatePlotNumber(Plot.PlotID, newValue);
+                PlotDataservice.UpdatePlotNumber(Plot.PlotID, newValue);
 
                 PlotNumber = newValue;
             }
@@ -170,16 +169,14 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public IPlotDatastore Datastore { get; set; }
+        public IPlotDataservice PlotDataservice { get; }
         public IDialogService DialogService { get; set; }
 
-        public PlotEditViewModel(IDataserviceProvider datastoreProvider
+        public PlotEditViewModel(IPlotDataservice plotDataservice
             , IDialogService dialogService
             , ICruiseNavigationService navigationService)
         {
-            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
-
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
@@ -192,19 +189,19 @@ namespace FScruiser.XF.ViewModels
 
             if (stratumPlot.InCruise)
             {
-                var hasTreeData = Datastore.GetNumTreeRecords(UnitCode, stratumCode, plotNumber) > 0;
+                var hasTreeData = PlotDataservice.GetNumTreeRecords(UnitCode, stratumCode, plotNumber) > 0;
 
                 if (hasTreeData)
                 {
                     if (await DialogService.AskYesNoAsync("Removing stratum will delete all tree data", "Continue?"))
                     {
-                        Datastore.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
+                        PlotDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
                         stratumPlot.InCruise = false;
                     }
                 }
                 else
                 {
-                    Datastore.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
+                    PlotDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
                     stratumPlot.InCruise = false;
                 }
             }
@@ -221,7 +218,7 @@ namespace FScruiser.XF.ViewModels
                 }
                 else
                 {
-                    Datastore.InsertPlot_Stratum(stratumPlot);
+                    PlotDataservice.InsertPlot_Stratum(stratumPlot);
                     stratumPlot.InCruise = true;
                 }
             }
@@ -240,14 +237,14 @@ namespace FScruiser.XF.ViewModels
             Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
-                plot = Datastore.GetPlot(plotID);
+                plot = PlotDataservice.GetPlot(plotID);
             }
             else
             {
-                plot = Datastore.GetPlot(unitCode, plotNumber);
+                plot = PlotDataservice.GetPlot(unitCode, plotNumber);
             }
 
-            var stratumPlots = Datastore.GetPlot_Strata(plot.CuttingUnitCode, plot.PlotNumber);
+            var stratumPlots = PlotDataservice.GetPlot_Strata(plot.CuttingUnitCode, plot.PlotNumber);
 
             Plot = plot;
             StratumPlots = stratumPlots;
@@ -257,7 +254,7 @@ namespace FScruiser.XF.ViewModels
 
         protected void RefreshErrorsAndWarnings(Plot plot)
         {
-            var errorsAndWarnings = Datastore.GetPlotErrors(plot.PlotID);
+            var errorsAndWarnings = PlotDataservice.GetPlotErrors(plot.PlotID);
             ErrorsAndWarnings = errorsAndWarnings;
         }
 
@@ -271,7 +268,7 @@ namespace FScruiser.XF.ViewModels
                 case nameof(Plot.Slope):
                 case nameof(Plot.Remarks):
                     {
-                        Datastore.UpdatePlot(plot);
+                        PlotDataservice.UpdatePlot(plot);
                         break;
                     }
             }
@@ -286,7 +283,7 @@ namespace FScruiser.XF.ViewModels
 
                 if (stratumPlot.InCruise)
                 {
-                    Datastore.UpdatePlot_Stratum(stratumPlot);
+                    PlotDataservice.UpdatePlot_Stratum(stratumPlot);
                 }
 
                 RefreshErrorsAndWarnings(Plot);
