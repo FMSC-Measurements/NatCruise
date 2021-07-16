@@ -2,9 +2,9 @@
 using NatCruise.Data;
 using System.Collections.Generic;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Cruise.Data
 {
-    public interface ILogDatastore : IDataservice
+    public interface ILogDataservice : IDataservice
     {
         IEnumerable<Log> GetLogs(string tree_guid);
 

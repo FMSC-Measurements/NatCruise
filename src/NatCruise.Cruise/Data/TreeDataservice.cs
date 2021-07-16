@@ -1,13 +1,14 @@
-﻿using FMSC.ORM.Core.SQL.QueryBuilder;
+﻿using CruiseDAL;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Cruise.Data
 {
-    public partial class CuttingUnitDatastore : ITreeDatastore
+    public class TreeDataservice : CruiseDataserviceBase, ITreeDataservice
     {
         private const string UPSERT_TREEMEASURMENT_COMMAND =
 @"INSERT INTO TreeMeasurment (
@@ -124,6 +125,14 @@ ON CONFLICT (TreeID) DO UPDATE SET
     ModifiedBy = @DeviceID
 WHERE TreeID = @TreeID;";
 
+        public TreeDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
+        {
+        }
+
+        public TreeDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
+
         public string CreateMeasureTree(string unitCode, string stratumCode,
             string sampleGroupCode = null, string species = null, string liveDead = "L",
             int treeCount = 1, int kpi = 0, bool stm = false)
@@ -222,6 +231,32 @@ INSERT INTO TallyLedger (
                 "WHERE t.TreeID = @p1;", treeID).FirstOrDefault();
         }
 
+        public IEnumerable<Tree> GetTreesByUnitCode(string unitCode)
+        {
+            return Database.Query<Tree_Ex>(
+                "SELECT t.*, tm.* FROM Tree AS t " +
+                "LEFT JOIN TreeMeasurment AS tm USING (TreeID) " +
+                "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
+                "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL",
+                unitCode, CruiseID).ToArray();
+        }
+
+        public TreeStub GetTreeStub(string treeID)
+        {
+            return Database.From<TreeStub>()
+                .LeftJoin("TreeMeasurment", "USING (TreeID)")
+                .Where("TreeID = @p1")
+                .Query(treeID).FirstOrDefault();
+        }
+
+        public IEnumerable<TreeStub> GetTreeStubsByUnitCode(string unitCode)
+        {
+            return Database.From<TreeStub>()
+                .LeftJoin("TreeMeasurment", "USING (TreeID)")
+                .Where("CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL")
+                .Query(unitCode, CruiseID);
+        }
+
         public IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID)
         {
             return Database.Query<TreeFieldValue>(
@@ -282,7 +317,7 @@ INSERT INTO TallyLedger (
 
         public void UpdateTree(Tree_Ex tree)
         {
-            if(tree == null) { throw new ArgumentNullException(nameof(tree)); }
+            if (tree == null) { throw new ArgumentNullException(nameof(tree)); }
 
             //if (tree.IsPersisted == false) { throw new InvalidOperationException("tree is not persisted before calling update"); }
             //Database.Update(tree);
@@ -405,14 +440,14 @@ UPSERT_TREEMEASURMENT_COMMAND,
             //{
             //    var stuff = Database.QueryGeneric($"Select * from TreeMeasurment where treeid = '{treeID}';").ToArray();
 
-                UpdateTreeFieldValue(
-                    new TreeFieldValue
-                    {
-                        TreeID = treeID,
-                        Field = "Remarks",
-                        ValueText = remarks,
-                        DBType = "TEXT",
-                    });
+            UpdateTreeFieldValue(
+                new TreeFieldValue
+                {
+                    TreeID = treeID,
+                    Field = "Remarks",
+                    ValueText = remarks,
+                    DBType = "TEXT",
+                });
 
             //    var stuffagain = Database.QueryGeneric($"Select * from TreeMeasurment where treeid = '{treeID}';").ToArray();
             //}
@@ -445,41 +480,6 @@ UPSERT_TREEMEASURMENT_COMMAND,
         public int? GetTreeNumber(string treeID)
         {
             return Database.ExecuteScalar<int?>("SELECT TreeNumber FROM Tree WHERE TreeID = @p1;", treeID);
-        }
-
-        public IEnumerable<TreeError> GetTreeErrors(string treeID)
-        {
-            return Database.Query<TreeError>(
-                "SELECT " +
-                "te.TreeID, " +
-                "te.TreeAuditRuleID, " +
-                "te.Field, " +
-                "te.Level, " +
-                "te.Message, " +
-                "te.IsResolved," +
-                "te.Resolution, " +
-                "te.ResolutionInitials " +
-                "FROM TreeError AS te " +
-                "WHERE te.TreeID = @p1;",
-                new object[] { treeID }).ToArray();
-        }
-
-        public TreeError GetTreeError(string treeID, string treeAuditRuleID)
-        {
-            return Database.Query<TreeError>(
-                "SELECT " +
-                "te.TreeID, " +
-                "te.TreeAuditRuleID, " +
-                "te.Field, " +
-                "te.Level, " +
-                "te.Message, " +
-                "te.IsResolved," +
-                "te.Resolution, " +
-                "te.ResolutionInitials " +
-                "FROM TreeError AS te " +
-                "WHERE te.TreeID = @p1 " +
-                "AND te.TreeAuditRuleID = @p2;",
-                new object[] { treeID, treeAuditRuleID }).FirstOrDefault();
         }
 
         public bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null, string stratumCode = null)
@@ -516,6 +516,45 @@ UPSERT_TREEMEASURMENT_COMMAND,
                 value, tree_guid);
         }
 
+        #endregion util
+
+        #region validation
+
+        public IEnumerable<TreeError> GetTreeErrors(string treeID)
+        {
+            return Database.Query<TreeError>(
+                "SELECT " +
+                "te.TreeID, " +
+                "te.TreeAuditRuleID, " +
+                "te.Field, " +
+                "te.Level, " +
+                "te.Message, " +
+                "te.IsResolved," +
+                "te.Resolution, " +
+                "te.ResolutionInitials " +
+                "FROM TreeError AS te " +
+                "WHERE te.TreeID = @p1;",
+                new object[] { treeID }).ToArray();
+        }
+
+        public TreeError GetTreeError(string treeID, string treeAuditRuleID)
+        {
+            return Database.Query<TreeError>(
+                "SELECT " +
+                "te.TreeID, " +
+                "te.TreeAuditRuleID, " +
+                "te.Field, " +
+                "te.Level, " +
+                "te.Message, " +
+                "te.IsResolved," +
+                "te.Resolution, " +
+                "te.ResolutionInitials " +
+                "FROM TreeError AS te " +
+                "WHERE te.TreeID = @p1 " +
+                "AND te.TreeAuditRuleID = @p2;",
+                new object[] { treeID, treeAuditRuleID }).FirstOrDefault();
+        }
+
         public void SetTreeAuditResolution(string treeID, string treeAuditRuleID, string resolution, string initials)
         {
             Database.Execute("INSERT OR REPLACE INTO TreeAuditResolution " +
@@ -531,6 +570,6 @@ UPSERT_TREEMEASURMENT_COMMAND,
                 , treeID, treeAuditRuleID);
         }
 
-        #endregion util
+        #endregion validation
     }
 }

@@ -1,13 +1,22 @@
 ﻿using CruiseDAL.Schema;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Cruise.Data
 {
-    public partial class CuttingUnitDatastore : IPlotDatastore
+    public class PlotDataservice : CruiseDataserviceBase, IPlotDataservice
     {
+        public PlotDataservice(CruiseDAL.CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
+        {
+        }
+
+        public PlotDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
+
         #region plot
 
         public string AddNewPlot(string cuttingUnitCode)
@@ -202,6 +211,18 @@ WHERE cust.CuttingUnitCode = @p1 AND tp.CruiseID = @p2 AND st.Method IN (SELECT 
 
         #region plot stratum
 
+        public IEnumerable<StratumProxy> GetPlotStrataProxies(string unitCode)
+        {
+            return Database.Query<StratumProxy>(
+                "SELECT " +
+                "st.* " +
+                "FROM Stratum AS st " +
+                "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
+                "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)",
+                new object[] { unitCode, CruiseID })
+                .ToArray();
+        }
+
         public void InsertPlot_Stratum(Plot_Stratum plotStratum)
         {
             if (plotStratum is null) { throw new ArgumentNullException(nameof(plotStratum)); }
@@ -349,199 +370,6 @@ AND p.PlotNumber = @p4; ",
 
         #region tree
 
-        public void InsertTree(TreeStub_Plot tree, SamplerState samplerState)
-        {
-            if (tree is null) { throw new ArgumentNullException(nameof(tree)); }
-
-           
-
-            var database = Database;
-            database.BeginTransaction();
-            try
-            {
-                var treeID = tree.TreeID ?? Guid.NewGuid().ToString();
-
-                var nextTreeNumber = GetNextPlotTreeNumber(tree.CuttingUnitCode, tree.StratumCode, tree.PlotNumber);
-                tree.TreeNumber = nextTreeNumber;
-
-                database.Execute2(
-    @"INSERT INTO Tree (
-    CruiseID,
-    TreeID,
-    TreeNumber,
-    CuttingUnitCode,
-    PlotNumber,
-    StratumCode,
-    SampleGroupCode,
-    SpeciesCode,
-    LiveDead,
-    CountOrMeasure
-) VALUES (
-    @CruiseID,
-    @TreeID,
-    @TreeNumber,
-    @CuttingUnitCode,
-    @PlotNumber,
-    @StratumCode,
-    @SampleGroupCode,
-    @SpeciesCode,
-    @LiveDead,
-    @CountOrMeasure
-);
-INSERT INTO TallyLedger (
-    CruiseID,
-    TallyLedgerID,
-    TreeID,
-    CuttingUnitCode,
-    PlotNumber,
-    StratumCode,
-    SampleGroupCode,
-    SpeciesCode,
-    LiveDead,
-    TreeCount,
-    KPI,
-    ThreePRandomValue,
-    STM
-) VALUES (
-    @CruiseID,
-    @TreeID,
-    @TreeID,
-    @CuttingUnitCode,
-    @PlotNumber,
-    @StratumCode,
-    @SampleGroupCode,
-    @SpeciesCode,
-    @LiveDead,
-    @TreeCount,
-    @KPI,
-    @ThreePRandomValue,
-    @STM
-); "
-                    , new
-                    {
-                        CruiseID,
-                        TreeID = treeID,
-                        tree.TreeNumber,
-                        tree.CuttingUnitCode,
-                        tree.PlotNumber,
-                        tree.StratumCode,
-                        tree.SampleGroupCode,
-                        tree.SpeciesCode,
-                        tree.LiveDead,
-                        tree.CountOrMeasure,
-                        tree.TreeCount,
-                        tree.KPI,
-                        tree.ThreePRandomValue,
-                        tree.STM,
-                    });
-
-                tree.TreeID = treeID;
-
-                if (samplerState != null)
-                {
-                    SampleInfoDataservice.UpsertSamplerState(samplerState);
-                }
-                database.CommitTransaction();
-            }
-            catch
-            {
-                database.RollbackTransaction();
-                throw;
-            }
-        }
-
-        public string CreatePlotTree(string unitCode, int plotNumber,
-            string stratumCode, string sampleGroupCode,
-            string species = null, string liveDead = "L",
-            string countMeasure = "M", int treeCount = 1,
-            int kpi = 0, bool stm = false)
-        {
-            var tree_guid = Guid.NewGuid().ToString();
-            CreatePlotTree(tree_guid, unitCode, plotNumber, stratumCode, sampleGroupCode, species, liveDead, countMeasure, treeCount, kpi, stm);
-            return tree_guid;
-        }
-
-        protected void CreatePlotTree(string treeID, string unitCode, int plotNumber,
-            string stratumCode, string sampleGroupCode,
-            string species = null, string liveDead = "L",
-            string countMeasure = "M", int treeCount = 1,
-            int kpi = 0, bool stm = false)
-        {
-            var tallyLedgerID = treeID;
-
-            Database.Execute2(
-$@"INSERT INTO Tree (
-    CruiseID,
-    TreeID,
-    TreeNumber,
-    CruiseID,
-    CuttingUnitCode,
-    PlotNumber,
-    StratumCode,
-    SampleGroupCode,
-    SpeciesCode,
-    LiveDead,
-    CountOrMeasure
-) VALUES (
-    @CruiseID,
-    @TreeID,
-    (SELECT ifnull(max(TreeNumber), 0) + 1 FROM Tree WHERE CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND PlotNumber = @PlotNumber),
-    @CruiseID,
-    @CuttingUnitCode,
-    @PlotNumber,
-    @StratumCode,
-    @SampleGroupCode,
-    @SpeciesCode,
-    @LiveDead,
-    @CountOrMeasure);
-INSERT INTO TallyLedger (
-    CruiseID,
-    TallyLedgerID,
-    TreeID,
-    CruiseID,
-    CuttingUnitCode,
-    PlotNumber,
-    StratumCode,
-    SampleGroupCode,
-    SpeciesCode,
-    LiveDead,
-    TreeCount,
-    KPI,
-    STM
-) VALUES (
-    @CruiseID,
-    @TallyLedgerID,
-    @TreeID,
-    @CruiseID,
-    @CuttingUnitCode,
-    @PlotNumber,
-    @StratumCode,
-    @SampleGroupCode,
-    @SpeciesCode,
-    @LiveDead,
-    @TreeCount,
-    @KPI,
-    @STM
-);"
-                , new
-                {
-                    CruiseID,
-                    TallyLedgerID = tallyLedgerID,
-                    TreeID = treeID,
-                    CuttingUnitCode = unitCode,
-                    PlotNumber = plotNumber,
-                    StratumCode = stratumCode,
-                    SampleGroupCode = sampleGroupCode,
-                    SpeciesCode = species,
-                    LiveDead = liveDead,
-                    CountOrMeasure = countMeasure,
-                    TreeCount = treeCount,
-                    KPI = kpi,
-                    STM = stm,
-                }
-            );
-        }
-
         public IEnumerable<TreeStub_Plot> GetPlotTreeProxies(string unitCode, int plotNumber)
         {
             return Database.Query<TreeStub_Plot>(
@@ -570,25 +398,6 @@ GROUP BY tl.TreeID
 ORDER BY t.TreeNumber
 ;",
                 new object[] { unitCode, CruiseID, plotNumber });
-        }
-
-        public int GetNextPlotTreeNumber(string unitCode, string stratumCode, int plotNumber)
-        {
-            var database = Database;
-            var useCrossStrataTreeNumbering = database.ExecuteScalar<bool>("SELECT UseCrossStrataPlotTreeNumbering FROM Cruise WHERE CruiseID = @p1;", CruiseID);
-
-            if (useCrossStrataTreeNumbering)
-            {
-                return Database.ExecuteScalar<int>("SELECT ifnull(max(TreeNumber), 0) + 1  FROM Tree " +
-                    "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3;"
-                    , unitCode, CruiseID, plotNumber);
-            }
-            else
-            {
-                return Database.ExecuteScalar<int>("SELECT ifnull(max(TreeNumber), 0) + 1  FROM Tree " +
-                    "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3 AND StratumCode = @p4;"
-                    , unitCode, CruiseID, plotNumber, stratumCode);
-            }
         }
 
         #endregion tree

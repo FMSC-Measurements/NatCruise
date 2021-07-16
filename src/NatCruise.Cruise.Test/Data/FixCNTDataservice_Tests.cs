@@ -1,13 +1,11 @@
 ﻿using FluentAssertions;
-using NatCruise.Cruise.Test.Services;
 using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Services;
+using NatCruise.Test;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
-using NatCruise.Test;
 
-namespace NatCruise.Cruise.Core.Test.Data
+namespace NatCruise.Cruise.Test.Data
 {
     public class FixCNTDataservice_Tests : Datastore_TestBase
     {
@@ -58,7 +56,7 @@ namespace NatCruise.Cruise.Core.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var plotds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
@@ -104,7 +102,7 @@ namespace NatCruise.Cruise.Core.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var plotds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
@@ -148,7 +146,7 @@ namespace NatCruise.Cruise.Core.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var plotds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
@@ -187,7 +185,7 @@ namespace NatCruise.Cruise.Core.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var plotds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var plotID = plotds.AddNewPlot(unitCode);
 

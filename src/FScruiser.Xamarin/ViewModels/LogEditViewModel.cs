@@ -1,9 +1,9 @@
 ﻿using FScruiser.XF.Constants;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using Prism.Common;
 using Prism.Navigation;
+using System;
 using System.Collections.Generic;
 
 namespace FScruiser.XF.ViewModels
@@ -20,27 +20,26 @@ namespace FScruiser.XF.ViewModels
             set => SetProperty(ref _log, value);
         }
 
-        public ICuttingUnitDatastore Datastore { get; set; }
-
         public IEnumerable<LogFieldSetup> LogFields { get => _logFields; set => SetProperty(ref _logFields, value); }
 
         public IEnumerable<LogError> Errors { get => _errors; set => SetProperty(ref _errors, value); }
+        public ILogDataservice LogDataservice { get; }
 
-        public LogEditViewModel(IDataserviceProvider datastoreProvider)
+        public LogEditViewModel(ILogDataservice logDataservice)
         {
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
         }
 
         protected override void Load(IParameters parameters)
         {
-            if (parameters is null) { throw new System.ArgumentNullException(nameof(parameters)); }
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
             var log_guid = parameters.GetValue<string>(NavParams.LogID);
 
-            var log = Datastore.GetLog(log_guid);
+            var log = LogDataservice.GetLog(log_guid);
 
-            LogFields = Datastore.GetLogFields(log.TreeID);
-            Errors = Datastore.GetLogErrorsByLog(log.LogID);
+            LogFields = LogDataservice.GetLogFields(log.TreeID);
+            Errors = LogDataservice.GetLogErrorsByLog(log.LogID);
             Log = log;
         }
 
@@ -59,7 +58,7 @@ namespace FScruiser.XF.ViewModels
             var log = Log;
             if (log != null)
             {
-                Datastore.UpdateLog(log);
+                LogDataservice.UpdateLog(log);
             }
         }
     }

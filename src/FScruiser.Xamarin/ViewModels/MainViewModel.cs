@@ -1,15 +1,14 @@
 ﻿using FScruiser.XF.Services;
 using NatCruise.Core.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Services;
-using Prism.Common;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -114,7 +113,7 @@ namespace FScruiser.XF.ViewModels
         public IAppInfoService AppInfo { get; }
         public ICruiseDialogService DialogService { get; }
         public IDeviceInfoService DeviceInfo { get; }
-        public ICuttingUnitDatastore CuttingUnitDataservice { get; }
+        public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ISaleDataservice SaleDataservice { get; }
 
         public MainViewModel(
@@ -132,7 +131,7 @@ namespace FScruiser.XF.ViewModels
 
             if (datastoreProvider.CruiseID != null)
             {
-                CuttingUnitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+                CuttingUnitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDataservice>();
                 SaleDataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
             }
         }
@@ -165,7 +164,6 @@ namespace FScruiser.XF.ViewModels
         //{
         //    base.Load();
 
-            
         //}
 
         protected override void OnInitialize(INavigationParameters parameters)

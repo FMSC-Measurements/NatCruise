@@ -1,18 +1,12 @@
-﻿using CruiseDAL;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FMSC.Sampling;
-using NatCruise.Cruise.Test.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
+using NatCruise.Test;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using NatCruise.Test;
 
 namespace NatCruise.Cruise.Test.Data
 {
@@ -36,7 +30,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
                 var tpds = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
-                var cuds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var pop = tpds.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead);
 
@@ -45,14 +39,14 @@ namespace NatCruise.Cruise.Test.Data
                 var tallyEntries = datastore.GetTallyEntriesByUnitCode(unit);
                 tallyEntries.Should().HaveCount(1);
 
-                // add another entry using insertTallyLedger 
+                // add another entry using insertTallyLedger
                 datastore.InsertTallyLedger(new TallyLedger(unit, pop));
                 tallyEntries = datastore.GetTallyEntriesByUnitCode(unit);
                 tallyEntries.Should().HaveCount(2);
 
                 // inset a tally ledger with plot number
                 // and conferm that GetTallyEntriesByUnitCode doesn't return plot tally entries
-                cuds.AddNewPlot(unit);
+                plotds.AddNewPlot(unit);
                 datastore.InsertTallyAction(new TallyAction(unit, 1, pop));
                 tallyEntries = datastore.GetTallyEntriesByUnitCode(unit);
                 tallyEntries.Should().HaveCount(2);
@@ -76,7 +70,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
                 var tpds = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
-                var cuds = new CuttingUnitDatastore(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var treeds = new TreeDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var tallyPops = database.QueryGeneric($"Select * from TallyPopulation WHERE StratumCode = '{stratumCode}';")
                     .ToArray();
@@ -105,7 +99,7 @@ namespace NatCruise.Cruise.Test.Data
 
                 if (sampleResult == SampleResult.M || sampleResult == SampleResult.I)
                 {
-                    var tree = cuds.GetTree(entry.TreeID);
+                    var tree = treeds.GetTree(entry.TreeID);
 
                     tree.Should().NotBeNull();
 

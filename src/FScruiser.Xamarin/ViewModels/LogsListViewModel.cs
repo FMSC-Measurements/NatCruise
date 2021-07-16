@@ -1,8 +1,7 @@
 ﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using NatCruise.Util;
 using Prism.Common;
 using Prism.Navigation;
@@ -40,7 +39,9 @@ namespace FScruiser.XF.ViewModels
             protected set => SetProperty(ref _logFields, value);
         }
 
-        protected ICuttingUnitDatastore Datastore { get; }
+        protected ITreeDataservice TreeDataservice { get; }
+        protected ILogDataservice LogDataservice { get; }
+        protected ICuttingUnitDataservice Datastore { get; }
         protected ICruiseNavigationService NavigationService { get; }
 
         public ICommand AddLogCommand => _addLogCommand ?? (_addLogCommand = new Command(ShowAddLogPage));
@@ -51,11 +52,11 @@ namespace FScruiser.XF.ViewModels
 
         public LogsListViewModel(
             ICruiseNavigationService navigationService,
-            IDataserviceProvider datastoreProvider)
+            ITreeDataservice treeDataservice,
+            ILogDataservice logDataservice)
         {
-            if (datastoreProvider is null) { throw new System.ArgumentNullException(nameof(datastoreProvider)); }
-
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
+            LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
@@ -66,11 +67,11 @@ namespace FScruiser.XF.ViewModels
             var tree_guid = Tree_GUID = parameters.GetValue<string>(NavParams.TreeID)
                 ?? parameters.GetValue<string>(KnownNavigationParameters.XamlParam);
 
-            TreeNumber = Datastore.GetTreeStub(tree_guid)?.TreeNumber;
+            TreeNumber = TreeDataservice.GetTreeStub(tree_guid)?.TreeNumber;
 
-            LogFields = Datastore.GetLogFields(tree_guid);
+            LogFields = LogDataservice.GetLogFields(tree_guid);
 
-            Logs = Datastore.GetLogs(tree_guid).ToObservableCollection()
+            Logs = LogDataservice.GetLogs(tree_guid).ToObservableCollection()
                 ?? new ObservableCollection<Log>();
         }
 
@@ -81,7 +82,7 @@ namespace FScruiser.XF.ViewModels
                 TreeID = Tree_GUID
             };
 
-            Datastore.InsertLog(newLog);
+            LogDataservice.InsertLog(newLog);
 
             _logs.Add(newLog);
         }

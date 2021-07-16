@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
@@ -36,7 +37,7 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
-            var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDataservice>();
             if (datastore != null)
             {
                 Units = datastore.GetUnits();
