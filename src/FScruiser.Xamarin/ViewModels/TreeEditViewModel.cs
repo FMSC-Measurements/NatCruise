@@ -82,16 +82,23 @@ namespace FScruiser.XF.ViewModels
                 RaisePropertyChanged(nameof(SpeciesCode));
                 RaisePropertyChanged(nameof(LiveDead));
                 RaisePropertyChanged(nameof(Remarks));
+                RaisePropertyChanged(nameof(Initials));
             }
         }
 
         public string Initials
         {
-            get => _initials;
+            get => Tree?.Initials;
             set
             {
                 if (IsLoading) { return; }
-                SetProperty(ref _initials, value);
+                var tree = Tree;
+                if(tree == null) { return; }
+                var oldValue = tree.Initials;
+                if(oldValue != value)
+                {
+                    TreeDataservice.UpdateTreeInitials(tree.TreeID, value);
+                }
             }
         }
 

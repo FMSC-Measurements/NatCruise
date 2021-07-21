@@ -509,11 +509,22 @@ UPSERT_TREEMEASURMENT_COMMAND,
 
         public void UpdateTreeInitials(string tree_guid, string value)
         {
-            Database.Execute(
-                "UPDATE TreeMeasurment SET " +
-                "Initials = @p1 " +
-                "WHERE TreeID = @p2",
-                value, tree_guid);
+            Database.Execute2(
+@"INSERT INTO TreeMeasurment (
+    TreeID,
+    Initials
+) VALUES (
+    @TreeID,
+    @Initials
+)
+ON CONFLICT (TreeID) DO
+UPDATE SET Initials = @Initials
+WHERE TreeID = @TreeID;",
+                new
+                {
+                    TreeID = tree_guid,
+                    Initials = value,
+                });
         }
 
         #endregion util
