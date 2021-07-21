@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Test.Services;
 using NatCruise.Test;
 using System.Linq;
 using Xunit;
