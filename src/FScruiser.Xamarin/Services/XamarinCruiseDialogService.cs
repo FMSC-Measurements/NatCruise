@@ -1,12 +1,11 @@
-﻿using NatCruise.Cruise.Services;
+﻿using FScruiser.XF.Views;
+using NatCruise.Cruise.Services;
+using NatCruise.Data;
 using Prism.Common;
-using Prism.Ioc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using NatCruise.Data;
-using FScruiser.XF.Views;
 
 namespace FScruiser.XF.Services
 {
@@ -14,20 +13,15 @@ namespace FScruiser.XF.Services
     {
         private TaskCompletionSource<int?> _askKpiTcs;
         private TaskCompletionSource<AskTreeCountResult> _askTreeCountTcs;
-        private IDataserviceProvider DatastoreProvider { get; }
         private IApplicationProvider ApplicationProvider { get; }
         private ICruisersDataservice CruisersDataservice { get; }
-        //private IContainerExtension Container { get; }
 
         public XamarinCruiseDialogService(IApplicationProvider applicationProvider,
-            //IContainerExtension container,
             IDataserviceProvider datastoreProvider,
             ICruisersDataservice cruisersDataservice)
         {
-            DatastoreProvider = datastoreProvider;
             ApplicationProvider = applicationProvider;
             CruisersDataservice = cruisersDataservice;
-            //Container = container;
         }
 
         private Page GetCurrentPage()
@@ -106,7 +100,6 @@ namespace FScruiser.XF.Services
             view.OnClosed += handelClose;
 
             GetCurrentPage().Navigation.PushModalAsync(view);
-
 
             return _askKpiTcs.Task;
         }
