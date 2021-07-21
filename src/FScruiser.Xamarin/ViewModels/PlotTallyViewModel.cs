@@ -45,6 +45,7 @@ namespace FScruiser.XF.ViewModels
 
         public ISampleSelectorDataService SampleSelectorDataService { get; private set; }
         public ITallySettingsDataService TallySettings { get; private set; }
+        public ICruisersDataservice CruisersDataservice { get; }
         public ISoundService SoundService { get; private set; }
         public IContainerProvider ContainerProvider { get; }
         public IPlotTallyService TallyService { get; }
@@ -65,6 +66,7 @@ namespace FScruiser.XF.ViewModels
             ITallyPopulationDataservice tallyPopulationDataservice,
             ISampleSelectorDataService sampleSelectorDataservice,
             ISoundService soundService,
+            ICruisersDataservice cruisersDataservice,
             ITallySettingsDataService tallySettings,
             IContainerProvider containerProvider,
             IPlotTallyService tallyService)
@@ -76,6 +78,7 @@ namespace FScruiser.XF.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             TallySettings = tallySettings ?? throw new ArgumentNullException(nameof(tallySettings));
+            CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
             ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
             TallyService = tallyService ?? throw new ArgumentNullException(nameof(tallyService));
@@ -238,12 +241,14 @@ namespace FScruiser.XF.ViewModels
             {
                 await soundService.SignalMeasureTreeAsync();
 
-                //if (TallySettings.EnableCruiserPopup)
-                //{
-                //    var cruiser = dialogService.AskCruiserAsync();
-                //    if(cruiser != null)
-                //    await dialogService.AskCruiserAsync(tree);
-                //}
+                if (CruisersDataservice.PromptCruiserOnSample)
+                {
+                    var cruiser = await DialogService.AskCruiserAsync();
+                    if (cruiser != null)
+                    {
+                        TreeDataservice.UpdateTreeInitials(tree.TreeID, cruiser);
+                    }
+                }
             }
             else if (tree.CountOrMeasure == "I")
             {

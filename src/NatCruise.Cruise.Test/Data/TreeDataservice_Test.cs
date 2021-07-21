@@ -314,5 +314,40 @@ namespace NatCruise.Cruise.Test.Data
                 speciesError.Field.Should().Be(nameof(Models.Tree.SpeciesCode));
             }
         }
+
+        [Fact]
+        public void UpdateTreeInitials()
+        {
+            var unitCode = "u1";
+            var stratumCode = "st1";
+            var sgCode = "sg1";
+            var species = (string)null;
+            var liveDead = "L";
+            //var countMeasure = "M";
+            var treeCount = 1;
+            var initials = "something";
+
+            var init = new DatastoreInitializer();
+
+            using (var database = init.CreateDatabase())
+            {
+                var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
+
+                var treeID = treeDS.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+
+                var stuff = database.QueryGeneric("SELECT * FROM TreeMeasurment;");
+
+                treeDS.UpdateTreeInitials(treeID, initials);
+
+                database.ExecuteScalar<string>("SELECT Initials FROM TreeMeasurment WHERE TreeID = @p1", treeID).Should().Be(initials);
+
+                var tree = treeDS.GetTree(treeID);
+                tree.Initials.Should().Be(initials);
+
+                treeDS.UpdateTreeInitials(treeID, "somethingElse");
+                var treeAgain = treeDS.GetTree(treeID);
+                treeAgain.Initials.Should().Be("somethingElse");
+            }
+        }
     }
 }
