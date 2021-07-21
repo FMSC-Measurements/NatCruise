@@ -39,8 +39,10 @@ namespace NatCruise.Cruise.Data
             var database = Database;
             var deviceID = DeviceID;
 
+            if (typeof(ISaleDataservice).IsAssignableFrom(type))
+            { return new SaleDataservice(database, cruiseID, deviceID); }
 
-            if(cruiseID == null)
+            if (cruiseID == null)
             { throw new InvalidOperationException("DataserviceProvider: no cruise selected"); }
 
             if (typeof(ICuttingUnitDataservice).IsAssignableFrom(type))
@@ -60,9 +62,6 @@ namespace NatCruise.Cruise.Data
 
             if (typeof(ISampleSelectorDataService).IsAssignableFrom(type))
             { return SampleSelectorDataService; }
-
-            if (typeof(ISaleDataservice).IsAssignableFrom(type))
-            { return new SaleDataservice(database, cruiseID, deviceID); }
 
             if (typeof(IFixCNTDataservice).IsAssignableFrom(type))
             { return new FixCNTDataservice(database, cruiseID, deviceID); }
