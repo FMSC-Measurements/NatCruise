@@ -182,10 +182,10 @@ namespace NatCruise.Cruise.Data
             if (atn.IsInsuranceSample == true && atn.IsSample == false) { throw new InvalidOperationException("If action is insurance sample it must be sample aswell"); }
 
             Database.BeginTransaction();
+            var tallyEntry = new TallyEntry(atn);
             try
             {
-                var tallyEntry = new TallyEntry(atn);
-
+               
                 tallyEntry.TallyLedgerID = Guid.NewGuid().ToString();
 
                 if (atn.IsSample)
@@ -307,14 +307,16 @@ INSERT INTO TreeMeasurment (
                 }
 
                 Database.CommitTransaction();
-
-                return tallyEntry;
+                
             }
             catch
             {
                 Database.RollbackTransaction();
                 throw;
             }
+
+            RefreshErrorsAndWarnings(tallyEntry);
+            return tallyEntry;
         }
 
         public void DeleteTallyEntry(string tallyLedgerID)
@@ -332,6 +334,14 @@ INSERT INTO TreeMeasurment (
                 Database.RollbackTransaction();
                 throw;
             }
+        }
+
+        public void RefreshErrorsAndWarnings(TallyEntry tallyEntry)
+        {
+            if (tallyEntry is null) { throw new ArgumentNullException(nameof(tallyEntry)); }
+
+            tallyEntry.ErrorCount = Database.ExecuteScalar<int>("SELECT count(*) FROM TreeError WHERE Level = 'E' AND TreeID = @p1;", tallyEntry.TreeID);
+            tallyEntry.WarningCount = Database.ExecuteScalar<int>("SELECT count(*) FROM TreeError WHERE Level = 'W' AND TreeID = @p1;", tallyEntry.TreeID);
         }
     }
 }
