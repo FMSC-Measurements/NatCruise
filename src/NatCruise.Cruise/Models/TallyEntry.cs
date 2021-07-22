@@ -1,11 +1,15 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
+using Prism.Mvvm;
 using System;
 
 namespace NatCruise.Cruise.Models
 {
     [Table("TallyLedger")]
-    public class TallyEntry : IHasTreeID
+    public class TallyEntry : BindableBase, IHasTreeID
     {
+        private int _warningCount;
+        private int _errorCount;
+
         public TallyEntry()
         { }
 
@@ -33,9 +37,17 @@ namespace NatCruise.Cruise.Models
 
         public string SampleGroupCode { get; set; }
 
-        public int ErrorCount { get; set; }
+        public int ErrorCount
+        {
+            get => _errorCount;
+            set => SetProperty(ref _errorCount, value);
+        }
 
-        public int WarningCount { get; set; }
+        public int WarningCount
+        {
+            get => _warningCount;
+            set => SetProperty(ref _warningCount, value);
+        }
 
         public string SpeciesCode { get; set; }
 

@@ -10,6 +10,7 @@ using Prism.Common;
 using Prism.Ioc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -104,7 +105,30 @@ namespace FScruiser.XF.ViewModels
             get => _selectedTreeViewModel;
             protected set
             {
+                if(_selectedTreeViewModel != null)
+                { _selectedTreeViewModel.PropertyChanged -= SelectedTreeViewModel_PropertyChanged; }
                 SetProperty(ref _selectedTreeViewModel, value);
+                if(value != null)
+                { value.PropertyChanged += SelectedTreeViewModel_PropertyChanged; }
+            }
+        }
+
+        public TallyEntry SelectedEntry
+        {
+            get => _selectedEntry;
+            protected set => SetProperty(ref _selectedEntry, value);
+        }
+
+        private void SelectedTreeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var vm = (TreeEditViewModel)sender;
+            if(e.PropertyName == nameof(TreeEditViewModel.ErrorsAndWarnings))
+            {
+                var tallyEntry = SelectedEntry;
+                if(tallyEntry != null)
+                {
+                    TallyDataservice.RefreshErrorsAndWarnings(tallyEntry);
+                }
             }
         }
 
@@ -118,6 +142,7 @@ namespace FScruiser.XF.ViewModels
         private string _title;
         private string _unitCode;
         private TreeEditViewModel _selectedTreeViewModel;
+        private TallyEntry _selectedEntry;
 
         public ICommand ShowTallyMenuCommand => _showTallyMenuCommand
             ?? (_showTallyMenuCommand = new Command<TallyPopulation>(ShowTallyMenu));
@@ -174,7 +199,7 @@ namespace FScruiser.XF.ViewModels
         public void SelectTallyEntry(object obj)
         {
             var tallyEntry = obj as TallyEntry;
-            if (tallyEntry == null) { return; }
+            SelectedEntry = tallyEntry;
             var treeID = tallyEntry?.TreeID;
             if (treeID != null)
             {

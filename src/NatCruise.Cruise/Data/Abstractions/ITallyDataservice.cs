@@ -20,5 +20,7 @@ namespace NatCruise.Cruise.Data
         TallyEntry InsertTallyAction(TallyAction atn);
 
         void DeleteTallyEntry(string tallyLedgerID);
+
+        void RefreshErrorsAndWarnings(TallyEntry tallyEntry);
     }
 }
