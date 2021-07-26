@@ -9,6 +9,7 @@ using NatCruise.Util;
 using System.Collections.Generic;
 using Xamarin.CommunityToolkit.Markup;
 using FScruiser.XF.Controls;
+using FScruiser.XF.Util;
 
 namespace FScruiser.XF.Views
 {
@@ -191,6 +192,12 @@ namespace FScruiser.XF.Views
                 var nextChild = layout.Children.Skip(indexOfChild + 1).Where(x => x is Entry || x is Picker).FirstOrDefault();
                 nextChild?.Focus();
             }
+        }
+
+        private void openDeleteButton_Clicked(object sender, EventArgs e)
+        {
+            var swipeview = ((Element)sender).GetAncestor<SwipeView>();
+            swipeview.Open(OpenSwipeItem.LeftItems);
         }
     }
 }

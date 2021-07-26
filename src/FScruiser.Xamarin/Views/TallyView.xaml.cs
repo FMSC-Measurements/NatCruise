@@ -8,6 +8,7 @@ using NatCruise.Cruise.Models;
 using System.Collections.Generic;
 using Xamarin.CommunityToolkit.Markup;
 using FScruiser.XF.Controls;
+using FScruiser.XF.Util;
 
 namespace FScruiser.XF.Views
 {
@@ -187,6 +188,10 @@ namespace FScruiser.XF.Views
             }
         }
 
-
+        private void openUntallyButton_Clicked(object sender, EventArgs e)
+        {
+            var swipeview = ((Element)sender).GetAncestor<SwipeView>();
+            swipeview.Open(OpenSwipeItem.LeftItems);
+        }
     }
 }
