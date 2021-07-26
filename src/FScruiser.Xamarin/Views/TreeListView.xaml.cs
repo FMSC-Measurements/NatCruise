@@ -17,31 +17,6 @@ namespace FScruiser.XF.Views
             //_treeListView.ItemSelected += _treeListView_ItemSelected;
         }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-            if (BindingContext is TreeListViewModel vm && vm != null)
-            {
-                vm.TreeAdded += ViewModel_TreeAdded;
-            }
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            if (BindingContext is TreeListViewModel vm && vm != null)
-            {
-                vm.TreeAdded -= ViewModel_TreeAdded;
-            }
-        }
-
-        private void ViewModel_TreeAdded(object sender, EventArgs e)
-        {
-            ScrollLast();
-        }
-
         private void _treeListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             if (BindingContext is TreeListViewModel vm

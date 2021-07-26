@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+             xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
              x:Class="FScruiser.XF.Views.TreeListView"
              x:Name="_page"
              BackgroundColor="White"
@@ -9,10 +10,21 @@
     <!--<ContentPage.Resources>
     </ContentPage.Resources>-->
     <StackLayout>
+        <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="EndAndExpand"
+                     Margin="5,0">
+            <Label Text="Only Trees With Errors"
+                   VerticalTextAlignment="Center" />
+            <Switch IsToggled="{Binding OnlyShowTreesWithErrorsOrWarnings}" />
+        </StackLayout>
+
         <CollectionView x:Name="_treeListView"
                         ItemsSource="{Binding Trees}"
-                        SelectionChangedCommand="{Binding EditTreeCommand}"
-                        SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference _treeListView}}">
+                        SelectionMode="None"
+                        ItemSizingStrategy="MeasureFirstItem">
+            <CollectionView.Behaviors>
+                <behaviors:ScrollOnLoadBehavior />
+            </CollectionView.Behaviors>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,10,0,10"

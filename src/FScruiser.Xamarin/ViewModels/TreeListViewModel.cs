@@ -18,19 +18,34 @@ namespace FScruiser.XF.ViewModels
     {
         private ICommand _deleteTreeCommand;
         private Command<TreeStub> _editTreeCommand;
-        private ICollection<TreeStub> _trees;
+        private ICollection<TreeStub> _allTrees;
         private Command _addTreeCommand;
         private Command<TreeStub> _showLogsCommand;
         private string _unitCode;
+        private bool _onlyShowTreesWithErrorsOrWarnings;
 
-        public ICollection<TreeStub> Trees
+        public ICollection<TreeStub> AllTrees
         {
-            get { return _trees; }
+            get { return _allTrees; }
             protected set
             {
-                SetProperty(ref _trees, value);
+                SetProperty(ref _allTrees, value);
+                RaisePropertyChanged(nameof(Trees));
             }
         }
+
+        public bool OnlyShowTreesWithErrorsOrWarnings
+        {
+            get => _onlyShowTreesWithErrorsOrWarnings;
+            set
+            {
+                SetProperty(ref _onlyShowTreesWithErrorsOrWarnings, value);
+                RaisePropertyChanged(nameof(Trees));
+            }
+        }
+
+        public IEnumerable<TreeStub> Trees => AllTrees?.Where(x => !OnlyShowTreesWithErrorsOrWarnings || x.ErrorCount > 0 || x.WarningCount > 0);
+
 
         public string[] StratumCodes { get; set; }
 
@@ -73,7 +88,7 @@ namespace FScruiser.XF.ViewModels
 
             var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
 
-            Trees = TreeDataservice.GetTreeStubsByUnitCode(unitCode).ToObservableCollection();
+            AllTrees = TreeDataservice.GetTreeStubsByUnitCode(unitCode).ToObservableCollection();
 
             StratumCodes = CuttingUnitDatastore.GetStrataProxiesByUnitCode(UnitCode).Select(x => x.StratumCode).ToArray();
         }
@@ -93,7 +108,8 @@ namespace FScruiser.XF.ViewModels
                 {
                     var tree_guid = TreeDataservice.CreateMeasureTree(UnitCode, stratumCode, sampleGroupCode);
                     var newTree = TreeDataservice.GetTreeStub(tree_guid);
-                    _trees.Add(newTree);
+                    
+                    AllTrees.Add(newTree);
                     OnTreeAdded(null);
                 }
             }
@@ -101,7 +117,12 @@ namespace FScruiser.XF.ViewModels
 
         public void OnTreeAdded(EventArgs e)
         {
+            //reset OnlyShowTreesWithErrorsOrWarnings value to ensure new tree is shown
+            OnlyShowTreesWithErrorsOrWarnings = false;
+            RaisePropertyChanged(nameof(Trees));
+
             TreeAdded?.Invoke(this, e);
+            
         }
 
         public Task ShowEditTreeAsync(TreeStub tree)
