@@ -87,6 +87,13 @@
                                             <ColumnDefinition Width="50" />
                                         </Grid.ColumnDefinitions>
 
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer x:Name="_treeCellTappedGesture"
+                                                                                  Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
+                                                                                  CommandParameter="{Binding .}"
+                                                                                  Tapped="_treeCellTappedGesture_Tapped" />
+                                        </Grid.GestureRecognizers>
+
                                         <Label Grid.Column="0"
                                                Text="{Binding CountOrMeasure}"
                                                TextColor="{StaticResource darkText}"
