@@ -52,6 +52,8 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand ShowPlotsCommand => new Command(() => ShowPlots());
 
+        public ICommand ShowPlotTreesCommand => new Command(() => NavigationService.ShowPlotTreeList(SelectedCuttingUnit?.CuttingUnitCode));
+
         public ICommand ShowTallyCommand => new Command(() => ShowTally());
 
         public ICommand ShowSettingsCommand => new Command(async () => await NavigationService.ShowSettings());

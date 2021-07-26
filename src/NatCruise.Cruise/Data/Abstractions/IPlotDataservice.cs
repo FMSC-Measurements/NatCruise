@@ -43,7 +43,7 @@ namespace NatCruise.Cruise.Data
 
         #region tree
 
-        IEnumerable<TreeStub_Plot> GetPlotTreeProxies(string unitCode, int plotNumber);
+        IEnumerable<PlotTreeEntry> GetPlotTreeProxies(string unitCode, int plotNumber);
 
         #endregion tree
 

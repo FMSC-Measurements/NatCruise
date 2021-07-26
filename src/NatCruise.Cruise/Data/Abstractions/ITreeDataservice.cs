@@ -19,6 +19,8 @@ namespace NatCruise.Cruise.Data
 
         IEnumerable<TreeStub> GetTreeStubsByUnitCode(string unitCode);
 
+        IEnumerable<TreeStub> GetPlotTreeStubsByUnitCode(string unitCode);
+
         IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID);
 
         void UpdateTree(Tree tree);

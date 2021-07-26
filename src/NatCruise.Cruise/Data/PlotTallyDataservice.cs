@@ -19,7 +19,7 @@ namespace NatCruise.Cruise.Data
             SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        public void InsertTree(TreeStub_Plot tree, SamplerState samplerState)
+        public void InsertTree(PlotTreeEntry tree, SamplerState samplerState)
         {
             if (tree is null) { throw new ArgumentNullException(nameof(tree)); }
 

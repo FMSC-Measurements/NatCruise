@@ -251,10 +251,100 @@ INSERT INTO TallyLedger (
 
         public IEnumerable<TreeStub> GetTreeStubsByUnitCode(string unitCode)
         {
-            return Database.From<TreeStub>()
-                .LeftJoin("TreeMeasurment", "USING (TreeID)")
-                .Where("CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL")
-                .Query(unitCode, CruiseID);
+            //return Database.From<TreeStub>()
+            //    .LeftJoin("TreeMeasurment", "USING (TreeID)")
+            //    .Where("CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL")
+            //    .Query(unitCode, CruiseID);
+
+            return Database.Query<TreeStub>(
+@"
+WITH treeErrorCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS ErrorCount
+    FROM TreeError
+    WHERE Level = 'E'
+    GROUP BY TreeID
+),
+
+treeWarningCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS WarningCount
+    FROM TreeError
+    WHERE Level = 'W'
+    GROUP BY TreeID
+)
+
+SELECT
+    t.TreeID,
+    t.TreeNumber,
+    t.StratumCode,
+    t.SampleGroupCode,
+    t.SpeciesCode,
+    t.LiveDead,
+    t.PlotNumber,
+    max(tm.TotalHeight, tm.MerchHeightPrimary, tm.UpperStemHeight) AS Height,
+    max(tm.DBH, tm.DRC, tm.DBHDoubleBarkThickness) AS Diameter,
+    t.CountOrMeasure,
+    te.ErrorCount,
+    tw.WarningCount
+FROM Tree AS t
+LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+LEFT JOIN treeErrorCount AS te USING (TreeID)
+LEFT JOIN treeWarningCount AS tw USING (TreeID)
+WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL;", unitCode, CruiseID);
+        }
+
+        public IEnumerable<TreeStub> GetPlotTreeStubsByUnitCode(string unitCode)
+        {
+            //return Database.From<TreeStub>()
+            //    .LeftJoin("TreeMeasurment", "USING (TreeID)")
+            //    .Where("CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber NOT NULL")
+            //    .Query(unitCode, CruiseID);
+
+            return Database.Query<TreeStub>(
+@"
+WITH treeErrorCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS ErrorCount
+    FROM TreeError
+    WHERE Level = 'E'
+    GROUP BY TreeID
+),
+
+treeWarningCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS WarningCount
+    FROM TreeError
+    WHERE Level = 'W'
+    GROUP BY TreeID
+)
+
+SELECT
+    t.TreeID,
+    t.TreeNumber,
+    t.StratumCode,
+    t.SampleGroupCode,
+    t.SpeciesCode,
+    t.LiveDead,
+    t.PlotNumber,
+    max(tm.TotalHeight, tm.MerchHeightPrimary, tm.UpperStemHeight) AS Height,
+    max(tm.DBH, tm.DRC, tm.DBHDoubleBarkThickness) AS Diameter,
+    t.CountOrMeasure,
+    te.ErrorCount,
+    tw.WarningCount
+FROM Tree AS t
+LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+LEFT JOIN treeErrorCount AS te USING (TreeID)
+LEFT JOIN treeWarningCount AS tw USING (TreeID)
+WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber NOT NULL;", unitCode, CruiseID);
         }
 
         public IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID)
