@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
@@ -35,7 +36,7 @@
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                 </Style>
-                
+
 
             </ResourceDictionary>
         </Grid.Resources>
@@ -62,7 +63,8 @@
                Content="Code:" />
         <TextBox Grid.Row="0"
                  Grid.Column="1"
-                 Text="{Binding CuttingUnitCode}" />
+                 Text="{Binding CuttingUnitCode}"
+                 MaxLength="{x:Static dsgn:Constants.UNITCODE_MAXLENGTH}" />
 
         <Label Grid.Row="1"
                Content="Description:" />
