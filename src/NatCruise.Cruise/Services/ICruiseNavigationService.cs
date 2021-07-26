@@ -36,6 +36,8 @@ namespace FScruiser.XF.Services
 
         Task ShowPlotTally(string plotID);
 
+        Task ShowPlotTreeList(string unitCode);
+
         //Task ShowPlotTally(string unitCode, int plotNumber);
 
         Task ShowSaleSelect();

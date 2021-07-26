@@ -24,14 +24,14 @@ namespace NatCruise.Cruise.Services
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
-        public async Task<TreeStub_Plot> TallyAsync(TallyPopulation_Plot pop,
+        public async Task<PlotTreeEntry> TallyAsync(TallyPopulation_Plot pop,
                                               string unitCode,
                                               int plot)
         {
             if (pop is null) { throw new ArgumentNullException(nameof(pop)); }
             var dialogService = DialogService;
 
-            TreeStub_Plot tree;
+            PlotTreeEntry tree;
             if (SINGLE_STAGE_PLOT.Contains(pop.Method))
             {
                 tree = CreateTree(unitCode, plot, pop, "M");
@@ -86,7 +86,7 @@ namespace NatCruise.Cruise.Services
             return tree;
         }
 
-        public static TreeStub_Plot CreateTree(string unitCode,
+        public static PlotTreeEntry CreateTree(string unitCode,
                                         int plotNumber,
                                         TallyPopulation_Plot population,
                                         string countOrMeasure,
@@ -97,7 +97,7 @@ namespace NatCruise.Cruise.Services
         {
             if (population is null) { throw new ArgumentNullException(nameof(population)); }
 
-            return new TreeStub_Plot
+            return new PlotTreeEntry
             {
                 CuttingUnitCode = unitCode,
                 StratumCode = population.StratumCode,

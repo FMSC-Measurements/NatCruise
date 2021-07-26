@@ -286,6 +286,33 @@ namespace NatCruise.Cruise.Test.Data
             }
         }
 
+        [Theory]
+        [InlineData("u1", "st1", null, "", "", Skip = "sampleGroup is required now")]
+        [InlineData("u1", "st1", "sg1", "sp1", "L")]
+        [InlineData("u1", "st1", "sg1", null, null)]
+        public void GetTreeStubByUnitCode(string unitCode, string stratumCode, string sgCode, string species, string liveDead)
+        {
+            var init = new DatastoreInitializer();
+            using (var database = init.CreateDatabase())
+            {
+                var datastore = new TreeDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                var tree_GUID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead);
+                //datastore.GetTreeStub(tree_GUID).Should().NotBeNull();
+
+                var trees = datastore.GetTreeStubsByUnitCode(unitCode).ToArray();
+
+                trees.Should().HaveCount(1);
+
+                var tree = trees.First();
+                tree.TreeID.Should().Be(tree_GUID);
+                tree.StratumCode.Should().Be(stratumCode);
+                tree.SampleGroupCode.Should().Be(sgCode);
+                tree.SpeciesCode.Should().Be(species);
+                //tree.CountOrMeasure.Should().Be(countMeasure);
+            }
+        }
+
         [Fact]
         public void GetTreeError_SpeciesMissing()
         {

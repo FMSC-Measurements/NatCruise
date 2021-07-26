@@ -24,7 +24,7 @@ namespace FScruiser.XF.ViewModels
         private ICollection<TallyPopulation_Plot> _tallyPopulations;
         private ICollection<StratumProxy> _strata;
         private string _stratumFilter = STRATUM_FILTER_ALL;
-        private ICollection<TreeStub_Plot> _trees;
+        private ICollection<PlotTreeEntry> _trees;
         private ICommand _tallyCommand;
         private Command _editPlotCommand;
         private Plot _plot;
@@ -153,7 +153,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public ICollection<TreeStub_Plot> Trees
+        public ICollection<PlotTreeEntry> Trees
         {
             get { return _trees; }
             set { SetProperty(ref _trees, value); }
@@ -166,7 +166,7 @@ namespace FScruiser.XF.ViewModels
 
         public void SelectTree(object obj)
         {
-            var tree = obj as TreeStub_Plot;
+            var tree = obj as PlotTreeEntry;
             if (tree == null) { return; }
             var treeID = tree?.TreeID;
             if (treeID != null)
@@ -275,7 +275,7 @@ namespace FScruiser.XF.ViewModels
             Trees.Remove(tree);
         }
 
-        public void DeleteTree(TreeStub_Plot tree)
+        public void DeleteTree(PlotTreeEntry tree)
         {
             TreeDataservice.DeleteTree(tree.TreeID);
             Trees.Remove(tree);

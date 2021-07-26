@@ -5,7 +5,7 @@ namespace NatCruise.Cruise.Data
 {
     public interface IPlotTallyDataservice : IDataservice
     {
-        void InsertTree(TreeStub_Plot tree, SamplerState samplerState);
+        void InsertTree(PlotTreeEntry tree, SamplerState samplerState);
 
         string CreatePlotTree(string unitCode,
             int plotNumber,

@@ -370,9 +370,9 @@ AND p.PlotNumber = @p4; ",
 
         #region tree
 
-        public IEnumerable<TreeStub_Plot> GetPlotTreeProxies(string unitCode, int plotNumber)
+        public IEnumerable<PlotTreeEntry> GetPlotTreeProxies(string unitCode, int plotNumber)
         {
-            return Database.Query<TreeStub_Plot>(
+            return Database.Query<PlotTreeEntry>(
 @"SELECT
     t.TreeID,
     t.CuttingUnitCode,
