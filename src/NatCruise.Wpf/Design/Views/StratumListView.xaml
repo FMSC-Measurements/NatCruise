@@ -6,6 +6,7 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
+             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Design.Views.StratumListView"
@@ -64,7 +65,8 @@
                     <TextBox x:Name="_stratumCodeTextBox"
                              Grid.Row="0"
                              Grid.Column="0"
-                             mah:TextBoxHelper.Watermark="Code" />
+                             mah:TextBoxHelper.Watermark="Code"
+                             MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
                     <Button Grid.Row="0"
                             Grid.Column="1"
                             Style="{StaticResource AddButton}"

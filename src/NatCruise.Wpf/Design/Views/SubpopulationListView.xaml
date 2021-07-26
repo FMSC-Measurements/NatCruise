@@ -7,6 +7,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              ToolTip="Subpopulations"
              mc:Ignorable="d"
@@ -43,7 +45,8 @@
             <ComboBox x:Name="_speciesTextBox"
                       ItemsSource="{Binding SpeciesOptions}"
                       IsEditable="True"
-                      IsTextSearchCaseSensitive="False" />
+                      IsTextSearchCaseSensitive="False"
+                      controls:ComboBoxHelper.MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}" />
             <Button x:Name="_addSpeciesButton"
                     Style="{StaticResource AddButton}"
                     Grid.Column="1"
