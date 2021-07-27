@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Tag="Stratum Details"
@@ -77,7 +78,8 @@
                    Grid.Column="0">Code*</Label>
             <TextBox Grid.Row="0"
                      Grid.Column="1"
-                     Text="{Binding StratumCode}" />
+                     Text="{Binding StratumCode}"
+                     MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
 
             <Label Grid.Row="1">Description</Label>
 
@@ -98,10 +100,10 @@
             <Label Grid.Row="5">Yield Component</Label>
 
             <ComboBox Grid.Row="5"
-                     Grid.Column="1"
-                     ToolTip="Yield Component"
-                     ItemsSource="{Binding YieldComponentOptions}"
-                     SelectedItem="{Binding YieldComponent, FallbackValue='CL'}" />
+                      Grid.Column="1"
+                      ToolTip="Yield Component"
+                      ItemsSource="{Binding YieldComponentOptions}"
+                      SelectedItem="{Binding YieldComponent, FallbackValue='CL'}" />
 
         </Grid>
 
@@ -156,26 +158,30 @@
                 <Label Grid.Row="1"
                        Grid.Column="0"
                        Content="FPS:"
-                       Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"/>
+                       Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}" />
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          ToolTip="Fixed Plot Size"
                          Text="{Binding FixedPlotSize}"
-                         Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"/>
+                         Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}" />
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
                        Content="KZ (3PPNT)"
-                       Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"/>
+                       Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}" />
                 <TextBox Grid.Row="2"
                          Grid.Column="1"
                          ToolTip="KZ (3PPNT)"
                          Text="{Binding KZ3PPNT}"
-                         Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"/>
+                         Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}" />
 
-                <Label Grid.Column="0" Grid.Row="3" Content="FIXCNT Field"
+                <Label Grid.Column="0"
+                       Grid.Row="3"
+                       Content="FIXCNT Field"
                        Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
-                    <ComboBox Grid.Column="1" Grid.Row="3" Width="100"
+                <ComboBox Grid.Column="1"
+                          Grid.Row="3"
+                          Width="100"
                           ItemsSource="{Binding TreeFieldOptions}"
                           SelectedValue="{Binding FixCNTField}"
                           SelectedValuePath="Field"

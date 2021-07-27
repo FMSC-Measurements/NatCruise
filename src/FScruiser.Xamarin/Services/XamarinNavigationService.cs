@@ -197,6 +197,14 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.PlotID}={plotID}"));
         }
 
+        public Task ShowPlotTreeList(string unitCode)
+        {
+            if (unitCode is null) { throw new ArgumentNullException(nameof(unitCode)); }
+
+            return NavigationService.NavigateAsync("Navigation/PlotTreeList",
+                new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
+        }
+
         //public Task ShowPlotTally(string unitCode, int plotNumber)
         //{
         //    return NavigationService.NavigateAsync("PlotTally",

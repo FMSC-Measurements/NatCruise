@@ -1,16 +1,11 @@
 ﻿using CruiseDAL;
+using CruiseDAL.V3.Models;
 using FluentAssertions;
-using NatCruise.Cruise.Test.Services;
 using NatCruise.Cruise.Data;
-using System;
-using System.Collections.Generic;
+using NatCruise.Test;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using CruiseDAL.V3.Models;
-using NatCruise.Test;
 
 namespace NatCruise.Cruise.Test.Data
 {
@@ -123,10 +118,8 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void GetTallyPopulationsByUnitCode_multiCruise()
         {
-            
-
             var init1 = new DatastoreInitializer();
-            var init2 = new DatastoreInitializer( "1");
+            var init2 = new DatastoreInitializer("1");
 
             var unitCode = init1.Units[0];
 
@@ -138,7 +131,6 @@ namespace NatCruise.Cruise.Test.Data
 
             var tp = ds.GetTallyPopulationsByUnitCode(unitCode).ToArray();
             tp.Should().HaveCount(4);
-
         }
 
         [Fact]

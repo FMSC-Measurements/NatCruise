@@ -95,12 +95,12 @@ namespace FScruiser.XF.ViewModels
             using (var database = init.CreateDatabase())
             {
                 InitializeFizCNT(database, init.CruiseID);
+                var dsp = new DataserviceProvider(database, new TestDeviceInfoService())
+                {
+                    CruiseID = init.CruiseID
+                };
 
-                var viewModel = new FixCNTTallyViewModel(
-                    new DataserviceProvider(database, new TestDeviceInfoService())
-                    {
-                        CruiseID = init.CruiseID
-                    });
+                var viewModel = new FixCNTTallyViewModel(dsp.GetDataservice<IFixCNTDataservice>() );
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
 
@@ -130,13 +130,13 @@ namespace FScruiser.XF.ViewModels
                 InitializeFizCNT(database, init.CruiseID);
 
                 var deviceInfo = new TestDeviceInfoService();
-                var datastore = new CuttingUnitDatastore(database, init.CruiseID, deviceInfo.DeviceID,new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
+                var datastore = new CuttingUnitDatastore(database, init.CruiseID, deviceInfo.DeviceID);
+                var dsp = new DataserviceProvider(database, deviceInfo)
+                {
+                    CruiseID = init.CruiseID,
+                };
 
-                var viewModel = new FixCNTTallyViewModel(
-                    new DataserviceProvider(database, deviceInfo)
-                    {
-                        CruiseID = init.CruiseID,
-                    });
+                var viewModel = new FixCNTTallyViewModel( dsp.GetDataservice<IFixCNTDataservice>() );
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
                 viewModel.Initialize(navParams);

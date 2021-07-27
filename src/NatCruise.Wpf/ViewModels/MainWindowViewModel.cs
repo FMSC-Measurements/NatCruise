@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
@@ -42,8 +43,10 @@ namespace NatCruise.Wpf.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             DeviceInfoService = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
             CruiseDialogService = cruiseDialogService ?? throw new ArgumentNullException(nameof(cruiseDialogService));
+            AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
         }
 
+        public Version AppVersion {get;}
         protected IAppService AppService { get; }
         protected IDataserviceProvider DataserviceProvider { get; }
         protected IDesignNavigationService NavigationService { get; }
@@ -65,7 +68,7 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        public string Title => $"National Cruise System (0.29-Alpha) {CurrentFileName?.Prepend(" - ")}";
+        public string Title => $"National Cruise System ({AppVersion}-Alpha) {CurrentFileName?.Prepend(" - ")}";
 
         public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles().Select(x => new FileInfo(x));
 

@@ -1,14 +1,31 @@
-﻿using NatCruise.Cruise.Models;
+﻿using CruiseDAL;
+using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Cruise.Data
 {
-    public partial class CuttingUnitDatastore
+    public class LogDataservice : CruiseDataserviceBase, ILogDataservice
     {
+        private static readonly LogFieldSetup[] DEFAULT_LOG_FIELDS = new LogFieldSetup[]{
+            new LogFieldSetup(){
+                Field = nameof(Log.LogNumber), Heading = "LogNum"},
+            new LogFieldSetup(){
+                Field = nameof(Log.Grade), Heading = "Grade"},
+            new LogFieldSetup() {
+                Field = nameof(Log.SeenDefect), Heading = "PctSeenDef"}
+        };
+
+        public LogDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
+        {
+        }
+
+        public LogDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
+
         public IEnumerable<Log> GetLogs(string treeID)
         {
             return Database.Query<Log>(
@@ -175,15 +192,6 @@ namespace NatCruise.Cruise.Services
         {
             Database.Execute("DELETE FROM Log WHERE LogID = @p1;", logID);
         }
-
-        private static readonly LogFieldSetup[] DEFAULT_LOG_FIELDS = new LogFieldSetup[]{
-            new LogFieldSetup(){
-                Field = nameof(Log.LogNumber), Heading = "LogNum"},
-            new LogFieldSetup(){
-                Field = nameof(Log.Grade), Heading = "Grade"},
-            new LogFieldSetup() {
-                Field = nameof(Log.SeenDefect), Heading = "PctSeenDef"}
-        };
 
         public IEnumerable<LogFieldSetup> GetLogFields(string treeID)
         {

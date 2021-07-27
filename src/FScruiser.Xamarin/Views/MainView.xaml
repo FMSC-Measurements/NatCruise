@@ -83,6 +83,10 @@
                                 IsVisible="{Binding HasPlotStrata}"
                                 Command="{Binding ShowPlotsCommand}"
                                 Clicked="OnNavButtonClicked"/>
+                        <Button Text="Plot Trees"
+                                IsVisible="{Binding HasPlotStrata}"
+                                Command="{Binding ShowPlotTreesCommand}"
+                                Clicked="OnNavButtonClicked" />
                         <Button Text="Tally"
                                 IsVisible="{Binding HasTreeStrata}"
                                 Command="{Binding ShowTallyCommand}"

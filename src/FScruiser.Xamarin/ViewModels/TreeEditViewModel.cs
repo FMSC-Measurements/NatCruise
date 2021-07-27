@@ -1,12 +1,11 @@
 ﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Common;
-using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +39,8 @@ namespace FScruiser.XF.ViewModels
         private string _cruiseMethod;
 
         public bool IsLoading { get; set; }
-        protected ICuttingUnitDatastore Datastore { get; }
+        protected ICuttingUnitDataservice CuttingUnitDatastore { get; }
+        protected ITreeDataservice TreeDataservice { get; }
         public ICruisersDataservice CruisersDataservice { get; }
         protected ICruiseDialogService DialogService { get; }
         protected ICruiseNavigationService NavigationService { get; }
@@ -82,16 +82,23 @@ namespace FScruiser.XF.ViewModels
                 RaisePropertyChanged(nameof(SpeciesCode));
                 RaisePropertyChanged(nameof(LiveDead));
                 RaisePropertyChanged(nameof(Remarks));
+                RaisePropertyChanged(nameof(Initials));
             }
         }
 
         public string Initials
         {
-            get => _initials;
+            get => Tree?.Initials;
             set
             {
                 if (IsLoading) { return; }
-                SetProperty(ref _initials, value);
+                var tree = Tree;
+                if(tree == null) { return; }
+                var oldValue = tree.Initials;
+                if(oldValue != value)
+                {
+                    TreeDataservice.UpdateTreeInitials(tree.TreeID, value);
+                }
             }
         }
 
@@ -106,7 +113,7 @@ namespace FScruiser.XF.ViewModels
                 var oldValue = tree.Remarks;
                 if (value != oldValue)
                 {
-                    Datastore.UpdateTreeRemarks(tree.TreeID, value);
+                    TreeDataservice.UpdateTreeRemarks(tree.TreeID, value);
                 }
             }
         }
@@ -144,7 +151,7 @@ namespace FScruiser.XF.ViewModels
         private bool OnCountOrMeasureChangeing(Tree_Ex tree, string oldValue, string newValue)
         {
             var stratum = tree.StratumCode;
-            var cruiseMethod = Datastore.GetCruiseMethod(stratum);
+            var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(stratum);
             var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod);
             if (isPlotMethod == false)
             {
@@ -188,7 +195,7 @@ namespace FScruiser.XF.ViewModels
         {
             if (oldValue == newValue) { return false; }
 
-            if (Datastore.IsTreeNumberAvalible(tree.CuttingUnitCode, newValue, tree.PlotNumber))
+            if (TreeDataservice.IsTreeNumberAvalible(tree.CuttingUnitCode, newValue, tree.PlotNumber))
             {
                 return true;
             }
@@ -512,15 +519,15 @@ namespace FScruiser.XF.ViewModels
         }
 
         public TreeEditViewModel(
-            IDataserviceProvider datastoreProvider,
+            ICuttingUnitDataservice cuttingUnitDatastore,
+            ITreeDataservice treeDataservice,
             ICruiseDialogService dialogService,
             ICruiseNavigationService navigationService,
             ICruisersDataservice cruisersDataservice,
             ILoggingService loggingService)
         {
-            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
-
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            CuttingUnitDatastore = cuttingUnitDatastore ?? throw new ArgumentNullException(nameof(cuttingUnitDatastore));
+            TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
@@ -533,14 +540,12 @@ namespace FScruiser.XF.ViewModels
 
             var treeID = parameters.GetValue<string>(NavParams.TreeID);
 
-            var datastore = Datastore;
-
             try
             {
                 IsLoading = true;
-                var tree = datastore.GetTree(treeID);
+                var tree = TreeDataservice.GetTree(treeID);
                 var unitCode = tree.CuttingUnitCode;
-                var stratumCodes = datastore.GetStratumCodesByUnit(unitCode);
+                var stratumCodes = CuttingUnitDatastore.GetStratumCodesByUnit(unitCode);
                 StratumCodes = stratumCodes;
 
                 RefreshCruiseMethod(tree);
@@ -563,7 +568,7 @@ namespace FScruiser.XF.ViewModels
         {
             var stratumCode = tree?.StratumCode;
             if (string.IsNullOrEmpty(stratumCode) == false)
-            { CruiseMethod = Datastore.GetCruiseMethod(stratumCode); }
+            { CruiseMethod = CuttingUnitDatastore.GetCruiseMethod(stratumCode); }
             else
             { CruiseMethod = null; }
         }
@@ -571,7 +576,7 @@ namespace FScruiser.XF.ViewModels
         private void RefreshSampleGroups(Tree tree)
         {
             var stratum = tree.StratumCode;
-            var sampleGroups = Datastore.GetSampleGroupCodes(stratum);
+            var sampleGroups = CuttingUnitDatastore.GetSampleGroupCodes(stratum);
             SampleGroupCodes = sampleGroups;
         }
 
@@ -580,13 +585,13 @@ namespace FScruiser.XF.ViewModels
             var stratumCode = tree.StratumCode;
             var sampleGroupCode = tree.SampleGroupCode;
 
-            var subPopulations = Datastore.GetSubPopulations(stratumCode, sampleGroupCode);
+            var subPopulations = CuttingUnitDatastore.GetSubPopulations(stratumCode, sampleGroupCode);
             SubPopulations = subPopulations;
         }
 
         private void RefreshTreeFieldValues(Tree tree)
         {
-            var treeFieldValues = Datastore.GetTreeFieldValues(tree.TreeID);
+            var treeFieldValues = TreeDataservice.GetTreeFieldValues(tree.TreeID);
 
             foreach (var tfv in treeFieldValues)
             {
@@ -599,7 +604,7 @@ namespace FScruiser.XF.ViewModels
         private void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             var treeFieldValue = (TreeFieldValue)sender;
-            Datastore.UpdateTreeFieldValue(treeFieldValue);
+            TreeDataservice.UpdateTreeFieldValue(treeFieldValue);
             RefreshErrorsAndWarnings();
         }
 
@@ -612,7 +617,7 @@ namespace FScruiser.XF.ViewModels
         {
             if (tree == null) { return; }
 
-            ErrorsAndWarnings = Datastore.GetTreeErrors(tree.TreeID);
+            ErrorsAndWarnings = TreeDataservice.GetTreeErrors(tree.TreeID);
         }
 
         public void ShowLogs()
@@ -637,7 +642,7 @@ namespace FScruiser.XF.ViewModels
                 {
                     try
                     {
-                        Datastore.UpdateTree(tree);
+                        TreeDataservice.UpdateTree(tree);
                     }
                     catch (Exception e)
                     {

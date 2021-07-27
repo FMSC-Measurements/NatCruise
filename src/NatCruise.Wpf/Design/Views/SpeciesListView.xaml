@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -17,15 +18,15 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="99*" />
+            <ColumnDefinition Width="0" />
             <ColumnDefinition Width="315*" />
             <ColumnDefinition Width="386*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="68*" />
+            <RowDefinition Height="0" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="316*" />
-            <RowDefinition Height="33*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="0" />
         </Grid.RowDefinitions>
         <DataGrid Grid.Column="1"
                   Grid.Row="2"
@@ -38,7 +39,7 @@
                   x:Name="_speciesDatagrid"
                   ItemsSource="{Binding Species}">
             <DataGrid.Resources>
-                
+
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Species"
@@ -59,10 +60,10 @@
             <TextBox x:Name="_newSpeciesTextBox"
                      mah:TextBoxHelper.Watermark="Species Code"
                      Width="100"
-                     />
+                     MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}" />
             <Button Style="{StaticResource AddButton}"
                     Command="{Binding AddSpeciesCommand}"
-                    CommandParameter="{Binding Text, ElementName=_newSpeciesTextBox}"/>
+                    CommandParameter="{Binding Text, ElementName=_newSpeciesTextBox}" />
         </StackPanel>
         <Grid Grid.Column="2"
               Grid.Row="2"
@@ -88,14 +89,15 @@
             <TextBox Grid.Column="2"
                      Grid.Row="1"
                      Text="{Binding SpeciesCode}"
-                     Margin="0,2"/>
+                     MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}"
+                     Margin="0,2" />
             <Label Content="Contract Species"
                    Grid.Column="1"
                    Grid.Row="2" />
             <TextBox Grid.Column="2"
                      Grid.Row="2"
                      Text="{Binding ContractSpecies}"
-                     Margin="0,2"/>
+                     Margin="0,2" />
             <Label Content="FIA Code"
                    Grid.Column="1"
                    Grid.Row="3" />
@@ -104,7 +106,7 @@
                       ItemsSource="{Binding DataContext.FIAOptions, ElementName=_page}"
                       SelectedValue="{Binding FIACode}"
                       SelectedValuePath="FIACode"
-                      Margin="0,2"/>
+                      Margin="0,2" />
 
         </Grid>
 

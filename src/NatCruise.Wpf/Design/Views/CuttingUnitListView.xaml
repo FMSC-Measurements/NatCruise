@@ -11,6 +11,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
+             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -43,7 +44,8 @@
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="_unitCodeTextBox"
                                  Grid.Column="0"
-                                 mah:TextBoxHelper.Watermark="Code" />
+                                 mah:TextBoxHelper.Watermark="Code"
+                                 MaxLength="{x:Static dsgn:Constants.UNITCODE_MAXLENGTH}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource AddButton}">
                             <i:Interaction.Triggers>

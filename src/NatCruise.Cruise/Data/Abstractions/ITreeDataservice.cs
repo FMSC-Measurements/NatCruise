@@ -3,15 +3,23 @@ using NatCruise.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Cruise.Data
 {
-    public interface ITreeDatastore : IDataservice
+    public interface ITreeDataservice : IDataservice
     {
         string CreateMeasureTree(string unitCode, string stratumCode,
             string sampleGroupCode = null, string species = null, string liveDead = "L",
             int treeCount = 1, int kpi = 0, bool stm = false);
 
         Tree_Ex GetTree(string treeID);
+
+        IEnumerable<Tree> GetTreesByUnitCode(string unitCode);
+
+        TreeStub GetTreeStub(string treeID);
+
+        IEnumerable<TreeStub> GetTreeStubsByUnitCode(string unitCode);
+
+        IEnumerable<TreeStub> GetPlotTreeStubsByUnitCode(string unitCode);
 
         IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID);
 
@@ -29,9 +37,11 @@ namespace NatCruise.Cruise.Services
 
         void DeleteTree(string treeGuid);
 
-        #region util
-
         int? GetTreeNumber(string treeID);
+
+        bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null, string stratumCode = null);
+
+        void UpdateTreeInitials(string treeGuid, string value);
 
         IEnumerable<TreeError> GetTreeErrors(string treeID);
 
@@ -40,11 +50,5 @@ namespace NatCruise.Cruise.Services
         void SetTreeAuditResolution(string treeID, string treeAuditRuleID, string resolution, string initials);
 
         void ClearTreeAuditResolution(string treeID, string treeAuditRuleID);
-
-        bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null, string stratumCode = null);
-
-        void UpdateTreeInitials(string treeGuid, string value);
-
-        #endregion util
     }
 }
