@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              prism:ViewModelLocator.AutoWireViewModel="True"
              ToolTip="Sample Group Details"
              mc:Ignorable="d"
@@ -85,7 +86,8 @@
             <Label Content="Code*" />
             <TextBox Grid.Column="1"
                      ToolTip="Sample Group Code"
-                     Text="{Binding SampleGroupCode}" />
+                     Text="{Binding SampleGroupCode}"
+                     MaxLength="{x:Static dsgn:Constants.SGCODE_MAXLENGTH}" />
             <Label Content="Description&#xD;&#xA;"
                    Grid.Row="1" />
             <TextBox Height="71"

@@ -1,13 +1,14 @@
-﻿using FMSC.ORM.Core.SQL.QueryBuilder;
+﻿using CruiseDAL;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Cruise.Data
 {
-    public partial class CuttingUnitDatastore : ITreeDatastore
+    public class TreeDataservice : CruiseDataserviceBase, ITreeDataservice
     {
         private const string UPSERT_TREEMEASURMENT_COMMAND =
 @"INSERT INTO TreeMeasurment (
@@ -124,6 +125,54 @@ ON CONFLICT (TreeID) DO UPDATE SET
     ModifiedBy = @DeviceID
 WHERE TreeID = @TreeID;";
 
+        private const string GET_TREESTUB_BASE_COMMAND =
+@"WITH treeErrorCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS ErrorCount
+    FROM TreeError
+    WHERE Level = 'E'
+    GROUP BY TreeID
+),
+
+treeWarningCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS WarningCount
+    FROM TreeError
+    WHERE Level = 'W'
+    GROUP BY TreeID
+)
+
+SELECT
+    t.TreeID,
+    t.TreeNumber,
+    t.StratumCode,
+    t.SampleGroupCode,
+    t.SpeciesCode,
+    t.LiveDead,
+    t.PlotNumber,
+    max(tm.TotalHeight, tm.MerchHeightPrimary, tm.UpperStemHeight) AS Height,
+    max(tm.DBH, tm.DRC, tm.DBHDoubleBarkThickness) AS Diameter,
+    t.CountOrMeasure,
+    te.ErrorCount,
+    tw.WarningCount
+FROM Tree AS t
+LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+LEFT JOIN treeErrorCount AS te USING (TreeID)
+LEFT JOIN treeWarningCount AS tw USING (TreeID)
+";
+
+        public TreeDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
+        {
+        }
+
+        public TreeDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        {
+        }
+
         public string CreateMeasureTree(string unitCode, string stratumCode,
             string sampleGroupCode = null, string species = null, string liveDead = "L",
             int treeCount = 1, int kpi = 0, bool stm = false)
@@ -222,6 +271,38 @@ INSERT INTO TallyLedger (
                 "WHERE t.TreeID = @p1;", treeID).FirstOrDefault();
         }
 
+        public IEnumerable<Tree> GetTreesByUnitCode(string unitCode)
+        {
+            return Database.Query<Tree_Ex>(
+                "SELECT t.*, tm.* FROM Tree AS t " +
+                "LEFT JOIN TreeMeasurment AS tm USING (TreeID) " +
+                "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
+                "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL",
+                unitCode, CruiseID).ToArray();
+        }
+
+        public TreeStub GetTreeStub(string treeID)
+        {
+            return Database.Query<TreeStub>(GET_TREESTUB_BASE_COMMAND + " WHERE TreeID = @p1", treeID).FirstOrDefault();
+        }
+
+        public IEnumerable<TreeStub> GetTreeStubsByUnitCode(string unitCode)
+        {
+            return Database.Query<TreeStub>(GET_TREESTUB_BASE_COMMAND + " WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL;",
+                unitCode, CruiseID);
+        }
+
+        public IEnumerable<TreeStub> GetPlotTreeStubsByUnitCode(string unitCode)
+        {
+            //return Database.From<TreeStub>()
+            //    .LeftJoin("TreeMeasurment", "USING (TreeID)")
+            //    .Where("CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber NOT NULL")
+            //    .Query(unitCode, CruiseID);
+
+            return Database.Query<TreeStub>(GET_TREESTUB_BASE_COMMAND + " WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber NOT NULL;",
+                unitCode, CruiseID);
+        }
+
         public IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID)
         {
             return Database.Query<TreeFieldValue>(
@@ -282,7 +363,7 @@ INSERT INTO TallyLedger (
 
         public void UpdateTree(Tree_Ex tree)
         {
-            if(tree == null) { throw new ArgumentNullException(nameof(tree)); }
+            if (tree == null) { throw new ArgumentNullException(nameof(tree)); }
 
             //if (tree.IsPersisted == false) { throw new InvalidOperationException("tree is not persisted before calling update"); }
             //Database.Update(tree);
@@ -405,14 +486,14 @@ UPSERT_TREEMEASURMENT_COMMAND,
             //{
             //    var stuff = Database.QueryGeneric($"Select * from TreeMeasurment where treeid = '{treeID}';").ToArray();
 
-                UpdateTreeFieldValue(
-                    new TreeFieldValue
-                    {
-                        TreeID = treeID,
-                        Field = "Remarks",
-                        ValueText = remarks,
-                        DBType = "TEXT",
-                    });
+            UpdateTreeFieldValue(
+                new TreeFieldValue
+                {
+                    TreeID = treeID,
+                    Field = "Remarks",
+                    ValueText = remarks,
+                    DBType = "TEXT",
+                });
 
             //    var stuffagain = Database.QueryGeneric($"Select * from TreeMeasurment where treeid = '{treeID}';").ToArray();
             //}
@@ -446,6 +527,55 @@ UPSERT_TREEMEASURMENT_COMMAND,
         {
             return Database.ExecuteScalar<int?>("SELECT TreeNumber FROM Tree WHERE TreeID = @p1;", treeID);
         }
+
+        public bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null, string stratumCode = null)
+        {
+            if (plotNumber != null)
+            {
+                if (stratumCode == null) { throw new ArgumentNullException(nameof(stratumCode), "if plot number is not null, stratum code must be as well"); }
+
+                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree " +
+                    "WHERE CuttingUnitCode = @p1 " +
+                    "AND PlotNumber = @p2 " +
+                    "AND TreeNumber = @p3 " +
+                    "AND ((SELECT UseCrossStrataPlotTreeNumbering FROM Cruise WHERE CruiseID = @p4) = 1 OR StratumCode = @p5) " +
+                    "AND CruiseID = @p4;",
+                    unit, plotNumber, treeNumber, CruiseID, stratumCode) == 0;
+            }
+            else
+            {
+                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree " +
+                    "WHERE CuttingUnitCode = @p1 " +
+                    "AND PlotNumber IS NULL " +
+                    "AND TreeNumber = @p2 " +
+                    "AND CruiseID = @p3;",
+                    unit, treeNumber, CruiseID) == 0;
+            }
+        }
+
+        public void UpdateTreeInitials(string tree_guid, string value)
+        {
+            Database.Execute2(
+@"INSERT INTO TreeMeasurment (
+    TreeID,
+    Initials
+) VALUES (
+    @TreeID,
+    @Initials
+)
+ON CONFLICT (TreeID) DO
+UPDATE SET Initials = @Initials
+WHERE TreeID = @TreeID;",
+                new
+                {
+                    TreeID = tree_guid,
+                    Initials = value,
+                });
+        }
+
+        #endregion util
+
+        #region validation
 
         public IEnumerable<TreeError> GetTreeErrors(string treeID)
         {
@@ -482,40 +612,6 @@ UPSERT_TREEMEASURMENT_COMMAND,
                 new object[] { treeID, treeAuditRuleID }).FirstOrDefault();
         }
 
-        public bool IsTreeNumberAvalible(string unit, int treeNumber, int? plotNumber = null, string stratumCode = null)
-        {
-            if (plotNumber != null)
-            {
-                if (stratumCode == null) { throw new ArgumentNullException(nameof(stratumCode), "if plot number is not null, stratum code must be as well"); }
-
-                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree " +
-                    "WHERE CuttingUnitCode = @p1 " +
-                    "AND PlotNumber = @p2 " +
-                    "AND TreeNumber = @p3 " +
-                    "AND ((SELECT UseCrossStrataPlotTreeNumbering FROM Cruise WHERE CruiseID = @p4) = 1 OR StratumCode = @p5) " +
-                    "AND CruiseID = @p4;",
-                    unit, plotNumber, treeNumber, CruiseID, stratumCode) == 0;
-            }
-            else
-            {
-                return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree " +
-                    "WHERE CuttingUnitCode = @p1 " +
-                    "AND PlotNumber IS NULL " +
-                    "AND TreeNumber = @p2 " +
-                    "AND CruiseID = @p3;",
-                    unit, treeNumber, CruiseID) == 0;
-            }
-        }
-
-        public void UpdateTreeInitials(string tree_guid, string value)
-        {
-            Database.Execute(
-                "UPDATE TreeMeasurment SET " +
-                "Initials = @p1 " +
-                "WHERE TreeID = @p2",
-                value, tree_guid);
-        }
-
         public void SetTreeAuditResolution(string treeID, string treeAuditRuleID, string resolution, string initials)
         {
             Database.Execute("INSERT OR REPLACE INTO TreeAuditResolution " +
@@ -531,6 +627,6 @@ UPSERT_TREEMEASURMENT_COMMAND,
                 , treeID, treeAuditRuleID);
         }
 
-        #endregion util
+        #endregion validation
     }
 }

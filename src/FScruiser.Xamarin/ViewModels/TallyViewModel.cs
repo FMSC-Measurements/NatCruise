@@ -4,13 +4,13 @@ using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using NatCruise.Util;
 using Prism.Commands;
 using Prism.Common;
 using Prism.Ioc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -105,7 +105,30 @@ namespace FScruiser.XF.ViewModels
             get => _selectedTreeViewModel;
             protected set
             {
+                if(_selectedTreeViewModel != null)
+                { _selectedTreeViewModel.PropertyChanged -= SelectedTreeViewModel_PropertyChanged; }
                 SetProperty(ref _selectedTreeViewModel, value);
+                if(value != null)
+                { value.PropertyChanged += SelectedTreeViewModel_PropertyChanged; }
+            }
+        }
+
+        public TallyEntry SelectedEntry
+        {
+            get => _selectedEntry;
+            protected set => SetProperty(ref _selectedEntry, value);
+        }
+
+        private void SelectedTreeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var vm = (TreeEditViewModel)sender;
+            if(e.PropertyName == nameof(TreeEditViewModel.ErrorsAndWarnings))
+            {
+                var tallyEntry = SelectedEntry;
+                if(tallyEntry != null)
+                {
+                    TallyDataservice.RefreshErrorsAndWarnings(tallyEntry);
+                }
             }
         }
 
@@ -119,6 +142,7 @@ namespace FScruiser.XF.ViewModels
         private string _title;
         private string _unitCode;
         private TreeEditViewModel _selectedTreeViewModel;
+        private TallyEntry _selectedEntry;
 
         public ICommand ShowTallyMenuCommand => _showTallyMenuCommand
             ?? (_showTallyMenuCommand = new Command<TallyPopulation>(ShowTallyMenu));
@@ -139,6 +163,7 @@ namespace FScruiser.XF.ViewModels
 
         protected ICruiseNavigationService NavigationService { get; }
         public ITallyDataservice TallyDataservice { get; }
+        public ITreeDataservice TreeDataservice { get; }
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
 
         public ICruiseDialogService DialogService { get; }
@@ -149,18 +174,20 @@ namespace FScruiser.XF.ViewModels
         public ITreeBasedTallyService TallyService { get; }
 
         public TallyViewModel(ICruiseNavigationService navigationService,
-            IDataserviceProvider dataserviceProvider,
+            ITallyDataservice tallyDataservice,
+            ITreeDataservice treeDataservice,
+            ITallyPopulationDataservice tallyPopulationDataservice,
+            ISampleSelectorDataService sampleSelectorDataservice,
             ICruiseDialogService dialogService,
             ISoundService soundService,
             ICruisersDataservice cruisersDataservice,
             IContainerProvider containerProvider,
             ITreeBasedTallyService tallyService)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
-
-            TallyDataservice = dataserviceProvider.GetDataservice<ITallyDataservice>();
-            TallyPopulationDataservice = dataserviceProvider.GetDataservice<ITallyPopulationDataservice>();
-            SampleSelectorService = dataserviceProvider.GetDataservice<ISampleSelectorDataService>();
+            TallyDataservice = tallyDataservice ?? throw new ArgumentNullException(nameof(tallyDataservice));
+            TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
+            TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
+            SampleSelectorService = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             CruisersDataService = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
@@ -172,7 +199,7 @@ namespace FScruiser.XF.ViewModels
         public void SelectTallyEntry(object obj)
         {
             var tallyEntry = obj as TallyEntry;
-            if (tallyEntry == null) { return; }
+            SelectedEntry = tallyEntry;
             var treeID = tallyEntry?.TreeID;
             if (treeID != null)
             {
@@ -259,15 +286,15 @@ namespace FScruiser.XF.ViewModels
                     SoundService.SignalMeasureTreeAsync().FireAndForget();
                 }
 
-                //if (CruisersDataService.PromptCruiserOnSample)
-                //{
-                //    var cruiser = await DialogService.AskCruiserAsync();
-                //    if (cruiser != null)
-                //    {
-                //        Datastore.UpdateTreeInitials(entry.TreeID, cruiser);
-                //    }
-                //}
-                //else
+                if (CruisersDataService.PromptCruiserOnSample)
+                {
+                    var cruiser = await DialogService.AskCruiserAsync();
+                    if (cruiser != null)
+                    {
+                        TreeDataservice.UpdateTreeInitials(entry.TreeID, cruiser);
+                    }
+                }
+                else
                 if (method != CruiseMethods.H_PCT)
                 {
                     var sampleType = (isInsuranceSample) ? "Insurance Tree" : "Measure Tree";

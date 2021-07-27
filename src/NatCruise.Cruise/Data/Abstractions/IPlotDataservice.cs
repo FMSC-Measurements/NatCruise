@@ -1,11 +1,10 @@
-﻿using FMSC.Sampling;
-using NatCruise.Cruise.Models;
+﻿using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using System.Collections.Generic;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Cruise.Data
 {
-    public interface IPlotDatastore : IDataservice
+    public interface IPlotDataservice : IDataservice
     {
         #region plot
 
@@ -25,6 +24,8 @@ namespace NatCruise.Cruise.Services
 
         #region plot stratum
 
+        IEnumerable<StratumProxy> GetPlotStrataProxies(string unitCode);
+
         void InsertPlot_Stratum(Plot_Stratum stratumPlot);
 
         IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber, bool insertIfNotExists = false);
@@ -39,30 +40,10 @@ namespace NatCruise.Cruise.Services
 
         #endregion plot stratum
 
-        #region tally populations
-
-        IEnumerable<TallyPopulation_Plot> GetPlotTallyPopulationsByUnitCode(string unitCode, int plotNumber);
-
-        #endregion tally populations
 
         #region tree
 
-        void InsertTree(TreeStub_Plot tree, SamplerState samplerState);
-
-        string CreatePlotTree(string unitCode,
-            int plotNumber,
-            string stratumCode,
-            string sampleGroupCode = null,
-            string species = null,
-            string liveDead = "L",
-            string countMeasure = "M",
-            int treeCount = 1,
-            int kpi = 0,
-            bool stm = false);
-
-        IEnumerable<TreeStub_Plot> GetPlotTreeProxies(string unitCode, int plotNumber);
-
-        int GetNextPlotTreeNumber(string unitCode, string stratumCode, int plotNumber);
+        IEnumerable<PlotTreeEntry> GetPlotTreeProxies(string unitCode, int plotNumber);
 
         #endregion tree
 

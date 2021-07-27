@@ -3,15 +3,10 @@ using FluentAssertions;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
 using NatCruise.Test;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace NatCruise.Cruise.Test.Services
+namespace NatCruise.Cruise.Test.Data
 {
     public class SampleSelectorRepository_Tests : Datastore_TestBase
     {
@@ -29,8 +24,6 @@ namespace NatCruise.Cruise.Test.Services
             var insuranceFreq = 2;
             var method = CruiseDAL.Schema.CruiseMethods.STR;
 
-
-
             using (var database = new CruiseDatastore_V3())
             {
                 var saleID = SaleID;
@@ -43,7 +36,6 @@ namespace NatCruise.Cruise.Test.Services
                     new CruiseDAL.V3.Models.Stratum[]
                     {
                         new CruiseDAL.V3.Models.Stratum() {StratumCode = stratumCode, Method = method},
-
                     },
                     new CruiseDAL.V3.Models.CuttingUnit_Stratum[] {
                         new CruiseDAL.V3.Models.CuttingUnit_Stratum() {CuttingUnitCode = unitCode, StratumCode = stratumCode},

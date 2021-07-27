@@ -1,7 +1,8 @@
+#define MsBuildOutputDir ".\bin\Release\net472"
+#define VERSION "0.32"
+
 #define APP "National Cruise System"
 #define EXEName "NatCruise.Wpf.exe"
-#define MsBuildOutputDir ".\bin\Release\net472"
-#define VERSION "0.29"
 #define BASEURL "https://www.fs.fed.us/forestmanagement/products/measurement"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
 

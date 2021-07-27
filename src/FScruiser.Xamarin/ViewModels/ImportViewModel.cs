@@ -227,11 +227,11 @@ namespace FScruiser.XF.ViewModels
 
             if (await ImportCruise(cruiseID, importPath) == true)
             {
-                var sampleInfoDataservice = DataserviceProvider.GetDataservice<ISampleInfoDataservice>();
-                if (sampleInfoDataservice.HasSampleStateEnvy())
-                {
-                    //DialogService.ShowNotification()
-                }
+                //var sampleInfoDataservice = DataserviceProvider.GetDataservice<ISampleInfoDataservice>();
+                //if (sampleInfoDataservice.HasSampleStateEnvy())
+                //{
+                //    //DialogService.ShowNotification()
+                //}
 
                 DialogService.ShowNotification("Done");
                 await NavigationService.GoBackAsync();

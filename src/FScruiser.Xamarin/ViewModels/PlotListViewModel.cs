@@ -1,8 +1,7 @@
 ﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using NatCruise.Data;
 using Prism.Common;
 using Prism.Services;
 using System;
@@ -30,7 +29,8 @@ namespace FScruiser.XF.ViewModels
 
         public IEnumerable<Plot> Plots { get; protected set; }
         public IPageDialogService DialogService { get; }
-        public ICuttingUnitDatastore Datastore { get; set; }
+
+        protected IPlotDataservice PlotDataservice { get; }
         protected ICruiseNavigationService NavigationService { get; }
 
         public ICommand AddPlotCommand => _addPlotCommand ?? (_addPlotCommand = new Command(AddPlot));
@@ -39,13 +39,11 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand EditPlotCommand => _editPlotCommand ?? (_editPlotCommand = new Command<Plot>(ShowEditPlot));
 
-        public PlotListViewModel(ICruiseNavigationService navigationService
-            , IPageDialogService dialogService
-            , IDataserviceProvider datastoreProvider)
+        public PlotListViewModel(ICruiseNavigationService navigationService,
+            IPageDialogService dialogService,
+            IPlotDataservice plotDataservice)
         {
-            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
-
-            Datastore = datastoreProvider.GetDataservice<ICuttingUnitDatastore>();
+            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
@@ -62,16 +60,16 @@ namespace FScruiser.XF.ViewModels
         {
             var unitCode = UnitCode;
 
-            Plots = Datastore.GetPlotsByUnitCode(UnitCode).ToArray();
+            Plots = PlotDataservice.GetPlotsByUnitCode(UnitCode).ToArray();
             RaisePropertyChanged(nameof(Plots));
 
-            HasFixCNTStrata = Datastore.GetPlotStrataProxies(UnitCode)
+            HasFixCNTStrata = PlotDataservice.GetPlotStrataProxies(UnitCode)
                 .Any(x => x.Method == CruiseDAL.Schema.CruiseMethods.FIXCNT);
         }
 
         public void AddPlot(object obj)
         {
-            var plotID = Datastore.AddNewPlot(UnitCode);
+            var plotID = PlotDataservice.AddNewPlot(UnitCode);
             //NavigationService.NavigateAsync($"PlotEdit?{NavParams.PlotID}={plotID}");
             NavigationService.ShowPlotEdit(plotID);
         }
@@ -81,7 +79,7 @@ namespace FScruiser.XF.ViewModels
             var unitCode = UnitCode;
             var plotNumber = plot.PlotNumber;
 
-            Datastore.DeletePlot(unitCode, plotNumber);
+            PlotDataservice.DeletePlot(unitCode, plotNumber);
 
             RefreshPlots();
         }
@@ -94,7 +92,7 @@ namespace FScruiser.XF.ViewModels
 
         public async void ShowTallyPlot(Plot plot)
         {
-            var fixCNTstrata = Datastore.GetPlotStrataProxies(UnitCode).Where(x => x.Method == CruiseDAL.Schema.CruiseMethods.FIXCNT).ToArray();
+            var fixCNTstrata = PlotDataservice.GetPlotStrataProxies(UnitCode).Where(x => x.Method == CruiseDAL.Schema.CruiseMethods.FIXCNT).ToArray();
 
             if (fixCNTstrata.Any()
                 && await DialogService.DisplayAlertAsync("Show FixCNT Tally Page?", "", "FixCNT", "Standard"))

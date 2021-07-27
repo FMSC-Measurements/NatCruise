@@ -177,5 +177,15 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowBlank()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowPlotTreeList(string unitCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

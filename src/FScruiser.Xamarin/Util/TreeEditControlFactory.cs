@@ -24,7 +24,7 @@ namespace FScruiser.XF.Util
                 case "REAL":
                     {
                         editView = new Entry() { Keyboard = Keyboard.Numeric };
-                        editView.SetBinding(Entry.TextProperty, "ValueReal", converter: _nullableDoubleConverter );
+                        editView.SetBinding(Entry.TextProperty, "ValueReal", converter: _nullableDoubleConverter);
                         break;
                     }
                 case "INT":
@@ -49,13 +49,18 @@ namespace FScruiser.XF.Util
                     }
             }
 
-            if(editView != null)
+            if (editView != null)
             {
                 editView.BindingContext = tfv;
             }
             if (editView is Entry entry)
             {
                 entry.Effects.Add(new Xamarin.CommunityToolkit.Effects.SelectAllTextEffect());
+                var strDefaultValue = tfv.StrDefaultValue;
+                if (strDefaultValue != null)
+                {
+                    entry.Placeholder = strDefaultValue;
+                }
             }
 
             return editView;
