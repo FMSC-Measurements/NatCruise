@@ -28,6 +28,10 @@
                     Command="{Binding ResetDatabaseCommand}" />
             <Button Text="Backup Database"
                     Command="{Binding BackupDatabaseCommand}" />
+
+            <Button Text="User Agreement"
+                    Command="{Binding ShowUserAgreement}"
+                    VerticalOptions="EndAndExpand"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

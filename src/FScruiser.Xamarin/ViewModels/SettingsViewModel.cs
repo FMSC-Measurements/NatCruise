@@ -24,16 +24,19 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand ResetDatabaseCommand => new Command(() => ResetDatabase());
         public ICommand BackupDatabaseCommand => new Command(BackupDatabase);
+        public ICommand ShowUserAgreement => new Command(() => NavigationService.ShowUserAgreement());
 
         public IFileDialogService FileDialogService { get; }
+        public ICruiseNavigationService NavigationService { get; }
 
-        public SettingsViewModel(IDialogService dialogService, IFileSystemService fileSystemService, IDataserviceProvider dataserviceProvider, IFileDialogService fileDialogService)
+        public SettingsViewModel(IDialogService dialogService, IFileSystemService fileSystemService, IDataserviceProvider dataserviceProvider, IFileDialogService fileDialogService, ICruiseNavigationService navigationService)
         {
             AppSettings = new XamarinApplicationSettingService();
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         public async void ResetDatabase()

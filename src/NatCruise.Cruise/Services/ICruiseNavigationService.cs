@@ -55,5 +55,7 @@ namespace FScruiser.XF.Services
         Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID);
 
         Task ShowTreeList(string unitCode);
+
+        Task ShowUserAgreement();
     }
 }

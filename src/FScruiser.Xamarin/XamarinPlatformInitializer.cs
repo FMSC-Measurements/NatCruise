@@ -53,6 +53,7 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<ThreePPNTPlotView>("ThreePPNTPlot");
             containerRegistry.RegisterForNavigation<ManageCruisersView>("Cruisers");
             containerRegistry.RegisterForNavigation<SettingsView>("Settings");
+            containerRegistry.RegisterForNavigation<UserAgreementView>("UserAgreement");
             containerRegistry.RegisterForNavigation<LimitingDistanceView>("LimitingDistance");
             containerRegistry.RegisterForNavigation<LogsListView>("LogList");
             containerRegistry.RegisterForNavigation<LogEditView>("LogEdit");
