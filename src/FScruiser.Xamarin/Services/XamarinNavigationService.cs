@@ -335,5 +335,10 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync("Navigation/TreeList",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
+
+        public Task ShowUserAgreement()
+        {
+            return NavigationService.NavigateAsync("UserAgreement");
+        }
     }
 }

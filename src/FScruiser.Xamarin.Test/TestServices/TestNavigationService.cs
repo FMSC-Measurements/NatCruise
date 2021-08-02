@@ -187,5 +187,10 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowUserAgreement()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
