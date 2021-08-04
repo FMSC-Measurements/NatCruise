@@ -57,5 +57,7 @@ namespace FScruiser.XF.Services
         Task ShowTreeList(string unitCode);
 
         Task ShowUserAgreement();
+
+        Task ShowPrivacyPolicy();
     }
 }

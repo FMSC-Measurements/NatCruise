@@ -340,5 +340,10 @@ namespace FScruiser.XF.Services
         {
             return NavigationService.NavigateAsync("UserAgreement");
         }
+
+        public Task ShowPrivacyPolicy()
+        {
+            return NavigationService.NavigateAsync("PrivacyPolicy");
+        }
     }
 }

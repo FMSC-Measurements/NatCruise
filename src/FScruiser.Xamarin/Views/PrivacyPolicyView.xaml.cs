@@ -4,15 +4,15 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class UserAgreementView : ContentPage
+    public partial class PrivacyPolicyView : ContentPage
     {
-        public UserAgreementView()
+        public PrivacyPolicyView()
         {
             InitializeComponent();
 
             var htmlSource = new HtmlWebViewSource()
             {
-                Html = Properties.Resources.UserAgreement
+                Html = Properties.Resources.PrivacyPolicy
             };
             webView.Source = htmlSource;
         }
