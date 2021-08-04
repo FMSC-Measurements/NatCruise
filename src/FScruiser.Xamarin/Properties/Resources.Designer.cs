@@ -71,6 +71,25 @@ namespace FScruiser.XF.Properties {
         ///  &lt;style type=&quot;text/css&quot;&gt;code{white-space: pre;}&lt;/style&gt;
         ///&lt;/head&gt;
         ///&lt;body&gt;
+        ///&lt;p&gt;# Privacy Policy When you use this application no informa [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string PrivacyPolicy {
+            get {
+                return ResourceManager.GetString("PrivacyPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+        ///&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///  &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+        ///  &lt;meta http-equiv=&quot;Content-Style-Type&quot; content=&quot;text/css&quot; /&gt;
+        ///  &lt;meta name=&quot;generator&quot; content=&quot;pandoc&quot; /&gt;
+        ///  &lt;title&gt;&lt;/title&gt;
+        ///  &lt;style type=&quot;text/css&quot;&gt;code{white-space: pre;}&lt;/style&gt;
+        ///&lt;/head&gt;
+        ///&lt;body&gt;
         ///&lt;p&gt;This User Agreement is a legal agreement between you and  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UserAgreement {

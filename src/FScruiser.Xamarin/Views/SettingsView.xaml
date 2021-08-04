@@ -29,9 +29,12 @@
             <Button Text="Backup Database"
                     Command="{Binding BackupDatabaseCommand}" />
 
+            <Button Text="Privacy Policy"
+                    Command="{Binding ShowPrivacyPolicyCommand}"
+                    VerticalOptions="EndAndExpand" />
             <Button Text="User Agreement"
-                    Command="{Binding ShowUserAgreement}"
-                    VerticalOptions="EndAndExpand"/>
+                    Command="{Binding ShowUserAgreementCommand}"
+                    VerticalOptions="End"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

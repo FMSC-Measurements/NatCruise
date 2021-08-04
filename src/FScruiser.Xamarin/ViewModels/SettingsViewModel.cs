@@ -24,7 +24,8 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand ResetDatabaseCommand => new Command(() => ResetDatabase());
         public ICommand BackupDatabaseCommand => new Command(BackupDatabase);
-        public ICommand ShowUserAgreement => new Command(() => NavigationService.ShowUserAgreement());
+        public ICommand ShowUserAgreementCommand => new Command(() => NavigationService.ShowUserAgreement());
+        public ICommand ShowPrivacyPolicyCommand => new Command(() => NavigationService.ShowPrivacyPolicy());
 
         public IFileDialogService FileDialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
