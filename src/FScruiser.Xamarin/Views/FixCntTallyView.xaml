@@ -1,13 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              x:Class="FScruiser.XF.Views.FixCntTallyView"
              x:Name="Page"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             AutomationProperties.Name="Fix Count Tally Page">
     <ContentPage.Content>
-        <Grid>
+        <Grid AutomationProperties.IsInAccessibleTree="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -19,11 +18,15 @@
 
             <StackLayout Grid.Column="1"
                          Grid.Row="1"
-                         Orientation="Horizontal">
+                         Orientation="Horizontal"
+                         AutomationProperties.IsInAccessibleTree="False">
                 <Label Text="Untally"
-                       VerticalTextAlignment="Center" />
+                       VerticalTextAlignment="Center"
+                       AutomationProperties.IsInAccessibleTree="False"/>
                 <Switch x:Name="_enableUntallySwitch"
-                        IsToggled="{Binding IsUntallyEnabled}" />
+                        IsToggled="{Binding IsUntallyEnabled}"
+                        AutomationProperties.Name="Untally Switch"
+                        AutomationProperties.IsInAccessibleTree="True" />
             </StackLayout>
 
             <StackLayout x:Name="_tallyPopulationsView"
@@ -31,13 +34,16 @@
                          Grid.Row="0"
                          Grid.ColumnSpan="2"
                          Grid.RowSpan="1"
-                         BindableLayout.ItemsSource="{Binding TallyPopulations}">
+                         BindableLayout.ItemsSource="{Binding TallyPopulations}"
+                         AutomationProperties.IsInAccessibleTree="True"
+                         AutomationProperties.Name="Fix Count Tally Population List">
 
                 <BindableLayout.ItemTemplate>
 
                     <DataTemplate>
 
-                        <StackLayout Orientation="Horizontal">
+                        <StackLayout Orientation="Horizontal"
+                                     AutomationProperties.IsInAccessibleTree="False">
 
                             <Frame BackgroundColor="{StaticResource accent}"
                                    CornerRadius="5">
@@ -49,7 +55,9 @@
 
 
                             <CollectionView ItemsSource="{Binding Buckets}"
-                                            HeightRequest="80">
+                                            HeightRequest="80"
+                                            AutomationProperties.IsInAccessibleTree="True"
+                                            AutomationProperties.Name="{Binding SpeciesCode, StringFormat='{}{0} Species Tally List'}">
                                 <CollectionView.ItemsLayout>
                                     <GridItemsLayout Orientation="Horizontal" />
                                 </CollectionView.ItemsLayout>
@@ -61,7 +69,10 @@
                                                HeightRequest="75"
                                                WidthRequest="75"
                                                Margin="4"
-                                               BackgroundColor="LightGray">
+                                               BackgroundColor="LightGray"
+                                               AutomationProperties.IsInAccessibleTree="True"
+                                               AutomationProperties.Name="{Binding Value, StringFormat='{}{0} Tally Button'}"
+                                               AutomationProperties.HelpText="{Binding TreeCount, StringFormat='{}Tree Count {0}'}">
 
                                             <StackLayout>
                                                 <StackLayout.GestureRecognizers>
@@ -74,11 +85,13 @@
                                                 <Label Text="{Binding Value, StringFormat='{}{0}&quot;'}"
                                                        FontAttributes="Bold"
                                                        HorizontalTextAlignment="Center"
-                                                       VerticalOptions="Center" />
+                                                       VerticalOptions="Center"
+                                                       AutomationProperties.IsInAccessibleTree="False" />
 
                                                 <Label Text="{Binding TreeCount}"
                                                        HorizontalTextAlignment="Center"
-                                                       VerticalOptions="Center" />
+                                                       VerticalOptions="Center"
+                                                       AutomationProperties.IsInAccessibleTree="False" />
 
                                             </StackLayout>
 

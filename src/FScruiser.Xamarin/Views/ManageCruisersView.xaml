@@ -1,28 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.ManageCruisersView"
              BackgroundColor="White"
              x:Name="_self"
              Title="Manage Cruisers">
     <ContentPage.Content>
         <Grid>
-            
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
-            
-            <Label Grid.Row="0" Grid.Column="0"
-                Text="Cruisers"
-                VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                BackgroundColor="{StaticResource fs_brown}"
-                TextColor="{StaticResource white_90}" />
 
-            <StackLayout Grid.Row="1" Orientation="Horizontal">
+            <Label Grid.Row="0"
+                   Grid.Column="0"
+                   Text="Cruisers"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   BackgroundColor="{StaticResource fs_brown}"
+                   TextColor="{StaticResource white_90}" />
+
+            <StackLayout Grid.Row="1"
+                         Orientation="Horizontal">
 
                 <Label Text="Ask Cruisers Initials When Tree Created"
                        TextColor="Black"
@@ -30,28 +32,33 @@
                        HorizontalOptions="FillAndExpand"
                        Margin="10,0,0,0" />
 
-                <Switch  IsToggled="{Binding PromptCruiserOnSample}" 
+                <Switch  IsToggled="{Binding PromptCruiserOnSample}"
                          HorizontalOptions="End" />
-                
+
             </StackLayout>
 
-            <ListView x:Name="_cruisersListView" Grid.Row="2" ItemsSource="{Binding Cruisers}">
+            <ListView x:Name="_cruisersListView"
+                      Grid.Row="2"
+                      ItemsSource="{Binding Cruisers}"
+                      AutomationProperties.Name="Cruisers List">
 
                 <ListView.ItemTemplate>
 
                     <DataTemplate>
 
-                        <ViewCell x:Name="something">
+                        <ViewCell x:Name="something"
+                                  AutomationProperties.IsInAccessibleTree="True"
+                                  AutomationProperties.Name="{Binding .}">
 
-                            <Grid
-                                ColumnSpacing="0"
-                                RowSpacing="0"
-                                Margin="5">
+                            <Grid ColumnSpacing="0"
+                                  RowSpacing="0"
+                                  Margin="5">
 
                                 <Grid.Resources>
                                     <ResourceDictionary>
                                         <Style TargetType="BoxView">
-                                            <Setter Property="Color" Value="{StaticResource black_12}" />
+                                            <Setter Property="Color"
+                                                    Value="{StaticResource black_12}" />
                                         </Style>
                                     </ResourceDictionary>
                                 </Grid.Resources>
@@ -67,46 +74,59 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
-                                <BoxView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" />
+                                <BoxView Grid.Column="0"
+                                         Grid.Row="0"
+                                         Grid.RowSpan="2" />
 
-                                <BoxView Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" />
+                                <BoxView Grid.Column="1"
+                                         Grid.Row="1"
+                                         Grid.ColumnSpan="2" />
 
-                                <Label
-                                        Grid.Column="1" Grid.Row="0"
-                                        Text="{Binding .}"
-                                        TextColor="Black"
-                                        VerticalTextAlignment="Center"
-                                        Margin="10,0,0,0" />
+                                <Label Grid.Column="1"
+                                       Grid.Row="0"
+                                       Text="{Binding .}"
+                                       TextColor="Black"
+                                       VerticalTextAlignment="Center"
+                                       Margin="10,0,0,0"
+                                       AutomationProperties.IsInAccessibleTree="False" />
 
-                                <Button
-                                        Grid.Column="2" Grid.Row="0"
+                                <Button Grid.Column="2"
+                                        Grid.Row="0"
                                         Text="X"
                                         Command="{Binding BindingContext.RemoveCruiserCommand, Source={x:Reference _self}}"
                                         CommandParameter="{Binding .}"
-                                        BackgroundColor="Red" />
+                                        BackgroundColor="Red"
+                                        AutomationProperties.IsInAccessibleTree="True"
+                                        AutomationProperties.Name="Remove Button" />
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
-            <StackLayout Grid.Row="3" Orientation="Horizontal" VerticalOptions="Fill">
+            <StackLayout Grid.Row="3"
+                         Orientation="Horizontal"
+                         VerticalOptions="Fill">
 
                 <Button x:Name="_addCruiserButton"
-                    Style="{StaticResource button_base}"
+                        Style="{StaticResource button_base}"
                         HorizontalOptions="Start"
                         Image="ic_plus_white_18dp.png"
                         BackgroundColor="{StaticResource primary_500}"
                         WidthRequest="60"
                         IsEnabled="{Binding Text, Source={Reference _addCruiserEntry}, Converter={StaticResource isNotNullOrEmptyConverter}}"
-                        Margin="5"/>
+                        Margin="5"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Add Cruiser Button" />
 
                 <Entry x:Name="_addCruiserEntry"
                        HorizontalOptions="FillAndExpand"
                        Placeholder="Initials"
                        PlaceholderColor="{StaticResource black_30}"
                        Text=""
-                       TextColor="Black" />
+                       TextColor="Black"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Add Cruiser Entry Button" />
             </StackLayout>
         </Grid>
     </ContentPage.Content>
