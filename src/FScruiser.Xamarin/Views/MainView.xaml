@@ -7,20 +7,23 @@
                   xmlns:prism="http://prismlibrary.com"
                   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                  xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
                   mc:Ignorable="d"
                   IsPresented="True">
     <MasterDetailPage.Master>
         <ContentPage x:Name="MasterPage"
                      Title="Master"
                      Icon="ic_menu_white_18dp.png"
-                     BackgroundColor="{StaticResource fs_brown}">
+                     BackgroundColor="{StaticResource fs_brown}"
+                     AutomationProperties.Name="Navigation Panel">
+            <!-- see MainView constructor for additional AutomationProperty configuration -->
             <StackLayout>
                 <!--select cruise button-->
                 <Frame BackgroundColor="White"
                        Padding="2"
                        Margin="10"
-                       CornerRadius="0">
+                       CornerRadius="0"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Select Cruise Button">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowSelectSale}" Tapped="OnNavButtonClicked" />
                     </Frame.GestureRecognizers>
@@ -70,30 +73,44 @@
                         <Button Text="Sale"
                                 IsVisible="{Binding IsCruiseSelected}"
                                 Command="{Binding ShowSaleCommand}"
-                                Clicked="OnNavButtonClicked"/>
+                                Clicked="OnNavButtonClicked"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Sale Page Navigation Button" />
                         <Button Text="Cutting Unit Info"
                                 IsVisible="{Binding IsCuttingUnitSelected}"
                                 Command="{Binding ShowUnitInfoCommand}"
-                                Clicked="OnNavButtonClicked"/>
+                                Clicked="OnNavButtonClicked"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Cutting Unit Info Navigation Button"/>
                         <Button Text="Trees"
                                 IsVisible="{Binding HasTreeStrata}"
                                 Command="{Binding ShowTreesCommand}"
-                                Clicked="OnNavButtonClicked"/>
+                                Clicked="OnNavButtonClicked"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Trees List Page Navigation Button" />
                         <Button Text="Plots"
                                 IsVisible="{Binding HasPlotStrata}"
                                 Command="{Binding ShowPlotsCommand}"
-                                Clicked="OnNavButtonClicked"/>
+                                Clicked="OnNavButtonClicked"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Plot List Page Navigation Button"/>
                         <Button Text="Plot Trees"
                                 IsVisible="{Binding HasPlotStrata}"
                                 Command="{Binding ShowPlotTreesCommand}"
-                                Clicked="OnNavButtonClicked" />
+                                Clicked="OnNavButtonClicked"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Plot Trees List Page Navigation Button"/>
                         <Button Text="Tally"
                                 IsVisible="{Binding HasTreeStrata}"
                                 Command="{Binding ShowTallyCommand}"
-                                Clicked="OnNavButtonClicked"/>
+                                Clicked="OnNavButtonClicked"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Tally Page Navigation Button"/>
                         <Button Text="Cruisers"
                                 Command="{Binding ShowCruisersCommand}"
-                                Clicked="OnNavButtonClicked"/>
+                                Clicked="OnNavButtonClicked"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Cruisers Page Navigation Button"/>
                     </StackLayout>
                 </ScrollView>
 
@@ -154,7 +171,9 @@
                     <Button BackgroundColor="Transparent"
                             Image="ic_settings_white_24dp.png"
                             Command="{Binding ShowSettingsCommand}"
-                            Clicked="OnNavButtonClicked"/>
+                            Clicked="OnNavButtonClicked"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Settings Page Navigation Button" />
                     <!--<Button BackgroundColor="Transparent"
                             Image="ic_feedback_white_24dp.png"
                             Command="{Binding ShowFeedbackCommand}"

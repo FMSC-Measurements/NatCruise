@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.LogsListView"
-             Title="{Binding TreeNumber, StringFormat='{}Logs: Tree Number {0}'}">
+             Title="{Binding TreeNumber, StringFormat='{}Logs: Tree Number {0}'}"
+             AutomationProperties.Name="{Binding TreeNumber, StringFormat='{}Tree Number {0} Log List Page'}">
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="_logListView"
@@ -11,21 +12,38 @@
                       HasUnevenRows="True"
                       SeparatorColor="{StaticResource black_12}"
                       SeparatorVisibility="Default"
-                      CachingStrategy="RecycleElement">
+                      CachingStrategy="RecycleElement"
+                      AutomationProperties.Name="Logs List">
                 <!--DataTemplate generated at runtime-->
             </ListView>
-            <StackLayout Orientation="Horizontal" VerticalOptions="End">
+            <StackLayout Orientation="Horizontal"
+                         VerticalOptions="End">
                 <StackLayout.Resources>
                     <ResourceDictionary>
-                        <Style TargetType="Button" BasedOn="{StaticResource button_base}">
-                            <Setter Property="BackgroundColor"  Value="{StaticResource primary_500}"/>
-                            <Setter Property="HeightRequest" Value="60"/>
+                        <Style TargetType="Button"
+                               BasedOn="{StaticResource button_base}">
+                            <Setter Property="BackgroundColor"
+                                    Value="{StaticResource primary_500}" />
+                            <Setter Property="HeightRequest"
+                                    Value="60" />
                         </Style>
                     </ResourceDictionary>
                 </StackLayout.Resources>
-                <Button x:Name="_goToEndButton" Image="ic_chevron_double_down_white_24dp.png"/>
-                <Button x:Name="_addTreeButton" Image="ic_plus_white_24dp.png" Command="{Binding AddLogCommand}" FontSize="30" BackgroundColor="Orange" VerticalOptions="Fill" HorizontalOptions="FillAndExpand"/>
-                <Button x:Name="_goToStartButton" Image="ic_chevron_double_up_white_24dp.png" HorizontalOptions="End"/>
+                <Button x:Name="_goToEndButton"
+                        Image="ic_chevron_double_down_white_24dp.png"
+                        AutomationProperties.Name="Scroll To End of List Button" />
+                <Button x:Name="_addLogButton"
+                        Image="ic_plus_white_24dp.png"
+                        Command="{Binding AddLogCommand}"
+                        FontSize="30"
+                        BackgroundColor="Orange"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="FillAndExpand"
+                        AutomationProperties.Name="Add Log Button"/>
+                <Button x:Name="_goToStartButton"
+                        Image="ic_chevron_double_up_white_24dp.png"
+                        HorizontalOptions="End"
+                        AutomationProperties.Name="Scroll To Start of List Button" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
