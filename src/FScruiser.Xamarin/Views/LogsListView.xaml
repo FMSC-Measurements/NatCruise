@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.LogsListView"
              Title="{Binding TreeNumber, StringFormat='{}Logs: Tree Number {0}'}"
              AutomationProperties.Name="{Binding TreeNumber, StringFormat='{}Tree Number {0} Log List Page'}">
@@ -31,7 +30,7 @@
                 </StackLayout.Resources>
                 <Button x:Name="_goToEndButton"
                         Image="ic_chevron_double_down_white_24dp.png"
-                        AutomationProperties.Name="Scroll To End of List Button" />
+                        AutomationProperties.Name="Scroll To End of List" />
                 <Button x:Name="_addLogButton"
                         Image="ic_plus_white_24dp.png"
                         Command="{Binding AddLogCommand}"
@@ -39,11 +38,11 @@
                         BackgroundColor="Orange"
                         VerticalOptions="Fill"
                         HorizontalOptions="FillAndExpand"
-                        AutomationProperties.Name="Add Log Button"/>
+                        AutomationProperties.Name="Add Log"/>
                 <Button x:Name="_goToStartButton"
                         Image="ic_chevron_double_up_white_24dp.png"
                         HorizontalOptions="End"
-                        AutomationProperties.Name="Scroll To Start of List Button" />
+                        AutomationProperties.Name="Scroll To Start of List" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

@@ -18,16 +18,6 @@ namespace FScruiser.XF.Views
 
             _goToEndButton.Clicked += _goToEndButton_Clicked;
             _goToStartButton.Clicked += _goToStartButton_Clicked;
-
-            _plotListView.ItemSelected += _plotListView_ItemSelected;
-        }
-
-        private void _plotListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            if (e.SelectedItem is Plot plot && plot != null)
-            {
-                ViewModel?.ShowTallyPlot(plot);
-            }
         }
 
         private void _goToEndButton_Clicked(object sender, EventArgs e)
@@ -39,10 +29,10 @@ namespace FScruiser.XF.Views
         {
             var itemSource = _plotListView.ItemsSource;
             if (itemSource == null) { return; }
-            var lastItem = itemSource.Cast<object>().LastOrDefault();
-            if (lastItem == null) { return; }
+            var numItems = itemSource.Cast<object>().Count();
+            if(numItems < 1) { return; }
 
-            _plotListView.ScrollTo(lastItem, ScrollToPosition.End, false);
+            _plotListView.ScrollTo(numItems - 1, position: ScrollToPosition.End, animate: true);
         }
 
         private void _goToStartButton_Clicked(object sender, EventArgs e)
@@ -54,10 +44,10 @@ namespace FScruiser.XF.Views
         {
             var itemSource = _plotListView.ItemsSource;
             if (itemSource == null) { return; }
-            var firstItem = itemSource.Cast<object>().FirstOrDefault();
-            if (firstItem == null) { return; }
+            var numItems = itemSource.Cast<object>().Count();
+            if (numItems < 1) { return; }
 
-            _plotListView.ScrollTo(firstItem, ScrollToPosition.Start, false);
+            _plotListView.ScrollTo(0, position: ScrollToPosition.Start, animate: false);
         }
     }
 }

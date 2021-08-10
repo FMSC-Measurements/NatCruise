@@ -5,16 +5,14 @@
              x:Name="_page"
              Title="Select Cruise"
              AutomationProperties.IsInAccessibleTree="true"
-             AutomationProperties.Name="Cruise Selection Page"
-             AutomationProperties.HelpText="Select a Cruise From a List of Cruises">
+             AutomationProperties.Name="Cruise Selection Page">
     <ContentPage.Content>
         <StackLayout>
             <ListView ItemsSource="{Binding Cruises}"
                       SelectionMode="Single"
                       SelectedItem="{Binding SelectedCruise}"
                       AutomationProperties.IsInAccessibleTree="true"
-                      AutomationProperties.Name="Cruise List"
-                      AutomationProperties.HelpText="Tap Cruise Item to Mark as Selected. Then Tap an Action Button Below to Perform Action on Cruise.">
+                      AutomationProperties.Name="Cruise List">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell  Text="{Binding .}"
@@ -26,23 +24,20 @@
 
             <Button Text="Open"
                     AutomationProperties.IsInAccessibleTree="true"
-                    AutomationProperties.Name="Open Cruise Button"
-                    AutomationProperties.HelpText="Opens The Selected Cruise"
+                    AutomationProperties.Name="Open Cruise"
                     Command="{Binding OpenSelectedCruiseCommand}"
                     IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}" />
             <StackLayout Orientation="Horizontal"
                          HorizontalOptions="FillAndExpand">
                 <Button Text="Export"
                         AutomationProperties.IsInAccessibleTree="true"
-                        AutomationProperties.Name="Export Cruise Button"
-                        AutomationProperties.HelpText="Exports The Selected Cruise to a New File on The Device"
+                        AutomationProperties.Name="Export Cruise"
                         Command="{Binding ExportSelectedCruiseCommand}"
                         IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
                         HorizontalOptions="FillAndExpand" />
                 <Button Text="Share"
                         AutomationProperties.IsInAccessibleTree="true"
-                        AutomationProperties.Name="Share Cruise Button"
-                        AutomationProperties.HelpText="Exports The Selected Cruise and Gives Options to Share The File"
+                        AutomationProperties.Name="Share Cruise"
                         Command="{Binding ShareSelectedCruiseCommand}"
                         IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
                         HorizontalOptions="FillAndExpand" />
@@ -50,8 +45,7 @@
 
             <Button Text="Delete"
                     AutomationProperties.IsInAccessibleTree="true"
-                    AutomationProperties.Name="Delete Cruise Button"
-                    AutomationProperties.HelpText="Deletes The Selected Cruise"
+                    AutomationProperties.Name="Delete Cruise"
                     Command="{Binding DeleteSelectedCruiseCommand}"
                     IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}" />
         </StackLayout>

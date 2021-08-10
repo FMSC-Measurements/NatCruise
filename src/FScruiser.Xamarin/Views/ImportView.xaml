@@ -12,11 +12,11 @@
                    Text="{Binding ImportPath}"
                    IsReadOnly="True"
                    AutomationProperties.IsInAccessibleTree="True"
-                   AutomationProperties.Name="Selected Cruise Label" />
+                   AutomationProperties.Name="Selected Cruise" />
             <Button Text="Browse"
                     Command="{Binding BrowseFileCommand}"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Browse File Button" />
+                    AutomationProperties.Name="Browse File" />
             <AbsoluteLayout>
                 <ListView AbsoluteLayout.LayoutBounds="1,1,1,1"
                           AbsoluteLayout.LayoutFlags="All"
@@ -42,11 +42,11 @@
                     Command="{Binding ImportCruiseCommand}"
                     IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Import Cruise Button"/>
+                    AutomationProperties.Name="Import Cruise"/>
             <Button Text="Cancel"
                     Command="{Binding CancelCommand}"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Cancel Button"/>
+                    AutomationProperties.Name="Cancel"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

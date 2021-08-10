@@ -1,40 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.SettingsView"
-             Title="Settings">
+             Title="Settings"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Settings Page">
     <ContentPage.Content>
         <StackLayout Padding="5">
             <StackLayout>
                 <StackLayout Orientation="Horizontal">
 
                     <Label Text="Analitics"
-                           VerticalTextAlignment="Center" />
+                           VerticalTextAlignment="Center"
+                           AutomationProperties.IsInAccessibleTree="False"/>
 
-                    <Switch IsToggled="{Binding AppSettings.EnableAnalitics}" />
+                    <Switch IsToggled="{Binding AppSettings.EnableAnalitics}"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Analitics Toggle"/>
 
                 </StackLayout>
                 <StackLayout Orientation="Horizontal">
 
                     <Label Text="Crash/Error Reports"
-                           VerticalTextAlignment="Center" />
+                           VerticalTextAlignment="Center"
+                           AutomationProperties.IsInAccessibleTree="False"/>
 
-                    <Switch IsToggled="{Binding AppSettings.EnableCrashReports}" />
+                    <Switch IsToggled="{Binding AppSettings.EnableCrashReports}"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Crash Reports Toggle" />
 
                 </StackLayout>
             </StackLayout>
             <Button Text="Reset Database"
-                    Command="{Binding ResetDatabaseCommand}" />
+                    Command="{Binding ResetDatabaseCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Reset Database" />
             <Button Text="Backup Database"
-                    Command="{Binding BackupDatabaseCommand}" />
+                    Command="{Binding BackupDatabaseCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Backup Database"/>
 
             <Button Text="Privacy Policy"
                     Command="{Binding ShowPrivacyPolicyCommand}"
-                    VerticalOptions="EndAndExpand" />
+                    VerticalOptions="EndAndExpand"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Privacy Policy"/>
             <Button Text="User Agreement"
                     Command="{Binding ShowUserAgreementCommand}"
-                    VerticalOptions="End"/>
+                    VerticalOptions="End"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="User Agreement"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
