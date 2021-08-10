@@ -5,25 +5,27 @@
              xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
              x:Class="FScruiser.XF.Views.PlotEditView"
              x:Name="_page"
-             Title="Edit Plot">
+             Title="Edit Plot"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Plot Edit Page">
 
     <ContentPage.Resources>
         <Style x:Key="errorWarningLabel"
-                   TargetType="Label">
+               TargetType="Label">
             <Setter Property="TextColor"
-              Value="Black" />
+                    Value="Black" />
 
             <Setter Property="FontSize"
-              Value="Large" />
+                    Value="Large" />
 
             <Setter Property="Margin"
-              Value="0,0,0,7" />
+                    Value="0,0,0,7" />
 
             <Setter Property="BackgroundColor"
-              Value="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}" />
+                    Value="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}" />
 
             <Setter Property="Text"
-              Value="{Binding Message}" />
+                    Value="{Binding Message}" />
         </Style>
     </ContentPage.Resources>
 
@@ -73,7 +75,8 @@
                 <!--plot number-->
                 <Label Grid.Row="0"
                        Grid.Column="0"
-                       Text="Plot " />
+                       Text="Plot "
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <Entry Grid.Row="0"
                        Grid.Column="1"
                        x:Name="_plotNumberEntry"
@@ -82,7 +85,9 @@
                        Keyboard="Numeric"
                        ReturnCommand="{Binding UpdatePlotNumberCommand}"
                        ReturnCommandParameter="{Binding Text, Source={Reference _plotNumberEntry}}"
-                       ReturnType="Default">
+                       ReturnType="Default"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Plot Number">
                     <Entry.Effects>
                         <effects:SelectAllTextEffect />
                     </Entry.Effects>
@@ -94,29 +99,36 @@
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
-                       Text="Slope" />
+                       Text="Slope"
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <Entry Grid.Row="1"
                        Grid.Column="1"
                        Text="{Binding Plot.Slope}"
                        WidthRequest="50"
-                       Keyboard="Numeric" />
+                       Keyboard="Numeric"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Slope" />
 
                 <!--aspect-->
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
-                       Text="Aspect" />
+                       Text="Aspect"
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <Entry Grid.Row="2"
                        Grid.Column="1"
                        Text="{Binding Plot.Aspect}"
                        WidthRequest="50"
-                       Keyboard="Numeric" />
+                       Keyboard="Numeric"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Aspect" />
 
                 <!-- remarks -->
                 <Label Grid.Row="3"
                        Grid.Column="0"
                        Text="Remarks"
-                       VerticalTextAlignment="End" />
+                       VerticalTextAlignment="End"
+                       AutomationProperties.IsInAccessibleTree="False" />
 
                 <Editor Grid.Row="4"
                         Grid.Column="0"
@@ -125,7 +137,9 @@
                         Text="{Binding Plot.Remarks}"
                         IsSpellCheckEnabled="False"
                         HorizontalOptions="Fill"
-                        BackgroundColor="LightGray" />
+                        BackgroundColor="LightGray"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Remarks" />
             </Grid>
 
             <ListView x:Name="_plotListView"
@@ -133,7 +147,9 @@
                       SeparatorVisibility="None"
                       HasUnevenRows="True"
                       SelectionMode="None"
-                      WidthRequest="300">
+                      WidthRequest="300"
+                      AutomationProperties.IsInAccessibleTree="True"
+                      AutomationProperties.Name="Plot Stratum List">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -151,12 +167,15 @@
                                         <Label Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
                                                Margin="10,0,30,0"
                                                VerticalTextAlignment="Center"
-                                               HorizontalOptions="StartAndExpand" />
+                                               HorizontalOptions="StartAndExpand"
+                                               AutomationProperties.IsInAccessibleTree="False" />
 
                                         <Button Text=" Add/Remove "
                                                 Command="{Binding BindingContext.ToggleInCruiseCommand, Source={Reference _page }}"
                                                 CommandParameter="{Binding .}"
-                                                HorizontalOptions="End" />
+                                                HorizontalOptions="End"
+                                                AutomationProperties.IsInAccessibleTree="True"
+                                                AutomationProperties.Name="Add Remove Stratum" />
                                     </StackLayout>
 
                                     <!--this panel hides if plot is not in cruise-->
@@ -188,7 +207,9 @@
                                         <Button Text="Calculate Limiting Distances"
                                                 VerticalOptions="FillAndExpand"
                                                 Command="{Binding BindingContext.ShowLimitingDistanceCommand, Source={Reference _page }}"
-                                                CommandParameter="{Binding .}" />
+                                                CommandParameter="{Binding .}"
+                                                AutomationProperties.IsInAccessibleTree="True"
+                                                AutomationProperties.Name="Limiting Distance" />
                                     </StackLayout>
                                 </StackLayout>
                             </Frame>
@@ -198,14 +219,17 @@
             </ListView>
         </FlexLayout>
 
-        <StackLayout Grid.Row="1"
-                     BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
-                     VerticalOptions="End">
+        <CollectionView Grid.Row="1"
+                        BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
+                        VerticalOptions="End"
+                        AutomationProperties.Name="Plot Error List">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
-                    <Label Style="{StaticResource errorWarningLabel}" />
+                    <Label Style="{StaticResource errorWarningLabel}"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Plot Error Item" />
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
-        </StackLayout>
+        </CollectionView>
     </Grid>
 </ContentPage>

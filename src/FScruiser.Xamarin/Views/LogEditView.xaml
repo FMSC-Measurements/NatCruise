@@ -28,14 +28,12 @@
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal">
-                <Label Text="Log #"
+                <Label x:Name="_logNumberHeading" Text="Log #"
                        WidthRequest="100"
-                       VerticalTextAlignment="Center"
-                       AutomationProperties.IsInAccessibleTree="False"/>
+                       VerticalTextAlignment="Center"/>
                 <Entry Text="{Binding Log.LogNumber}"
                        WidthRequest="100"
-                       AutomationProperties.IsInAccessibleTree="True"
-                       AutomationProperties.Name="Log Number Textbox" />
+                       AutomationProperties.LabeledBy="{x:Reference _logNumberHeading}" />
             </StackLayout>
             
             <Grid>

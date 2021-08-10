@@ -17,6 +17,7 @@ namespace FScruiser.XF.ViewModels
         private ICommand _addPlotCommand;
         private Command<Plot> _editPlotCommand;
         private ICommand _deletePlotCommand;
+        private ICommand _showTallyPlotCommand;
         private string _unitCode;
 
         public string UnitCode
@@ -34,10 +35,9 @@ namespace FScruiser.XF.ViewModels
         protected ICruiseNavigationService NavigationService { get; }
 
         public ICommand AddPlotCommand => _addPlotCommand ?? (_addPlotCommand = new Command(AddPlot));
-
         public ICommand DeletePlotCommand => _deletePlotCommand ?? (_deletePlotCommand = new Command<Plot>(DeletePlot));
-
         public ICommand EditPlotCommand => _editPlotCommand ?? (_editPlotCommand = new Command<Plot>(ShowEditPlot));
+        public ICommand ShowTallyPlotCommand => _showTallyPlotCommand ?? (_showTallyPlotCommand = new Command<Plot>(ShowTallyPlot));
 
         public PlotListViewModel(ICruiseNavigationService navigationService,
             IPageDialogService dialogService,

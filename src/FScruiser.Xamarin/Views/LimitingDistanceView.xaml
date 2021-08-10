@@ -34,7 +34,7 @@
                         <Label AutomationProperties.IsInAccessibleTree="False">Variable Radius</Label>
                         <Switch IsToggled="{Binding IsVariableRadius}"
                                 AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Is Variable Radius Switch" />
+                                AutomationProperties.Name="Is Variable Radius Toggle" />
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
                         <Label>BAF/FPS</Label>
@@ -42,7 +42,7 @@
                                Text="{Binding BafOrFps}"
                                Keyboard="Numeric"
                                AutomationProperties.IsInAccessibleTree="True"
-                               AutomationProperties.Name="BAF or FPS Textbox">
+                               AutomationProperties.Name="BAF or FPS">
                             <Entry.Effects>
                                 <tk_effects:SelectAllTextEffect />
                             </Entry.Effects>
@@ -55,12 +55,11 @@
 
                     <Frame BackgroundColor="Yellow">
                         <StackLayout Orientation="Horizontal">
-                            <Label AutomationProperties.IsInAccessibleTree="False">DBH</Label>
+                            <Label x:Name="_dbhEntryHeader">DBH</Label>
                             <Entry x:Name="_dbhEntry"
                                    Text="{Binding DBH}"
                                    Keyboard="Numeric"
-                                   AutomationProperties.IsInAccessibleTree="True"
-                                   AutomationProperties.Name="DBH Textbox">
+                                   AutomationProperties.LabeledBy="{x:Reference _dbhEntryHeader}">
                                 <Entry.Effects>
                                     <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
@@ -70,12 +69,11 @@
 
                     <Frame BackgroundColor="Yellow">
                         <StackLayout Orientation="Horizontal">
-                            <Label AutomationProperties.IsInAccessibleTree="False">Slope (%)</Label>
+                            <Label x:Name="_slopePCTEntryHeading">Slope (%)</Label>
                             <Entry x:Name="_slopePctEntry"
                                    Text="{Binding SlopePCT}"
                                    Keyboard="Numeric"
-                                   AutomationProperties.IsInAccessibleTree="True"
-                                   AutomationProperties.Name="Slope Percent Textbox">
+                                   AutomationProperties.LabeledBy="{x:Reference _slopePCTEntryHeading}">
                                 <Entry.Effects>
                                     <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
@@ -86,35 +84,32 @@
                     <Frame BackgroundColor="Yellow">
                         <StackLayout>
                             <StackLayout Orientation="Horizontal">
-                                <Label AutomationProperties.IsInAccessibleTree="False">Slope Distance</Label>
+                                <Label x:Name="_slopeDistanceEntryHeading">Slope Distance</Label>
                                 <Entry x:Name="_slopeDistanceEntry"
                                        Text="{Binding SlopeDistanceStr}"
                                        Keyboard="Numeric"
-                                       AutomationProperties.IsInAccessibleTree="True"
-                                       AutomationProperties.Name="Slope Distance Textbox">
+                                       AutomationProperties.LabeledBy="{x:Reference _slopeDistanceEntryHeading}">
                                     <Entry.Effects>
                                         <tk_effects:SelectAllTextEffect />
                                     </Entry.Effects>
                                 </Entry>
                             </StackLayout>
                             <StackLayout Orientation="Horizontal">
-                                <Label AutomationProperties.IsInAccessibleTree="False">Measuring To</Label>
+                                <Label x:Name="_measuringToPickerHeading">Measuring To</Label>
                                 <Picker SelectedItem="{Binding MeasureToSelection}"
                                         ItemsSource="{Binding MeasureToOptions}"
-                                        AutomationProperties.IsInAccessibleTree="True"
-                                        AutomationProperties.Name="Measure To Picker" />
+                                        AutomationProperties.LabeledBy="{x:Reference _measuringToPickerHeading}" />
                             </StackLayout>
                         </StackLayout>
                     </Frame>
 
                     <Frame BackgroundColor="Yellow">
                         <StackLayout Orientation="Horizontal">
-                            <Label AutomationProperties.IsInAccessibleTree="False">Azimuth</Label>
+                            <Label x:Name="_azimuthEntryHeading">Azimuth</Label>
                             <Entry x:Name="_azimuthEntry"
                                    Text="{Binding Azimuth}"
                                    Keyboard="Numeric"
-                                   AutomationProperties.IsInAccessibleTree="True"
-                                   AutomationProperties.Name="Azimuth Textbox">
+                                   AutomationProperties.LabeledBy="{x:Reference _azimuthEntryHeading}">
                                 <Entry.Effects>
                                     <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
@@ -131,7 +126,7 @@
                                Text="{Binding TreeStatus, StringFormat='{}Tree is {0}'}"
                                IsVisible="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}"
                                AutomationProperties.IsInAccessibleTree="True"
-                               AutomationProperties.Name="Tree In Out Label" />
+                               AutomationProperties.Name="Tree In Out" />
                     </StackLayout>
                 </Frame>
             </StackLayout>

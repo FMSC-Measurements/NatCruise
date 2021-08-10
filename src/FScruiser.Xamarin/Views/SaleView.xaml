@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
              mc:Ignorable="d"
              x:Class="FScruiser.XF.Views.SaleView"
-             Title="Sale Info">
+             Title="Sale Info"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Sale Info Page">
     <ContentPage.Content>
         <TableView BindingContext="{Binding Sale}"
                    HasUnevenRows="True">
@@ -15,7 +15,7 @@
                 <TableSection>
                     <EntryCell Label="Sale Name"
                                Text="{Binding Name, Mode=OneWay}"
-                               IsEnabled="False" />
+                               IsEnabled="False"/>
                     <EntryCell Label="Sale Number"
                                Text="{Binding SaleNumber, Mode=OneWay}"
                                IsEnabled="False" />
@@ -31,10 +31,13 @@
                     <ViewCell>
                         <StackLayout Orientation="Vertical"
                                      Padding="16, 0">
-                            <Label Text="Remarks" />
+                            <Label Text="Remarks"
+                                   AutomationProperties.IsInAccessibleTree="False"/>
                             <Entry Text="{Binding Remarks}"
                                    BackgroundColor="LightGray"
-                                   HeightRequest="200" />
+                                   HeightRequest="200"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.Name="Remarks" />
                         </StackLayout>
                     </ViewCell>
                 </TableSection>

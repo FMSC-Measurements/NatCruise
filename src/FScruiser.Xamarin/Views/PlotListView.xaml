@@ -1,78 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              x:Class="FScruiser.XF.Views.PlotListView"
              x:Name="_page"
-             Title="{Binding UnitCode, StringFormat='{}Unit {0} Plots'}">
+             Title="{Binding UnitCode, StringFormat='{}Unit {0} Plots'}"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Plot List Page">
     <ContentPage.Content>
         <StackLayout>
-            <ListView x:Name="_plotListView"
-                      ItemsSource="{Binding Plots}"
-                      RowHeight="75">
-                <ListView.ItemTemplate>
+            <CollectionView x:Name="_plotListView"
+                            ItemsSource="{Binding Plots}"
+                            ItemSizingStrategy="MeasureFirstItem"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Plot List">
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.ContextActions>
-                                <MenuItem Text="Delete"
-                                          Command="{Binding BindingContext.DeletePlotCommand, Source={Reference _page}}"
-                                          CommandParameter="{Binding .}" /> 
-                            </ViewCell.ContextActions>
+                        <SwipeView HeightRequest="75">
+                            <SwipeView.LeftItems>
+                                <SwipeItem Text="Delete"
+                                           Command="{Binding BindingContext.DeletePlotCommand, Source={Reference _page}}"
+                                           CommandParameter="{Binding .}" />
+                            </SwipeView.LeftItems>
+                            
+                            <Grid Margin="0,10,0,10"
+                                  Padding="2"
+                                  AutomationProperties.IsInAccessibleTree="True"
+                                  AutomationProperties.Name="{Binding PlotNumber, StringFormat='{}Plot Number {0}'}">
 
-                                    <Grid Margin="0,10,0,10"
-                                          Padding="2">
-                                        <Grid.Resources>
-                                            <ResourceDictionary>
-                                                <Style x:Key="HeadingText"
-                                                       TargetType="Label">
-                                                    <Setter Property="FontSize"
-                                                            Value="10" />
-                                                    <Setter Property="TextColor"
-                                                            Value="{StaticResource black_70}" />
-                                                </Style>
-                                                <Style x:Key="ValueText"
-                                                       TargetType="Label">
-                                                    <Setter Property="FontSize"
-                                                            Value="Large" />
-                                                    <Setter Property="TextColor"
-                                                            Value="Black" />
-                                                </Style>
-                                            </ResourceDictionary>
-                                        </Grid.Resources>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="100" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.ShowTallyPlotCommand, Source={x:Reference _page} }"
+                                                          CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
 
-                                        <!--plot number-->
-                                        <Label Grid.Column="0"
-                                               Grid.Row="0"
-                                               Text="Plot #"
-                                               Style="{StaticResource HeadingText}" />
-                                        <Label Grid.Column="0"
-                                               Grid.Row="1"
-                                               Text="{Binding PlotNumber}"
-                                               Style="{StaticResource ValueText}" />
+                                <Grid.Resources>
+                                    <ResourceDictionary>
+                                        <Style x:Key="HeadingText"
+                                               TargetType="Label">
+                                            <Setter Property="FontSize"
+                                                    Value="10" />
+                                            <Setter Property="TextColor"
+                                                    Value="{StaticResource black_70}" />
+                                        </Style>
+                                        <Style x:Key="ValueText"
+                                               TargetType="Label">
+                                            <Setter Property="FontSize"
+                                                    Value="Large" />
+                                            <Setter Property="TextColor"
+                                                    Value="Black" />
+                                        </Style>
+                                    </ResourceDictionary>
+                                </Grid.Resources>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                                        <!--edit button-->
-                                        <Button Grid.Column="2"
-                                                Grid.Row="1"
-                                                Image="ic_edit_white_24dp.png"
-                                                Command="{Binding BindingContext.EditPlotCommand, Source={Reference _plotListView}}"
-                                                CommandParameter="{Binding .}"
-                                                WidthRequest="50"
-                                                BackgroundColor="Orange" />
-                                    </Grid>
-                        </ViewCell>
+                                <!--plot number-->
+                                <Label Grid.Column="0"
+                                       Grid.Row="0"
+                                       Text="Plot #"
+                                       Style="{StaticResource HeadingText}" />
+                                <Label Grid.Column="0"
+                                       Grid.Row="1"
+                                       Text="{Binding PlotNumber}"
+                                       Style="{StaticResource ValueText}" />
+
+                                <!--edit button-->
+                                <Button Grid.Column="2"
+                                        Grid.Row="1"
+                                        Image="ic_edit_white_24dp.png"
+                                        Command="{Binding BindingContext.EditPlotCommand, Source={Reference _plotListView}}"
+                                        CommandParameter="{Binding .}"
+                                        WidthRequest="50"
+                                        BackgroundColor="Orange"
+                                        AutomationProperties.IsInAccessibleTree="True"
+                                        AutomationProperties.Name="Edit Plot" />
+                            </Grid>
+                        </SwipeView>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            
             <StackLayout Orientation="Horizontal"
                          VerticalOptions="End">
                 <StackLayout.Resources>
@@ -87,18 +100,25 @@
                     </ResourceDictionary>
                 </StackLayout.Resources>
                 <Button x:Name="_goToEndButton"
-                        Image="ic_chevron_double_down_white_24dp.png" />
-                <Button x:Name="_addTreeButton"
+                        Image="ic_chevron_double_down_white_24dp.png"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Scroll to End of List" />
+                <Button x:Name="_addPlotButton"
                         Image="ic_plus_white_24dp.png"
                         Command="{Binding AddPlotCommand}"
                         FontSize="30"
                         BackgroundColor="Orange"
                         VerticalOptions="Fill"
-                        HorizontalOptions="FillAndExpand" />
+                        HorizontalOptions="FillAndExpand"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Add Plot" />
                 <Button x:Name="_goToStartButton"
                         Image="ic_chevron_double_up_white_24dp.png"
-                        HorizontalOptions="End" />
+                        HorizontalOptions="End"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Scoll to Start of List" />
             </StackLayout>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -26,14 +26,16 @@
             <StackLayout Grid.Row="1"
                          Orientation="Horizontal">
 
-                <Label Text="Ask Cruisers Initials When Tree Created"
+                <Label x:Name="_askInitialsSwitchHeading"
+                       Text="Ask Cruisers Initials When Tree Created"
                        TextColor="Black"
                        VerticalTextAlignment="Center"
                        HorizontalOptions="FillAndExpand"
                        Margin="10,0,0,0" />
 
                 <Switch  IsToggled="{Binding PromptCruiserOnSample}"
-                         HorizontalOptions="End" />
+                         HorizontalOptions="End"
+                         AutomationProperties.LabeledBy="{x:Reference _askInitialsSwitchHeading}" />
 
             </StackLayout>
 
@@ -117,7 +119,7 @@
                         IsEnabled="{Binding Text, Source={Reference _addCruiserEntry}, Converter={StaticResource isNotNullOrEmptyConverter}}"
                         Margin="5"
                         AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.Name="Add Cruiser Button" />
+                        AutomationProperties.Name="Add Cruiser" />
 
                 <Entry x:Name="_addCruiserEntry"
                        HorizontalOptions="FillAndExpand"
@@ -126,7 +128,7 @@
                        Text=""
                        TextColor="Black"
                        AutomationProperties.IsInAccessibleTree="True"
-                       AutomationProperties.Name="Add Cruiser Entry Button" />
+                       AutomationProperties.Name="Add Cruiser Entry" />
             </StackLayout>
         </Grid>
     </ContentPage.Content>
