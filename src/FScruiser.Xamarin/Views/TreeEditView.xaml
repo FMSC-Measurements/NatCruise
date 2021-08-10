@@ -228,12 +228,10 @@
 
         <!--Remarks-->
         <StackLayout Grid.Row="2">
-            <Label Text="Remarks"
-                   AutomationProperties.IsInAccessibleTree="False" />
+            <Label x:Name="_remarksHeading" Text="Remarks"/>
             <Editor HeightRequest="80"
                     Text="{Binding Remarks}"
-                    AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Remarks Textbox" />
+                    AutomationProperties.LabeledBy="{x:Reference _remarksHeading}" />
         </StackLayout>
 
         <StackLayout Grid.Row="3"
