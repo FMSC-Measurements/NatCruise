@@ -16,7 +16,8 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <SwipeView HeightRequest="75"
-                                   >
+                                   IsEnabled="False"
+                                   AutomationProperties.IsInAccessibleTree="True">
                             <SwipeView.LeftItems>
                                 <SwipeItem Text="Delete"
                                            Command="{Binding BindingContext.DeletePlotCommand, Source={Reference _page}}"
@@ -59,6 +60,7 @@
                                     <ColumnDefinition Width="100" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <!--plot number-->
@@ -81,6 +83,17 @@
                                         BackgroundColor="Orange"
                                         AutomationProperties.IsInAccessibleTree="True"
                                         AutomationProperties.Name="Edit Plot" />
+
+                                <!-- show item actions button -->
+                                <ImageButton Grid.Column="3"
+                                             BackgroundColor="Transparent"
+                                             Clicked="openDeletePlotButton_Clicked"
+                                             Source="ic_more_vert_black_24dp.png"
+                                             Padding="0,7"
+                                             VerticalOptions="Center"
+                                             AutomationProperties.IsInAccessibleTree="True"
+                                             AutomationProperties.Name="Show Item Actions Button" />
+
                             </Grid>
                         </SwipeView>
                     </DataTemplate>
