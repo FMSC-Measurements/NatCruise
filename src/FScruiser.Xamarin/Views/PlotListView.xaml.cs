@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using FScruiser.XF.Util;
 
 namespace FScruiser.XF.Views
 {
@@ -48,6 +49,12 @@ namespace FScruiser.XF.Views
             if (numItems < 1) { return; }
 
             _plotListView.ScrollTo(0, position: ScrollToPosition.Start, animate: false);
+        }
+
+        private void openDeletePlotButton_Clicked(object sender, EventArgs e)
+        {
+            var swipeview = ((Element)sender).GetAncestor<SwipeView>();
+            swipeview.Open(OpenSwipeItem.LeftItems);
         }
     }
 }
