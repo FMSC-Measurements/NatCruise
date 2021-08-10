@@ -15,7 +15,8 @@
                             AutomationProperties.Name="Plot List">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <SwipeView HeightRequest="75">
+                        <SwipeView HeightRequest="75"
+                                   >
                             <SwipeView.LeftItems>
                                 <SwipeItem Text="Delete"
                                            Command="{Binding BindingContext.DeletePlotCommand, Source={Reference _page}}"
