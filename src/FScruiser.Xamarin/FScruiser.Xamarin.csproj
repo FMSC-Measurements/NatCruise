@@ -39,6 +39,7 @@
   
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
     <ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj" />
   </ItemGroup>
 
