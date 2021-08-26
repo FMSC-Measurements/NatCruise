@@ -14,7 +14,7 @@ namespace NatCruise.Design.Views
         public StratumFieldsView()
         {
             InitializeComponent();
-            //RegionContext.GetObservableContext(this).PropertyChanged += Context_PropertyChanged;
+            RegionContext.GetObservableContext(this).PropertyChanged += Context_PropertyChanged;
         }
 
         private void Context_PropertyChanged(object sender, PropertyChangedEventArgs e)
