@@ -1,4 +1,5 @@
 ﻿using CruiseDAL;
+using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Sync;
 using FScruiser.XF.Services;
 using NatCruise;
@@ -192,7 +193,7 @@ namespace FScruiser.XF.ViewModels
                 File.Delete(convertToPath);
                 try
                 {
-                    Migrator.MigrateFromV2ToV3(convertFromPath, convertToPath, DeviceInfoService.DeviceID);
+                    new Migrator().MigrateFromV2ToV3(convertFromPath, convertToPath, DeviceInfoService.DeviceID);
                 }
                 catch (Exception e)
                 {

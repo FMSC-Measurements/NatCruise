@@ -1,4 +1,5 @@
 ﻿using CruiseDAL;
+using CruiseDAL.UpConvert;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
@@ -269,7 +270,7 @@ namespace NatCruise.Wpf.ViewModels
             if (templatePath == null || File.Exists(templatePath) == false) { return; }
 
             var v3TemplateDb = new CruiseDatastore_V3();
-            Migrator.MigrateFromV2ToV3(templatePath, v3TemplateDb, DeviceInfo.DeviceID);
+            new Migrator().MigrateFromV2ToV3(templatePath, v3TemplateDb, DeviceInfo.DeviceID);
 
             var cruiseID = v3TemplateDb.ExecuteScalar<string>("SELECT CruiseID FROM Cruise LIMIT 1;");
 
