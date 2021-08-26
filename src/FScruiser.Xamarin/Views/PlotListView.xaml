@@ -15,7 +15,7 @@
                             AutomationProperties.Name="Plot List">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <SwipeView HeightRequest="75"
+                        <SwipeView
                                    IsEnabled="False"
                                    AutomationProperties.IsInAccessibleTree="True">
                             <SwipeView.LeftItems>
@@ -60,7 +60,7 @@
                                     <ColumnDefinition Width="100" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="50" />
                                 </Grid.ColumnDefinitions>
 
                                 <!--plot number-->
@@ -71,11 +71,13 @@
                                 <Label Grid.Column="0"
                                        Grid.Row="1"
                                        Text="{Binding PlotNumber}"
-                                       Style="{StaticResource ValueText}" />
+                                       Style="{StaticResource ValueText}"/>
 
                                 <!--edit button-->
                                 <Button Grid.Column="2"
-                                        Grid.Row="1"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        VerticalOptions="Center"
                                         Image="ic_edit_white_24dp.png"
                                         Command="{Binding BindingContext.EditPlotCommand, Source={Reference _plotListView}}"
                                         CommandParameter="{Binding .}"
@@ -86,11 +88,13 @@
 
                                 <!-- show item actions button -->
                                 <ImageButton Grid.Column="3"
+                                             Grid.Row="0"
+                                             Grid.RowSpan="2"
+                                             VerticalOptions="Center"
                                              BackgroundColor="Transparent"
                                              Clicked="openDeletePlotButton_Clicked"
                                              Source="ic_more_vert_black_24dp.png"
                                              Padding="0,7"
-                                             VerticalOptions="Center"
                                              AutomationProperties.IsInAccessibleTree="True"
                                              AutomationProperties.Name="Show Item Actions Button" />
 
