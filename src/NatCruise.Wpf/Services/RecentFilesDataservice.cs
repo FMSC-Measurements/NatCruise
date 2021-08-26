@@ -30,6 +30,7 @@ namespace NatCruise.Wpf.Services
         {
             return Settings.RecentFiles
                 ?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(x => System.IO.File.Exists(x))
                 ?? Enumerable.Empty<string>();
         }
     }
