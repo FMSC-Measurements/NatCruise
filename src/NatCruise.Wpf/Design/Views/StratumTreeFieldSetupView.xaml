@@ -20,7 +20,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="163" />
+            <ColumnDefinition Width="170" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -51,11 +51,9 @@
             </Button>
         </Grid>
 
-        <Border Grid.Column="0"
-                Grid.Row="1"
-                BorderBrush="{StaticResource brush_shade_black_30}"
-                BorderThickness="1">
-            <Grid>
+        
+            <Grid Grid.Column="0"
+                  Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32" />
                     <RowDefinition Height="*" />
@@ -74,8 +72,8 @@
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="32" />
-                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -86,8 +84,7 @@
                     <ComboBox x:Name="_treeFieldCombobox"
                               VerticalAlignment="Stretch"
                               ItemsSource="{Binding TreeFields}" />
-                    <Button Content="+"
-                            Background="{StaticResource brush_addItem}"
+                    <Button Style="{StaticResource AddButton}"
                             Grid.Column="1"
                             IsEnabled="{Binding SelectedItem, ElementName=_treeFieldCombobox, Converter={StaticResource NotNullConverter}}"
                             CommandParameter="{Binding SelectedItem, ElementName=_treeFieldCombobox}">
@@ -100,21 +97,70 @@
                         </i:Interaction.Triggers>
                     </Button>
 
-                    <Button Content="-"
+                    <Button Style="{StaticResource RemoveButton}" 
                             Grid.Column="2"
-                            Background="{StaticResource brush_removeItem}"
                             IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}"
                             Command="{Binding RemoveTreeFieldCommand}" />
                 </Grid>
 
+            <Border Grid.Row="1" BorderBrush="{StaticResource brush_shade_black_30}"
+                    BorderThickness="1">
                 <ListBox x:Name="_tfsListView"
-                         Grid.Row="1"
+                         
                          SelectionMode="Single"
                          ItemsSource="{Binding FieldSetups}"
                          SelectedItem="{Binding SelectedTreeFieldSetup}">
+                    <ListBox.ItemTemplate>
+
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="20" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Control.Background"
+                                                Value="{x:Null}" />
+                                        <Setter Property="Control.BorderBrush"
+                                                Value="{x:Null}" />
+                                        <Setter Property="Control.Visibility"
+                                                Value="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource IsVisableConverter}}" />
+                                        <Style.Triggers>
+                                            <Trigger Property="Control.IsMouseOver"
+                                                     Value="True">
+                                                <Setter Property="Control.Background"
+                                                        Value="{x:Null}" />
+                                                <Setter Property="Control.BorderBrush"
+                                                        Value="{x:Null}" />
+                                                <Setter Property="Control.FontWeight"
+                                                        Value="Bold" />
+                                            </Trigger>
+                                            <Trigger Property="Control.IsFocused"
+                                                     Value="True">
+                                                <Setter Property="Control.FontWeight"
+                                                        Value="Bold" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Resources>
+                                <TextBlock Text="{Binding Field}" />
+                                <Button Content="^"
+                                        Grid.Column="1"
+                                        Command="{Binding DataContext.MoveUpCommand, RelativeSource={RelativeSource AncestorType=ItemsControl} }"
+                                        CommandParameter="{Binding .}" />
+                                <Button Content="˅"
+                                        Grid.Column="2"
+                                        Command="{Binding DataContext.MoveDownCommand, RelativeSource={RelativeSource AncestorType=ItemsControl} }"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
-            </Grid>
-        </Border>
+            </Border>
+        </Grid>
+        
 
 
 
@@ -182,7 +228,7 @@
                       Grid.Row="1"
                       IsChecked="{Binding SelectedTreeFieldSetup.DefaultValueBool}"
                       IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}" />
-            <Button Grid.ColumnSpan="2"
+            <!--<Button Grid.ColumnSpan="2"
                     Content="Move Up"
                     HorizontalAlignment="Left"
                     Margin="0,17,0,0"
@@ -199,7 +245,7 @@
                     Command="{Binding MoveDownCommand}"
                     IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}"
                     Margin="0,7"
-                    Height="27" />
+                    Height="27" />-->
         </Grid>
 
 
