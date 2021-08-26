@@ -4,8 +4,6 @@ using NatCruise.Design.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Design.Data
 {
@@ -176,6 +174,86 @@ SELECT
     sttfs.DefaultValueBool,
     sttfs.DefaultValueText
 FROM StratumTemplateTreeFieldSetup AS sttfs
+WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID;
+
+COMMIT;",
+                new
+                {
+                    CruiseID,
+                    StratumCode = stratumCode,
+                    StratumTemplateName = stratumTemplateName,
+                });
+        }
+
+        public IEnumerable<LogFieldSetup> GetLogFieldSetups(string stratumCode)
+        {
+            return Database.From<LogFieldSetup>()
+                .Where("CruiseID = @p1 AND StratumCode = @p2")
+                .OrderBy("FieldOrder")
+                .Query(CruiseID, stratumCode)
+                .ToArray();
+        }
+
+        public void UpsertLogFieldSetup(LogFieldSetup lfs)
+        {
+            if (lfs is null) { throw new ArgumentNullException(nameof(lfs)); }
+
+            Database.Execute2(
+@"INSERT INTO LogFieldSetup (
+    CruiseID,
+    StratumCode,
+    Field,
+    FieldOrder
+) VALUES (
+    @CruiseID,
+    @StratumCode,
+    @Field,
+    @FieldOrder
+) ON CONFLICT (CruiseID, StratumCode, Field) DO
+UPDATE SET
+    Field = @Field,
+    FieldOrder = @FieldOrder
+WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND Field = @Field;",
+            new
+            {
+                CruiseID,
+                lfs.StratumCode,
+                lfs.Field,
+                lfs.FieldOrder,
+            });
+        }
+
+        public void DeleteLogFieldSetup(LogFieldSetup lfs)
+        {
+            if (lfs is null) { throw new ArgumentNullException(nameof(lfs)); }
+
+            Database.Execute2("DELETE FROM LogFieldSetup WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND Field = @Field",
+                new
+                {
+                    CruiseID,
+                    lfs.StratumCode,
+                    lfs.Field,
+                });
+        }
+
+        public void SetLogFieldsFromStratumTemplate(string stratumCode, string stratumTemplateName)
+        {
+            Database.Execute2(
+@"BEGIN;
+Delete FROM LogFieldSetup WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode;
+
+INSERT INTO LogFieldSetup (
+    CruiseID,
+    StratumCode,
+    Field,
+    FieldOrder
+)
+SELECT
+    @CruiseID,
+    @StratumCode,
+    stlfs.Field,
+    stlfs.FieldOrder
+FROM StratumTemplateLogFieldSetup AS stlfs
 WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID;
 
 COMMIT;",

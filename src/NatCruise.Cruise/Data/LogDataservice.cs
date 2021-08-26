@@ -66,6 +66,7 @@ namespace NatCruise.Cruise.Data
 
             Database.Execute2(
                 "INSERT INTO Log ( " +
+                    "CruiseID," +
                     "LogID , " +
                     "TreeID, " +
                     "LogNumber, " +
@@ -90,6 +91,7 @@ namespace NatCruise.Cruise.Data
 
                     "CreatedBy " +
                 ") VALUES ( " +
+                    "@CruiseID," +
                     "@LogID, " +
                     "@TreeID, " +
                     "@LogNumber, " +
@@ -116,6 +118,7 @@ namespace NatCruise.Cruise.Data
                 ");",
                 new
                 {
+                    CruiseID,
                     LogID = logID,
                     log.TreeID,
                     LogNumber = logNumber,
@@ -195,10 +198,15 @@ namespace NatCruise.Cruise.Data
 
         public IEnumerable<LogFieldSetup> GetLogFields(string treeID)
         {
-            var fields = Database.From<LogFieldSetup>()
-                .Where("StratumCode = (SELECT StratumCode FROM Tree WHERE TreeID = @p1) AND CruiseID = (SELECT CruiseID FROM Tree WHERE TreeID = @p1)")
-                .OrderBy("FieldOrder")
-                .Query(treeID).ToArray();
+            var fields = Database.Query<LogFieldSetup>(
+@"SELECT
+    lfs.Field,
+    ifnull(lfh.Heading, lf.DefaultHeading) AS Heading
+FROM LogFieldSetup AS lfs
+JOIN LogField AS lf USING (Field)
+LEFT JOIN LogFieldHeading AS lfh USING (Field, CruiseID)
+WHERE StratumCode = (SELECT StratumCode FROM Tree WHERE TreeID = @p1) AND CruiseID = (SELECT CruiseID FROM Tree WHERE TreeID = @p1)
+ORDER BY lfs.FieldOrder;", treeID).ToArray();
 
             if (fields.Length == 0)
             {

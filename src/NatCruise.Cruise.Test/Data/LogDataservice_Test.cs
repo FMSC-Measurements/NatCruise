@@ -124,5 +124,32 @@ namespace NatCruise.Cruise.Test.Data
                 logAgain.Should().BeNull();
             }
         }
+
+        [Fact]
+        public void GetLogFields()
+        {
+            var init = new DatastoreInitializer();
+            using (var database = init.CreateDatabase())
+            {
+                var stratum = "st1";
+                var lfs = new CruiseDAL.V3.Models.LogFieldSetup
+                {
+                    CruiseID = init.CruiseID,
+                    StratumCode = stratum,
+                    Field = "Grade",
+                    FieldOrder = 1,
+                };
+                database.Insert(lfs);
+
+                var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
+                var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
+
+                var tree_guid = treeDS.CreateMeasureTree("u1", "st1", "sg1");
+
+                var logFields = datastore.GetLogFields(tree_guid);
+                logFields.Should().HaveCount(1);
+
+            }
+        }
     }
 }
