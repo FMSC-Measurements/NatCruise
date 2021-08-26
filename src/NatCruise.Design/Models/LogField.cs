@@ -12,5 +12,11 @@ namespace NatCruise.Design.Models
         public string DefaultHeading { get; set; }
 
         public string DbType { get; set; }
+
+        public override string ToString()
+        {
+            return Heading ?? DefaultHeading;
+
+        }
     }
 }

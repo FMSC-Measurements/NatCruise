@@ -494,11 +494,11 @@ new
         {
             return Database.Query<LogField>(
 @"SELECT
-    Field,
+    lf.Field,
     lfh.Heading,
     lf.DefaultHeading,
     DbType
-) FROM LogField AS lf
+FROM LogField AS lf
 LEFT JOIN LogFieldHeading AS lfh ON lf.Field = lfh.Field AND lfh.CruiseID = @p1;", CruiseID).ToArray();
         }
 
