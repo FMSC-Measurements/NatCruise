@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:tk_effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.LimitingDistanceView"
              Title="Limiting Distance Calculator">
     <ContentPage.Resources>
@@ -25,21 +24,25 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout>
-            
+
             <!-- the order that the entries appear on the screen is significant as this is the order that 
             users typicaly enter in their measurments Dbh, then slope, then slope distance-->
-            
+
             <Frame BackgroundColor="LightBlue">
                 <StackLayout Orientation="Horizontal">
                     <StackLayout Orientation="Horizontal">
-                        <Label>Variable Radius</Label>
-                        <Switch IsToggled="{Binding IsVariableRadius}" />
+                        <Label AutomationProperties.IsInAccessibleTree="False">Variable Radius</Label>
+                        <Switch IsToggled="{Binding IsVariableRadius}"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Is Variable Radius Toggle" />
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
                         <Label>BAF/FPS</Label>
                         <Entry x:Name="_bafOrFpsEntry"
                                Text="{Binding BafOrFps}"
-                               Keyboard="Numeric">
+                               Keyboard="Numeric"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.Name="BAF or FPS">
                             <Entry.Effects>
                                 <tk_effects:SelectAllTextEffect />
                             </Entry.Effects>
@@ -52,10 +55,11 @@
 
                     <Frame BackgroundColor="Yellow">
                         <StackLayout Orientation="Horizontal">
-                            <Label>DBH</Label>
+                            <Label x:Name="_dbhEntryHeader">DBH</Label>
                             <Entry x:Name="_dbhEntry"
                                    Text="{Binding DBH}"
-                                   Keyboard="Numeric">
+                                   Keyboard="Numeric"
+                                   AutomationProperties.LabeledBy="{x:Reference _dbhEntryHeader}">
                                 <Entry.Effects>
                                     <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
@@ -65,10 +69,11 @@
 
                     <Frame BackgroundColor="Yellow">
                         <StackLayout Orientation="Horizontal">
-                            <Label>Slope (%)</Label>
+                            <Label x:Name="_slopePCTEntryHeading">Slope (%)</Label>
                             <Entry x:Name="_slopePctEntry"
                                    Text="{Binding SlopePCT}"
-                                   Keyboard="Numeric">
+                                   Keyboard="Numeric"
+                                   AutomationProperties.LabeledBy="{x:Reference _slopePCTEntryHeading}">
                                 <Entry.Effects>
                                     <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
@@ -79,29 +84,32 @@
                     <Frame BackgroundColor="Yellow">
                         <StackLayout>
                             <StackLayout Orientation="Horizontal">
-                                <Label>Slope Distance</Label>
+                                <Label x:Name="_slopeDistanceEntryHeading">Slope Distance</Label>
                                 <Entry x:Name="_slopeDistanceEntry"
                                        Text="{Binding SlopeDistanceStr}"
-                                       Keyboard="Numeric">
+                                       Keyboard="Numeric"
+                                       AutomationProperties.LabeledBy="{x:Reference _slopeDistanceEntryHeading}">
                                     <Entry.Effects>
                                         <tk_effects:SelectAllTextEffect />
                                     </Entry.Effects>
                                 </Entry>
                             </StackLayout>
                             <StackLayout Orientation="Horizontal">
-                                <Label>Measuring To</Label>
+                                <Label x:Name="_measuringToPickerHeading">Measuring To</Label>
                                 <Picker SelectedItem="{Binding MeasureToSelection}"
-                                        ItemsSource="{Binding MeasureToOptions}" />
+                                        ItemsSource="{Binding MeasureToOptions}"
+                                        AutomationProperties.LabeledBy="{x:Reference _measuringToPickerHeading}" />
                             </StackLayout>
                         </StackLayout>
                     </Frame>
 
                     <Frame BackgroundColor="Yellow">
                         <StackLayout Orientation="Horizontal">
-                            <Label>Azimuth</Label>
+                            <Label x:Name="_azimuthEntryHeading">Azimuth</Label>
                             <Entry x:Name="_azimuthEntry"
                                    Text="{Binding Azimuth}"
-                                   Keyboard="Numeric">
+                                   Keyboard="Numeric"
+                                   AutomationProperties.LabeledBy="{x:Reference _azimuthEntryHeading}">
                                 <Entry.Effects>
                                     <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
@@ -111,11 +119,14 @@
                 </StackLayout>
                 <Frame BackgroundColor="Orange">
                     <StackLayout Orientation="Vertical">
-                        <Label>Limiting Distance</Label>
-                        <Label Text="{Binding LimitingDistance, StringFormat='{}{0:f2}'}" />
+                        <Label x:Name="_limitingDistanceLabel">Limiting Distance</Label>
+                        <Label AutomationProperties.LabeledBy="{x:Reference _limitingDistanceLabel}"
+                               Text="{Binding LimitingDistance, StringFormat='{}{0:f2}'}" />
                         <Label x:Name="_treeInOutLabel"
                                Text="{Binding TreeStatus, StringFormat='{}Tree is {0}'}"
-                               IsVisible="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+                               IsVisible="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.Name="Tree In Out" />
                     </StackLayout>
                 </Frame>
             </StackLayout>

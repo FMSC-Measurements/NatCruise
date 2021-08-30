@@ -2,26 +2,37 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FScruiser.XF.Views.PlotTreeListView"
-             x:Name="_page">
+             x:Name="_page"
+             Title="Plot Trees"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Plot Tree List Page">
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal">
-                <StackLayout Orientation="Horizontal" Margin="5,0">
-                    <Label Text="Plot" VerticalTextAlignment="Center" />
-                    <Picker ItemsSource="{Binding PlotFilterOptions}" SelectedItem="{Binding PlotFilter}" WidthRequest="60"/>
+                <StackLayout Orientation="Horizontal"
+                             Margin="5,0">
+                    <Label Text="Plot"
+                           VerticalTextAlignment="Center" />
+                    <Picker ItemsSource="{Binding PlotFilterOptions}"
+                            SelectedItem="{Binding PlotFilter}"
+                            WidthRequest="60" />
                 </StackLayout>
                 <StackLayout Orientation="Horizontal"
                              HorizontalOptions="EndAndExpand"
                              Margin="5,0">
-                    <Label Text="Only Trees With Errors"
+                    <Label x:Name="_onlyTreesWithErrorsHeading"
+                           Text="Only Trees With Errors"
                            VerticalTextAlignment="Center" />
-                    <Switch IsToggled="{Binding OnlyShowTreesWithErrorsOrWarnings}" />
+                    <Switch IsToggled="{Binding OnlyShowTreesWithErrorsOrWarnings}"
+                            AutomationProperties.LabeledBy="{x:Reference _onlyTreesWithErrorsHeading}" />
                 </StackLayout>
             </StackLayout>
             <CollectionView x:Name="_treeListView"
                             ItemsSource="{Binding Trees}"
                             SelectionMode="None"
-                            ItemSizingStrategy="MeasureFirstItem">
+                            ItemSizingStrategy="MeasureFirstItem"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Tree List">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="0,10,0,10"
@@ -64,77 +75,88 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <!--col 0: PlotNumber-->
-                            <Label Grid.Column="0"
+                            <Label x:Name="_plotNumberHeading" Grid.Column="0"
                                    Grid.Row="0"
                                    Text="Plot #"
                                    Style="{StaticResource HeadingText}" />
                             <Label Grid.Column="0"
                                    Grid.Row="1"
                                    Text="{Binding PlotNumber}"
-                                   Style="{StaticResource ValueText}" />
+                                   Style="{StaticResource ValueText}"
+                                   AutomationProperties.LabeledBy="{x:Reference _plotNumberHeading}"/>
                             <!--col 1: TreeNumber-->
-                            <Label Grid.Column="1"
+                            <Label x:Name="_treeNumberHeading" Grid.Column="1"
                                    Grid.Row="0"
                                    Text="Tree #"
                                    Style="{StaticResource HeadingText}" />
                             <Label Grid.Column="1"
                                    Grid.Row="1"
                                    Text="{Binding TreeNumber}"
-                                   Style="{StaticResource ValueText}" />
+                                   Style="{StaticResource ValueText}"
+                                   AutomationProperties.LabeledBy="{x:Reference _treeNumberHeading}"/>
                             <!--col 2: StratumCode-->
-                            <Label Grid.Column="2"
+                            <Label x:Name="_stratumCodeHeading"
+                                Grid.Column="2"
                                    Grid.Row="0"
                                    Text="Stratum"
                                    Style="{StaticResource HeadingText}" />
                             <Label Grid.Column="2"
                                    Grid.Row="1"
                                    Text="{Binding StratumCode}"
-                                   Style="{StaticResource ValueText}" />
+                                   Style="{StaticResource ValueText}"
+                                   AutomationProperties.LabeledBy="{x:Reference _stratumCodeHeading}"/>
                             <!--col 3: SampleGroupCode-->
-                            <Label Grid.Column="3"
+                            <Label x:Name="_sampleGroupCodeHeading"
+                                Grid.Column="3"
                                    Grid.Row="0"
                                    Text="Sample Group"
                                    Style="{StaticResource HeadingText}" />
                             <Label Grid.Column="3"
                                    Grid.Row="1"
                                    Text="{Binding SampleGroupCode}"
-                                   Style="{StaticResource ValueText}" />
+                                   Style="{StaticResource ValueText}"
+                                   AutomationProperties.LabeledBy="{x:Reference _sampleGroupCodeHeading}"/>
                             <!--col 4: SpeciesCode-->
-                            <Label Grid.Column="4"
+                            <Label x:Name="_speciesCodeHeading"
+                                Grid.Column="4"
                                    Grid.Row="0"
                                    Text="Species"
                                    Style="{StaticResource HeadingText}" />
                             <Label Grid.Column="4"
                                    Grid.Row="1"
                                    Text="{Binding SpeciesCode}"
-                                   Style="{StaticResource ValueText}" />
+                                   Style="{StaticResource ValueText}"
+                                   AutomationProperties.LabeledBy="{x:Reference _speciesCodeHeading}"/>
                             <!--col 5: LiveDead-->
-                            <Label Grid.Column="5"
+                            <Label x:Name="_liveDeadHeading" Grid.Column="5"
                                    Grid.Row="0"
                                    Text="Live/Dead"
                                    Style="{StaticResource HeadingText}" />
                             <Label Grid.Column="5"
                                    Grid.Row="1"
                                    Text="{Binding LiveDead}"
-                                   Style="{StaticResource ValueText}" />
+                                   Style="{StaticResource ValueText}"
+                                   AutomationProperties.LabeledBy="{x:Reference _liveDeadHeading}"/>
                             <!--col 6: Diameter-->
-                            <Label Grid.Column="6"
+                            <Label x:Name="_diameterHeading" Grid.Column="6"
                                    Grid.Row="0"
                                    Text="Diameter"
                                    Style="{StaticResource HeadingText}" />
                             <Label Grid.Column="6"
                                    Grid.Row="1"
                                    Text="{Binding Diameter}"
-                                   Style="{StaticResource ValueText}" />
+                                   Style="{StaticResource ValueText}"
+                                   AutomationProperties.LabeledBy="{x:Reference _diameterHeading}"/>
                             <!--col 7: Height-->
-                            <Label Grid.Column="7"
+                            <Label x:Name="_heightHeading" Grid.Column="7"
                                    Grid.Row="0"
                                    Text="Height"
-                                   Style="{StaticResource HeadingText}" />
+                                   Style="{StaticResource HeadingText}"/>
                             <Label Grid.Column="7"
                                    Grid.Row="1"
                                    Text="{Binding Height}"
-                                   Style="{StaticResource ValueText}" />
+                                   Style="{StaticResource ValueText}"
+                                   AutomationProperties.LabeledBy="{x:Reference _heightHeading}"/>
 
                         </Grid>
                     </DataTemplate>
@@ -155,11 +177,13 @@
                     </ResourceDictionary>
                 </StackLayout.Resources>
                 <Button x:Name="_goToEndButton"
-                        Image="ic_chevron_double_down_white_24dp.png" />
+                        Image="ic_chevron_double_down_white_24dp.png"
+                        AutomationProperties.Name="Scroll to End"/>
 
                 <Button x:Name="_goToStartButton"
                         Image="ic_chevron_double_up_white_24dp.png"
-                        HorizontalOptions="End" />
+                        HorizontalOptions="End"
+                        AutomationProperties.Name="Scroll to Start"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

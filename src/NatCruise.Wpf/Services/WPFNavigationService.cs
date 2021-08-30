@@ -77,6 +77,17 @@ namespace NatCruise.Wpf.Services
         {
             RegionManager.Regions[Regions.ContentRegion].RemoveAll();
             RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CruiseMasterView));
+
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(SaleView));
+            return Task.CompletedTask;
+        }
+
+        public Task ShowTemplateLandingLayout()
+        {
+            RegionManager.Regions[Regions.ContentRegion].RemoveAll();
+            RegionManager.RequestNavigate(Regions.ContentRegion, nameof(TemplateMasterView));
+
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(TreeDefaultValueListView));
             return Task.CompletedTask;
         }
 
@@ -101,6 +112,18 @@ namespace NatCruise.Wpf.Services
         public Task ShowDesignTemplates()
         {
             RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumTemplateListView));
+            return Task.CompletedTask;
+        }
+
+        public Task ShowTreeFields()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(TreeFieldsView));
+            return Task.CompletedTask;
+        }
+
+        public Task ShowLogFields()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(LogFieldsView));
             return Task.CompletedTask;
         }
     }

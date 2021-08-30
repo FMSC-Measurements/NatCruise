@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
 {
-    public class StratumFieldSetupViewModel : ViewModelBase
+    public class StratumTreeFieldSetupViewModel : ViewModelBase
     {
         private Stratum _stratum;
         private ObservableCollection<TreeFieldSetup> _fieldSetups;
@@ -19,7 +19,7 @@ namespace NatCruise.Design.ViewModels
         private TreeFieldSetup _selectedTreeFieldSetup;
         private IEnumerable<StratumTemplate> _stratumTemplates;
 
-        public StratumFieldSetupViewModel(IDataserviceProvider dataserviceProvider)
+        public StratumTreeFieldSetupViewModel(IDataserviceProvider dataserviceProvider)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
             TemplateDataservice = dataserviceProvider.GetDataservice<ITemplateDataservice>() ?? throw new ArgumentNullException(nameof(TemplateDataservice));

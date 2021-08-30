@@ -92,6 +92,7 @@ namespace NatCruise.Design.ViewModels
             if (stratumTemplate != null)
             {
                 FieldSetupDataservice.SetTreeFieldsFromStratumTemplate(code, stratumTemplate.StratumTemplateName);
+                FieldSetupDataservice.SetLogFieldsFromStratumTemplate(code, stratumTemplate.StratumTemplateName);
             }
 
             Strata.Add(newStratum);

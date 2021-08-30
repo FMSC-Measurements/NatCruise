@@ -1,38 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
              x:Class="FScruiser.XF.Views.CruiseSelectView"
              x:Name="_page"
-             Title="Select Cruise">
+             Title="Select Cruise"
+             AutomationProperties.IsInAccessibleTree="true"
+             AutomationProperties.Name="Cruise Selection Page">
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding Cruises}" 
-                            SelectionMode="Single"
-                            SelectedItem="{Binding SelectedCruise}">
+            <ListView ItemsSource="{Binding Cruises}"
+                      SelectionMode="Single"
+                      SelectedItem="{Binding SelectedCruise}"
+                      AutomationProperties.IsInAccessibleTree="true"
+                      AutomationProperties.Name="Cruise List">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell  Text="{Binding .}"/>
+                        <TextCell  Text="{Binding .}"
+                                   AutomationProperties.IsInAccessibleTree="true"
+                                   AutomationProperties.Name="{Binding .}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            
+
             <Button Text="Open"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="Open Cruise"
                     Command="{Binding OpenSelectedCruiseCommand}"
-                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"/>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+            <StackLayout Orientation="Horizontal"
+                         HorizontalOptions="FillAndExpand">
                 <Button Text="Export"
+                        AutomationProperties.IsInAccessibleTree="true"
+                        AutomationProperties.Name="Export Cruise"
                         Command="{Binding ExportSelectedCruiseCommand}"
                         IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
-                        HorizontalOptions="FillAndExpand"/>
+                        HorizontalOptions="FillAndExpand" />
                 <Button Text="Share"
+                        AutomationProperties.IsInAccessibleTree="true"
+                        AutomationProperties.Name="Share Cruise"
                         Command="{Binding ShareSelectedCruiseCommand}"
                         IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
-                        HorizontalOptions="FillAndExpand"/>
+                        HorizontalOptions="FillAndExpand" />
             </StackLayout>
-            
+
             <Button Text="Delete"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="Delete Cruise"
                     Command="{Binding DeleteSelectedCruiseCommand}"
                     IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}" />
         </StackLayout>

@@ -58,6 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
     <ProjectReference Include="..\NatCruise.Design\NatCruise.Design.csproj" />
   </ItemGroup>
 

@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>NatCruiseUserGuide</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\styles.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image1.jpeg" style="width:7.65833in;height:9.81389in" /></p>
+<blockquote>
+<p>U.S. Forest Service</p>
+<p>Washington Office</p>
+<p>Forest Management Service Center</p>
+<p>Fort Collins, CO</p>
+<p>Updated July 2021</p>
+<p>This document is currently a work in progress and may be changed frequently.</p>
+</blockquote>
+<p>The U.S. Department of Agriculture (USDA) prohibits discrimination in all its programs and activities on the basis of race, color, national origin, sex, religion, age, disability, political beliefs, sexual orientation, or marital or family status. (Not all prohibited bases apply to all programs.) Persons with disabilities who require alternative means for communication of program information (Braille, large print, audiotape, etc.) should contact USDA’s TARGET Center at (202) 720-2600 (voice and TDD).</p>
+<p>To file a complaint of discrimination, write USDA, Director, Office of Civil Rights, Room 326- W, Whitten Building, 1400 Independence Avenue, SW, Washington, DC 20250-9410 or call (202) 720-5964 (voice or TDD). USDA is an equal opportunity provider and employer.</p>
+<h1 id="table-of-contents">Table of Contents</h1>
+<p><a href="#about-natcruise-interim">About NatCruise Interim 1</a></p>
+<p><a href="#installation">Installation 1</a></p>
+<p><a href="#using-natcruise-interim">Using NatCruise Interim 2</a></p>
+<p><a href="#saving-changes">Saving changes 2</a></p>
+<p><a href="#create-new-cruise">Create New Cruise 3</a></p>
+<p><a href="#sale-information">Sale Information 4</a></p>
+<p><a href="#cruise-information">Cruise Information 5</a></p>
+<p><a href="#units-setup">Units Setup 6</a></p>
+<p><a href="#strata-setup">Strata Setup 7</a></p>
+<p><a href="#stratum-details">Stratum Details 7</a></p>
+<p><a href="#fields">Fields 7</a></p>
+<p><a href="#cutting-units">Cutting Units 8</a></p>
+<p><a href="#sample-groups">Sample Groups 8</a></p>
+<p><a href="#sample-group-details">Sample Group Details 8</a></p>
+<p><a href="#subpopulations">Subpopulations 9</a></p>
+<p><a href="#species">Species 10</a></p>
+<p><a href="#audit-rules">Audit Rules 11</a></p>
+<p><a href="#tree-default-values">Tree Default Values 12</a></p>
+<p><a href="#design-templates">Design Templates 13</a></p>
+<p><a href="#stratum-template">Stratum Template 13</a></p>
+<p><a href="#tree-fields">Tree Fields 13</a></p>
+<p><a href="#template-.cut-files">Template (.cut) Files 14</a></p>
+<p><a href="#appendix-a-cruise-design-forms">APPENDIX A: CRUISE DESIGN FORMS 15</a></p>
+<p><a href="#sale-information-1">Sale Information 15</a></p>
+<p><a href="#cutting-units-1">Cutting Units 15</a></p>
+<p><a href="#_Toc79588109">Stratum 16</a></p>
+<p><a href="#tree-defaults">Tree Defaults 17</a></p>
+<p><a href="#tree-audit-rules">Tree Audit Rules 18</a></p>
+<h1 id="about-natcruise-interim">About NatCruise Interim</h1>
+<p>NatCruise Interim is part of the third generation of software for the U.S. Forest Service’s <a href="http://www.fs.fed.us/fmsc/measure/cruising/">National Cruise System</a>. It is used to establish new sales, customize data entry forms, and modify cruise designs. It is designed to work with the latest versions of Cruise Processing and Cruise Design. NatCruise Interim serves as an intermediate desktop software solution while a server-based cruise management system is developed (anticipated release in fall 2023).</p>
+<p>NatCruise Interim currently supports the cruise methods outlined in the <a href="https://usdagcc.sharepoint.com/sites/fs-orms/orms-directives/Pages/Browse-Directives.aspx">Timber Cruising Handbook</a> (FSH 2409.12), including 100 percent cruise, fixed plot, fixed count-measure, point sampling, point count-measure, sample tree, 3P, fixed plot-3P, point-3P, 3P-point, and fixed plot-count.</p>
+<p>This document is a work in progress and may be changed frequently.</p>
+<h1 id="installation">Installation</h1>
+<p>Installation files for NatCruise Interim can be obtained from the Forest Management Service Center personnel while in testing. Following production release installation files will be available on the Software Center for Forest Service users, or from the <a href="https://www.fs.fed.us/forestmanagement/products/measurement/">Forest Management Service Center website</a> for others. The default directory for all cruise files and template files is C:/users/&lt;username&gt;/Documents/CruiseFiles.</p>
+<h1 id="using-natcruise-interim">Using NatCruise Interim</h1>
+<p>The opening screen for NatCruise Interim contains only a File menu with four options: New Cruise, Open File, Open Recent, and Exit. Version information is found at the top of the window (Figure 1).</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image7.png" style="width:5.435in;height:3.2087in" /></p>
+<p>Figure 1-NatCruise Interim Opening Screen</p>
+<p>Once a cruise file is created or an existing cruise file is opened, the best way to fill out information is to move from top to bottom down the left hand menu and from left to right within nested menus (Figure 2).</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image8.png" style="width:5.90064in;height:3.44348in" /></p>
+<p>Figure 2 – nested menus within NatCruise Interim</p>
+<h2 id="saving-changes">Saving changes</h2>
+<p>There is no Save option in the File menu because changes are automatically saved whenever you check a box or click into a new textbox. If the program crashes all changes prior to that point will be retained.</p>
+<h1 id="create-new-cruise">Create New Cruise</h1>
+<p>The New Cruise button will launch a Create New Cruise window (Figure 3).</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image9.png" style="width:4.32174in;height:3.20514in" /></p>
+<p>Figure 3-Cruise File Creation Prompt</p>
+<p>The first step in establishing a new cruise is to define the cruise information. At the top of this form, you will be asked to select a Template by using the Browse button. The default location for Template files installed with V2 software is C:/users/&lt;username&gt;/Documents/CruiseFiles/Templates/. Template files can also be downloaded <a href="https://www.fs.fed.us/forestmanagement/products/measurement/cruising/cruisemanager/index.php">from the FMSC website</a> as a ZIP file. Template files can be edited in Cruise Manager (part of the version 2 software suite). Although selecting a Template file is optional, it contains establishment and design information you will have to enter manually if you do not select one.</p>
+<p>Once a template has been selected:</p>
+<ul>
+<li><p>enter the Sale Name and Number (usually 5 digits)</p></li>
+<li><p>Select Region and Forest from the pull down lists. District number (2 digits) will need to be typed.</p></li>
+<li><p>Select Purpose from the pull-down list (usually Timber Sale or Recon).</p></li>
+<li><p>UOM is the default Unit of Measure for the sale. This value will be used as the default whenever UOM needs to be entered. If you are using FIXCNT method with other cruising methods, you can change the UOM to 04 for those FIXCNT populations.</p></li>
+<li><p>The checkbox labeled Number Plot Trees Sequentially Across Strata will determine how tree numbers auto populate within plots (1 through n for each stratum vs 1 through n for the plot as a whole).</p></li>
+</ul>
+<p>Note that all information entered in this screen can be edited later, except for the Template file applied. Once all the information has been entered, click on the Save As button, navigate to your desired save location, edit the file name if desired, and press Save to move on to subsequent setup steps. Unlike in V2, there is not currently an option to create a sale folder; this will need to be done manually if desired.</p>
+<blockquote>
+<p>From this point onwards, the interface does not differ between new sale entry and editing an existing file.</p>
+</blockquote>
+<h1 id="sale-information">Sale Information</h1>
+<p>The Sale screen shows the Sale Name, Sale Number (usually 5 digits), Region, Forest, and District (2 digits) in editable fields. As in initial setup, Region and Forest are drop-down menus, while the other fields are typed into.</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image10.png" style="width:5.94266in;height:2.3in" /></p>
+<p>Figure 4-Sale level information</p>
+<h1 id="cruise-information">Cruise Information</h1>
+<p>The Cruise screen shows the Cruise Number, Purpose, Unit of Measure, and a Remarks field along with an option to number plot trees sequentially across strata. If purpose is set to Timber Sale the cruise number defaults to the Sale Number. If a different purpose is selected a code indicating the purpose of the cruise will be appended to the end of the sale number. If the box for numbering plot trees sequentially is checked, all trees on a plot will be numbered sequentially in the order they are entered into FSCruiser regardless of strata.</p>
+<blockquote>
+<p>This screen was added to NatCruise Interim in anticipation of a future release which will allow for multiple cruises (e.g. Recon, Timber Sale, and Check Cruise) to be stored within one Sale-level file.</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image11.png" style="width:5.92565in;height:2.3in" /></p>
+</blockquote>
+<p>Figure 5 – Cruise level information</p>
+<h1 id="units-setup">Units Setup</h1>
+<p>The next step is to enter the Unit-level information. To begin, enter an alphanumeric unit code into the box in the top left next to the green plus sign. Press the green plus sign to add the unit to the file; to delete a unit, highlight it in the menu on the left and press the red minus button (Figure 6).</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image12.png" style="width:5.34713in;height:3.00026in" /></p>
+<p>Figure 6- Unit Information/add a unit</p>
+<p>Each unit requires a Description and Area (in acres). In addition, Logging Method, Payment Unit, Prescription (Rx), and Remarks can be entered. These fields will all display in the cruise output, but only Area, Logging Method, and Payment Unit will be imported into TIM.</p>
+<h1 id="strata-setup">Strata Setup</h1>
+<p>In NatCruise Interim Strata, Sample Groups, and Sampling Frequency are all set up using the submenus within the Strata page. Complete data can be entered one stratum at a time (recommended), or each submenu can be completed for all strata at once.</p>
+<h2 id="stratum-details">Stratum Details</h2>
+<blockquote>
+<p>To create a new stratum enter a code in the textbox on the left. Optionally, you can apply a Stratum Template by selecting one from the dropdown menu before pressing the green plus sign (Figure 7). If a template is not selected, the cruise method can be set manually. For plot-based cruise methods a field will appear for basal area factor (BAF) or fixed plot size (FPS). Fixed plot size is entered as the inverse of the plot size (e.g. for 1/20<sup>th</sup> acre plots FPS is 20). The selected template will set up a default list of fields, which can then be modified (see <a href="#fields">Fields</a>).</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image13.png" style="width:6.34661in;height:2in" /></p>
+</blockquote>
+<p>Figure 7 – Stratum Details and Templates</p>
+<h2 id="fields">Fields</h2>
+<blockquote>
+<p>Fields can be selected manually, or you can start from a template (see <a href="#design-templates">Design Templates</a>). A Default Value can be assigned to each field, and the field can be either locked or hidden. To rearrange the fields select one from the list and use the Move Up and Move Down buttons (Figure 8). Changes are applied to the Stratum highlighted on the left.</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image14.png" style="width:6.35in;height:2.5471in" /></p>
+</blockquote>
+<p>Figure 8 – Fields Setup</p>
+<h2 id="cutting-units">Cutting Units</h2>
+<blockquote>
+<p>Select the desired Stratum from the list on the left and check the boxes for the corresponding Cutting Units. All units can be selected by using the Select All button, and all selections can be cleared by using the Clear All button (Figure 9).</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image15.png" style="width:6.34924in;height:2.17047in" /></p>
+</blockquote>
+<p>Figure 9 – Stratum Cutting Units setup</p>
+<h2 id="sample-groups">Sample Groups</h2>
+<blockquote>
+<p>You will establish sample groups, frequencies (if applicable), and subpopulations (species lists) through the two submenus within Sample Groups.</p>
+</blockquote>
+<h3 id="sample-group-details">Sample Group Details</h3>
+<blockquote>
+<p>Sample Group Details is where you will enter the sample group Code that will be displayed on the tally/plot page in FS Cruiser V3. Code and Primary Product are required fields. In addition, a Description, Secondary Product, Biomass Product, Cut/Leave designation, and Live/Dead Default can be set. If no choices are made, the program will default to Cut and Live (Figure 10). If the sample method selected involves frequency sampling, related field entry will be available (frequency, insurance frequency, sample selector type, big BAF, KZ, etc. depending on cruise method).</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image16.png" style="width:6.34953in;height:2.87826in" /></p>
+</blockquote>
+<p>Figure 10 – Sample Group Details page</p>
+<blockquote>
+<p>There is a checkbox in this menu for Tally by Species. If checked, trees will be tallied at the Species Level. If left unchecked, trees will be tallied at the Sample Group level.</p>
+</blockquote>
+<h3 id="subpopulations">Subpopulations</h3>
+<blockquote>
+<p>Use this menu to assign species to the selected Sample Group. Species codes can be selected from the drop down, or a new code can be typed in. Press the green plus button to add the species to the list. Once a species code is added, the Live/Dead field can be changed. Adding a duplicate of an existing species code will create a copy with the opposite Live/Dead default (Figure 11). The program will not allow more than two replicates of the same species code.</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image17.png" style="width:6.34939in;height:2.32174in" /></p>
+</blockquote>
+<p>Figure 11 – Subpopulations setup</p>
+<h1 id="species">Species</h1>
+<p>The Species menu shows species codes present in the Template File, as well as any additional species codes entered into the cruise setup. Each species code can be assigned a Contract Species and FIA code (Figure 12). The FIA code links the species to volume equations within Cruise Processing, although this can also be done manually if the field is left blank.</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image18.png" style="width:6.35in;height:5.06319in" /></p>
+<p>Figure 12 – Species Setup</p>
+<h1 id="section"></h1>
+<h1 id="audit-rules">Audit Rules</h1>
+<p>Audit rules can be used to test entered tree data. If data violates the Audit Rules a warning will be generated within FS Cruiser V3 as well as within the Cruise Processing program. Errors triggered by audit rules can be suppressed to enable processing, so audit rules like minimum heights can be used even if they may be violated on rare occasions.</p>
+<p>To create an audit rule, establish the rule on the left hand side of the screen in the Add Audit Rule area. Choose a Tree Field, and minimum and/or maximum allowed value. A description can also be added for clarity (Figure13).</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image19.png" style="width:6.35in;height:2.33372in" /></p>
+<p>Figure 13 – Audit Rule Setup</p>
+<p>To apply the audit rule to a Species, Product, and Live/Dead combination, highlight the rule on the left and use the drop down menu on the right in the Add Population To Audit Rule area. Note that ‘Any’ is an option for all three dropdowns. In the event that audit rules conflict with one another, the most specific rule will take precedence (for example, if a rule limits DBH for Sawtimber of Any species to 12.0 inches or greater but another rule limits DBH for Ponderosa Pine Sawtimber to 10.0 – 99.9 inches, a value of 11.0 inches will not produce an error).</p>
+<p>To delete an Audit Rule or to delete a Population from an audit rule, highlight the desired line and press the appropriate Delete button at the bottom of the screen.</p>
+<h1 id="tree-default-values">Tree Default Values</h1>
+<p>The Tree Defaults table displays a list of species code/product combinations present in the Template File, as well as any additional species codes entered into the cruise setup. Many default values can be set for each species. Primary Product Cull, Primary Product Hidden Defect, and Tree Grade can be assigned different default values for Live and Dead trees using the same species code (Figure 14). If you wish to have multiple Hidden Primary Defect percent for the same Species, Primary Product, and Live/Dead combination, you will have to create a new record with a different Species code to distinguish it from the original code. This list can be edited, new records can be added, and existing records can be deleted.</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image20.png" style="width:6.35in;height:3.71042in" /></p>
+<p>Figure 14 – Tree Default Values setup</p>
+<h1 id="design-templates">Design Templates</h1>
+<p>Templates for each cruise method can be edited or new templates can be created using the Design Templates menu.</p>
+<h2 id="stratum-template">Stratum Template</h2>
+<blockquote>
+<p>A default Code, Yield Component, and Basal Area Factor or Fixed Plot Size can be set for each cruise method. To create a new template, type the code into the box on the left and hit the green “+” button (Figure 15).</p>
+</blockquote>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image21.png" style="width:5.33415in;height:3.1in" /></p>
+<p>Figure 15 – Stratum Template setup</p>
+<h2 id="tree-fields">Tree Fields</h2>
+<blockquote>
+<p>Default fields can be established for each Template, as well as assigning default values and either locking or hiding each one. Highlight the desired template on the left to edit the associated fields. Fields can be added and removed using the green “+” or the red “-“ buttons (Figure 16).</p>
+</blockquote>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image22.png" style="width:5.35479in;height:3.1in" /></p>
+<p>Figure 16 – Tree Fields setup</p>
+<h1 id="template-.cut-files">Template (.cut) Files</h1>
+<p>In the current version of NatCruise Interim, Template Files from Version 2 of the National Cruise software suite are used in setup. These .cut files contain information that will be used to fill in default values in new cruises, including species information and field setup settings.</p>
+<p>The information in Template Files can be edited directly using Cruise Manager (available in the Forest Service Software Center or from the <a href="https://www.fs.fed.us/forestmanagement/products/measurement/cruising/cruisemanager/index.php">Forest Management Service Center website</a>). To edit a Template File, Click on the Open File button. In the Open File dialog box, use the pull down list at the bottom for Files of type: and select Cruise Template File (*.cut). By default, Template Files will be stored in My Documents/Cruise Files/Template Files. Select a Template File and click Open. The Template Editor allows the user to setup and edit Template data (Figure 17).</p>
+<p><img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image23.png" style="width:6.35in;height:3.60825in" /></p>
+<p>Figure 17-Template Editor in Cruise Manager</p>
+<h1 id="appendix-a-cruise-design-forms">APPENDIX A: CRUISE DESIGN FORMS</h1>
+<p>Fill out these forms for each new cruise being established, and keep an updated copy in the presale folder.</p>
+<p>Cruise Designer Name:</p>
+<p>Date:</p>
+<p>Path and Name of Template File Used:</p>
+<h2 id="sale-information-1">Sale Information</h2>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 12%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 16%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sale Number</th>
+<th>Sale Name</th>
+<th>Purpose</th>
+<th>Default UOM</th>
+<th>Region</th>
+<th>Forest</th>
+<th>District Code</th>
+<th>Log Grading?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="cutting-units-1">Cutting Units</h2>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 19%" />
+<col style="width: 18%" />
+<col style="width: 21%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>
+<blockquote>
+<p>
+Cutting Unit Code
+</p>
+</blockquote>
+</th>
+<th>
+<blockquote>
+<p>
+Area
+</p>
+</blockquote>
+</th>
+<th>
+<blockquote>
+<p>
+Description
+</p>
+</blockquote>
+</th>
+<th>
+<blockquote>
+<p>
+Payment Unit
+</p>
+</blockquote>
+</th>
+<th>
+<blockquote>
+<p>
+Logging Method
+</p>
+</blockquote>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<h2 id="stratum">Stratum</h2>
+<blockquote>
+<p>(Fill out a copy of this page for each stratum.)</p>
+</blockquote>
+<p>Code: _______ Cruise Method: ________ Description: ________________________________________________________</p>
+<p>Month: _______ Year: ________ Yield Component: ______ BAF: ________ FP Size: ________ 3PPNT KZ: _______</p>
+<p>List Cutting Units:</p>
+<blockquote>
+<p><strong>Sample Groups in Stratum</strong></p>
+</blockquote>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 3%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>SG Code</strong></th>
+<th><strong>Prim Prod</strong></th>
+<th><strong>Sec Prod</strong></th>
+<th><strong>Default LD</strong></th>
+<th><strong>Samp Freq</strong></th>
+<th><strong>Ins Freq</strong></th>
+<th><strong>Big BAF*</strong></th>
+<th><strong>KZ</strong></th>
+<th><strong>Min KPI</strong></th>
+<th><strong>Max KPI</strong></th>
+<th><strong>Descrip</strong></th>
+<th><strong>Tally by**</strong></th>
+<th><strong>System-atic?</strong></th>
+<th><strong>Tree Defaults (Sp/PProd/LD)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tree Field Setup Tally Setup –</strong> Stratum Hot Key:</p>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 12%" />
+<col style="width: 18%" />
+<col style="width: 5%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>
+<blockquote>
+<p>
+Field Name
+</p>
+</blockquote>
+</th>
+<th>
+Heading
+</th>
+<th>
+<blockquote>
+<p>
+Width (0 = auto width)
+</p>
+</blockquote>
+</th>
+<th>
+</th>
+<th>
+<blockquote>
+<p>
+SG or Sp Code
+</p>
+</blockquote>
+</th>
+<th>
+<blockquote>
+<p>
+Description
+</p>
+</blockquote>
+</th>
+<th>
+<blockquote>
+<p>
+Hot Key
+</p>
+</blockquote>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="even">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr class="odd">
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<p>* or Small FP size for FCM</p>
+<p>** Sample Group, Species or Don’t Tally</p>
+<h2 id="tree-defaults">Tree Defaults</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 7%" />
+<col style="width: 3%" />
+<col style="width: 6%" />
+<col style="width: 5%" />
+<col style="width: 6%" />
+<col style="width: 5%" />
+<col style="width: 6%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+<col style="width: 3%" />
+<col style="width: 4%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Sp Code</strong></th>
+<th><strong>Primary Prod</strong></th>
+<th><strong>LD</strong></th>
+<th><strong>FIA Code</strong></th>
+<th><strong>Cull P</strong></th>
+<th><strong>Hidden P</strong></th>
+<th><strong>Cull S</strong></th>
+<th><strong>Hidden S</strong></th>
+<th><strong>% Rec</strong></th>
+<th><strong>Grade</strong></th>
+<th><strong>Form Class</strong></th>
+<th><strong>Contr Sp</strong></th>
+<th><strong>Merch Ht LL</strong></th>
+<th><strong>Merch Ht Type</strong></th>
+<th><strong>BTR</strong></th>
+<th><strong>AvgZ</strong></th>
+<th><strong>RefHtPer</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="tree-audit-rules">Tree Audit Rules</h2>
+<table>
+<thead>
+<tr class="header">
+<th><strong>Field</strong></th>
+<th><strong>Min</strong></th>
+<th><strong>Max</strong></th>
+<th><strong>Tree Defaults (Sp/PProd/LD)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

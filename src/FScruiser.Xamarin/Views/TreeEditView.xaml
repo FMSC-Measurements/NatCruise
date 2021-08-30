@@ -11,10 +11,14 @@
              Title="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
              BackgroundColor="White"
              TreeNumber="{Binding TreeNumber}"
-             TreeFieldValues="{Binding TreeFieldValues}">
+             TreeFieldValues="{Binding TreeFieldValues}"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Tree Edit Page">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Logs"
-                     Command="{Binding ShowLogsCommand}" />
+                     Command="{Binding ShowLogsCommand}"
+                     AutomationProperties.IsInAccessibleTree="True"
+                     AutomationProperties.Name="Logs Button" />
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <converters:ErrorToColorConverter x:Key="errorToColorConverter"
@@ -89,8 +93,11 @@
             <!--Tree Number-->
             <StackLayout Orientation="Horizontal">
 
-                <Label Text="Tree #" />
-                <Entry x:Name="_treeNumberEntry">
+                <Label Text="Tree #"
+                       AutomationProperties.IsInAccessibleTree="False" />
+                <Entry x:Name="_treeNumberEntry"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Tree Number Textbox">
                     <Entry.Effects>
                         <effects:SelectAllTextEffect />
                     </Entry.Effects>
@@ -101,11 +108,14 @@
             <!--Stratum-->
             <StackLayout Orientation="Horizontal">
 
-                <Label Text="Stratum" />
+                <Label Text="Stratum"
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_stratumCodeEntry"
-                                        SelectedValue="{Binding StratumCode}"
-                                        ValueSource="{Binding StratumCodes}"
-                                        WidthRequest="40">
+                                      SelectedValue="{Binding StratumCode}"
+                                      ValueSource="{Binding StratumCodes}"
+                                      WidthRequest="40"
+                                      AutomationProperties.IsInAccessibleTree="True"
+                                      AutomationProperties.Name="Stratum Picker">
                 </controls:ValuePicker>
 
             </StackLayout>
@@ -114,11 +124,14 @@
             <StackLayout Orientation="Horizontal"
                          BackgroundColor="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}">
 
-                <Label Text="Sample Group" />
+                <Label Text="Sample Group"
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_sampleGroupEntry"
-                                        SelectedValue="{Binding SampleGroupCode}"
-                                        ValueSource="{Binding SampleGroupCodes}"
-                                        WidthRequest="40">
+                                      SelectedValue="{Binding SampleGroupCode}"
+                                      ValueSource="{Binding SampleGroupCodes}"
+                                      WidthRequest="40"
+                                      AutomationProperties.IsInAccessibleTree="True"
+                                      AutomationProperties.Name="Sample Group Picker">
                 </controls:ValuePicker>
 
             </StackLayout>
@@ -127,11 +140,14 @@
             <StackLayout Orientation="Horizontal"
                          BackgroundColor="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}">
 
-                <Label Text="Species" />
+                <Label Text="Species"
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_speciesEntry"
-                                        SelectedValue="{Binding SpeciesCode}"
-                                        ValueSource="{Binding SpeciesOptions}"
-                                        WidthRequest="40">
+                                      SelectedValue="{Binding SpeciesCode}"
+                                      ValueSource="{Binding SpeciesOptions}"
+                                      WidthRequest="40"
+                                      AutomationProperties.IsInAccessibleTree="True"
+                                      AutomationProperties.Name="Species Picker">
                 </controls:ValuePicker>
 
             </StackLayout>
@@ -139,10 +155,13 @@
             <!--Live Dead-->
             <StackLayout Orientation="Horizontal">
 
-                <Label Text="Live/Dead" />
+                <Label Text="Live/Dead"
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_liveDeadPicker"
-                                        SelectedValue="{Binding LiveDead}"
-                                        WidthRequest="40">
+                                      SelectedValue="{Binding LiveDead}"
+                                      WidthRequest="40"
+                                      AutomationProperties.IsInAccessibleTree="True"
+                                      AutomationProperties.Name="Live Dead Picker">
                     <controls:ValuePicker.ValueSource>
                         <Array Type="{x:Type x:String}">
                             <x:String>L</x:String>
@@ -155,19 +174,25 @@
 
             <!--Initials-->
             <StackLayout Orientation="Horizontal">
-                <Label Text="Initials" />
+                <Label Text="Initials"
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <Picker x:Name="_initialsPicker"
                         WidthRequest="40"
                         SelectedItem="{Binding Initials}"
-                        ItemsSource="{Binding Cruisers}" />
+                        ItemsSource="{Binding Cruisers}"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Initials Picker" />
             </StackLayout>
 
             <!--Count Or Measure-->
             <StackLayout Orientation="Horizontal">
-                <Label Text="Count/Measure" />
+                <Label Text="Count/Measure"
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <Picker WidthRequest="40"
                         SelectedItem="{Binding CountOrMeasure}"
-                        ItemsSource="{Binding CountOrMeasureOptions}">
+                        ItemsSource="{Binding CountOrMeasureOptions}"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Count or Measure Picker">
 
                 </Picker>
 
@@ -203,20 +228,25 @@
 
         <!--Remarks-->
         <StackLayout Grid.Row="2">
-            <Label>Remarks</Label>
+            <Label x:Name="_remarksHeading" Text="Remarks"/>
             <Editor HeightRequest="80"
-                    Text="{Binding Remarks}" />
+                    Text="{Binding Remarks}"
+                    AutomationProperties.LabeledBy="{x:Reference _remarksHeading}" />
         </StackLayout>
 
         <StackLayout Grid.Row="3"
                      BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
-                     VerticalOptions="End">
+                     VerticalOptions="End"
+                     AutomationProperties.IsInAccessibleTree="True"
+                     AutomationProperties.Name="Errors List">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <Button Style="{StaticResource errorWarningButton}"
                             FontSize="Medium"
                             Command="{Binding BindingContext.ShowEditTreeErrorCommand, Source={Reference _page}}"
-                            CommandParameter="{Binding .}" />
+                            CommandParameter="{Binding .}"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Error Item" />
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </StackLayout>

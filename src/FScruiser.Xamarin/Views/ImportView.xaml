@@ -1,40 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.ImportView"
              x:Name="_page"
              Title="Import Cruise"
-             IsBusy="{Binding IsWorking}">
+             IsBusy="{Binding IsWorking}"
+             AutomationProperties.Name="Import Cruise Page">
     <ContentPage.Content>
         <StackLayout>
             <Entry Placeholder="Select Cruise File"
                    Text="{Binding ImportPath}"
-                   IsReadOnly="True"/>
+                   IsReadOnly="True"
+                   AutomationProperties.IsInAccessibleTree="True"
+                   AutomationProperties.Name="Selected Cruise" />
             <Button Text="Browse"
-                    Command="{Binding BrowseFileCommand}" />
+                    Command="{Binding BrowseFileCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Browse File" />
             <AbsoluteLayout>
-            <ListView
-                AbsoluteLayout.LayoutBounds="1,1,1,1"
-                AbsoluteLayout.LayoutFlags="All"
-                ItemsSource="{Binding Cruises}"
-                      SelectionMode="Single">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextCell  Text="{Binding .}" 
-                                   Command="{Binding BindingContext.SelectCruiseCommand, Source={Reference _page}}"
-                                   CommandParameter="{Binding .}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                <ListView AbsoluteLayout.LayoutBounds="1,1,1,1"
+                          AbsoluteLayout.LayoutFlags="All"
+                          ItemsSource="{Binding Cruises}"
+                          SelectionMode="Single"
+                          AutomationProperties.IsInAccessibleTree="True"
+                          AutomationProperties.Name="Cruise List">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell  Text="{Binding .}"
+                                       Command="{Binding BindingContext.SelectCruiseCommand, Source={Reference _page}}"
+                                       CommandParameter="{Binding .}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-                <ActivityIndicator AbsoluteLayout.LayoutBounds=".5,.5" AbsoluteLayout.LayoutFlags="PositionProportional" Color="{StaticResource primary_500}"
+                <ActivityIndicator AbsoluteLayout.LayoutBounds=".5,.5"
+                                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                                   Color="{StaticResource primary_500}"
                                    IsRunning="{Binding IsWorking}" />
             </AbsoluteLayout>
             <Button Text="Import"
                     Command="{Binding ImportCruiseCommand}"
-                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"/>
-            <Button Text="Cancel" Command="{Binding CancelCommand}" />
+                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Import Cruise"/>
+            <Button Text="Cancel"
+                    Command="{Binding CancelCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Cancel"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

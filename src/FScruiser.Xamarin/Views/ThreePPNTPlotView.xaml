@@ -5,61 +5,76 @@
              xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.ThreePPNTPlotView"
              BackgroundColor="White"
-             Title="{Binding StratumPlot.PlotNumber, StringFormat='{}Plot {0} '}">
-    
-    
+             Title="{Binding StratumPlot.PlotNumber, StringFormat='{}Plot {0} '}"
+             AutomationProperties.IsInAccessibleTree="False"
+             AutomationProperties.Name="Three P PNT Plot Page">
+
+
     <ContentPage.Content>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="250"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="50" />
                 <RowDefinition />
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="50" />
             </Grid.RowDefinitions>
 
-            <StackLayout Grid.Column="1" Grid.Row="1">
+            <StackLayout Grid.Column="1"
+                         Grid.Row="1">
 
                 <StackLayout.Resources>
-                    <Style TargetType="Label" >
-                        <Setter Property="FontSize" Value="Small" />
-                        <Setter Property="VerticalOptions" Value="Start" />
-                        <Setter Property="Margin" Value="5,0,0,0" />
-                        <Setter Property="TextColor" Value="Black" />
+                    <Style TargetType="Label">
+                        <Setter Property="FontSize"
+                                Value="Small" />
+                        <Setter Property="VerticalOptions"
+                                Value="Start" />
+                        <Setter Property="Margin"
+                                Value="5,0,0,0" />
+                        <Setter Property="TextColor"
+                                Value="Black" />
                     </Style>
-                    <Style TargetType="Entry" >
-                        <Setter Property="BackgroundColor" Value="LightGray"/>
-                        <Setter Property="Margin" Value="0"/>
-                        <Setter Property="Keyboard" Value="Numeric" />
+                    <Style TargetType="Entry">
+                        <Setter Property="BackgroundColor"
+                                Value="LightGray" />
+                        <Setter Property="Margin"
+                                Value="0" />
+                        <Setter Property="Keyboard"
+                                Value="Numeric" />
                     </Style>
                 </StackLayout.Resources>
 
-                <Label  Text="Average Height"/>
+                <Label  Text="Average Height"
+                        AutomationProperties.IsInAccessibleTree="False" />
                 <Entry Text="{Binding AverageHeight}"
                        WidthRequest="40"
-                       >
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Average Height">
                     <Entry.Effects>
                         <tk_ef:SelectAllTextEffect />
                     </Entry.Effects>
                 </Entry>
-                
+
                 <Label Text="Tree Count" />
                 <Entry Text="{Binding TreeCount}"
                        VerticalOptions="Start"
                        WidthRequest="40"
-                       >
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Tree Count">
                     <Entry.Effects>
                         <tk_ef:SelectAllTextEffect />
                     </Entry.Effects>
                 </Entry>
-                
-                <Label Text="Volume Factor"/>
+
+                <Label Text="Volume Factor"
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <Entry Text="{Binding VolumeFactor}"
                        IsEnabled="False"
-                       >
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Volume Factor">
                     <Entry.Effects>
                         <tk_ef:SelectAllTextEffect />
                     </Entry.Effects>
@@ -71,18 +86,20 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" 
-                            Grid.Row="0" 
-                            Text="Add Plot" 
-                            BackgroundColor="{StaticResource primary_500}" 
+                    <Button Grid.Column="0"
+                            Grid.Row="0"
+                            Text="Add Plot"
+                            BackgroundColor="{StaticResource primary_500}"
                             Command="{Binding AddPlotCommand}"
-                            />
-                    <Button Grid.Column="1" 
-                            Grid.Row="0" 
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Add Plot" />
+                    <Button Grid.Column="1"
+                            Grid.Row="0"
                             Text="Cancel"
                             BackgroundColor="DimGray"
                             Command="{Binding CancelCommand}"
-                            />
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Cancel" />
 
                 </Grid>
             </StackLayout>

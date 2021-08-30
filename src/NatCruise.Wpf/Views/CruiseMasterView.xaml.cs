@@ -73,5 +73,15 @@ namespace NatCruise.Wpf.Views
         {
             NavigationService.ShowDesignTemplates();
         }
+
+        private void _treeFieldsButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.ShowTreeFields();
+        }
+
+        private void _logFieldsButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.ShowLogFields();
+        }
     }
 }
