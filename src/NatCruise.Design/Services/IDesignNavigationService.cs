@@ -19,6 +19,8 @@ namespace NatCruise.Design.Services
 
         Task ShowCruiseLandingLayout();
 
+        Task ShowTemplateLandingLayout();
+
         Task ShowAuditRules();
 
         Task ShowTreeDefaultValues();

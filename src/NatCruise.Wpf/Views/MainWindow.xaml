@@ -16,6 +16,8 @@
             <MenuItem Header="File">
                 <MenuItem Header="New Cruise"
                           Command="{Binding CreateNewFileCommand}" />
+                <MenuItem Header="New Template"
+                          Command="{Binding CreateNewTemplateCommand}" />
                 <Separator />
                 <MenuItem Header="Open File"
                           Command="{Binding SelectFileCommand}" />
