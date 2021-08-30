@@ -70,6 +70,7 @@
                     <Button Grid.Row="0"
                             Grid.Column="1"
                             Style="{StaticResource AddButton}"
+                            Click="Button_Click"
                             IsEnabled="{Binding Text, ElementName=_stratumCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
@@ -123,6 +124,7 @@
         </Border>
 
         <TabControl Grid.Column="1"
+                    x:Name="_stratumDetailsRegion"
                     prism:RegionManager.RegionName="{x:Static nav:Regions.StratumDetailsRegion}"
                     prism:RegionManager.RegionContext="{Binding SelectedStratum}"
                     HorizontalAlignment="Stretch"

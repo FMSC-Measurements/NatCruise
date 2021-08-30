@@ -1,23 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
              x:Class="FScruiser.XF.Views.SaleSelectView"
              x:Name="_page"
-             Title="Select Sale">
+             Title="Select Sale"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Select Sale Page">
     <ContentPage.Content>
         <StackLayout>
-        <ListView ItemsSource="{Binding Sales}" >
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextCell Text="{Binding .}" 
-                              Command="{Binding BindingContext.ShowCruiseSelectCommand, Source={Reference _page}}"
-                              CommandParameter="{Binding SaleID}"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-            <Button Text="Import" Command="{Binding ShowImportCommand}" />
+            <ListView ItemsSource="{Binding Sales}"
+                      AutomationProperties.IsInAccessibleTree="True"
+                      AutomationProperties.Name="Sale List">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding .}"
+                                  Command="{Binding BindingContext.ShowCruiseSelectCommand, Source={Reference _page}}"
+                                  CommandParameter="{Binding SaleID}"
+                                  AutomationProperties.IsInAccessibleTree="True"
+                                  AutomationProperties.Name="Sale" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Text="Import"
+                    Command="{Binding ShowImportCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Import Cruise" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

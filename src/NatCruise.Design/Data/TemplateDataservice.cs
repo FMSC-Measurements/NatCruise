@@ -452,7 +452,7 @@ AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '');",
     IsTreeMeasurmentField
 FROM TreeField AS tf
 LEFT JOIN TreeFieldHeading AS tfh ON tf.Field = tfh.Field AND tfh.CruiseID = @p1
-ORDER BY tf.Field;", CruiseID).ToArray();
+ORDER BY ifnull(tfh.Heading, tf.DefaultHeading);", CruiseID).ToArray();
         }
 
         public void UpdateTreeField(TreeField treeField)
@@ -494,12 +494,13 @@ new
         {
             return Database.Query<LogField>(
 @"SELECT
-    Field,
+    lf.Field,
     lfh.Heading,
     lf.DefaultHeading,
     DbType
-) FROM LogField AS lf
-LEFT JOIN LogFieldHeading AS lfh ON lf.Field = lfh.Field AND lfh.CruiseID = @p1;", CruiseID).ToArray();
+FROM LogField AS lf
+LEFT JOIN LogFieldHeading AS lfh ON lf.Field = lfh.Field AND lfh.CruiseID = @p1
+ORDER BY ifnull(lfh.Heading, lf.DefaultHeading);", CruiseID).ToArray();
         }
 
         public void UpdateLogField(LogField lf)
@@ -679,7 +680,7 @@ WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID AND Fi
 
         #region StratumTemplateLogFieldSetup
 
-        public IEnumerable<StratumTemplateLogFieldSetup> GetStratumTemplateLogFieldSetup(string stratumTemplateName)
+        public IEnumerable<StratumTemplateLogFieldSetup> GetStratumTemplateLogFieldSetups(string stratumTemplateName)
         {
             return Database.From<StratumTemplateLogFieldSetup>()
                 .Where("StratumTemplateName = @p1 AND CruiseID = @p2")

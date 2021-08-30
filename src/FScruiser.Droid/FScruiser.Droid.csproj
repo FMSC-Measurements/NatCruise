@@ -127,7 +127,9 @@
       <Name>NatCruise.Cruise</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\strings.xml" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Essentials">
       <Version>1.6.1</Version>

@@ -98,7 +98,7 @@ namespace NatCruise.Design.Data
 
         #region StratumTemplateLogFieldSetup
 
-        IEnumerable<StratumTemplateLogFieldSetup> GetStratumTemplateLogFieldSetup(string stratumTemplateName);
+        IEnumerable<StratumTemplateLogFieldSetup> GetStratumTemplateLogFieldSetups(string stratumTemplateName);
 
         void UpsertStratumTemplateLogFieldSetup(StratumTemplateLogFieldSetup stlfs);
 

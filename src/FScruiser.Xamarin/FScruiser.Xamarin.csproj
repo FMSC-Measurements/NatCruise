@@ -10,8 +10,17 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Label="Pandoc Mardown Generator">
+    <PandocOutputDir>$(MSBuildProjectDirectory)\</PandocOutputDir>
+    <PandocTableOfContents>false</PandocTableOfContents>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="**\*~" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Pandoc Include="..\..\doc\UserAgreement.md" Link="UserAgreement.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +28,7 @@
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.1.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="PandocTasks" Version="0.1.2" />
     <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
     <PackageReference Include="Scripty.MsBuild" Version="0.7.4" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="1.1.0" />
@@ -29,6 +39,7 @@
   
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
     <ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj" />
   </ItemGroup>
 
@@ -41,6 +52,11 @@
     </Compile>
     <Compile Update="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Update="Views\AskKpiView.xaml.cs">
       <DependentUpon>AskKpiView.xaml</DependentUpon>
@@ -125,6 +141,10 @@
   <ItemGroup>
     <EmbeddedResource Update="App.xaml">
       <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\AskKpiView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -222,6 +242,9 @@
     <EmbeddedResource Update="Controls\PopulationIndicator.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\UserAgreementView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -248,6 +271,9 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Views\PlotEditView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\UserAgreementView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>

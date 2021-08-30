@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              x:Class="FScruiser.XF.Views.TreeCountEditView"
              Title="Edit Tree Count">
     <ContentPage.Content>
@@ -70,7 +69,7 @@
                                         <Setter Property="HorizontalTextAlignment"
                                                 Value="Center" />
                                         <Setter Property="Margin"
-                                                Value="0,-3"/>
+                                                Value="0,-3" />
                                         <Setter Property="BackgroundColor"
                                                 Value="Transparent" />
                                     </Style>
@@ -120,7 +119,9 @@
                                    Grid.Column="0"
                                    x:Name="_stratumLabel"
                                    Style="{StaticResource tallyInfo_label_value}"
-                                   Text="{Binding TallyPopulation.StratumCode, FallbackValue={StaticResource tallyInfo_label_fallback_value}}" />
+                                   Text="{Binding TallyPopulation.StratumCode, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.LabeledBy="{x:Reference _stratumHeader}" />
 
                             <!-- sample group -->
                             <Label Grid.Row="0"
@@ -132,7 +133,9 @@
                                    Grid.Column="2"
                                    x:Name="_sampleGroupLabel"
                                    Style="{StaticResource tallyInfo_label_value}"
-                                   Text="{Binding TallyPopulation.SampleGroupCode, FallbackValue={StaticResource tallyInfo_label_fallback_value}}" />
+                                   Text="{Binding TallyPopulation.SampleGroupCode, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.LabeledBy="{x:Reference _sampleGroupHeader}" />
 
                             <!-- species -->
                             <Label Grid.Row="0"
@@ -144,7 +147,9 @@
                                    Grid.Column="4"
                                    x:Name="_speciesLabel"
                                    Style="{StaticResource tallyInfo_label_value}"
-                                   Text="{Binding TallyPopulation.SpeciesCode, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}" />
+                                   Text="{Binding TallyPopulation.SpeciesCode, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.LabeledBy="{x:Reference _speciesHeader}" />
 
                             <!-- live dead -->
                             <Label Grid.Row="0"
@@ -156,7 +161,9 @@
                                    Grid.Column="6"
                                    x:Name="_liveDeadLabel"
                                    Style="{StaticResource tallyInfo_label_value}"
-                                   Text="{Binding TallyPopulation.LiveDead, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}" />
+                                   Text="{Binding TallyPopulation.LiveDead, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.LabeledBy="{x:Reference _liveDeadHeader}" />
 
 
                             <!-- spacers -->
@@ -173,7 +180,7 @@
                         </Grid>
                     </Frame>
 
-                    <StackLayout Orientation="Horizontal" 
+                    <StackLayout Orientation="Horizontal"
                                  Grid.Row="1">
 
                         <StackLayout.Resources>
@@ -197,9 +204,13 @@
                         <Frame BackgroundColor="White">
 
                             <StackLayout Orientation="Horizontal">
-                                <Label>Tree Count:</Label>
+                                <Label Text="Tree Count:"
+                                       AutomationProperties.IsInAccessibleTree="False"/>
 
-                                <Label Text="{Binding TallyPopulation.TreeCount, FallbackValue=00000}" />
+                                <Label Text="{Binding TallyPopulation.TreeCount, FallbackValue=00000}"
+                                       AutomationProperties.IsInAccessibleTree="True"
+                                       AutomationProperties.Name="Tree Count"
+                                       AutomationProperties.HelpText="{Binding TallyPopulation.TreeCount}" />
                             </StackLayout>
                         </Frame>
 
@@ -207,9 +218,13 @@
                                IsVisible="{Binding IsSTR}">
 
                             <StackLayout Orientation="Horizontal">
-                                <Label>Frequency:</Label>
+                                <Label Text="Frequency:"
+                                       AutomationProperties.IsInAccessibleTree="False" />
 
-                                <Label Text="{Binding TallyPopulation.Frequency, FallbackValue=00000}" />
+                                <Label Text="{Binding TallyPopulation.Frequency, FallbackValue=00000}"
+                                       AutomationProperties.IsInAccessibleTree="True"
+                                       AutomationProperties.Name="Tree Count"
+                                       AutomationProperties.HelpText="{Binding TallyPopulation.Frequency}" />
                             </StackLayout>
                         </Frame>
 
@@ -234,7 +249,7 @@
                         <!--remarks -->
                         <RowDefinition Height="{StaticResource form_rowHeight}" />
                         <RowDefinition Height="150" />
-                        
+
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -248,57 +263,71 @@
                             Grid.Column="0"
                             Text="Tree Count (+/-)"
                             VerticalTextAlignment="Center"
-                            HorizontalOptions="StartAndExpand" />
+                            HorizontalOptions="StartAndExpand"
+                            AutomationProperties.IsInAccessibleTree="False"/>
                     <Entry  Grid.Row="0"
                             Grid.Column="1"
                             x:Name="_treeCountDifferenceEntry"
                             Text="{Binding TreeCountDelta}"
                             WidthRequest="50"
                             HorizontalOptions="Start"
-                            Keyboard="Numeric"/>
+                            Keyboard="Numeric"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Tree Count Difference" />
 
                     <!--Ajusted Tree Count-->
                     <Label  Grid.Row="0"
                             Grid.Column="2"
                             VerticalOptions="Center"
-                            Text="{Binding AdjustedTreeCount, StringFormat='{}New Tree Count:{0}'}" />
+                            Text="{Binding AdjustedTreeCount, StringFormat='{}New Tree Count:{0}'}"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="New Tree Count"/>
 
                     <!--KPI-->
                     <Label Grid.Row="1"
                            Grid.Column="0"
                            Text="KPI (+/-)"
-                           IsEnabled="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}" />
+                           IsEnabled="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
+                           AutomationProperties.IsInAccessibleTree="False"/>
                     <Entry Grid.Row="1"
                            Grid.Column="1"
                            Text="{Binding KPIDelta}"
                            WidthRequest="50"
                            HorizontalOptions="Start"
                            IsEnabled="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
-                           Keyboard="Numeric"/>
+                           Keyboard="Numeric"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="KPI"/>
 
                     <!--Reason-->
                     <Label  Grid.Row="2"
                             Grid.Column="0"
                             Text="Reason"
                             VerticalTextAlignment="Center"
-                            HorizontalOptions="StartAndExpand" />
+                            HorizontalOptions="StartAndExpand"
+                            AutomationProperties.IsInAccessibleTree="False"/>
                     <Picker Grid.Row="2"
                             Grid.Column="1"
                             ItemsSource="{Binding EditReasonOptions}"
                             SelectedItem="{Binding EditReason}"
                             VerticalOptions="CenterAndExpand"
-                            WidthRequest="150" />
+                            WidthRequest="150"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Reson Picker" />
 
                     <!--Remarks-->
                     <Label  Grid.Row="3"
                             Grid.Column="0"
-                            Text="Remarks" />
+                            Text="Remarks"
+                            AutomationProperties.IsInAccessibleTree="False"/>
                     <Editor Grid.Row="4"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Text="{Binding Remarks}"
                             HeightRequest="100"
-                            BackgroundColor="LightGray" />
+                            BackgroundColor="LightGray"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Remaks Textbox"/>
                 </Grid>
 
                 <!--<TableView>
@@ -344,11 +373,15 @@
 
                 <Button Text="Submit"
                         BackgroundColor="Green"
-                        Command="{Binding SaveTreeCountEditCommand}" />
+                        Command="{Binding SaveTreeCountEditCommand}"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Save Button" />
 
                 <Button x:Name="_cancelButton"
                         Text="Cancel"
-                        Clicked="_cancelButton_Clicked" />
+                        Clicked="_cancelButton_Clicked"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Cancel Button" />
             </StackLayout>
         </Grid>
     </ContentPage.Content>

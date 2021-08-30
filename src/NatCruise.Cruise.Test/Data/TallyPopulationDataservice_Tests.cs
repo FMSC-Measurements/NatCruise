@@ -115,23 +115,23 @@ namespace NatCruise.Cruise.Test.Data
             }
         }
 
-        [Fact]
-        public void GetTallyPopulationsByUnitCode_multiCruise()
-        {
-            var init1 = new DatastoreInitializer();
-            var init2 = new DatastoreInitializer("1");
+        //[Fact]
+        //public void GetTallyPopulationsByUnitCode_multiCruise()
+        //{
+        //    var init1 = new DatastoreInitializer();
+        //    var init2 = new DatastoreInitializer("1");
 
-            var unitCode = init1.Units[0];
+        //    var unitCode = init1.Units[0];
 
-            using var db = init1.CreateDatabase();
+        //    using var db = init1.CreateDatabase();
 
-            init2.InitializeCruise(db);
+        //    init2.InitializeCruise(db);
 
-            var ds = new TallyPopulationDataservice(db, init1.CruiseID, init1.DeviceID);
+        //    var ds = new TallyPopulationDataservice(db, init1.CruiseID, init1.DeviceID);
 
-            var tp = ds.GetTallyPopulationsByUnitCode(unitCode).ToArray();
-            tp.Should().HaveCount(4);
-        }
+        //    var tp = ds.GetTallyPopulationsByUnitCode(unitCode).ToArray();
+        //    tp.Should().HaveCount(4);
+        //}
 
         [Fact]
         public void GetTallyPopulationsByUnitCode_with_tallybysubpop_Test()

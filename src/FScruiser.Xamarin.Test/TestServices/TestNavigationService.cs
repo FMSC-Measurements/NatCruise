@@ -187,5 +187,15 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowUserAgreement()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowPrivacyPolicy()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

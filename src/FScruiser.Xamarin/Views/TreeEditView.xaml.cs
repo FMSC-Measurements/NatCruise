@@ -129,12 +129,14 @@ namespace FScruiser.XF.Views
                 //}
 
                 var header = new Label() { Text = field.Heading };
-                if (field.Field == "Species")
-                { header.Text = "Sp/LD"; }
+                //if (field.Field == "Species")
+                //{ header.Text = "Sp/LD"; }
 
                 grid.Children.Add(header, 0, index);
 
                 var editView = TreeEditControlFactory.MakeEditView(field);
+                editView.SetValue(AutomationProperties.LabeledByProperty, header);
+
                 if (editView is Entry entry)
                 {
                     entry.Completed += _entry_Completed;

@@ -51,7 +51,7 @@ namespace FScruiser.XF.Views
         private void _stratumFilterButton_Clicked(object sender, EventArgs e)
         {
             if (sender != null && sender is View view
-                && view != null   && view.BindingContext is string stratumFilter
+                && view != null && view.BindingContext is string stratumFilter
                 && BindingContext is PlotTallyViewModel viewModel)
             {
                 viewModel.StratumFilter = stratumFilter;
@@ -97,19 +97,22 @@ namespace FScruiser.XF.Views
         {
             var controls = new List<View>();
 
-            controls.Add(new Label
-            { Text = "Species" }
-            .Column(0)
-            .Row(0));
+            var spFieldLabel = new Label
+                { Text = "Species" }
+                .Column(0)
+                .Row(0);
 
             var speciesPicker = new ValuePicker();
-            AjustEditView(speciesPicker);
+            SetupEditView(speciesPicker, spFieldLabel);
 
-            controls.Add(speciesPicker
+            var spEditControl = speciesPicker
                 .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.SpeciesCode))
                 .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.SpeciesOptions))
                 .Column(0)
-                .Row(1));
+                .Row(1);
+
+            controls.Add(spFieldLabel);
+            controls.Add(spEditControl);
 
 
             int counter = 1;
@@ -119,21 +122,22 @@ namespace FScruiser.XF.Views
 
                 if (field.Field == nameof(TreeEditViewModel.LiveDead))
                 {
-                    controls.Add(new Label
+                    var fieldLabel = new Label
                     { Text = "L/D" }
-            .Column(counter)
-            .Row(0));
+                    .Column(counter)
+                    .Row(0);
 
-                    var ldPicker = new ValuePicker();
-                    AjustEditView(ldPicker);
-
-                    controls.Add(ldPicker
+                    var editControl = new ValuePicker()
                         .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.LiveDead))
                         .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.LiveDeadOptions))
                         .Column(counter)
-                        .Row(1));
+                        .Row(1);
+                    SetupEditView(editControl, fieldLabel);
+
+                    controls.Add(fieldLabel);
+                    controls.Add(editControl);
                 }
-                else if(field.Field == nameof(TreeEditViewModel.Initials))
+                else if (field.Field == nameof(TreeEditViewModel.Initials))
                 {
                     var fieldLabel = new Label()
                     {
@@ -145,8 +149,9 @@ namespace FScruiser.XF.Views
                     var initPicker = new ValuePicker()
                         .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Initials))
                         .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.Cruisers));
-                    AjustEditView(initPicker);
+                    SetupEditView(initPicker, fieldLabel);
 
+                    controls.Add(fieldLabel);
                     controls.Add(initPicker.Column(counter).Row(1));
                 }
                 else
@@ -161,7 +166,7 @@ namespace FScruiser.XF.Views
                     var editControl = Util.TreeEditControlFactory.MakeEditView(field)
                         .Column(counter)
                         .Row(1);
-                    AjustEditView(editControl);
+                    SetupEditView(editControl, fieldLabel);
 
                     if (editControl is Entry entry)
                     {
@@ -177,9 +182,10 @@ namespace FScruiser.XF.Views
             return controls;
         }
 
-        private static void AjustEditView(View view)
+        private static void SetupEditView(View editView, View label)
         {
             //view.Margin = new Thickness(5,0);
+            editView.SetValue(AutomationProperties.LabeledByProperty, label);
         }
 
         private void _entry_Completed(object sender, EventArgs e)

@@ -1,4 +1,5 @@
 ﻿using CruiseDAL;
+using CruiseDAL.UpConvert;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
@@ -242,10 +243,28 @@ namespace NatCruise.Wpf.ViewModels
                     dest.UpsertStratumTemplateTreeFieldSetup(tfsd);
                 }
 
-                var logFieldSetupDefaults = src.GetStratumTemplateLogFieldSetup(st.StratumTemplateName);
+                var logFieldSetupDefaults = src.GetStratumTemplateLogFieldSetups(st.StratumTemplateName);
                 foreach (var lfsd in logFieldSetupDefaults)
                 {
                     dest.UpsertStratumTemplateLogFieldSetup(lfsd);
+                }
+            }
+
+            var treeFields = src.GetTreeFields();
+            foreach (var tf in treeFields)
+            {
+                if (string.IsNullOrEmpty(tf.Heading) is false)
+                {
+                    dest.UpdateTreeField(tf);
+                }
+            }
+
+            var logFields = src.GetLogFields();
+            foreach (var lf in logFields)
+            {
+                if (string.IsNullOrEmpty(lf.Heading) is false)
+                {
+                    dest.UpdateLogField(lf);
                 }
             }
 
@@ -268,8 +287,18 @@ namespace NatCruise.Wpf.ViewModels
 
             if (templatePath == null || File.Exists(templatePath) == false) { return; }
 
-            var v3TemplateDb = new CruiseDatastore_V3();
-            Migrator.MigrateFromV2ToV3(templatePath, v3TemplateDb, DeviceInfo.DeviceID);
+            var extention = Path.GetExtension(templatePath);
+
+            CruiseDatastore_V3 v3TemplateDb = null;
+            if (extention is ".cut")
+            {
+                v3TemplateDb = new CruiseDatastore_V3();
+                new Migrator().MigrateFromV2ToV3(templatePath, v3TemplateDb, DeviceInfo.DeviceID);
+            }
+            else if (extention is ".crz3t")
+            {
+                v3TemplateDb = new CruiseDatastore_V3(templatePath);
+            }
 
             var cruiseID = v3TemplateDb.ExecuteScalar<string>("SELECT CruiseID FROM Cruise LIMIT 1;");
 

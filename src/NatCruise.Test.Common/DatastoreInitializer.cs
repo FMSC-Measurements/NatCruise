@@ -8,19 +8,19 @@ namespace NatCruise.Test
 {
     public class DatastoreInitializer
     {
-        public string CruiseID { get; }
-        public string SaleID { get; }
+        public string CruiseID { get; set; }
+        public string SaleID { get; set; }
 
-        public string DeviceID { get; }
-        public string[] Units { get; }
-        public Stratum[] Strata { get; }
-        public CuttingUnit_Stratum[] UnitStrata { get; }
-        public string[] Species { get; }
-        public SampleGroup[] SampleGroups { get; }
-        public TreeDefaultValue[] TreeDefaults { get; }
-        public SubPopulation[] Subpops { get; }
-        public Stratum[] PlotStrata { get; }
-        public Stratum[] NonPlotStrata { get; }
+        public string DeviceID { get; set; }
+        public string[] Units { get; set; }
+        public Stratum[] Strata { get; set; }
+        public CuttingUnit_Stratum[] UnitStrata { get; set; }
+        public string[] Species { get; set; }
+        public SampleGroup[] SampleGroups { get; set; }
+        public TreeDefaultValue[] TreeDefaults { get; set; }
+        public SubPopulation[] Subpops { get; set; }
+        public Stratum[] PlotStrata { get; set; }
+        public Stratum[] NonPlotStrata { get; set; }
 
         public DatastoreInitializer()
         {

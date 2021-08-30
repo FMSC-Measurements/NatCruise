@@ -14,5 +14,14 @@ namespace NatCruise.Design.Data
         //void SetTreeFieldsFromStratumDefault(string stratumCode, StratumDefault sd);
 
         void SetTreeFieldsFromStratumTemplate(string stratumCode, string stratumTemplateName);
+
+
+        IEnumerable<LogFieldSetup> GetLogFieldSetups(string stratumCode);
+
+        void UpsertLogFieldSetup(LogFieldSetup lfs);
+
+        void DeleteLogFieldSetup(LogFieldSetup lfs);
+
+        void SetLogFieldsFromStratumTemplate(string stratumCode, string stratumTemplateName);
     }
 }

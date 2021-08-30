@@ -1,24 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
              xmlns:tk_conv="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
              xmlns:my_behv="clr-namespace:FScruiser.XF.Behaviors"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             xmlns:models="clr-namespace:NatCruise.Cruise.Models;assembly=NatCruise.Cruise"
              xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
              x:Class="FScruiser.XF.Views.PlotTallyView"
              BackgroundColor="White"
              x:Name="_page"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Plot Tally Page">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="tallyIncruiseColor"></Color>
 
             <tk_conv:BoolToObjectConverter x:Key="tallyIncruiseBackgroundColorConverter"
-                                              x:TypeArguments="Color"
-                                              TrueObject="{StaticResource primary_500}"
-                                              FalseObject="DimGray" />
+                                           x:TypeArguments="Color"
+                                           TrueObject="{StaticResource primary_500}"
+                                           FalseObject="DimGray" />
 
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -37,14 +36,16 @@
             </Grid.RowDefinitions>
 
             <RelativeLayout Grid.Row="0">
-                
+
                 <!--Trees List-->
                 <CollectionView AbsoluteLayout.LayoutFlags="SizeProportional"
                                 AbsoluteLayout.LayoutBounds="0,0,1,1"
                                 x:Name="_tallyFeedListView"
                                 ItemsSource="{Binding Trees}"
                                 SelectionMode="None"
-                                ItemsUpdatingScrollMode="KeepLastItemInView">
+                                ItemsUpdatingScrollMode="KeepLastItemInView"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Tree List">
 
                     <CollectionView.Behaviors>
                         <my_behv:ScrollOnLoadBehavior />
@@ -56,25 +57,19 @@
                                     <SwipeItem Text="Delete"
                                                BackgroundColor="Red"
                                                Command="{Binding BindingContext.DeleteTreeCommand, Source={Reference _page}}"
-                                               CommandParameter="{Binding TreeID}" />
+                                               CommandParameter="{Binding TreeID}"
+                                               AutomationProperties.IsInAccessibleTree="True"
+                                               AutomationProperties.Name="Delete Tree" />
                                 </SwipeView.LeftItems>
-
-                                <!--<cells:PlotTreeViewCell>
-                                    <cells:PlotTreeViewCell.GestureRecognizers>
-                                        <TapGestureRecognizer x:Name="_treeCellTappedGesture"
-                                                              Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
-                                                              CommandParameter="{Binding .}"
-                                                              Tapped="_treeCellTappedGesture_Tapped" />
-                                    </cells:PlotTreeViewCell.GestureRecognizers>
-
-                                </cells:PlotTreeViewCell>-->
 
                                 <Frame CornerRadius="5"
                                        Margin="2,5,2,0"
                                        Padding="0"
                                        BackgroundColor="{Binding CountOrMeasure, Converter={StaticResource countMeasureToColorConverter}}">
 
-                                    <Grid>
+                                    <Grid AutomationProperties.IsInAccessibleTree="True"
+                                          AutomationProperties.Name="Tree Item"
+                                          AutomationProperties.HelpText="{Binding TreeNumber, StringFormat='{}Tree Number {0}'} ">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="50" />
                                         </Grid.RowDefinitions>
@@ -89,16 +84,17 @@
 
                                         <Grid.GestureRecognizers>
                                             <TapGestureRecognizer x:Name="_treeCellTappedGesture"
-                                                                                  Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
-                                                                                  CommandParameter="{Binding .}"
-                                                                                  Tapped="_treeCellTappedGesture_Tapped" />
+                                                                  Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
+                                                                  CommandParameter="{Binding .}"
+                                                                  Tapped="_treeCellTappedGesture_Tapped" />
                                         </Grid.GestureRecognizers>
 
                                         <Label Grid.Column="0"
                                                Text="{Binding CountOrMeasure}"
                                                TextColor="{StaticResource darkText}"
                                                FontSize="16"
-                                               VerticalTextAlignment="Center" />
+                                               VerticalTextAlignment="Center"
+                                               AutomationProperties.IsInAccessibleTree="False"/>
 
                                         <local_ctrls:PopulationIndicator Grid.Row="0"
                                                                          Grid.Column="1"
@@ -120,7 +116,8 @@
                                                TextColor="{StaticResource darkText}"
                                                FontSize="30"
                                                VerticalTextAlignment="Center"
-                                               HorizontalOptions="Start" />
+                                               HorizontalOptions="Start"
+                                               AutomationProperties.IsInAccessibleTree="False"/>
 
                                         <!-- show delete button-->
                                         <ImageButton Grid.Column="4"
@@ -128,7 +125,9 @@
                                                      Clicked="openDeleteButton_Clicked"
                                                      Source="ic_more_vert_black_24dp.png"
                                                      Padding="0,7"
-                                                     VerticalOptions="Center" />
+                                                     VerticalOptions="Center"
+                                                     AutomationProperties.IsInAccessibleTree="True"
+                                                     AutomationProperties.Name="Show Item Actions"/>
 
                                     </Grid>
 
@@ -147,7 +146,9 @@
                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
                         Padding="0"
                         BindingContext="{Binding SelectedTreeViewModel}"
-                        BindingContextChanged="_treeEditPanel_BindingContextChanged">
+                        BindingContextChanged="_treeEditPanel_BindingContextChanged"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Tree Edit Panel">
 
 
                     <Grid>
@@ -190,21 +191,27 @@
                                  Grid.Column="0"
                                  Text="Hide"
                                  HorizontalOptions="Start"
-                                 Clicked="_hideTreeEditPanelButton_Clicked" />
+                                 Clicked="_hideTreeEditPanelButton_Clicked"
+                                 AutomationProperties.IsInAccessibleTree="True"
+                                 AutomationProperties.Name="Hide Tree Edit Panel"/>
 
 
                         <Button Grid.Row="2"
                                 Grid.Column="1"
                                 x:Name="_logsButton"
                                 Text="Logs"
-                                Command="{Binding ShowLogsCommand}" />
+                                Command="{Binding ShowLogsCommand}"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Logs" />
 
                         <Button Grid.Row="2"
                                 Grid.Column="2"
                                 x:Name="_editButton"
                                 Text="Edit"
                                 Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
-                                CommandParameter="{Binding TreeID}" />
+                                CommandParameter="{Binding TreeID}"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Edit Tree" />
 
                         <!--<Button Grid.Row="2"
                             Grid.Column="3"
@@ -218,25 +225,29 @@
                 </Frame>
 
             </RelativeLayout>
-            
+
             <CollectionView Grid.Row="1"
-                               x:Name="TallyListView"
+                            x:Name="TallyListView"
                             IsVisible="{Binding TalliesFiltered, Converter={StaticResource listIsNotNullOrEmptyConverter}}"
-                               ItemsSource="{Binding TalliesFiltered}"
-                               BackgroundColor="White"
-                               VerticalOptions="CenterAndExpand">
+                            ItemsSource="{Binding TalliesFiltered}"
+                            BackgroundColor="White"
+                            VerticalOptions="CenterAndExpand"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Tally Population List">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical"
                                      Span="4"
                                      HorizontalItemSpacing="3"
                                      VerticalItemSpacing="3" />
                 </CollectionView.ItemsLayout>
-                
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame Padding="0"
                                HeightRequest="80"
-                               BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}">
+                               BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.Name="Tally Population Item">
 
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
@@ -244,14 +255,15 @@
                             </Frame.GestureRecognizers>
 
 
-                                <!--<StackLayout
+                            <!--<StackLayout
                                     Orientation="Horizontal"
                                     VerticalOptions="CenterAndExpand"
                                     HorizontalOptions="Center"
                                     HeightRequest="20"
                                              BackgroundColor="Black"
                                              Padding="5,2,5,2">
-                                    --><!--<Grid.ColumnDefinitions>
+                                    -->
+                            <!--<Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="10" />
                                         <ColumnDefinition Width="2" />
                                         <ColumnDefinition Width="*" />
@@ -260,7 +272,8 @@
                                         <ColumnDefinition Width="2" />
                                         <ColumnDefinition Width="*" />
                                         
-                                    </Grid.ColumnDefinitions>--><!--
+                                    </Grid.ColumnDefinitions>-->
+                            <!--
                                     <StackLayout.Resources>
                                         <ResourceDictionary>
                                             <Style TargetType="Label">
@@ -300,20 +313,19 @@
                                            Text="{Binding LiveDead}" />
                                 </StackLayout>-->
 
-                                <Grid RowDefinitions="*,Auto,*">
+                            <Grid RowDefinitions="*,Auto,*">
 
-                                    <local_ctrls:PopulationIndicator
-                                        Grid.Row="1"
-                                        HorizontalOptions="Center"
-                                        StratumCode="{Binding StratumCode}"
-                                        SampleGroupCode="{Binding SampleGroupCode}"
-                                        Species="{Binding SpeciesCode}"
-                                        LiveDead="{Binding LiveDead}"
-                                        FontSize="Micro"
-                                        AltFontSize="Large"
-                                        AltFontAttributes="Bold"
-                                        CellPadding="2,-4"/>
-                                </Grid>
+                                <local_ctrls:PopulationIndicator Grid.Row="1"
+                                                                 HorizontalOptions="Center"
+                                                                 StratumCode="{Binding StratumCode}"
+                                                                 SampleGroupCode="{Binding SampleGroupCode}"
+                                                                 Species="{Binding SpeciesCode}"
+                                                                 LiveDead="{Binding LiveDead}"
+                                                                 FontSize="Micro"
+                                                                 AltFontSize="Large"
+                                                                 AltFontAttributes="Bold"
+                                                                 CellPadding="2,-4" />
+                            </Grid>
 
 
                         </Frame>
@@ -331,22 +343,27 @@
                             SelectedItem="{Binding StratumFilter}"
                             SelectionMode="Single"
                             ItemsSource="{Binding StrataFilterOptions}"
-                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
+                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource listIsNotNullOrEmptyConverter}}"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Stratum Filter List">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal"
                                        ItemSpacing="2" />
                 </CollectionView.ItemsLayout>
 
-                <CollectionView.ItemTemplate >
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Label Text="{Binding .}"
-                                TextColor="{StaticResource white_90}"
-                                BackgroundColor="{StaticResource primary_500}"
-                                Margin="2"
-                                Padding="1"
+                               TextColor="{StaticResource white_90}"
+                               BackgroundColor="{StaticResource primary_500}"
+                               Margin="2"
+                               Padding="1"
                                WidthRequest="70"
                                VerticalTextAlignment="Center"
-                               HorizontalTextAlignment="Center"/>
+                               HorizontalTextAlignment="Center"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.Name="Stratum Filter Item"
+                               AutomationProperties.HelpText="{Binding .}"/>
                     </DataTemplate>
 
                 </CollectionView.ItemTemplate>
