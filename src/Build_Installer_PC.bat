@@ -33,7 +33,7 @@ IF NOT EXIST %innoSetupPath% (
 	IF "%interactive%"=="0" PAUSE
 	EXIT /B 1)
 
-IF NOT DEFINED dateCode (SET dateCode=%date:~10,4%%date:~4,2%%date:~7,2%)
+IF NOT DEFINED dateCode (SET dateCode=%date:~10,4%_%date:~4,2%_%date:~7,2%)
 IF NOT DEFINED artifactsDir (SET artifactsDir=../Artifacts/%dateCode%/)
 
 ECHO %innoSetupPath% /dAPP_VERSION=%appVer% /O"%artifactsDir%NatCruise_Setup.exe" "./NatCruise.Wpf/Setup.iss" 
