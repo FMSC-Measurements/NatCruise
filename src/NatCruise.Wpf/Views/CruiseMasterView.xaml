@@ -62,14 +62,18 @@
                     Click="_tdv_Click" />
             <Button Content="Design Templates"
                     Click="_designTemplatesButton_Click" />
+            <Button Content="Tree Fields"
+                    Click="_treeFieldsButton_Click" />
+            <Button Content="Log Fields"
+                    Click="_logFieldsButton_Click" />
 
         </StackPanel>
 
-                <ContentControl x:Name="_cruiseContentPanel"
-                                prism:RegionManager.RegionName="{x:Static nav:Regions.CruiseContentRegion}"
-                                Margin="5,5,0,0">
+        <ContentControl x:Name="_cruiseContentPanel"
+                        prism:RegionManager.RegionName="{x:Static nav:Regions.CruiseContentRegion}"
+                        Margin="5,5,0,0">
 
-                </ContentControl>
+        </ContentControl>
 
     </DockPanel>
 </UserControl>

@@ -134,6 +134,7 @@ namespace NatCruise.Design.ViewModels
         private void SelectedTreeFieldSetup_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var sttfs = (StratumTemplateTreeFieldSetup)sender;
+            if(sttfs is null) { return; }
             TemplateDataservice.UpsertStratumTemplateTreeFieldSetup(sttfs);
         }
 

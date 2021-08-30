@@ -103,5 +103,17 @@ namespace NatCruise.Wpf.Services
             RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(StratumTemplateListView));
             return Task.CompletedTask;
         }
+
+        public Task ShowTreeFields()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(TreeFieldsView));
+            return Task.CompletedTask;
+        }
+
+        public Task ShowLogFields()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(LogFieldsView));
+            return Task.CompletedTask;
+        }
     }
 }
