@@ -137,6 +137,9 @@ namespace NatCruise.Wpf.ViewModels
                     DataserviceProvider.Database = database;
                     DataserviceProvider.CruiseID = cruiseID;
 
+                    RecentFilesDataservice.AddRecentFile(filePath);
+                    RaisePropertyChanged(nameof(RecentFiles));
+
                     NavigationService.ShowTemplateLandingLayout();
                 }
             }
