@@ -61,10 +61,10 @@ namespace NatCruise.Wpf
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SaleView));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CruiseView));
 
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListView));
+            //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListView));
             regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailView));
 
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListView));
+            //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListView));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumDetailView));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumFieldsView));
             regionManager.RegisterViewWithRegion(Regions.StratumFieldsRegion, typeof(StratumTreeFieldSetupView));
@@ -76,17 +76,31 @@ namespace NatCruise.Wpf
             regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SampleGroupDetailView));
             regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SubpopulationListView));
 
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(TreeAuditRuleListView));
+            //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(TreeAuditRuleListView));
             regionManager.RegisterViewWithRegion(Regions.TreeAuditSelectors, typeof(TreeAuditSelectorsView));
 
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(TreeDefaultValueListView));
+            //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(TreeDefaultValueListView));
 
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SpeciesListView));
+            //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SpeciesListView));
 
-            regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumTemplateListView));
+            //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumTemplateListView));
             regionManager.RegisterViewWithRegion(Regions.StratumTemplateRegion, typeof(StratumTemplateDetailsView));
             regionManager.RegisterViewWithRegion(Regions.StratumTemplateRegion, typeof(StratumTemplateFieldsView));
-            
+            regionManager.RegisterViewWithRegion(Regions.StratumTemplateRegion, typeof(StratumTemplateLogFieldSetupView));
+
+            //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(TreeFieldsView));
+            //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(LogFieldsView));
+
+
+            // template
+
+            //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(TreeAuditRuleListView));
+            //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(TreeDefaultValueListView));
+            //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(SpeciesListView));
+            //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(StratumTemplateListView));
+            //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(TreeFieldsView));
+            //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(LogFieldsView));
+
 
             base.OnInitialized();
 
@@ -128,9 +142,21 @@ namespace NatCruise.Wpf
 
             containerRegistry.RegisterDialog<NewCruiseView, NewCruiseViewModel>("NewCruise");
 
+            containerRegistry.RegisterForNavigation<TemplateMasterView>();
             containerRegistry.RegisterForNavigation<CruiseMasterView>();
+            
+            //containerRegistry.RegisterForNavigation<CuttingUnitDetailView>();
+
+            containerRegistry.RegisterForNavigation<SaleView>();
+            containerRegistry.RegisterForNavigation<CruiseView>();
             containerRegistry.RegisterForNavigation<CuttingUnitListView>();
-            containerRegistry.RegisterForNavigation<CuttingUnitDetailView>();
+            containerRegistry.RegisterForNavigation<StratumListView>();
+            containerRegistry.RegisterForNavigation<TreeAuditRuleListView>();
+            containerRegistry.RegisterForNavigation<TreeDefaultValueListView>();
+            containerRegistry.RegisterForNavigation<SpeciesListView>();
+            containerRegistry.RegisterForNavigation<StratumTemplateListView>();
+            containerRegistry.RegisterForNavigation<TreeFieldsView>();
+            containerRegistry.RegisterForNavigation<LogFieldsView>();
 
 
             // register validators

@@ -26,5 +26,9 @@ namespace NatCruise.Design.Services
         Task ShowSpecies();
 
         Task ShowDesignTemplates();
+
+        Task ShowTreeFields();
+
+        Task ShowLogFields();
     }
 }
