@@ -10,6 +10,8 @@ namespace NatCruise.Services
 
         Task<string> SelectBackupFileDestinationAsync(string defaultDir = null, string defaultFileName = null);
 
+        Task<string> SelectTemplateFileDestinationAsync(string defaultDir = null, string defaultFileName = null);
+
         Task<string> SelectTemplateFileAsync();
     }
 }

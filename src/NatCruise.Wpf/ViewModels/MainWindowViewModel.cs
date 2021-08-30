@@ -74,6 +74,9 @@ namespace NatCruise.Wpf.ViewModels
 
         public ICommand CreateNewFileCommand => _createNewFileCommand ?? (_createNewFileCommand = new DelegateCommand(CreateNewFile));
 
+        public ICommand CreateNewTemplateCommand => new DelegateCommand(CreateNewTemplate);
+
+
         public ICommand OpenFileCommand => _openFileCommand ?? (_openFileCommand = new DelegateCommand<string>(OpenFile));
 
         public ICommand OpenFileInfoCommand => _openFileCommand ?? (_openFileCommand = new DelegateCommand<FileInfo>(OpenFile));
@@ -102,6 +105,43 @@ namespace NatCruise.Wpf.ViewModels
             });
         }
 
+        private async void CreateNewTemplate()
+        {
+            var filePath = await FileDialogService.SelectTemplateFileDestinationAsync();
+            if (filePath != null)
+            {
+                var fileInfo = new FileInfo(filePath);
+
+                var extension = fileInfo.Extension.ToLower();
+                if (extension == ".crz3t")
+                {
+                    var saleID = Guid.NewGuid().ToString();
+                    var sale = new CruiseDAL.V3.Models.Sale()
+                    {
+                        SaleID = saleID,
+                        SaleNumber = "",
+                    };
+
+                    var cruiseID = Guid.NewGuid().ToString();
+                    var cruise = new CruiseDAL.V3.Models.Cruise()
+                    {
+                        CruiseID = cruiseID,
+                        SaleID = saleID,
+                        CruiseNumber = "",
+                    };
+
+                    var database = new CruiseDatastore_V3(fileInfo.FullName, true);
+                    database.Insert(sale);
+                    database.Insert(cruise);
+
+                    DataserviceProvider.Database = database;
+                    DataserviceProvider.CruiseID = cruiseID;
+
+                    NavigationService.ShowTemplateLandingLayout();
+                }
+            }
+        }
+
         public async void SelectFile()
         {
             var path = await FileDialogService.SelectCruiseFileAsync();
@@ -119,23 +159,48 @@ namespace NatCruise.Wpf.ViewModels
         public void OpenFile(FileInfo file)
         {
             var filePath = file.FullName;
-            var database = new CruiseDatastore_V3(filePath);
+            var extention = file.Extension;
 
-            var cruiseIDs = database.QueryScalar<string>("SELECT CruiseID FROM Cruise;").ToArray();
-            if (cruiseIDs.Length > 1)
+            if (extention is ".crz3")
             {
-                CruiseDialogService.ShowNotification("File contains multiple cruises. \r\nOpening files with multiple cruises is not supported yet", "Warning");
-                return;
+                var database = new CruiseDatastore_V3(filePath);
+
+                var cruiseIDs = database.QueryScalar<string>("SELECT CruiseID FROM Cruise;").ToArray();
+                if (cruiseIDs.Length > 1)
+                {
+                    CruiseDialogService.ShowNotification("File contains multiple cruises. \r\nOpening files with multiple cruises is not supported yet", "Warning");
+                    return;
+                }
+                var cruiseID = cruiseIDs.First();
+
+                DataserviceProvider.Database = database;
+                DataserviceProvider.CruiseID = cruiseID;
+
+                NavigationService.ShowCruiseLandingLayout();
+                RecentFilesDataservice.AddRecentFile(filePath);
+                CurrentFileName = Path.GetFileName(filePath);
+                RaisePropertyChanged(nameof(RecentFiles));
             }
-            var cruiseID = cruiseIDs.First();
+            else if(extention is ".crz3t")
+            {
+                var database = new CruiseDatastore_V3(filePath);
 
-            DataserviceProvider.Database = database;
-            DataserviceProvider.CruiseID = cruiseID;
+                var cruiseIDs = database.QueryScalar<string>("SELECT CruiseID FROM Cruise;").ToArray();
+                if (cruiseIDs.Length > 1)
+                {
+                    CruiseDialogService.ShowNotification("Invalid Template File", "Warning");
+                    return;
+                }
+                var cruiseID = cruiseIDs.First();
 
-            NavigationService.ShowCruiseLandingLayout();
-            RecentFilesDataservice.AddRecentFile(filePath);
-            CurrentFileName = Path.GetFileName(filePath);
-            RaisePropertyChanged(nameof(RecentFiles));
+                DataserviceProvider.Database = database;
+                DataserviceProvider.CruiseID = cruiseID;
+
+                NavigationService.ShowTemplateLandingLayout();
+                RecentFilesDataservice.AddRecentFile(filePath);
+                CurrentFileName = Path.GetFileName(filePath);
+                RaisePropertyChanged(nameof(RecentFiles));
+            }
         }
     }
 }
