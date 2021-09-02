@@ -1,4 +1,5 @@
-﻿using FScruiser.XF.Constants;
+﻿using CruiseDAL.Schema;
+using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
@@ -45,7 +46,6 @@ namespace FScruiser.XF.ViewModels
         }
 
         public IEnumerable<TreeStub> Trees => AllTrees?.Where(x => !OnlyShowTreesWithErrorsOrWarnings || x.ErrorCount > 0 || x.WarningCount > 0);
-
 
         public string[] StratumCodes { get; set; }
 
@@ -106,10 +106,40 @@ namespace FScruiser.XF.ViewModels
 
                 if (sampleGroupCode != null)
                 {
-                    var tree_guid = TreeDataservice.CreateMeasureTree(UnitCode, stratumCode, sampleGroupCode);
-                    var newTree = TreeDataservice.GetTreeStub(tree_guid);
-                    
-                    AllTrees.Add(newTree);
+                    var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(stratumCode);
+                    if (cruiseMethod == CruiseMethods.THREEP)
+                    {
+                        var sg = CuttingUnitDatastore.GetSampleGroup(stratumCode, sampleGroupCode);
+
+                        var defaultLD = sg.DefaultLiveDead;
+                        var subPops = CuttingUnitDatastore.GetSubPopulations(stratumCode, sampleGroupCode)
+                            .ToDictionary(x => x.SpeciesCode + ((x.LiveDead != defaultLD) ? $" ({x.LiveDead})" : ""));
+
+                        var subPopAlias = subPops.Keys.ToArray();
+                        var selectedSubPopAlias = await DialogService.AskValueAsync("Select Sub-Population", subPopAlias);
+                        if (subPops.TryGetValue(selectedSubPopAlias, out var selectedSubPop))
+                        {
+                            var kpi = await DialogService.AskKPIAsync((int)sg.MinKPI, (int)sg.MaxKPI);
+                            if (kpi is null) { return; }
+
+                            var tree_guid = TreeDataservice.CreateMeasureTree(UnitCode,
+                                stratumCode,
+                                sampleGroupCode: sampleGroupCode,
+                                species: selectedSubPop.SpeciesCode,
+                                liveDead: selectedSubPop.LiveDead,
+                                kpi: kpi.Value);
+                            var newTree = TreeDataservice.GetTreeStub(tree_guid);
+
+                            AllTrees.Add(newTree);
+                        }
+                    }
+                    else
+                    {
+                        var tree_guid = TreeDataservice.CreateMeasureTree(UnitCode, stratumCode, sampleGroupCode);
+                        var newTree = TreeDataservice.GetTreeStub(tree_guid);
+
+                        AllTrees.Add(newTree);
+                    }
                     OnTreeAdded(null);
                 }
             }
@@ -122,7 +152,6 @@ namespace FScruiser.XF.ViewModels
             RaisePropertyChanged(nameof(Trees));
 
             TreeAdded?.Invoke(this, e);
-            
         }
 
         public Task ShowEditTreeAsync(TreeStub tree)
