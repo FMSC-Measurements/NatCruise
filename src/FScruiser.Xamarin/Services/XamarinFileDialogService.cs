@@ -34,5 +34,10 @@ namespace FScruiser.XF.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<string> SelectTemplateFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
