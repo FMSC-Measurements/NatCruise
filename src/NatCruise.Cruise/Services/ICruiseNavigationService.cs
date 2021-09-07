@@ -1,32 +1,30 @@
 ﻿using NatCruise.Services;
-using Prism.Navigation;
 using System.Threading.Tasks;
 
 namespace FScruiser.XF.Services
 {
     public interface ICruiseNavigationService : ICoreNavigationService
     {
-        Task ShowImport();
-
         Task ShowBlank();
-
-        Task ShowManageCruisers();
 
         Task ShowCruiseLandingLayout();
 
-        //Task ShowCruiseSelect(string saleID);
+        Task ShowCuttingUnitInfo(string unitCode);
 
         Task ShowCuttingUnitList();
 
-        Task ShowCuttingUnitInfo(string unitCode);
-
+        //Task ShowCruiseSelect(string saleID);
         Task ShowFixCNT(string unitCode, int plotNumber, string stratumCode);
+
+        Task ShowImport();
 
         Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber);
 
         Task ShowLogEdit(string logID);
 
         Task ShowLogsList(string treeID);
+
+        Task ShowManageCruisers();
 
         Task ShowPlotEdit(string plotID);
 
@@ -40,9 +38,11 @@ namespace FScruiser.XF.Services
 
         //Task ShowPlotTally(string unitCode, int plotNumber);
 
-        Task ShowSaleSelect();
+        Task ShowPrivacyPolicy();
 
         Task ShowSale(string cruiseID);
+
+        Task ShowSaleSelect();
 
         Task ShowTally(string unitCode);
 
@@ -58,6 +58,6 @@ namespace FScruiser.XF.Services
 
         Task ShowUserAgreement();
 
-        Task ShowPrivacyPolicy();
+        Task ShowUtilities();
     }
 }

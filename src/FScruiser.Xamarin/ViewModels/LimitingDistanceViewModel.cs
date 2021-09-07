@@ -2,15 +2,19 @@
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Services;
 using Prism.Common;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class LimitingDistanceViewModel : XamarinViewModelBase, INavigatedAware
+    public class LimitingDistanceViewModel : XamarinViewModelBase//, INavigatedAware
     {
         public const String MEASURE_TO_FACE = "Face";
         public const String MEASURE_TO_CENTER = "Center";
@@ -25,10 +29,17 @@ namespace FScruiser.XF.ViewModels
         private double _azimuth;
         private bool _isToFace = true;
         private bool _isVariableRadius;
+        private Plot_Stratum _plot;
 
-        public IPlotDataservice PlotDataservice { get; }
+        protected IDataserviceProvider DataserviceProvider { get; }
+        public IPlotDataservice PlotDataservice { get; protected set; }
+        public IDialogService DialogService { get; }
 
-        public Plot_Stratum Plot { get; set; }
+        public Plot_Stratum Plot
+        {
+            get => _plot;
+            set => SetProperty(ref _plot, value);
+        }
 
         public double BafOrFps
         {
@@ -161,23 +172,26 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public LimitingDistanceViewModel(IPlotDataservice plotDataservice)
+        public ICommand SaveReportToPlotCommand => new Command(SaveReport);
+
+        public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
         {
-            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
+            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
-        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
-        {
-            // do nothing
-        }
+        //void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
+        //{
+        //    // do nothing
+        //}
 
-        public void OnNavigatedFrom(INavigationParameters parameters)
-        {
-            if (TreeStatus != null)
-            {
-                SaveReport();
-            }
-        }
+        //public void OnNavigatedFrom(INavigationParameters parameters)
+        //{
+        //    if (TreeStatus != null)
+        //    {
+        //        SaveReport();
+        //    }
+        //}
 
         protected override void Load(IParameters parameters)
         {
@@ -187,17 +201,21 @@ namespace FScruiser.XF.ViewModels
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
-            var plot = PlotDataservice.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
-
-            if (plot != null)
+            if (unitCode != null && stratumCode != null && plotNumber != null)
             {
-                var isVariableRadious = IsVariableRadius = CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(plot.CruiseMethod);
+                var ds = PlotDataservice = DataserviceProvider.GetDataservice<PlotDataservice>();
+                var plot = ds.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
 
-                BafOrFps = (isVariableRadious) ? plot.BAF : plot.FPS;
+                if (plot != null)
+                {
+                    var isVariableRadious = IsVariableRadius = CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(plot.CruiseMethod);
 
-                Plot = plot;
+                    BafOrFps = (isVariableRadious) ? plot.BAF : plot.FPS;
 
-                RaisePropertyChanged(nameof(BafOrFps));
+                    Plot = plot;
+
+                    RaisePropertyChanged(nameof(BafOrFps));
+                }
             }
         }
 
@@ -243,10 +261,14 @@ namespace FScruiser.XF.ViewModels
         public void SaveReport()
         {
             var plot = Plot;
-            var report = GenerateReport();
-            if (!string.IsNullOrEmpty(report))
+            if (plot != null)
             {
-                PlotDataservice.AddPlotRemark(plot.CuttingUnitCode, plot.PlotNumber, report);
+                var report = GenerateReport();
+                if (!string.IsNullOrEmpty(report))
+                {
+                    PlotDataservice.AddPlotRemark(plot.CuttingUnitCode, plot.PlotNumber, report);
+                    DialogService.ShowNotification(report, "Report Saved");
+                }
             }
         }
     }

@@ -28,6 +28,11 @@
             <!-- the order that the entries appear on the screen is significant as this is the order that 
             users typicaly enter in their measurments Dbh, then slope, then slope distance-->
 
+            <StackLayout IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}">
+                <Label Text="{Binding Plot.StratumCode, StringFormat='{}Stratum {0}'}}" />
+            </StackLayout>
+                         
+            
             <Frame BackgroundColor="LightBlue">
                 <StackLayout Orientation="Horizontal">
                     <StackLayout Orientation="Horizontal">
@@ -131,6 +136,11 @@
                 </Frame>
             </StackLayout>
 
+
+            <Button Text="Save Limiting Distance Report To Remarks"
+                    Command="{Binding SaveReportToPlotCommand}"
+                    IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                    IsEnabled="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

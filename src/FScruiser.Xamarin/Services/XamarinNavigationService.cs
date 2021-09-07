@@ -2,34 +2,25 @@
 using NatCruise.Services;
 using Prism.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FScruiser.XF.Services
 {
     public class XamarinNavigationService : ICruiseNavigationService
     {
-        ILoggingService Log { get; }
-
         public XamarinNavigationService(INavigationService navigationService, ILoggingService loggingService)
         {
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             Log = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
-        INavigationService NavigationService { get; }
+        private ILoggingService Log { get; }
+        private INavigationService NavigationService { get; }
 
         public Task GoBackAsync()
         {
             return NavigationService.GoBackAsync();
-        }
-
-        public Task ShowBlank()
-        {
-            return NavigationService.NavigateAsync("Blank");
         }
 
         public Task<INavigationResult> NavigateAsync(string path, NavigationParameters navparams)
@@ -37,9 +28,9 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync(path, navparams);
         }
 
-        public Task ShowManageCruisers()
+        public Task ShowBlank()
         {
-            return NavigationService.NavigateAsync("Navigation/Cruisers");
+            return NavigationService.NavigateAsync("Blank");
         }
 
         public Task ShowCruiseLandingLayout()
@@ -68,7 +59,6 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync("Navigation/CuttingUnitInfo",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
-
 
         public Task ShowCuttingUnitList()
         {
@@ -158,6 +148,11 @@ namespace FScruiser.XF.Services
             }
         }
 
+        public Task ShowManageCruisers()
+        {
+            return NavigationService.NavigateAsync("Navigation/Cruisers");
+        }
+
         public Task ShowPlotEdit(string plotID)
         {
             if (string.IsNullOrEmpty(plotID))
@@ -210,6 +205,11 @@ namespace FScruiser.XF.Services
         //    return NavigationService.NavigateAsync("PlotTally",
         //        new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.PLOT_NUMBER}={plotNumber}"));
         //}
+
+        public Task ShowPrivacyPolicy()
+        {
+            return NavigationService.NavigateAsync("PrivacyPolicy");
+        }
 
         public Task ShowSale(string cruiseID)
         {
@@ -341,9 +341,9 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync("UserAgreement");
         }
 
-        public Task ShowPrivacyPolicy()
+        public Task ShowUtilities()
         {
-            return NavigationService.NavigateAsync("PrivacyPolicy");
+            return NavigationService.NavigateAsync("Navigation/Utilities");
         }
     }
 }
