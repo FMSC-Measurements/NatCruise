@@ -27,7 +27,7 @@
     <PackageReference Include="Backpack.XF.Converters" Version="1.0.1.2" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.1.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="PandocTasks" Version="0.1.2" />
     <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
     <PackageReference Include="Scripty.MsBuild" Version="0.7.4" />
@@ -243,6 +243,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\UserAgreementView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\UtilitiesView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
