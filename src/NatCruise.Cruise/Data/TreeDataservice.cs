@@ -165,6 +165,140 @@ LEFT JOIN treeErrorCount AS te USING (TreeID)
 LEFT JOIN treeWarningCount AS tw USING (TreeID)
 ";
 
+        private const string GET_TREEEX_BASE_COMMAND =
+@"WITH treeErrorCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS ErrorCount
+    FROM TreeError
+    WHERE Level = 'E'
+    GROUP BY TreeID
+),
+
+treeWarningCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS WarningCount
+    FROM TreeError
+    WHERE Level = 'W'
+    GROUP BY TreeID
+)
+
+SELECT
+    t.*,
+    tm.*,
+    te.ErrorCount,
+    tw.WarningCount
+FROM Tree AS t
+LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+LEFT JOIN treeErrorCount AS te USING (TreeID)
+LEFT JOIN treeWarningCount AS tw USING (TreeID)
+";
+
+        private const string GET_TREEEX_BASE_COMMAND_2 =
+@"WITH treeErrorCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS ErrorCount
+    FROM TreeError
+    WHERE Level = 'E'
+    GROUP BY TreeID
+),
+
+treeWarningCount AS
+(
+    SELECT
+        TreeID,
+        count(*)AS WarningCount
+    FROM TreeError
+    WHERE Level = 'W'
+    GROUP BY TreeID
+)
+
+
+SELECT
+    t.*,
+    CAST (ifnull(tl.KPI, 0) AS REAL) AS KPI,
+    (CASE ifnull(tl.STM, 0) WHEN 0 THEN 'N' WHEN 1 THEN 'Y' END) AS STM,
+    te.ErrorCount,
+    tw.WarningCount,
+
+        -- MEASURMENT FIELDS
+        ifnull(tm.SeenDefectPrimary, 
+            (SELECT tfs.DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS SeenDefectPrimary,
+        ifnull(tm.SeenDefectSecondary, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS SeenDefectSecondary,
+        ifnull(tm.RecoverablePrimary, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'RecoverablePrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS RecoverablePrimary,
+        ifnull(tm.HiddenPrimary, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HiddenPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS HiddenPrimary,
+        ifnull(tm.Grade, 
+            (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Grade' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS Grade,
+
+        ifnull(tm.HeightToFirstLiveLimb, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HeightToFirstLiveLimb' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS HeightToFirstLiveLimb,
+        ifnull(tm.PoleLength, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'PoleLength' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS PoleLength,
+        ifnull(tm.ClearFace, 
+            (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'ClearFace' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS ClearFace,
+        ifnull(tm.CrownRatio, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'CrownRatio' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS CrownRatio,
+        ifnull(tm.DBH, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBH' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS DBH,
+
+        ifnull(tm.DRC, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DRC' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS DRC,
+        ifnull(tm.TotalHeight, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TotalHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS TotalHeight,
+        ifnull(tm.MerchHeightPrimary, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS MerchHeightPrimary,
+        ifnull(tm.MerchHeightSecondary, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS MerchHeightSecondary,
+        ifnull(tm.FormClass, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'FormClass' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS FormClass,
+
+        ifnull(tm.UpperStemDiameter, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemDiameter' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS UpperStemDiameter,
+        ifnull(tm.UpperStemHeight, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS UpperStemHeight,
+        ifnull(tm.DBHDoubleBarkThickness, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBHDoubleBarkThickness' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS DBHDoubleBarkThickness,
+        ifnull(tm.TopDIBPrimary, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS TopDIBPrimary,
+        ifnull(tm.TopDIBSecondary, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS TopDIBSecondary,
+
+        ifnull(tm.DefectCode, 
+            (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DefectCode' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS DefectCode,
+        ifnull(tm.DiameterAtDefect, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DiameterAtDefect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS DiameterAtDefect,
+        ifnull(tm.VoidPercent, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'VoidPercent' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS VoidPercent,
+        ifnull(tm.Slope, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Slope' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS Slope,
+        ifnull(tm.Aspect, 
+            (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Aspect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS Aspect,
+
+        ifnull(tm.Remarks, 
+            (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Remarks' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS Remarks,
+        ifnull(tm.IsFallBuckScale, 
+            (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'IsFallBuckScale' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS IsFallBuckScale,
+
+        ifnull(tm.MetaData, 
+            (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MetaData' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS MetaData, 
+        ifnull(tm.Initials, 
+            (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Initials' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)) AS Initials
+
+FROM Tree AS t
+LEFT JOIN TallyLedger AS tl ON tl.TreeID = t.TreeID
+LEFT JOIN TreeMeasurment AS tm ON t.TreeID = tm.TreeID
+LEFT JOIN treeErrorCount AS te USING (TreeID)
+LEFT JOIN treeWarningCount AS tw USING (TreeID)
+";
+
         public TreeDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -265,19 +399,13 @@ INSERT INTO TallyLedger (
 
         public Tree_Ex GetTree(string treeID)
         {
-            return Database.Query<Tree_Ex>(
-                "SELECT t.*, tm.* FROM Tree AS t " +
-                "LEFT JOIN TreeMeasurment AS tm USING (TreeID) " +
-                "WHERE t.TreeID = @p1;", treeID).FirstOrDefault();
+            return Database.Query<Tree_Ex>(GET_TREEEX_BASE_COMMAND + "WHERE t.TreeID = @p1;", treeID).FirstOrDefault();
         }
 
-        public IEnumerable<Tree> GetTreesByUnitCode(string unitCode)
+        public IEnumerable<Tree_Ex> GetTreesByUnitCode(string unitCode)
         {
-            return Database.Query<Tree_Ex>(
-                "SELECT t.*, tm.* FROM Tree AS t " +
-                "LEFT JOIN TreeMeasurment AS tm USING (TreeID) " +
-                "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
-                "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL",
+            return Database.Query<Tree_Ex>(GET_TREEEX_BASE_COMMAND_2 +
+                "WHERE t.CuttingUnitCode = @p1 AND t.CruiseID = @p2 AND t.PlotNumber IS NULL",
                 unitCode, CruiseID).ToArray();
         }
 
@@ -300,6 +428,12 @@ INSERT INTO TallyLedger (
             //    .Query(unitCode, CruiseID);
 
             return Database.Query<TreeStub>(GET_TREESTUB_BASE_COMMAND + " WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber NOT NULL;",
+                unitCode, CruiseID);
+        }
+
+        public IEnumerable<Tree_Ex> GetPlotTreesByUnitCode(string unitCode)
+        {
+            return Database.Query<Tree_Ex>(GET_TREEEX_BASE_COMMAND_2 + " WHERE t.CuttingUnitCode = @p1 AND t.CruiseID = @p2 AND t.PlotNumber NOT NULL;",
                 unitCode, CruiseID);
         }
 
