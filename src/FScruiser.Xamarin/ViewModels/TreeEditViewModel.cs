@@ -48,6 +48,7 @@ namespace FScruiser.XF.ViewModels
 
         public bool UseSimplifiedTreeFields { get; set; } = false;
 
+
         public IEnumerable<string> Cruisers
         {
             get => _cruisers;

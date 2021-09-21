@@ -399,7 +399,7 @@ INSERT INTO TallyLedger (
 
         public Tree_Ex GetTree(string treeID)
         {
-            return Database.Query<Tree_Ex>(GET_TREEEX_BASE_COMMAND + "WHERE t.TreeID = @p1;", treeID).FirstOrDefault();
+            return Database.Query<Tree_Ex>(GET_TREEEX_BASE_COMMAND_2 + "WHERE t.TreeID = @p1;", treeID).FirstOrDefault();
         }
 
         public IEnumerable<Tree_Ex> GetTreesByUnitCode(string unitCode)
