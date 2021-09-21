@@ -40,6 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
+    <ProjectReference Include="..\..\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid.csproj" />
     <ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj" />
   </ItemGroup>
 

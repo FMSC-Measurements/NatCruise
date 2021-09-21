@@ -74,6 +74,9 @@ namespace NatCruise.Cruise.Data
                 return new SamplerInfoDataservice(database, cruiseID, deviceID);
             }
 
+            if(typeof(ITreeFieldDataservice).IsAssignableFrom(type))
+            { return new TreeFieldDataservice(database, cruiseID, deviceID); }
+
             if (typeof(ITallyPopulationDataservice).IsAssignableFrom(type))
             { return new TallyPopulationDataservice(database, cruiseID, deviceID); }
 
@@ -100,6 +103,7 @@ namespace NatCruise.Cruise.Data
             containerRegistry.Register<IPlotTallyDataservice>(e => GetDataservice<IPlotTallyDataservice>());
             containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
             containerRegistry.Register<ISampleInfoDataservice>(x => GetDataservice<ISampleInfoDataservice>());
+            containerRegistry.Register<ITreeFieldDataservice>(x => GetDataservice<ITreeFieldDataservice>());
         }
     }
 }

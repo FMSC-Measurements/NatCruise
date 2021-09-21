@@ -3,15 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
              xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
+             xmlns:converters="clr-namespace:FScruiser.XF.Converters"
+             xmlns:dg="clr-namespace:Xamarin.Forms.DataGrid;assembly=Xamarin.Forms.DataGrid"
              x:Class="FScruiser.XF.Views.TreeListView"
              x:Name="_page"
              BackgroundColor="White"
              Title="{Binding UnitCode, StringFormat='{}Unit {0} Trees'}"
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Tree List Page">
-    <!--<ContentPage.Resources>
-    </ContentPage.Resources>-->
     <StackLayout>
+        <Label Text="Long Tap Row To Edit Tree Record" />
+
         <StackLayout Orientation="Horizontal"
                      HorizontalOptions="EndAndExpand"
                      Margin="5,0">
@@ -23,7 +25,7 @@
                     AutomationProperties.Name="Only Show Trees With Errors Toggle" />
         </StackLayout>
 
-        <CollectionView x:Name="_treeListView"
+        <!--<CollectionView x:Name="_treeListView"
                         ItemsSource="{Binding Trees}"
                         SelectionMode="None"
                         ItemSizingStrategy="MeasureFirstItem"
@@ -75,7 +77,9 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <!--col 0: TreeNumber-->
+                        -->
+        <!--col 0: TreeNumber-->
+        <!--
                         <Label x:Name="_treeNumberHeading"
                                Grid.Column="0"
                                Grid.Row="0"
@@ -86,7 +90,9 @@
                                Text="{Binding TreeNumber}"
                                Style="{StaticResource ValueText}"
                                AutomationProperties.LabeledBy="{x:Reference _treeNumberHeading}" />
-                        <!--col 1: StratumCode-->
+                        -->
+        <!--col 1: StratumCode-->
+        <!--
                         <Label x:Name="_stratumCodeHeading"
                                Grid.Column="1"
                                Grid.Row="0"
@@ -97,7 +103,9 @@
                                Text="{Binding StratumCode}"
                                Style="{StaticResource ValueText}"
                                AutomationProperties.LabeledBy="{x:Reference _stratumCodeHeading}" />
-                        <!--col 2: SampleGroupCode-->
+                        -->
+        <!--col 2: SampleGroupCode-->
+        <!--
                         <Label x:Name="_sampleGroupCodeHeading"
                                Grid.Column="2"
                                Grid.Row="0"
@@ -108,7 +116,9 @@
                                Text="{Binding SampleGroupCode}"
                                Style="{StaticResource ValueText}"
                                AutomationProperties.LabeledBy="{x:Reference _sampleGroupCodeHeading}" />
-                        <!--col 3: SpeciesCode-->
+                        -->
+        <!--col 3: SpeciesCode-->
+        <!--
                         <Label x:Name="_speciesCodeHeading"
                                Grid.Column="3"
                                Grid.Row="0"
@@ -119,7 +129,9 @@
                                Text="{Binding SpeciesCode}"
                                Style="{StaticResource ValueText}"
                                AutomationProperties.LabeledBy="{x:Reference _speciesCodeHeading}" />
-                        <!--col 4: LiveDead-->
+                        -->
+        <!--col 4: LiveDead-->
+        <!--
                         <Label x:Name="_liveDeadHeading"
                                Grid.Column="4"
                                Grid.Row="0"
@@ -130,7 +142,9 @@
                                Text="{Binding LiveDead}"
                                Style="{StaticResource ValueText}"
                                AutomationProperties.LabeledBy="{x:Reference _liveDeadHeading}" />
-                        <!--col 5: Diameter-->
+                        -->
+        <!--col 5: Diameter-->
+        <!--
                         <Label x:Name="_diameterHeading"
                                Grid.Column="5"
                                Grid.Row="0"
@@ -141,7 +155,9 @@
                                Text="{Binding Diameter}"
                                Style="{StaticResource ValueText}"
                                AutomationProperties.LabeledBy="{x:Reference _diameterHeading}" />
-                        <!--col 6: Height-->
+                        -->
+        <!--col 6: Height-->
+        <!--
                         <Label x:Name="_heightHeading"
                                Grid.Column="6"
                                Grid.Row="0"
@@ -154,7 +170,8 @@
                                AutomationProperties.LabeledBy="{x:Reference _heightHeading}" />
 
                     </Grid>
-                    <!--<ViewCell.ContextActions>
+                    -->
+        <!--<ViewCell.ContextActions>
                         <MenuItem x:Name="Delete"
                                   Text="Delete"
                                   Command="{Binding Path=BindingContext.DeleteTreeCommand, Source={x:Reference Page}}"
@@ -164,10 +181,30 @@
                                   Command="{Binding BindingContext.ShowLogsCommand, Source={x:Reference Page}}"
                                   CommandParameter="{Binding .}" />
                     </ViewCell.ContextActions>-->
+        <!--
 
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-        </CollectionView>
+        </CollectionView>-->
+
+        <dg:NGDataGrid x:Name="_treesDataGrid"
+                       Columns="{Binding TreeFields, Converter={StaticResource treeFieldToDataGridColumnConverter}}"
+                       ItemsSource="{Binding Trees}"
+                       VerticalOptions="FillAndExpand"
+                       SelectionMode="Single">
+            <dg:NGDataGrid.Resources>
+                <ResourceDictionary>
+                    <converters:TreeFieldToDataGridColumnConverter x:Key="treeFieldToDataGridColumnConverter" />
+                </ResourceDictionary>
+            </dg:NGDataGrid.Resources>
+
+            <dg:NGDataGrid.RowsBackgroundColorPalette>
+                <dg:PaletteCollection>
+                    <Color>#FFFFFF</Color>
+                </dg:PaletteCollection>
+            </dg:NGDataGrid.RowsBackgroundColorPalette>
+        </dg:NGDataGrid>
+
         <StackLayout Orientation="Horizontal"
                      VerticalOptions="End">
             <StackLayout.Resources>
@@ -181,10 +218,42 @@
                     </Style>
                 </ResourceDictionary>
             </StackLayout.Resources>
-            <Button x:Name="_goToEndButton"
+            <!--<Button x:Name="_goToEndButton"
                     Image="ic_chevron_double_down_white_24dp.png"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Scroll to End Button" />
+                    AutomationProperties.Name="Scroll to End Button" />-->
+            <Button x:Name="_editTreeButton"
+                    Image="ic_edit_white_24dp.png"
+                    Command="{Binding EditTreeCommand}"
+                    CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}">
+                <!--<VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="Red" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="Blue" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding SelectedItem, Source={Reference _treesDataGrid}, Converter={StaticResource myNotNullConverter}}"
+                                 Value="False">
+                        <Setter Property="IsEnabled"
+                                Value="False" />
+                    </DataTrigger>
+
+                </Button.Triggers>-->
+            </Button>
+
             <Button x:Name="_addTreeButton"
                     Image="ic_plus_white_24dp.png"
                     Command="{Binding AddTreeCommand}"
@@ -194,11 +263,45 @@
                     HorizontalOptions="FillAndExpand"
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="Add Tree Button" />
-            <Button x:Name="_goToStartButton"
+
+            <Button x:Name="_deleteTreeButton"
+                    Text="Delete"
+                    TextColor="White"
+                    Command="{Binding DeleteTreeCommand}"
+                    CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}">
+                <!--<VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="Red" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="Blue" />
+                            </VisualState.Setters>
+                        </VisualState>
+                                     
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding ABoolProp}"
+                                 Value="False">
+                        <Setter Property="IsEnabled"
+                                Value="False" />
+                    </DataTrigger>
+                                 
+                </Button.Triggers>-->
+            </Button>
+
+            <!--<Button x:Name="_goToStartButton"
                     Image="ic_chevron_double_up_white_24dp.png"
                     HorizontalOptions="End"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Scroll to Start Button" />
+                    AutomationProperties.Name="Scroll to Start Button" />-->
         </StackLayout>
     </StackLayout>
 </ContentPage>

@@ -264,6 +264,70 @@ namespace NatCruise.Cruise.Test.Data
         }
 
         [Theory]
+        [InlineData("u1", "st1", "sg1", "sp1", "L", 101)]
+        public void GetTreesByUnitCode(string unitCode, string stratumCode, string sgCode, string species, string liveDead, int kpi)
+        {
+            var init = new DatastoreInitializer();
+            using (var db = init.CreateDatabase())
+            {
+                var tfs = new TreeFieldSetup
+                {
+                    CruiseID = init.CruiseID,
+                    StratumCode = stratumCode,
+                    //SampleGroupCode = sgCode,
+                    Field = "DBH",
+                    DefaultValueReal = 103.0,
+                };
+                db.Insert(tfs);
+
+                var ds = new TreeDataservice(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                var tree_GUID = ds.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, kpi: kpi);
+
+                db.Execute("INSERT INTO TreeMeasurment  (TreeID, DBH) VALUES (@p1, @p2);", tree_GUID, 107.0);
+
+                var trees = ds.GetTreesByUnitCode(unitCode).ToArray();
+                trees.Should().HaveCount(1);
+
+                var tree = trees.First();
+                tree.KPI.Should().Be(kpi);
+
+                tree.DBH.Should().Be(107.0);
+            }
+        }
+
+        [Theory]
+        [InlineData("u1", "st1", "sg1", "sp1", "L", 101)]
+        public void GetTreesByUnitCode_With_StratumFieldSetupDefaultValue(string unitCode, string stratumCode, string sgCode, string species, string liveDead, int kpi)
+        {
+            var init = new DatastoreInitializer();
+            using (var db = init.CreateDatabase())
+            {
+                var tfs = new TreeFieldSetup
+                {
+                    CruiseID = init.CruiseID,
+                    StratumCode = stratumCode,
+                    //SampleGroupCode = sgCode,
+                    Field = "DBH",
+                    DefaultValueReal = 103.0,
+                };
+                db.Insert(tfs);
+
+                var ds = new TreeDataservice(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                var tree_GUID = ds.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, kpi: kpi);
+
+                var trees = ds.GetTreesByUnitCode(unitCode).ToArray();
+                trees.Should().HaveCount(1);
+
+                var tree = trees.First();
+                tree.KPI.Should().Be(kpi);
+
+                tree.DBH.Should().Be(103.0);
+            }
+        }
+
+        [Theory]
         [InlineData("u1", "st1", null, "", "", Skip = "sampleGroup is required now")]
         [InlineData("u1", "st1", "sg1", "sp1", "L")]
         public void GetTreeStub(string unitCode, string stratumCode, string sgCode, string species, string liveDead)

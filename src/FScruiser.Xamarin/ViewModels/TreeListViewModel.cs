@@ -18,14 +18,21 @@ namespace FScruiser.XF.ViewModels
     public class TreeListViewModel : XamarinViewModelBase
     {
         private ICommand _deleteTreeCommand;
-        private Command<TreeStub> _editTreeCommand;
-        private ICollection<TreeStub> _allTrees;
+        private Command _editTreeCommand;
+        private ICollection<Tree_Ex> _allTrees;
         private Command _addTreeCommand;
         private Command<TreeStub> _showLogsCommand;
         private string _unitCode;
         private bool _onlyShowTreesWithErrorsOrWarnings;
+        private IEnumerable<TreeField> _treeFields;
 
-        public ICollection<TreeStub> AllTrees
+        public IEnumerable<TreeField> TreeFields
+        {
+            get => _treeFields;
+            protected set => SetProperty(ref _treeFields, value);
+        }
+
+        public ICollection<Tree_Ex> AllTrees
         {
             get { return _allTrees; }
             protected set
@@ -45,17 +52,23 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public IEnumerable<TreeStub> Trees => AllTrees?.Where(x => !OnlyShowTreesWithErrorsOrWarnings || x.ErrorCount > 0 || x.WarningCount > 0);
+        public IEnumerable<Tree_Ex> Trees => AllTrees?.Where(x => !OnlyShowTreesWithErrorsOrWarnings || x.ErrorCount > 0 || x.WarningCount > 0);
 
         public string[] StratumCodes { get; set; }
 
-        public ICommand AddTreeCommand => _addTreeCommand ?? (_addTreeCommand = new Command(AddTreeAsync));
+        public ICommand AddTreeCommand => _addTreeCommand ??= new Command(AddTreeAsync);
 
-        public ICommand DeleteTreeCommand => _deleteTreeCommand ?? (_deleteTreeCommand = new Command<TreeStub>(DeleteTree));
+        public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new Command<TreeStub>(DeleteTree);
 
-        public ICommand EditTreeCommand => _editTreeCommand ?? (_editTreeCommand = new Command<TreeStub>(async (x) => await ShowEditTreeAsync(x)));
+        public ICommand EditTreeCommand => _editTreeCommand ??= new Command((tree) =>
+                    {
+                        if (tree != null) { ShowEditTree((Tree_Ex)tree); }
+                    });
 
-        public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new Command<TreeStub>(async (x) => await ShowLogsAsync(x)));
+        public ICommand ShowLogsCommand => _showLogsCommand ??= new Command<TreeStub>((tree) =>
+                    {
+                        if (tree != null) { ShowLogsAsync(tree); }
+                    });
 
         public string UnitCode
         {
@@ -67,6 +80,7 @@ namespace FScruiser.XF.ViewModels
         protected ITreeDataservice TreeDataservice { get; }
         protected ICruiseDialogService DialogService { get; }
         protected ICruiseNavigationService NavigationService { get; }
+        public ITreeFieldDataservice TreeFieldDataservice { get; }
 
         public event EventHandler TreeAdded;
 
@@ -74,12 +88,14 @@ namespace FScruiser.XF.ViewModels
             ICruiseDialogService dialogService,
             ICruiseNavigationService navigationService,
             ICuttingUnitDataservice cuttingUnitDatastore,
-            ITreeDataservice treeDataservice)
+            ITreeDataservice treeDataservice,
+            ITreeFieldDataservice treeFieldDataservice)
         {
             CuttingUnitDatastore = cuttingUnitDatastore ?? throw new ArgumentNullException(nameof(cuttingUnitDatastore));
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
         }
 
         protected override void Load(IParameters parameters)
@@ -88,9 +104,12 @@ namespace FScruiser.XF.ViewModels
 
             var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
 
-            AllTrees = TreeDataservice.GetTreeStubsByUnitCode(unitCode).ToObservableCollection();
-
-            StratumCodes = CuttingUnitDatastore.GetStrataProxiesByUnitCode(UnitCode).Select(x => x.StratumCode).ToArray();
+            if (IsLoaded is false)
+            {
+                TreeFields = TreeFieldDataservice.GetNonPlotTreeFields(unitCode);
+                StratumCodes = CuttingUnitDatastore.GetStrataProxiesByUnitCode(UnitCode).Select(x => x.StratumCode).ToArray();
+            }
+            AllTrees = TreeDataservice.GetTreesByUnitCode(unitCode).ToObservableCollection();
         }
 
         public async void AddTreeAsync()
@@ -128,7 +147,7 @@ namespace FScruiser.XF.ViewModels
                                 species: selectedSubPop.SpeciesCode,
                                 liveDead: selectedSubPop.LiveDead,
                                 kpi: kpi.Value);
-                            var newTree = TreeDataservice.GetTreeStub(tree_guid);
+                            var newTree = TreeDataservice.GetTree(tree_guid);
 
                             AllTrees.Add(newTree);
                         }
@@ -136,7 +155,7 @@ namespace FScruiser.XF.ViewModels
                     else
                     {
                         var tree_guid = TreeDataservice.CreateMeasureTree(UnitCode, stratumCode, sampleGroupCode);
-                        var newTree = TreeDataservice.GetTreeStub(tree_guid);
+                        var newTree = TreeDataservice.GetTree(tree_guid);
 
                         AllTrees.Add(newTree);
                     }
@@ -154,15 +173,17 @@ namespace FScruiser.XF.ViewModels
             TreeAdded?.Invoke(this, e);
         }
 
-        public Task ShowEditTreeAsync(TreeStub tree)
+        public void ShowEditTree(Tree_Ex tree)
         {
-            return NavigationService.ShowTreeEdit(tree.TreeID);
+            //NavigationService.ShowPrivacyPolicy();
+            NavigationService.ShowTreeEdit(tree.TreeID);
         }
 
         private void DeleteTree(TreeStub tree)
         {
             if (tree == null) { return; }
 
+            DialogService.AskCancelAsync("Delete Tree?", "", true);
             TreeDataservice.DeleteTree(tree.TreeID);
         }
 

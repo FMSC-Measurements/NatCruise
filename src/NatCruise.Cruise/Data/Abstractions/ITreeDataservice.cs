@@ -13,13 +13,15 @@ namespace NatCruise.Cruise.Data
 
         Tree_Ex GetTree(string treeID);
 
-        IEnumerable<Tree> GetTreesByUnitCode(string unitCode);
+        IEnumerable<Tree_Ex> GetTreesByUnitCode(string unitCode);
 
         TreeStub GetTreeStub(string treeID);
 
         IEnumerable<TreeStub> GetTreeStubsByUnitCode(string unitCode);
 
         IEnumerable<TreeStub> GetPlotTreeStubsByUnitCode(string unitCode);
+
+        IEnumerable<Tree_Ex> GetPlotTreesByUnitCode(string unitCode);
 
         IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID);
 
