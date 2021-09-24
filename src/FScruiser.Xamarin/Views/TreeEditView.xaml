@@ -198,6 +198,16 @@
 
             </StackLayout>
 
+            <!-- KPI -->
+            <StackLayout Orientation="Horizontal"
+                         IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
+                <Label Text="KPI"
+                       AutomationProperties.IsInAccessibleTree="False" />
+                <Label Text="{Binding Tree.KPI}"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Species Picker" />
+            </StackLayout>
+
         </FlexLayout>
 
         <ScrollView x:Name="_editViewsHost"

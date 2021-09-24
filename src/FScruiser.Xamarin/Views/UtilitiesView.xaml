@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Views.UtilitiesView"
+             xmlns:prism="http://prismlibrary.com">
+    <ContentPage.Content>
+        <StackLayout AutomationProperties.IsInAccessibleTree="False">
+            <Button Text="Limiting Distance"
+                    Command="{prism:NavigateTo 'LimitingDistance'}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Limiting Distance Page Navigation" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

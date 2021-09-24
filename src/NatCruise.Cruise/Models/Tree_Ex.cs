@@ -2,6 +2,9 @@
 
 namespace NatCruise.Cruise.Models
 {
+    /// <summary>
+    /// Extends Tree class to include tree measurment fields
+    /// </summary>
     public class Tree_Ex : Tree, IHasTreeID
     {
         private const string DEFAULT_GRADE = "00";
@@ -35,9 +38,6 @@ namespace NatCruise.Cruise.Models
         private bool _isFallBuckScale;
         private string _remarks = "";
         private string _initials;
-
-        //[Field(Name = "TreeID")]
-        //public string TreeID { get; set; }
 
         public bool IsFallBuckScale
         {
@@ -206,5 +206,11 @@ namespace NatCruise.Cruise.Models
             get { return _initials; }
             set { SetValue(ref _initials, value); }
         }
+
+        public int KPI { get; set; }
+
+        public int ErrorCount { get; set; }
+
+        public int WarningCount { get; set; }
     }
 }

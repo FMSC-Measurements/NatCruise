@@ -12,6 +12,7 @@ namespace NatCruise.Cruise.Models
         public float BigBAF { get; set; }
         public float SmallFPS { get; set; }
         public string Description { get; set; }
+        public string DefaultLiveDead { get; set; }
 
         //[Field(Name = "SampleSelectorType")]
         //public string SampleSelectorType { get; set; }

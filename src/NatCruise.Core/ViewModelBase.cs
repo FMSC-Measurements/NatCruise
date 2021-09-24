@@ -11,6 +11,7 @@ namespace NatCruise
     public abstract class ViewModelBase : Prism.Mvvm.BindableBase, IActiveAware
     {
         public IParameters Parameters { get; protected set; }
+        public bool IsLoaded { get; private set; }
 
         private bool _isActive;
 
@@ -36,6 +37,7 @@ namespace NatCruise
                     var stopwatch = Stopwatch.StartNew();
 
                     Load();
+                    IsLoaded = true;
 
                     stopwatch.Stop();
                     Analytics.TrackEvent("view_model_load",

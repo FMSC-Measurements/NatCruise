@@ -1,11 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dg="clr-namespace:Xamarin.Forms.DataGrid;assembly=Xamarin.Forms.DataGrid"
+             xmlns:converters="clr-namespace:FScruiser.XF.Converters"
              x:Class="FScruiser.XF.Views.PlotTreeListView"
              x:Name="_page"
              Title="Plot Trees"
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Plot Tree List Page">
+
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal">
@@ -27,7 +30,7 @@
                             AutomationProperties.LabeledBy="{x:Reference _onlyTreesWithErrorsHeading}" />
                 </StackLayout>
             </StackLayout>
-            <CollectionView x:Name="_treeListView"
+            <!--<CollectionView x:Name="_treeListView"
                             ItemsSource="{Binding Trees}"
                             SelectionMode="None"
                             ItemSizingStrategy="MeasureFirstItem"
@@ -74,7 +77,7 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <!--col 0: PlotNumber-->
+                            --><!--col 0: PlotNumber--><!--
                             <Label x:Name="_plotNumberHeading" Grid.Column="0"
                                    Grid.Row="0"
                                    Text="Plot #"
@@ -84,7 +87,7 @@
                                    Text="{Binding PlotNumber}"
                                    Style="{StaticResource ValueText}"
                                    AutomationProperties.LabeledBy="{x:Reference _plotNumberHeading}"/>
-                            <!--col 1: TreeNumber-->
+                            --><!--col 1: TreeNumber--><!--
                             <Label x:Name="_treeNumberHeading" Grid.Column="1"
                                    Grid.Row="0"
                                    Text="Tree #"
@@ -94,7 +97,7 @@
                                    Text="{Binding TreeNumber}"
                                    Style="{StaticResource ValueText}"
                                    AutomationProperties.LabeledBy="{x:Reference _treeNumberHeading}"/>
-                            <!--col 2: StratumCode-->
+                            --><!--col 2: StratumCode--><!--
                             <Label x:Name="_stratumCodeHeading"
                                 Grid.Column="2"
                                    Grid.Row="0"
@@ -105,7 +108,7 @@
                                    Text="{Binding StratumCode}"
                                    Style="{StaticResource ValueText}"
                                    AutomationProperties.LabeledBy="{x:Reference _stratumCodeHeading}"/>
-                            <!--col 3: SampleGroupCode-->
+                            --><!--col 3: SampleGroupCode--><!--
                             <Label x:Name="_sampleGroupCodeHeading"
                                 Grid.Column="3"
                                    Grid.Row="0"
@@ -116,7 +119,7 @@
                                    Text="{Binding SampleGroupCode}"
                                    Style="{StaticResource ValueText}"
                                    AutomationProperties.LabeledBy="{x:Reference _sampleGroupCodeHeading}"/>
-                            <!--col 4: SpeciesCode-->
+                            --><!--col 4: SpeciesCode--><!--
                             <Label x:Name="_speciesCodeHeading"
                                 Grid.Column="4"
                                    Grid.Row="0"
@@ -127,7 +130,7 @@
                                    Text="{Binding SpeciesCode}"
                                    Style="{StaticResource ValueText}"
                                    AutomationProperties.LabeledBy="{x:Reference _speciesCodeHeading}"/>
-                            <!--col 5: LiveDead-->
+                            --><!--col 5: LiveDead--><!--
                             <Label x:Name="_liveDeadHeading" Grid.Column="5"
                                    Grid.Row="0"
                                    Text="Live/Dead"
@@ -137,7 +140,7 @@
                                    Text="{Binding LiveDead}"
                                    Style="{StaticResource ValueText}"
                                    AutomationProperties.LabeledBy="{x:Reference _liveDeadHeading}"/>
-                            <!--col 6: Diameter-->
+                            --><!--col 6: Diameter--><!--
                             <Label x:Name="_diameterHeading" Grid.Column="6"
                                    Grid.Row="0"
                                    Text="Diameter"
@@ -147,7 +150,7 @@
                                    Text="{Binding Diameter}"
                                    Style="{StaticResource ValueText}"
                                    AutomationProperties.LabeledBy="{x:Reference _diameterHeading}"/>
-                            <!--col 7: Height-->
+                            --><!--col 7: Height--><!--
                             <Label x:Name="_heightHeading" Grid.Column="7"
                                    Grid.Row="0"
                                    Text="Height"
@@ -161,10 +164,30 @@
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-            </CollectionView>
+            </CollectionView>-->
+
+            <dg:NGDataGrid x:Name="_treesDataGrid"
+                           Columns="{Binding TreeFields, Converter={StaticResource treeFieldToDataGridColumnConverter}}"
+                           ItemsSource="{Binding Trees}"
+                           VerticalOptions="FillAndExpand"
+                           SelectionMode="Single">
+                <dg:NGDataGrid.Resources>
+                    <ResourceDictionary>
+                        <converters:TreeFieldToDataGridColumnConverter x:Key="treeFieldToDataGridColumnConverter" PlotNumber="True" />
+                    </ResourceDictionary>
+                </dg:NGDataGrid.Resources>
+
+
+                <dg:NGDataGrid.RowsBackgroundColorPalette>
+                    <dg:PaletteCollection>
+                        <Color>#FFFFFF</Color>
+                    </dg:PaletteCollection>
+                </dg:NGDataGrid.RowsBackgroundColorPalette>
+            </dg:NGDataGrid>
+
             <StackLayout Orientation="Horizontal"
                          VerticalOptions="End"
-                         HorizontalOptions="End">
+                         HorizontalOptions="Fill">
                 <StackLayout.Resources>
                     <ResourceDictionary>
                         <Style TargetType="Button"
@@ -176,14 +199,40 @@
                         </Style>
                     </ResourceDictionary>
                 </StackLayout.Resources>
-                <Button x:Name="_goToEndButton"
+
+                <Button x:Name="_editTreeButton"
+                        Image="ic_edit_white_24dp.png"
+                        Command="{Binding EditTreeCommand}"
+                        CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"/>
+
+                <!--<Button x:Name="_addTreeButton"
+                        Image="ic_plus_white_24dp.png"
+                        Command="{Binding AddTreeCommand}"
+                        FontSize="30"
+                        BackgroundColor="Orange"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="FillAndExpand"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Add Tree Button" />
+
+                <Button x:Name="_deleteTreeButton"
+                        Text="Delete"
+                        TextColor="White"
+                        IsEnabled="False"
+                        IsVisible="False"
+                        Command="{Binding DeleteTreeCommand}"
+                        CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}" />-->
+
+
+
+                <!--<Button x:Name="_goToEndButton"
                         Image="ic_chevron_double_down_white_24dp.png"
                         AutomationProperties.Name="Scroll to End"/>
 
                 <Button x:Name="_goToStartButton"
                         Image="ic_chevron_double_up_white_24dp.png"
                         HorizontalOptions="End"
-                        AutomationProperties.Name="Scroll to Start"/>
+                        AutomationProperties.Name="Scroll to Start"/>-->
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
