@@ -197,5 +197,10 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowUtilities()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
