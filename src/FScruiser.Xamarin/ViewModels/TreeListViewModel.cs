@@ -141,7 +141,7 @@ namespace FScruiser.XF.ViewModels
                             var kpi = await DialogService.AskKPIAsync((int)sg.MinKPI, (int)sg.MaxKPI);
                             if (kpi is null) { return; }
 
-                            var tree_guid = TreeDataservice.CreateMeasureTree(UnitCode,
+                            var tree_guid = TreeDataservice.InsertManualTree(UnitCode,
                                 stratumCode,
                                 sampleGroupCode: sampleGroupCode,
                                 species: selectedSubPop.SpeciesCode,
@@ -154,7 +154,7 @@ namespace FScruiser.XF.ViewModels
                     }
                     else
                     {
-                        var tree_guid = TreeDataservice.CreateMeasureTree(UnitCode, stratumCode, sampleGroupCode);
+                        var tree_guid = TreeDataservice.InsertManualTree(UnitCode, stratumCode, sampleGroupCode);
                         var newTree = TreeDataservice.GetTree(tree_guid);
 
                         AllTrees.Add(newTree);

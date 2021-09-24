@@ -12,6 +12,7 @@ namespace NatCruise.Cruise.Models
             public const string UTILITY = "utility";
             public const string TREECOUNT_EDIT = "treecount_edit";
             public const string CLICKER = "clicker";
+            public const string MANUAL_TREE = "manual_tree";
         }
 
         public TallyLedger(string unitCode, TallyPopulation tallyPopulation)

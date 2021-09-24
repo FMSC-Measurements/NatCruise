@@ -307,16 +307,16 @@ LEFT JOIN treeWarningCount AS tw USING (TreeID)
         {
         }
 
-        public string CreateMeasureTree(string unitCode, string stratumCode,
+        public string InsertManualTree(string unitCode, string stratumCode,
             string sampleGroupCode = null, string species = null, string liveDead = "L",
             int treeCount = 1, int kpi = 0, bool stm = false)
         {
             var tree_guid = Guid.NewGuid().ToString();
-            CreateMeasureTree(tree_guid, unitCode, stratumCode, sampleGroupCode, species, liveDead, treeCount, kpi, stm);
+            InsertManualTree(tree_guid, unitCode, stratumCode, sampleGroupCode, species, liveDead, treeCount, kpi, stm);
             return tree_guid;
         }
 
-        protected void CreateMeasureTree(string treeID, string unitCode, string stratumCode,
+        protected void InsertManualTree(string treeID, string unitCode, string stratumCode,
             string sampleGroupCode = null, string species = null, string liveDead = "L",
             int treeCount = 1, int kpi = 0, bool stm = false)
         {
@@ -349,6 +349,13 @@ LEFT JOIN treeWarningCount AS tw USING (TreeID)
     @LiveDead,
     'M'
 );
+
+INSERT INTO TreeMeasurment (
+    TreeID
+) VALUES (
+    @TreeID
+);
+
 INSERT INTO TallyLedger (
     TallyLedgerID,
     TreeID,
@@ -360,7 +367,8 @@ INSERT INTO TallyLedger (
     LiveDead,
     TreeCount,
     KPI,
-    STM
+    STM,
+    EntryType
 ) VALUES (
     @TallyLedgerID,
     @TreeID,
@@ -372,7 +380,8 @@ INSERT INTO TallyLedger (
     @LiveDead,
     @TreeCount,
     @KPI,
-    @STM
+    @STM,
+    @EntryType
 );"
 ,
                 new
@@ -388,6 +397,7 @@ INSERT INTO TallyLedger (
                     TreeCount = treeCount,
                     KPI = kpi,
                     STM = stm,
+                    EntryType = TallyLedger.EntryTypeValues.MANUAL_TREE,
                 });
         }
 
