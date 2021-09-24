@@ -18,11 +18,6 @@ Information we collect:
  - Application session length
  
 You can disable anonymous usage data collection in the settings page of the application.
-
-## Cruisers Initials
-In the application you have the option to 'sign' cruise data using user initials. 
-Use of cruisers initials is an optional feature. Initial data is not is not sent 
-to the USFS or any third parties. It is only stored locally on the device
  
 ## Google Play Store
  
