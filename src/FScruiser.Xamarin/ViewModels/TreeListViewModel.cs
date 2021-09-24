@@ -20,8 +20,8 @@ namespace FScruiser.XF.ViewModels
         private ICommand _deleteTreeCommand;
         private Command _editTreeCommand;
         private ICollection<Tree_Ex> _allTrees;
-        private Command _addTreeCommand;
-        private Command<TreeStub> _showLogsCommand;
+        private ICommand _addTreeCommand;
+        private ICommand _showLogsCommand;
         private string _unitCode;
         private bool _onlyShowTreesWithErrorsOrWarnings;
         private IEnumerable<TreeField> _treeFields;
@@ -58,16 +58,19 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand AddTreeCommand => _addTreeCommand ??= new Command(AddTreeAsync);
 
-        public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new Command<TreeStub>(DeleteTree);
+        public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new Command((tree) =>
+                    {
+                        if (tree != null) { DeleteTree((Tree_Ex)tree); }
+                    });
 
         public ICommand EditTreeCommand => _editTreeCommand ??= new Command((tree) =>
                     {
                         if (tree != null) { ShowEditTree((Tree_Ex)tree); }
                     });
 
-        public ICommand ShowLogsCommand => _showLogsCommand ??= new Command<TreeStub>((tree) =>
+        public ICommand ShowLogsCommand => _showLogsCommand ??= new Command((tree) =>
                     {
-                        if (tree != null) { ShowLogsAsync(tree); }
+                        if (tree != null) { ShowLogsAsync((Tree_Ex)tree); }
                     });
 
         public string UnitCode
@@ -179,15 +182,21 @@ namespace FScruiser.XF.ViewModels
             NavigationService.ShowTreeEdit(tree.TreeID);
         }
 
-        private void DeleteTree(TreeStub tree)
+        private async void DeleteTree(Tree_Ex tree)
         {
             if (tree == null) { return; }
 
-            DialogService.AskCancelAsync("Delete Tree?", "", true);
-            TreeDataservice.DeleteTree(tree.TreeID);
+            var result = await DialogService.AskValueAsync("Delete Tree?", "yes", "no");
+            if (result is "yes")
+            {
+                TreeDataservice.DeleteTree(tree.TreeID);
+                AllTrees.Remove(tree);
+                RaisePropertyChanged(nameof(Trees));
+            }
+            
         }
 
-        public Task ShowLogsAsync(TreeStub tree)
+        public Task ShowLogsAsync(Tree_Ex tree)
         {
             return NavigationService.ShowLogsList(tree.TreeID);
         }
