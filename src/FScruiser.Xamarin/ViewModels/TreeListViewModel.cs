@@ -138,7 +138,7 @@ namespace FScruiser.XF.ViewModels
                         var selectedSubPopAlias = await DialogService.AskValueAsync("Select Sub-Population", subPopAlias);
                         if (subPops.TryGetValue(selectedSubPopAlias, out var selectedSubPop))
                         {
-                            var kpi = await DialogService.AskKPIAsync((int)sg.MinKPI, (int)sg.MaxKPI);
+                            var kpi = await DialogService.AskKPIAsync((int)sg.MaxKPI, (int)sg.MinKPI);
                             if (kpi is null) { return; }
 
                             var tree_guid = TreeDataservice.InsertManualTree(UnitCode,
