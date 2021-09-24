@@ -205,7 +205,7 @@
                         Command="{Binding EditTreeCommand}"
                         CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"/>
 
-                <Button x:Name="_addTreeButton"
+                <!--<Button x:Name="_addTreeButton"
                         Image="ic_plus_white_24dp.png"
                         Command="{Binding AddTreeCommand}"
                         FontSize="30"
@@ -221,7 +221,7 @@
                         IsEnabled="False"
                         IsVisible="False"
                         Command="{Binding DeleteTreeCommand}"
-                        CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}" />
+                        CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}" />-->
 
 
 
