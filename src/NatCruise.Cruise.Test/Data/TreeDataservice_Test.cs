@@ -284,7 +284,7 @@ namespace NatCruise.Cruise.Test.Data
 
                 var tree_GUID = ds.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, kpi: kpi);
 
-                db.Execute("INSERT INTO TreeMeasurment  (TreeID, DBH) VALUES (@p1, @p2);", tree_GUID, 107.0);
+                db.Execute("UPDATE TreeMeasurment  SET DBH = @p2 WHERE TreeID = @p1;", tree_GUID, 107.0);
 
                 var trees = ds.GetTreesByUnitCode(unitCode).ToArray();
                 trees.Should().HaveCount(1);
@@ -398,7 +398,7 @@ namespace NatCruise.Cruise.Test.Data
 
                 var treeErrors = treeDS.GetTreeErrors(treeID).ToArray();
 
-                treeErrors.Should().HaveCount(1);
+                treeErrors.Should().HaveCount(2);
 
                 var speciesError = treeErrors.First();
                 speciesError.Level.Should().Be("E");
