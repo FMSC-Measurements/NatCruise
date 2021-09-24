@@ -338,10 +338,10 @@ WHERE CruiseID = @p3 AND CuttingUnitCode = @p4;",
         public IEnumerable<Tree> GetTreesByUnitCode(string unitCode)
         {
             return Database.Query<Tree_Ex>(
-                "SELECT t.*, tm.* FROM Tree AS t " +
-                "LEFT JOIN TreeMeasurment AS tm USING (TreeID) " +
-                "JOIN CuttingUnit AS cu USING (CuttingUnitCode, CruiseID) " +
-                "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL",
+@"SELECT t.*, tm.*
+FROM Tree AS t 
+LEFT JOIN TreeMeasurment AS tm USING (TreeID) 
+WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber IS NULL",
                 unitCode, CruiseID).ToArray();
         }
 

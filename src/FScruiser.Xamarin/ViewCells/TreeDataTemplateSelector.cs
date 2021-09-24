@@ -13,6 +13,7 @@ namespace FScruiser.XF.ViewCells
         public DataTemplate TallyEditTemplate { get; set; }
         public DataTemplate TreeItemTemplate { get; set; }
         public DataTemplate BasicTemplate { get; set; }
+        public DataTemplate ManualTreeTemplate { get; set; }
 
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
@@ -21,6 +22,10 @@ namespace FScruiser.XF.ViewCells
                 if (tallyEntry.EntryType == TallyLedger.EntryTypeValues.TALLY)
                 {
                     return (tallyEntry.TreeID != null) ? TreeItemTemplate : BasicTemplate;
+                }
+                else if(tallyEntry.EntryType == TallyLedger.EntryTypeValues.MANUAL_TREE)
+                {
+                    return ManualTreeTemplate;
                 }
                 else
                 { return TallyEditTemplate; }

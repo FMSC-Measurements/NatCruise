@@ -161,7 +161,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var tree = datastore.GetTree(treeID);
                 tree.Should().NotBeNull();
@@ -199,7 +199,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var tree = datastore.GetTree(treeID);
                 tree.Should().NotBeNull();
@@ -251,7 +251,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var tree = datastore.GetTree(treeID);
                 tree.Should().NotBeNull();
@@ -260,6 +260,70 @@ namespace NatCruise.Cruise.Test.Data
 
                 tree = datastore.GetTree(treeID);
                 tree.Should().BeNull();
+            }
+        }
+
+        [Theory]
+        [InlineData("u1", "st1", "sg1", "sp1", "L", 101)]
+        public void GetTreesByUnitCode(string unitCode, string stratumCode, string sgCode, string species, string liveDead, int kpi)
+        {
+            var init = new DatastoreInitializer();
+            using (var db = init.CreateDatabase())
+            {
+                var tfs = new TreeFieldSetup
+                {
+                    CruiseID = init.CruiseID,
+                    StratumCode = stratumCode,
+                    //SampleGroupCode = sgCode,
+                    Field = "DBH",
+                    DefaultValueReal = 103.0,
+                };
+                db.Insert(tfs);
+
+                var ds = new TreeDataservice(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                var tree_GUID = ds.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, kpi: kpi);
+
+                db.Execute("UPDATE TreeMeasurment  SET DBH = @p2 WHERE TreeID = @p1;", tree_GUID, 107.0);
+
+                var trees = ds.GetTreesByUnitCode(unitCode).ToArray();
+                trees.Should().HaveCount(1);
+
+                var tree = trees.First();
+                tree.KPI.Should().Be(kpi);
+
+                tree.DBH.Should().Be(107.0);
+            }
+        }
+
+        [Theory]
+        [InlineData("u1", "st1", "sg1", "sp1", "L", 101)]
+        public void GetTreesByUnitCode_With_StratumFieldSetupDefaultValue(string unitCode, string stratumCode, string sgCode, string species, string liveDead, int kpi)
+        {
+            var init = new DatastoreInitializer();
+            using (var db = init.CreateDatabase())
+            {
+                var tfs = new TreeFieldSetup
+                {
+                    CruiseID = init.CruiseID,
+                    StratumCode = stratumCode,
+                    //SampleGroupCode = sgCode,
+                    Field = "DBH",
+                    DefaultValueReal = 103.0,
+                };
+                db.Insert(tfs);
+
+                var ds = new TreeDataservice(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                var tree_GUID = ds.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, kpi: kpi);
+
+                var trees = ds.GetTreesByUnitCode(unitCode).ToArray();
+                trees.Should().HaveCount(1);
+
+                var tree = trees.First();
+                tree.KPI.Should().Be(kpi);
+
+                tree.DBH.Should().Be(103.0);
             }
         }
 
@@ -273,7 +337,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
-                var tree_GUID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead);
+                var tree_GUID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead);
 
                 var tree = datastore.GetTreeStub(tree_GUID);
                 tree.Should().NotBeNull();
@@ -297,7 +361,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
-                var tree_GUID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead);
+                var tree_GUID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead);
                 //datastore.GetTreeStub(tree_GUID).Should().NotBeNull();
 
                 var trees = datastore.GetTreeStubsByUnitCode(unitCode).ToArray();
@@ -330,11 +394,11 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = treeDS.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = treeDS.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var treeErrors = treeDS.GetTreeErrors(treeID).ToArray();
 
-                treeErrors.Should().HaveCount(1);
+                treeErrors.Should().HaveCount(2);
 
                 var speciesError = treeErrors.First();
                 speciesError.Level.Should().Be("E");
@@ -360,7 +424,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = treeDS.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = treeDS.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var stuff = database.QueryGeneric("SELECT * FROM TreeMeasurment;");
 

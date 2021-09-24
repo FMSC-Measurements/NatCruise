@@ -59,6 +59,7 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<LogsListView>("LogList");
             containerRegistry.RegisterForNavigation<LogEditView>("LogEdit");
             containerRegistry.RegisterForNavigation<FeedbackView>("Feedback");
+            containerRegistry.RegisterForNavigation<UtilitiesView>("Utilities");
         }
 
 

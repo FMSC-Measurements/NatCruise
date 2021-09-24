@@ -9,31 +9,29 @@
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Plot Edit Page">
 
-    <ContentPage.Resources>
-        <Style x:Key="errorWarningLabel"
-               TargetType="Label">
-            <Setter Property="TextColor"
-                    Value="Black" />
-
-            <Setter Property="FontSize"
-                    Value="Large" />
-
-            <Setter Property="Margin"
-                    Value="0,0,0,7" />
-
-            <Setter Property="BackgroundColor"
-                    Value="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}" />
-
-            <Setter Property="Text"
-                    Value="{Binding Message}" />
-        </Style>
-    </ContentPage.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition  Height="Auto" />
         </Grid.RowDefinitions>
+
+        <StackLayout Grid.Row="1"
+                     BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
+                     VerticalOptions="End"
+                     AutomationProperties.Name="Plot Error List">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Label 
+                        TextColor="{StaticResource darkText}"
+                           Text="{Binding Message}"
+                           BackgroundColor="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}"
+                           FontSize="Large"
+                           Margin="0,0,0,7"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Plot Error Item" />
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
 
         <FlexLayout Grid.Row="0"
                     Grid.RowSpan="2"
@@ -219,17 +217,6 @@
             </ListView>
         </FlexLayout>
 
-        <CollectionView Grid.Row="1"
-                        BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
-                        VerticalOptions="End"
-                        AutomationProperties.Name="Plot Error List">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate>
-                    <Label Style="{StaticResource errorWarningLabel}"
-                           AutomationProperties.IsInAccessibleTree="True"
-                           AutomationProperties.Name="Plot Error Item" />
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </CollectionView>
+
     </Grid>
 </ContentPage>

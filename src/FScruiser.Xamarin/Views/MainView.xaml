@@ -113,6 +113,11 @@
                                 Clicked="OnNavButtonClicked"
                                 AutomationProperties.IsInAccessibleTree="True"
                                 AutomationProperties.Name="Cruisers Page Navigation"/>
+                        <Button Text="Utilities"
+                                Command="{prism:NavigateTo 'Navigation/Utilities'}"
+                                Clicked="OnNavButtonClicked"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Utilities Page Navigation" />
                     </StackLayout>
                 </ScrollView>
 
