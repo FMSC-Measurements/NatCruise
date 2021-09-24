@@ -11,7 +11,7 @@
             <Color x:Key="fs_brown">#312418</Color>
             <Color x:Key="primary_500">#345E36</Color>
             <Color x:Key="fs_green">#345E36</Color>
-            <Color x:Key="color_action">Orange</Color>
+            <Color x:Key="color_action">#FFBF00</Color>
 
             <!-- Dodger blue -->
             <Color x:Key="accent">#1E90FF</Color>
@@ -38,6 +38,7 @@
             <Color x:Key="measureTreeColor">#3CB371</Color> <!--MediumSeaGreen-->
             <Color x:Key="insuranceTreeColor">#BA55D3</Color><!--MediumOrchid-->
             <Color x:Key="tallyCountEntryColor">#00BFFF</Color>
+            <Color x:Key="manualTreeColor">#FFBF00</Color>
             <!--SandyBrown-->
 
 
@@ -46,6 +47,8 @@
             <tc_conv:ListIsNotNullOrEmptyConverter x:Key="listIsNotNullOrEmptyConverter" />
             <!--False if value is 0, True for everything else-->
             <tc_conv:IntToBoolConverter x:Key="intToBoolConverter" />
+
+            <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
 
             <converters:ErrorLevelToColorConverter x:Key="errorLevelToColorConverter"
                                                    Default="White"

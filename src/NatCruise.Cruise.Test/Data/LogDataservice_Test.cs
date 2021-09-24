@@ -25,7 +25,7 @@ namespace NatCruise.Cruise.Test.Data
                 var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var tree_guid = treeDS.CreateMeasureTree("u1", "st1", "sg1");
+                var tree_guid = treeDS.InsertManualTree("u1", "st1", "sg1");
 
                 var log = new Log() { TreeID = tree_guid };
 
@@ -67,7 +67,7 @@ namespace NatCruise.Cruise.Test.Data
                 var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var tree_guid = treeDS.CreateMeasureTree("u1", "st1", "sg1");
+                var tree_guid = treeDS.InsertManualTree("u1", "st1", "sg1");
 
                 var log = new Log() { TreeID = tree_guid, LogNumber = 1 };
                 datastore.InsertLog(log);
@@ -113,7 +113,7 @@ namespace NatCruise.Cruise.Test.Data
                 var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = treeDS.CreateMeasureTree("u1", "st1", "sg1");
+                var treeID = treeDS.InsertManualTree("u1", "st1", "sg1");
 
                 var log = new Log() { TreeID = treeID, LogNumber = 1 };
                 datastore.InsertLog(log);
@@ -144,7 +144,7 @@ namespace NatCruise.Cruise.Test.Data
                 var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var tree_guid = treeDS.CreateMeasureTree("u1", "st1", "sg1");
+                var tree_guid = treeDS.InsertManualTree("u1", "st1", "sg1");
 
                 var logFields = datastore.GetLogFields(tree_guid);
                 logFields.Should().HaveCount(1);

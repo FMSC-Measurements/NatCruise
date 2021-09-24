@@ -161,7 +161,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var tree = datastore.GetTree(treeID);
                 tree.Should().NotBeNull();
@@ -199,7 +199,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var tree = datastore.GetTree(treeID);
                 tree.Should().NotBeNull();
@@ -251,7 +251,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var tree = datastore.GetTree(treeID);
                 tree.Should().NotBeNull();
@@ -282,7 +282,7 @@ namespace NatCruise.Cruise.Test.Data
 
                 var ds = new TreeDataservice(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
-                var tree_GUID = ds.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, kpi: kpi);
+                var tree_GUID = ds.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, kpi: kpi);
 
                 db.Execute("INSERT INTO TreeMeasurment  (TreeID, DBH) VALUES (@p1, @p2);", tree_GUID, 107.0);
 
@@ -315,7 +315,7 @@ namespace NatCruise.Cruise.Test.Data
 
                 var ds = new TreeDataservice(db, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
-                var tree_GUID = ds.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, kpi: kpi);
+                var tree_GUID = ds.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, kpi: kpi);
 
                 var trees = ds.GetTreesByUnitCode(unitCode).ToArray();
                 trees.Should().HaveCount(1);
@@ -337,7 +337,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
-                var tree_GUID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead);
+                var tree_GUID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead);
 
                 var tree = datastore.GetTreeStub(tree_GUID);
                 tree.Should().NotBeNull();
@@ -361,7 +361,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TreeDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
-                var tree_GUID = datastore.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead);
+                var tree_GUID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead);
                 //datastore.GetTreeStub(tree_GUID).Should().NotBeNull();
 
                 var trees = datastore.GetTreeStubsByUnitCode(unitCode).ToArray();
@@ -394,7 +394,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = treeDS.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = treeDS.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var treeErrors = treeDS.GetTreeErrors(treeID).ToArray();
 
@@ -424,7 +424,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
-                var treeID = treeDS.CreateMeasureTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
+                var treeID = treeDS.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
 
                 var stuff = database.QueryGeneric("SELECT * FROM TreeMeasurment;");
 

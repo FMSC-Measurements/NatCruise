@@ -57,17 +57,26 @@
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
+                                                <!-- Icon -->
                                                 <ColumnDefinition Width="40" />
+                                                <!-- Pop Indicator -->
                                                 <ColumnDefinition Width="150" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
+                                                <!-- filler -->
                                                 <ColumnDefinition Width="*" />
+                                                <!-- counts and kpi -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- reason -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- Right margin -->
+                                                <ColumnDefinition Width="50" />
                                             </Grid.ColumnDefinitions>
 
+                                            <!-- Icon -->
                                             <Image Grid.Row="0"
                                                    Grid.Column="0"
                                                    Source="ic_counts_box_black_24dp.png" />
 
+                                            <!-- pop indicator -->
                                             <local_ctrls:PopulationIndicator Grid.Row="0"
                                                                              Grid.Column="1"
                                                                              StratumCode="{Binding StratumCode}"
@@ -80,8 +89,9 @@
                                                                              HorizontalOptions="Start"
                                                                              FontSize="Small" />
 
+                                            <!-- counts and kpi -->
                                             <StackLayout Grid.Row="0"
-                                                         Grid.Column="2"
+                                                         Grid.Column="3"
                                                          Orientation="Vertical">
                                                 <!--Tree Counts-->
                                                 <Label Text="{Binding TreeCount, StringFormat='{}Tree Count:{0}'}"
@@ -99,7 +109,7 @@
 
                                             <!--Reson-->
                                             <Label Grid.Row="0"
-                                                   Grid.Column="3"
+                                                   Grid.Column="4"
                                                    Text="{Binding Reason}"
                                                    FontSize="Small"
                                                    VerticalTextAlignment="Center" />
@@ -147,12 +157,21 @@
                                                 </Grid.RowDefinitions>
 
                                                 <Grid.ColumnDefinitions>
+                                                    <!-- icon -->
                                                     <ColumnDefinition Width="40" />
+                                                    <!-- pop indicator -->
                                                     <ColumnDefinition Width="150" />
+                                                    <!-- tree number -->
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
+                                                    <!-- empty filler -->
                                                     <ColumnDefinition Width="*" />
+                                                    <!-- count or measure -->
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <!-- KPI -->
                                                     <ColumnDefinition Width="50" />
+                                                    <!-- errors and warnings -->
+                                                    <ColumnDefinition Width="50" />
+                                                    <!-- button -->
                                                     <ColumnDefinition Width="50" />
                                                 </Grid.ColumnDefinitions>
 
@@ -185,19 +204,32 @@
                                                        VerticalTextAlignment="Center"
                                                        HorizontalOptions="Start" />
 
-                                                <!--Count Or Measure-->
-                                                <Label Grid.Row="0"
-                                                       Grid.Column="3"
-                                                       Text="{Binding CountOrMeasure}"
-                                                       TextColor="{StaticResource darkText}"
-                                                       FontSize="16"
-                                                       VerticalTextAlignment="Center" />
+                                                
 
-                                                <!-- skip column 4 -->
+                                                <!-- skip column 3 -->
+
+                                                <!--Count Or Measure-->
+
+                                                <StackLayout Grid.Row="0"
+                                                             Grid.Column="4"
+                                                             Orientation="Vertical">
+                                                    <Label Text="C/M" />
+                                                    <Label Text="{Binding CountOrMeasure}"
+                                                           TextColor="{StaticResource darkText}" />
+                                                </StackLayout>
+
+                                                <!-- KPI -->
+                                                <StackLayout Grid.Column="5"
+                                                             Grid.Row="0"
+                                                             Orientation="Vertical"
+                                                             IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
+                                                    <Label Text="KPI" FontSize="Small"/>
+                                                    <Label Text="{Binding KPI}" FontAttributes="Bold" />
+                                                </StackLayout>
 
                                                 <!--Error and warnings-->
                                                 <StackLayout Grid.Row="0"
-                                                             Grid.Column="5">
+                                                             Grid.Column="6">
 
                                                     <Frame Padding="0"
                                                            CornerRadius="5"
@@ -211,7 +243,7 @@
                                                             <Label Text="{Binding ErrorCount}"
                                                                    TextColor="Black"
                                                                    VerticalTextAlignment="Center"
-                                                                   AutomationProperties.IsInAccessibleTree="False"/>
+                                                                   AutomationProperties.IsInAccessibleTree="False" />
                                                         </StackLayout>
                                                     </Frame>
 
@@ -223,24 +255,24 @@
                                                         <StackLayout Orientation="Horizontal"
                                                                      Padding="0">
                                                             <Image Source="ic_warning_black_24dp.png"
-                                                                   AutomationProperties.IsInAccessibleTree="False"/>
+                                                                   AutomationProperties.IsInAccessibleTree="False" />
                                                             <Label Text="{Binding WarningCount}"
                                                                    TextColor="Black"
                                                                    VerticalTextAlignment="Center"
-                                                                   AutomationProperties.IsInAccessibleTree="False"/>
+                                                                   AutomationProperties.IsInAccessibleTree="False" />
                                                         </StackLayout>
                                                     </Frame>
                                                 </StackLayout>
 
                                                 <!-- show untally button-->
-                                                <ImageButton Grid.Column="6"
+                                                <ImageButton Grid.Column="7"
                                                              BackgroundColor="Transparent"
                                                              Clicked="openUntallyButton_Clicked"
                                                              Source="ic_more_vert_black_24dp.png"
                                                              Padding="0,7"
                                                              VerticalOptions="Center"
                                                              AutomationProperties.IsInAccessibleTree="True"
-                                                             AutomationProperties.Name="Show Item Actions Button"/>
+                                                             AutomationProperties.Name="Show Item Actions Button" />
 
                                             </Grid>
                                         </Frame>
@@ -248,6 +280,144 @@
                                     </SwipeView>
                                 </DataTemplate>
                             </cells:TreeDataTemplateSelector.TreeItemTemplate>
+
+                            <!-- Manual Tree Template -->
+                            <cells:TreeDataTemplateSelector.ManualTreeTemplate>
+                                <DataTemplate>
+                                    <Frame BackgroundColor="{StaticResource manualTreeColor}"
+                                           CornerRadius="5"
+                                           Margin="2,5,2,0"
+                                           Padding="0"
+                                           AutomationProperties.IsInAccessibleTree="True"
+                                           AutomationProperties.Name="Tree Item">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer x:Name="_treeCellTappedGesture"
+                                                                  Command="{Binding BindingContext.SelectTallyEntryCommand, Source={Reference _page}}"
+                                                                  CommandParameter="{Binding .}"
+                                                                  Tapped="_treeCellTappedGesture_Tapped" />
+                                        </Frame.GestureRecognizers>
+                                        <Frame.Resources>
+                                            <converters:ComparisonConverter x:Key="greaterThanZeroConverter"
+                                                                            x:TypeArguments="x:Int32"
+                                                                            Default="True"
+                                                                            GreaterThan="True"
+                                                                            CompareToValue="0" />
+                                        </Frame.Resources>
+
+                                        <Grid x:Name="_contentHost">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="50" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <!-- icon -->
+                                                <ColumnDefinition Width="40" />
+                                                <!-- pop indicator -->
+                                                <ColumnDefinition Width="150" />
+                                                <!-- tree number -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- empty filler -->
+                                                <ColumnDefinition Width="*" />
+                                                <!-- count or measure -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- KPI -->
+                                                <ColumnDefinition Width="50" />
+                                                <!-- errors and warnings -->
+                                                <ColumnDefinition Width="50" />
+                                                <!-- empty -->
+                                                <ColumnDefinition Width="50" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Image Grid.Row="0"
+                                                   Grid.Column="0"
+                                                   Source="ic_pine_tree_box_black_24dp.png"
+                                                   AutomationProperties.IsInAccessibleTree="False" />
+
+
+
+                                            <local_ctrls:PopulationIndicator Grid.Row="0"
+                                                                             Grid.Column="1"
+                                                                             StratumCode="{Binding StratumCode}"
+                                                                             SampleGroupCode="{Binding SampleGroupCode}"
+                                                                             Species="{Binding SpeciesCode}"
+                                                                             LiveDead="{Binding LiveDead}"
+                                                                             Margin="5"
+                                                                             HeightRequest="30"
+                                                                             VerticalOptions="Center"
+                                                                             HorizontalOptions="Start"
+                                                                             FontSize="Small" />
+
+
+                                            <!--Tree Number-->
+                                            <Label Grid.Row="0"
+                                                   Grid.Column="2"
+                                                   Text="{Binding TreeNumber, StringFormat='{}Tree {0}'}"
+                                                   TextColor="{StaticResource darkText}"
+                                                   FontSize="30"
+                                                   VerticalTextAlignment="Center"
+                                                   HorizontalOptions="Start" />
+
+                                            <!-- skip column 3 -->
+
+                                            <!--Count Or Measure-->
+                                            <StackLayout Grid.Row="0"
+                                                         Grid.Column="4"
+                                                         Orientation="Vertical">
+                                                <Label Text="C/M" />
+                                                <Label Text="{Binding CountOrMeasure}"
+                                                       TextColor="{StaticResource darkText}" />
+                                            </StackLayout>
+
+                                            <!-- KPI -->
+                                            <StackLayout Grid.Column="5"
+                                                         Grid.Row="0"
+                                                         Orientation="Vertical"
+                                                         IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
+                                                <Label Text="KPI" FontSize="Small" />
+                                                <Label Text="{Binding KPI}" FontAttributes="Bold"  />
+                                            </StackLayout>
+
+                                            <!--Error and warnings-->
+                                            <StackLayout Grid.Row="0"
+                                                         Grid.Column="6">
+
+                                                <Frame Padding="0"
+                                                       CornerRadius="5"
+                                                       BackgroundColor="Red"
+                                                       VerticalOptions="Center"
+                                                       IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
+                                                    <StackLayout Orientation="Horizontal"
+                                                                 Padding="0">
+                                                        <Image Source="ic_error_outline_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Text="{Binding ErrorCount}"
+                                                               TextColor="Black"
+                                                               VerticalTextAlignment="Center"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </StackLayout>
+                                                </Frame>
+
+                                                <Frame Padding="0"
+                                                       CornerRadius="5"
+                                                       BackgroundColor="Gold"
+                                                       VerticalOptions="Center"
+                                                       IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}">
+                                                    <StackLayout Orientation="Horizontal"
+                                                                 Padding="0">
+                                                        <Image Source="ic_warning_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Text="{Binding WarningCount}"
+                                                               TextColor="Black"
+                                                               VerticalTextAlignment="Center"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </StackLayout>
+                                                </Frame>
+                                            </StackLayout>
+
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </cells:TreeDataTemplateSelector.ManualTreeTemplate>
 
                             <!-- Basic Tally Entry Item Template-->
                             <cells:TreeDataTemplateSelector.BasicTemplate>
@@ -280,7 +450,7 @@
                                                 <Image Grid.Row="0"
                                                        Grid.Column="0"
                                                        Source="ic_tally_box_black_24dp.png"
-                                                       AutomationProperties.IsInAccessibleTree="False"/>
+                                                       AutomationProperties.IsInAccessibleTree="False" />
 
                                                 <local_ctrls:PopulationIndicator Grid.Row="0"
                                                                                  Grid.Column="1"
@@ -489,13 +659,13 @@
                                                        BackgroundColor="Transparent"
                                                        TextColor="Black"
                                                        AutomationProperties.IsInAccessibleTree="True"
-                                                       AutomationProperties.Name="Tree Count"/>
+                                                       AutomationProperties.Name="Tree Count" />
 
                                                 <Label Text="{Binding SumKPI, StringFormat='{}Kpi:{0}'}"
                                                        TextColor="Black"
                                                        IsVisible="{Binding SumKPI, Converter={StaticResource intToBoolConverter}}"
                                                        AutomationProperties.IsInAccessibleTree="False"
-                                                       AutomationProperties.Name="Total KPI"/>
+                                                       AutomationProperties.Name="Total KPI" />
                                             </StackLayout>
                                         </Frame>
                                     </Grid>
