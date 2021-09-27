@@ -193,7 +193,19 @@ namespace FScruiser.XF.ViewModels
                 File.Delete(convertToPath);
                 try
                 {
-                    new Migrator().MigrateFromV2ToV3(convertFromPath, convertToPath, DeviceInfoService.DeviceID);
+                    using var v2db = new CruiseDatastore(convertFromPath, false, null, new Updater_V2());
+                    using var v3db = new CruiseDatastore_V3(convertToPath, true);
+
+                    var migrator = new Migrator();
+                    if (migrator.EnsureCanMigrate(v2db, out var msg))
+                    {
+                        new Migrator().MigrateFromV2ToV3(convertFromPath, convertToPath, DeviceInfoService.DeviceID);
+                    }
+                    else
+                    {
+                        Log.LogEvent("Import Error", new Dictionary<string, string> { { "Message", msg }, });
+                        DialogService.ShowNotification(msg, "Import Error");
+                    }
                 }
                 catch (Exception e)
                 {
