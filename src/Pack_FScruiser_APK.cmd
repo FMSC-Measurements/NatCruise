@@ -30,13 +30,31 @@ call %msbuild% -restore "%parent%FScruiser.Droid\FScruiser.Droid.csproj" ^
 					-p:AndroidSigningKeyAlias=FMSC ^
 					-p:AndroidSigningKeyPass=env:fscruiser_ks_password
 
+IF "%errorlevel%" EQU "0" (
+ECHO Build compleated created successfully.
+) ELSE (
+ECHO Error while building project.
+EXIT /B
+)
+
 SET sign_output=%parent%FScruiser.Droid\bin\Release\com.FMSC.FScruiser-Signed.apk
 
 IF NOT DEFINED dateCode (SET dateCode=%date:~10,4%_%date:~4,2%_%date:~7,2%)
-IF NOT DEFINED artifactsDir (SET artifactsDir=../Artifacts/%dateCode%/)
+IF NOT DEFINED artifactsDir (SET artifactsDir=%parent%../Artifacts/%dateCode%/)
+
+IF NOT EXIST "%artifactsDir%" (
+	MKDIR "%artifactsDir%"
+	IF "!errorlevel!" EQU "0" (
+		ECHO Folder created successfully.
+	) ELSE (
+		ECHO Error while creating folder.
+	)
+) ELSE (
+	ECHO Folder already exists.
+)
 
 SET apk_output_path=%artifactsDir%com.FMSC.FScruiser-Signed.apk
-					
+			
 copy "%sign_output%" "%apk_output_path%"
 					
 
