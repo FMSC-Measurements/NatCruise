@@ -149,6 +149,7 @@ namespace FScruiser.XF.ViewModels
                                 sampleGroupCode: sampleGroupCode,
                                 species: selectedSubPop.SpeciesCode,
                                 liveDead: selectedSubPop.LiveDead,
+                                treeCount: 0,
                                 kpi: kpi.Value);
                             var newTree = TreeDataservice.GetTree(tree_guid);
 
@@ -157,7 +158,7 @@ namespace FScruiser.XF.ViewModels
                     }
                     else
                     {
-                        var tree_guid = TreeDataservice.InsertManualTree(UnitCode, stratumCode, sampleGroupCode);
+                        var tree_guid = TreeDataservice.InsertManualTree(UnitCode, stratumCode, sampleGroupCode, treeCount: 0);
                         var newTree = TreeDataservice.GetTree(tree_guid);
 
                         AllTrees.Add(newTree);
