@@ -6,6 +6,8 @@ namespace NatCruise.Services
     {
         Task<string> SelectCruiseFileAsync();
 
+        Task<string> SelectCruiseDatabaseAsync();
+
         Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null);
 
         Task<string> SelectBackupFileDestinationAsync(string defaultDir = null, string defaultFileName = null);
