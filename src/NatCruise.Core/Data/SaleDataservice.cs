@@ -30,22 +30,19 @@ namespace NatCruise.Data
         public IEnumerable<Cruise> GetCruises()
         {
             return Database.From<Cruise>()
-                .Join("Sale AS s", "USING (SaleID)")
                 .Query().ToArray();
         }
 
-        public IEnumerable<Cruise> GetCruises(int saleNumber)
+        public IEnumerable<Cruise> GetCruisesBySaleNumber(string saleNumber)
         {
             return Database.From<Cruise>()
-                .Join("Sale AS s", "USING (SaleID)")
-                .Where("s.SaleNumber = @p1")
+                .Where("SaleNumber = @p1")
                 .Query(saleNumber).ToArray();
         }
 
         public IEnumerable<Cruise> GetCruises(string saleID)
         {
             return Database.From<Cruise>()
-                .Join("Sale AS s", "USING (SaleID)")
                 .Where("SaleID = @p1")
                 .Query(saleID).ToArray();
         }
@@ -58,7 +55,6 @@ namespace NatCruise.Data
         public Cruise GetCruise(string cruiseID)
         {
             return Database.From<Cruise>()
-                .Join("Sale AS s", "USING (SaleID)")
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).First();
         }
@@ -72,10 +68,10 @@ namespace NatCruise.Data
 
         public Sale GetSale()
         {
-            return GetSale(CruiseID);
+            return GetSaleByCruiseID(CruiseID);
         }
 
-        public Sale GetSale(string cruiseID)
+        public Sale GetSaleByCruiseID(string cruiseID)
         {
             if (string.IsNullOrEmpty(cruiseID)) { throw new ArgumentException($"'{nameof(cruiseID)}' cannot be null or empty.", nameof(cruiseID)); }
 
@@ -83,6 +79,16 @@ namespace NatCruise.Data
                 .Join("Cruise", "USING (SaleID)")
                 .Where("Cruise.CruiseID = @p1")
                 .Query(cruiseID)
+                .FirstOrDefault();
+        }
+
+        public Sale GetSaleBySaleNumber(string saleNumber)
+        {
+            if (string.IsNullOrEmpty(saleNumber)) { throw new ArgumentException($"'{nameof(saleNumber)}' cannot be null or empty.", nameof(saleNumber)); }
+
+            return Database.From<Sale>()
+                .Where("SaleNumber = @p1")
+                .Query(saleNumber)
                 .FirstOrDefault();
         }
 
