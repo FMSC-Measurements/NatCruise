@@ -152,10 +152,10 @@ namespace FScruiser.XF.ViewModels
                 if(isCruiseInConflict)
                 { eList.Add("Cruise Number Conflict"); }
 
-                var saleConflicts = cruiseChecker.GetSaleConflicts(importDb, db, cruiseID);
-                var isSaleInConflict = saleConflicts.Any();
-                if(isSaleInConflict)
-                { eList.Add("Sale Number Conflict"); }
+                //var saleConflicts = cruiseChecker.GetSaleConflicts(importDb, db, cruiseID);
+                //var isSaleInConflict = saleConflicts.Any();
+                //if(isSaleInConflict)
+                //{ eList.Add("Sale Number Conflict"); }
 
                 var plotConflicts = cruiseChecker.GetPlotConflicts(importDb, db, cruiseID);
                 if(plotConflicts.Any())

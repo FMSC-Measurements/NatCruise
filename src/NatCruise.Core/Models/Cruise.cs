@@ -50,10 +50,10 @@ namespace NatCruise.Models
             set => SetProperty(ref _defaultUOM, value);
         }
 
-        [Field(SQLExpression = "s.Name", Alias = "SaleName")]
+        [Field(Alias = "SaleName", SQLExpression = "(SELECT Name FROM Sale WHERE Cruise.SaleNumber = Sale.SaleNumber)")]
         public string SaleName { get; set; }
 
-        [Field(SQLExpression = "s.SaleNumber", Alias = "SaleNumber")]
+        [Field(PersistanceFlags = PersistanceFlags.OnInsert)]
         public string SaleNumber { get; set; }
 
         [Field(Alias = "HasPlotStrata", SQLExpression = "(SELECT count(*) > 0 FROM Stratum JOIN LK_CruiseMethod USING (Method) WHERE Stratum.CruiseID = Cruise.CruiseID AND LK_CruiseMethod.IsPlotMethod = 1)")]

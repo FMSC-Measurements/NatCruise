@@ -60,7 +60,7 @@ namespace FScruiser.XF.ViewModels
 
             var cruiseID = parameters.GetValue<string>(NavParams.CruiseID);
 
-            Sale = Dataservice.GetSale(cruiseID);
+            Sale = Dataservice.GetSaleByCruiseID(cruiseID);
         }
     }
 }
