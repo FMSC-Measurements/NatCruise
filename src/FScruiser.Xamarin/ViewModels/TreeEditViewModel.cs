@@ -184,6 +184,8 @@ namespace FScruiser.XF.ViewModels
                     Tree.TreeNumber = value;
                     OnTreeNumberChanged(oldValue, value);
                 }
+                else
+                { RaisePropertyChanged(nameof(TreeNumber)); } // raise property changed to reset value in view
             }
         }
 
