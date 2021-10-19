@@ -115,5 +115,10 @@ namespace NatCruise.Wpf.Services
                 return null;
             }
         }
+
+        public Task<string> SelectCruiseDatabaseAsync()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
