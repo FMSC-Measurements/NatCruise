@@ -45,6 +45,12 @@ namespace FScruiser.XF.ViewModels
         {
             if (await DialogService.AskYesNoAsync("This will delete all cruise data do you want to continue", "Warning", defaultNo: true))
             {
+                if (await DialogService.AskYesNoAsync("Backup Cruise Data Before Resetting Database?", "", defaultNo: true))
+                {
+                    if (!await BackupDatabase())
+                    { return; }
+                }
+
                 var databasePath = FileSystemService.DefaultCruiseDatabasePath;
                 File.Delete(databasePath);
                 Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Database Reset");
