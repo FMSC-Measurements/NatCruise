@@ -2,6 +2,7 @@
 using CruiseDAL.V3.Sync;
 using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
+using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Models;
@@ -31,6 +32,7 @@ namespace FScruiser.XF.ViewModels
         protected IFileSystemService FileSystemService { get; }
         protected IFileDialogService FileDialogService { get; }
         protected IDialogService DialogService { get; }
+        protected IDeviceInfoService DeviceInfo { get; }
 
         public ICommand OpenSelectedCruiseCommand => new Command(OpenSelectedCruise);
         public ICommand ShareSelectedCruiseCommand => new Command(ShareSelectedCruise);
@@ -55,7 +57,9 @@ namespace FScruiser.XF.ViewModels
             set => SetProperty(ref _cruises, value);
         }
 
-        public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, IDialogService dialogService, IFileDialogService fileDialogService)
+        
+
+        public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, IDialogService dialogService, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
@@ -63,6 +67,7 @@ namespace FScruiser.XF.ViewModels
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
+            DeviceInfo = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
         }
 
         public void OpenSelectedCruise()
@@ -96,7 +101,8 @@ namespace FScruiser.XF.ViewModels
         public void ShareCruise(Cruise cruise)
         {
             var timestamp = DateTime.Today.ToString("ddMMyyyy");
-            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.Purpose.Replace(' ', '_')}_{timestamp}.crz3";
+            var deviceName = DeviceInfo.DeviceName;
+            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.Purpose.Replace(' ', '_')}_{timestamp}_{deviceName}.crz3";
             var exportTempDir = FileSystemService.ExportTempDir;
             var fileToExport = Path.Combine(exportTempDir, defaultFileName);
 
@@ -117,7 +123,8 @@ namespace FScruiser.XF.ViewModels
         public async Task ExportCruise(Cruise cruise)
         {
             var timestamp = DateTime.Today.ToString("ddMMyyyy");
-            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.Purpose.Replace(' ', '_')}_{timestamp}.crz3";
+            var deviceName = DeviceInfo.DeviceName;
+            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.Purpose.Replace(' ', '_')}_{timestamp}_{deviceName}.crz3";
 
             // create file to export before geting the destination path
             // on android requesting the desination file creates an empty file
