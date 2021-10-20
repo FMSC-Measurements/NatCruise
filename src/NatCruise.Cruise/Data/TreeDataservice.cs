@@ -280,7 +280,7 @@ LEFT JOIN treeWarningCount AS tw USING (TreeID)
         }
 
         public string InsertManualTree(string unitCode, string stratumCode,
-            string sampleGroupCode = null, string species = null, string liveDead = "L",
+            string sampleGroupCode, string species = null, string liveDead = "L",
             int treeCount = 1, int kpi = 0, bool stm = false)
         {
             var tree_guid = Guid.NewGuid().ToString();
@@ -289,7 +289,7 @@ LEFT JOIN treeWarningCount AS tw USING (TreeID)
         }
 
         protected void InsertManualTree(string treeID, string unitCode, string stratumCode,
-            string sampleGroupCode = null, string species = null, string liveDead = "L",
+            string sampleGroupCode, string species = null, string liveDead = "L",
             int treeCount = 1, int kpi = 0, bool stm = false)
         {
             liveDead = liveDead ?? GetDefaultLiveDead(stratumCode, sampleGroupCode);
@@ -424,7 +424,7 @@ INSERT INTO TallyLedger (
             return Database.Query<TreeFieldValue>(
                 "SELECT " +
                     "t.TreeID, " +
-                    "tf.Field, " +
+                    "tfs.Field, " +
                     "ifnull(tfh.Heading, tf.DefaultHeading) AS Heading, " +
                     "tf.DbType, " +
                     "tfv.ValueReal, " +
