@@ -169,6 +169,7 @@ namespace NatCruise.Test
             {
                 CruiseID = cruiseID,
                 SaleID = saleID,
+                SaleNumber = saleNumber,
                 CruiseNumber = saleNumber,
             }, option: Backpack.SqlBuilder.OnConflictOption.Ignore);
 
