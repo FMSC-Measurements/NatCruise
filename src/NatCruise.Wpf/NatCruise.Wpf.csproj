@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <Version>$(FScruiserVersion)</Version>
+    <!-- Company and ProductName effect where the user.config file use for Setting is stored-->
+    <Company>FMSC</Company>
+    <ProductName>NatCruise</ProductName>
     <Authors>Benjamin Campbell</Authors>
     <AssemblyTitle>National Cruise System</AssemblyTitle>
   </PropertyGroup>
@@ -95,6 +98,21 @@
   <ItemGroup>
     <Folder Include="Cruise\ViewModels\" />
     <Folder Include="Cruise\Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
