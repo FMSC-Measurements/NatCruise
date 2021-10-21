@@ -152,7 +152,7 @@ namespace NatCruise.Design.ViewModels
 
         public bool TallyBySubPop
         {
-            get => SampleGroup?.TallyBySubPop ?? default(bool);
+            get => (CruiseMethodType.ThreePMethods.HasFlag(this.CruiseMethodType)) ? true :  SampleGroup?.TallyBySubPop ?? default(bool);
             set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.TallyBySubPop = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
         }
 
@@ -190,6 +190,8 @@ namespace NatCruise.Design.ViewModels
         }
 
         public string CruiseMethod => SampleGroup?.CruiseMethod;
+
+        public CruiseMethodType CruiseMethodType => CruiseMethodTypeExtentions.StringToCruiseMethodType(this.CruiseMethod);
 
         public string DefaultSampleSelectorType
         {
