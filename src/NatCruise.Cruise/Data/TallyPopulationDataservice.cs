@@ -110,7 +110,7 @@ namespace NatCruise.Cruise.Data
         {
             var tallyPops = Database.Query<TallyPopulation_Plot>(
                 SELECT_TALLYPOPULATION_CORE +
-                "WHERE st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)"
+                "WHERE tp.CruiseID = @p2 AND cust.CuttingUnitCode = @p1 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)"
                 , new object[] { unitCode, CruiseID }).ToArray();
 
             foreach (var pop in tallyPops)

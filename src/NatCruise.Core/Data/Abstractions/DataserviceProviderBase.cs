@@ -11,10 +11,19 @@ namespace NatCruise.Data
     public abstract class DataserviceProviderBase : IDataserviceProvider
     {
         private string _cruiseID;
+        private CruiseDatastore_V3 _database;
 
         public string DatabasePath => Database.Path;
 
-        public CruiseDatastore_V3 Database { get; set; }
+        public CruiseDatastore_V3 Database
+        {
+            get => _database;
+            set
+            {
+                CruiseID = null;
+                _database = value;
+            }
+        }
         public IDeviceInfoService DeviceInfoService { get; }
         public string DeviceID { get; }
 

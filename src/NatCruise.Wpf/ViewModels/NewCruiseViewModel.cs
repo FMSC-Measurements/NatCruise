@@ -154,10 +154,11 @@ namespace NatCruise.Wpf.ViewModels
                 if (extension == ".crz3")
                 {
                     var saleID = Guid.NewGuid().ToString();
+                    var saleNumber = SaleNumber;
                     var sale = new CruiseDAL.V3.Models.Sale()
                     {
                         SaleID = saleID,
-                        SaleNumber = SaleNumber,
+                        SaleNumber = saleNumber,
                         Name = SaleName,
                         Region = Region,
                         Forest = Forest,
@@ -172,6 +173,7 @@ namespace NatCruise.Wpf.ViewModels
                         CruiseID = cruiseID,
                         SaleID = saleID,
                         CruiseNumber = cruiseNumber,
+                        SaleNumber = saleNumber,
                         Purpose = purpose.PurposeCode,
                         UseCrossStrataPlotTreeNumbering = UseCrossStrataPlotTreeNumbering,
                         DefaultUOM = UOM,

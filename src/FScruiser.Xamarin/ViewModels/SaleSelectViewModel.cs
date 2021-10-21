@@ -24,7 +24,7 @@ namespace FScruiser.XF.ViewModels
 
         public ICruiseNavigationService NavigationService { get; }
 
-        public ICommand ShowCruiseSelectCommand => new Command<string>((saleID) => ShowCruiseSelect(saleID));
+        public ICommand ShowCruiseSelectCommand => new Command<Sale>((sale) => ShowCruiseSelect(sale.SaleNumber));
 
         public ICommand ShowImportCommand => new Command(() => NavigationService.ShowImport());
 
@@ -36,9 +36,9 @@ namespace FScruiser.XF.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
-        public void ShowCruiseSelect(string saleID)
+        public void ShowCruiseSelect(string saleNumber)
         {
-            NavigationService.ShowCruiseSelect(saleID);
+            NavigationService.ShowCruiseSelect(saleNumber);
         }
 
         protected override void Load(IParameters parameters)

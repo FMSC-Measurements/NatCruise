@@ -38,12 +38,12 @@ namespace FScruiser.XF.ViewModels
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-            var saleID = parameters.GetValue<string>(NavParams.SaleID);
+            var saleNumber = parameters.GetValue<string>(NavParams.SaleNumber);
             var saleDataservice = SaleDataservice;
-            var sale = saleDataservice.GetSale(saleID);
+            var sale = saleDataservice.GetSaleBySaleNumber(saleNumber);
             Sale = sale;
 
-            var cruises = saleDataservice.GetCruises(saleID);
+            var cruises = saleDataservice.GetCruisesBySaleNumber(saleNumber);
             Cruises = cruises;
         }
     }

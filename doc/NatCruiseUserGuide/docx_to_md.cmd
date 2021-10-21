@@ -14,7 +14,7 @@ SET parent=%~dp0
 
 SET pandoc="%parent%pandoc.cmd"
 
-call %pandoc% "%parent%NatCruiseInterimUserGuide_WorkInProgress.docx" -t gfm -o "%parent%NatCruiseUserGuide.md" --extract-media "%parent%\"
+call %pandoc% "%parent%NatCruiseInterimUserGuide_WorkInProgress.docx" -t gfm -o "%parent%NatCruiseUserGuide.md" --extract-media "."
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE

@@ -10,6 +10,8 @@ namespace FScruiser.XF.Constants
     {
         public const string SaleID = "SaleID";
 
+        public const string SaleNumber = "SaleNumber";
+
         public const string CruiseID = "CruiseID";
 
         public const string UNIT = "Unit";

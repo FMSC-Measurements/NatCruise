@@ -39,6 +39,10 @@
                     Command="{Binding BackupDatabaseCommand}"
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="Backup Database"/>
+            <Button Text="Load Database"
+                    Command="{Binding LoadDatabaseCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Backup Database" />
 
             <Button Text="Privacy Policy"
                     Command="{Binding ShowPrivacyPolicyCommand}"

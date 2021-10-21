@@ -38,15 +38,15 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync("/Main/Navigation/Blank", parameters: null, useModalNavigation: false, animated: false);
         }
 
-        public Task ShowCruiseSelect(string saleID)
+        public Task ShowCruiseSelect(string saleNumber)
         {
-            if (string.IsNullOrEmpty(saleID))
+            if (string.IsNullOrEmpty(saleNumber))
             {
-                throw new ArgumentException($"'{nameof(saleID)}' cannot be null or empty.", nameof(saleID));
+                throw new ArgumentException($"'{nameof(saleNumber)}' cannot be null or empty.", nameof(saleNumber));
             }
 
             return NavigationService.NavigateAsync("CruiseSelect",
-                new NavigationParameters($"{NavParams.SaleID}={saleID}"));
+                new NavigationParameters($"{NavParams.SaleNumber}={saleNumber}"));
         }
 
         public Task ShowCuttingUnitInfo(string unitCode)

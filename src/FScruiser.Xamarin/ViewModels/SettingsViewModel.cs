@@ -23,7 +23,8 @@ namespace FScruiser.XF.ViewModels
         public IDataserviceProvider DataserviceProvider { get; }
 
         public ICommand ResetDatabaseCommand => new Command(() => ResetDatabase());
-        public ICommand BackupDatabaseCommand => new Command(BackupDatabase);
+        public ICommand BackupDatabaseCommand => new Command(async () => await BackupDatabase());
+        public ICommand LoadDatabaseCommand => new Command(LoadDatabase);
         public ICommand ShowUserAgreementCommand => new Command(() => NavigationService.ShowUserAgreement());
         public ICommand ShowPrivacyPolicyCommand => new Command(() => NavigationService.ShowPrivacyPolicy());
 
@@ -44,6 +45,12 @@ namespace FScruiser.XF.ViewModels
         {
             if (await DialogService.AskYesNoAsync("This will delete all cruise data do you want to continue", "Warning", defaultNo: true))
             {
+                if (await DialogService.AskYesNoAsync("Backup Cruise Data Before Resetting Database?", "", defaultNo: true))
+                {
+                    if (!await BackupDatabase())
+                    { return; }
+                }
+
                 var databasePath = FileSystemService.DefaultCruiseDatabasePath;
                 File.Delete(databasePath);
                 Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Database Reset");
@@ -52,17 +59,36 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public async void BackupDatabase()
+        public async Task<bool> BackupDatabase()
         {
             var timestamp = DateTime.Today.ToString("ddMMyyyy");
             var defaultFileName = $"CruiseDatabaseBackup_{timestamp}.crz3db";
 
             var backupPath = await FileDialogService.SelectBackupFileDestinationAsync(defaultFileName: defaultFileName);
-            if(string.IsNullOrEmpty(backupPath) == false)
+            if (string.IsNullOrEmpty(backupPath) == false)
             {
-
                 FileSystemService.CopyTo(DataserviceProvider.DatabasePath, backupPath);
+                return true;
             }
+            else
+            { return false; }
+        }
+
+        public async void LoadDatabase()
+        {
+            var loadPath = await FileDialogService.SelectCruiseDatabaseAsync();
+            if (loadPath is null) { return; }
+
+            if (await DialogService.AskYesNoAsync("Backup current cruise data before loading?", "", defaultNo: true))
+            {
+                if(!await BackupDatabase())
+                { return; }
+            }
+
+            var databasePath = FileSystemService.DefaultCruiseDatabasePath;
+            File.Copy(loadPath, databasePath, true);
+            var newDatabase = new CruiseDatastore_V3(databasePath);
+            DataserviceProvider.CruiseID = null;
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)

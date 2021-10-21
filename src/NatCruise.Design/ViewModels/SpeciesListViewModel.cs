@@ -5,6 +5,7 @@ using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand<Species> _deleteSpeciesCommand;
         private ObservableCollection<Species> _species;
         private IEnumerable<FIASpecies> _fiaOptions;
+        private Species _selectedSpecies;
 
         public ITemplateDataservice TemplateDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
@@ -33,14 +35,32 @@ namespace NatCruise.Design.ViewModels
 
         public ICommand AddSpeciesCommand => _addSpeciesCommand ??= new DelegateCommand<string>(AddSpecies);
 
-        public ICommand UpdateSpeciesCommand => _updateSpeciesCommand ??= new DelegateCommand<Species>(UpdateSpecies);
-
         public ICommand DeleteSpeciesCommand => _deleteSpeciesCommand ??= new DelegateCommand<Species>(DeleteSpecies);
 
         public ObservableCollection<Species> Species
         {
             get => _species;
             protected set => SetProperty(ref _species, value);
+        }
+
+        public Species SelectedSpecies
+        {
+            get => _selectedSpecies;
+            set
+            {
+                if(_selectedSpecies != null)
+                { _selectedSpecies.PropertyChanged -= SelectedSpecies_PropertyChanged; }
+                _selectedSpecies = value;
+                if(value != null)
+                { value.PropertyChanged += SelectedSpecies_PropertyChanged; }
+                RaisePropertyChanged();
+
+                void SelectedSpecies_PropertyChanged(object sender, PropertyChangedEventArgs e)
+                {
+                    var species = (Species)sender;
+                    UpdateSpecies(species);
+                }
+            }
         }
 
         public IEnumerable<FIASpecies> FIAOptions
@@ -70,6 +90,7 @@ namespace NatCruise.Design.ViewModels
                 };
                 TemplateDataservice.UpsertSpecies(newSpecies);
                 Species.Add(newSpecies);
+                SelectedSpecies = newSpecies;
             }
             else
             { DialogService.ShowNotification("Species Code Already Exists"); }

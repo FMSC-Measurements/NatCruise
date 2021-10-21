@@ -152,10 +152,10 @@ namespace FScruiser.XF.ViewModels
                 if(isCruiseInConflict)
                 { eList.Add("Cruise Number Conflict"); }
 
-                var saleConflicts = cruiseChecker.GetSaleConflicts(importDb, db, cruiseID);
-                var isSaleInConflict = saleConflicts.Any();
-                if(isSaleInConflict)
-                { eList.Add("Sale Number Conflict"); }
+                //var saleConflicts = cruiseChecker.GetSaleConflicts(importDb, db, cruiseID);
+                //var isSaleInConflict = saleConflicts.Any();
+                //if(isSaleInConflict)
+                //{ eList.Add("Sale Number Conflict"); }
 
                 var plotConflicts = cruiseChecker.GetPlotConflicts(importDb, db, cruiseID);
                 if(plotConflicts.Any())
@@ -259,12 +259,16 @@ namespace FScruiser.XF.ViewModels
         {
             options ??= new CruiseSyncOptions()
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.Insert,
-                TreeDataFlags = SyncFlags.Insert,
-                TreeFlags = SyncFlags.Insert,
-                SamplerState = SyncFlags.Insert,
-                Validation = SyncFlags.Insert,
+                Design = SyncFlags.InsertUpdate,
+                FieldData = SyncFlags.InsertUpdate,
+                TreeDataFlags = SyncFlags.InsertUpdate,
+                TreeFlags = SyncFlags.InsertUpdate,
+                SamplerState = SyncFlags.InsertUpdate,
+                Validation = SyncFlags.InsertUpdate,
+                Processing = SyncFlags.InsertUpdate,
+                Template = SyncFlags.InsertUpdate,
+                TreeDefaultValue = SyncFlags.InsertUpdate,
+                
             };
 
             var destDb = DataserviceProvider.Database;

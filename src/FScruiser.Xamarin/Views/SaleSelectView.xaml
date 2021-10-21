@@ -15,7 +15,7 @@
                     <DataTemplate>
                         <TextCell Text="{Binding .}"
                                   Command="{Binding BindingContext.ShowCruiseSelectCommand, Source={Reference _page}}"
-                                  CommandParameter="{Binding SaleID}"
+                                  CommandParameter="{Binding .}"
                                   AutomationProperties.IsInAccessibleTree="True"
                                   AutomationProperties.Name="Sale" />
                     </DataTemplate>

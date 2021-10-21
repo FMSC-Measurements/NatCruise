@@ -19,7 +19,7 @@ namespace FScruiser.XF.Views
 
         private void _cancelButton_Clicked(object sender, EventArgs e)
         {
-            Navigation.PopModalAsync();
+            Navigation.PopAsync();
         }
     }
 }

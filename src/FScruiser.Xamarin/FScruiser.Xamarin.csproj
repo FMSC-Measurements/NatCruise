@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Pandoc Include="..\..\doc\PrivacyPolicy.md" Link="PrivacyPolicy.md" />
+    <None Include="..\..\doc\PrivacyPolicy.md" Link="PrivacyPolicy.md" />
   </ItemGroup>
 
   <ItemGroup>
-    <Pandoc Include="..\..\doc\UserAgreement.md" Link="UserAgreement.md" />
+    <None Include="..\..\doc\UserAgreement.md" Link="UserAgreement.md" />
   </ItemGroup>
 
   <ItemGroup>

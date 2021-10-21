@@ -673,7 +673,7 @@ WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID AND Fi
 
         public void DeleteStratumTemplateTreeFieldSetup(StratumTemplateTreeFieldSetup stfs)
         {
-            Database.Execute("DELETE FROM StratumTemplateTreeFieldSetup StratumTemplateName = @p1 AND CruiseID = @p2 AND Field = @p3;", stfs.StratumTemplateName, CruiseID, stfs.Field);
+            Database.Execute("DELETE FROM StratumTemplateTreeFieldSetup WHERE StratumTemplateName = @p1 AND CruiseID = @p2 AND Field = @p3;", stfs.StratumTemplateName, CruiseID, stfs.Field);
         }
 
         #endregion StratumTemplateTreeFieldSetup

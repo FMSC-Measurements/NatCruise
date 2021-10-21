@@ -98,8 +98,8 @@ namespace NatCruise.Design.ViewModels
 
         public string UOM
         {
-            get => SampleGroup?.CutLeave;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.CutLeave = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            get => SampleGroup?.UOM;
+            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.UOM = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
         }
 
         public string PrimaryProduct
@@ -122,7 +122,7 @@ namespace NatCruise.Design.ViewModels
 
         public string DefaultLiveDead
         {
-            get => SampleGroup?.CutLeave;
+            get => SampleGroup?.DefaultLiveDead;
             set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.DefaultLiveDead = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
         }
 
@@ -152,7 +152,7 @@ namespace NatCruise.Design.ViewModels
 
         public bool TallyBySubPop
         {
-            get => SampleGroup?.TallyBySubPop ?? default(bool);
+            get => (CruiseMethodType.ThreePMethods.HasFlag(this.CruiseMethodType)) ? true :  SampleGroup?.TallyBySubPop ?? default(bool);
             set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.TallyBySubPop = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
         }
 
@@ -190,6 +190,8 @@ namespace NatCruise.Design.ViewModels
         }
 
         public string CruiseMethod => SampleGroup?.CruiseMethod;
+
+        public CruiseMethodType CruiseMethodType => CruiseMethodTypeExtentions.StringToCruiseMethodType(this.CruiseMethod);
 
         public string DefaultSampleSelectorType
         {
