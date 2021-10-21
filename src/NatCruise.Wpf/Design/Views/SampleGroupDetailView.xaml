@@ -21,6 +21,9 @@
                                                        TrueValue="Collapsed"
                                                        FalseValue="Visible"
                                                        MethodMap="PlotMethods" />
+            <converters:CruiseMethodToBoolConverter x:Key="IsNotThreePMethodsConverter"
+                                                    MethodMap="ThreePMethods"
+                                                    Invert="True"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -153,7 +156,8 @@
                       Grid.Row="7"
                       Grid.Column="1"
                       ToolTip="Tally By Species"
-                      IsChecked="{Binding TallyBySubPop}" />
+                      IsChecked="{Binding TallyBySubPop}"
+                      IsEnabled="{Binding CruiseMethod, Converter={StaticResource IsNotThreePMethodsConverter}}"/>
         </Grid>
 
         <GroupBox Header="Sampleing Frequency Options"
