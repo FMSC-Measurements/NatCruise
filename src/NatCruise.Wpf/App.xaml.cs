@@ -125,14 +125,17 @@ namespace NatCruise.Wpf
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            
+
             containerRegistry.RegisterInstance<IAppService>(this);
-            containerRegistry.Register<IApplicationSettingService, WpfApplicationSettingService>();
+            containerRegistry.Register<IWpfApplicationSettingService, WpfApplicationSettingService>();
             containerRegistry.Register<IDialogService, WpfDialogService>();
             containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();
             containerRegistry.Register<IDeviceInfoService, WpfDeviceInfoService>();
             containerRegistry.RegisterSingleton<ISetupInfoDataservice, SetupInfoDataservice>();
             containerRegistry.RegisterInstance<ILoggingService>(new WpfLoggingService());
-            containerRegistry.RegisterInstance<IFileDialogService>(new WpfFileDialogService());
+            //containerRegistry.RegisterInstance<IFileDialogService>(new WpfFileDialogService());
+            containerRegistry.RegisterSingleton<IFileDialogService, WpfFileDialogService>();
             containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
 
             var deviceInfo = Container.Resolve<IDeviceInfoService>();

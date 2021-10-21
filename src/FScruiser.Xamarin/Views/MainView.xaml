@@ -83,7 +83,7 @@
                                 Command="{Binding ShowUnitInfoCommand}"
                                 Clicked="OnNavButtonClicked"
                                 AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Cutting Unit Info Navigation"/>
+                                AutomationProperties.Name="Cutting Unit Info Navigation" />
                         <Button Text="Trees"
                                 IsVisible="{Binding HasTreeStrata}"
                                 Command="{Binding ShowTreesCommand}"
@@ -95,24 +95,24 @@
                                 Command="{Binding ShowPlotsCommand}"
                                 Clicked="OnNavButtonClicked"
                                 AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Plot List Page Navigation"/>
+                                AutomationProperties.Name="Plot List Page Navigation" />
                         <Button Text="Plot Trees"
                                 IsVisible="{Binding HasPlotStrata}"
                                 Command="{Binding ShowPlotTreesCommand}"
                                 Clicked="OnNavButtonClicked"
                                 AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Plot Trees List Page Navigation"/>
+                                AutomationProperties.Name="Plot Trees List Page Navigation" />
                         <Button Text="Tally"
                                 IsVisible="{Binding HasTreeStrata}"
                                 Command="{Binding ShowTallyCommand}"
                                 Clicked="OnNavButtonClicked"
                                 AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Tally Page Navigation"/>
+                                AutomationProperties.Name="Tally Page Navigation" />
                         <Button Text="Cruisers"
                                 Command="{Binding ShowCruisersCommand}"
                                 Clicked="OnNavButtonClicked"
                                 AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Cruisers Page Navigation"/>
+                                AutomationProperties.Name="Cruisers Page Navigation" />
                         <Button Text="Utilities"
                                 Command="{prism:NavigateTo 'Navigation/Utilities'}"
                                 Clicked="OnNavButtonClicked"
@@ -121,56 +121,30 @@
                     </StackLayout>
                 </ScrollView>
 
-                <!--navigation list view-->
-                <!--<ListView x:Name="MenuItemsListView"
-                          SeparatorVisibility="None"
-                          HasUnevenRows="true"
-                          ItemsSource="{Binding NavigationListItems}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            -->
-                <!--<TextCell Text="{Binding Title}"
-                                      TextColor="{StaticResource lightText}" />-->
-                <!--
+                <BoxView HeightRequest="3"
+                        Margin="50,0"
+                         BackgroundColor="White"
+                         HorizontalOptions="Fill" />
 
-
-                            <ViewCell>
-                                <Label  HorizontalOptions="Start"
-                                        Margin="15,7"
-                                        VerticalTextAlignment="Center"
-                                        Text="{Binding Title}"
-                                        FontSize="24"
-                                        TextColor="{StaticResource lightText}" />
-
-                                -->
-                <!--<StackLayout Padding="15,10" HorizontalOptions="FillAndExpand" IsEnabled="{Binding CanShow}">
-                                    
-                                </StackLayout>-->
-                <!--
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>-->
-
-                <FlexLayout VerticalOptions="End"
-                            HorizontalOptions="CenterAndExpand"
-                            Wrap="Wrap"
-                            JustifyContent="Center">
-                    <FlexLayout.Resources>
+                <StackLayout Orientation="Vertical">
+                    <StackLayout.Resources>
                         <ResourceDictionary>
                             <Style TargetType="Label">
                                 <Setter Property="TextColor"
                                         Value="{StaticResource lightText}" />
                                 <Setter Property="Margin"
                                         Value="5" />
+                                <Setter Property="HorizontalTextAlignment"
+                                        Value="Center" />
                             </Style>
                         </ResourceDictionary>
-                    </FlexLayout.Resources>
-                    <Label Text="{Binding DeviceInfo.DeviceName}"
+                    </StackLayout.Resources>
+
+                    <Label Text="{Binding DeviceInfo.DeviceName, StringFormat='{}Device ID:{0}'}"
                            d:Text="DevceID" />
-                    <Label Text="{Binding AppInfo.Version, StringFormat='{}v{0}'}"
+                    <Label Text="{Binding AppInfo.Version, StringFormat='{}Version {0}'}"
                            d:Text="v0.00" />
-                </FlexLayout>
+                </StackLayout>
 
                 <StackLayout Orientation="Horizontal"
                              VerticalOptions="End"

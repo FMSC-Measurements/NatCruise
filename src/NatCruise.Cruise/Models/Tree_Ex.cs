@@ -11,6 +11,7 @@ namespace NatCruise.Cruise.Models
         private const string DEFAULT_CLEAR_FACE = "";
         private const string DEFAULT_DEFECT_CODE = "";
 
+        private double _seenDefectPrimary;
         private double _seenDefectSecondary;
         private double _recoverablePrimary;
         private double _hiddenPrimary;
@@ -47,8 +48,8 @@ namespace NatCruise.Cruise.Models
 
         public double SeenDefectPrimary
         {
-            get { return _seenDefectSecondary; }
-            set { SetValue(ref _seenDefectSecondary, value); }
+            get { return _seenDefectPrimary; }
+            set { SetValue(ref _seenDefectPrimary, value); }
         }
 
         public double SeenDefectSecondary

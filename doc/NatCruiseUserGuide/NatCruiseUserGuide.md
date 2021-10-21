@@ -1,4 +1,4 @@
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image1.jpeg" style="width:7.65833in;height:9.81389in" />
+<img src="./media/image1.jpeg" style="width:7.65833in;height:9.81389in" />
 
 > U.S. Forest Service
 >
@@ -122,7 +122,7 @@ The opening screen for NatCruise Interim contains only a File menu with
 four options: New Cruise, Open File, Open Recent, and Exit. Version
 information is found at the top of the window (Figure 1).
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image7.png" style="width:5.435in;height:3.2087in" />
+<img src="./media/image7.png" style="width:5.435in;height:3.2087in" />
 
 Figure 1-NatCruise Interim Opening Screen
 
@@ -130,7 +130,7 @@ Once a cruise file is created or an existing cruise file is opened, the
 best way to fill out information is to move from top to bottom down the
 left hand menu and from left to right within nested menus (Figure 2).
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image8.png" style="width:5.90064in;height:3.44348in" />
+<img src="./media/image8.png" style="width:5.90064in;height:3.44348in" />
 
 Figure 2 – nested menus within NatCruise Interim
 
@@ -145,7 +145,7 @@ retained.
 
 The New Cruise button will launch a Create New Cruise window (Figure 3).
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image9.png" style="width:4.32174in;height:3.20514in" />
+<img src="./media/image9.png" style="width:4.32174in;height:3.20514in" />
 
 Figure 3-Cruise File Creation Prompt
 
@@ -197,7 +197,7 @@ Region, Forest, and District (2 digits) in editable fields. As in
 initial setup, Region and Forest are drop-down menus, while the other
 fields are typed into.
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image10.png" style="width:5.94266in;height:2.3in" />
+<img src="./media/image10.png" style="width:5.94266in;height:2.3in" />
 
 Figure 4-Sale level information
 
@@ -216,7 +216,7 @@ they are entered into FSCruiser regardless of strata.
 > release which will allow for multiple cruises (e.g. Recon, Timber
 > Sale, and Check Cruise) to be stored within one Sale-level file.
 >
-> <img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image11.png" style="width:5.92565in;height:2.3in" />
+> <img src="./media/image11.png" style="width:5.92565in;height:2.3in" />
 
 Figure 5 – Cruise level information
 
@@ -228,7 +228,7 @@ plus sign. Press the green plus sign to add the unit to the file; to
 delete a unit, highlight it in the menu on the left and press the red
 minus button (Figure 6).
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image12.png" style="width:5.34713in;height:3.00026in" />
+<img src="./media/image12.png" style="width:5.34713in;height:3.00026in" />
 
 Figure 6- Unit Information/add a unit
 
@@ -256,7 +256,7 @@ completed for all strata at once.
 > 20). The selected template will set up a default list of fields, which
 > can then be modified (see [Fields](#fields)).
 >
-> <img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image13.png" style="width:6.34661in;height:2in" />
+> <img src="./media/image13.png" style="width:6.34661in;height:2in" />
 
 Figure 7 – Stratum Details and Templates
 
@@ -269,7 +269,7 @@ Figure 7 – Stratum Details and Templates
 > and Move Down buttons (Figure 8). Changes are applied to the Stratum
 > highlighted on the left.
 >
-> <img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image14.png" style="width:6.35in;height:2.5471in" />
+> <img src="./media/image14.png" style="width:6.35in;height:2.5471in" />
 
 Figure 8 – Fields Setup
 
@@ -280,7 +280,7 @@ Figure 8 – Fields Setup
 > by using the Select All button, and all selections can be cleared by
 > using the Clear All button (Figure 9).
 >
-> <img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image15.png" style="width:6.34924in;height:2.17047in" />
+> <img src="./media/image15.png" style="width:6.34924in;height:2.17047in" />
 
 Figure 9 – Stratum Cutting Units setup
 
@@ -302,7 +302,7 @@ Figure 9 – Stratum Cutting Units setup
 > (frequency, insurance frequency, sample selector type, big BAF, KZ,
 > etc. depending on cruise method).
 >
-> <img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image16.png" style="width:6.34953in;height:2.87826in" />
+> <img src="./media/image16.png" style="width:6.34953in;height:2.87826in" />
 
 Figure 10 – Sample Group Details page
 
@@ -320,7 +320,7 @@ Figure 10 – Sample Group Details page
 > opposite Live/Dead default (Figure 11). The program will not allow
 > more than two replicates of the same species code.
 >
-> <img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image17.png" style="width:6.34939in;height:2.32174in" />
+> <img src="./media/image17.png" style="width:6.34939in;height:2.32174in" />
 
 Figure 11 – Subpopulations setup
 
@@ -333,7 +333,7 @@ species code can be assigned a Contract Species and FIA code (Figure
 Processing, although this can also be done manually if the field is left
 blank.
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image18.png" style="width:6.35in;height:5.06319in" />
+<img src="./media/image18.png" style="width:6.35in;height:5.06319in" />
 
 Figure 12 – Species Setup
 
@@ -352,7 +352,7 @@ screen in the Add Audit Rule area. Choose a Tree Field, and minimum
 and/or maximum allowed value. A description can also be added for
 clarity (Figure13).
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image19.png" style="width:6.35in;height:2.33372in" />
+<img src="./media/image19.png" style="width:6.35in;height:2.33372in" />
 
 Figure 13 – Audit Rule Setup
 
@@ -384,7 +384,7 @@ new record with a different Species code to distinguish it from the
 original code. This list can be edited, new records can be added, and
 existing records can be deleted.
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image20.png" style="width:6.35in;height:3.71042in" />
+<img src="./media/image20.png" style="width:6.35in;height:3.71042in" />
 
 Figure 14 – Tree Default Values setup
 
@@ -400,7 +400,7 @@ created using the Design Templates menu.
 > the code into the box on the left and hit the green “+” button (Figure
 > 15).
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image21.png" style="width:5.33415in;height:3.1in" />
+<img src="./media/image21.png" style="width:5.33415in;height:3.1in" />
 
 Figure 15 – Stratum Template setup
 
@@ -412,7 +412,7 @@ Figure 15 – Stratum Template setup
 > fields. Fields can be added and removed using the green “+” or the red
 > “-“ buttons (Figure 16).
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image22.png" style="width:5.35479in;height:3.1in" />
+<img src="./media/image22.png" style="width:5.35479in;height:3.1in" />
 
 Figure 16 – Tree Fields setup
 
@@ -434,7 +434,7 @@ stored in My Documents/Cruise Files/Template Files. Select a Template
 File and click Open. The Template Editor allows the user to setup and
 edit Template data (Figure 17).
 
-<img src="C:\Users\BenCamps\Documents\FMSC_GitHub\NatCruise\doc\NatCruiseUserGuide\/media/image23.png" style="width:6.35in;height:3.60825in" />
+<img src="./media/image23.png" style="width:6.35in;height:3.60825in" />
 
 Figure 17-Template Editor in Cruise Manager
 

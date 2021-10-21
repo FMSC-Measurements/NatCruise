@@ -16,7 +16,7 @@ namespace NatCruise.Services
 
         //Task ShowImport();
 
-        Task ShowCruiseSelect(string saleID);
+        Task ShowCruiseSelect(string saleNumber);
 
         Task GoBackAsync();
     }

@@ -58,6 +58,7 @@ namespace NatCruise.Design.ViewModels
                 SampleGroupCode = code,
                 StratumCode = Stratum.StratumCode,
                 CruiseMethod = Stratum.Method,
+                CutLeave = "C",
                 DefaultLiveDead = "L",
             };
 

@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:prism="http://prismlibrary.com/"
@@ -37,7 +39,8 @@
                   CanUserResizeRows="False"
                   CanUserResizeColumns="False"
                   x:Name="_speciesDatagrid"
-                  ItemsSource="{Binding Species}">
+                  ItemsSource="{Binding Species}"
+                  SelectedItem="{Binding SelectedSpecies}">
             <DataGrid.Resources>
 
             </DataGrid.Resources>
@@ -61,15 +64,21 @@
                      mah:TextBoxHelper.Watermark="Species Code"
                      Width="100"
                      MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}" />
-            <Button Style="{StaticResource AddButton}"
-                    Command="{Binding AddSpeciesCommand}"
-                    CommandParameter="{Binding Text, ElementName=_newSpeciesTextBox}" />
+            <Button Style="{StaticResource AddButton}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding AddSpeciesCommand}"
+                                               CommandParameter="{Binding Text, Source={x:Reference _newSpeciesTextBox}}" />
+                        <triggers:ClearTextBoxAction TargetName="_newSpeciesTextBox" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
         </StackPanel>
         <Grid Grid.Column="2"
               Grid.Row="2"
               Background="White"
-              DataContext="{Binding SelectedItem, ElementName=_speciesDatagrid}"
-              IsEnabled="{Binding  SelectedItem, ElementName=_speciesDatagrid, Converter={StaticResource NotNullConverter}}">
+              DataContext="{Binding SelectedSpecies}"
+              IsEnabled="{Binding  SelectedSpecies, Converter={StaticResource NotNullConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35*" />
                 <RowDefinition Height="Auto" />

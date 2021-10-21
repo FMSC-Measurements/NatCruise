@@ -12,7 +12,19 @@ namespace FScruiser.XF.Services
         {
             var fileTypes = new Dictionary<DevicePlatform, IEnumerable<string>>()
                 {
-                    { DevicePlatform.Android, new string[] {"application/cruise", "application/crz3"}},
+                    { DevicePlatform.Android, new string[] {"application/x-cruise", "application/x-crz3"}},
+                };
+
+            var result = await FilePicker.PickAsync();
+
+            return result?.FullPath;
+        }
+
+        public async Task<string> SelectCruiseDatabaseAsync()
+        {
+            var fileTypes = new Dictionary<DevicePlatform, IEnumerable<string>>()
+                {
+                    { DevicePlatform.Android, new string[] {"application/x-crz3db"}},
                 };
 
             var result = await FilePicker.PickAsync();
