@@ -95,7 +95,7 @@ namespace NatCruise.Wpf.Services
             {
                 InitialDirectory = AppSettings.LastOpenTemplateDir,
                 DefaultExt = "*.crz3t",
-                Filter = "V3 Template File (*.crz3t)|*.crz3t| V2 Template File (*.cut)|*.cut",
+                Filter = "All Template Files|*.crz3t;*.cut|V3 Template File|*.crz3t| V2 Template File|*.cut",
             };
 
             var result = dialog.ShowDialog();
