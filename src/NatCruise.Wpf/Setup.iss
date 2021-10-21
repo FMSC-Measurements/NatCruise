@@ -49,9 +49,10 @@ OutputBaseFilename=NatCruise_Setup
 
 [Tasks]
 Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons};
+;Name: associateV3CruiseFileTypes; Description: "Associate V3 Cruise (.crz3) Files with NatCruise"; GroupDescription: "Associate File Types";  
 ;Name: deployV2Templates; Description: "V2 Templates"; GroupDescription: "Template Files"; Flags: checkablealone
 ;Name: deployV2Templates/overwriteV2Templates; Description: "Recopy existing template files"; GroupDescription: "Template Files"; Flags: unchecked dontinheritcheck;
-;Name: associateV3CruiseFileTypes; Description: "Associate V3 Cruise (.crz3) Files with NatCruise"; GroupDescription: "Associate File Types";  
+
 ;Name: associateV2CruiseFileTypes; Description: "Associate V2 Cruise (.cruise) Files with NatCruise"; GroupDescription: "Associate File Types"; Flags: unchecked
 ;Name: associateCutFileTypes; Description: "Associate V2 Template (.cut) Files with Cruise Manager"; GroupDescription: "Associate File Types"; Flags: unchecked
 
@@ -75,22 +76,22 @@ Filename: "{app}\{#EXEName}"; Description: "{cm:LaunchProgram,{#APP}}"; Flags: n
 
 [Registry]
 
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{#EXEName}; ValueType: none; Flags: deletekey noerror;
+;Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{#EXEName}; ValueType: none; Flags: deletekey noerror; Tasks: associateV3CruiseFileTypes;
 
-Root: HKA; Subkey: "Software\Classes\Applications\{#EXEName}\SupportedTypes"; ValueType: string; ValueName: ".crz3"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateCruiseFileTypes;
-Root: HKA; Subkey: "Software\Classes\Applications\{#EXEName}\SupportedTypes"; ValueType: string; ValueName: ".crz3t"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateCutFileTypes;
+;Root: HKA; Subkey: "Software\Classes\Applications\{#EXEName}\SupportedTypes"; ValueType: string; ValueName: ".crz3"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+;Root: HKA; Subkey: "Software\Classes\Applications\{#EXEName}\SupportedTypes"; ValueType: string; ValueName: ".crz3t"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
 
-; NCS.CruiseFileV3 is the internal unique name for the file type assocation for the .crz3 extention
-Root: HKA; Subkey: "Software\Classes\.crz3"; ValueType: string; ValueName: ""; ValueData: "NCS.CruiseFileV3"; Flags: uninsdeletevalue; Tasks: associateCruiseFileTypes;
-Root: HKA; Subkey: "Software\Classes\.crz3\OpenWithProgids"; ValueType: string; ValueName: "NCS.CruiseFileV3"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateCruiseFileTypes;
-Root: HKA; Subkey: "Software\Classes\NCS.CruiseFileV3"; ValueType: string; ValueName: ""; ValueData: "Cruise File V3"; Flags: uninsdeletevalue; Tasks: associateCruiseFileTypes;
-; the ',0' in ValueData tells Explorer to use the first icon from NatCruise.Wpf.exe
-Root: HKA; Subkey: "Software\Classes\NCS.CruiseFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#EXEName},0"; Flags: uninsdeletevalue; Tasks: associateCruiseFileTypes;
-Root: HKA; Subkey: "Software\Classes\NCS.CruiseFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#EXEName}"" ""%1"""; Flags: uninsdeletevalue; Tasks: associateCruiseFileTypes;
+;; NCS.CruiseFileV3 is the internal unique name for the file type assocation for the .crz3 extention
+;Root: HKA; Subkey: "Software\Classes\.crz3"; ValueType: string; ValueName: ""; ValueData: "NCS.CruiseFileV3"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+;Root: HKA; Subkey: "Software\Classes\.crz3\OpenWithProgids"; ValueType: string; ValueName: "NCS.CruiseFileV3"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+;Root: HKA; Subkey: "Software\Classes\NCS.CruiseFileV3"; ValueType: string; ValueName: ""; ValueData: "Cruise File V3"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+;; the ',0' in ValueData tells Explorer to use the first icon from NatCruise.Wpf.exe
+;Root: HKA; Subkey: "Software\Classes\NCS.CruiseFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#EXEName},0"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+;Root: HKA; Subkey: "Software\Classes\NCS.CruiseFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#EXEName}"" ""%1"""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
 
-; register cruise template files
-Root: HKA; Subkey: "Software\Classes\.crz3t"; ValueType: string; ValueName: ""; ValueData: "NCS.TemplateFileV3"; Flags: uninsdeletevalue; Tasks: associateCutFileTypes;
-Root: HKA; Subkey: "Software\Classes\.crz3t\OpenWithProgids"; ValueType: string; ValueName: "NCS.TemplateFileV3"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateCutFileTypes;
-Root: HKA; Subkey: "Software\Classes\NCS.TemplateFile"; ValueType: string; ValueName: ""; ValueData: "Cruise Template File V3"; Flags: uninsdeletevalue; Tasks: associateCutFileTypes;
-Root: HKA; Subkey: "Software\Classes\NCS.TemplateFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#EXEName},0"; Flags: uninsdeletevalue; Tasks: associateCutFileTypes;
-Root: HKA; Subkey: "Software\Classes\NCS.TemplateFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#EXEName}"" ""%1"""; Flags: uninsdeletevalue; Tasks: associateCutFileTypes;
+;; register cruise template files
+;Root: HKA; Subkey: "Software\Classes\.crz3t"; ValueType: string; ValueName: ""; ValueData: "NCS.TemplateFileV3"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+;Root: HKA; Subkey: "Software\Classes\.crz3t\OpenWithProgids"; ValueType: string; ValueName: "NCS.TemplateFileV3"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+;Root: HKA; Subkey: "Software\Classes\NCS.TemplateFile"; ValueType: string; ValueName: ""; ValueData: "Cruise Template File V3"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+;Root: HKA; Subkey: "Software\Classes\NCS.TemplateFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#EXEName},0"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+;Root: HKA; Subkey: "Software\Classes\NCS.TemplateFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#EXEName}"" ""%1"""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
