@@ -1,15 +1,14 @@
 # Privacy Policy
- When you use this application no personal identifiable information (PII) is collected or sent to the US Forest Service (USFS)
+ Thank you for using FScruiser and reviewing our privacy statment. When you use this application no personal identifiable information (PII) is collected or sent to the US Forest Service (USFS)
  or third parties. 
  
 ## Anonymous Usage Information
-When using the application, we my collect anonymous usage 
+When using the application, we may collect anonymous usage 
 information for the purpose of improving the experience of all users.
  
 Information we collect:
  - Crash and Error information
- - Time to load for each page
- - Number of times visiting each page
+ - Application Pages you vist
  - Country 
  - Device Model
  - OS version
