@@ -9,21 +9,12 @@
         <Grid>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
-                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0"
-                   Grid.Column="0"
-                   Text="Cruisers"
-                   VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"
-                   BackgroundColor="{StaticResource fs_brown}"
-                   TextColor="{StaticResource white_90}" />
-
-            <StackLayout Grid.Row="1"
+            <StackLayout Grid.Row="0"
                          Orientation="Horizontal">
 
                 <Label x:Name="_askInitialsSwitchHeading"
@@ -35,78 +26,77 @@
 
                 <Switch  IsToggled="{Binding PromptCruiserOnSample}"
                          HorizontalOptions="End"
-                         AutomationProperties.LabeledBy="{x:Reference _askInitialsSwitchHeading}" />
+                         AutomationProperties.LabeledBy="{x:Reference _askInitialsSwitchHeading}"
+                         HeightRequest="{StaticResource minTouchableHeight}"/>
 
             </StackLayout>
 
-            <ListView x:Name="_cruisersListView"
-                      Grid.Row="2"
+            <CollectionView x:Name="_cruisersListView"
+                      Grid.Row="1"
                       ItemsSource="{Binding Cruisers}"
                       AutomationProperties.Name="Cruisers List">
 
-                <ListView.ItemTemplate>
-
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
+                        <Grid ColumnSpacing="0"
+                              RowSpacing="0"
+                              Margin="5"
+                              AutomationProperties.IsInAccessibleTree="True"
+                              AutomationProperties.Name="{Binding .}">
 
-                        <ViewCell x:Name="something"
-                                  AutomationProperties.IsInAccessibleTree="True"
-                                  AutomationProperties.Name="{Binding .}">
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <Style TargetType="BoxView">
+                                        <Setter Property="Color"
+                                                Value="{StaticResource black_12}" />
+                                    </Style>
+                                </ResourceDictionary>
+                            </Grid.Resources>
 
-                            <Grid ColumnSpacing="0"
-                                  RowSpacing="0"
-                                  Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="3" />
+                            </Grid.RowDefinitions>
 
-                                <Grid.Resources>
-                                    <ResourceDictionary>
-                                        <Style TargetType="BoxView">
-                                            <Setter Property="Color"
-                                                    Value="{StaticResource black_12}" />
-                                        </Style>
-                                    </ResourceDictionary>
-                                </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3" />
+                                <ColumnDefinition Width="6*" />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="3" />
-                                </Grid.RowDefinitions>
+                            <BoxView Grid.Column="0"
+                                     Grid.Row="0"
+                                     Grid.RowSpan="2" />
 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="3" />
-                                    <ColumnDefinition Width="6*" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
+                            <BoxView Grid.Column="1"
+                                     Grid.Row="1"
+                                     Grid.ColumnSpan="2" />
 
-                                <BoxView Grid.Column="0"
-                                         Grid.Row="0"
-                                         Grid.RowSpan="2" />
+                            <Label Grid.Column="1"
+                                   Grid.Row="0"
+                                   Text="{Binding .}"
+                                   TextColor="Black"
+                                   VerticalTextAlignment="Center"
+                                   Margin="10,0,0,0"
+                                   AutomationProperties.IsInAccessibleTree="False" />
 
-                                <BoxView Grid.Column="1"
-                                         Grid.Row="1"
-                                         Grid.ColumnSpan="2" />
-
-                                <Label Grid.Column="1"
-                                       Grid.Row="0"
-                                       Text="{Binding .}"
-                                       TextColor="Black"
-                                       VerticalTextAlignment="Center"
-                                       Margin="10,0,0,0"
-                                       AutomationProperties.IsInAccessibleTree="False" />
-
-                                <Button Grid.Column="2"
-                                        Grid.Row="0"
-                                        Text="X"
-                                        Command="{Binding BindingContext.RemoveCruiserCommand, Source={x:Reference _self}}"
-                                        CommandParameter="{Binding .}"
-                                        BackgroundColor="Red"
-                                        AutomationProperties.IsInAccessibleTree="True"
-                                        AutomationProperties.Name="Remove Button" />
-                            </Grid>
-                        </ViewCell>
+                            <Button Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="11,5"
+                                    HeightRequest="{StaticResource minTouchableHeight}"
+                                    WidthRequest="{StaticResource minTouchableWidth}"
+                                    Text="X"
+                                    Command="{Binding BindingContext.RemoveCruiserCommand, Source={x:Reference _self}}"
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="Red"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="{Binding . ,StringFormat='{}Remove {0}'}" />
+                        </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-            <StackLayout Grid.Row="3"
+            <StackLayout Grid.Row="2"
                          Orientation="Horizontal"
                          VerticalOptions="Fill">
 
@@ -116,6 +106,7 @@
                         Image="ic_plus_white_18dp.png"
                         BackgroundColor="{StaticResource primary_500}"
                         WidthRequest="60"
+                        HeightRequest="{StaticResource minTouchableHeight}"
                         IsEnabled="{Binding Text, Source={Reference _addCruiserEntry}, Converter={StaticResource isNotNullOrEmptyConverter}}"
                         Margin="5"
                         AutomationProperties.IsInAccessibleTree="True"
