@@ -59,131 +59,10 @@ namespace FScruiser.XF
                 ,typeof(Crashes));
 
 #endif
-
-            //var ea = Container.Resolve<IEventAggregator>();
-
-            // var cruiseFileSelectedEvent = ea.GetEvent<CruiseFileSelectedEvent>().Subscribe(async (path) =>
-            // {
-            //     await LoadCruiseFileAsync(path);
-            // });
-
-            //_cruiseFileOpenedEvent = ea.GetEvent<CruiseFileOpenedEvent>();
-
-            //MessagingCenter.Subscribe<object, string>(this, Messages.CRUISE_FILE_SELECTED, async (sender, path) =>
-            //{
-            //    await LoadDatabase(path);
-            //});
-            //await NavigationService.NavigateAsync("/Main/Navigation/CuttingUnits");
-
             await CruiseNavigationService.ShowCruiseLandingLayout();
 
-            //await NavigationService.NavigateAsync("/Main");
+
         }
-
-        //protected async System.Threading.Tasks.Task LoadDatabase(string path)
-        //{
-        //    //var cruiseFileType = CruiseDAL.DAL.ExtrapolateCruiseFileType(path);
-        //    //if (cruiseFileType.HasFlag(CruiseDAL.CruiseFileType.Cruise))
-        //    //{
-        //    //    Analytics.TrackEvent("Error::::LoadCruiseFile|Invalid File Path", new Dictionary<string, string>() { { "FilePath", path } });
-        //    //    return;
-        //    //}
-
-        //    try
-        //    {
-        //        var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Storage);
-
-        //        if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
-        //        {
-        //            if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Plugin.Permissions.Abstractions.Permission.Storage))
-        //            {
-        //                await DialogService.DisplayAlertAsync("Request Access To Storage", "FScruiser needs access to files on device", "OK");
-        //            }
-
-        //            var requestResults = await CrossPermissions.Current.RequestPermissionsAsync(Plugin.Permissions.Abstractions.Permission.Storage);
-        //            status = requestResults.GetValueOrDefault(Plugin.Permissions.Abstractions.Permission.Storage);
-        //        }
-
-        //        if (status == Plugin.Permissions.Abstractions.PermissionStatus.Granted)
-        //        {
-        //            try
-        //            {
-        //                if (System.IO.Path.GetExtension(path).ToLowerInvariant() == ".cruise")
-        //                {
-        //                    var convertedPath = Migrator.GetConvertedPath(path);
-
-        //                    // if converted file already exists let the user know that we
-        //                    // are just going to open it instead of the file they selected
-        //                    // otherwise convert the .cruise file and open the convered .crz3 file
-        //                    if (System.IO.File.Exists(convertedPath) == true)
-        //                    {
-        //                        await DialogService.DisplayAlertAsync("Message",
-        //                            $"Opening {convertedPath}",
-        //                            "OK");
-        //                    }
-        //                    else
-        //                    {
-        //                        try
-        //                        {
-        //                            Migrator.MigrateFromV2ToV3(path, convertedPath);
-        //                        }
-        //                        catch(Exception e)
-        //                        {
-        //                            LogAndShowExceptionAsync("File Error", "Unable to Migrate File", e
-        //                                , new Dictionary<string, string>(){ { "FileName", path } })
-        //                                .FireAndForget();
-        //                            return;
-        //                        }
-
-        //                        var fileName = System.IO.Path.GetFileName(path);
-        //                        await DialogService.DisplayAlertAsync("Message",
-        //                            $"Your cruise file has been updated and the file {fileName} has been created",
-        //                            "OK");
-        //                    }
-
-        //                    path = convertedPath;
-        //                }
-
-        //                DataserviceProvider.OpenDatabase(path);
-        //                path = DataserviceProvider.DatabasePath;
-
-        //                Properties.SetValue("cruise_path", path);
-
-        //                //var sampleInfoDS = DataserviceProvider.GetDataservice<ISampleInfoDataservice>();
-        //                //if (sampleInfoDS.HasSampleStates() == false
-        //                //    && sampleInfoDS.HasSampleStateEnvy()
-        //                //    && await DialogService2.AskYesNoAsync("This file doesn't have any samplers associated with this device. Would you to continue by copying a state from another device?", "Copy samplers from another device?"))
-        //                //{
-        //                //    await NavigationService.NavigateAsync("/Main/Navigation/CuttingUnits/SampleStateManagmentOther");
-        //                //}
-        //                //else
-        //                //{
-        //                //    await NavigationService.NavigateAsync("/Main/Navigation/CuttingUnits");
-        //                //}
-
-        //                await NavigationService.NavigateAsync("/Main/Navigation/CuttingUnits");
-
-        //                MessagingCenter.Send<object, string>(this, Messages.CRUISE_FILE_OPENED, path);
-        //            }
-        //            catch (FileNotFoundException ex)
-        //            {
-        //                LogAndShowExceptionAsync("File Error", "File Not Found",
-        //                    ex, new Dictionary<string, string> { { "FilePath", path } })
-        //                    .FireAndForget();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                 LogAndShowExceptionAsync("File Error", "File Could Not Be Opended",
-        //                     ex, new Dictionary<string, string> { { "FilePath", path } })
-        //                    .FireAndForget();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogException("permissions", "request permissions error in method LoadCruiseFileAsync", ex);
-        //    }
-        //}
 
         //protected void ReloadNavigation()
         //{
@@ -241,24 +120,38 @@ namespace FScruiser.XF
 
             if (containerRegistry.IsRegistered<IDataserviceProvider>() == false)
             {
-                var deviceInfo = Container.Resolve<IDeviceInfoService>();
-                var fileSystemService = Container.Resolve<IFileSystemService>();
-                var cruiseDbPath = fileSystemService.DefaultCruiseDatabasePath;
-                if (File.Exists(cruiseDbPath) == false)
-                {
-                    var newDb = new CruiseDatastore_V3(cruiseDbPath, true);
-                }
-
-                _dataserviceProvider = new DataserviceProvider(cruiseDbPath, deviceInfo);
-                _dataserviceProvider.RegisterDataservices(containerRegistry);
-
-                containerRegistry.RegisterInstance<IDataserviceProvider>(_dataserviceProvider);
+                var dataserviceProvider = GetDataserviceProvider();
+                containerRegistry.RegisterInstance<IDataserviceProvider>(dataserviceProvider);
+                dataserviceProvider.RegisterDataservices(containerRegistry);
+                //containerRegistry.RegisterSingleton<IDataserviceProvider>(GetDataserviceProvider);
             }
 
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)
             {
                 containerRegistry.RegisterInstance<ICruisersDataservice>(_cruisersDataservice = new CruisersDataservice(this));
             }
+        }
+
+        protected DataserviceProvider GetDataserviceProvider()
+        {
+            if (_dataserviceProvider is null)
+            {
+                var deviceInfo = Container.Resolve<IDeviceInfoService>();
+                var fileSystemService = Container.Resolve<IFileSystemService>();
+                var cruiseDbPath = fileSystemService.DefaultCruiseDatabasePath;
+                if (File.Exists(cruiseDbPath) == false)
+                {
+                    //throw new Exception();
+                    var newDb = new CruiseDatastore_V3(cruiseDbPath, true);
+                    _dataserviceProvider = new DataserviceProvider(newDb, deviceInfo);
+                }
+                else
+                {
+                    var db = new CruiseDatastore_V3(cruiseDbPath, true);
+                    _dataserviceProvider = new DataserviceProvider(db, deviceInfo);
+                }
+            }
+            return _dataserviceProvider;
         }
 
         public static void LogException(string catigory, string message, Exception ex, IDictionary<string, string> data = null)

@@ -163,6 +163,9 @@
                                     <!-- stratum code and add/remove button-->
                                     <StackLayout Orientation="Horizontal">
                                         <Label Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
+                                               FontAttributes="Bold"
+                                               FontSize="Large"
+                                               TextColor="{StaticResource darkText}"
                                                Margin="10,0,30,0"
                                                VerticalTextAlignment="Center"
                                                HorizontalOptions="StartAndExpand"
@@ -188,11 +191,14 @@
                                         <StackLayout Orientation="Horizontal"
                                                      Margin="10,0,10,0">
 
-                                            <StackLayout Orientation="Horizontal">
-                                                <Label Text="Empty Plot"
+                                            <StackLayout Orientation="Horizontal"
+                                                         >
+                                                <Label Text="Is Null Plot"
                                                        VerticalTextAlignment="Center"
                                                        Margin="10,0,30,0" />
-                                                <Switch IsToggled="{Binding IsEmpty}" />
+                                                <Switch IsToggled="{Binding IsEmpty}"
+                                                        OnColor="{StaticResource primary_500}"
+                                                        HeightRequest="44"/>
                                             </StackLayout>
                                         </StackLayout>
 

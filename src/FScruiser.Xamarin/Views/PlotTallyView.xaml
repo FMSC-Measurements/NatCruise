@@ -125,6 +125,7 @@
                                                      Clicked="openDeleteButton_Clicked"
                                                      Source="ic_more_vert_black_24dp.png"
                                                      Padding="0,7"
+                                                     HeightRequest="44"
                                                      VerticalOptions="Center"
                                                      AutomationProperties.IsInAccessibleTree="True"
                                                      AutomationProperties.Name="Show Item Actions"/>

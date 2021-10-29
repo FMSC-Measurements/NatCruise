@@ -23,7 +23,7 @@
                        Margin="10"
                        CornerRadius="0"
                        AutomationProperties.IsInAccessibleTree="True"
-                       AutomationProperties.Name="Select Cruise Button">
+                       AutomationProperties.Name="Select Cruise">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowSelectSale}" Tapped="OnNavButtonClicked" />
                     </Frame.GestureRecognizers>
@@ -48,7 +48,7 @@
                         <Picker x:Name="_cuttingUnitPicker"
                                 Title="Select Cutting Unit"
                                 TextColor="{StaticResource lightText}"
-                                TitleColor="{StaticResource white_50}"
+                                TitleColor="{StaticResource white_60}"
                                 BackgroundColor="{StaticResource white_12}"
                                 ItemsSource="{Binding CuttingUnits}"
                                 SelectedItem="{Binding SelectedCuttingUnit}"

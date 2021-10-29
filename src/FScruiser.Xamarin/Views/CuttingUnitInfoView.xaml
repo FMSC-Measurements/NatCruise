@@ -30,7 +30,8 @@
 
                 <StackLayout>
                     <Label Text="Remarks"
-                           x:Name="_unitRemarksLabel"/>
+                           x:Name="_unitRemarksLabel"
+                           AutomationProperties.IsInAccessibleTree="true"/>
                     <Entry Text="{Binding CuttingUnit.Remarks}"
                            AutomationProperties.IsInAccessibleTree="true"
                            AutomationProperties.LabeledBy="{x:Reference _unitRemarksLabel}"/>

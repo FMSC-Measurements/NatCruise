@@ -31,11 +31,11 @@
                     <ViewCell>
                         <StackLayout Orientation="Vertical"
                                      Padding="16, 0">
-                            <Label x:Name="_remarksHeading" Text="Remarks"
-                                   AutomationProperties.IsInAccessibleTree="False"/>
+                            <Label x:Name="_remarksHeading" Text="Remarks"/>
                             <Entry Text="{Binding Remarks}"
                                    BackgroundColor="LightGray"
                                    HeightRequest="200"
+                                   AutomationProperties.IsInAccessibleTree="True"
                                    AutomationProperties.LabeledBy="{x:Reference _remarksHeading}" />
                         </StackLayout>
                     </ViewCell>

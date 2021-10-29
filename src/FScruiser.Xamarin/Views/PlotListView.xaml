@@ -21,7 +21,8 @@
                             <SwipeView.LeftItems>
                                 <SwipeItem Text="Delete"
                                            Command="{Binding BindingContext.DeletePlotCommand, Source={Reference _page}}"
-                                           CommandParameter="{Binding .}" />
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="Red"/>
                             </SwipeView.LeftItems>
                             
                             <Grid Margin="0,10,0,10"
@@ -95,8 +96,9 @@
                                              Clicked="openDeletePlotButton_Clicked"
                                              Source="ic_more_vert_black_24dp.png"
                                              Padding="0,7"
+                                             HeightRequest="44"
                                              AutomationProperties.IsInAccessibleTree="True"
-                                             AutomationProperties.Name="Show Item Actions Button" />
+                                             AutomationProperties.Name="Show Actions Item" />
 
                             </Grid>
                         </SwipeView>
