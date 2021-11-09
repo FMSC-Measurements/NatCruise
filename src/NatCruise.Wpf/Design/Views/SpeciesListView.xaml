@@ -64,7 +64,8 @@
                      mah:TextBoxHelper.Watermark="Species Code"
                      Width="100"
                      MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}" />
-            <Button Style="{StaticResource AddButton}">
+            <Button Style="{StaticResource AddButton}"
+                    IsEnabled="{Binding Text, Source={x:Reference _newSpeciesTextBox}, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding AddSpeciesCommand}"
