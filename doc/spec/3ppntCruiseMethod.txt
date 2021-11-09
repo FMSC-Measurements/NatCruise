@@ -1,0 +1,30 @@
+ - store user entered values? such as Tree Cnt, Avg Ht
+ - avg ht as int?
+ - number trees sequentialy across strata?
+ - is limiting distance done on borderline trees? can trees be added or removed after?
+ - store calculated KPI on plot stratum record
+ - store 3p random value
+
+ - when count plot: create single tree with tree count = tree cnt
+ - when measure plot: create 1 tree record for each tree in plot
+
+# KPI Equation 
+Round(TreeCount * Stratum.BAF * AveHt * VolFactor)
+
+## KPI Calculation: Volume Factor
+Where does the 0.333 come from? It is a commonly used 3PPNT Volume Factor that converts BA/acre and average height to a CF volume estimate - 0.333 makes the shape of each tree a geometric cone. We know trees are not perfect cones, but it is an acceptable approximation for quickly calculating CF volume.
+
+# Workflow for 3PPNT
+
+ 1. locate plot center and swing prism/relaskop, count the "in" trees. Borderline trees are not measured, they are estimated  ... the most common way to do this is to count every other borderline tree as "in" for the plot-level tree count on this first stage. Enter the plot-level tree count into a "Tree count" field on the New Plot/Edit Plot form.
+	
+ 2. Make an ocular estimate of average total height of all the trees on the plot. Enter this plot average tree height estimate into an "Average Total Height" field on the New Plot/Edit Plot form.
+	
+ 3. With tree count (plot-level), average height (plot-level) and BAF (known - statum-level), FScruiser determines whether the plot is a second stage sample, e.g a measure plot: avg height x 0.333 x BAF x number of trees gives a CF volume/acre estimate represented by the plot (the plot-level KPI). FScruiser draws a random number between 0 and KZ3PPNT - if it's less than than or equal to the KPI, it is a measure plot, otherwise it is a count plot. Whether a count or measure plot, Cruise Processing needs the KPI, or the numbers needed to calculate the KPI, for each plot. The logical place for this info would be in the Plot table.	
+		
+		- Measure plots: trees are measured just like it was a PNT - DBH's, total heights, borderline trees measured as in or out. 
+		
+		- Count plots - plot-level KPI is already determined, and saved. No tree records are entered. Crew moves on to next plot.
+		
+
+
