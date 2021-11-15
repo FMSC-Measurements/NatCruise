@@ -198,7 +198,7 @@
                                                        Margin="10,0,30,0" />
                                                 <Switch IsToggled="{Binding IsEmpty}"
                                                         OnColor="{StaticResource primary_500}"
-                                                        HeightRequest="44"/>
+                                                        HeightRequest="{StaticResource minTouchableHeight}"/>
                                             </StackLayout>
                                         </StackLayout>
 

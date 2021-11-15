@@ -270,6 +270,7 @@
                                                              Clicked="openUntallyButton_Clicked"
                                                              Source="ic_more_vert_black_24dp.png"
                                                              Padding="0,7"
+                                                             HeightRequest="{StaticResource minTouchableHeight}"
                                                              VerticalOptions="Center"
                                                              AutomationProperties.IsInAccessibleTree="True"
                                                              AutomationProperties.Name="Show Item Actions Button" />
@@ -470,6 +471,7 @@
                                                              Clicked="openUntallyButton_Clicked"
                                                              Source="ic_more_vert_black_24dp.png"
                                                              Padding="0,7"
+                                                             HeightRequest="{StaticResource minTouchableHeight}"
                                                              VerticalOptions="Center"
                                                              AutomationProperties.IsInAccessibleTree="True"
                                                              AutomationProperties.Name="Show Item Actions Button" />
@@ -622,6 +624,7 @@
                                                         Grid.Column="1"
                                                         Grid.Row="0"
                                                         Padding="10,3"
+                                                        HeightRequest="{StaticResource minTouchableHeight}"
                                                         Command="{Binding BindingContext.ShowTallyMenuCommand, Source={Reference _page}}"
                                                         Source="ic_more_vert_black_24dp.png"
                                                         BackgroundColor="Transparent"
