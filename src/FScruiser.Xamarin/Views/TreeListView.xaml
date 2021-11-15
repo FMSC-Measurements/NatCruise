@@ -19,7 +19,7 @@
                    VerticalTextAlignment="Center"
                    AutomationProperties.IsInAccessibleTree="True" />
             <Switch IsToggled="{Binding OnlyShowTreesWithErrorsOrWarnings}"
-                    HeightRequest="44"
+                    HeightRequest="{StaticResource minTouchableHeight}"
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="Only Show Trees With Errors Toggle" />
         </StackLayout>

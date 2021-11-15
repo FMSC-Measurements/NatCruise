@@ -96,7 +96,7 @@
                                              Clicked="openDeletePlotButton_Clicked"
                                              Source="ic_more_vert_black_24dp.png"
                                              Padding="0,7"
-                                             HeightRequest="44"
+                                             HeightRequest="{StaticResource minTouchableHeight}"
                                              AutomationProperties.IsInAccessibleTree="True"
                                              AutomationProperties.Name="Show Actions Item" />
 

@@ -125,7 +125,7 @@
                                                      Clicked="openDeleteButton_Clicked"
                                                      Source="ic_more_vert_black_24dp.png"
                                                      Padding="0,7"
-                                                     HeightRequest="44"
+                                                     HeightRequest="{StaticResource minTouchableHeight}"
                                                      VerticalOptions="Center"
                                                      AutomationProperties.IsInAccessibleTree="True"
                                                      AutomationProperties.Name="Show Item Actions"/>
@@ -339,7 +339,7 @@
                             Grid.Column="0"
                             x:Name="StratumFilterListView"
                             VerticalOptions="End"
-                            HeightRequest="44"
+                            HeightRequest="{StaticResource minTouchableHeight}"
                             Margin="2,1"
                             SelectedItem="{Binding StratumFilter}"
                             SelectionMode="Single"

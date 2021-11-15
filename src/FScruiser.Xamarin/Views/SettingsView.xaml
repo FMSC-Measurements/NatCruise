@@ -15,6 +15,7 @@
                            AutomationProperties.IsInAccessibleTree="False"/>
 
                     <Switch IsToggled="{Binding AppSettings.EnableAnalitics}"
+                            HeightRequest="{StaticResource minTouchableHeight}"
                             AutomationProperties.IsInAccessibleTree="True"
                             AutomationProperties.Name="Analitics Toggle"/>
 
@@ -26,6 +27,7 @@
                            AutomationProperties.IsInAccessibleTree="False"/>
 
                     <Switch IsToggled="{Binding AppSettings.EnableCrashReports}"
+                            HeightRequest="{StaticResource minTouchableHeight}"
                             AutomationProperties.IsInAccessibleTree="True"
                             AutomationProperties.Name="Crash Reports Toggle" />
 

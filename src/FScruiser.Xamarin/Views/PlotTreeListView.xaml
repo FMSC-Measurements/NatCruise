@@ -30,6 +30,7 @@
                            Text="Only Trees With Errors"
                            VerticalTextAlignment="Center" />
                     <Switch IsToggled="{Binding OnlyShowTreesWithErrorsOrWarnings}"
+                            HeightRequest="{StaticResource minTouchableHeight}"
                             AutomationProperties.LabeledBy="{x:Reference _onlyTreesWithErrorsHeading}"
                             MinimumHeightRequest="{StaticResource minTouchableHeight}" />
                 </StackLayout>
