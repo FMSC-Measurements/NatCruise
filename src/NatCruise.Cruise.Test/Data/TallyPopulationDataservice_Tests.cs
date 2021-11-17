@@ -3,6 +3,7 @@ using CruiseDAL.V3.Models;
 using FluentAssertions;
 using NatCruise.Cruise.Data;
 using NatCruise.Test;
+using System;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -112,6 +113,87 @@ namespace NatCruise.Cruise.Test.Data
                 pop.TallyDescription.Should().NotBeNullOrWhiteSpace();
                 pop.TallyHotKey.Should().NotBeNullOrWhiteSpace();
                 pop.Method.Should().NotBeNullOrWhiteSpace();
+            }
+        }
+
+        [Theory]
+        [InlineData("u1", "st1", "sg1", "sp1", "L", true)]
+        [InlineData("u1", "st1", "sg1", null, null, false)]
+        public void GetTallyPopulation_With_TreeCountsAndKPIs(string unitCode, string stratum, string sampleGroup, string species, string liveDead, bool tallyBySubpop)
+        {
+            var tallyDescription = $"{stratum} {sampleGroup} {species} {liveDead}";
+            var hotKey = "A";
+            var method = CruiseDAL.Schema.CruiseMethods.STR;
+            var cruiseID = CruiseID;
+
+            var units = new[] { unitCode };
+            var strata = new[]
+            {
+                new Stratum()
+                {
+                    StratumCode = stratum,
+                    Method = method,
+                }
+            };
+            var unit_strata = new[]
+            {
+                new CuttingUnit_Stratum()
+                {
+                    CuttingUnitCode = unitCode,
+                    StratumCode = stratum,
+                }
+            };
+
+            var sampleGroups = new[]
+            {
+                new SampleGroup()
+                {
+                    StratumCode = stratum,
+                    SampleGroupCode = sampleGroup,
+                    SamplingFrequency = 101,
+                    TallyBySubPop = tallyBySubpop,
+                }
+            };
+
+            var subPop = new[]
+            {
+                new SubPopulation()
+                {
+                    StratumCode = stratum,
+                    SampleGroupCode = sampleGroup,
+                    SpeciesCode = species ?? "dummy",
+                    LiveDead = liveDead ?? "L",
+                }
+            };
+
+            using (var db = new CruiseDatastore_V3())
+            {
+                base.InitializeDatabase(db, cruiseID, SaleID, units, strata, unit_strata, sampleGroups, new[] { species ?? "dummy" }, null, subPop);
+
+                db.Insert(new TallyLedger { TallyLedgerID = Guid.NewGuid().ToString(), CruiseID = cruiseID, CuttingUnitCode = unitCode, StratumCode = stratum, SampleGroupCode = sampleGroup, SpeciesCode = species, LiveDead = liveDead ?? "L", TreeCount = 101, KPI = 201 });
+                db.Insert(new TallyLedger { TallyLedgerID = Guid.NewGuid().ToString(), CruiseID = cruiseID, CuttingUnitCode = unitCode, StratumCode = stratum, SampleGroupCode = sampleGroup, SpeciesCode = species, LiveDead = liveDead ?? "L", TreeCount = 103, KPI = 203 });
+
+                db.Execute("INSERT INTO TallyDescription (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead, Description) VALUES " +
+                    "(@p1, @p2, @p3, @p4, @p5, @p6);", new object[] { cruiseID, stratum, sampleGroup, species, liveDead, tallyDescription });
+
+                db.Execute("INSERT INTO TallyHotKey (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead, HotKey) VALUES " +
+                    "(@p1, @p2, @p3, @p4, @p5, @p6);", new object[] { cruiseID, stratum, sampleGroup, species, liveDead, hotKey });
+
+                var datastore = new TallyPopulationDataservice(db, cruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                var spResult = db.QueryGeneric("select * from SubPopulation;");
+                var tpresult = db.QueryGeneric("select * from TallyPopulation;");
+
+                var pop = datastore.GetTallyPopulation(unitCode, stratum, sampleGroup, species, liveDead);
+                pop.Should().NotBeNull();
+
+                VerifyTallyPopulation(pop);
+
+                pop.TallyDescription.Should().NotBeNullOrWhiteSpace();
+                pop.TallyHotKey.Should().NotBeNullOrWhiteSpace();
+                pop.Method.Should().NotBeNullOrWhiteSpace();
+                pop.TreeCount.Should().Be(204);
+                pop.SumKPI.Should().Be(404);
             }
         }
 

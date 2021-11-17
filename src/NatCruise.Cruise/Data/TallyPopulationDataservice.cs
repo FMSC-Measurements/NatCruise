@@ -22,26 +22,7 @@ namespace NatCruise.Cruise.Data
         }
 
         private string SELECT_TALLYPOPULATION_CORE =
-@"WITH tallyPopTreeCounts AS (
-    SELECT CruiseID,
-        CuttingUnitCode,
-        StratumCode,
-        SampleGroupCode,
-        SpeciesCode,
-        LiveDead,
-        sum(TreeCount) AS TreeCount,
-        sum(KPI) AS SumKPI
-    FROM TallyLedger AS tl
-    WHERE CuttingUnitCode = @p1 AND CruiseID = @p2
-    GROUP BY
-        CruiseID,
-        CuttingUnitCode,
-        StratumCode,
-        SampleGroupCode,
-        ifnull(SpeciesCode, ''),
-        ifnull(LiveDead, ''))
-
-    SELECT
+@"SELECT
         tp.Description,
         tp.StratumCode,
         st.Method AS StratumMethod,
@@ -49,9 +30,24 @@ namespace NatCruise.Cruise.Data
         tp.SpeciesCode,
         tp.LiveDead,
         tp.HotKey,
-        ifnull(tl.TreeCount, 0) AS TreeCount,
-        ifnull(tl.SumKPI, 0) AS SumKPI,
-        -- sum(tl.KPI) SumKPI,
+            (SELECT ifnull(sum(TreeCount), 0) FROM
+                TallyLedger AS tl
+            WHERE
+                tl.CuttingUnitCode = cust.CuttingUnitCode
+                AND tl.StratumCode = tp.StratumCode
+                AND tl.SampleGroupCode = tp.SampleGroupCode
+                AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
+                AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
+            ) AS TreeCount,
+            (SELECT ifnull(sum(KPI), 0) FROM
+                TallyLedger AS tl
+            WHERE
+                tl.CuttingUnitCode = cust.CuttingUnitCode
+                AND tl.StratumCode = tp.StratumCode
+                AND tl.SampleGroupCode = tp.SampleGroupCode
+                AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
+                AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
+            ) AS SumKPI,
         sg.SamplingFrequency AS Frequency,
         sg.MinKPI AS sgMinKPI,
         sg.MaxKPI AS sgMaxKPI,
@@ -62,13 +58,7 @@ namespace NatCruise.Cruise.Data
     -- Left JOIN SamplerState ss USING (CruiseID, StratumCode, SampleGroupCode)
     JOIN Stratum AS st USING (CruiseID, StratumCode)
     JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
-    LEFT JOIN tallyPopTreeCounts AS tl
-        ON tl.CuttingUnitCode = cust.CuttingUnitCode
-        AND tl.CruiseID =  tp.CruiseID
-        AND tp.StratumCode = tl.StratumCode
-        AND tp.SampleGroupCode = tl.SampleGroupCode
-        AND ifnull(tp.SpeciesCode, '') = ifnull(tl.SpeciesCode, '')
-        AND ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, '')";
+";
 
         public IEnumerable<TallyPopulation> GetTallyPopulationsByUnitCode(string unitCode)
         {
