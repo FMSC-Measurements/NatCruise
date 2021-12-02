@@ -267,7 +267,7 @@ SELECT last_insert_rowid();",
     st.BasalAreaFactor AS BAF,
     st.FixedPlotSize AS FPS,
     st.Method AS CruiseMethod,
-    st.KZ3PPNT AS KZ,
+    st.KZ3PPNT,
     ps.IsEmpty,
     ps.KPI
 FROM Plot AS p
@@ -295,7 +295,7 @@ $@"SELECT
     st.BasalAreaFactor AS BAF,
     st.FixedPlotSize AS FPS,
     st.Method AS CruiseMethod,
-    st.KZ3PPNT AS KZ,
+    st.KZ3PPNT,
     ps.IsEmpty,
     ps.KPI
 FROM Plot AS p

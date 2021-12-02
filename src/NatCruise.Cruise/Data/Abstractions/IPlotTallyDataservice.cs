@@ -10,7 +10,7 @@ namespace NatCruise.Cruise.Data
         string CreatePlotTree(string unitCode,
             int plotNumber,
             string stratumCode,
-            string sampleGroupCode = null,
+            string sampleGroupCode,
             string species = null,
             string liveDead = "L",
             string countMeasure = "M",

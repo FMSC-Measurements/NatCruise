@@ -255,8 +255,8 @@ namespace NatCruise.Cruise.Test.Data
             var strata = new[]
             {
                 new CruiseDAL.V3.Models.Stratum {StratumCode = "st1", Method = "FIX" },
-                new CruiseDAL.V3.Models.Stratum {StratumCode = "st2", Method = "FIX" },
-                new CruiseDAL.V3.Models.Stratum {StratumCode = "st3", Method = "FIX" },
+                new CruiseDAL.V3.Models.Stratum {StratumCode = "st2", Method = "3PPNT", KZ3PPNT = 101  },
+                new CruiseDAL.V3.Models.Stratum {StratumCode = "st3", Method = "FIX"},
             };
             var unit_strata = new[]
             {
@@ -303,6 +303,10 @@ namespace NatCruise.Cruise.Test.Data
 
                 var nonExistantPS = datastore.GetPlot_Stratum(units[0], "st3", plotNumber);
                 ValidatePlot_Stratum(nonExistantPS, false);
+
+                var tppnt = datastore.GetPlot_Stratum(units[0], "st2", plotNumber);
+                tppnt.KZ3PPNT.Should().Be(101);
+
             }
         }
 
