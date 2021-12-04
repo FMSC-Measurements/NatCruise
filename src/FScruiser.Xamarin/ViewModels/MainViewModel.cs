@@ -133,8 +133,12 @@ namespace FScruiser.XF.ViewModels
 
             if (datastoreProvider.CruiseID != null)
             {
-                CuttingUnitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDataservice>();
+                var cuttingUnitDataservice = CuttingUnitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDataservice>();
                 SaleDataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
+                if (cuttingUnitDataservice != null)
+                {
+                    CuttingUnits = cuttingUnitDataservice.GetUnits();
+                }
             }
         }
 
@@ -170,13 +174,8 @@ namespace FScruiser.XF.ViewModels
 
         protected override void OnInitialize(INavigationParameters parameters)
         {
-            base.OnInitialize(parameters);
 
-            var cuttingUnitDataservice = CuttingUnitDataservice;
-            if (cuttingUnitDataservice != null)
-            {
-                CuttingUnits = cuttingUnitDataservice.GetUnits();
-            }
+            base.OnInitialize(parameters);
         }
     }
 }
