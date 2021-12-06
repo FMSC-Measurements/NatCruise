@@ -29,18 +29,22 @@
             users typicaly enter in their measurments Dbh, then slope, then slope distance-->
 
             <StackLayout IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}">
-                <Label Text="{Binding Plot.StratumCode, StringFormat='{}Stratum {0}'}}" />
+                <Label Text="{Binding Plot.StratumCode, StringFormat='{}Stratum {0}'}" />
             </StackLayout>
                          
             
             <Frame BackgroundColor="LightBlue">
                 <StackLayout Orientation="Horizontal">
+
+                    <!-- Is Variable Radius -->
                     <StackLayout Orientation="Horizontal">
                         <Label AutomationProperties.IsInAccessibleTree="False">Variable Radius</Label>
                         <Switch IsToggled="{Binding IsVariableRadius}"
                                 AutomationProperties.IsInAccessibleTree="True"
                                 AutomationProperties.Name="Is Variable Radius Toggle" />
                     </StackLayout>
+
+                    <!-- Baf Or Fps -->
                     <StackLayout Orientation="Horizontal">
                         <Label>BAF/FPS</Label>
                         <Entry x:Name="_bafOrFpsEntry"
@@ -58,6 +62,7 @@
             <StackLayout Orientation="Horizontal">
                 <StackLayout>
 
+                    <!-- DBH -->
                     <Frame BackgroundColor="Yellow">
                         <StackLayout Orientation="Horizontal">
                             <Label x:Name="_dbhEntryHeader">DBH</Label>
@@ -72,6 +77,7 @@
                         </StackLayout>
                     </Frame>
 
+                    <!-- Slope PCT -->
                     <Frame BackgroundColor="Yellow">
                         <StackLayout Orientation="Horizontal">
                             <Label x:Name="_slopePCTEntryHeading">Slope (%)</Label>
@@ -86,6 +92,7 @@
                         </StackLayout>
                     </Frame>
 
+                    <!-- Slope Dist and Measure To -->
                     <Frame BackgroundColor="Yellow">
                         <StackLayout>
                             <StackLayout Orientation="Horizontal">
@@ -103,11 +110,13 @@
                                 <Label x:Name="_measuringToPickerHeading">Measuring To</Label>
                                 <Picker SelectedItem="{Binding MeasureToSelection}"
                                         ItemsSource="{Binding MeasureToOptions}"
+                                        HorizontalOptions="FillAndExpand"
                                         AutomationProperties.LabeledBy="{x:Reference _measuringToPickerHeading}" />
                             </StackLayout>
                         </StackLayout>
                     </Frame>
 
+                    <!-- Azimuth -->
                     <Frame BackgroundColor="Yellow">
                         <StackLayout Orientation="Horizontal">
                             <Label x:Name="_azimuthEntryHeading">Azimuth</Label>
@@ -122,6 +131,8 @@
                         </StackLayout>
                     </Frame>
                 </StackLayout>
+
+                <!-- Limiting Distance and Tree Status -->
                 <Frame BackgroundColor="Orange">
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="_limitingDistanceLabel">Limiting Distance</Label>
