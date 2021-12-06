@@ -22,9 +22,9 @@ namespace NatCruise.Data
         public void DeleteCruise(string cruiseID)
         {
             var database = Database;
-            var saleID = database.ExecuteScalar<string>("SELECT SaleID FROM Cruise WHERE CruiseID = @p1;", cruiseID);
+            var saleNumber = database.ExecuteScalar<string>("SELECT SaleNumber FROM Cruise WHERE CruiseID = @p1;", cruiseID);
             database.Execute("DELETE FROM Cruise WHERE CruiseID = @p1;", cruiseID);
-            database.Execute("DELETE FROM Sale WHERE SaleID = @p1 AND (SELECT count(*) FROM Cruise WHERE SaleID = @p1) = 0; ", saleID);
+            database.Execute("DELETE FROM Sale WHERE SaleNumber = @p1 AND (SELECT count(*) FROM Cruise WHERE SaleNumber = @p1) = 0; ", saleNumber);
         }
 
         public IEnumerable<Cruise> GetCruises()
