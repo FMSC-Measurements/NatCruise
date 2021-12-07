@@ -237,9 +237,32 @@ namespace FScruiser.XF.ViewModels
             else
             { StrataFilterOptions = new string[0]; }
 
+            // we need to reload tally pops on each load incase coming back from edit tree counts
             Tallies = tallyPopulations;
 
-            TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse().ToObservableCollection();
+            
+            var tf = TallyFeed;
+            if(tf != null)
+            {
+                // HACK reloading tally feed causes us to lose the scroll position
+                // to mantain the scroll position we need to add new tally entry items to the existing
+                // tally feed collection instead of reloading the whole collection
+                // we should only need to add entries when coming back from edit tree counts and only be adding one entry when doing so
+
+                var tallyEntries = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse();
+                var newTe = tallyEntries.Except(tf, new TallyEntryComparer());
+
+                foreach(var entry in newTe)
+                {
+                    tf.Add(entry);
+                }
+            }
+            else
+            {
+                TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse().ToObservableCollection();
+            }
+
+            
 
             // refresh selected tree incase coming back from TreeEdit page
 
@@ -330,6 +353,19 @@ namespace FScruiser.XF.ViewModels
         public void SetStratumFilter(string code)
         {
             SelectedStratumCode = code ?? STRATUM_FILTER_ALL;
+        }
+    }
+
+    class TallyEntryComparer : EqualityComparer<TallyEntry>
+    {
+        public override bool Equals(TallyEntry x, TallyEntry y)
+        {
+            return x.TallyLedgerID == y.TallyLedgerID;
+        }
+
+        public override int GetHashCode(TallyEntry obj)
+        {
+            return obj.TallyLedgerID.GetHashCode();
         }
     }
 }
