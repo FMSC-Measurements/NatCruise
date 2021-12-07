@@ -87,6 +87,7 @@
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="CustomRenderers\ValuePickerEditText.cs" />
     <Compile Include="CustomRenderers\ValuePickerRenderer.cs" />
+    <Compile Include="Effects\AndroidViewLifecycleEffect.cs" />
     <Compile Include="Services\ActivityService.cs" />
     <Compile Include="Services\IActivityService.cs" />
     <None Include="Activities\SurrogateActivity.cs~" />
@@ -141,6 +142,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\logs2.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

@@ -20,15 +20,10 @@ namespace FScruiser.XF.Views
             InitializeComponent();
         }
 
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            var count = _tallyFeedListView.ItemsSource.OrEmpty().OfType<object>().Count();
-            if (count > 1)
-            {
-                _tallyFeedListView.ScrollTo(count - 1, position: ScrollToPosition.End, animate: false);
-            }
 
             var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
             if (vm != null)
@@ -192,6 +187,18 @@ namespace FScruiser.XF.Views
         {
             var swipeview = ((Element)sender).GetAncestor<SwipeView>();
             swipeview.Open(OpenSwipeItem.LeftItems);
+        }
+
+        private void _tallyFeedListView_Loaded(object sender, EventArgs e)
+        {
+            // scroll to end of tally feed when view loads
+
+            var itemCount = _tallyFeedListView.ItemsSource?.OfType<object>()?.Count() ?? 0;
+            if (itemCount > 2)
+            {
+                _tallyFeedListView.ScrollTo(itemCount - 1, position: ScrollToPosition.End, animate: false);
+            }
+
         }
     }
 }
