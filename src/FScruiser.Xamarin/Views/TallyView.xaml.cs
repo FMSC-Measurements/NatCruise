@@ -67,7 +67,6 @@ namespace FScruiser.XF.Views
                     _treeEditControlGrid.Children.Clear();
                     var editControls = MakeEditControls(vm.TreeFieldValues);
                     _treeEditControlGrid.Children.AddRange(editControls);
-                    _treeEditPanel.ForceLayout();
                 }
                 finally
                 {

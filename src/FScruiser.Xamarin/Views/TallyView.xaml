@@ -526,7 +526,7 @@
                         <Label Grid.ColumnSpan="3"
                                Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
                                TextColor="{StaticResource darkText}"
-                               FontSize="Large" />
+                               FontSize="Large"/>
 
                         <ScrollView x:Name="_treeEditScrollView"
                                     Grid.Row="1"
@@ -535,8 +535,8 @@
                                     Orientation="Horizontal">
                             <Grid x:Name="_treeEditControlGrid">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="15" />
+                                    <RowDefinition Height="50" />
                                 </Grid.RowDefinitions>
                             </Grid>
                         </ScrollView>
