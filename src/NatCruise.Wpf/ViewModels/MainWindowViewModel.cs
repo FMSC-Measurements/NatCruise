@@ -119,7 +119,7 @@ namespace NatCruise.Wpf.ViewModels
                     var sale = new CruiseDAL.V3.Models.Sale()
                     {
                         SaleID = saleID,
-                        SaleNumber = "",
+                        SaleNumber = "00000",
                     };
 
                     var cruiseID = Guid.NewGuid().ToString();
@@ -127,7 +127,8 @@ namespace NatCruise.Wpf.ViewModels
                     {
                         CruiseID = cruiseID,
                         SaleID = saleID,
-                        CruiseNumber = "",
+                        CruiseNumber = "00000",
+                        SaleNumber = "00000",
                     };
 
                     var database = new CruiseDatastore_V3(fileInfo.FullName, true);
