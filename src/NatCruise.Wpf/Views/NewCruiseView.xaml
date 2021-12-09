@@ -33,51 +33,58 @@
         <Grid Grid.Row="0"
               Margin="-10,0,10,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="30*" />
+                <RowDefinition x:Name="_topMarg"
+                               Height="30*" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="27*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="170*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition x:Name="_footer"
+                               Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
+
+                <ColumnDefinition x:Name="_leftMarg"
+                                  Width="*" />
+                <ColumnDefinition x:Name="_col1"
+                                  Width="240" />
+                <ColumnDefinition x:Name="_col2"
+                                  Width="240" />
+                <ColumnDefinition x:Name="_rightMargin"
+                                  Width="*" />
             </Grid.ColumnDefinitions>
             <DockPanel  Grid.Column="1"
                         Grid.Row="2"
-                        Grid.ColumnSpan="5">
+                        Grid.ColumnSpan="2"
+                        HorizontalAlignment="Stretch">
 
-                <Button DockPanel.Dock="Right"
-                        Content="Browse"
-                        Command="{Binding SelectTemplateCommand}"
-                        HorizontalAlignment="Right"
-                        Height="20"
-                        Margin="7,0,0,0" />
-                <TextBox Width="339"
+                <TextBox x:Name="_templateFilePathTextBox"
+                         DockPanel.Dock="Left"
                          IsReadOnly="True"
                          Text="{Binding TemplatePath}"
-                         VerticalAlignment="Stretch"
-                         TextAlignment="Right" />
+                         TextAlignment="Right"
+                         IsTabStop="False"
+                         Width="381" />
+                <Button x:Name="_browseTemplateButton"
+                        HorizontalAlignment="Right"
+                        Content="Browse"
+                        Command="{Binding SelectTemplateCommand}"
+                        Height="20" />
+                
             </DockPanel>
 
+            <!-- Template Header -->
             <Label Content="Template"
                    Background="{StaticResource brush_accent}"
                    HorizontalAlignment="Stretch"
                    Grid.Column="1"
                    Grid.Row="1"
-                   Grid.ColumnSpan="5"
+                   Grid.ColumnSpan="2"
                    Margin="0,0,0,10" />
 
             <Separator HorizontalAlignment="Left"
@@ -86,122 +93,126 @@
                        Grid.Column="1"
                        Grid.Row="4"
                        Grid.ColumnSpan="5" />
+
+            <!-- Sale Info Header -->
             <Label Content="Sale Info"
                    Background="{StaticResource brush_accent}"
                    HorizontalAlignment="Stretch"
                    Grid.Column="1"
                    Grid.Row="5"
-                   Grid.ColumnSpan="5"
+                   Grid.ColumnSpan="2"
                    Margin="0,0,0,10" />
-            <TextBox HorizontalAlignment="Left"
-                     Height="23"
-                     TextWrapping="Wrap"
-                     Text="{Binding SaleName}"
-                     VerticalAlignment="Top"
-                     Width="120"
-                     Grid.Column="2"
-                     Grid.Row="6"
-                     Margin="30,3,0,10" />
-            <Label Content="Sale Name"
-                   Grid.Column="1"
-                   Grid.Row="6"
-                   Margin="3,0,0,10" />
-            <Label Content="Sale Number"
-                   Grid.Column="1"
-                   Grid.Row="7"
-                   Margin="3,0,0,10" />
-            <TextBox HorizontalAlignment="Left"
-                     Height="23"
-                     TextWrapping="Wrap"
-                     Text="{Binding SaleNumber}"
-                     VerticalAlignment="Top"
-                     Width="120"
-                     Grid.Column="2"
-                     Grid.Row="7"
-                     Margin="30,3,0,10" />
-            <Label Content="Purpose"
-                   Grid.Column="1"
-                   Grid.Row="8"
-                   Margin="3,0,0,10" />
-            <ComboBox HorizontalAlignment="Left"
-                      VerticalAlignment="Top"
-                      Width="120"
-                      Grid.Column="2"
-                      Height="22"
-                      Grid.Row="8"
-                      Margin="30,0,0,10"
-                      SelectedValue="{Binding Purpose}"
-                      ItemsSource="{Binding PurposeOptions}" />
-            <Label Content="Region"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Grid.Column="4"
-                   Height="26"
-                   Width="47"
-                   Grid.Row="6"
-                   Margin="0,0,0,10" />
-            <ComboBox HorizontalAlignment="Left"
-                      VerticalAlignment="Top"
-                      Width="120"
-                      Grid.Column="5"
-                      Height="22"
-                      Grid.Row="6"
-                      Margin="0,1,0,10"
-                      SelectedValue="{Binding Region}"
-                      SelectedValuePath="RegionCode"
-                      ItemsSource="{Binding RegionOptions}" />
-            <Label Content="Forest"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Grid.Column="4"
-                   Height="26"
-                   Width="42"
-                   Grid.Row="7" />
-            <ComboBox HorizontalAlignment="Left"
-                      VerticalAlignment="Top"
-                      Width="120"
-                      Grid.Column="5"
-                      Height="22"
-                      Grid.Row="7"
-                      Margin="0,4,0,10"
-                      SelectedValue="{Binding Forest}"
-                      SelectedValuePath="ForestCode"
-                      ItemsSource="{Binding ForestOptions}" />
-            <Label Content="District"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Grid.Column="4"
-                   Height="26"
-                   Width="47"
-                   Grid.Row="8" />
-            <TextBox HorizontalAlignment="Left"
-                                      Height="23"
-                                      Text="{Binding District}"
-                                      VerticalAlignment="Top"
-                                      Width="50"
-                                      Grid.Column="5"
-                                      Grid.Row="8"
-                                      Margin="0,3,0,10" />
 
-            <Label Grid.Row="9"
-                   Grid.Column="1"
-                   Content="Unit of Measure" />
-            <ComboBox Grid.Row="9"
-                      Grid.Column="2"
-                      ItemsSource="{Binding UOMOptions}"
-                      SelectedValue="{Binding UOM}"
-                      SelectedValuePath="UOMCode"
-                      HorizontalAlignment="Right"
-                      Width="120"
-                      Margin="30,3,0,10"/>
+            <!-- Sale Name -->
+            <DockPanel Grid.Column="1"
+                       Grid.Row="6"
+                       Margin="0,0,0,10">
+                <Label Content="Sale Name"
+                       DockPanel.Dock="Left"
+                       Margin="10,0,0,0" />
+                <TextBox Height="23"
+                         TextWrapping="Wrap"
+                         Text="{Binding SaleName}"
+                         VerticalAlignment="Top"
+                         Width="120"
+                         HorizontalAlignment="Right" />
+            </DockPanel>
 
-            <CheckBox Content="Number Plot Trees Sequentialy Across Strata"
-                      IsChecked="{Binding UseCrossStrataPlotTreeNumbering}"
-                      Margin="0,3,0,10"
-                      Grid.Row="10"
-                      Grid.Column="1"
-                      Grid.ColumnSpan="4" />
+            <!-- Sale Number-->
+            <DockPanel Grid.Column="2"
+                       Grid.Row="6"
+                       Margin="0,0,0,10">
+                <Label Content="Sale Number"
+                       Margin="10,0,0,0" />
+                <TextBox HorizontalAlignment="Right"
+                         Height="23"
+                         TextWrapping="Wrap"
+                         Text="{Binding SaleNumber}"
+                         VerticalAlignment="Top"
+                         Width="120" />
+            </DockPanel>
 
+            <!-- Purpose -->
+            <DockPanel Grid.Column="1"
+                       Grid.Row="7"
+                       Margin="0,0,0,10">
+                <Label Content="Purpose"
+                       Margin="10,0,0,0" />
+                <ComboBox HorizontalAlignment="Right"
+                          VerticalAlignment="Top"
+                          Width="120"
+                          Height="22"
+                          SelectedValue="{Binding Purpose}"
+                          ItemsSource="{Binding PurposeOptions}" />
+            </DockPanel>
+
+            <!-- UOM -->
+            <DockPanel Grid.Row="7"
+                       Grid.Column="2"
+                       Margin="0,0,0,10">
+                <Label Content="Unit of Measure"
+                       Margin="10,0,0,0" />
+                <ComboBox ItemsSource="{Binding UOMOptions}"
+                          SelectedValue="{Binding UOM}"
+                          SelectedValuePath="UOMCode"
+                          Width="100"
+                          HorizontalAlignment="Right" />
+            </DockPanel>
+
+            <!-- Region -->
+            <DockPanel Grid.Row="8"
+                       Grid.Column="1"
+                       Margin="0,0,0,10">
+                <Label Content="Region"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Height="26"
+                       Width="47"
+                       Margin="10,0,0,0" />
+                <ComboBox HorizontalAlignment="Right"
+                          VerticalAlignment="Top"
+                          Width="120"
+                          Height="22"
+                          SelectedValue="{Binding Region}"
+                          SelectedValuePath="RegionCode"
+                          ItemsSource="{Binding RegionOptions}" />
+            </DockPanel>
+
+            <!-- Forest -->
+            <DockPanel Grid.Column="2"
+                       Grid.Row="8"
+                       Margin="0,0,0,10">
+                <Label Content="Forest"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Height="26"
+                       Width="42"
+                       Margin="10,0,0,0" />
+                <ComboBox HorizontalAlignment="Right"
+                          VerticalAlignment="Top"
+                          Width="120"
+                          Height="22"
+                          SelectedValue="{Binding Forest}"
+                          SelectedValuePath="ForestCode"
+                          ItemsSource="{Binding ForestOptions}" />
+            </DockPanel>
+
+            <!-- District -->
+            <DockPanel Grid.Column="1"
+                       Grid.Row="9"
+                       Margin="0,0,0,10">
+                <Label Content="District"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Height="26"
+                       Width="47"
+                       Margin="10,0,0,0" />
+                <TextBox HorizontalAlignment="Right"
+                         Height="23"
+                         Text="{Binding District}"
+                         VerticalAlignment="Top"
+                         Width="50" />
+            </DockPanel>
 
         </Grid>
 
