@@ -147,7 +147,7 @@ namespace FScruiser.XF
                 }
                 else
                 {
-                    var db = new CruiseDatastore_V3(cruiseDbPath, true);
+                    var db = new CruiseDatastore_V3(cruiseDbPath, false);
                     _dataserviceProvider = new DataserviceProvider(db, deviceInfo);
                 }
             }
