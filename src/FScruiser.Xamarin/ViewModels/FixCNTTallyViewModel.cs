@@ -138,7 +138,7 @@ namespace FScruiser.XF.ViewModels
             foreach (var tp in tallyPopulations)
             {
                 var buckets = new List<FixCNTTallyBucket>();
-                var interval = tp.Min + tp.IntervalSize / 2;
+                var interval = tp.Min + Math.Round((double)tp.IntervalSize / 2, 1);
 
                 //foreach interval value try to read a tree
                 do
