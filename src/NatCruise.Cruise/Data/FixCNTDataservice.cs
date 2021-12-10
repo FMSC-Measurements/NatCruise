@@ -23,7 +23,7 @@ namespace NatCruise.Cruise.Data
 
         public bool GetOneTreePerTallyOption()
         {
-            return true;
+            return false;
         }
 
         public void IncrementFixCNTTreeCount(string unitCode, int plotNumber, string stratumCode,
