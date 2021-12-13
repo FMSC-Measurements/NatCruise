@@ -119,6 +119,8 @@ namespace FScruiser.XF.Views
             foreach (var field in treeFields)
             {
                 if (PRECONFIGED_TREE_FIELDS.Contains(field.Field)) { continue; }
+                if(field.Field.Equals("Remarks", StringComparison.OrdinalIgnoreCase)) { continue; }
+                if (field.Field.Equals("Initials", StringComparison.OrdinalIgnoreCase)) { continue; }
                 if (field.IsHidden && !showHidden) { continue; }
 
                 grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
