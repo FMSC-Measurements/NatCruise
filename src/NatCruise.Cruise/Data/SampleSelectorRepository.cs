@@ -64,7 +64,11 @@ namespace NatCruise.Cruise.Services
                 case "PNT":
                 case "FIXCNT":
                     {
-                        return new HundredPCTSelector();
+                        return new HundredPCTSelector()
+                        {
+                            SampleGroupCode = samplerInfo.SampleGroupCode,
+                            StratumCode = samplerInfo.StratumCode,
+                        };
                     }
 
                 case "STR":
