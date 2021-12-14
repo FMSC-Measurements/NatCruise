@@ -15,6 +15,8 @@ namespace FScruiser.XF.ViewModels
     {
         private Command<FixCNTTallyBucket> _processTallyCommand;
         private bool _isUntallyEnabled;
+        private string _unitCode;
+        private int _plotNumber;
 
         public string Title => $"FixCNT Tally Unit {Unit} Plot {PlotNumber}";
 
@@ -32,8 +34,16 @@ namespace FScruiser.XF.ViewModels
             set { SetProperty(ref _isUntallyEnabled, value); }
         }
 
-        public string Unit { get; private set; }
-        public int PlotNumber { get; private set; }
+        public string Unit
+        {
+            get => _unitCode;
+            private set => SetProperty(ref _unitCode, value);
+        }
+        public int PlotNumber
+        {
+            get => _plotNumber;
+            private set => SetProperty(ref _plotNumber, value);
+        }
 
         protected FixCNTTallyViewModel()
         {
@@ -130,6 +140,7 @@ namespace FScruiser.XF.ViewModels
             var unit = Unit = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = PlotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
+            RaisePropertyChanged(nameof(Title));
 
             //read fixcount tally populations
             var tallyPopulations = FixCNTDataservice.GetFixCNTTallyPopulations(stratumCode).ToArray();
