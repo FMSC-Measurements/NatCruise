@@ -54,6 +54,12 @@ namespace NatCruise.Cruise.Models
             set => SetValue(ref _kpi, value);
         }
 
+        public int TreeCount { get; set; }
+
+        public double AverageHeight { get; set; }
+
+        public string CountOrMeasure { get; set; }
+
         [Field("KZ3PPNT", PersistanceFlags = PersistanceFlags.Never)]
         public int KZ3PPNT { get; set; }
 

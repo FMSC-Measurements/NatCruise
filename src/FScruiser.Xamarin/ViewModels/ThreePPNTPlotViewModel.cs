@@ -106,6 +106,8 @@ namespace FScruiser.XF.ViewModels
                 return;
             }
 
+
+
             var datastore = PlotDataservice;
 
             var plotStratum = StratumPlot;
@@ -116,11 +118,16 @@ namespace FScruiser.XF.ViewModels
             var sampleGroupCodes = CuttingUnitDataservice.GetSampleGroupCodes(stratumCode);
             var sgCode = sampleGroupCodes.First();
 
-            plotStratum.InCruise = true;
-            datastore.InsertPlot_Stratum(plotStratum);
+            
 
             var random = new Random();
             var randomValue = random.Next(1, StratumPlot.KZ3PPNT);
+
+            plotStratum.InCruise = true;
+            plotStratum.TreeCount = TreeCount;
+            plotStratum.AverageHeight = AverageHeight;
+            plotStratum.CountOrMeasure = (kpi > randomValue) ? "M" : "C";
+            datastore.Insert3PPNT_Plot_Stratum(plotStratum);
 
             if (kpi > randomValue)
             {
