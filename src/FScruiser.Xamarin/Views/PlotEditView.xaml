@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
              xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
+             xmlns:converters="clr-namespace:FScruiser.XF.Converters"
              x:Class="FScruiser.XF.Views.PlotEditView"
              x:Name="_page"
              Title="Edit Plot"
@@ -158,11 +159,21 @@
                                    CornerRadius="0"
                                    BackgroundColor="{StaticResource accent}">
 
+                                <Frame.Resources>
+                                    <ResourceDictionary>
+                                        <converters:CruiseMethodToBoolConverter MethodMap="FixedSizePlotMethods" x:Key="IsFixedSizedPlotMethod" />
+                                        <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods" x:Key="IsVRPlotMethod" />
+                                    </ResourceDictionary>
+                                </Frame.Resources>
+
                                 <StackLayout>
 
                                     <!-- stratum code and add/remove button-->
                                     <StackLayout Orientation="Horizontal">
                                         <Label Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
+                                               FontAttributes="Bold"
+                                               FontSize="Large"
+                                               TextColor="{StaticResource darkText}"
                                                Margin="10,0,30,0"
                                                VerticalTextAlignment="Center"
                                                HorizontalOptions="StartAndExpand"
@@ -174,6 +185,24 @@
                                                 HorizontalOptions="End"
                                                 AutomationProperties.IsInAccessibleTree="True"
                                                 AutomationProperties.Name="Add Remove Stratum" />
+                                    </StackLayout>
+
+                                    <!-- Cruise Method -->
+                                    <StackLayout Orientation="Horizontal" Margin="10,0,10,0">
+                                        <Label Text="Method:"/>
+                                        <Label Text="{Binding CruiseMethod}"/>
+                                    </StackLayout>
+                                    
+                                    <!-- BAF -->
+                                    <StackLayout Orientation="Horizontal" IsVisible="{Binding CruiseMethod, Converter={StaticResource IsVRPlotMethod}}" Margin="10,0,10,0">
+                                        <Label Text="BAF:"/>
+                                        <Label Text="{Binding BAF}"/>
+                                    </StackLayout>
+
+                                    <!-- FPS -->
+                                    <StackLayout Orientation="Horizontal" IsVisible="{Binding CruiseMethod, Converter={StaticResource IsFixedSizedPlotMethod}}" Margin="10,0,10,0">
+                                        <Label Text="FPS:"/>
+                                        <Label Text="{Binding FPS}"/>
                                     </StackLayout>
 
                                     <!--this panel hides if plot is not in cruise-->
@@ -188,11 +217,14 @@
                                         <StackLayout Orientation="Horizontal"
                                                      Margin="10,0,10,0">
 
-                                            <StackLayout Orientation="Horizontal">
-                                                <Label Text="Empty Plot"
-                                                       VerticalTextAlignment="Center"
-                                                       Margin="10,0,30,0" />
-                                                <Switch IsToggled="{Binding IsEmpty}" />
+                                            <StackLayout Orientation="Horizontal"
+                                                         >
+                                                <Label Text="Is Null Plot"
+                                                       VerticalTextAlignment="Center" />
+                                                <Switch IsToggled="{Binding IsEmpty}"
+                                                        OnColor="{StaticResource primary_500}"
+                                                        HeightRequest="{StaticResource minTouchableHeight}"
+                                                        Margin="20,0,0,0"/>
                                             </StackLayout>
                                         </StackLayout>
 

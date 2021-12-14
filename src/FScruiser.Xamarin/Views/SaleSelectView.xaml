@@ -16,8 +16,7 @@
                         <TextCell Text="{Binding .}"
                                   Command="{Binding BindingContext.ShowCruiseSelectCommand, Source={Reference _page}}"
                                   CommandParameter="{Binding .}"
-                                  AutomationProperties.IsInAccessibleTree="True"
-                                  AutomationProperties.Name="Sale" />
+                                  TextColor="{StaticResource listItemText}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

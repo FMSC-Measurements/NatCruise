@@ -21,8 +21,8 @@ namespace NatCruise.Cruise.Logic
 
         public int InsuranceIndex => BlockSelecter.InsuranceIndex;
 
-        public string StratumCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string SampleGroupCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string StratumCode { get; set; }
+        public string SampleGroupCode { get; set; }
 
         public S3PSelector(int freq, int kz)
         {

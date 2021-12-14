@@ -30,8 +30,6 @@ namespace FScruiser.XF.Behaviors
             var items = listView.ItemsSource;
             if(items == null) { return; }
 
-            var lastItem = listView.ItemsSource.OfType<object>().LastOrDefault();
-            if(lastItem == null) { return; }
             var itemCount = listView.ItemsSource?.OfType<object>()?.Count() ?? 0;
             if(itemCount > 2)
             {

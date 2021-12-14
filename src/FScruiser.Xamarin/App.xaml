@@ -7,6 +7,11 @@
                         x:Class="FScruiser.XF.App">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- Sizes -->
+            <x:Double x:Key="minTouchableHeight">44</x:Double>
+            <x:Double x:Key="minTouchableWidth">44</x:Double>
+            
+            
             <!-- colors -->
             <Color x:Key="fs_brown">#312418</Color>
             <Color x:Key="primary_500">#345E36</Color>
@@ -16,13 +21,16 @@
             <!-- Dodger blue -->
             <Color x:Key="accent">#1E90FF</Color>
             <Color x:Key="accentText">Blue</Color>
-            <Color x:Key="darkText">Black</Color>
+            <Color x:Key="darkText">#B2000000</Color>
+            <Color x:Key="listItemText">#345E36</Color>
             <Color x:Key="lightText">White</Color>
 
             <!-- these colors provide semi transparent pigments to be used as background coulors or text color. 
             using a semi trasparent color as a font or background color is a good alternative to using greys
             as these semi transparent pigments will play well with any other colors lower down in the visual stack-->
             <Color x:Key="white_90">#E1ffffff</Color>
+            <Color x:Key="white_70">#B2ffffff</Color>
+            <Color x:Key="white_60">#99ffffff</Color>
             <Color x:Key="white_50">#7FFFFFFF</Color>
             <Color x:Key="white_38">#60FFFFFF</Color>
             <Color x:Key="white_12">#1EFFFFFF</Color>

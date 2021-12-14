@@ -2,6 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:Backpack.XF.Converters;assembly=Backpack.XF.Converters"
+             xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
+             xmlns:effects="clr-namespace:FScruiser.XF.Effects"
              xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
              xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
              x:Class="FScruiser.XF.Views.TallyView"
@@ -15,6 +17,7 @@
             <Color x:Key="tallyButtonBgColor">Green</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
+
     <ContentPage.Content>
 
         <Grid>
@@ -34,9 +37,14 @@
                                 Focused="_tallyFeedListView_Focused"
                                 SelectionMode="None"
                                 ItemSizingStrategy="MeasureFirstItem"
-                                ItemsUpdatingScrollMode="KeepLastItemInView"
+                                ItemsUpdatingScrollMode="KeepScrollOffset"
                                 AutomationProperties.IsInAccessibleTree="True"
                                 AutomationProperties.Name="Tally Feed">
+
+                    <CollectionView.Effects>
+                        <effects:ViewLifecycleEffect Loaded="_tallyFeedListView_Loaded" />
+                    </CollectionView.Effects>
+
                     <CollectionView.ItemTemplate>
                         <cells:TreeDataTemplateSelector>
 
@@ -270,6 +278,7 @@
                                                              Clicked="openUntallyButton_Clicked"
                                                              Source="ic_more_vert_black_24dp.png"
                                                              Padding="0,7"
+                                                             HeightRequest="{StaticResource minTouchableHeight}"
                                                              VerticalOptions="Center"
                                                              AutomationProperties.IsInAccessibleTree="True"
                                                              AutomationProperties.Name="Show Item Actions Button" />
@@ -470,6 +479,7 @@
                                                              Clicked="openUntallyButton_Clicked"
                                                              Source="ic_more_vert_black_24dp.png"
                                                              Padding="0,7"
+                                                             HeightRequest="{StaticResource minTouchableHeight}"
                                                              VerticalOptions="Center"
                                                              AutomationProperties.IsInAccessibleTree="True"
                                                              AutomationProperties.Name="Show Item Actions Button" />
@@ -516,7 +526,7 @@
                         <Label Grid.ColumnSpan="3"
                                Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
                                TextColor="{StaticResource darkText}"
-                               FontSize="Large" />
+                               FontSize="Large"/>
 
                         <ScrollView x:Name="_treeEditScrollView"
                                     Grid.Row="1"
@@ -525,8 +535,8 @@
                                     Orientation="Horizontal">
                             <Grid x:Name="_treeEditControlGrid">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="15" />
+                                    <RowDefinition Height="50" />
                                 </Grid.RowDefinitions>
                             </Grid>
                         </ScrollView>
@@ -622,6 +632,7 @@
                                                         Grid.Column="1"
                                                         Grid.Row="0"
                                                         Padding="10,3"
+                                                        HeightRequest="{StaticResource minTouchableHeight}"
                                                         Command="{Binding BindingContext.ShowTallyMenuCommand, Source={Reference _page}}"
                                                         Source="ic_more_vert_black_24dp.png"
                                                         BackgroundColor="Transparent"

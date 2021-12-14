@@ -144,16 +144,32 @@ namespace FScruiser.XF.ViewModels
                             var kpi = await DialogService.AskKPIAsync((int)sg.MaxKPI, (int)sg.MinKPI);
                             if (kpi is null) { return; }
 
-                            var tree_guid = TreeDataservice.InsertManualTree(UnitCode,
-                                stratumCode,
-                                sampleGroupCode: sampleGroupCode,
-                                species: selectedSubPop.SpeciesCode,
-                                liveDead: selectedSubPop.LiveDead,
-                                treeCount: 0,
-                                kpi: kpi.Value);
-                            var newTree = TreeDataservice.GetTree(tree_guid);
-
-                            AllTrees.Add(newTree);
+                            if (kpi is -1)
+                            {
+                                var tree_guid = TreeDataservice.InsertManualTree(UnitCode,
+                                    stratumCode,
+                                    sampleGroupCode: sampleGroupCode,
+                                    species: selectedSubPop.SpeciesCode,
+                                    liveDead: selectedSubPop.LiveDead,
+                                    treeCount: 0,
+                                    kpi: 0,
+                                    stm: true);
+                                var newTree = TreeDataservice.GetTree(tree_guid);
+                                AllTrees.Add(newTree);
+                            }
+                            else
+                            {
+                                var tree_guid = TreeDataservice.InsertManualTree(UnitCode,
+                                    stratumCode,
+                                    sampleGroupCode: sampleGroupCode,
+                                    species: selectedSubPop.SpeciesCode,
+                                    liveDead: selectedSubPop.LiveDead,
+                                    treeCount: 0,
+                                    kpi: kpi.Value);
+                                var newTree = TreeDataservice.GetTree(tree_guid);
+                                AllTrees.Add(newTree);
+                            }
+                            
                         }
                     }
                     else

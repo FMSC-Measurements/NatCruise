@@ -16,6 +16,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell  Text="{Binding .}"
+                                   TextColor="{StaticResource listItemText}"
                                    AutomationProperties.IsInAccessibleTree="true"
                                    AutomationProperties.Name="{Binding .}"/>
                     </DataTemplate>

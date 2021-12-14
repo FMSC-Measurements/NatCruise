@@ -18,7 +18,7 @@
         <ToolbarItem Text="Logs"
                      Command="{Binding ShowLogsCommand}"
                      AutomationProperties.IsInAccessibleTree="True"
-                     AutomationProperties.Name="Logs Button" />
+                     AutomationProperties.Name="Logs" />
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <converters:ErrorToColorConverter x:Key="errorToColorConverter"
@@ -49,6 +49,9 @@
                                              x:TypeArguments="Color"
                                              TrueObject="Red"
                                              FalseObject="Transparent" />
+
+        <converters:CruiseMethodToBoolConverter x:Key="isfixCNTConverter"
+                                                MethodMap="FIXCNT" />
     </ContentPage.Resources>
 
     <Grid>
@@ -72,14 +75,16 @@
                     <Setter Property="HorizontalTextAlignment"
                             Value="End" />
                 </Style>
-                <Style TargetType="Picker">
+                <Style TargetType="controls:ValuePicker">
                     <Setter Property="WidthRequest"
-                            Value="50" />
+                            Value="60" />
+                    <Setter Property="HeightRequest"
+                            Value="44" />
                 </Style>
 
                 <Style TargetType="StackLayout">
                     <Setter Property="HeightRequest"
-                            Value="40" />
+                            Value="50" />
                     <Setter Property="Margin"
                             Value="7,0,0,3" />
                 </Style>
@@ -87,6 +92,8 @@
                 <Style TargetType="Entry">
                     <Setter Property="WidthRequest"
                             Value="50" />
+                    <Setter Property="HeightRequest"
+                            Value="44" />
                 </Style>
             </FlexLayout.Resources>
 
@@ -97,7 +104,7 @@
                        AutomationProperties.IsInAccessibleTree="False" />
                 <Entry x:Name="_treeNumberEntry"
                        AutomationProperties.IsInAccessibleTree="True"
-                       AutomationProperties.Name="Tree Number Textbox">
+                       AutomationProperties.Name="Tree Number">
                     <Entry.Effects>
                         <effects:SelectAllTextEffect />
                     </Entry.Effects>
@@ -113,9 +120,10 @@
                 <controls:ValuePicker x:Name="_stratumCodeEntry"
                                       SelectedValue="{Binding StratumCode}"
                                       ValueSource="{Binding StratumCodes}"
-                                      WidthRequest="40"
+                                      WidthRequest="60"
+                                      HeightRequest="{StaticResource minTouchableHeight}"
                                       AutomationProperties.IsInAccessibleTree="True"
-                                      AutomationProperties.Name="Stratum Picker">
+                                      AutomationProperties.Name="Stratum">
                 </controls:ValuePicker>
 
             </StackLayout>
@@ -129,9 +137,10 @@
                 <controls:ValuePicker x:Name="_sampleGroupEntry"
                                       SelectedValue="{Binding SampleGroupCode}"
                                       ValueSource="{Binding SampleGroupCodes}"
-                                      WidthRequest="40"
+                                      WidthRequest="60"
+                                      HeightRequest="{StaticResource minTouchableHeight}"
                                       AutomationProperties.IsInAccessibleTree="True"
-                                      AutomationProperties.Name="Sample Group Picker">
+                                      AutomationProperties.Name="Sample Group">
                 </controls:ValuePicker>
 
             </StackLayout>
@@ -145,9 +154,10 @@
                 <controls:ValuePicker x:Name="_speciesEntry"
                                       SelectedValue="{Binding SpeciesCode}"
                                       ValueSource="{Binding SpeciesOptions}"
-                                      WidthRequest="40"
+                                      WidthRequest="60"
+                                      HeightRequest="{StaticResource minTouchableHeight}"
                                       AutomationProperties.IsInAccessibleTree="True"
-                                      AutomationProperties.Name="Species Picker">
+                                      AutomationProperties.Name="Species">
                 </controls:ValuePicker>
 
             </StackLayout>
@@ -159,9 +169,10 @@
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_liveDeadPicker"
                                       SelectedValue="{Binding LiveDead}"
-                                      WidthRequest="40"
+                                      WidthRequest="60"
+                                      HeightRequest="{StaticResource minTouchableHeight}"
                                       AutomationProperties.IsInAccessibleTree="True"
-                                      AutomationProperties.Name="Live Dead Picker">
+                                      AutomationProperties.Name="Live Dead">
                     <controls:ValuePicker.ValueSource>
                         <Array Type="{x:Type x:String}">
                             <x:String>L</x:String>
@@ -177,35 +188,48 @@
                 <Label Text="Initials"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <Picker x:Name="_initialsPicker"
-                        WidthRequest="40"
+                        WidthRequest="60"
+                        HeightRequest="{StaticResource minTouchableHeight}"
                         SelectedItem="{Binding Initials}"
                         ItemsSource="{Binding Cruisers}"
                         AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.Name="Initials Picker" />
+                        AutomationProperties.Name="Initials" />
             </StackLayout>
 
             <!--Count Or Measure-->
             <StackLayout Orientation="Horizontal">
                 <Label Text="Count/Measure"
                        AutomationProperties.IsInAccessibleTree="False" />
-                <Picker WidthRequest="40"
+                <Picker WidthRequest="60"
+                        HeightRequest="{StaticResource minTouchableHeight}"
                         SelectedItem="{Binding CountOrMeasure}"
                         ItemsSource="{Binding CountOrMeasureOptions}"
                         AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.Name="Count or Measure Picker">
+                        AutomationProperties.Name="Count or Measure">
 
                 </Picker>
 
+            </StackLayout>
+
+            <!-- Tree Count -->
+            <StackLayout Orientation="Horizontal"
+                         IsVisible="{Binding CruiseMethod, Converter={StaticResource isfixCNTConverter}}">
+                <Label Text="Tree Count"
+                       AutomationProperties.IsInAccessibleTree="False" />
+                <Entry Text="{Binding TreeCount}"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Tree Count" />
             </StackLayout>
 
             <!-- KPI -->
             <StackLayout Orientation="Horizontal"
                          IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
                 <Label Text="KPI"
+                       x:Name="_kpiLabel"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <Label Text="{Binding Tree.KPI}"
                        AutomationProperties.IsInAccessibleTree="True"
-                       AutomationProperties.Name="Species Picker" />
+                       AutomationProperties.LabeledBy="{Reference _kpiLabel}" />
             </StackLayout>
 
         </FlexLayout>
@@ -238,7 +262,8 @@
 
         <!--Remarks-->
         <StackLayout Grid.Row="2">
-            <Label x:Name="_remarksHeading" Text="Remarks"/>
+            <Label x:Name="_remarksHeading"
+                   Text="Remarks" />
             <Editor HeightRequest="80"
                     Text="{Binding Remarks}"
                     AutomationProperties.LabeledBy="{x:Reference _remarksHeading}" />

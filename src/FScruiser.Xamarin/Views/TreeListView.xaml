@@ -12,8 +12,6 @@
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Tree List Page">
     <StackLayout>
-        <Label Text="Long Tap Row To Edit Tree Record" />
-
         <StackLayout Orientation="Horizontal"
                      HorizontalOptions="EndAndExpand"
                      Margin="5,0">
@@ -21,171 +19,10 @@
                    VerticalTextAlignment="Center"
                    AutomationProperties.IsInAccessibleTree="True" />
             <Switch IsToggled="{Binding OnlyShowTreesWithErrorsOrWarnings}"
+                    HeightRequest="{StaticResource minTouchableHeight}"
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="Only Show Trees With Errors Toggle" />
         </StackLayout>
-
-        <!--<CollectionView x:Name="_treeListView"
-                        ItemsSource="{Binding Trees}"
-                        SelectionMode="None"
-                        ItemSizingStrategy="MeasureFirstItem"
-                        AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.Name="Tree List">
-            <CollectionView.Behaviors>
-                <behaviors:ScrollOnLoadBehavior />
-            </CollectionView.Behaviors>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,10,0,10"
-                          Padding="2"
-                          AutomationProperties.IsInAccessibleTree="True"
-                          AutomationProperties.Name="Tree Item">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding BindingContext.EditTreeCommand, Source={x:Reference _page} }"
-                                                  CommandParameter="{Binding .}" />
-                        </Grid.GestureRecognizers>
-
-
-                        <Grid.Resources>
-                            <ResourceDictionary>
-                                <Style x:Key="HeadingText"
-                                       TargetType="Label">
-                                    <Setter Property="FontSize"
-                                            Value="10" />
-                                    <Setter Property="TextColor"
-                                            Value="{StaticResource black_70}" />
-                                </Style>
-                                <Style x:Key="ValueText"
-                                       TargetType="Label">
-                                    <Setter Property="FontSize"
-                                            Value="Large" />
-                                    <Setter Property="TextColor"
-                                            Value="Black" />
-                                </Style>
-                            </ResourceDictionary>
-                        </Grid.Resources>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        -->
-        <!--col 0: TreeNumber-->
-        <!--
-                        <Label x:Name="_treeNumberHeading"
-                               Grid.Column="0"
-                               Grid.Row="0"
-                               Text="Tree #"
-                               Style="{StaticResource HeadingText}" />
-                        <Label Grid.Column="0"
-                               Grid.Row="1"
-                               Text="{Binding TreeNumber}"
-                               Style="{StaticResource ValueText}"
-                               AutomationProperties.LabeledBy="{x:Reference _treeNumberHeading}" />
-                        -->
-        <!--col 1: StratumCode-->
-        <!--
-                        <Label x:Name="_stratumCodeHeading"
-                               Grid.Column="1"
-                               Grid.Row="0"
-                               Text="Stratum"
-                               Style="{StaticResource HeadingText}" />
-                        <Label Grid.Column="1"
-                               Grid.Row="1"
-                               Text="{Binding StratumCode}"
-                               Style="{StaticResource ValueText}"
-                               AutomationProperties.LabeledBy="{x:Reference _stratumCodeHeading}" />
-                        -->
-        <!--col 2: SampleGroupCode-->
-        <!--
-                        <Label x:Name="_sampleGroupCodeHeading"
-                               Grid.Column="2"
-                               Grid.Row="0"
-                               Text="Sample Group"
-                               Style="{StaticResource HeadingText}" />
-                        <Label Grid.Column="2"
-                               Grid.Row="1"
-                               Text="{Binding SampleGroupCode}"
-                               Style="{StaticResource ValueText}"
-                               AutomationProperties.LabeledBy="{x:Reference _sampleGroupCodeHeading}" />
-                        -->
-        <!--col 3: SpeciesCode-->
-        <!--
-                        <Label x:Name="_speciesCodeHeading"
-                               Grid.Column="3"
-                               Grid.Row="0"
-                               Text="Species"
-                               Style="{StaticResource HeadingText}" />
-                        <Label Grid.Column="3"
-                               Grid.Row="1"
-                               Text="{Binding SpeciesCode}"
-                               Style="{StaticResource ValueText}"
-                               AutomationProperties.LabeledBy="{x:Reference _speciesCodeHeading}" />
-                        -->
-        <!--col 4: LiveDead-->
-        <!--
-                        <Label x:Name="_liveDeadHeading"
-                               Grid.Column="4"
-                               Grid.Row="0"
-                               Text="Live/Dead"
-                               Style="{StaticResource HeadingText}" />
-                        <Label Grid.Column="4"
-                               Grid.Row="1"
-                               Text="{Binding LiveDead}"
-                               Style="{StaticResource ValueText}"
-                               AutomationProperties.LabeledBy="{x:Reference _liveDeadHeading}" />
-                        -->
-        <!--col 5: Diameter-->
-        <!--
-                        <Label x:Name="_diameterHeading"
-                               Grid.Column="5"
-                               Grid.Row="0"
-                               Text="Diameter"
-                               Style="{StaticResource HeadingText}" />
-                        <Label Grid.Column="5"
-                               Grid.Row="1"
-                               Text="{Binding Diameter}"
-                               Style="{StaticResource ValueText}"
-                               AutomationProperties.LabeledBy="{x:Reference _diameterHeading}" />
-                        -->
-        <!--col 6: Height-->
-        <!--
-                        <Label x:Name="_heightHeading"
-                               Grid.Column="6"
-                               Grid.Row="0"
-                               Text="Height"
-                               Style="{StaticResource HeadingText}" />
-                        <Label Grid.Column="6"
-                               Grid.Row="1"
-                               Text="{Binding Height}"
-                               Style="{StaticResource ValueText}"
-                               AutomationProperties.LabeledBy="{x:Reference _heightHeading}" />
-
-                    </Grid>
-                    -->
-        <!--<ViewCell.ContextActions>
-                        <MenuItem x:Name="Delete"
-                                  Text="Delete"
-                                  Command="{Binding Path=BindingContext.DeleteTreeCommand, Source={x:Reference Page}}"
-                                  CommandParameter="{Binding .}" />
-                        <MenuItem x:Name="_showLogsMenuItem"
-                                  Text="Logs"
-                                  Command="{Binding BindingContext.ShowLogsCommand, Source={x:Reference Page}}"
-                                  CommandParameter="{Binding .}" />
-                    </ViewCell.ContextActions>-->
-        <!--
-
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>-->
 
         <dg:NGDataGrid x:Name="_treesDataGrid"
                        Columns="{Binding TreeFields, Converter={StaticResource treeFieldToDataGridColumnConverter}}"
@@ -226,7 +63,9 @@
             <Button x:Name="_editTreeButton"
                     Image="ic_edit_white_24dp.png"
                     Command="{Binding EditTreeCommand}"
-                    CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}">
+                    CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Edit Tree">
                 <!--<VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="CommonStates">
                         <VisualState x:Name="Normal">
@@ -263,13 +102,15 @@
                     VerticalOptions="Fill"
                     HorizontalOptions="FillAndExpand"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Add Tree Button" />
+                    AutomationProperties.Name="Add Tree" />
 
             <Button x:Name="_deleteTreeButton"
                     Text="Delete"
                     TextColor="White"
                     Command="{Binding DeleteTreeCommand}"
-                    CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}">
+                    CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Delete Tree">
                 <!--<VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="CommonStates">
                         <VisualState x:Name="Normal">

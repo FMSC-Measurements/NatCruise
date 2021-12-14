@@ -21,6 +21,8 @@ namespace FScruiser.XF.ViewModels
 {
     public class ImportViewModel : XamarinViewModelBase
     {
+        private static readonly string[] FILE_EXTENSIONS = new[] { ".cruise", ".crz3", ".crz3db" };
+
         private IEnumerable<Cruise> _cruises;
         private string _selectedCruiseFile;
         private Cruise _selectedCruise;
@@ -97,6 +99,13 @@ namespace FScruiser.XF.ViewModels
         {
             var cruisePath = await FileDialogService.SelectCruiseFileAsync();
             if (cruisePath == null) { return; }
+
+            var srcFileExt = Path.GetExtension(cruisePath).ToLowerInvariant();
+            if (string.IsNullOrEmpty(srcFileExt) || FILE_EXTENSIONS.Contains(srcFileExt) is false)
+            {
+                DialogService.ShowNotification("Invalid File Type");
+                return;
+            }
 
             var importPath = GetPathForImport(cruisePath);
             if(importPath == null) { return; }
@@ -260,15 +269,15 @@ namespace FScruiser.XF.ViewModels
             options ??= new CruiseSyncOptions()
             {
                 Design = SyncFlags.InsertUpdate,
-                FieldData = SyncFlags.InsertUpdate,
-                TreeDataFlags = SyncFlags.InsertUpdate,
                 TreeFlags = SyncFlags.InsertUpdate,
+                TreeDataFlags = SyncFlags.InsertUpdate,
+                FieldData = SyncFlags.InsertUpdate,
                 SamplerState = SyncFlags.InsertUpdate,
                 Validation = SyncFlags.InsertUpdate,
                 Processing = SyncFlags.InsertUpdate,
-                Template = SyncFlags.InsertUpdate,
                 TreeDefaultValue = SyncFlags.InsertUpdate,
-                
+                Template = SyncFlags.InsertUpdate,
+
             };
 
             var destDb = DataserviceProvider.Database;
@@ -292,6 +301,7 @@ namespace FScruiser.XF.ViewModels
                 finally
                 {
                     IsWorking = false;
+                    destDb.ReleaseConnection(true);
                 }
             }
         }
