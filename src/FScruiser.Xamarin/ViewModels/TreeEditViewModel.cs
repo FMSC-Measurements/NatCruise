@@ -84,6 +84,7 @@ namespace FScruiser.XF.ViewModels
                 RaisePropertyChanged(nameof(LiveDead));
                 RaisePropertyChanged(nameof(Remarks));
                 RaisePropertyChanged(nameof(Initials));
+                RaisePropertyChanged(nameof(TreeCount));
             }
         }
 
@@ -116,6 +117,18 @@ namespace FScruiser.XF.ViewModels
                 {
                     TreeDataservice.UpdateTreeRemarks(tree.TreeID, value);
                 }
+            }
+        }
+
+        public int TreeCount
+        {
+            get => (Tree != null) ? TreeDataservice.GetTreeCount(Tree.TreeID) : 0;
+            set
+            {
+                if (IsLoading) { return; }
+                var tree = Tree;
+                if (tree == null) { return; }
+                TreeDataservice.UpdateTreeCount(tree.TreeID, value);
             }
         }
 
