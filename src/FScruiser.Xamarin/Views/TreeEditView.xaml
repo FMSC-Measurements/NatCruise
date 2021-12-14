@@ -49,6 +49,9 @@
                                              x:TypeArguments="Color"
                                              TrueObject="Red"
                                              FalseObject="Transparent" />
+
+        <converters:CruiseMethodToBoolConverter x:Key="isfixCNTConverter"
+                                                MethodMap="FIXCNT" />
     </ContentPage.Resources>
 
     <Grid>
@@ -208,6 +211,16 @@
 
             </StackLayout>
 
+            <!-- Tree Count -->
+            <StackLayout Orientation="Horizontal"
+                         IsVisible="{Binding CruiseMethod, Converter={StaticResource isfixCNTConverter}}">
+                <Label Text="Tree Count"
+                       AutomationProperties.IsInAccessibleTree="False" />
+                <Entry Text="{Binding TreeCount}"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Tree Count" />
+            </StackLayout>
+
             <!-- KPI -->
             <StackLayout Orientation="Horizontal"
                          IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
@@ -249,7 +262,8 @@
 
         <!--Remarks-->
         <StackLayout Grid.Row="2">
-            <Label x:Name="_remarksHeading" Text="Remarks"/>
+            <Label x:Name="_remarksHeading"
+                   Text="Remarks" />
             <Editor HeightRequest="80"
                     Text="{Binding Remarks}"
                     AutomationProperties.LabeledBy="{x:Reference _remarksHeading}" />

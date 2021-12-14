@@ -37,7 +37,7 @@ namespace FScruiser.XF.Views
                 try
                 {
                     _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm.TreeFieldValues);
+                    var editControls = MakeEditControls(vm);
                     _treeEditControlGrid.Children.AddRange(editControls);
                 }
                 finally
@@ -78,7 +78,7 @@ namespace FScruiser.XF.Views
                 try
                 {
                     _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm.TreeFieldValues);
+                    var editControls = MakeEditControls(vm);
                     _treeEditControlGrid.Children.AddRange(editControls);
                 }
                 finally
@@ -93,8 +93,9 @@ namespace FScruiser.XF.Views
         }
 
 
-        private IEnumerable<View> MakeEditControls(IEnumerable<TreeFieldValue> treeFieldValues)
+        private IEnumerable<View> MakeEditControls(TreeEditViewModel vm)
         {
+            var treeFieldValues = vm.TreeFieldValues;
             var controls = new List<View>();
 
             var spFieldLabel = new Label
@@ -114,8 +115,29 @@ namespace FScruiser.XF.Views
             controls.Add(spFieldLabel);
             controls.Add(spEditControl);
 
+            int colCounter = 1;
 
-            int counter = 1;
+            var cruiseMethod = vm.CruiseMethod;
+            if(cruiseMethod == CruiseDAL.Schema.CruiseMethods.FIXCNT)
+            {
+                var treeCountLabel = new Label { Text = "Count" }
+                .Column(colCounter)
+                .Row(0);
+
+                var treeCountEntry = new Entry()
+                    .Bind(Entry.TextProperty, nameof(TreeEditViewModel.TreeCount))
+                    .Column(colCounter)
+                    .Row(1);
+                SetupEditView(treeCountEntry, treeCountLabel);
+
+                controls.Add(treeCountLabel);
+                controls.Add(treeCountEntry);
+
+                colCounter++;
+            }
+
+
+            
             foreach (var field in treeFieldValues)
             {
                 if (field.IsHidden || field.IsLocked) { continue; }
@@ -124,13 +146,13 @@ namespace FScruiser.XF.Views
                 {
                     var fieldLabel = new Label
                     { Text = "L/D" }
-                    .Column(counter)
+                    .Column(colCounter)
                     .Row(0);
 
                     var editControl = new ValuePicker()
                         .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.LiveDead))
                         .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.LiveDeadOptions))
-                        .Column(counter)
+                        .Column(colCounter)
                         .Row(1);
                     SetupEditView(editControl, fieldLabel);
 
@@ -143,7 +165,7 @@ namespace FScruiser.XF.Views
                     {
                         Text = field.Heading
                     }
-                    .Column(counter)
+                    .Column(colCounter)
                     .Row(0);
 
                     var initPicker = new ValuePicker()
@@ -152,7 +174,7 @@ namespace FScruiser.XF.Views
                     SetupEditView(initPicker, fieldLabel);
 
                     controls.Add(fieldLabel);
-                    controls.Add(initPicker.Column(counter).Row(1));
+                    controls.Add(initPicker.Column(colCounter).Row(1));
                 }
                 else
                 {
@@ -160,11 +182,11 @@ namespace FScruiser.XF.Views
                     {
                         Text = field.Heading
                     }
-                    .Column(counter)
+                    .Column(colCounter)
                     .Row(0);
 
                     var editControl = Util.TreeEditControlFactory.MakeEditView(field)
-                        .Column(counter)
+                        .Column(colCounter)
                         .Row(1);
                     SetupEditView(editControl, fieldLabel);
 
@@ -176,7 +198,7 @@ namespace FScruiser.XF.Views
                     controls.Add(fieldLabel);
                     controls.Add(editControl);
                 }
-                counter++;
+                colCounter++;
             }
 
             return controls;

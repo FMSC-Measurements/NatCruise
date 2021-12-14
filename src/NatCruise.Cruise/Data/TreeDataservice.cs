@@ -637,6 +637,56 @@ UPSERT_TREEMEASURMENT_COMMAND,
             Database.Execute("Delete FROM Tree WHERE TreeID = @p1", tree_guid);
         }
 
+        public int GetTreeCount(string treeID)
+        {
+            return Database.ExecuteScalar<int>("SELECT total(TreeCount) FROM TallyLedger WHERE TreeID = @p1", treeID);
+        }
+
+
+        public void UpdateTreeCount(string treeID, int treeCount)
+        {
+            var tree = GetTree(treeID);
+            var curTreeCount = GetTreeCount(treeID);
+            var treeCountDiff = treeCount - curTreeCount;
+
+            Database.Execute2(
+@"INSERT INTO TallyLedger (
+    TallyLedgerID,
+    CruiseID,
+    TreeID,
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    TreeCount
+) VALUES (
+    @TallyLedgerID,
+    @CruiseID,
+    @TreeID,
+    @CuttingUnitCode,
+    @PlotNumber,
+    @StratumCode,
+    @SampleGroupCode,
+    @SpeciesCode,
+    @LiveDead,
+    @TreeCount
+);", new
+{
+    TallyLedgerID = Guid.NewGuid().ToString(),
+    CruiseID = CruiseID,
+    tree.TreeID,
+    tree.CuttingUnitCode,
+    tree.PlotNumber,
+    tree.StratumCode,
+    tree.SampleGroupCode,
+    tree.SpeciesCode,
+    tree.LiveDead,
+    TreeCount = treeCountDiff,
+});
+        }
+
         #region util
 
         public int? GetTreeNumber(string treeID)
