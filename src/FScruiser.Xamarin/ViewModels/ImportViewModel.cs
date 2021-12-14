@@ -301,7 +301,7 @@ namespace FScruiser.XF.ViewModels
                 finally
                 {
                     IsWorking = false;
-                    destDb.ReleaseConnection();
+                    destDb.ReleaseConnection(true);
                 }
             }
         }
