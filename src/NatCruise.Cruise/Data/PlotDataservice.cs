@@ -234,7 +234,36 @@ $@"INSERT INTO Plot_Stratum (
     PlotNumber,
     StratumCode,
     IsEmpty,
+    CreatedBy
+) VALUES (
+    '{CruiseID}',
+    @CuttingUnitCode,
+    @PlotNumber,
+    @StratumCode,
+    @IsEmpty,
+    '{DeviceID}'
+);
+SELECT last_insert_rowid();",
+                plotStratum);
+
+            plotStratum.InCruise = true;
+            plotStratum.Plot_Stratum_CN = plot_stratum_CN;
+        }
+
+        public void Insert3PPNT_Plot_Stratum(Plot_Stratum plotStratum)
+        {
+            if (plotStratum is null) { throw new ArgumentNullException(nameof(plotStratum)); }
+
+            var plot_stratum_CN = Database.ExecuteScalar2<long?>(
+$@"INSERT INTO Plot_Stratum (
+    CruiseID,
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    IsEmpty,
     KPI,
+    TreeCount,
+    AverageHeight,
     ThreePRandomValue,
     CreatedBy
 ) VALUES (
@@ -244,6 +273,8 @@ $@"INSERT INTO Plot_Stratum (
     @StratumCode,
     @IsEmpty,
     @KPI,
+    @TreeCount,
+    @AverageHeight,
     @ThreePRandomValue,
     '{DeviceID}'
 );
@@ -387,8 +418,10 @@ AND p.PlotNumber = @p4; ",
     tl.KPI,
     max(tm.TotalHeight, tm.MerchHeightPrimary, tm.UpperStemHeight) AS Height,
     max(tm.DBH, tm.DRC, tm.DBHDoubleBarkThickness) AS Diameter,
-    t.CountOrMeasure
+    t.CountOrMeasure,
+    st.Method
 FROM Tree AS t
+JOIN Stratum AS st USING (StratumCode, CruiseID)
 LEFT JOIN TallyLedger_Tree_Totals AS tl USING (TreeID)
 LEFT JOIN TreeMeasurment AS tm USING (TreeID)
 WHERE t.CuttingUnitCode = @p1

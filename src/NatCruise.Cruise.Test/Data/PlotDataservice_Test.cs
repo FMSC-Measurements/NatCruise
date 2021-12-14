@@ -166,6 +166,7 @@ namespace NatCruise.Cruise.Test.Data
 
                 var treesAgain = ds.GetPlotTreeProxies(unitCode, plotNumber).ToArray();
                 treesAgain.Select(x => x.TreeNumber).Should().BeInAscendingOrder();
+                treesAgain.Should().OnlyContain(x => x.Method != null);
             }
         }
 
@@ -392,14 +393,55 @@ namespace NatCruise.Cruise.Test.Data
                 database.Execute($"INSERT INTO Stratum (CruiseID, StratumID, StratumCode, Method) VALUES ('{init.CruiseID}', '{stratumID}', '{newStratumCode}', '{method}');");
                 database.Execute($"INSERT INTO CuttingUnit_Stratum (CruiseID, CuttingUnitCode, StratumCode) VALUES ('{init.CruiseID}', '{unit}', '{newStratumCode}')");
 
-                var result = datastore.GetPlotStrataProxies(unit).ToArray();
+                var results = datastore.GetPlotStrataProxies(unit).ToArray();
 
-                result.Should().HaveCount(1);
+                results.Should().HaveCount(1);
             }
         }
 
         [Fact]
         public void InsertStratumPlot()
+        {
+            var init = new DatastoreInitializer();
+            var plotNumber = 1;
+            var stratumCode = "st1";
+            var unitCode = "u1";
+            var isEmpty = true;
+            var plotID = Guid.NewGuid().ToString();
+            var cruiseID = init.CruiseID;
+            //var remarks = "something";
+
+            using (var database = init.CreateDatabase())
+            {
+                var datastore = new PlotDataservice(database, cruiseID, init.DeviceID);
+
+                var stratumPlot = new Models.Plot_Stratum()
+                {
+                    CuttingUnitCode = unitCode,
+                    PlotNumber = plotNumber,
+                    StratumCode = stratumCode,
+                    IsEmpty = isEmpty,
+                    //Remarks = remarks
+                };
+
+                database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
+                    $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
+
+                datastore.InsertPlot_Stratum(stratumPlot);
+
+                datastore.IsPlotNumberAvalible(unitCode, plotNumber).Should().BeFalse("we just took that plot number");
+
+                var plotStratumAgain = datastore.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
+                plotStratumAgain.Should().NotBeNull();
+                plotStratumAgain.PlotNumber.Should().Be(plotNumber);
+                //ourStratumPlot.Remarks.Should().Be(remarks);
+                plotStratumAgain.IsEmpty.Should().Be(isEmpty);
+                plotStratumAgain.StratumCode.Should().Be(stratumCode);
+            }
+        }
+
+        [Fact]
+        public void Insert3PPNT_Plot_Stratum()
         {
             var init = new DatastoreInitializer();
             var plotNumber = 1;
@@ -422,13 +464,14 @@ namespace NatCruise.Cruise.Test.Data
                     StratumCode = stratumCode,
                     IsEmpty = isEmpty,
                     KPI = kpi,
+
                     //Remarks = remarks
                 };
 
                 database.Execute($"INSERT INTO Plot (CruiseID, PlotID, CuttingUnitCode, PlotNumber) VALUES " +
                     $"('{cruiseID}', '{plotID}', '{unitCode}', {plotNumber})");
 
-                datastore.InsertPlot_Stratum(stratumPlot);
+                datastore.Insert3PPNT_Plot_Stratum(stratumPlot);
 
                 datastore.IsPlotNumberAvalible(unitCode, plotNumber).Should().BeFalse("we just took that plot number");
 
