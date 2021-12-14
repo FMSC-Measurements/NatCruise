@@ -23,7 +23,7 @@ namespace NatCruise.Cruise.Data
 
         public bool GetOneTreePerTallyOption()
         {
-            return true;
+            return false;
         }
 
         public void IncrementFixCNTTreeCount(string unitCode, int plotNumber, string stratumCode,
@@ -54,6 +54,7 @@ namespace NatCruise.Cruise.Data
     SampleGroupCode,
     SpeciesCode,
     LiveDead,
+    EntryType,
     TreeCount
 ) VALUES (
     @TallyLedgerID,
@@ -65,6 +66,7 @@ namespace NatCruise.Cruise.Data
     @SampleGroupCode,
     @SpeciesCode,
     @LiveDead,
+    'tally',
     1 -- TreeCount
 );",
                 new
@@ -107,6 +109,7 @@ namespace NatCruise.Cruise.Data
     SampleGroupCode,
     SpeciesCode,
     LiveDead,
+    EntryType,
     TreeCount
 ) VALUES (
     @TallyLedgerID,
@@ -118,6 +121,7 @@ namespace NatCruise.Cruise.Data
     @SampleGroupCode,
     @SpeciesCode,
     @LiveDead,
+    'tally',
     -1
 );",
                     new
@@ -154,6 +158,7 @@ namespace NatCruise.Cruise.Data
     SampleGroupCode,
     SpeciesCode,
     LiveDead,
+    EntryType,
     TreeCount
 ) VALUES (
     @TallyLedgerID,
@@ -165,6 +170,7 @@ namespace NatCruise.Cruise.Data
     @SampleGroupCode,
     @SpeciesCode,
     @LiveDead,
+    'tally',
     1 -- TreeCount
 );",
                 new

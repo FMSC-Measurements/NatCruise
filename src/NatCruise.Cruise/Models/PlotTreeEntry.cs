@@ -23,6 +23,8 @@ namespace NatCruise.Cruise.Models
 
         public string CountOrMeasure { get; set; }
 
+        public string Method { get; set; }
+
         public int TreeCount { get; set; }
 
         public bool STM { get; set; }

@@ -52,5 +52,8 @@ namespace NatCruise.Cruise.Data
         void SetTreeAuditResolution(string treeID, string treeAuditRuleID, string resolution, string initials);
 
         void ClearTreeAuditResolution(string treeID, string treeAuditRuleID);
+        int GetTreeCount(string treeID);
+
+        void UpdateTreeCount(string treeID, int count);
     }
 }

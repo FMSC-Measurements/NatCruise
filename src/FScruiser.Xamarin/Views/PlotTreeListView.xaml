@@ -18,7 +18,10 @@
                            VerticalTextAlignment="Center" />
                     <Picker ItemsSource="{Binding PlotFilterOptions}"
                             SelectedItem="{Binding PlotFilter}"
-                            WidthRequest="60" />
+                            WidthRequest="60"
+                            MinimumHeightRequest="{StaticResource minTouchableHeight}"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Plot Filter" />
                 </StackLayout>
                 <StackLayout Orientation="Horizontal"
                              HorizontalOptions="EndAndExpand"
@@ -27,7 +30,9 @@
                            Text="Only Trees With Errors"
                            VerticalTextAlignment="Center" />
                     <Switch IsToggled="{Binding OnlyShowTreesWithErrorsOrWarnings}"
-                            AutomationProperties.LabeledBy="{x:Reference _onlyTreesWithErrorsHeading}" />
+                            HeightRequest="{StaticResource minTouchableHeight}"
+                            AutomationProperties.LabeledBy="{x:Reference _onlyTreesWithErrorsHeading}"
+                            MinimumHeightRequest="{StaticResource minTouchableHeight}" />
                 </StackLayout>
             </StackLayout>
             <!--<CollectionView x:Name="_treeListView"
@@ -203,7 +208,9 @@
                 <Button x:Name="_editTreeButton"
                         Image="ic_edit_white_24dp.png"
                         Command="{Binding EditTreeCommand}"
-                        CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"/>
+                        CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Edit Tree"/>
 
                 <!--<Button x:Name="_addTreeButton"
                         Image="ic_plus_white_24dp.png"
