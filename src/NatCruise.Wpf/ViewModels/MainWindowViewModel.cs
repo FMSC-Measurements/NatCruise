@@ -68,7 +68,7 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        public string Title => $"National Cruise System ({AppVersion}-Alpha) {CurrentFileName?.Prepend(" - ")}";
+        public string Title => $"National Cruise System ({AppVersion}-Beta) {CurrentFileName?.Prepend(" - ")}";
 
         public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles().Select(x => new FileInfo(x));
 
