@@ -142,7 +142,7 @@
 
                     <Label Text="{Binding DeviceInfo.DeviceName, StringFormat='{}Device ID:{0}'}"
                            d:Text="DevceID" />
-                    <Label Text="{Binding AppInfo.Version, StringFormat='{}Version {0}'}"
+                    <Label Text="{Binding AppInfo.Version, StringFormat='{}Version {0}-Beta'}"
                            d:Text="v0.00" />
                 </StackLayout>
 
