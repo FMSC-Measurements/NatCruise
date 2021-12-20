@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="NatCruise.Design.Views.SubpopulationListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -49,6 +50,7 @@
                       controls:ComboBoxHelper.MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}" />
             <Button x:Name="_addSpeciesButton"
                     Style="{StaticResource AddButton}"
+                    Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
                     Grid.Column="1"
                     IsEnabled="{Binding Text, ElementName=_speciesTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                 <i:Interaction.Triggers>
@@ -61,6 +63,7 @@
             </Button>
             <Button x:Name="_removeSpeciesButton"
                     Style="{StaticResource RemoveButton}"
+                    Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                     Command="{Binding RemoveSubpopulationCommand}"
                     CommandParameter="{Binding SelectedItem, Source={x:Reference _subpopListView} }"
                     Grid.Column="2"
