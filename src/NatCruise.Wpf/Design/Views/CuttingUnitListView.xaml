@@ -3,6 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
@@ -27,16 +28,9 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0">
-                        <Grid.Resources>
-                            <Style TargetType="{x:Type Button}"
-                                   BasedOn="{StaticResource MetroFlatButton}">
-                                <Setter Property="FontWeight"
-                                        Value="Bold" />
-                                <Setter Property="FontSize"
-                                        Value="16" />
-                            </Style>
-                        </Grid.Resources>
+                    <Grid Grid.Row="0"
+                          Background="{StaticResource ControlBackgroundBrush}">
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="32" />
@@ -47,7 +41,9 @@
                                  mah:TextBoxHelper.Watermark="Code"
                                  MaxLength="{x:Static dsgn:Constants.UNITCODE_MAXLENGTH}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource AddButton}">
+                                Style="{StaticResource AddButton}"
+                                Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                                IsEnabled="{Binding Text, ElementName=_unitCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <i:InvokeCommandAction Command="{Binding AddCuttingUnitCommand}"
@@ -58,8 +54,10 @@
                         </Button>
                         <Button  Grid.Column="2"
                                  Style="{StaticResource RemoveButton}"
+                                 Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                                  Command="{Binding RemoveCuttingUnitCommand}"
-                                 CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}" />
+                                 CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}"
+                                 IsEnabled="{Binding SelectedItem, ElementName=_cuttingUnitListView, Converter={StaticResource NotNullConverter}}"/>
                     </Grid>
 
                     <!--<DataGrid x:Name="_cuttingUnitListView"  Width="200"
