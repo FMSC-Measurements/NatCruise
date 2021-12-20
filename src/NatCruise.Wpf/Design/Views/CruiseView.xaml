@@ -9,7 +9,9 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="{StaticResource brush_background}"
              Height="420"
-             Width="375">
+             Width="375"
+             VerticalAlignment="Top"
+             HorizontalAlignment="Left">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Width="288"
@@ -17,9 +19,12 @@
 
             <!-- Header -->
             <Label Content="Cruise Info"
+                   
                    Background="{DynamicResource AccentColorBrush}"
                    HorizontalAlignment="Stretch"
-                   Margin="0,0,0,10" />
+                   Margin="0,0,0,10"
+                   FontWeight="Bold"
+                   FontSize="14" />
 
             <!-- Cruise Number -->
             <DockPanel>
