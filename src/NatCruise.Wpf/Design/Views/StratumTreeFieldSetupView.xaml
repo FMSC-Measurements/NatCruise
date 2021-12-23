@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -26,7 +27,8 @@
 
         <Grid Grid.Row="0"
               Grid.Column="0"
-              Grid.ColumnSpan="2">
+              Grid.ColumnSpan="2"
+              Margin="0,0,0,3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition  Width="162" />
                 <ColumnDefinition Width="160" />
@@ -51,62 +53,63 @@
             </Button>
         </Grid>
 
-        
-            <Grid Grid.Column="0"
-                  Grid.Row="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="32" />
-                    <RowDefinition Height="*" />
 
+        <Grid Grid.Column="0"
+              Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.Resources>
+                    <Style TargetType="{x:Type Button}"
+                           BasedOn="{StaticResource MetroFlatButton}">
+                        <Setter Property="FontWeight"
+                                Value="Bold" />
+                        <Setter Property="FontSize"
+                                Value="16" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
-                    <Grid.Resources>
-                        <Style TargetType="{x:Type Button}"
-                               BasedOn="{StaticResource MetroFlatButton}">
-                            <Setter Property="FontWeight"
-                                    Value="Bold" />
-                            <Setter Property="FontSize"
-                                    Value="16" />
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
 
+                <ComboBox x:Name="_treeFieldCombobox"
+                          VerticalAlignment="Stretch"
+                          ItemsSource="{Binding TreeFields}" />
+                <Button Style="{StaticResource AddButton}"
+                        Grid.Column="1"
+                        Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                        IsEnabled="{Binding SelectedItem, ElementName=_treeFieldCombobox, Converter={StaticResource NotNullConverter}}"
+                        CommandParameter="{Binding SelectedItem, ElementName=_treeFieldCombobox}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding AddTreeFieldCommand}"
+                                                   CommandParameter="{Binding SelectedItem, ElementName=_treeFieldCombobox}" />
+                            <triggers:ClearComboBoxAction TargetName="_treeFieldCombobox" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
 
-                    <ComboBox x:Name="_treeFieldCombobox"
-                              VerticalAlignment="Stretch"
-                              ItemsSource="{Binding TreeFields}" />
-                    <Button Style="{StaticResource AddButton}"
-                            Grid.Column="1"
-                            IsEnabled="{Binding SelectedItem, ElementName=_treeFieldCombobox, Converter={StaticResource NotNullConverter}}"
-                            CommandParameter="{Binding SelectedItem, ElementName=_treeFieldCombobox}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Click">
-                                <i:InvokeCommandAction Command="{Binding AddTreeFieldCommand}"
-                                                       CommandParameter="{Binding SelectedItem, ElementName=_treeFieldCombobox}" />
-                                <triggers:ClearComboBoxAction TargetName="_treeFieldCombobox" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </Button>
+                <Button Style="{StaticResource RemoveButton}"
+                        Grid.Column="2"
+                        IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}"
+                        Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
+                        Command="{Binding RemoveTreeFieldCommand}" />
+            </Grid>
 
-                    <Button Style="{StaticResource RemoveButton}" 
-                            Grid.Column="2"
-                            IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}"
-                            Command="{Binding RemoveTreeFieldCommand}" />
-                </Grid>
-
-            <Border Grid.Row="1" BorderBrush="{StaticResource brush_shade_black_30}"
+            <Border Grid.Row="1"
+                    BorderBrush="{StaticResource brush_shade_black_30}"
                     BorderThickness="1">
                 <ListBox x:Name="_tfsListView"
-                         
                          SelectionMode="Single"
                          ItemsSource="{Binding FieldSetups}"
                          SelectedItem="{Binding SelectedTreeFieldSetup}">
@@ -160,7 +163,7 @@
                 </ListBox>
             </Border>
         </Grid>
-        
+
 
 
 
