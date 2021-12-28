@@ -1,6 +1,7 @@
 ﻿using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Design.Validation;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
 {
-    public class StratumTreeFieldSetupViewModel : ViewModelBase
+    public class StratumTreeFieldSetupViewModel : ValidationViewModelBase
     {
         private Stratum _stratum;
         private ObservableCollection<TreeFieldSetup> _fieldSetups;
@@ -19,7 +20,8 @@ namespace NatCruise.Design.ViewModels
         private TreeFieldSetup _selectedTreeFieldSetup;
         private IEnumerable<StratumTemplate> _stratumTemplates;
 
-        public StratumTreeFieldSetupViewModel(IDataserviceProvider dataserviceProvider)
+        public StratumTreeFieldSetupViewModel(IDataserviceProvider dataserviceProvider, TreeFieldSetupValidator treeFieldSetupValidator)
+            : base(treeFieldSetupValidator)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
             TemplateDataservice = dataserviceProvider.GetDataservice<ITemplateDataservice>() ?? throw new ArgumentNullException(nameof(TemplateDataservice));
@@ -107,20 +109,95 @@ namespace NatCruise.Design.ViewModels
             get => _selectedTreeFieldSetup;
             set
             {
-                if (_selectedTreeFieldSetup != null) { _selectedTreeFieldSetup.PropertyChanged -= SelectedTreeFieldSetup_PropertyChanged; }
+                //if (_selectedTreeFieldSetup != null) { _selectedTreeFieldSetup.PropertyChanged -= SelectedTreeFieldSetup_PropertyChanged; }
                 SetProperty(ref _selectedTreeFieldSetup, value);
-                if (value != null) { value.PropertyChanged += SelectedTreeFieldSetup_PropertyChanged; }
+                //if (value != null) { value.PropertyChanged += SelectedTreeFieldSetup_PropertyChanged; }
+                ValidateAll(value);
                 RaisePropertyChanged(nameof(IsDefaultBoolean));
                 RaisePropertyChanged(nameof(IsDefaultInt));
                 RaisePropertyChanged(nameof(IsDefaultReal));
                 RaisePropertyChanged(nameof(IsDefaultText));
+                RaisePropertyChanged(nameof(DefaultValueBool));
+                RaisePropertyChanged(nameof(DefaultValueInt));
+                RaisePropertyChanged(nameof(DefaultValueReal));
+                RaisePropertyChanged(nameof(DefaultValueText));
+                RaisePropertyChanged(nameof(IsLocked));
+                RaisePropertyChanged(nameof(IsHidden));
+                
             }
         }
 
         private void SelectedTreeFieldSetup_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var fieldSetup = sender as TreeFieldSetup;
+
             FieldSetupDataservice.UpsertTreeFieldSetup(fieldSetup);
+        }
+
+        public bool IsLocked
+        {
+            get => SelectedTreeFieldSetup?.IsLocked ?? false;
+            set
+            {
+                var tfs = SelectedTreeFieldSetup;
+                if (tfs != null)
+                { SetPropertyAndValidate(tfs, value, (m, x) => m.IsLocked = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+            }
+        }
+
+        public bool IsHidden
+        {
+            get => SelectedTreeFieldSetup?.IsHidden ?? false;
+            set
+            {
+                var tfs = SelectedTreeFieldSetup;
+                if (tfs != null)
+                { SetPropertyAndValidate(tfs, value, (m, x) => m.IsHidden = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+            }
+        }
+
+        public bool? DefaultValueBool
+        {
+            get => SelectedTreeFieldSetup?.DefaultValueBool;
+            set
+            {
+                var tfs = SelectedTreeFieldSetup;
+                if (tfs != null)
+                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueBool = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x));  }
+            }
+        }
+
+        public int? DefaultValueInt
+        {
+            get => SelectedTreeFieldSetup?.DefaultValueInt;
+            set
+            {
+                var tfs = SelectedTreeFieldSetup;
+                if (tfs != null)
+                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueInt = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+            }
+        }
+
+        public double? DefaultValueReal
+        {
+            get => SelectedTreeFieldSetup?.DefaultValueReal;
+            set
+            {
+                var tfs = SelectedTreeFieldSetup;
+                if (tfs != null)
+                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueReal = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+            }
+        }
+
+        public string DefaultValueText
+        {
+            get => SelectedTreeFieldSetup?.DefaultValueText;
+            set
+            {
+                var tfs = SelectedTreeFieldSetup;
+                if(tfs != null)
+                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueText = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+            }
         }
 
         public bool IsDefaultReal => string.Compare(SelectedTreeFieldSetup?.Field?.DbType, "REAL", true) == 0;

@@ -169,7 +169,8 @@
 
         <Grid Grid.Column="2"
               Grid.Row="1"
-              Grid.ColumnSpan="2">
+              Grid.ColumnSpan="2"
+              IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="28*" />
                 <RowDefinition Height="31*" />
@@ -193,44 +194,40 @@
 
             <Label Content="Default Value"
                    Grid.Row="1"
-                   Grid.Column="1" />
+                   Grid.Column="1"
+                    />
             <CheckBox Content="Locked"
                       Grid.Column="1"
                       Grid.Row="2"
                       Grid.ColumnSpan="2"
-                      IsChecked="{Binding SelectedTreeFieldSetup.IsLocked}"
-                      IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}" />
+                      IsChecked="{Binding IsLocked}"/>
             <CheckBox Content="Hidden"
                       Grid.Column="1"
                       Grid.Row="3"
                       Grid.ColumnSpan="2"
-                      IsChecked="{Binding SelectedTreeFieldSetup.IsHidden}"
-                      IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}" />
+                      IsChecked="{Binding IsHidden}" />
             <TextBox x:Name="_intDefaultValueTextBox"
                      Grid.Column="2"
                      Visibility="{Binding IsDefaultInt, Converter={StaticResource IsVisableConverter}}"
                      Grid.Row="1"
                      Background="SkyBlue"
-                     Text="{Binding SelectedTreeFieldSetup.DefaultValueText}"
-                     IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}" />
+                     Text="{Binding DefaultValueInt, TargetNullValue=''}"/>
             <TextBox x:Name="_realDefaultValueTextBox"
                      Grid.Column="2"
                      Visibility="{Binding IsDefaultReal, Converter={StaticResource IsVisableConverter}}"
                      Grid.Row="1"
-                     Text="{Binding SelectedTreeFieldSetup.DefaultValueReal}"
-                     IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}" />
+                     Text="{Binding DefaultValueReal, TargetNullValue=''}"/>
             <TextBox x:Name="_textDefaultValueTextBox"
                      Grid.Column="2"
                      Visibility="{Binding IsDefaultText, Converter={StaticResource IsVisableConverter}}"
                      Grid.Row="1"
-                     Text="{Binding SelectedTreeFieldSetup.DefaultValueText}"
-                     IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}" />
+                     Text="{Binding DefaultValueText}"/>
             <CheckBox x:Name="_boolDefaultValueCheckBox"
                       Grid.Column="2"
                       Visibility="{Binding IsDefaultBoolean, Converter={StaticResource IsVisableConverter}}"
                       Grid.Row="1"
-                      IsChecked="{Binding SelectedTreeFieldSetup.DefaultValueBool}"
-                      IsEnabled="{Binding SelectedItem, ElementName=_tfsListView, Converter={StaticResource NotNullConverter}}" />
+                      IsThreeState="True"
+                      IsChecked="{Binding DefaultValueBool}"/>
             <!--<Button Grid.ColumnSpan="2"
                     Content="Move Up"
                     HorizontalAlignment="Left"
