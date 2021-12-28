@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
@@ -66,6 +67,9 @@ namespace NatCruise.Design.ViewModels
 
         public void AddStratum(string code)
         {
+            code = code.Trim();
+            if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$") is false) { return; }
+
             var newStratum = new Stratum
             {
                 StratumCode = code,

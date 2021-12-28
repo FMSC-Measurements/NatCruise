@@ -2,10 +2,7 @@
 using FluentValidation;
 using NatCruise.Design.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Design.Validation
 {
@@ -15,11 +12,14 @@ namespace NatCruise.Design.Validation
         {
             RuleFor(x => x.SampleGroupCode)
                 .NotEmpty()
-                .WithSeverity(Severity.Error);
+                .Matches("^[a-zA-Z0-9]+$")
+                .WithSeverity(Severity.Error)
+                .WithMessage("Sample Group Code Should Only Contain Numbers and Letters");
 
             RuleFor(x => x.PrimaryProduct)
                 .NotEmpty()
-                .WithSeverity(Severity.Error);
+                .WithSeverity(Severity.Error)
+                .WithMessage("Primary Product Should Not Be Blank");
 
             RuleFor(x => x.SamplingFrequency)
                 .Must(x => x > 0)

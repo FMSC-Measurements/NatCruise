@@ -4,7 +4,9 @@ using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Design.Validation;
 using NatCruise.Services;
+using NatCruise.Wpf.Validation;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -15,7 +17,7 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class NewCruiseViewModel : BindableBase, IDialogAware
+    public class NewCruiseViewModel : ValidationViewModelBase, IDialogAware
     {
         private ICommand _createCruiseCommand;
         private ICommand _cancelCommand;
@@ -31,6 +33,7 @@ namespace NatCruise.Wpf.ViewModels
         private ICommand _selectTemplateCommand;
 
         public NewCruiseViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
+            : base(new NewCruiseValidator())
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             SetupinfoDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
@@ -47,13 +50,13 @@ namespace NatCruise.Wpf.ViewModels
         public string SaleName
         {
             get => _saleName;
-            set => SetProperty(ref _saleName, value);
+            set => SetPropertyAndValidate(this, value, (m, v) => _saleName = v, validated: null);
         }
 
         public string SaleNumber
         {
             get => _saleNumber;
-            set => SetProperty(ref _saleNumber, value);
+            set => SetPropertyAndValidate(this, value, (m,v) => _saleNumber = v, validated: null);
         }
 
         public string Region
@@ -61,7 +64,7 @@ namespace NatCruise.Wpf.ViewModels
             get => _region;
             set
             {
-                SetProperty(ref _region, value);
+                SetPropertyAndValidate(this, value, (m, v) => _region = v, validated: null);
                 RaisePropertyChanged(nameof(ForestOptions));
             }
         }
@@ -71,7 +74,7 @@ namespace NatCruise.Wpf.ViewModels
             get => _forest;
             set
             {
-                SetProperty(ref _forest, value);
+                SetPropertyAndValidate(this, value, (m, v) => _forest = v, validated: null);
                 RaisePropertyChanged(nameof(DistrictOptions));
             }
         }
@@ -79,19 +82,19 @@ namespace NatCruise.Wpf.ViewModels
         public string District
         {
             get => _district;
-            set => SetProperty(ref _district, value);
+            set => SetPropertyAndValidate(this, value, (m, v) => _district = v, validated: null);
         }
 
         public Purpose Purpose
         {
             get => _purpose;
-            set => SetProperty(ref _purpose, value);
+            set => SetPropertyAndValidate(this, value, (m, v) => _purpose = v, validated: null);
         }
 
         public string UOM
         {
             get => _uom;
-            set => SetProperty(ref _uom, value);
+            set => SetPropertyAndValidate(this, value, (m, v) => _uom = v, validated: null);
         }
 
         public bool UseCrossStrataPlotTreeNumbering
@@ -140,8 +143,8 @@ namespace NatCruise.Wpf.ViewModels
 
         private async void CreateCruise()
         {
-            var isSaleValid = ValidateSale();
-            if (isSaleValid == false) { return; }
+            ValidateAll(this);
+            if (HasErrors == true) { return; }
 
             var defaultFileName = $"{SaleNumber} {SaleName} {Purpose}.crz3";
 

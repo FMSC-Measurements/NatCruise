@@ -5,6 +5,7 @@ using Prism.Commands;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
@@ -53,6 +54,9 @@ namespace NatCruise.Design.ViewModels
 
         public void AddSampleGroup(string code)
         {
+            code = code.Trim();
+            if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$") is false) { return; }
+
             var newSampleGroup = new SampleGroup()
             {
                 SampleGroupCode = code,

@@ -16,11 +16,24 @@ namespace NatCruise.Wpf.Converters
         {
             try
             {
-                var isVisable = (bool)value;
-                return (isVisable) ? Visibility.Visible : Visibility.Collapsed;
+                if(value is bool)
+                {
+                    var isVisable = (bool)value;
+                    return isVisable ? Visibility.Visible : Visibility.Collapsed;
+                }
+                else if(value is string)
+                {
+                    var isVisable = !string.IsNullOrEmpty((string)value);
+                    return isVisable ? Visibility.Visible : Visibility.Collapsed;
+                }
+                else
+                {
+                    return value != null ? Visibility.Visible : Visibility.Collapsed;
+                }
+                
             }
             catch
-            { return true; }
+            { return Visibility.Visible; }
             
         }
 

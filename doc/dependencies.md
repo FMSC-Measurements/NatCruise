@@ -35,6 +35,8 @@ for System.Drawing.Icon in properties/Resources.Designer.cs
 
  - `CruiseDAL.Core`
  - `FMSC.Sampling`
+ - FluentValidation - For validation used in NatCruise.Design.Validation
+	
 
 # FScruiser.Xamarin
 
