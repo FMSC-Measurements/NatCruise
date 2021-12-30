@@ -170,5 +170,20 @@ WHERE SampleGroupID = @SampleGroupID;",
                     DeviceID
                 });
         }
+
+        public void UpdateSampleGroupCode(SampleGroup sg)
+        {
+            Database.Execute2(
+@"UPDATE SampleGroup SET
+    SampleGroupCode = @SampleGroupCode,
+    ModifiedBy = @DeviceID
+WHERE SampleGroupID = @SampleGroupID;",
+                new
+                {
+                    sg.SampleGroupID,
+                    sg.SampleGroupCode,
+                    DeviceID
+                });
+        }
     }
 }

@@ -20,6 +20,8 @@ namespace NatCruise.Design.Data
 
         void UpdateSampleGroup(SampleGroup sampleGroup);
 
+        void UpdateSampleGroupCode(SampleGroup sg);
+
         void DeleteSampleGroup(SampleGroup sampleGroup);
     }
 }

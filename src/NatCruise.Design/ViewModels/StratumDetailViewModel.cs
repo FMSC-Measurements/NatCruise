@@ -87,7 +87,26 @@ namespace NatCruise.Design.ViewModels
         public string StratumCode
         {
             get => Stratum?.StratumCode;
-            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.StratumCode = x, st => StratumDataservice.UpdateStratum(st));
+            set
+            {
+                var origValue = Stratum?.StratumCode;
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.StratumCode = x, st => UpdateStratumCode(st));
+
+                void UpdateStratumCode(Stratum st)
+                {
+                    try
+                    {
+                        StratumDataservice.UpdateStratumCode(st);
+                        
+                    }
+                    catch (FMSC.ORM.UniqueConstraintException)
+                    {
+                        Stratum.StratumCode = origValue;
+                        RaisePropertyChanged(nameof(StratumCode));
+                        //DialogService.ShowNotification("Stratum Code Already Exists");
+                    }
+                }
+            }
         }
 
         public string Description

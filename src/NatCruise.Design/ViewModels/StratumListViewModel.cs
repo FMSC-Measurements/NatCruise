@@ -1,6 +1,7 @@
 ﻿using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Services;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,12 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<StratumTemplate> _stratumTemplateOptions;
         private StratumTemplate _selectedStratumTemplate;
 
-        public StratumListViewModel(IStratumDataservice stratumDataservice, ITemplateDataservice templateDataservice, IFieldSetupDataservice fieldSetupDataservice)
+        public StratumListViewModel(IStratumDataservice stratumDataservice, ITemplateDataservice templateDataservice, IFieldSetupDataservice fieldSetupDataservice, IDialogService dialogService)
         {
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             StratumValidator = new StratumValidator();
         }
@@ -33,6 +35,7 @@ namespace NatCruise.Design.ViewModels
         protected IStratumDataservice StratumDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
         public ITemplateDataservice TemplateDataservice { get; }
+        public IDialogService DialogService { get; }
         public StratumValidator StratumValidator { get; }
         public ObservableCollection<Stratum> Strata
         {
@@ -137,17 +140,24 @@ namespace NatCruise.Design.ViewModels
                 newStratum.YieldComponent = stratumTemplate.YieldComponent;
             }
 
-            StratumDataservice.AddStratum(newStratum);
-
-            if (stratumTemplate != null)
+            try
             {
-                FieldSetupDataservice.SetTreeFieldsFromStratumTemplate(code, stratumTemplate.StratumTemplateName);
-                FieldSetupDataservice.SetLogFieldsFromStratumTemplate(code, stratumTemplate.StratumTemplateName);
-            }
+                StratumDataservice.AddStratum(newStratum);
 
-            newStratum.PropertyChanged += stratum_PropertyChanged;
-            Strata.Add(newStratum);
-            SelectedStratum = newStratum;
+                if (stratumTemplate != null)
+                {
+                    FieldSetupDataservice.SetTreeFieldsFromStratumTemplate(code, stratumTemplate.StratumTemplateName);
+                    FieldSetupDataservice.SetLogFieldsFromStratumTemplate(code, stratumTemplate.StratumTemplateName);
+                }
+
+                newStratum.PropertyChanged += stratum_PropertyChanged;
+                Strata.Add(newStratum);
+                SelectedStratum = newStratum;
+            }
+            catch(FMSC.ORM.UniqueConstraintException)
+            {
+                DialogService.ShowNotification("Stratum Code Already Exists");
+            }
         }
 
         public void RemoveStratum(Stratum stratum)

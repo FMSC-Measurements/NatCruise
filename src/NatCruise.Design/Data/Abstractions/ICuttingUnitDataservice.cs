@@ -14,6 +14,8 @@ namespace NatCruise.Design.Data
 
         void UpdateCuttingUnit(CuttingUnit unit);
 
+        void UpdateCuttingUnitCode(CuttingUnit unit);
+
         void DeleteCuttingUnit(CuttingUnit unit);
     }
 }

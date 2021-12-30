@@ -1,5 +1,6 @@
 ﻿using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Services;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,11 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand _addNewRuleSelectorCommand;
         private DelegateCommand<TreeAuditRuleSelector> _deleteRuleSelectorCommand;
 
-        public TreeAuditSelectorsViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice)
+        public TreeAuditSelectorsViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice, IDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         public ICommand AddNewRuleSelectorCommand => _addNewRuleSelectorCommand ??= new DelegateCommand(AddNewRuleSelector);
@@ -30,6 +32,7 @@ namespace NatCruise.Design.ViewModels
 
         public ITemplateDataservice TemplateDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
+        public IDialogService DialogService { get; }
 
         public TreeAuditRule TreeAuditRule
         {
@@ -92,8 +95,15 @@ namespace NatCruise.Design.ViewModels
             if (auditRule == null) { return; }
             newRuleSelector.TreeAuditRuleID = auditRule.TreeAuditRuleID;
 
-            TemplateDataservice.AddRuleSelector(newRuleSelector);
-            Selectors.Add(newRuleSelector);
+            try
+            {
+                TemplateDataservice.AddRuleSelector(newRuleSelector);
+                Selectors.Add(newRuleSelector);
+            }
+            catch (FMSC.ORM.UniqueConstraintException)
+            {
+                DialogService.ShowNotification("Audit Rule Selector Already Exists");
+            }
 
             NewRuleSelector = new TreeAuditRuleSelector();
         }

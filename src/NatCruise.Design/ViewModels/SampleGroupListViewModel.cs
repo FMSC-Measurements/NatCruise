@@ -2,6 +2,7 @@
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Services;
 using Prism.Commands;
 using System;
 using System.Collections.ObjectModel;
@@ -20,16 +21,18 @@ namespace NatCruise.Design.ViewModels
         private Stratum _stratum;
         private SampleGroup _selectedSampleGroup;
 
-        public SampleGroupListViewModel(IDataserviceProvider datastoreProvider)
+        public SampleGroupListViewModel(IDataserviceProvider datastoreProvider, IDialogService dialogService)
         {
             var sampleGroupDataservice = datastoreProvider.GetDataservice<ISampleGroupDataservice>();
 
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             SampleGroupValidator = new SampleGroupValidator();
         }
 
         protected ISampleGroupDataservice SampleGroupDataservice { get; }
+        public IDialogService DialogService { get; }
         public SampleGroupValidator SampleGroupValidator { get; }
 
         public ICommand AddSampleGroupCommand => _addSampleGroupCommand ??= new DelegateCommand<string>(AddSampleGroup);
@@ -104,10 +107,17 @@ namespace NatCruise.Design.ViewModels
                 DefaultLiveDead = "L",
             };
 
-            SampleGroupDataservice.AddSampleGroup(newSampleGroup);
-            newSampleGroup.PropertyChanged += samplegroup_PropertyChanged;
-            SampleGroups.Add(newSampleGroup);
-            SelectedSampleGroup = newSampleGroup;
+            try
+            {
+                SampleGroupDataservice.AddSampleGroup(newSampleGroup);
+                newSampleGroup.PropertyChanged += samplegroup_PropertyChanged;
+                SampleGroups.Add(newSampleGroup);
+                SelectedSampleGroup = newSampleGroup;
+            }
+            catch (FMSC.ORM.UniqueConstraintException)
+            {
+                DialogService.ShowNotification("Sample Group Code Already Exists");
+            }
         }
 
         public void RemoveSampleGroup(SampleGroup sampleGroup)
