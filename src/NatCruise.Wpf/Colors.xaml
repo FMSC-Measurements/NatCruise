@@ -11,6 +11,7 @@
     <Color x:Key="color_fs_green">#345E36</Color>
     <Color x:Key="color_text_light">White</Color>
     <Color x:Key="color_text_dark">Black</Color>
+    
 
     <Color x:Key="shade_white_90">#E1ffffff</Color>
     <Color x:Key="shade_white_50">#7FFFFFFF</Color>
@@ -45,6 +46,10 @@
     <SolidColorBrush x:Key="brush_text_dark"
                      Color="{StaticResource color_text_dark}" />
 
+    <SolidColorBrush x:Key="brush_listItemError"
+                     Color="Red" />
+
+    <!-- shade brushes -->
     <SolidColorBrush x:Key="brush_shade_white_90"
                      Color="{StaticResource shade_white_90}" />
     <SolidColorBrush x:Key="brush_shade_white_50"
