@@ -94,6 +94,17 @@
                               ItemsSource="{Binding SampleGroups}"
                               SelectedItem="{Binding SelectedSampleGroup}"
                               SelectionMode="Single">
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Errors, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="Background"
+                                                Value="{StaticResource brush_listItemError}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Resources>
                         <ListView.View>
                             <GridView AllowsColumnReorder="False"
                                       ColumnHeaderToolTip="Sample Groups">

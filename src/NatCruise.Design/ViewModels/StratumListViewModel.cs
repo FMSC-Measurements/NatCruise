@@ -1,9 +1,11 @@
 ﻿using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Design.Validation;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -24,22 +26,58 @@ namespace NatCruise.Design.ViewModels
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+
+            StratumValidator = new StratumValidator();
         }
 
         protected IStratumDataservice StratumDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
         public ITemplateDataservice TemplateDataservice { get; }
-
+        public StratumValidator StratumValidator { get; }
         public ObservableCollection<Stratum> Strata
         {
             get => _strata;
-            protected set => SetProperty(ref _strata, value);
+            protected set
+            {
+                if(_strata != null)
+                {
+                    foreach(var st in _strata)
+                    {
+                        st.PropertyChanged -= stratum_PropertyChanged;
+                    }
+                }
+                SetProperty(ref _strata, value);
+                if(value != null)
+                {
+                    foreach(var st in value)
+                    {
+                        st.PropertyChanged += stratum_PropertyChanged;
+                    }
+                }
+            }
+        }
+
+        private void stratum_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == nameof(Stratum.Errors)) { return; }
+            if(sender is Stratum st && st != null)
+            {
+                ValidateStratum(st);
+            }
+            
         }
 
         public Stratum SelectedStratum
         {
             get => _selectedStratum;
-            set => SetProperty(ref _selectedStratum, value);
+            set
+            {
+                SetProperty(ref _selectedStratum, value);
+                if(value != null)
+                {
+                    ValidateStratum(value);
+                }
+            }
         }
 
         public IEnumerable<StratumTemplate> StratumTemplateOptions
@@ -57,8 +95,16 @@ namespace NatCruise.Design.ViewModels
         public override void Load()
         {
             StratumTemplateOptions = TemplateDataservice.GetStratumTemplates();
-            var strata = StratumDataservice.GetStrata();
+            var strata = StratumDataservice.GetStrata().ToArray();
+
+            foreach (var st in strata)
+            {
+                ValidateStratum(st);
+            }
+
             Strata = new ObservableCollection<Stratum>(strata);
+
+            
         }
 
         public ICommand AddStratumCommand => _addStratumCommand ?? (_addStratumCommand = new DelegateCommand<string>(AddStratum));
@@ -99,6 +145,7 @@ namespace NatCruise.Design.ViewModels
                 FieldSetupDataservice.SetLogFieldsFromStratumTemplate(code, stratumTemplate.StratumTemplateName);
             }
 
+            newStratum.PropertyChanged += stratum_PropertyChanged;
             Strata.Add(newStratum);
             SelectedStratum = newStratum;
         }
@@ -112,6 +159,7 @@ namespace NatCruise.Design.ViewModels
             var index = strata.IndexOf(stratum);
             if (index < 0) { return; }
             strata.RemoveAt(index);
+            stratum.PropertyChanged -= stratum_PropertyChanged;
 
             if (index <= strata.Count - 1)
             {
@@ -122,6 +170,20 @@ namespace NatCruise.Design.ViewModels
             {
                 SelectedStratum = strata.LastOrDefault();
             }
+        }
+
+        public void ValidateStratum(Stratum stratum)
+        {
+            if (stratum is null) { throw new ArgumentNullException(nameof(stratum)); }
+
+            var errors = StratumValidator.Validate(stratum).Errors
+                .Where(x => x.Severity == FluentValidation.Severity.Error)
+                .Select(x => x.ErrorMessage).ToArray();
+
+            if (errors.Length > 0)
+            { stratum.Errors = errors; }
+            else
+            { stratum.Errors = Enumerable.Empty<string>(); }
         }
     }
 }

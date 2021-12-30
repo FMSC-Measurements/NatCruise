@@ -13,6 +13,9 @@
                                                     Invert="True" />
             <converters:IsVisableConverter x:Key="IsVisableConverter" />
 
+            <converters:IsEmptyConverter x:Key="IsNotNullOrEmptyConverter"
+                                         Invert="True" />
+
             <converters:AppendConverter x:Key="AppendConverter" />
             <converters:PrependConverter x:Key="PrependConverter" />
             <converters:ReplaceNullConverter x:Key="ReplaceNullConverter" />

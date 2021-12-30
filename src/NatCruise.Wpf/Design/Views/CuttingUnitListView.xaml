@@ -6,6 +6,7 @@
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Design.Views.CuttingUnitListView"
              xmlns:prism="http://prismlibrary.com/"
@@ -13,6 +14,7 @@
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:models="clr-namespace:CruiseDAL.V3.Models;assembly=CruiseDAL.V3.Models"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -57,7 +59,7 @@
                                  Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                                  Command="{Binding RemoveCuttingUnitCommand}"
                                  CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}"
-                                 IsEnabled="{Binding SelectedItem, ElementName=_cuttingUnitListView, Converter={StaticResource NotNullConverter}}"/>
+                                 IsEnabled="{Binding SelectedItem, ElementName=_cuttingUnitListView, Converter={StaticResource NotNullConverter}}" />
                     </Grid>
 
                     <!--<DataGrid x:Name="_cuttingUnitListView"  Width="200"
@@ -79,17 +81,17 @@
                               ItemsSource="{Binding CuttingUnits}"
                               SelectedItem="{Binding SelectedUnit}"
                               SelectionMode="Single">
-                        <!--<ListView.Resources>
-                        <Style TargetType="ListViewItem">
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected"
-                                         Value="True">
-                                    <Setter Property="Background"
-                                            Value="{StaticResource brush_accent}" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListView.Resources>-->
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Errors, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="Background"
+                                                Value="{StaticResource brush_listItemError}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Resources>
                         <ListView.View>
                             <GridView AllowsColumnReorder="False"
                                       ColumnHeaderToolTip="Cutting Units">
