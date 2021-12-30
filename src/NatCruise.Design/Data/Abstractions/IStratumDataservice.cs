@@ -12,6 +12,8 @@ namespace NatCruise.Design.Data
 
         void UpdateStratum(Stratum stratum);
 
+        void UpdateStratumCode(Stratum stratum);
+
         void DeleteStratum(Stratum stratum);
 
         void DeleteStratum(string stratumCode);

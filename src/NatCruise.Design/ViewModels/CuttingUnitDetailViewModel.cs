@@ -63,7 +63,26 @@ namespace NatCruise.Design.ViewModels
         public string CuttingUnitCode
         {
             get => CuttingUnit?.CuttingUnitCode;
-            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.CuttingUnitCode = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+            set
+            {
+                var origValue = CuttingUnit?.CuttingUnitCode;
+
+                SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.CuttingUnitCode = x, cu => UpdateCuttingUnitCode(cu));
+
+                void UpdateCuttingUnitCode(CuttingUnit cu)
+                {
+                    try
+                    {
+                        UnitDataservice.UpdateCuttingUnitCode(cu);
+                    }
+                    catch (FMSC.ORM.UniqueConstraintException)
+                    {
+                        CuttingUnit.CuttingUnitCode = origValue;
+                        RaisePropertyChanged(nameof(CuttingUnitCode));
+                        //DialogService.ShowNotification("Unit Code Already Exists");
+                    }
+                }
+            }
         }
 
         public double Area

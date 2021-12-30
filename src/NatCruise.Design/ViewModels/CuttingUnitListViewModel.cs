@@ -2,6 +2,7 @@
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Services;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -21,17 +22,19 @@ namespace NatCruise.Design.ViewModels
         private CuttingUnit _selectedUnit;
         private Dictionary<CuttingUnit, IEnumerable<string>> _unitErrorLookup;
 
-        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider)
+        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider, IDialogService dialogService)
         {
             if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
 
             var unitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDataservice>();
             UnitDataservice = unitDataservice ?? throw new ArgumentNullException(nameof(unitDataservice));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             CuttingUnitValidator = new CuttingUnitValidator();
         }
 
         private ICuttingUnitDataservice UnitDataservice { get; }
+        public IDialogService DialogService { get; }
         public CuttingUnitValidator CuttingUnitValidator { get; }
 
         public ObservableCollection<CuttingUnit> CuttingUnits
@@ -106,10 +109,17 @@ namespace NatCruise.Design.ViewModels
                 CuttingUnitCode = unitCode
             };
 
-            UnitDataservice.AddCuttingUnit(newUnit);
-            newUnit.PropertyChanged += unit_PropertyChanged;
-            CuttingUnits.Add(newUnit);
-            SelectedUnit = newUnit;
+            try
+            {
+                UnitDataservice.AddCuttingUnit(newUnit);
+                newUnit.PropertyChanged += unit_PropertyChanged;
+                CuttingUnits.Add(newUnit);
+                SelectedUnit = newUnit;
+            }
+            catch (FMSC.ORM.UniqueConstraintException)
+            {
+                DialogService.ShowNotification("Unit Code Already Exists");
+            }
         }
 
         public void RemoveCuttingUnit(CuttingUnit unit)
