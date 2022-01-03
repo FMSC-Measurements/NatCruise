@@ -7,6 +7,8 @@ using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace NatCruise.Design.ViewModels
 {
@@ -152,6 +154,22 @@ namespace NatCruise.Design.ViewModels
 
         public void AddSubpopulation(string species)
         {
+            species = species.Trim();
+            if (Regex.IsMatch(species, "^[a-zA-Z0-9]+$") is false) { return; }
+
+            //var speciesList = SpeciesOptions;
+            //var alreadyExists = speciesList.Any(x => x.Equals(species, StringComparison.OrdinalIgnoreCase));
+
+            //if (alreadyExists == false)
+            //{
+            //    var newSpecies = new Species()
+            //    {
+            //        SpeciesCode = species,
+            //    };
+            //    TemplateDataservice.UpsertSpecies(newSpecies);
+            //    SpeciesOptions.Add(species);
+            //}
+
             var sampleGroup = SampleGroup;
             var liveDead = sampleGroup.DefaultLiveDead ?? "L";
             if (SubpopulationDataservice.Exists(sampleGroup.StratumCode, sampleGroup.SampleGroupCode, species, liveDead))
