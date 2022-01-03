@@ -12,7 +12,8 @@
              d:DesignWidth="800"
              Background="White"
              Tag="Tree Fields"
-             x:Name="_page">
+             x:Name="_page"
+             IsEnabled="{Binding StratumTemplate, Converter={StaticResource NotNullConverter}}">
     <Grid>
 
         <Grid.RowDefinitions>
