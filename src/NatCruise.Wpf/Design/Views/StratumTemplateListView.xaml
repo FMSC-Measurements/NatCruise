@@ -60,6 +60,8 @@
                             Value="{Binding Tag}" />
                     <Setter Property="HorizontalContentAlignment"
                             Value="Left" />
+                    <Setter Property="IsEnabled"
+                            Value="{Binding IsEnabled}" />
                 </Style>
             </TabControl.Resources>
         </TabControl>
