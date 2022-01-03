@@ -84,7 +84,7 @@
 
                 <ComboBox x:Name="_treeFieldCombobox"
                           VerticalAlignment="Stretch"
-                          ItemsSource="{Binding TreeFields}" />
+                          ItemsSource="{Binding AvalibleTreeFields}" />
                 <Button Style="{StaticResource AddButton}"
                         Grid.Column="1"
                         Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"

@@ -78,7 +78,11 @@ namespace NatCruise.Design.ViewModels
         public IEnumerable<TreeField> TreeFields
         {
             get => _treeFields;
-            set => SetProperty(ref _treeFields, value);
+            set
+            {
+                SetProperty(ref _treeFields, value);
+                RaisePropertyChanged(nameof(AvalibleTreeFields));
+            }
         }
 
         private class TreeFieldComparer : IEqualityComparer<TreeField>
@@ -262,6 +266,7 @@ namespace NatCruise.Design.ViewModels
         public void AddTreeField(TreeField tf)
         {
             if (tf == null) { return; }
+            if(FieldSetups.Any(x => x.Field.Field == tf.Field)) { return; }
             var newtfs = new TreeFieldSetup()
             {
                 Field = tf,
