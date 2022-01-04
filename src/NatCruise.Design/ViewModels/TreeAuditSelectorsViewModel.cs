@@ -76,8 +76,14 @@ namespace NatCruise.Design.ViewModels
         public IEnumerable<Product> ProductOptions
         {
             get => _productOptions;
-            set => SetProperty(ref _productOptions, value);
+            set
+            {
+                SetProperty(ref _productOptions, value);
+                RaisePropertyChanged(nameof(ProductCodeOptions));
+            }
         }
+
+        public IEnumerable<string> ProductCodeOptions => ProductOptions?.Select(x => x.ProductCode).ToArray();
 
         public override void Load()
         {
