@@ -160,6 +160,7 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterForNavigation<StratumTemplateListView>();
             containerRegistry.RegisterForNavigation<TreeFieldsView>();
             containerRegistry.RegisterForNavigation<LogFieldsView>();
+            containerRegistry.RegisterForNavigation<DesignChecksView>();
 
 
             // register validators

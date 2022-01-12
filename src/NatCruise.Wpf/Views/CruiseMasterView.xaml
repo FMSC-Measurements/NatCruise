@@ -66,6 +66,8 @@
                     Click="_treeFieldsButton_Click" />
             <Button Content="Log Fields"
                     Click="_logFieldsButton_Click" />
+            <Button Content="Design Checks"
+                    Click="_designChecks_Click" />
 
         </StackPanel>
 

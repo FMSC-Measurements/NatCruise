@@ -126,5 +126,11 @@ namespace NatCruise.Wpf.Services
             RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(LogFieldsView));
             return Task.CompletedTask;
         }
+
+        public Task ShowDesignChecks()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(DesignChecksView));
+            return Task.CompletedTask;
+        }
     }
 }
