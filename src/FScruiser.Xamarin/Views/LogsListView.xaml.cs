@@ -7,6 +7,7 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Xamarin.CommunityToolkit.Markup;
+using FScruiser.XF.Util;
 
 namespace FScruiser.XF.Views
 {
@@ -15,6 +16,8 @@ namespace FScruiser.XF.Views
     {
         private const int COLUMN_COUNT = 3;
         private const int error_col_width = 50;
+        private const int menu_col_width = 20;
+
         private static readonly IValueConverter _greaterThanZeroConverter =
             new ComparisonConverter<int>()
             {
@@ -52,7 +55,7 @@ namespace FScruiser.XF.Views
             }
         }
 
-        private static ViewCell CreateViewCellFromLogFields(IEnumerable<LogFieldSetup> fields)
+        private View CreateViewCellFromLogFields(IEnumerable<LogFieldSetup> fields)
         {
             var grid = new Grid() { Padding = 5 };
             for (int i = 0; i < COLUMN_COUNT; i++)
@@ -61,6 +64,9 @@ namespace FScruiser.XF.Views
             }
 
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = error_col_width });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = Constants.UI.MinTouchableWidth });
+
+            //grid.RowDefinitions.Add(new RowDefinition { Height = Constants.UI.MinTouchableHeight });
 
             grid.Children.Add(
                 new Label()
@@ -109,18 +115,55 @@ namespace FScruiser.XF.Views
             }
             .Padding(0, 0)
             .Bind(Frame.IsVisibleProperty, "ErrorCount", converter: _greaterThanZeroConverter)
-            .Column(COLUMN_COUNT + 1)
+            .Column(COLUMN_COUNT)
             .Row(0);
 
             grid.Children.Add(errorCountIndicator);
 
-            var viewCell = new ViewCell
+            var logMenuButton = new ImageButton
             {
-                View = grid
-            };
+                Source = new FileImageSource { File = "ic_more_vert_black_24dp.png" }
+            }
+                .Column(COLUMN_COUNT + 1)
+                .Row(0)
+                .RowSpan(2)
+                .Height(Constants.UI.MinTouchableHeight)
+                .Width(Constants.UI.MinTouchableWidth);
+            logMenuButton.BackgroundColor = Color.Transparent;
+            logMenuButton.Clicked += LogMenuButton_Clicked;
+            grid.Children.Add(logMenuButton);
 
-            return viewCell;
+            grid.GestureRecognizers.Add(
+                new TapGestureRecognizer()
+                    .BindCommand(path: nameof(View.BindingContext) + "." + nameof(LogsListViewModel.EditLogCommand),
+                    source: this)
+                    .Bind(TapGestureRecognizer.CommandParameterProperty, path: ".")
+                );
+
+            var swipeView = new SwipeView
+            {
+                IsEnabled = false,
+                LeftItems = new SwipeItems(new[]
+                {
+                    new SwipeItem {Text = "Delete", BackgroundColor = Color.Red }
+                    .Bind(SwipeItem.CommandProperty, path: nameof(View.BindingContext) + "." + nameof(LogsListViewModel.DeleteLogCommand), source: this)
+                    .Bind(SwipeItem.CommandParameterProperty, path: ".")
+                })
+
+            };
+            swipeView.Content = grid;
+
+
+            return swipeView;
+
+            void LogMenuButton_Clicked(object sender, System.EventArgs e)
+            {
+                var swipeview = ((Element)sender).GetAncestor<SwipeView>();
+                swipeview.Open(OpenSwipeItem.LeftItems);
+            }
         }
+
+        
 
         /// <summary>
         /// Gets or sets the <see cref="LogFields" /> property. This is a bindable property.
@@ -144,7 +187,7 @@ namespace FScruiser.XF.Views
 
             this.SetBinding(logFieldsProperty, "LogFields");
 
-            _logListView.ItemTapped += _logListView_ItemTapped;
+            //_logListView. += _logListView_ItemTapped;
 
 
         }
