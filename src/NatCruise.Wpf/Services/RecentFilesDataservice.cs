@@ -20,8 +20,10 @@ namespace NatCruise.Wpf.Services
         {
             filePath = Path.GetFullPath(filePath);
 
-            var recentFiles = GetRecentFiles().Select(x => Path.GetFullPath(x));
-            recentFiles = recentFiles.Union(new[] { filePath });
+            var recentFiles = GetRecentFiles().Select(x => Path.GetFullPath(x)).ToList();
+            recentFiles.RemoveAll(x => string.Equals(x, filePath, StringComparison.OrdinalIgnoreCase));
+            recentFiles.Add(filePath);
+
             Settings.RecentFiles = String.Join(",", recentFiles.ToArray());
             Settings.Save();
         }
