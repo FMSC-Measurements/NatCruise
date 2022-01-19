@@ -42,7 +42,9 @@ namespace NatCruise.Wpf.Views
                 if (designChecks.Any(x => x.Level == "Error"))
                 {
                     var dialogService = Container.Resolve<IDialogService>();
-                    if (!dialogService.AskYesNoAsync("Cruise Has Design Error. Do You Want To Exit?", "", defaultNo: true).Result)
+                    if (!dialogService.AskYesNoAsync(
+@"Cruise Has Design Errors.
+See Design Checks Page For Details.", "Do You Want To Exit?", defaultNo: true).Result)
                     {
                         e.Cancel = true;
                     }
