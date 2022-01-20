@@ -61,10 +61,13 @@ namespace NatCruise
 
             setter.Invoke(model, value);
 
-            var selector = ValidatorOptions.Global.ValidatorSelectors.MemberNameValidatorSelectorFactory.Invoke(new[] { propName, });
-            var results = Validator.Validate(new ValidationContext<TModel>(model, new FluentValidation.Internal.PropertyChain(), selector));
+            // we need to validate all properties just incase there are any validation rules
+            // that are dependant on the set property, also we don't want to invoke the validated
+            // action if another validation rule fails
+            var results = Validator.Validate(new ValidationContext<TModel>(model));
+            var errorDict = results.Errors.ToCollectionDictionary(x => x.PropertyName);
+            Errors = errorDict;
 
-            Errors[propName] = results.Errors;
             RaiseErrorsChanged(propName);
 
             if(false == results.Errors.Any(x => x.Severity == Severity.Error))
@@ -83,7 +86,9 @@ namespace NatCruise
             {
                 Errors = null;
             }
-            
+            RaisePropertyChanged(nameof(HasErrors));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(null));
+
         }
     }
 }

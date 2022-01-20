@@ -81,7 +81,26 @@ namespace NatCruise.Design.ViewModels
         public string SampleGroupCode
         {
             get => SampleGroup?.SampleGroupCode;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SampleGroupCode = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                var origValue = SampleGroup?.SampleGroupCode;
+
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SampleGroupCode = x, sg => UpdateSampleGroupCode(sg));
+
+                void UpdateSampleGroupCode(SampleGroup sg)
+                {
+                    try
+                    {
+                        SampleGroupDataservice.UpdateSampleGroupCode(sg);
+                    }
+                    catch (FMSC.ORM.UniqueConstraintException)
+                    {
+                        SampleGroup.SampleGroupCode = origValue;
+                        RaisePropertyChanged(nameof(SampleGroupCode));
+                        //DialogService.ShowNotification("Unit Code Already Exists");
+                    }
+                }
+            }
         }
 
         public string Description

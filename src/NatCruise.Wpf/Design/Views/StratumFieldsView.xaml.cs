@@ -1,4 +1,5 @@
 ﻿using NatCruise.Design.Models;
+using NatCruise.Design.ViewModels;
 using Prism.Common;
 using Prism.Regions;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ namespace NatCruise.Design.Views
         {
             var context = (ObservableObject<object>)sender;
             var selectedStratum = (Stratum)context.Value;
-            RegionManager.SetRegionContext(_stratumFieldsRegion, selectedStratum);
+            (DataContext as StratumFieldsViewModel).Stratum = selectedStratum;
         }
     }
 }

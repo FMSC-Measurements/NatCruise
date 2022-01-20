@@ -14,16 +14,19 @@ namespace NatCruise.Design.Validation
         {
             RuleFor(x => x.CuttingUnitCode)
                 .NotEmpty()
-                .WithSeverity(Severity.Error);
+                .Matches("^[a-zA-Z0-9]+$")
+                .WithSeverity(Severity.Error)
+                .WithMessage("Cutting Unit Code Should Only Contain Numbers and Letters");
 
             RuleFor(x => x.Area)
                 .Must(x => x > 0)
-                .WithMessage("Cutting Unit Area is 0")
+                .WithMessage("Cutting Unit Area Should Be Grater Than 0")
                 .WithSeverity(Severity.Info);
 
             RuleFor(x => x.Description)
                 .NotEmpty()
-                .WithSeverity(Severity.Info);
+                .WithSeverity(Severity.Info)
+                .WithMessage("Cutting Unit Description is Recommended");
 
         }
     }

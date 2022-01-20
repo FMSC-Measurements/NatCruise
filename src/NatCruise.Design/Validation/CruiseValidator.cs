@@ -14,15 +14,19 @@ namespace NatCruise.Design.Validation
         {
             RuleFor(x => x.CruiseNumber)
                 .NotEmpty()
-                .WithSeverity(Severity.Error);
+                .Matches("^[a-zA-Z0-9]+$")
+                .WithSeverity(Severity.Error)
+                .WithMessage("Cruise Number Should Only Contain Numbers and Letters");
 
             RuleFor(x => x.Purpose)
                 .NotEmpty()
-                .WithSeverity(Severity.Error);
+                .WithSeverity(Severity.Error)
+                .WithMessage("Cruise Purpose Should Not Be Blank");
 
             RuleFor(x => x.DefaultUOM)
                 .NotEmpty()
-                .WithSeverity(Severity.Error);
+                .WithSeverity(Severity.Error)
+                .WithMessage("Default UOM Should Not Be Blank");
         }
     }
 }

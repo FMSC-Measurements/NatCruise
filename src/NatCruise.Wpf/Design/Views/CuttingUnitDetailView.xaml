@@ -10,110 +10,97 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="433.721"
+             VerticalAlignment="Top"
+             HorizontalAlignment="Left"
              IsEnabled="{Binding CuttingUnit, Converter={StaticResource NotNullConverter}}">
 
-    <Grid VerticalAlignment="Stretch"
-          HorizontalAlignment="Stretch"
-          Background="White">
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical"
+                    Background="{StaticResource ControlBackgroundBrush}">
+            <StackPanel.Resources>
+                <ResourceDictionary>
+                    <Style TargetType="TextBox"
+                           BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Setter Property="Margin"
+                                Value="0,0,0,10" />
+                        <Setter Property="Width"
+                                Value="50" />
+                        <Setter Property="HorizontalAlignment"
+                                Value="Left" />
+                    </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="HorizontalAlignment"
+                                Value="Right" />
+                    </Style>
+                    <Style TargetType="ComboBox"
+                           BasedOn="{StaticResource {x:Type ComboBox}}">
+                        <Setter Property="Margin"
+                                Value="0,0,0,10" />
+                    </Style>
 
-        <Grid.Resources>
-            <ResourceDictionary>
-                <Style TargetType="TextBox"
-                       BasedOn="{StaticResource {x:Type TextBox}}">
-                    <Setter Property="Margin"
-                            Value="0,0,0,10" />
-                    <Setter Property="Width"
-                            Value="50" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                </Style>
-                <Style TargetType="Label">
-                    <Setter Property="HorizontalAlignment"
-                            Value="Right" />
-                </Style>
-                <Style TargetType="ComboBox"
-                       BasedOn="{StaticResource {x:Type ComboBox}}">
-                    <Setter Property="Margin"
-                            Value="0,0,0,10" />
-                </Style>
+
+                </ResourceDictionary>
+            </StackPanel.Resources>
 
 
-            </ResourceDictionary>
-        </Grid.Resources>
+            <!-- Unit Code -->
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Code"
+                       Width="123" />
+                <TextBox Text="{Binding CuttingUnitCode}"
+                         MaxLength="{x:Static dsgn:Constants.UNITCODE_MAXLENGTH}" />
+            </StackPanel>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="60" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+            <!-- Description -->
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Description"
+                       Width="123" />
+                <TextBox Margin="0,0,0,10"
+                         Width="100"
+                         Text="{Binding Description}"
+                         TextWrapping="Wrap" />
+            </StackPanel>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+            <!-- Area -->
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Area"
+                       Width="123" />
 
-        <Label Grid.Row="0"
-               Grid.Column="0"
-               Content="Code:" />
-        <TextBox Grid.Row="0"
-                 Grid.Column="1"
-                 Text="{Binding CuttingUnitCode}"
-                 MaxLength="{x:Static dsgn:Constants.UNITCODE_MAXLENGTH}" />
+                <TextBox Text="{Binding Area}" />
+            </StackPanel>
 
-        <Label Grid.Row="1"
-               Content="Description:" />
-        <TextBox Grid.Row="1"
-                 Grid.Column="1"
-                 Margin="0,0,0,10"
-                 Width="100"
-                 Text="{Binding Description}"
-                 TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Logging Method"
+                       Width="123" />
+                <ComboBox SelectedValue="{Binding LoggingMethod}"
+                          ItemsSource="{Binding LoggingMethodOptions}"
+                          SelectedValuePath="LoggingMethodCode" />
+            </StackPanel>
 
-        <Label Grid.Row="2"
-               Grid.Column="0"
-               Content="Area:" />
+            <!-- Payment Unit -->
+            <StackPanel Orientation="Horizontal">
+                <Label Content="PaymentUnit"
+                       Width="123" />
+                <TextBox Text="{Binding PaymentUnit}" />
+            </StackPanel>
 
-        <TextBox Grid.Row="2"
-                 Grid.Column="1"
-                 Text="{Binding Area}" />
+            <!-- Rx -->
+            <!--<StackPanel Orientation="Horizontal">
+                <Label Content="Rx"
+                       Width="123" />
+                <TextBox Text="{Binding Rx}" />
+            </StackPanel>-->
 
-        <Label Grid.Row="3"
-               Grid.Column="0"
-               Content="Logging Method:" />
-        <ComboBox Grid.Row="3"
-                  Grid.Column="1"
-                  SelectedValue="{Binding LoggingMethod}"
-                  ItemsSource="{Binding LoggingMethodOptions}"
-                  SelectedValuePath="LoggingMethodCode" />
+            <!-- Remarks -->
+            <StackPanel Orientation="Vertical">
+                <Label Content="Remarks"
+                       HorizontalAlignment="Left" />
+                <TextBox Text="{Binding Remarks}"
+                         Height="100"
+                         Width="300" />
+            </StackPanel>
 
-        <Label Grid.Row="4"
-               Grid.Column="0"
-               Content="PaymentUnit" />
-        <TextBox Grid.Row="4"
-                 Grid.Column="1"
-                 Text="{Binding PaymentUnit}" />
+        </StackPanel>
 
-        <Label Grid.Row="5"
-               Grid.Column="0"
-               Content="Rx" />
-        <TextBox Grid.Row="5"
-                 Grid.Column="1"
-                 Text="{Binding Rx}" />
-
-        <Label Grid.Row="6"
-               Grid.Column="0"
-               Content="Remarks" />
-        <TextBox Grid.Row="7"
-                 Grid.Column="0"
-                 Grid.ColumnSpan="3"
-                 Text="{Binding Remarks}"
-                 Height="100"
-                 Width="300" />
-    </Grid>
+    </ScrollViewer>
 </UserControl>

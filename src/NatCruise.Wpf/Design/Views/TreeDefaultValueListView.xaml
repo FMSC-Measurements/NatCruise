@@ -28,9 +28,8 @@
 
             <StackPanel>
                 <Label Content="Product" />
-                <ComboBox ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependAnyConverter}}"
+                    <ComboBox ItemsSource="{Binding ProductCodeOptions, Converter={StaticResource PrependAnyConverter}}"
                           SelectedValue="{Binding NewTreeDefaultValue.PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}"
-                          SelectedValuePath="ProductCode"
                           Width="75" />
             </StackPanel>
 
@@ -50,9 +49,11 @@
                   ItemsSource="{Binding TreeDefaultValues}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Species"
-                                    Binding="{Binding SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                                    Binding="{Binding SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}"
+                                    IsReadOnly="True"/>
                 <DataGridTextColumn Header="Product"
-                                    Binding="{Binding PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                                    Binding="{Binding PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}" 
+                                    IsReadOnly="True"/>
                 <DataGridTextColumn Header="CreatedBy"
                                     Binding="{Binding CreatedBy}"
                                     Visibility="Collapsed" />

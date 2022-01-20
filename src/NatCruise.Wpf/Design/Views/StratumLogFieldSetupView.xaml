@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
@@ -26,7 +27,8 @@
 
         <Grid Grid.Row="0"
               Grid.Column="0"
-              Grid.ColumnSpan="2">
+              Grid.ColumnSpan="2"
+              Margin="0,0,0,3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition  Width="162" />
                 <ColumnDefinition Width="160" />
@@ -62,6 +64,7 @@
                       ItemsSource="{Binding AvalibleLogFields}" />
             <Button Style="{StaticResource AddButton}"
                     Grid.Column="1"
+                    Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
                     IsEnabled="{Binding SelectedItem, ElementName=_logFieldCombobox, Converter={StaticResource NotNullConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -75,13 +78,13 @@
                     Grid.Column="2"
                     IsEnabled="{Binding SelectedItem, ElementName=_lfsListView, Converter={StaticResource NotNullConverter}}"
                     Command="{Binding RemoveLogFieldCommand}"
-                    CommandParameter="{Binding SelectedItem, ElementName=_lfsListView}" />
+                    CommandParameter="{Binding SelectedItem, ElementName=_lfsListView}"
+                    Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}" />
         </Grid>
         <Border Grid.Row="2"
                 BorderBrush="{StaticResource brush_shade_black_30}"
                 BorderThickness="1">
             <ListBox x:Name="_lfsListView"
-                     
                      SelectionMode="Single"
                      ItemsSource="{Binding FieldSetups}"
                      SelectedItem="{Binding SelectedLogFieldSetup}">

@@ -70,7 +70,7 @@ namespace FScruiser.XF.Util
         public static View MakeGradePicker(LogFieldSetup field)
         {
             var editView = new Entry();
-            ((InputView)editView).Keyboard = Keyboard.Default;
+            ((InputView)editView).Keyboard = Keyboard.Numeric;
             Xamarin.Forms.PlatformConfiguration.AndroidSpecific.Entry.SetImeOptions(editView, Xamarin.Forms.PlatformConfiguration.AndroidSpecific.ImeFlags.Next);
             editView.SetBinding(Entry.TextProperty, $"Log.{field.Field}");
 

@@ -40,72 +40,40 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <WrapPanel Margin="50, 32"
+    <WrapPanel 
                Background="{StaticResource brush_background}">
 
-        <Grid Margin="5">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="103">Code*</Label>
+                <TextBox Text="{Binding StratumCode}"
+                         MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
+            </StackPanel>
 
-            <Grid.Resources>
-                <ResourceDictionary>
-                    <Style TargetType="TextBox"
-                           BasedOn="{StaticResource {x:Type TextBox}}">
-                        <Setter Property="Margin"
-                                Value="0,0,0,10" />
-                        <Setter Property="Width"
-                                Value="50" />
-                        <Setter Property="HorizontalAlignment"
-                                Value="Left" />
-                    </Style>
-                </ResourceDictionary>
-            </Grid.Resources>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="60" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="103">Description</Label>
+                <TextBox Width="100"
+                         Text="{Binding Description}" />
+            </StackPanel>
 
-            <Label Grid.Row="0"
-                   Grid.Column="0">Code*</Label>
-            <TextBox Grid.Row="0"
-                     Grid.Column="1"
-                     Text="{Binding StratumCode}"
-                     MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
+            <StackPanel Orientation="Horizontal">
+                <Label Width="103">Method*</Label>
 
-            <Label Grid.Row="1">Description</Label>
+                <ComboBox SelectedValue="{Binding Method}"
+                          SelectedValuePath="Method"
+                          ItemsSource="{Binding Methods}" />
+            </StackPanel>
 
-            <TextBox Grid.Row="1"
-                     Grid.Column="1"
-                     Width="100"
-                     Text="{Binding Description}" />
+            <StackPanel Orientation="Horizontal">
+                <Label Width="103">Yield Component</Label>
 
-            <Label Grid.Row="2"
-                   Grid.Column="0">Method*</Label>
-
-            <ComboBox Grid.Row="2"
-                      Grid.Column="1"
-                      SelectedValue="{Binding Method}"
-                      SelectedValuePath="Method"
-                      ItemsSource="{Binding Methods}" />
-
-            <Label Grid.Row="5">Yield Component</Label>
-
-            <ComboBox Grid.Row="5"
-                      Grid.Column="1"
-                      ToolTip="Yield Component"
-                      ItemsSource="{Binding YieldComponentOptions}"
-                      SelectedItem="{Binding YieldComponent, FallbackValue='CL'}" />
-
-        </Grid>
+                <ComboBox ToolTip="Yield Component"
+                          ItemsSource="{Binding YieldComponentOptions}"
+                          SelectedItem="{Binding YieldComponent, FallbackValue='CL'}" />
+            </StackPanel>
+        </StackPanel>
 
         <GroupBox Header="Plot Options"
                   Visibility="{Binding IsPlot, Converter={StaticResource IsVisableConverter}}"

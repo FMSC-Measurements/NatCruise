@@ -32,5 +32,6 @@ namespace NatCruise.Design.Services
         Task ShowTreeFields();
 
         Task ShowLogFields();
+        Task ShowDesignChecks();
     }
 }

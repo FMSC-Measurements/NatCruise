@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Wpf.Views"
+             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:controls="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -128,6 +129,7 @@
                                  Height="23"
                                  TextWrapping="Wrap"
                                  Text="{Binding SaleNumber}"
+                                 MaxLength="{x:Static dsgn:Constants.SALENUMBER_MAXLENGTH}"
                                  VerticalAlignment="Top"
                                  Width="120" />
                     </DockPanel>

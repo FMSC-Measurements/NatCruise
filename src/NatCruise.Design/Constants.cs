@@ -6,5 +6,6 @@
         public const int STRATUMCODE_MAXLENGTH = 2;
         public const int SGCODE_MAXLENGTH = 2;
         public const int SPECIESCODE_MAXLENGTH = 6;
+        public const int SALENUMBER_MAXLENGTH = 5;
     }
 }

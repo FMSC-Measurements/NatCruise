@@ -149,13 +149,19 @@ WHERE CruiseID = @CruiseID AND SpeciesCode = @SpeciesCode;",
 
         public void DeleteRuleSelector(TreeAuditRuleSelector tars)
         {
-            Database.Execute2("DELETE FROM TreeAuditRuleSelector WHERE CruiseID = @CruiseID AND SpeciesCode = @SpeciesCode AND PrimaryProduct = @PrimaryProduct AND LiveDead = @LiveDead;",
+            Database.Execute2(
+@"DELETE FROM TreeAuditRuleSelector
+WHERE TreeAuditRuleID = @TreeAuditRuleID
+AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '')
+AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '')
+AND ifnull(LiveDead, '') = ifnull(@LiveDead, '');",
                 new
                 {
                     CruiseID,
                     tars.SpeciesCode,
                     tars.PrimaryProduct,
                     tars.LiveDead,
+                    tars.TreeAuditRuleID,
                 });
         }
 

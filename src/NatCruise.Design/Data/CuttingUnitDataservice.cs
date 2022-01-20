@@ -94,14 +94,41 @@ namespace NatCruise.Design.Data
         {
             Database.Execute2(
 @"UPDATE CuttingUnit SET
-    CuttingUnitCode = @CuttingUnitCode,
     Area = @Area,
     Description = @Description,
     Remarks = @Remarks,
     LoggingMethod = @LoggingMethod,
     PaymentUnit = @PaymentUnit,
-    Rx = @Rx
-WHERE CuttingUnitID = @CuttingUnitID;", unit);
+    Rx = @Rx,
+    ModifiedBy = @DeviceID
+WHERE CuttingUnitID = @CuttingUnitID;",
+            new
+            {
+                unit.CuttingUnitID,
+                unit.Area,
+                unit.Description,
+                unit.Remarks,
+                unit.LoggingMethod,
+                unit.PaymentUnit,
+                unit.Rx,
+                DeviceID,
+            });
+        }
+
+        public void UpdateCuttingUnitCode(CuttingUnit unit)
+        {
+            Database.Execute2(
+@"UPDATE CuttingUnit SET
+    CuttingUnitCode = @CuttingUnitCode,
+    ModifiedBy = @DeviceID
+WHERE CuttingUnitID = @CuttingUnitID;",
+            new
+            {
+                unit.CuttingUnitID,
+                unit.CuttingUnitCode,
+                DeviceID,
+
+            });
         }
     }
 }

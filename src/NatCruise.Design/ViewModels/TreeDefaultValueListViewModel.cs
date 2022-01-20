@@ -1,5 +1,6 @@
 ﻿using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Services;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -21,14 +22,16 @@ namespace NatCruise.Design.ViewModels
         private ICommand _addNewTreeDefaultValueCommand;
         private ICommand _deleteTreeDefaultValueCommand;
 
-        public TreeDefaultValueListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupInfoDataservice)
+        public TreeDefaultValueListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupInfoDataservice, IDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             SetupDataservice = setupInfoDataservice ?? throw new ArgumentNullException(nameof(setupInfoDataservice));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         public ITemplateDataservice TemplateDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
+        public IDialogService DialogService { get; }
 
         public ICommand AddNewTreeDefaultValueCommand => _addNewTreeDefaultValueCommand ?? new DelegateCommand(AddNewTreeDefaultValue);
         public ICommand DeleteTreeDefaultValueCommand => _deleteTreeDefaultValueCommand ?? new DelegateCommand<TreeDefaultValue>(DeleteTreeDefaultValue);
@@ -77,18 +80,31 @@ namespace NatCruise.Design.ViewModels
         public IEnumerable<Product> ProductOptions
         {
             get => _productOptions;
-            set => SetProperty(ref _productOptions, value);
+            set
+            {
+                SetProperty(ref _productOptions, value);
+                RaisePropertyChanged(nameof(ProductCodeOptions));
+            }
         }
+
+        public IEnumerable<string> ProductCodeOptions => ProductOptions?.Select(x => x.ProductCode).ToArray();
 
         public void AddNewTreeDefaultValue()
         {
             var newTDV = NewTreeDefaultValue;
             if(newTDV == null) { return; }
 
-            TemplateDataservice.AddTreeDefaultValue(newTDV);
-            TreeDefaultValues.Add(newTDV);
-            newTDV.PropertyChanged += TreeDefaultValue_PropertyChanged;
-            NewTreeDefaultValue = new TreeDefaultValue();
+            try
+            {
+                TemplateDataservice.AddTreeDefaultValue(newTDV);
+                TreeDefaultValues.Add(newTDV);
+                newTDV.PropertyChanged += TreeDefaultValue_PropertyChanged;
+                NewTreeDefaultValue = new TreeDefaultValue();
+            }
+            catch (FMSC.ORM.UniqueConstraintException)
+            {
+                DialogService.ShowNotification("Tree Default Already Exists");
+            }
         }
 
         public void DeleteTreeDefaultValue(TreeDefaultValue tdv)

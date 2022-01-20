@@ -20,6 +20,7 @@ namespace FScruiser.XF.ViewModels
         private ObservableCollection<Log> _logs;
         private IEnumerable<LogFieldSetup> _logFields;
         private int? _treeNumber;
+        private ICommand _deleteLogCommand;
 
         public int? TreeNumber
         {
@@ -45,6 +46,9 @@ namespace FScruiser.XF.ViewModels
         protected ICruiseNavigationService NavigationService { get; }
 
         public ICommand AddLogCommand => _addLogCommand ?? (_addLogCommand = new Command(ShowAddLogPage));
+
+        public ICommand DeleteLogCommand => _deleteLogCommand ??= new Command<Log>(DeleteLog);
+        
 
         public ICommand EditLogCommand => _editLogCommand ?? (_editLogCommand = new Command<Log>(ShowEditLogPage));
 
@@ -73,6 +77,13 @@ namespace FScruiser.XF.ViewModels
 
             Logs = LogDataservice.GetLogs(tree_guid).ToObservableCollection()
                 ?? new ObservableCollection<Log>();
+        }
+
+        public void DeleteLog(Log log)
+        {
+            if(log is null) { return; }
+            LogDataservice.DeleteLog(log.LogID);
+            Logs.Remove(log);
         }
 
         private void ShowAddLogPage(object obj)

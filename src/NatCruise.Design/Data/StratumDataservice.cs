@@ -53,23 +53,23 @@ namespace NatCruise.Design.Data
     @YieldComponent,
     @FixCNTField,
     @DeviceID
-);",        new
-            {
-                CruiseID,
-                stratum.StratumID,
-                stratum.StratumCode,
-                stratum.Description,
-                stratum.Method,
-                stratum.BasalAreaFactor,
-                stratum.FixedPlotSize,
-                stratum.KZ3PPNT,
-                stratum.SamplingFrequency,
-                stratum.HotKey,
-                stratum.FBSCode,
-                stratum.YieldComponent,
-                stratum.FixCNTField,
-                DeviceID,
-            });
+);", new
+{
+    CruiseID,
+    stratum.StratumID,
+    stratum.StratumCode,
+    stratum.Description,
+    stratum.Method,
+    stratum.BasalAreaFactor,
+    stratum.FixedPlotSize,
+    stratum.KZ3PPNT,
+    stratum.SamplingFrequency,
+    stratum.HotKey,
+    stratum.FBSCode,
+    stratum.YieldComponent,
+    stratum.FixCNTField,
+    DeviceID,
+});
         }
 
         public void AddStratumToCuttingUnit(string cuttingUnitCode, string stratumCode)
@@ -112,7 +112,7 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
             return Database.From<Stratum>().Query();
         }
 
-        
+
 
         public void RemoveStratumFromCuttingUnit(string cuttingUnitCode, string stratumCode)
         {
@@ -138,8 +138,39 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
     SamplingFrequency = @SamplingFrequency,
     FBSCode = @FBSCode,
     YieldComponent = @YieldComponent,
-    FixCNTField = @FixCNTField
-WHERE StratumID = @StratumID;", stratum);
+    FixCNTField = @FixCNTField,
+    ModifiedBy = @DeviceID
+WHERE StratumID = @StratumID;",
+            new
+            {
+                stratum.StratumID,
+                stratum.Description,
+                stratum.Method,
+                stratum.BasalAreaFactor,
+                stratum.FixedPlotSize,
+                stratum.KZ3PPNT,
+                stratum.SamplingFrequency,
+                stratum.FBSCode,
+                stratum.YieldComponent,
+                DeviceID,
+            });
+        }
+
+        public void UpdateStratumCode(Stratum stratum)
+        {
+            if (stratum is null) { throw new ArgumentNullException(nameof(stratum)); }
+
+            Database.Execute2(
+@"UPDATE Stratum SET
+    StratumCode = @StratumCode,
+    ModifiedBy = @DeviceID
+WHERE StratumID = @StratumID;",
+            new
+            {
+                stratum.StratumID,
+                stratum.StratumCode,
+                DeviceID,
+            });
         }
 
         public bool HasTreeCounts(string unitCode, string stratum)

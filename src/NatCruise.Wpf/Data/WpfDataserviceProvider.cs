@@ -72,6 +72,10 @@ namespace NatCruise.Data
                 {
                     return new FieldSetupDataservice(database, cruiseID, deviceID);
                 }
+                else if (type == typeof(IDesignCheckDataservice))
+                {
+                    return new DesignCheckDataservice(database, cruiseID, deviceID);
+                }
 
                 return null;
             }
@@ -92,6 +96,7 @@ namespace NatCruise.Data
             containerRegistry.Register<ISubpopulationDataservice>(x => GetDataservice<ISubpopulationDataservice>());
             containerRegistry.Register<ITemplateDataservice>(x => GetDataservice<ITemplateDataservice>());
             containerRegistry.Register<IFieldSetupDataservice>(x => GetDataservice<IFieldSetupDataservice>());
+            containerRegistry.Register<IDesignCheckDataservice>(x => GetDataservice<IDesignCheckDataservice>());
         }
     }
 }

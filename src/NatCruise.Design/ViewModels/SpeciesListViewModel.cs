@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -79,6 +80,9 @@ namespace NatCruise.Design.ViewModels
 
         public void AddSpecies(string speciesCode)
         {
+            speciesCode = speciesCode.Trim();
+            if(Regex.IsMatch(speciesCode, "^[a-zA-Z0-9]+$") is false) { return; }
+
             var speciesList = Species;
             var alreadyExists = speciesList.Any(x => x.SpeciesCode.Equals(speciesCode, StringComparison.OrdinalIgnoreCase));
 
