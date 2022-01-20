@@ -70,7 +70,9 @@ namespace NatCruise.Wpf.ViewModels
 
         public string Title => $"National Cruise System ({AppVersion}-Beta) {CurrentFileName?.Prepend(" - ")}";
 
-        public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles().Select(x => new FileInfo(x));
+        public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles()
+            .Reverse()
+            .Select(x => new FileInfo(x)).ToArray();
 
         public ICommand CreateNewFileCommand => _createNewFileCommand ?? (_createNewFileCommand = new DelegateCommand(CreateNewFile));
 
