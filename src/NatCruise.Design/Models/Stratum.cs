@@ -1,5 +1,6 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 using Prism.Mvvm;
+using System.Collections.Generic;
 
 namespace NatCruise.Design.Models
 {
@@ -17,6 +18,7 @@ namespace NatCruise.Design.Models
         private string _fbsCode;
         private string _yieldComponent;
         private string _fixCNTField;
+        private IEnumerable<string> _errors;
 
         [PrimaryKeyField("Stratum_CN")]
         public int Stratum_CN { get; set; }
@@ -87,6 +89,13 @@ namespace NatCruise.Design.Models
         {
             get => _fixCNTField;
             set => SetProperty(ref _fixCNTField, value);
+        }
+
+        [IgnoreField]
+        public IEnumerable<string> Errors
+        {
+            get => _errors;
+            set => SetProperty(ref _errors, value);
         }
     }
 }

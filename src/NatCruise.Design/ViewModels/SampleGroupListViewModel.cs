@@ -1,10 +1,14 @@
 ﻿using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Design.Validation;
+using NatCruise.Services;
 using Prism.Commands;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
@@ -17,14 +21,19 @@ namespace NatCruise.Design.ViewModels
         private Stratum _stratum;
         private SampleGroup _selectedSampleGroup;
 
-        public SampleGroupListViewModel(IDataserviceProvider datastoreProvider)
+        public SampleGroupListViewModel(IDataserviceProvider datastoreProvider, IDialogService dialogService)
         {
             var sampleGroupDataservice = datastoreProvider.GetDataservice<ISampleGroupDataservice>();
 
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+
+            SampleGroupValidator = new SampleGroupValidator();
         }
 
         protected ISampleGroupDataservice SampleGroupDataservice { get; }
+        public IDialogService DialogService { get; }
+        public SampleGroupValidator SampleGroupValidator { get; }
 
         public ICommand AddSampleGroupCommand => _addSampleGroupCommand ??= new DelegateCommand<string>(AddSampleGroup);
         public ICommand RemoveSampleGroupCommand => _removeSampleGroupCommand ??= new DelegateCommand<SampleGroup>(RemoveSampleGroup);
@@ -42,17 +51,53 @@ namespace NatCruise.Design.ViewModels
         public ObservableCollection<SampleGroup> SampleGroups
         {
             get => _sampleGroups;
-            protected set => SetProperty(ref _sampleGroups, value);
+            protected set
+            {
+                if(_sampleGroups != null)
+                {
+                    foreach(var sg in _sampleGroups)
+                    {
+                        sg.PropertyChanged -= samplegroup_PropertyChanged;
+                    }
+                }
+                SetProperty(ref _sampleGroups, value);
+                if(value != null)
+                {
+                    foreach(var sg in value)
+                    {
+                        sg.PropertyChanged += samplegroup_PropertyChanged;
+                    }
+                }
+            }
+        }
+
+        private void samplegroup_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == nameof(SampleGroup.Errors)) { return; }
+            if(sender is SampleGroup sg && sg != null)
+            {
+                ValidateSampeleGroup(sg);
+            }
         }
 
         public SampleGroup SelectedSampleGroup
         {
             get => _selectedSampleGroup;
-            set => SetProperty(ref _selectedSampleGroup, value);
+            set
+            {
+                SetProperty(ref _selectedSampleGroup, value);
+                if(value != null)
+                {
+                    ValidateSampeleGroup(value);
+                }
+            }
         }
 
         public void AddSampleGroup(string code)
         {
+            code = code.Trim();
+            if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$") is false) { return; }
+
             var newSampleGroup = new SampleGroup()
             {
                 SampleGroupCode = code,
@@ -62,9 +107,17 @@ namespace NatCruise.Design.ViewModels
                 DefaultLiveDead = "L",
             };
 
-            SampleGroupDataservice.AddSampleGroup(newSampleGroup);
-            SampleGroups.Add(newSampleGroup);
-            SelectedSampleGroup = newSampleGroup;
+            try
+            {
+                SampleGroupDataservice.AddSampleGroup(newSampleGroup);
+                newSampleGroup.PropertyChanged += samplegroup_PropertyChanged;
+                SampleGroups.Add(newSampleGroup);
+                SelectedSampleGroup = newSampleGroup;
+            }
+            catch (FMSC.ORM.UniqueConstraintException)
+            {
+                DialogService.ShowNotification("Sample Group Code Already Exists");
+            }
         }
 
         public void RemoveSampleGroup(SampleGroup sampleGroup)
@@ -75,6 +128,7 @@ namespace NatCruise.Design.ViewModels
             SampleGroupDataservice.DeleteSampleGroup(sampleGroup);
             var index = sampleGroups.IndexOf(sampleGroup);
             sampleGroups.Remove(sampleGroup);
+            sampleGroup.PropertyChanged -= samplegroup_PropertyChanged;
 
             if (index < 0) { return; }
             if (index <= sampleGroups.Count - 1)
@@ -92,7 +146,16 @@ namespace NatCruise.Design.ViewModels
         {
             if (stratum != null)
             {
-                SampleGroups = new ObservableCollection<SampleGroup>(SampleGroupDataservice.GetSampleGroups(stratum.StratumCode));
+                var sampleGroups = SampleGroupDataservice.GetSampleGroups(stratum.StratumCode).ToArray();
+
+                foreach (var sampleGroup in sampleGroups)
+                {
+                    ValidateSampeleGroup(sampleGroup);
+                }
+
+                SampleGroups = new ObservableCollection<SampleGroup>(sampleGroups);
+
+                
             }
         }
 
@@ -101,6 +164,17 @@ namespace NatCruise.Design.ViewModels
             base.Load();
 
             LoadSampleGroups(Stratum);
+        }
+
+        public void ValidateSampeleGroup(SampleGroup sampleGroup)
+        {
+            if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
+
+            var errors = SampleGroupValidator.Validate(sampleGroup).Errors
+                .Where(x => x.Severity == FluentValidation.Severity.Error)
+                .Select(x => x.ErrorMessage).ToArray();
+
+            sampleGroup.Errors = errors;
         }
     }
 }

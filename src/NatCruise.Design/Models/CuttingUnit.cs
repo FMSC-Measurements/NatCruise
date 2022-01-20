@@ -1,5 +1,6 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 using Prism.Mvvm;
+using System.Collections.Generic;
 
 namespace NatCruise.Design.Models
 {
@@ -13,6 +14,7 @@ namespace NatCruise.Design.Models
         private string _paymentUnit;
         private string _rx;
         private string _remarks;
+        private IEnumerable<string> _errors;
 
         public int CuttingUnit_CN { get; set; }
 
@@ -62,6 +64,13 @@ namespace NatCruise.Design.Models
         {
             get => _rx;
             set => SetProperty(ref _rx, value);
+        }
+
+        [IgnoreField]
+        public IEnumerable<string> Errors
+        {
+            get => _errors;
+            set => SetProperty(ref _errors, value);
         }
     }
 }

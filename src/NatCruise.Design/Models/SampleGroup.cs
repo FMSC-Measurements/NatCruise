@@ -1,5 +1,6 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 using Prism.Mvvm;
+using System.Collections.Generic;
 
 namespace NatCruise.Design.Models
 {
@@ -24,6 +25,7 @@ namespace NatCruise.Design.Models
         private string _sampleSelectorType;
         private bool _useExternalSampler;
         private double _smallFPS;
+        private IEnumerable<string> _errors;
 
         [PrimaryKeyField("SampleGroup_CN")]
         public int SampleGroup_CN { get; set; }
@@ -142,5 +144,12 @@ namespace NatCruise.Design.Models
 
         [Field(PersistanceFlags = PersistanceFlags.Never)]
         public string CruiseMethod { get; set; }
+
+        [IgnoreField]
+        public IEnumerable<string> Errors
+        {
+            get => _errors;
+            set => SetProperty(ref _errors, value);
+        }
     }
 }

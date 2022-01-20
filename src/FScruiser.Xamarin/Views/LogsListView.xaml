@@ -6,15 +6,12 @@
              AutomationProperties.Name="{Binding TreeNumber, StringFormat='{}Tree Number {0} Log List Page'}">
     <ContentPage.Content>
         <StackLayout>
-            <ListView x:Name="_logListView"
+            <CollectionView x:Name="_logListView"
                       ItemsSource="{Binding Logs}"
-                      HasUnevenRows="True"
-                      SeparatorColor="{StaticResource black_12}"
-                      SeparatorVisibility="Default"
-                      CachingStrategy="RecycleElement"
+                      ItemSizingStrategy="MeasureFirstItem"
                       AutomationProperties.Name="Logs List">
                 <!--DataTemplate generated at runtime-->
-            </ListView>
+            </CollectionView>
             <StackLayout Orientation="Horizontal"
                          VerticalOptions="End">
                 <StackLayout.Resources>

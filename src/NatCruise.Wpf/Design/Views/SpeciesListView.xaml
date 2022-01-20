@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
@@ -65,6 +66,8 @@
                      Width="100"
                      MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}" />
             <Button Style="{StaticResource AddButton}"
+                    Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                    Width="32"
                     IsEnabled="{Binding Text, Source={x:Reference _newSpeciesTextBox}, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">

@@ -83,5 +83,10 @@ namespace NatCruise.Wpf.Views
         {
             NavigationService.ShowLogFields();
         }
+
+        private void _designChecks_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.ShowDesignChecks();
+        }
     }
 }

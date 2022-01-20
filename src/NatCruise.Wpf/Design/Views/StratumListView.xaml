@@ -3,6 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
@@ -45,15 +46,6 @@
 
                 <Grid Grid.Row="1"
                       VerticalAlignment="Stretch">
-                    <Grid.Resources>
-                        <Style TargetType="{x:Type Button}"
-                               BasedOn="{StaticResource MetroFlatButton}">
-                            <Setter Property="FontWeight"
-                                    Value="Bold" />
-                            <Setter Property="FontSize"
-                                    Value="16" />
-                        </Style>
-                    </Grid.Resources>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
@@ -70,7 +62,7 @@
                     <Button Grid.Row="0"
                             Grid.Column="1"
                             Style="{StaticResource AddButton}"
-                            Click="Button_Click"
+                            Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
                             IsEnabled="{Binding Text, ElementName=_stratumCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
@@ -84,6 +76,7 @@
                     <Button Grid.Row="0"
                             Grid.Column="2"
                             Style="{StaticResource RemoveButton}"
+                            Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                             Command="{Binding RemoveStratumCommand}"
                             CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}"
                             IsEnabled="{Binding SelectedItem, ElementName=_stratumListView, Converter={StaticResource NotNullConverter}}" />
@@ -96,6 +89,17 @@
                           ItemsSource="{Binding Strata}"
                           SelectedItem="{Binding SelectedStratum}"
                           SelectionMode="Single">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Errors, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                             Value="True">
+                                    <Setter Property="Background"
+                                            Value="{StaticResource brush_listItemError}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Resources>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False"
                                   ColumnHeaderToolTip="Strata">

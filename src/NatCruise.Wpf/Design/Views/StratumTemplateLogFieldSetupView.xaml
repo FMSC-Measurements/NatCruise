@@ -11,7 +11,8 @@
              Background="White"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Tag="Log Fields">
+             Tag="Log Fields"
+             IsEnabled="{Binding StratumTemplate, Converter={StaticResource NotNullConverter}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

@@ -2,10 +2,7 @@
 using FluentValidation;
 using NatCruise.Design.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Design.Validation
 {
@@ -15,7 +12,9 @@ namespace NatCruise.Design.Validation
         {
             RuleFor(x => x.StratumCode)
                 .NotEmpty()
-                .WithSeverity(Severity.Error);
+                .Matches("^[a-zA-Z0-9]+$")
+                .WithSeverity(Severity.Error)
+                .WithMessage("Stratum Code Should Only Contain Numbers and Letters");
 
             RuleFor(x => x.Method)
                 .NotEmpty()
@@ -47,7 +46,8 @@ namespace NatCruise.Design.Validation
 
             RuleFor(x => x.Description)
                 .NotEmpty()
-                .WithSeverity(Severity.Info);
+                .WithSeverity(Severity.Info)
+                .WithMessage("Stratum Description is Recommended");
         }
     }
 }

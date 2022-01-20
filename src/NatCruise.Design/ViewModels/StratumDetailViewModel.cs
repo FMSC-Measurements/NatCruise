@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using NatCruise.Data;
+using NatCruise.Data.Abstractions;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
@@ -19,7 +20,7 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<CruiseMethod> _methods;
         private IEnumerable<TreeField> _treefieldOptions;
 
-        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupDataservice, StratumValidator validator)
+        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupDataservice, ISaleDataservice saleDataservice, StratumValidator validator)
             : base(validator)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
@@ -27,10 +28,25 @@ namespace NatCruise.Design.ViewModels
             var stratumDataservice = dataserviceProvider.GetDataservice<IStratumDataservice>();
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             TemplateDataservice = dataserviceProvider.GetDataservice<ITemplateDataservice>() ?? throw new ArgumentNullException(nameof(TemplateDataservice));
+            SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
 
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
 
-            Methods = SetupDataservice.GetCruiseMethods();
+
+            var cruise = saleDataservice.GetCruise();
+            if(cruise.Purpose == "Recon")
+            {
+                Methods = new[]
+                {
+                    new CruiseMethod { Method = "FIX", FriendlyName = "Fixed Plot", IsPlotMethod = true },
+                    new CruiseMethod { Method = "PNT", FriendlyName = "Point (Variable Plot)", IsPlotMethod= true },
+                };
+            }
+            else
+            {
+                Methods = SetupDataservice.GetCruiseMethods();
+            }
+            
             TreeFieldOptions = TemplateDataservice.GetTreeFields();
 
             //HotKeyOptions = new string[]
@@ -43,6 +59,7 @@ namespace NatCruise.Design.ViewModels
         }
 
         public ITemplateDataservice TemplateDataservice { get; }
+        public ISaleDataservice SaleDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
         protected IStratumDataservice StratumDataservice { get; }
 
@@ -87,7 +104,26 @@ namespace NatCruise.Design.ViewModels
         public string StratumCode
         {
             get => Stratum?.StratumCode;
-            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.StratumCode = x, st => StratumDataservice.UpdateStratum(st));
+            set
+            {
+                var origValue = Stratum?.StratumCode;
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.StratumCode = x, st => UpdateStratumCode(st));
+
+                void UpdateStratumCode(Stratum st)
+                {
+                    try
+                    {
+                        StratumDataservice.UpdateStratumCode(st);
+                        
+                    }
+                    catch (FMSC.ORM.UniqueConstraintException)
+                    {
+                        Stratum.StratumCode = origValue;
+                        RaisePropertyChanged(nameof(StratumCode));
+                        //DialogService.ShowNotification("Stratum Code Already Exists");
+                    }
+                }
+            }
         }
 
         public string Description
