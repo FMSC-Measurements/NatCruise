@@ -28,7 +28,7 @@
                     </ResourceDictionary.MergedDictionaries>-->
                     <!--<Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}"  >-->
                     <Style TargetType="{x:Type Button}"
-                           BasedOn="{StaticResource MetroFlatButton}">
+                           BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                         <Setter Property="Background"
                                 Value="{StaticResource brush_shade_white_12}" />
                         <Setter Property="Foreground"

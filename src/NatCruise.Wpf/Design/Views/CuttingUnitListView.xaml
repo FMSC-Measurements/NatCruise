@@ -4,7 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
@@ -31,7 +31,7 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0"
-                          Background="{StaticResource ControlBackgroundBrush}">
+                          Background="{StaticResource MahApps.Brushes.Control.Background}">
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
