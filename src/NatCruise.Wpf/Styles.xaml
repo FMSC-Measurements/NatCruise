@@ -3,17 +3,15 @@
                     xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     x:Class="NatCruise.Wpf.Styles">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.FlatButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="AddButton"
            TargetType="Button"
-           BasedOn="{StaticResource MetroFlatButton}">
+           BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
         <Setter Property="Foreground"
                 Value="{StaticResource brush_text_dark}" />
         <Setter Property="Background"
@@ -26,7 +24,7 @@
 
     <Style x:Key="RemoveButton"
            TargetType="Button"
-           BasedOn="{StaticResource MetroFlatButton}">
+           BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
         <Setter Property="Foreground"
                 Value="{StaticResource brush_text_dark}" />
         <Setter Property="Background"

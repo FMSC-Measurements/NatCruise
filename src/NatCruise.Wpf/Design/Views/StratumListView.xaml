@@ -5,7 +5,7 @@
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"

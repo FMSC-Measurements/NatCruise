@@ -19,8 +19,7 @@
 
             <!-- Header -->
             <Label Content="Cruise Info"
-                   
-                   Background="{DynamicResource AccentColorBrush}"
+                   Background="{DynamicResource MahApps.Brushes.AccentAccentColorBrush}"
                    HorizontalAlignment="Stretch"
                    Margin="0,0,0,10"
                    FontWeight="Bold"

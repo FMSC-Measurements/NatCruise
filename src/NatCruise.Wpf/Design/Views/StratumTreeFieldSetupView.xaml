@@ -6,7 +6,7 @@
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
@@ -65,7 +65,7 @@
             <Grid Grid.Row="0">
                 <Grid.Resources>
                     <Style TargetType="{x:Type Button}"
-                           BasedOn="{StaticResource MetroFlatButton}">
+                           BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                         <Setter Property="FontWeight"
                                 Value="Bold" />
                         <Setter Property="FontSize"

@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
-             Background="{DynamicResource ControlBackgroundBrush}">
+             Background="{DynamicResource MahApps.Brushes.Control.Background}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="17*" />
