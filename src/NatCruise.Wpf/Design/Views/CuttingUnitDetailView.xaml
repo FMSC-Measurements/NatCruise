@@ -16,7 +16,7 @@
 
     <ScrollViewer>
         <StackPanel Orientation="Vertical"
-                    Background="{StaticResource ControlBackgroundBrush}">
+                    Background="{StaticResource MahApps.Brushes.Control.Background}">
             <StackPanel.Resources>
                 <ResourceDictionary>
                     <Style TargetType="TextBox"
