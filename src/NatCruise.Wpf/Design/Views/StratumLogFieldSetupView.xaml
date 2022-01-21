@@ -6,7 +6,7 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              mc:Ignorable="d"
              Background="White"
