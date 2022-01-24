@@ -11,7 +11,7 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<PublishSingleFile>true</PublishSingleFile>
+		<PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<UseWPF>true</UseWPF>
