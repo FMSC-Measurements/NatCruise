@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.352
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Wpf", "NatCruise.Wpf\NatCruise.Wpf.csproj", "{5ECD0664-39BD-425D-AB54-594FF7B33C11}"
 EndProject
@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		Build_Installer_PC.bat = Build_Installer_PC.bat
+		Build_Publish_PC.cmd = Build_Publish_PC.cmd
 		Build_Release_PC.cmd = Build_Release_PC.cmd
 		Directory.Build.props = Directory.Build.props
 		NuGet.config = NuGet.config
