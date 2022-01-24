@@ -1,120 +1,122 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-    <Version>$(FScruiserVersion)</Version>
-    <!-- Company and ProductName effect where the user.config file use for Setting is stored-->
-    <Company>FMSC</Company>
-    <ProductName>NatCruise</ProductName>
-    <Authors>Benjamin Campbell</Authors>
-    <AssemblyTitle>National Cruise System</AssemblyTitle>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <ApplicationIcon>Resources\cruisetree_setup.ico</ApplicationIcon>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <None Remove="Resources\logs.jpg" />
-  </ItemGroup>
+	<PropertyGroup>
+		<Version>$(FScruiserVersion)</Version>
+		<!-- Company and ProductName effect where the user.config file use for Setting is stored-->
+		<Company>FMSC</Company>
+		<ProductName>NatCruise</ProductName>
+		<Authors>Benjamin Campbell</Authors>
+		<AssemblyTitle>National Cruise System</AssemblyTitle>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\cruisetree_setup.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\fsmeasicon98x56.gif" />
-    <Resource Include="Resources\Icon.bmp">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\logs.jpg" />
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<UseWPF>true</UseWPF>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
+		<ApplicationIcon>Resources\cruisetree_setup.ico</ApplicationIcon>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.0.77" />
-    <PackageReference Include="MahApps.Metro">
-      <Version>2.4.9</Version>
-    </PackageReference>
-    <PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" Version="4.11.0" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>4.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>4.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-    <!--<PackageReference Include="Newtonsoft.Json">
+	<ItemGroup>
+		<None Remove="Resources\logs.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Resources\cruisetree_setup.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\fsmeasicon98x56.gif" />
+		<Resource Include="Resources\Icon.bmp">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\logs.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.0.77" />
+		<PackageReference Include="MahApps.Metro">
+			<Version>2.4.9</Version>
+		</PackageReference>
+		<PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" Version="4.11.0" />
+		<PackageReference Include="Microsoft.AppCenter.Analytics">
+			<Version>4.1.0</Version>
+		</PackageReference>
+		<PackageReference Include="Microsoft.AppCenter.Crashes">
+			<Version>4.1.0</Version>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+		<!--<PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>-->
-    <PackageReference Include="Prism.DryIoc">
-      <Version>8.0.0.1909</Version>
-    </PackageReference>
-    <PackageReference Include="Prism.Wpf">
-      <Version>8.0.0.1909</Version>
-    </PackageReference>
-    <PackageReference Include="Scripty.MsBuild">
-      <Version>0.7.4</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
-  </ItemGroup>
+		<PackageReference Include="Prism.DryIoc">
+			<Version>8.0.0.1909</Version>
+		</PackageReference>
+		<PackageReference Include="Prism.Wpf">
+			<Version>8.0.0.1909</Version>
+		</PackageReference>
+		<PackageReference Include="Scripty.MsBuild">
+			<Version>0.7.4</Version>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
-    <ProjectReference Include="..\NatCruise.Design\NatCruise.Design.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
+		<ProjectReference Include="..\NatCruise.Design\NatCruise.Design.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Design\Views\CuttingUnitDetailView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Design\Views\CuttingUnitListView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Design\Views\CuttingUnitStrataView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Design\Views\SaleView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Design\Views\SampleGroupDetailView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Design\Views\SampleGroupListView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Design\Views\StratumDetailView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Design\Views\StratumListView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Design\Views\SubpopulationListView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Design\Views\CuttingUnitDetailView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Design\Views\CuttingUnitListView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Design\Views\CuttingUnitStrataView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Design\Views\SaleView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Design\Views\SampleGroupDetailView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Design\Views\SampleGroupListView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Design\Views\StratumDetailView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Design\Views\StratumListView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Design\Views\SubpopulationListView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Cruise\ViewModels\" />
-    <Folder Include="Cruise\Views\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Cruise\ViewModels\" />
+		<Folder Include="Cruise\Views\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
 
 </Project>

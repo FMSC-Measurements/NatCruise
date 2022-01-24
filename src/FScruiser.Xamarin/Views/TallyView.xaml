@@ -37,7 +37,7 @@
                                 Focused="_tallyFeedListView_Focused"
                                 SelectionMode="None"
                                 ItemSizingStrategy="MeasureFirstItem"
-                                ItemsUpdatingScrollMode="KeepScrollOffset"
+                                ItemsUpdatingScrollMode="KeepLastItemInView"
                                 AutomationProperties.IsInAccessibleTree="True"
                                 AutomationProperties.Name="Tally Feed">
 
