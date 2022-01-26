@@ -11,9 +11,7 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
-		<TargetFramework>net6.0-windows</TargetFramework>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<TargetFramework>net472</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<ApplicationIcon>Resources\cruisetree_setup.ico</ApplicationIcon>
