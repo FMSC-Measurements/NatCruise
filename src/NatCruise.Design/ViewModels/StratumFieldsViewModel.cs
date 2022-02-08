@@ -28,6 +28,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 _stratum = value;
+                RaisePropertyChanged(nameof(Stratum));
                 LogFieldsViewModel.Stratum = value;
                 TreeFieldsViewModel.Stratum = value;
             }

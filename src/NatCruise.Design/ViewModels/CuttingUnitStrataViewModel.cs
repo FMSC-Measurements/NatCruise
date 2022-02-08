@@ -1,8 +1,9 @@
 ﻿using NatCruise.Data;
-using NatCruise.Services;
-using NatCruise.Util;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Design.Util;
+using NatCruise.Services;
+using NatCruise.Util;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
