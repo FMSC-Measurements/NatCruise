@@ -152,6 +152,7 @@ WHERE StratumID = @StratumID;",
                 stratum.SamplingFrequency,
                 stratum.FBSCode,
                 stratum.YieldComponent,
+                stratum.FixCNTField,
                 DeviceID,
             });
         }

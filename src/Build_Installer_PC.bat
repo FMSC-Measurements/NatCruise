@@ -16,7 +16,7 @@ SET parent=%~dp0
 
 IF NOT DEFINED verStamp (SET verStamp=%date:~10,4%%date:~4,2%%date:~7,2%)
 
-CALL %parent%/Build_Publish_PC.cmd
+CALL %parent%/Build_Release_PC.cmd
 
 IF /I "%ERRORLEVEL%" NEQ "0" (
 ECHO build failed

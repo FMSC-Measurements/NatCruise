@@ -1,5 +1,5 @@
-#define MsBuildOutputDir ".\bin\Release\net6.0-windows\win-x64\publish"
-#define VERSION "0.40"
+#define MsBuildOutputDir ".\bin\Release\net472"
+#define VERSION "0.40.2"
 
 #define APP "National Cruise System"
 #define EXEName "NatCruise.Wpf.exe"
@@ -61,19 +61,17 @@ Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:Ad
 ; need to update the paths below after the solution files and folders are updated.
 Source: "{#MsBuildOutputDir}\*.exe"; DestDir: {app}; Flags: ignoreversion;
 Source: "{#MsBuildOutputDir}\*.dll"; DestDir: {app}; Flags: ignoreversion;
-Source: "{#MsBuildOutputDir}\NatCruise.Wpf.dll.config"; DestDir: {app}; Flags: ignoreversion;
-;Source: "{#MsBuildOutputDir}\runtimes\win-x64\native\*.dll"; DestDir: {app}\runtimes\win-x64\native; Flags: ignoreversion;
-;Source: "{#MsBuildOutputDir}\runtimes\win-x86\native\*.dll"; DestDir: {app}\runtimes\win-x86\native; Flags: ignoreversion;
+Source: "{#MsBuildOutputDir}\*.exe.config"; DestDir: {app}; Flags: ignoreversion;
+Source: "{#MsBuildOutputDir}\runtimes\win-x64\native\*.dll"; DestDir: {app}\runtimes\win-x64\native; Flags: ignoreversion;
+Source: "{#MsBuildOutputDir}\runtimes\win-x86\native\*.dll"; DestDir: {app}\runtimes\win-x86\native; Flags: ignoreversion;
 ;Source: "..\..\Template Files\V2\*.cut"; DestDir: {app}\Templates; Flags: ignoreversion deleteafterinstall; Tasks: deployV2Templates
 ;Source: "..\..\Template Files\V3\*.cut"; DestDir: {app}\Templates; Flags: ignoreversion deleteafterinstall; Tasks: deployV3Templates
 
 [InstallDelete]
-;remove pre netcore app config file
-Type: files; Name: "{app}\NatCruise.Wpf.exe.config"
-;remove old sqlite native dirs
-Type: filesandordirs; Name: "{app}\runtimes"
-;remove old dlls
+;clean any files from the net 6.0 release
+Type: files; Name: "{app}\*.exe"
 Type: files; Name: "{app}\*.dll"
+Type: files; Name: "{app}\NatCruise.Wpf.dll.config"
 
 
 [Icons]
