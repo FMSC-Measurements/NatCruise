@@ -171,7 +171,7 @@ namespace FScruiser.XF.ViewModels
             var treeID = tree?.TreeID;
             if (treeID != null)
             {
-                var treeVM = ContainerProvider.Resolve<TreeEditViewModel>();
+                var treeVM = ContainerProvider.Resolve<TreeEditViewModel>((typeof(ICruiseNavigationService), NavigationService));
                 treeVM.UseSimplifiedTreeFields = true;
                 treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
                 treeVM.Load();
