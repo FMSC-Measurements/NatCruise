@@ -197,8 +197,7 @@ namespace FScruiser.XF.ViewModels
                     Tree.TreeNumber = value;
                     OnTreeNumberChanged(oldValue, value);
                 }
-                else
-                { RaisePropertyChanged(nameof(TreeNumber)); } // raise property changed to reset value in view
+                RaisePropertyChanged(nameof(TreeNumber));
             }
         }
 
@@ -653,8 +652,7 @@ namespace FScruiser.XF.ViewModels
 
             if (tree != null)
             {
-                if (ValidateSampleGroupCode(tree.SampleGroupCode)
-                    && ValidateSpecies(tree.SpeciesCode))
+                if (ValidateSampleGroupCode(tree.SampleGroupCode))
                 {
                     try
                     {
