@@ -18,13 +18,22 @@ namespace FScruiser.XF.ViewModels
         private Command<Plot> _editPlotCommand;
         private ICommand _deletePlotCommand;
         private ICommand _showTallyPlotCommand;
-        private string _unitCode;
+        private CuttingUnit _cuttingUnit;
 
-        public string UnitCode
+        public string UnitCode => CuttingUnit?.CuttingUnitCode;
+
+        public CuttingUnit CuttingUnit
         {
-            get => _unitCode;
-            set => SetProperty(ref _unitCode, value);
+            get => _cuttingUnit;
+            protected set
+            {
+                SetProperty(ref _cuttingUnit, value);
+                RaisePropertyChanged(nameof(UnitCode));
+                RaisePropertyChanged(nameof(Title));
+            }
         }
+
+        public string Title => $"Unit {UnitCode} - {CuttingUnit?.Description} Plots";
 
         public bool HasFixCNTStrata { get; set; }
 
@@ -32,6 +41,7 @@ namespace FScruiser.XF.ViewModels
         public IPageDialogService DialogService { get; }
 
         protected IPlotDataservice PlotDataservice { get; }
+        public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         protected ICruiseNavigationService NavigationService { get; }
 
         public ICommand AddPlotCommand => _addPlotCommand ?? (_addPlotCommand = new Command(AddPlot));
@@ -41,9 +51,11 @@ namespace FScruiser.XF.ViewModels
 
         public PlotListViewModel(ICruiseNavigationService navigationService,
             IPageDialogService dialogService,
-            IPlotDataservice plotDataservice)
+            IPlotDataservice plotDataservice,
+            ICuttingUnitDataservice cuttingUnitDataservice)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
+            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
@@ -52,7 +64,8 @@ namespace FScruiser.XF.ViewModels
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-            var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
+            var unitCode = parameters.GetValue<string>(NavParams.UNIT);
+            var cuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
             RefreshPlots();
         }
 

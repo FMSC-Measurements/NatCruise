@@ -91,14 +91,17 @@ namespace FScruiser.XF.ViewModels
         public ICommand SelectTallyEntryCommand => new Command<object>(SelectTallyEntry);
         //public ICommand ChangeSelectedTallyEntryCommand => new Command(ChangeSelectedTallyEntry);
 
-        public string UnitCode
+        public CuttingUnit CuttingUnit
         {
-            get => _unitCode;
-            set
+            get => _cuttingUnit;
+            protected set
             {
-                _unitCode = value;
+                SetProperty(ref _cuttingUnit, value);
+                RaisePropertyChanged(nameof(UnitCode));
             }
         }
+
+        public string UnitCode => CuttingUnit.CuttingUnitCode;
 
         public TreeEditViewModel SelectedTreeViewModel
         {
@@ -143,6 +146,7 @@ namespace FScruiser.XF.ViewModels
         private string _unitCode;
         private TreeEditViewModel _selectedTreeViewModel;
         private TallyEntry _selectedEntry;
+        private CuttingUnit _cuttingUnit;
 
         public ICommand ShowTallyMenuCommand => _showTallyMenuCommand
             ?? (_showTallyMenuCommand = new Command<TallyPopulation>(ShowTallyMenu));
@@ -164,6 +168,7 @@ namespace FScruiser.XF.ViewModels
         protected ICruiseNavigationService NavigationService { get; }
         public ITallyDataservice TallyDataservice { get; }
         public ITreeDataservice TreeDataservice { get; }
+        public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
 
         public ICruiseDialogService DialogService { get; }
@@ -176,6 +181,7 @@ namespace FScruiser.XF.ViewModels
         public TallyViewModel(ICruiseNavigationService navigationService,
             ITallyDataservice tallyDataservice,
             ITreeDataservice treeDataservice,
+            ICuttingUnitDataservice cuttingUnitDataservice,
             ITallyPopulationDataservice tallyPopulationDataservice,
             ISampleSelectorDataService sampleSelectorDataservice,
             ICruiseDialogService dialogService,
@@ -186,6 +192,7 @@ namespace FScruiser.XF.ViewModels
         {
             TallyDataservice = tallyDataservice ?? throw new ArgumentNullException(nameof(tallyDataservice));
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
+            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
             SampleSelectorService = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -220,9 +227,10 @@ namespace FScruiser.XF.ViewModels
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-            var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
+            var unitCode = parameters.GetValue<string>(NavParams.UNIT);
+            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
 
-            Title = $"Unit {unitCode}";
+            Title = $"Unit {unitCode} - {cuttingUnit.Description}";
 
             var tallyPopulations = TallyPopulationDataservice.GetTallyPopulationsByUnitCode(UnitCode);
             var strata = tallyPopulations.Select(x => x.StratumCode)
