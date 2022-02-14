@@ -20,7 +20,6 @@ namespace FScruiser.XF.ViewModels
         private const string STRATUM_FILTER_ALL = "All";
 
         private int _plotNumber;
-        private string _unitCode;
         private ICollection<TallyPopulation_Plot> _tallyPopulations;
         private ICollection<StratumProxy> _strata;
         private string _stratumFilter = STRATUM_FILTER_ALL;
@@ -31,14 +30,16 @@ namespace FScruiser.XF.ViewModels
         private ICommand _editTreeCommand;
         private ICommand _deleteTreeCommand;
         private TreeEditViewModel _selectedTreeViewModel;
+        private CuttingUnit _cuttingUnit;
 
         public event EventHandler TreeAdded;
 
-        public string Title => $"Unit {UnitCode} Plot {Plot?.PlotNumber}";
+        public string Title => $"Unit {UnitCode} - {CuttingUnit.Description} Plot {Plot?.PlotNumber}";
 
         public ICuttingUnitDataservice Dataservice { get; }
         public ITreeDataservice TreeDataservice { get; }
         public IPlotDataservice PlotDataservice { get; }
+        public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
         public ICruiseDialogService DialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
@@ -63,6 +64,7 @@ namespace FScruiser.XF.ViewModels
             ICruiseDialogService dialogService,
             ITreeDataservice treeDataservice,
             IPlotDataservice plotDataservice,
+            ICuttingUnitDataservice cuttingUnitDataservice,
             ITallyPopulationDataservice tallyPopulationDataservice,
             ISampleSelectorDataService sampleSelectorDataservice,
             ISoundService soundService,
@@ -73,6 +75,7 @@ namespace FScruiser.XF.ViewModels
         {
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
+            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
             SampleSelectorDataService = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
@@ -110,11 +113,18 @@ namespace FScruiser.XF.ViewModels
             set { SetProperty(ref _plotNumber, value); }
         }
 
-        public string UnitCode
+        public CuttingUnit CuttingUnit
         {
-            get { return _unitCode; }
-            set { SetProperty(ref _unitCode, value); }
+            get => _cuttingUnit;
+            protected set
+            {
+                SetProperty(ref _cuttingUnit, value);
+                RaisePropertyChanged(nameof(UnitCode));
+                RaisePropertyChanged(nameof(Title));
+            }
         }
+
+        public string UnitCode => CuttingUnit?.CuttingUnitCode;
 
         public bool IsRecon { get; private set; }
 
@@ -192,6 +202,8 @@ namespace FScruiser.XF.ViewModels
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
+            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
+
             Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
@@ -208,7 +220,6 @@ namespace FScruiser.XF.ViewModels
 
             Plot = plot;
             PlotNumber = plot.PlotNumber;
-            UnitCode = plot.CuttingUnitCode;
 
             // refresh selected tree incase coming back from TreeEdit page
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
