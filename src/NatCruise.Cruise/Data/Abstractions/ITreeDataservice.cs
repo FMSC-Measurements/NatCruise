@@ -8,7 +8,7 @@ namespace NatCruise.Cruise.Data
     public interface ITreeDataservice : IDataservice
     {
         string InsertManualTree(string unitCode, string stratumCode,
-            string sampleGroupCode = null, string species = null, string liveDead = "L",
+            string sampleGroupCode = null, string species = null, string liveDead = null,
             int treeCount = 1, int kpi = 0, bool stm = false);
 
         Tree_Ex GetTree(string treeID);
