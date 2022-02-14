@@ -29,6 +29,7 @@ namespace NatCruise.Cruise.Data
         tp.SampleGroupCode,
         tp.SpeciesCode,
         tp.LiveDead,
+        sg.DefaultLiveDead,
         tp.HotKey,
             (SELECT ifnull(sum(TreeCount), 0) FROM
                 TallyLedger AS tl
