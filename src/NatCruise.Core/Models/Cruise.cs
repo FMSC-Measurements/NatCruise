@@ -26,6 +26,10 @@ namespace NatCruise.Models
             set => SetProperty(ref _purpose, value);
         }
 
+        [Field(SQLExpression = "LK_Purpose.ShortCode", Alias = "PurposeShortCode")]
+        public string PurposeShortCode { get; set; }
+
+
         public string Remarks
         {
             get => _remarks;
