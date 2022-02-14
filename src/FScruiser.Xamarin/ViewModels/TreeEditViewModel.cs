@@ -210,7 +210,7 @@ namespace FScruiser.XF.ViewModels
         {
             if (oldValue == newValue) { return false; }
 
-            if (TreeDataservice.IsTreeNumberAvalible(tree.CuttingUnitCode, newValue, tree.PlotNumber))
+            if (TreeDataservice.IsTreeNumberAvalible(tree.CuttingUnitCode, newValue, tree.PlotNumber, tree.StratumCode))
             {
                 return true;
             }
@@ -558,7 +558,7 @@ namespace FScruiser.XF.ViewModels
             try
             {
                 IsLoading = true;
-                var tree = TreeDataservice.GetTree(treeID);
+                var tree = TreeDataservice.GetTree(treeID) ?? throw new NullReferenceException("GetTree returned null"); ;
                 var unitCode = tree.CuttingUnitCode;
                 var stratumCodes = CuttingUnitDatastore.GetStratumCodesByUnit(unitCode);
                 StratumCodes = stratumCodes;
