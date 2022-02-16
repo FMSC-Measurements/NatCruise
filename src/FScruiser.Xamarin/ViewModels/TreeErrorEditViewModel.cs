@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Constants;
+using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
@@ -17,16 +18,19 @@ namespace FScruiser.XF.ViewModels
         private ICommand _saveCommand;
 
         public TreeErrorEditViewModel(ITreeDataservice treeDataservice,
-            ICruiseDialogService dialogService)
+            ICruiseDialogService dialogService,
+            ICruiseNavigationService navigationService)
         {
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         public ICommand SaveCommand => _saveCommand ??= new Command(Save);
 
         protected ITreeDataservice TreeDataservice { get; }
         protected ICruiseDialogService DialogService { get; }
+        public ICruiseNavigationService NavigationService { get; }
         public int TreeNumber { get => _treeNumber; set => SetProperty(ref _treeNumber, value); }
 
         protected TreeError TreeError
@@ -138,10 +142,12 @@ namespace FScruiser.XF.ViewModels
                     return;
                 }
                 TreeDataservice.SetTreeAuditResolution(treeID, treeAuditRuleID, remarks, sig);
+                NavigationService.GoBackAsync();
             }
             else
             {
                 TreeDataservice.ClearTreeAuditResolution(treeID, treeAuditRuleID);
+                NavigationService.GoBackAsync();
             }
         }
     }
