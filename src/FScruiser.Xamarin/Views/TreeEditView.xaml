@@ -104,7 +104,8 @@
                        AutomationProperties.IsInAccessibleTree="False" />
                 <Entry x:Name="_treeNumberEntry"
                        AutomationProperties.IsInAccessibleTree="True"
-                       AutomationProperties.Name="Tree Number">
+                       AutomationProperties.Name="Tree Number"
+                       Keyboard="Numeric">
                     <Entry.Effects>
                         <effects:SelectAllTextEffect />
                     </Entry.Effects>

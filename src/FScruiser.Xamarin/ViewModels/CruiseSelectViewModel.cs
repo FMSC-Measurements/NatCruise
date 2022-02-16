@@ -22,6 +22,8 @@ namespace FScruiser.XF.ViewModels
     {
         //public ICommand SelectCruiseCommand => new
 
+        const string EXPORT_TIMESTAMP_FORMAT = "yyyyMMddhhmm";
+
         private Sale _sale;
         private IEnumerable<Cruise> _cruises;
         private Cruise _selectedCruise;
@@ -100,9 +102,9 @@ namespace FScruiser.XF.ViewModels
 
         public void ShareCruise(Cruise cruise)
         {
-            var timestamp = DateTime.Today.ToString("ddMMyyyy");
+            var timestamp = DateTime.Now.ToString(EXPORT_TIMESTAMP_FORMAT);
             var deviceName = DeviceInfo.DeviceName;
-            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.Purpose.Replace(' ', '_')}_{timestamp}_{deviceName}.crz3";
+            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.PurposeShortCode.Replace(' ', '_')}_{timestamp}_{deviceName}.crz3";
             var exportTempDir = FileSystemService.ExportTempDir;
             var fileToExport = Path.Combine(exportTempDir, defaultFileName);
 
@@ -122,9 +124,9 @@ namespace FScruiser.XF.ViewModels
 
         public async Task ExportCruise(Cruise cruise)
         {
-            var timestamp = DateTime.Today.ToString("ddMMyyyy");
+            var timestamp = DateTime.Now.ToString(EXPORT_TIMESTAMP_FORMAT);
             var deviceName = DeviceInfo.DeviceName;
-            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.Purpose.Replace(' ', '_')}_{timestamp}_{deviceName}.crz3";
+            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.PurposeShortCode.Replace(' ', '_')}_{timestamp}_{deviceName}.crz3";
 
             // create file to export before geting the destination path
             // on android requesting the desination file creates an empty file

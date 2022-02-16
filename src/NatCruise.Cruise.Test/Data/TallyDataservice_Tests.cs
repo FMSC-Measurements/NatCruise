@@ -55,6 +55,7 @@ namespace NatCruise.Cruise.Test.Data
 
         [Theory]
         [InlineData("st4", "sg2", null, null, SampleResult.C)]// non sample, null values
+        [InlineData("st4", "sg2", null, null, SampleResult.M)]// sample, null values
         [InlineData("st4", "sg2", "", "", SampleResult.C)]//non sample, not tally by subpop
         [InlineData("st3", "sg1", "sp1", "L", SampleResult.C)]//non sample, tally by subpop
         [InlineData("st4", "sg2", "", "", SampleResult.M)]//sample, not tally by subpop
@@ -107,8 +108,13 @@ namespace NatCruise.Cruise.Test.Data
                     tree.StratumCode.Should().Be(stratumCode);
                     tree.SampleGroupCode.Should().Be(sgCode);
                     tree.SpeciesCode.Should().Be(pop.SpeciesCode);
-                    tree.LiveDead.Should().Be(pop.LiveDead);
                     tree.CountOrMeasure.Should().Be(sampleResult.ToString());
+
+                    if(string.IsNullOrEmpty(pop.LiveDead))
+                    { tree.LiveDead.Should().Be(pop.DefaultLiveDead); }
+                    else
+                    { tree.LiveDead.Should().Be(pop.LiveDead); }
+                    
                 }
 
                 var tallyPopulate = tpds.GetTallyPopulationsByUnitCode(unitCode).Where(x => (x.SpeciesCode ?? "") == (species ?? "")).Single();

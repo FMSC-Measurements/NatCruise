@@ -212,7 +212,7 @@ namespace NatCruise.Cruise.Test.Data
         }
 
         [Fact]
-        public void CreateMeasureTree()
+        public void InsertManualTree()
         {
             var init = new DatastoreInitializer();
 
@@ -465,7 +465,7 @@ namespace NatCruise.Cruise.Test.Data
 
                 var treeErrors = treeDS.GetTreeErrors(treeID).ToArray();
 
-                treeErrors.Should().HaveCount(2);
+                treeErrors.Should().HaveCount(3);
 
                 var speciesError = treeErrors.First();
                 speciesError.Level.Should().Be("E");

@@ -235,7 +235,7 @@ $@"INSERT INTO Tree (
     @SampleGroupCode,
     @SpeciesCode,
     @LiveDead,
-    'M' -- countMeasure
+    'C' -- countMeasure
 );
 
 INSERT INTO TreeMeasurment

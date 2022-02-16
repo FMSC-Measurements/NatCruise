@@ -25,6 +25,9 @@ namespace FScruiser.XF.ViewModels
         private string _unitCode;
         private bool _onlyShowTreesWithErrorsOrWarnings;
         private IEnumerable<TreeField> _treeFields;
+        private CuttingUnit _cuttingUnit;
+
+        public string Title => $"Unit {UnitCode} - {CuttingUnit?.Description} Trees";
 
         public IEnumerable<TreeField> TreeFields
         {
@@ -73,10 +76,17 @@ namespace FScruiser.XF.ViewModels
                         if (tree != null) { ShowLogsAsync((Tree_Ex)tree); }
                     });
 
-        public string UnitCode
+        public string UnitCode => CuttingUnit?.CuttingUnitCode;
+
+        public CuttingUnit CuttingUnit
         {
-            get => _unitCode;
-            set => SetProperty(ref _unitCode, value);
+            get => _cuttingUnit;
+            protected set
+            {
+                SetProperty(ref _cuttingUnit, value);
+                RaisePropertyChanged(nameof(UnitCode));
+                RaisePropertyChanged(nameof(Title));
+            }
         }
 
         protected ICuttingUnitDataservice CuttingUnitDatastore { get; }
@@ -105,12 +115,13 @@ namespace FScruiser.XF.ViewModels
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-            var unitCode = UnitCode = parameters.GetValue<string>(NavParams.UNIT);
+            var unitCode = parameters.GetValue<string>(NavParams.UNIT);
+            var cuttingUnit = CuttingUnit = CuttingUnitDatastore.GetUnit(unitCode);
 
             if (IsLoaded is false)
             {
                 TreeFields = TreeFieldDataservice.GetNonPlotTreeFields(unitCode);
-                StratumCodes = CuttingUnitDatastore.GetStrataProxiesByUnitCode(UnitCode).Select(x => x.StratumCode).ToArray();
+                StratumCodes = CuttingUnitDatastore.GetStrataProxiesByUnitCode(unitCode).Select(x => x.StratumCode).ToArray();
             }
             AllTrees = TreeDataservice.GetTreesByUnitCode(unitCode).ToObservableCollection();
         }

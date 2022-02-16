@@ -8,7 +8,7 @@
              x:Class="FScruiser.XF.Views.TreeListView"
              x:Name="_page"
              BackgroundColor="White"
-             Title="{Binding UnitCode, StringFormat='{}Unit {0} Trees'}"
+             Title="{Binding Title}"
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Tree List Page">
     <StackLayout>

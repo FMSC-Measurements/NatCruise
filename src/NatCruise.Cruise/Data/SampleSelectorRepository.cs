@@ -59,10 +59,13 @@ namespace NatCruise.Cruise.Services
 
             switch (method)
             {
+                case "FIXCNT":
+                    {
+                        return new ZeroFrequencySelecter(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+                    }
                 case "100":
                 case "FIX":
                 case "PNT":
-                case "FIXCNT":
                     {
                         return new HundredPCTSelector()
                         {
