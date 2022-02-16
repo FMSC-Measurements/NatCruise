@@ -34,7 +34,7 @@ namespace FScruiser.XF.ViewModels
 
         public event EventHandler TreeAdded;
 
-        public string Title => $"Unit {UnitCode} - {CuttingUnit.Description} Plot {Plot?.PlotNumber}";
+        public string Title => $"Unit {CuttingUnit?.CuttingUnitCode} - {CuttingUnit?.Description} Plot {Plot?.PlotNumber}";
 
         public ICuttingUnitDataservice Dataservice { get; }
         public ITreeDataservice TreeDataservice { get; }
@@ -202,17 +202,18 @@ namespace FScruiser.XF.ViewModels
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
-            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
-
             Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
                 plot = PlotDataservice.GetPlot(plotID);
+                unitCode = plot.CuttingUnitCode;
             }
             else
             {
                 plot = PlotDataservice.GetPlot(unitCode, plotNumber);
             }
+
+            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
 
             TallyPopulations = TallyPopulationDataservice.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
             Strata = PlotDataservice.GetPlotStrataProxies(plot.CuttingUnitCode).ToArray();
