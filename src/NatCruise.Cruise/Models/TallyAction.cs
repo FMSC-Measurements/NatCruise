@@ -20,6 +20,14 @@ namespace NatCruise.Cruise.Models
             SampleGroupCode = population.SampleGroupCode;
             SpeciesCode = population.SpeciesCode;
             LiveDead = population.LiveDead;
+            if(string.IsNullOrEmpty(population.LiveDead))
+            {
+                LiveDead = population.DefaultLiveDead;
+            }
+            else
+            {
+                LiveDead = population.LiveDead;
+            }
         }
 
         public TallyAction(string unitCode, TallyPopulation population) : this(population)

@@ -97,13 +97,23 @@ namespace NatCruise.Cruise.Services
         {
             if (population is null) { throw new ArgumentNullException(nameof(population)); }
 
+            string liveDead = null;
+            if(string.IsNullOrEmpty(population.LiveDead))
+            {
+                liveDead = population.DefaultLiveDead;
+            }
+            else
+            {
+                liveDead = population.LiveDead;
+            }
+
             return new PlotTreeEntry
             {
                 CuttingUnitCode = unitCode,
                 StratumCode = population.StratumCode,
                 SampleGroupCode = population.SampleGroupCode,
                 SpeciesCode = population.SpeciesCode,
-                LiveDead = population.LiveDead,
+                LiveDead = liveDead,
                 PlotNumber = plotNumber,
                 CountOrMeasure = countOrMeasure,
                 TreeCount = treeCount,

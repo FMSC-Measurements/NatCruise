@@ -1,20 +1,18 @@
-﻿using NatCruise.Cruise.Models;
-using FScruiser.XF.Util;
+﻿using FScruiser.XF.Util;
+using FScruiser.XF.ViewModels;
+using NatCruise.Cruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using FScruiser.XF.ViewModels;
 
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TreeEditView : ContentPage
     {
-        static readonly string[] PRECONFIGED_TREE_FIELDS = new[] { nameof(TreeEditViewModel.Initials), nameof(TreeEditViewModel.Remarks) };
-
+        private static readonly string[] PRECONFIGED_TREE_FIELDS = new[] { nameof(TreeEditViewModel.Initials), nameof(TreeEditViewModel.Remarks) };
 
         #region TreeNumber
 
@@ -36,9 +34,7 @@ namespace FScruiser.XF.Views
         /// <param name="newValue">The new value of the <see cref="TreeNumber"/> property.</param>
         protected virtual void OnTreeNumberChanged(int? oldValue, int? newValue)
         {
-
             _treeNumberEntry.Text = newValue?.ToString();
-
         }
 
         /// <summary>
@@ -94,11 +90,12 @@ namespace FScruiser.XF.Views
             InitializeComponent();
 
             //_altRowColor = (Color)App.Current.Resources["black_12"];
-            _treeNumberEntry.Completed += _treeNumberEntry_Completed;
-            _treeNumberEntry.Keyboard = Keyboard.Numeric;
+            //_treeNumberEntry.Completed += _treeNumberEntry_Completed;
+            _treeNumberEntry.Unfocused += _treeNumberEntry_Unfocused;
+            //_treeNumberEntry.Keyboard = Keyboard.Numeric;
         }
 
-        private void _treeNumberEntry_Completed(object sender, EventArgs e)
+        private void _treeNumberEntry_Unfocused(object sender, FocusEventArgs e)
         {
             var value = _treeNumberEntry.Text;
             if (int.TryParse(value, out var intValue))
@@ -119,7 +116,7 @@ namespace FScruiser.XF.Views
             foreach (var field in treeFields)
             {
                 if (PRECONFIGED_TREE_FIELDS.Contains(field.Field)) { continue; }
-                if(field.Field.Equals("Remarks", StringComparison.OrdinalIgnoreCase)) { continue; }
+                if (field.Field.Equals("Remarks", StringComparison.OrdinalIgnoreCase)) { continue; }
                 if (field.Field.Equals("Initials", StringComparison.OrdinalIgnoreCase)) { continue; }
                 if (field.IsHidden && !showHidden) { continue; }
 

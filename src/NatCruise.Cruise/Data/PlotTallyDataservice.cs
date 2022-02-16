@@ -136,11 +136,21 @@ INSERT INTO TallyLedger (
 
         protected void CreatePlotTree(string treeID, string unitCode, int plotNumber,
             string stratumCode, string sampleGroupCode,
-            string species = null, string liveDead = "L",
+            string species = null, string liveDead = null,
             string countMeasure = "M", int treeCount = 1,
             int kpi = 0, bool stm = false)
         {
             var tallyLedgerID = treeID;
+
+            if(string.IsNullOrEmpty(liveDead))
+            {
+                liveDead = Database.ExecuteScalar<string>(
+                    "SELECT DefaultLiveDead " +
+                    "FROM SampleGroup " +
+                    "WHERE CruiseID = @p1 " +
+                    "AND StratumCode = @p2 " +
+                    "AND SampleGroupCode = @p3;", CruiseID, stratumCode, sampleGroupCode);
+            }
 
             Database.Execute2(
 $@"INSERT INTO Tree (

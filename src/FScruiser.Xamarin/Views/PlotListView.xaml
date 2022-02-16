@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FScruiser.XF.Views.PlotListView"
              x:Name="_page"
-             Title="{Binding UnitCode, StringFormat='{}Unit {0} Plots'}"
+             Title="{Binding Title}"
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Plot List Page">
     <ContentPage.Content>
