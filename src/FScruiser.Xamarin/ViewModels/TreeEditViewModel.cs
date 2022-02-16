@@ -37,6 +37,7 @@ namespace FScruiser.XF.ViewModels
         private IEnumerable<string> _cruisers;
         private string _initials;
         private string _cruiseMethod;
+        private IEnumerable<string> _countOrMeasureOptions;
 
         public bool IsLoading { get; set; }
         protected ICuttingUnitDataservice CuttingUnitDatastore { get; }
@@ -47,7 +48,6 @@ namespace FScruiser.XF.ViewModels
         protected ILoggingService LoggingService { get; }
 
         public bool UseSimplifiedTreeFields { get; set; } = false;
-
 
         public IEnumerable<string> Cruisers
         {
@@ -95,9 +95,9 @@ namespace FScruiser.XF.ViewModels
             {
                 if (IsLoading) { return; }
                 var tree = Tree;
-                if(tree == null) { return; }
+                if (tree == null) { return; }
                 var oldValue = tree.Initials;
-                if(oldValue != value)
+                if (oldValue != value)
                 {
                     TreeDataservice.UpdateTreeInitials(tree.TreeID, value);
                 }
@@ -149,34 +149,36 @@ namespace FScruiser.XF.ViewModels
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.CountOrMeasure;
-                if (OnCountOrMeasureChangeing(tree, oldValue, value))
-                {
-                    tree.CountOrMeasure = value;
-                    OnCountOrMeasureChanged(oldValue, value);
-                }
+                tree.CountOrMeasure = value;
+                OnCountOrMeasureChanged(oldValue, value);
             }
         }
 
         private void OnCountOrMeasureChanged(string oldValue, string value)
         {
             SaveTree();
+            RefreshErrorsAndWarnings();
         }
 
-        private bool OnCountOrMeasureChangeing(Tree_Ex tree, string oldValue, string newValue)
-        {
-            var stratum = tree.StratumCode;
-            var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(stratum);
-            var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod);
-            if (isPlotMethod == false)
-            {
-                //DialogService.ShowMessageAsync($"Cruise Method {cruiseMethod} does not allow changing Count or Measure value");
-            }
-            return isPlotMethod;
-        }
+        //private bool OnCountOrMeasureChangeing(Tree_Ex tree, string oldValue, string newValue)
+        //{
+        //    var stratum = tree.StratumCode;
+        //    var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(stratum);
+        //    var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod);
+        //    if (isPlotMethod == false)
+        //    {
+        //        //DialogService.ShowMessageAsync($"Cruise Method {cruiseMethod} does not allow changing Count or Measure value");
+        //    }
+        //    return isPlotMethod;
+        //}
 
         #endregion CountOrMeasure
 
-        public IEnumerable<string> CountOrMeasureOptions => new[] { "C", "M", "I" };
+        public IEnumerable<string> CountOrMeasureOptions
+        {
+            get => _countOrMeasureOptions;
+            set => SetProperty(ref _countOrMeasureOptions, value);
+        }
 
         #region TreeNumber
 
@@ -570,6 +572,17 @@ namespace FScruiser.XF.ViewModels
                 RefreshErrorsAndWarnings(tree);
 
                 Cruisers = CruisersDataservice.GetCruisers().ToArray();
+
+                var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(tree.StratumCode);
+                var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod) || cruiseMethod == "FIXCNT";
+                if (isPlotMethod == false)
+                {
+                    CountOrMeasureOptions = new[] { "M", "I" };
+                }
+                else
+                {
+                    CountOrMeasureOptions = new[] { "C", "M", "I" };
+                }
 
                 Tree = tree;
             }
