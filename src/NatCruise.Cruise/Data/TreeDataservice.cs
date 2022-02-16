@@ -172,7 +172,7 @@ LEFT JOIN treeWarningCount AS tw USING (TreeID)
         TreeID,
         count(*)AS ErrorCount
     FROM TreeError
-    WHERE Level = 'E'
+    WHERE Level = 'E' AND IsResolved = 0
     GROUP BY TreeID
 ),
 
@@ -182,7 +182,7 @@ treeWarningCount AS
         TreeID,
         count(*)AS WarningCount
     FROM TreeError
-    WHERE Level = 'W'
+    WHERE Level = 'W' AND IsResolved = 0
     GROUP BY TreeID
 )
 
@@ -204,7 +204,7 @@ LEFT JOIN treeWarningCount AS tw USING (TreeID)
         TreeID,
         count(*)AS ErrorCount
     FROM TreeError
-    WHERE Level = 'E'
+    WHERE Level = 'E' AND IsResolved = 0
     GROUP BY TreeID
 ),
 
@@ -214,7 +214,7 @@ treeWarningCount AS
         TreeID,
         count(*)AS WarningCount
     FROM TreeError
-    WHERE Level = 'W'
+    WHERE Level = 'W' AND IsResolved = 0
     GROUP BY TreeID
 )
 

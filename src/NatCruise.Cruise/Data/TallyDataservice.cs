@@ -44,10 +44,10 @@ namespace NatCruise.Cruise.Data
         t.CountOrMeasure,
         tl.STM,
         (CASE WHEN tl.TreeID IS NULL THEN 0 ELSE
-            (SELECT count(*) FROM TreeError AS te WHERE Level = 'E' AND te.TreeID = tl.TreeID AND Resolution IS NULL)
+            (SELECT count(*) FROM TreeError AS te WHERE Level = 'E' AND te.TreeID = tl.TreeID AND IsResolved = 0)
         END) AS ErrorCount,
         (CASE WHEN tl.TreeID IS NULL THEN 0 ELSE
-            (SELECT count(*) FROM TreeError AS te WHERE Level = 'W' AND te.TreeID = tl.TreeID AND Resolution IS NULL)
+            (SELECT count(*) FROM TreeError AS te WHERE Level = 'W' AND te.TreeID = tl.TreeID AND IsResolved = 0)
         END) AS WarningCount
     FROM TallyLedger AS tl
     LEFT JOIN Tree AS t USING (TreeID) ";
@@ -200,6 +200,17 @@ namespace NatCruise.Cruise.Data
                         "AND ifnull(PlotNumber, -1) = ifnull(@PlotNumber, -1)",
                         new { CruiseID, atn.CuttingUnitCode, atn.PlotNumber });
 
+                    //if (string.IsNullOrEmpty(tallyEntry.LiveDead))
+                    //{
+                    //    tallyEntry.LiveDead = Database.ExecuteScalar2<string>(
+                    //        "SELECT DefaultLiveDead " +
+                    //        "FROM SampleGroup " +
+                    //        "WHERE CruiseID = @CruiseID " +
+                    //        "AND StratumCode = @StratumCode " +
+                    //        "AND SampleGroupCode = @SampleGroupCode;",
+                    //        new { CruiseID, atn.StratumCode, atn.SampleGroupCode });
+                    //}
+
                     Database.Execute2(
 @"INSERT INTO Tree (
     TreeID,
@@ -340,8 +351,8 @@ INSERT INTO TreeMeasurment (
         {
             if (tallyEntry is null) { throw new ArgumentNullException(nameof(tallyEntry)); }
 
-            tallyEntry.ErrorCount = Database.ExecuteScalar<int>("SELECT count(*) FROM TreeError WHERE Level = 'E' AND TreeID = @p1;", tallyEntry.TreeID);
-            tallyEntry.WarningCount = Database.ExecuteScalar<int>("SELECT count(*) FROM TreeError WHERE Level = 'W' AND TreeID = @p1;", tallyEntry.TreeID);
+            tallyEntry.ErrorCount = Database.ExecuteScalar<int>("SELECT count(*) FROM TreeError WHERE Level = 'E' AND IsResolved = 0 AND TreeID = @p1;", tallyEntry.TreeID);
+            tallyEntry.WarningCount = Database.ExecuteScalar<int>("SELECT count(*) FROM TreeError WHERE Level = 'W' AND IsResolved = 0 AND TreeID = @p1;", tallyEntry.TreeID);
         }
     }
 }
