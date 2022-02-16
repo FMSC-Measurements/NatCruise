@@ -65,7 +65,7 @@ namespace FScruiser.XF.ViewModels
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
-            var cuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
+            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
             RefreshPlots();
         }
 
