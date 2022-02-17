@@ -33,6 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.4.4.10100" />
 		<PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.0.77" />
 		<PackageReference Include="MahApps.Metro">
 			<Version>2.4.9</Version>
@@ -63,7 +64,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
 		<ProjectReference Include="..\NatCruise.Design\NatCruise.Design.csproj" />
 	</ItemGroup>
 

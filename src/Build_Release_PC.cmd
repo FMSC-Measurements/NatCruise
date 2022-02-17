@@ -14,7 +14,7 @@ SET msbuild="%parent%tools\msbuild.cmd"
 
 IF NOT DEFINED build_config SET build_config="Release"
 
-call %msbuild% %parent%\NatCruise.Wpf\NatCruise.Wpf.csproj /target:Rebuild /p:Configuration=%build_config%;SolutionDir=%parent%\
+call %msbuild% %parent%\NatCruise.Wpf\NatCruise.Wpf.csproj -restore /target:Rebuild /p:Configuration=%build_config%;SolutionDir=%parent%\
 
 ::End Boilderplate
 EXIT /B %errorlevel%
