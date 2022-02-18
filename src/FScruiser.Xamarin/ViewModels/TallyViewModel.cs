@@ -296,7 +296,7 @@ namespace FScruiser.XF.ViewModels
         {
             var entry = await TallyService.TallyAsync(UnitCode, pop);
             if (entry == null) { return; }
-            SoundService.SignalTallyAsync().FireAndForget();
+            SoundService.SignalTallyAsync().ConfigureAwait(false);
 
             pop.TreeCount = pop.TreeCount + entry.TreeCount;
             pop.SumKPI = pop.SumKPI + entry.KPI;
@@ -310,11 +310,11 @@ namespace FScruiser.XF.ViewModels
                 var isInsuranceSample = entry.CountOrMeasure == "I";
                 if (isInsuranceSample)
                 {
-                    SoundService.SignalInsuranceTreeAsync().FireAndForget();
+                    SoundService.SignalInsuranceTreeAsync().ConfigureAwait(false);
                 }
                 else
                 {
-                    SoundService.SignalMeasureTreeAsync().FireAndForget();
+                    SoundService.SignalMeasureTreeAsync().ConfigureAwait(false);
                 }
 
                 if (CruisersDataService.PromptCruiserOnSample)
@@ -329,7 +329,7 @@ namespace FScruiser.XF.ViewModels
                 if (method != CruiseMethods.H_PCT)
                 {
                     var sampleType = (isInsuranceSample) ? "Insurance Tree" : "Measure Tree";
-                    DialogService.ShowMessageAsync("Tree #" + entry.TreeNumber.ToString(), sampleType).FireAndForget();
+                    DialogService.ShowMessageAsync("Tree #" + entry.TreeNumber.ToString(), sampleType).ConfigureAwait(false);
                 }
 
                 //if (tree.CountOrMeasure == "M" && await AskEnterMeasureTreeDataAsync(tallySettings, dialogService))

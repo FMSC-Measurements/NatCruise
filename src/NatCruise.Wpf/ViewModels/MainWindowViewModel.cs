@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
@@ -76,14 +77,14 @@ namespace NatCruise.Wpf.ViewModels
 
         public ICommand CreateNewFileCommand => _createNewFileCommand ?? (_createNewFileCommand = new DelegateCommand(CreateNewFile));
 
-        public ICommand CreateNewTemplateCommand => new DelegateCommand(CreateNewTemplate);
+        public ICommand CreateNewTemplateCommand => new DelegateCommand(() => CreateNewTemplate());
 
 
         public ICommand OpenFileCommand => _openFileCommand ?? (_openFileCommand = new DelegateCommand<string>(OpenFile));
 
         public ICommand OpenFileInfoCommand => _openFileCommand ?? (_openFileCommand = new DelegateCommand<FileInfo>(OpenFile));
 
-        public ICommand SelectFileCommand => _selectFileCommand ?? (_selectFileCommand = new DelegateCommand(SelectFile));
+        public ICommand SelectFileCommand => _selectFileCommand ?? (_selectFileCommand = new DelegateCommand(() => SelectFile()));
 
         public ICommand ShutdownCommand => new DelegateCommand(() => AppService.Shutdown());
 
@@ -107,7 +108,7 @@ namespace NatCruise.Wpf.ViewModels
             });
         }
 
-        private async void CreateNewTemplate()
+        private async Task CreateNewTemplate()
         {
             var filePath = await FileDialogService.SelectTemplateFileDestinationAsync();
             if (filePath != null)
@@ -148,7 +149,7 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        public async void SelectFile()
+        public async Task SelectFile()
         {
             var path = await FileDialogService.SelectCruiseFileAsync();
             if (path != null)
