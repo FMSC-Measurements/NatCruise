@@ -13,6 +13,7 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
@@ -113,7 +114,7 @@ namespace NatCruise.Wpf.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public ICommand CreateCruiseCommand => _createCruiseCommand ??= new DelegateCommand(CreateCruise);
+        public ICommand CreateCruiseCommand => _createCruiseCommand ??= new DelegateCommand(() => CreateCruise);
 
         public ICommand SelectTemplateCommand => _selectTemplateCommand ??= new DelegateCommand(SelectTemplate);
 
@@ -141,7 +142,7 @@ namespace NatCruise.Wpf.ViewModels
             RaiseRequestClose(new DialogResult(ButtonResult.Cancel));
         }
 
-        private async void CreateCruise()
+        private async Task CreateCruise()
         {
             ValidateAll(this);
             if (HasErrors == true) { return; }
@@ -304,6 +305,7 @@ namespace NatCruise.Wpf.ViewModels
             {
                 v3TemplateDb = new CruiseDatastore_V3(templatePath);
             }
+            else return;
 
             var cruiseID = v3TemplateDb.ExecuteScalar<string>("SELECT CruiseID FROM Cruise LIMIT 1;");
 
