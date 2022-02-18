@@ -16,9 +16,9 @@ namespace NatCruise.Design.Data
         {
         }
 
-        public void AddSampleGroup(SampleGroup sampleGroup)
+        public void AddSampleGroup(SampleGroup sg)
         {
-            sampleGroup.SampleGroupID ??= Guid.NewGuid().ToString();
+            sg.SampleGroupID ??= Guid.NewGuid().ToString();
 
             Database.Execute2(
 @"INSERT INTO SampleGroup (
@@ -70,26 +70,26 @@ namespace NatCruise.Design.Data
 );",        new
             {
                 CruiseID,
-                sampleGroup.SampleGroupID,
-                sampleGroup.SampleGroupCode,
-                sampleGroup.StratumCode,
-                sampleGroup.CutLeave,
-                sampleGroup.UOM,
-                sampleGroup.PrimaryProduct,
-                sampleGroup.SecondaryProduct,
-                sampleGroup.BiomassProduct,
-                sampleGroup.DefaultLiveDead,
-                sampleGroup.SamplingFrequency,
-                sampleGroup.InsuranceFrequency,
-                sampleGroup.KZ,
-                sampleGroup.BigBAF,
-                sampleGroup.TallyBySubPop,
-                sampleGroup.UseExternalSampler,
-                sampleGroup.SampleSelectorType,
-                sampleGroup.Description,
-                sampleGroup.MinKPI,
-                sampleGroup.MaxKPI,
-                sampleGroup.SmallFPS,
+                sg.SampleGroupID,
+                sg.SampleGroupCode,
+                sg.StratumCode,
+                sg.CutLeave,
+                sg.UOM,
+                sg.PrimaryProduct,
+                sg.SecondaryProduct,
+                sg.BiomassProduct,
+                sg.DefaultLiveDead,
+                sg.SamplingFrequency,
+                sg.InsuranceFrequency,
+                sg.KZ,
+                sg.BigBAF,
+                sg.TallyBySubPop,
+                sg.UseExternalSampler,
+                sg.SampleSelectorType,
+                sg.Description,
+                sg.MinKPI,
+                sg.MaxKPI,
+                sg.SmallFPS,
                 DeviceID,
             });
         }
