@@ -16,9 +16,9 @@ namespace NatCruise.Design.Data
 
         string GetMethod(string stratumCode);
 
-        void AddSampleGroup(SampleGroup sampleGroup);
+        void AddSampleGroup(SampleGroup sg);
 
-        void UpdateSampleGroup(SampleGroup sampleGroup);
+        void UpdateSampleGroup(SampleGroup sg);
 
         void UpdateSampleGroupCode(SampleGroup sg);
 
