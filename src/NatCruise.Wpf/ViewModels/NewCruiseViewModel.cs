@@ -114,7 +114,7 @@ namespace NatCruise.Wpf.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public ICommand CreateCruiseCommand => _createCruiseCommand ??= new DelegateCommand(() => CreateCruise);
+        public ICommand CreateCruiseCommand => _createCruiseCommand ??= new DelegateCommand(() => CreateCruise());
 
         public ICommand SelectTemplateCommand => _selectTemplateCommand ??= new DelegateCommand(SelectTemplate);
 
