@@ -21,7 +21,7 @@ namespace FScruiser.XF.Services
 
         public void ShowNotification(string message, string title = null)
         {
-            PageDialogService.DisplayAlertAsync(title, message, "OK").FireAndForget();
+            PageDialogService.DisplayAlertAsync(title, message, "OK").ConfigureAwait(false);
         }
 
         public Task ShowNotificationAsync(string message, string title = null)

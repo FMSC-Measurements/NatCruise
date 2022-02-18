@@ -7,16 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CruiseDAL.V3" Version="3.4.4.101" />
+    <PackageReference Include="CruiseDAL.V3.Models" Version="3.4.4.101" />
     <PackageReference Include="FluentValidation" Version="10.1.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.1.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
     <PackageReference Include="Prism.Core" Version="8.0.0.1909" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
     <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
-  </ItemGroup>
+  </ItemGroup>-->
+
+	<ItemGroup>
+		<PackageReference Include="CruiseDAL.V3" Version="3.4.4.101" />
+		
+		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.4.4.10102" />
+		
+		<PackageReference Include="SQLitePCLRaw.core" Version="2.0.7" />
+	</ItemGroup>
 
   <ItemGroup>
     <Folder Include="ViewModels\" />
