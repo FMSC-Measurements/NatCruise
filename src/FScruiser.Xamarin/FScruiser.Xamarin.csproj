@@ -10,10 +10,6 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup Label="Pandoc Mardown Generator">
-    <PandocOutputDir>$(MSBuildProjectDirectory)\</PandocOutputDir>
-    <PandocTableOfContents>false</PandocTableOfContents>
-  </PropertyGroup>
 
   <ItemGroup>
     <None Remove="**\*~" />
@@ -32,7 +28,6 @@
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.1.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="PandocTasks" Version="0.1.2" />
     <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
     <PackageReference Include="Scripty.MsBuild" Version="0.7.4" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="1.1.0" />
