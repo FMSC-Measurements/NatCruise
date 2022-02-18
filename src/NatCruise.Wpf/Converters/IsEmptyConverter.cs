@@ -13,11 +13,8 @@ namespace NatCruise.Wpf.Converters
         {
             var v = value as IEnumerable;
 
-            if (v != null && v.GetEnumerator().MoveNext())
-            {
-                return false ^ Invert;
-            }
-            return true ^ Invert;
+            var isEmpty = v != null && v.GetEnumerator().MoveNext();
+            return isEmpty ^ Invert;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
