@@ -2,5 +2,3 @@
 	path = Xamarin.Forms.DataGrid
 	url = https://github.com/BenCamps/Xamarin.Forms.DataGrid.git
 	branch = new_grid
-[submodule "./Xamarin.Forms.DataGrid"]
-	url = https://github.com/BenCamps/Xamarin.Forms.DataGrid.git
