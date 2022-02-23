@@ -160,7 +160,7 @@
                       IsEnabled="{Binding CruiseMethod, Converter={StaticResource IsNotThreePMethodsConverter}}"/>
         </Grid>
 
-        <GroupBox Header="Sampleing Frequency Options"
+        <GroupBox Header="Sampling Frequency Options"
                   Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsFrequencySampleVisibilityConverter}, FallbackValue=Visible}"
                   Margin="5"
                   Height="148"
