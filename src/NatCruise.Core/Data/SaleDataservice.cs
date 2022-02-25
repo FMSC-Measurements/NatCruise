@@ -60,14 +60,14 @@ DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;",
         public IEnumerable<Cruise> GetCruises()
         {
             return Database.From<Cruise>()
-                .Join("LK_Purpose", "USING (Purpose)")
+                .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Query().ToArray();
         }
 
         public IEnumerable<Cruise> GetCruisesBySaleNumber(string saleNumber)
         {
             return Database.From<Cruise>()
-                .Join("LK_Purpose", "USING (Purpose)")
+                .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("SaleNumber = @p1")
                 .Query(saleNumber).ToArray();
         }
@@ -75,7 +75,7 @@ DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;",
         public IEnumerable<Cruise> GetCruises(string saleID)
         {
             return Database.From<Cruise>()
-                .Join("LK_Purpose", "USING (Purpose)")
+                .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("SaleID = @p1")
                 .Query(saleID).ToArray();
         }
@@ -88,7 +88,7 @@ DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;",
         public Cruise GetCruise(string cruiseID)
         {
             return Database.From<Cruise>()
-                .Join("LK_Purpose", "USING (Purpose)")
+                .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).First();
         }
