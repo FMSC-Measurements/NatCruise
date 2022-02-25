@@ -50,6 +50,12 @@ namespace FScruiser.XF
         {
             Xamarin.Forms.DataGrid.DataGridComponent.Init();
 
+            // hook up our logging service to our utility TaskExtentions class
+            // this helper extention class is used to get exceptions from
+            // 'Fire and Forget' async actions
+            var loggingService = Container.Resolve<ILoggingService>();
+            NatCruise.Util.TaskExtentions.LoggingService = loggingService;
+
             this.InitializeComponent();
 
 #if RELEASE

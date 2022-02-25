@@ -2,11 +2,13 @@
 using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Util;
 using Prism.Common;
 using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -44,10 +46,10 @@ namespace FScruiser.XF.ViewModels
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         protected ICruiseNavigationService NavigationService { get; }
 
-        public ICommand AddPlotCommand => _addPlotCommand ?? (_addPlotCommand = new Command(AddPlot));
-        public ICommand DeletePlotCommand => _deletePlotCommand ?? (_deletePlotCommand = new Command<Plot>(DeletePlot));
-        public ICommand EditPlotCommand => _editPlotCommand ?? (_editPlotCommand = new Command<Plot>(ShowEditPlot));
-        public ICommand ShowTallyPlotCommand => _showTallyPlotCommand ?? (_showTallyPlotCommand = new Command<Plot>(ShowTallyPlot));
+        public ICommand AddPlotCommand => _addPlotCommand ??= new Command(() => AddPlot().FireAndForget());
+        public ICommand DeletePlotCommand => _deletePlotCommand ??= new Command<Plot>(DeletePlot);
+        public ICommand EditPlotCommand => _editPlotCommand ??= new Command<Plot>((p) => ShowEditPlot(p).FireAndForget());
+        public ICommand ShowTallyPlotCommand => _showTallyPlotCommand ??= new Command<Plot>((p) => ShowTallyPlot(p).FireAndForget());
 
         public PlotListViewModel(ICruiseNavigationService navigationService,
             IPageDialogService dialogService,
@@ -80,11 +82,10 @@ namespace FScruiser.XF.ViewModels
                 .Any(x => x.Method == CruiseDAL.Schema.CruiseMethods.FIXCNT);
         }
 
-        public void AddPlot(object obj)
+        public Task AddPlot()
         {
             var plotID = PlotDataservice.AddNewPlot(UnitCode);
-            //NavigationService.NavigateAsync($"PlotEdit?{NavParams.PlotID}={plotID}");
-            NavigationService.ShowPlotEdit(plotID);
+            return NavigationService.ShowPlotEdit(plotID);
         }
 
         private void DeletePlot(Plot plot)
@@ -97,13 +98,12 @@ namespace FScruiser.XF.ViewModels
             RefreshPlots();
         }
 
-        public void ShowEditPlot(Plot plot)
+        public Task ShowEditPlot(Plot plot)
         {
-            //NavigationService.NavigateAsync($"PlotEdit?{NavParams.PlotID}={plot.PlotID}");
-            NavigationService.ShowPlotEdit(plot.PlotID);
+            return NavigationService.ShowPlotEdit(plot.PlotID);
         }
 
-        public async void ShowTallyPlot(Plot plot)
+        public async Task ShowTallyPlot(Plot plot)
         {
             var fixCNTstrata = PlotDataservice.GetPlotStrataProxies(UnitCode).Where(x => x.Method == CruiseDAL.Schema.CruiseMethods.FIXCNT).ToArray();
 
@@ -121,15 +121,10 @@ namespace FScruiser.XF.ViewModels
                 }
 
                 if (stratum == null || stratum == "Cancel") { return; }
-
-                //await NavigationService.NavigateAsync($"FixCNTTally?{NavParams.UNIT}={UnitCode}&{NavParams.STRATUM}={stratum}&{NavParams.PLOT_NUMBER}={plot.PlotNumber}");
-
                 await NavigationService.ShowFixCNT(UnitCode, plot.PlotNumber, stratum);
             }
             else
             {
-                //await NavigationService.NavigateAsync($"PlotTally?{NavParams.PlotID}={plot.PlotID}");
-
                 await NavigationService.ShowPlotTally(plot.PlotID);
             }
         }

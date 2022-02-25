@@ -56,6 +56,10 @@ namespace NatCruise.Wpf
 #endif
 
             var container = Container;
+
+            var loggingService = container.Resolve<ILoggingService>();
+            NatCruise.Util.TaskExtentions.LoggingService = loggingService;
+
             var regionManager = container.Resolve<IRegionManager>();
             //regionManager.RegisterViewWithRegion(Regions.ContentRegion, typeof(CruiseMasterPage));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SaleView));
