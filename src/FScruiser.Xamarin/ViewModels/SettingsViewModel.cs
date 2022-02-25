@@ -10,6 +10,7 @@ using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using NatCruise.Data;
 using NatCruise.Services;
+using NatCruise.Util;
 using Prism.Ioc;
 using Prism.Navigation;
 using Xamarin.Forms;
@@ -23,11 +24,11 @@ namespace FScruiser.XF.ViewModels
         public IFileSystemService FileSystemService { get; }
         public IDataserviceProvider DataserviceProvider { get; }
 
-        public ICommand ResetDatabaseCommand => new Command(() => ResetDatabase());
-        public ICommand BackupDatabaseCommand => new Command(async () => await BackupDatabase());
-        public ICommand LoadDatabaseCommand => new Command(LoadDatabase);
-        public ICommand ShowUserAgreementCommand => new Command(() => NavigationService.ShowUserAgreement());
-        public ICommand ShowPrivacyPolicyCommand => new Command(() => NavigationService.ShowPrivacyPolicy());
+        public ICommand ResetDatabaseCommand => new Command(() => ResetDatabase().FireAndForget());
+        public ICommand BackupDatabaseCommand => new Command(() => BackupDatabase().FireAndForget());
+        public ICommand LoadDatabaseCommand => new Command(() => LoadDatabase().FireAndForget());
+        public ICommand ShowUserAgreementCommand => new Command(() => NavigationService.ShowUserAgreement().FireAndForget());
+        public ICommand ShowPrivacyPolicyCommand => new Command(() => NavigationService.ShowPrivacyPolicy().FireAndForget());
 
         public IFileDialogService FileDialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
@@ -48,7 +49,7 @@ namespace FScruiser.XF.ViewModels
             catch { }
         }
 
-        public async void ResetDatabase()
+        public async Task ResetDatabase()
         {
             if (await DialogService.AskYesNoAsync("This will delete all cruise data do you want to continue", "Warning", defaultNo: true))
             {
@@ -86,12 +87,12 @@ namespace FScruiser.XF.ViewModels
             { return false; }
         }
 
-        public async void LoadDatabase()
+        public async Task LoadDatabase()
         {
             var loadPath = await FileDialogService.SelectCruiseDatabaseAsync();
             if (loadPath is null) { return; }
 
-            if (await DialogService.AskYesNoAsync("Backup current cruise data before loading?", "", defaultNo: true))
+            if (await DialogService.AskYesNoAsync("Backup current cruise data before loading?", "", defaultNo: false))
             {
                 if(!await BackupDatabase())
                 { return; }

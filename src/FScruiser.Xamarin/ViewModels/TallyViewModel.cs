@@ -4,6 +4,7 @@ using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
+using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Commands;
 using Prism.Common;
@@ -149,16 +150,16 @@ namespace FScruiser.XF.ViewModels
         private CuttingUnit _cuttingUnit;
 
         public ICommand ShowTallyMenuCommand => _showTallyMenuCommand
-            ?? (_showTallyMenuCommand = new Command<TallyPopulation>(ShowTallyMenu));
+            ?? (_showTallyMenuCommand = new Command<TallyPopulation>((tp) => ShowTallyMenu(tp).FireAndForget()));
 
         public ICommand TallyCommand => _tallyCommand
-            ?? (_tallyCommand = new DelegateCommand<TallyPopulation>(async (x) => await TallyAsync(x)));
+            ?? (_tallyCommand = new DelegateCommand<TallyPopulation>((tp) => TallyAsync(tp).FireAndForget("TallyAsync")));
 
         public ICommand StratumSelectedCommand => _stratumSelectedCommand
             ?? (_stratumSelectedCommand = new Command<string>(x => SetStratumFilter(x)));
 
         public ICommand EditTreeCommand => _editTreeCommand
-            ?? (_editTreeCommand = new Command<string>(EditTree));
+            ?? (_editTreeCommand = new Command<string>((treeID) => EditTree(treeID).FireAndForget()));
 
         public ICommand UntallyCommand => _untallyCommand
             ?? (_untallyCommand = new Command<string>(Untally));
@@ -171,7 +172,8 @@ namespace FScruiser.XF.ViewModels
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
 
-        public ICruiseDialogService DialogService { get; }
+        public ICruiseDialogService CruiseDialogService { get; }
+        public IDialogService DialogService { get; }
         public ISampleSelectorDataService SampleSelectorService { get; }
         public ICruisersDataservice CruisersDataService { get; }
         public ISoundService SoundService { get; }
@@ -184,7 +186,8 @@ namespace FScruiser.XF.ViewModels
             ICuttingUnitDataservice cuttingUnitDataservice,
             ITallyPopulationDataservice tallyPopulationDataservice,
             ISampleSelectorDataService sampleSelectorDataservice,
-            ICruiseDialogService dialogService,
+            ICruiseDialogService cruiseDialogService,
+            IDialogService dialogService, 
             ISoundService soundService,
             ICruisersDataservice cruisersDataservice,
             IContainerProvider containerProvider,
@@ -195,6 +198,7 @@ namespace FScruiser.XF.ViewModels
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
             SampleSelectorService = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
+            CruiseDialogService = cruiseDialogService ?? throw new ArgumentNullException(nameof(cruiseDialogService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             CruisersDataService = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
@@ -277,26 +281,21 @@ namespace FScruiser.XF.ViewModels
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
 
-        private void ShowTallyMenu(TallyPopulation tp)
+        private Task ShowTallyMenu(TallyPopulation tp)
         {
-            NavigationService.ShowTreeCountEdit(UnitCode, tp.StratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead);
-
-            //NavigationService.NavigateAsync($"TreeCountEdit?{NavParams.UNIT}={UnitCode}&{NavParams.STRATUM}={obj.StratumCode}&{NavParams.SAMPLE_GROUP}={obj.SampleGroupCode}&{NavParams.SPECIES}={obj.SpeciesCode}&{NavParams.LIVE_DEAD}={obj.LiveDead}",
-            //    useModalNavigation: true);
+            return NavigationService.ShowTreeCountEdit(UnitCode, tp.StratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead);
         }
 
-        public void EditTree(string treeID)
+        public Task EditTree(string treeID)
         {
-            NavigationService.ShowTreeEdit(treeID);
-
-            //NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, treeID } });
+            return NavigationService.ShowTreeEdit(treeID);
         }
 
         public async Task TallyAsync(TallyPopulation pop)
         {
             var entry = await TallyService.TallyAsync(UnitCode, pop);
             if (entry == null) { return; }
-            SoundService.SignalTallyAsync().ConfigureAwait(false);
+            SoundService.SignalTallyAsync().FireAndForget();
 
             pop.TreeCount = pop.TreeCount + entry.TreeCount;
             pop.SumKPI = pop.SumKPI + entry.KPI;
@@ -310,16 +309,16 @@ namespace FScruiser.XF.ViewModels
                 var isInsuranceSample = entry.CountOrMeasure == "I";
                 if (isInsuranceSample)
                 {
-                    SoundService.SignalInsuranceTreeAsync().ConfigureAwait(false);
+                    SoundService.SignalInsuranceTreeAsync().FireAndForget();
                 }
                 else
                 {
-                    SoundService.SignalMeasureTreeAsync().ConfigureAwait(false);
+                    SoundService.SignalMeasureTreeAsync().FireAndForget();
                 }
 
                 if (CruisersDataService.PromptCruiserOnSample)
                 {
-                    var cruiser = await DialogService.AskCruiserAsync();
+                    var cruiser = await CruiseDialogService.AskCruiserAsync();
                     if (cruiser != null)
                     {
                         TreeDataservice.UpdateTreeInitials(entry.TreeID, cruiser);
@@ -329,13 +328,8 @@ namespace FScruiser.XF.ViewModels
                 if (method != CruiseMethods.H_PCT)
                 {
                     var sampleType = (isInsuranceSample) ? "Insurance Tree" : "Measure Tree";
-                    DialogService.ShowMessageAsync("Tree #" + entry.TreeNumber.ToString(), sampleType).ConfigureAwait(false);
+                    DialogService.ShowNotification("Tree #" + entry.TreeNumber.ToString(), sampleType);
                 }
-
-                //if (tree.CountOrMeasure == "M" && await AskEnterMeasureTreeDataAsync(tallySettings, dialogService))
-                //{
-                //    var task = dialogService.ShowEditTreeAsync(tree, dataService);//allow method to contiue from show edit tree we will allow tally history action to be added in the background
-                //}
             }
         }
 
