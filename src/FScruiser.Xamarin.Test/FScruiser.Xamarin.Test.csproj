@@ -19,8 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />-->
-	  <PackageReference Include="CruiseDAL.V3.Models" Version="3.4.4.101" />
     <ProjectReference Include="..\FScruiser.Xamarin\FScruiser.Xamarin.csproj" />
   </ItemGroup>
 
