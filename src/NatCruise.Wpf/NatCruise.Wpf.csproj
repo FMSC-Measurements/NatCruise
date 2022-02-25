@@ -34,6 +34,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.4.4.10100" />
+		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.4.4.10102" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		
 		<PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.0.77" />
 		<PackageReference Include="MahApps.Metro">
 			<Version>2.4.9</Version>
