@@ -8,6 +8,8 @@ namespace NatCruise.Cruise.Models
     {
         private string _speciesCode;
         private string _liveDead;
+        private int _errorCount;
+        private int _warningCount;
 
         public string TreeID { get; set; }
 
@@ -48,8 +50,16 @@ namespace NatCruise.Cruise.Models
 
         public string Initials { get; set; }
 
-        public int ErrorCount { get; set; }
+        public int ErrorCount
+        {
+            get => _errorCount;
+            set => SetProperty(ref _errorCount, value);
+        }
 
-        public int WarningCount { get; set; }
+        public int WarningCount
+        {
+            get => _warningCount;
+            set => SetProperty(ref _warningCount, value);
+        }
     }
 }

@@ -151,6 +151,8 @@ INSERT INTO TallyLedger (
                 database.RollbackTransaction();
                 throw;
             }
+
+            RefreshErrorsAndWarnings(tree);
         }
 
         public string CreatePlotTree(string unitCode,
