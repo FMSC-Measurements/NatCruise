@@ -117,7 +117,9 @@ namespace NatCruise.Cruise.Services
                 {
                     if (kpi == -1)  //user entered sure to measure
                     {
-                        tallyAction = CreateTally(unitCode, pop, SampleResult.M, stm: true);
+                        // stm trees get a tree count of 0 because they aren't really considered part of the
+                        // main population
+                        tallyAction = CreateTally(unitCode, pop, SampleResult.M, treeCount: 0, stm: true);
                     }
                     else
                     {
@@ -153,7 +155,9 @@ namespace NatCruise.Cruise.Services
 
             if (kpi == -1)  //user entered sure to measure
             {
-                return CreateTally(unitCode, pop, SampleResult.M, stm: true);
+                // stm trees get a tree count of 0 because they aren't really considered part of the
+                // main population
+                return CreateTally(unitCode, pop, SampleResult.M, treeCount: 0, stm: true);
             }
             else
             {

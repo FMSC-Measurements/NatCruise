@@ -136,45 +136,53 @@ namespace FScruiser.XF.ViewModels
 
                 if (sampleGroupCode != null)
                 {
-                    var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(stratumCode);
-                    if (cruiseMethod == CruiseMethods.THREEP)
-                    {
-                        var sg = CuttingUnitDatastore.GetSampleGroup(stratumCode, sampleGroupCode);
-
-                        var defaultLD = sg.DefaultLiveDead;
-                        var subPops = CuttingUnitDatastore.GetSubPopulations(stratumCode, sampleGroupCode)
-                            .ToDictionary(x => x.SpeciesCode + ((x.LiveDead != defaultLD) ? $" ({x.LiveDead})" : ""));
-
-                        var subPopAlias = subPops.Keys.ToArray();
-                        var selectedSubPopAlias = await DialogService.AskValueAsync("Select Sub-Population", subPopAlias);
-                        if (subPops.TryGetValue(selectedSubPopAlias, out var selectedSubPop))
-                        {
-                            var kpi = await DialogService.AskKPIAsync((int)sg.MaxKPI, (int)sg.MinKPI);
-                            if (kpi is null) { return; }
-
-                            var isSTM = kpi is -1;
-                            var tree_guid = TreeDataservice.InsertManualTree(UnitCode,
-                                    stratumCode,
-                                    sampleGroupCode: sampleGroupCode,
-                                    species: selectedSubPop.SpeciesCode,
-                                    liveDead: selectedSubPop.LiveDead,
-                                    treeCount: 0,
-                                    kpi: isSTM ? 0 : kpi.Value,
-                                    stm: isSTM);
-                            var newTree = TreeDataservice.GetTree(tree_guid);
-                            AllTrees.Add(newTree);
-                        }
-                    }
-                    else
-                    {
-                        var tree_guid = TreeDataservice.InsertManualTree(UnitCode, stratumCode, sampleGroupCode, treeCount: 0);
-                        var newTree = TreeDataservice.GetTree(tree_guid);
-
-                        AllTrees.Add(newTree);
-                    }
-                    OnTreeAdded(null);
+                    await AddTree(stratumCode, sampleGroupCode);
                 }
             }
+        }
+
+        protected async Task AddTree(string stratumCode, string sampleGroupCode)
+        {
+            var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(stratumCode);
+            if (cruiseMethod == CruiseMethods.THREEP || cruiseMethod == CruiseMethods.S3P)
+            {
+                var sg = CuttingUnitDatastore.GetSampleGroup(stratumCode, sampleGroupCode);
+
+                var defaultLD = sg.DefaultLiveDead;
+                var subPops = CuttingUnitDatastore.GetSubPopulations(stratumCode, sampleGroupCode)
+                    .ToDictionary(x => x.SpeciesCode + ((x.LiveDead != defaultLD) ? $" ({x.LiveDead})" : ""));
+
+                var subPopAlias = subPops.Keys.ToArray();
+                var selectedSubPopAlias = await DialogService.AskValueAsync("Select Sub-Population", subPopAlias);
+                if (subPops.TryGetValue(selectedSubPopAlias, out var selectedSubPop))
+                {
+                    var kpi = await DialogService.AskKPIAsync((int)sg.MaxKPI, (int)sg.MinKPI);
+                    if (kpi is null) { return; }
+
+                    var isSTM = kpi is -1;
+                    var tree_guid = TreeDataservice.InsertManualTree(UnitCode,
+                            stratumCode,
+                            sampleGroupCode: sampleGroupCode,
+                            species: selectedSubPop.SpeciesCode,
+                            liveDead: selectedSubPop.LiveDead,
+                            treeCount: 0,
+                            kpi: isSTM ? 0 : kpi.Value,
+                            stm: isSTM);
+                    var newTree = TreeDataservice.GetTree(tree_guid);
+                    AllTrees.Add(newTree);
+                }
+            }
+            else
+            {
+                var isHpct = cruiseMethod == CruiseMethods.H_PCT;
+                var treeCount = (isHpct ? 1 : 0);
+
+                var tree_guid = TreeDataservice.InsertManualTree(UnitCode, stratumCode, sampleGroupCode, treeCount: treeCount);
+                var newTree = TreeDataservice.GetTree(tree_guid);
+
+                AllTrees.Add(newTree);
+            }
+            OnTreeAdded(null);
         }
 
         public void OnTreeAdded(EventArgs e)
