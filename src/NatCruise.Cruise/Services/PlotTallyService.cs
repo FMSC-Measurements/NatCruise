@@ -15,11 +15,11 @@ namespace NatCruise.Cruise.Services
 
         public ISampleSelectorDataService SampleSelectorDataservice { get; }
         public ICruiseDialogService DialogService { get; }
-        public IPlotTreeDataservice PlotTallyDataservice { get; }
+        public IPlotTreeDataservice PlotTreeDataservice { get; }
 
-        public PlotTallyService(ICruiseDialogService dialogService, IPlotTreeDataservice plotTallyDataservice, ISampleSelectorDataService sampleSelectorDataservice)
+        public PlotTallyService(ICruiseDialogService dialogService, IPlotTreeDataservice plotTreeDataservice, ISampleSelectorDataService sampleSelectorDataservice)
         {
-            PlotTallyDataservice = plotTallyDataservice ?? throw new ArgumentNullException(nameof(plotTallyDataservice));
+            PlotTreeDataservice = plotTreeDataservice ?? throw new ArgumentNullException(nameof(plotTreeDataservice));
             SampleSelectorDataservice = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
@@ -35,7 +35,7 @@ namespace NatCruise.Cruise.Services
             if (SINGLE_STAGE_PLOT.Contains(pop.Method))
             {
                 tree = CreateTree(unitCode, plot, pop, "M");
-                PlotTallyDataservice.InsertTree(tree, (SamplerState)null);
+                PlotTreeDataservice.InsertTree(tree, (SamplerState)null);
                 return tree;
             }
             else
@@ -51,7 +51,8 @@ namespace NatCruise.Cruise.Services
                         var kpi = nkpi.Value;
                         if (kpi == -1)  //user entered sure to measure
                         {
-                            tree = CreateTree(unitCode, plot, pop, "M", stm: true);
+                            // stm trees get count of 0
+                            tree = CreateTree(unitCode, plot, pop, "M", treeCount:0, stm: true);
                         }
                         else
                         {
@@ -74,11 +75,11 @@ namespace NatCruise.Cruise.Services
                     // TODO update how sample state gets persisted to make this code cleaner
                     if ((sampler is ZeroFrequencySelecter) == false)
                     {
-                        PlotTallyDataservice.InsertTree(tree, new SamplerState(sampler));
+                        PlotTreeDataservice.InsertTree(tree, new SamplerState(sampler));
                     }
                     else
                     {
-                        PlotTallyDataservice.InsertTree(tree, null);
+                        PlotTreeDataservice.InsertTree(tree, null);
                     }
                 }
             }
