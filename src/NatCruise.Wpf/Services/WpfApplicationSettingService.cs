@@ -16,8 +16,8 @@ namespace NatCruise.Wpf.Services
         }
 
         protected Settings AppSettings { get; }
-        protected string DefaultOpenCruiseDir { get; }
-        protected string DefaultOpenTemplateDir { get; }
+        public string DefaultOpenCruiseDir { get; }
+        public string DefaultOpenTemplateDir { get; }
 
         public bool EnableCrashReports
         {
