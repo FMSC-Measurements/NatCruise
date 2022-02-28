@@ -41,7 +41,7 @@ namespace FScruiser.XF.Data
             if (props.ContainsKey(CRUISERS_PROP_KEY))
             {
                 var cruisersPropValue = (string)props[CRUISERS_PROP_KEY];
-                _cruisers = cruisersPropValue.Split(',');
+                _cruisers = cruisersPropValue.Split(',', StringSplitOptions.RemoveEmptyEntries);
             }
             else
             {

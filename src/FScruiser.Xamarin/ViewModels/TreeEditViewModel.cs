@@ -35,7 +35,6 @@ namespace FScruiser.XF.ViewModels
         private bool _hasSpeciesError;
         private Command<TreeError> _showEditTreeErrorCommand;
         private IEnumerable<string> _cruisers;
-        private string _initials;
         private string _cruiseMethod;
         private IEnumerable<string> _countOrMeasureOptions;
 
@@ -571,7 +570,16 @@ namespace FScruiser.XF.ViewModels
                 RefreshTreeFieldValues(tree);
                 RefreshErrorsAndWarnings(tree);
 
-                Cruisers = CruisersDataservice.GetCruisers().ToArray();
+                var cruisers = CruisersDataservice.GetCruisers()
+                    .ToArray();
+                var initials = tree.Initials;
+                if(!string.IsNullOrEmpty(initials)
+                    && !cruisers.Contains(initials, StringComparer.OrdinalIgnoreCase))
+                {
+                    cruisers = cruisers.Append(initials).ToArray();
+                }
+
+                Cruisers = cruisers;
 
                 var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(tree.StratumCode);
                 var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod) || cruiseMethod == "FIXCNT";
