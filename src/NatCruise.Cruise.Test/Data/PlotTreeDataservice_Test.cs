@@ -6,7 +6,7 @@ using Xunit;
 
 namespace NatCruise.Cruise.Test.Data
 {
-    public class PlotTallyDataservice_Test
+    public class PlotTreeDataservice_Test
     {
         [Fact]
         public void CreatePlotTree()
@@ -26,7 +26,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = init.CreateDatabase())
             {
-                var datastore = new PlotTallyDataservice(database, cruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
+                var datastore = new PlotTreeDataservice(database, cruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
                 var treeDS = new TreeDataservice(database, cruiseID, init.DeviceID);
 
                 database.Execute(
@@ -70,7 +70,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = init.CreateDatabase())
             {
-                var datastore = new PlotTallyDataservice(database, cruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
+                var datastore = new PlotTreeDataservice(database, cruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
                 var treeDS = new TreeDataservice(database, cruiseID, init.DeviceID);
 
                 database.Execute(

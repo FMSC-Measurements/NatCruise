@@ -2,21 +2,56 @@
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using System;
+using System.Collections.Generic;
 
 namespace NatCruise.Cruise.Data
 {
-    public class PlotTallyDataservice : CruiseDataserviceBase, IPlotTallyDataservice
+    public class PlotTreeDataservice : CruiseDataserviceBase, IPlotTreeDataservice
     {
         public ISampleInfoDataservice SampleInfoDataservice { get; }
 
-        public PlotTallyDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice) : base(database, cruiseID, deviceID)
+        public PlotTreeDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice) : base(database, cruiseID, deviceID)
         {
             SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        public PlotTallyDataservice(string path, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice) : base(path, cruiseID, deviceID)
+        public PlotTreeDataservice(string path, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice) : base(path, cruiseID, deviceID)
         {
             SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
+        }
+
+        public IEnumerable<PlotTreeEntry> GetPlotTrees(string unitCode, int plotNumber)
+        {
+            return Database.Query<PlotTreeEntry>(
+@"SELECT
+    t.TreeID,
+    t.CuttingUnitCode,
+    t.TreeNumber,
+    t.PlotNumber,
+    t.StratumCode,
+    t.SampleGroupCode,
+    t.SpeciesCode,
+    t.LiveDead,
+    tl.TreeCount,
+    tl.STM,
+    tl.KPI,
+    max(tm.TotalHeight, tm.MerchHeightPrimary, tm.UpperStemHeight) AS Height,
+    max(tm.DBH, tm.DRC, tm.DBHDoubleBarkThickness) AS Diameter,
+    t.CountOrMeasure,
+    st.Method,
+    (SELECT count(*) FROM TreeError AS te WHERE Level = 'E' AND te.TreeID = tl.TreeID AND IsResolved = 0) AS ErrorCount,
+    (SELECT count(*) FROM TreeError AS te WHERE Level = 'W' AND te.TreeID = tl.TreeID AND IsResolved = 0) AS WarningCount
+FROM Tree AS t
+JOIN Stratum AS st USING (StratumCode, CruiseID)
+LEFT JOIN TallyLedger_Tree_Totals AS tl USING (TreeID)
+LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+WHERE t.CuttingUnitCode = @p1
+AND t.CruiseID = @p2
+AND t.PlotNumber = @p3
+GROUP BY tl.TreeID
+ORDER BY t.TreeNumber
+;",
+                new object[] { unitCode, CruiseID, plotNumber });
         }
 
         public void InsertTree(PlotTreeEntry tree, SamplerState samplerState)
@@ -242,6 +277,14 @@ INSERT INTO TallyLedger (
                     "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3 AND StratumCode = @p4;"
                     , unitCode, CruiseID, plotNumber, stratumCode);
             }
+        }
+
+        public void RefreshErrorsAndWarnings(PlotTreeEntry treeEntry)
+        {
+            if (treeEntry is null) { throw new ArgumentNullException(nameof(treeEntry)); }
+
+            treeEntry.ErrorCount = Database.ExecuteScalar<int>("SELECT count(*) FROM TreeError WHERE Level = 'E' AND IsResolved = 0 AND TreeID = @p1;", treeEntry.TreeID);
+            treeEntry.WarningCount = Database.ExecuteScalar<int>("SELECT count(*) FROM TreeError WHERE Level = 'W' AND IsResolved = 0 AND TreeID = @p1;", treeEntry.TreeID);
         }
     }
 }
