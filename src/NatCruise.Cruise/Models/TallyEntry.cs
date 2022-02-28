@@ -9,6 +9,11 @@ namespace NatCruise.Cruise.Models
     {
         private int _warningCount;
         private int _errorCount;
+        private string _stratumCode;
+        private string _sampleGroupCode;
+        private string _speciesCode;
+        private string _liveDead;
+        private string _countOrMeasure;
 
         public TallyEntry()
         { }
@@ -29,13 +34,51 @@ namespace NatCruise.Cruise.Models
             CountOrMeasure = action.SampleResult.ToString();
         }
 
+        // non changing fields
+        public string TallyLedgerID { get; set; }
+        public string TreeID { get; set; }
+        public int? TreeNumber { get; set; }
         public string CuttingUnitCode { get; set; }
-
         public int? PlotNumber { get; set; }
+        public string EntryType { get; set; }
+        public int TreeCount { get; set; }
+        public int KPI { get; set; }
+        public string Reason { get; set; }
 
-        public string StratumCode { get; set; }
+        // fields that can get changed when entry gets reloaded
+        // because we are refreshing TallyEntry records inplace
+        // we need to implement INPC on fields that can be updated
+        // this may change if we find a better way of doing reloads
+        // on the Tally page
+        public string StratumCode
+        {
+            get => _stratumCode;
+            set => SetProperty(ref _stratumCode, value);
+        }
 
-        public string SampleGroupCode { get; set; }
+        public string SampleGroupCode
+        {
+            get => _sampleGroupCode;
+            set => SetProperty(ref _sampleGroupCode, value);
+        }
+
+        public string SpeciesCode
+        {
+            get => _speciesCode;
+            set => SetProperty(ref _speciesCode, value);
+        }
+
+        public string LiveDead
+        {
+            get => _liveDead;
+            set => SetProperty(ref _liveDead, value);
+        }
+
+        public string CountOrMeasure
+        {
+            get => _countOrMeasure;
+            set => SetProperty(ref _countOrMeasure, value);
+        }
 
         public int ErrorCount
         {
@@ -48,26 +91,6 @@ namespace NatCruise.Cruise.Models
             get => _warningCount;
             set => SetProperty(ref _warningCount, value);
         }
-
-        public string SpeciesCode { get; set; }
-
-        public string LiveDead { get; set; }
-
-        public string EntryType { get; set; }
-
-        public int TreeCount { get; set; }
-
-        public int KPI { get; set; }
-
-        public string Reason { get; set; }
-
-        public int? TreeNumber { get; set; }
-
-        public string TreeID { get; set; }
-
-        public string CountOrMeasure { get; set; }
-
-        public string TallyLedgerID { get; set; }
 
         public override string ToString()
         {

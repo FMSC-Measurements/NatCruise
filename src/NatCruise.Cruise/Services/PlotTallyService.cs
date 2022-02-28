@@ -15,9 +15,9 @@ namespace NatCruise.Cruise.Services
 
         public ISampleSelectorDataService SampleSelectorDataservice { get; }
         public ICruiseDialogService DialogService { get; }
-        public IPlotTallyDataservice PlotTallyDataservice { get; }
+        public IPlotTreeDataservice PlotTallyDataservice { get; }
 
-        public PlotTallyService(ICruiseDialogService dialogService, IPlotTallyDataservice plotTallyDataservice, ISampleSelectorDataService sampleSelectorDataservice)
+        public PlotTallyService(ICruiseDialogService dialogService, IPlotTreeDataservice plotTallyDataservice, ISampleSelectorDataService sampleSelectorDataservice)
         {
             PlotTallyDataservice = plotTallyDataservice ?? throw new ArgumentNullException(nameof(plotTallyDataservice));
             SampleSelectorDataservice = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));

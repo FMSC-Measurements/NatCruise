@@ -8,6 +8,7 @@ using Prism.Common;
 using Prism.Ioc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -31,6 +32,7 @@ namespace FScruiser.XF.ViewModels
         private ICommand _deleteTreeCommand;
         private TreeEditViewModel _selectedTreeViewModel;
         private CuttingUnit _cuttingUnit;
+        private PlotTreeEntry _selectedTree;
 
         public event EventHandler TreeAdded;
 
@@ -50,13 +52,71 @@ namespace FScruiser.XF.ViewModels
         public ISoundService SoundService { get; private set; }
         public IContainerProvider ContainerProvider { get; }
         public IPlotTallyService TallyService { get; }
+        public IPlotTreeDataservice PlotTreeDataservice { get; }
+
+        public PlotTreeEntry SelectedTree
+        {
+            get => _selectedTree;
+            set
+            {
+                if (value == null) { return; }
+                var treeID = value.TreeID;
+                if (treeID != null)
+                {
+                    var treeVM = ContainerProvider.Resolve<TreeEditViewModel>((typeof(ICruiseNavigationService), NavigationService));
+                    treeVM.UseSimplifiedTreeFields = true;
+                    treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
+                    treeVM.Load();
+
+                    SetProperty(ref _selectedTree, value);
+                    SelectedTreeViewModel = treeVM;
+                }
+                else
+                {
+                    SetProperty(ref _selectedTree, null);
+                    SelectedTreeViewModel = null;
+                }
+            }
+        }
 
         public TreeEditViewModel SelectedTreeViewModel
         {
             get => _selectedTreeViewModel;
             protected set
             {
+                if (_selectedTreeViewModel != null)
+                { _selectedTreeViewModel.PropertyChanged -= SelectedTreeViewModel_PropertyChanged; }
                 SetProperty(ref _selectedTreeViewModel, value);
+                if (value != null)
+                { value.PropertyChanged += SelectedTreeViewModel_PropertyChanged; }
+            }
+        }
+
+        private void SelectedTreeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var vm = (TreeEditViewModel)sender;
+            var tree = SelectedTree;
+            if (e.PropertyName == nameof(TreeEditViewModel.ErrorsAndWarnings))
+            {
+                
+                if (tree != null)
+                {
+                    PlotTreeDataservice.RefreshErrorsAndWarnings(tree);
+                }
+            }
+            if (e.PropertyName == nameof(TreeEditViewModel.SpeciesCode))
+            {
+                if (tree != null)
+                {
+                    tree.SpeciesCode = vm.SpeciesCode;
+                }
+            }
+            if (e.PropertyName == nameof(TreeEditViewModel.LiveDead))
+            {
+                if (tree != null)
+                {
+                    tree.LiveDead = vm.LiveDead;
+                }
             }
         }
 
@@ -71,7 +131,8 @@ namespace FScruiser.XF.ViewModels
             ICruisersDataservice cruisersDataservice,
             ITallySettingsDataService tallySettings,
             IContainerProvider containerProvider,
-            IPlotTallyService tallyService)
+            IPlotTallyService tallyService,
+            IPlotTreeDataservice plotTreeDataservice)
         {
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
@@ -85,21 +146,18 @@ namespace FScruiser.XF.ViewModels
             SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
             ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
             TallyService = tallyService ?? throw new ArgumentNullException(nameof(tallyService));
+            PlotTreeDataservice = plotTreeDataservice ?? throw new ArgumentNullException(nameof(plotTreeDataservice));
         }
 
         public ICommand SelectTreeCommand => new Command<object>(SelectTree);
 
-        public ICommand EditTreeCommand => _editTreeCommand
-    ?? (_editTreeCommand = new Command<string>(ShowEditTree));
+        public ICommand EditTreeCommand => _editTreeCommand ??= new Command<string>(x => ShowEditTree(x).FireAndForget());
 
-        public ICommand DeleteTreeCommand => _deleteTreeCommand
-            ?? (_deleteTreeCommand = new Command<string>(DeleteTree));
+        public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new Command<string>(DeleteTree);
 
-        public ICommand TallyCommand => _tallyCommand
-            ?? (_tallyCommand = new Command<TallyPopulation_Plot>(async (x) => await this.TallyAsync(x)));
+        public ICommand TallyCommand => _tallyCommand ??= new Command<TallyPopulation_Plot>(x =>  TallyAsync(x).FireAndForget());
 
-        public ICommand EditPlotCommand => _editPlotCommand
-            ?? (_editPlotCommand = new Command(() => ShowEditPlot()));
+        public ICommand EditPlotCommand => _editPlotCommand ??= new Command(() => ShowEditPlot());
 
         public Plot Plot
         {
@@ -177,21 +235,7 @@ namespace FScruiser.XF.ViewModels
         public void SelectTree(object obj)
         {
             var tree = obj as PlotTreeEntry;
-            if (tree == null) { return; }
-            var treeID = tree?.TreeID;
-            if (treeID != null)
-            {
-                var treeVM = ContainerProvider.Resolve<TreeEditViewModel>((typeof(ICruiseNavigationService), NavigationService));
-                treeVM.UseSimplifiedTreeFields = true;
-                treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
-                treeVM.Load();
-
-                SelectedTreeViewModel = treeVM;
-            }
-            else
-            {
-                SelectedTreeViewModel = null;
-            }
+            SelectedTree = tree;
         }
 
         protected override void Load(IParameters parameters)
@@ -217,7 +261,7 @@ namespace FScruiser.XF.ViewModels
 
             TallyPopulations = TallyPopulationDataservice.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
             Strata = PlotDataservice.GetPlotStrataProxies(plot.CuttingUnitCode).ToArray();
-            Trees = PlotDataservice.GetPlotTreeProxies(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
+            Trees = PlotTreeDataservice.GetPlotTrees(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
 
             Plot = plot;
             PlotNumber = plot.PlotNumber;
@@ -244,14 +288,14 @@ namespace FScruiser.XF.ViewModels
             if (tree == null) { return; }
             ISoundService soundService = SoundService;
 
-            await soundService.SignalTallyAsync();
+            soundService.SignalTallyAsync().FireAndForget();
 
             _trees.Add(tree);
             OnTreeAdded();
 
             if (tree.CountOrMeasure == "M")
             {
-                await soundService.SignalMeasureTreeAsync();
+                soundService.SignalMeasureTreeAsync().FireAndForget();
 
                 if (CruisersDataservice.PromptCruiserOnSample)
                 {
@@ -264,20 +308,18 @@ namespace FScruiser.XF.ViewModels
             }
             else if (tree.CountOrMeasure == "I")
             {
-                await soundService.SignalInsuranceTreeAsync();
+                soundService.SignalInsuranceTreeAsync().FireAndForget();
             }
         }
 
-        public void ShowEditTree(string treeID)
+        public Task ShowEditTree(string treeID)
         {
-            //NavigationService.NavigateAsync("Tree", new NavigationParameters() { { NavParams.TreeID, treeID } });
-            NavigationService.ShowTreeEdit(treeID);
+            return NavigationService.ShowTreeEdit(treeID);
         }
 
-        public void ShowEditPlot()
+        public Task ShowEditPlot()
         {
-            //NavigationService.NavigateAsync("PlotEdit", new NavigationParameters($"{NavParams.PlotID}={Plot.PlotID}"));
-            NavigationService.ShowPlotEdit(Plot.PlotID);
+            return NavigationService.ShowPlotEdit(Plot.PlotID);
         }
 
         public void DeleteTree(string tree_guid)

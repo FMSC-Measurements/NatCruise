@@ -48,14 +48,14 @@ namespace FScruiser.XF.ViewModels
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public Random Random { get; }
         protected IPlotDataservice PlotDataservice { get; }
-        protected IPlotTallyDataservice PlotTallyDataservice { get; }
+        protected IPlotTreeDataservice PlotTallyDataservice { get; }
         protected ICruiseDialogService DialogService { get; }
 
         public Plot_Stratum StratumPlot { get; protected set; }
 
         public ThreePPNTPlotViewModel(ICruiseNavigationService navigationService,
             IPlotDataservice plotDataservice,
-            IPlotTallyDataservice plotTallyDataservice,
+            IPlotTreeDataservice plotTallyDataservice,
             ICruiseDialogService dialogService,
             ICuttingUnitDataservice cuttingUnitDataservice,
             Random random)
