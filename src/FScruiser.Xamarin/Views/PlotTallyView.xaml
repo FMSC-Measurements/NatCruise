@@ -169,6 +169,10 @@
                                             <ColumnDefinition Width="Auto" />
                                             <!-- spacer -->
                                             <ColumnDefinition Width="*" />
+                                            <!-- KPI -->
+                                            <ColumnDefinition Width="50" />
+                                            <!-- STM -->
+                                            <ColumnDefinition Width="Auto" />
                                             <!-- errors and warnings -->
                                             <ColumnDefinition Width="50" />
                                             <!-- button -->
@@ -224,9 +228,28 @@
                                                    FontSize="Medium" />
                                         </StackLayout>
 
+                                        <!-- KPI -->
+                                        <StackLayout Grid.Column="4"
+                                                     Grid.Row="0"
+                                                     Orientation="Vertical"
+                                                     IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
+                                            <Label Text="KPI"
+                                                   FontSize="Small" />
+                                            <Label Text="{Binding KPI}"
+                                                   FontAttributes="Bold" />
+                                        </StackLayout>
+
+                                        <!-- STM -->
+                                        <Label Grid.Column="5"
+                                               WidthRequest="50"
+                                               Text="STM"
+                                               FontAttributes="Bold"
+                                               HorizontalTextAlignment="Center"
+                                               IsVisible="{Binding STM}" />
+
                                         <!--Error and warnings -->
                                         <StackLayout Grid.Row="0"
-                                                     Grid.Column="5">
+                                                     Grid.Column="6">
 
                                             <Frame Padding="0"
                                                    CornerRadius="5"
@@ -262,7 +285,7 @@
                                         </StackLayout>
 
                                         <!-- show delete button-->
-                                        <ImageButton Grid.Column="6"
+                                        <ImageButton Grid.Column="7"
                                                      BackgroundColor="Transparent"
                                                      Clicked="openDeleteButton_Clicked"
                                                      Source="ic_more_vert_black_24dp.png"
