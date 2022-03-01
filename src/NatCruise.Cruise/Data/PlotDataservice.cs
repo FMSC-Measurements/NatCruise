@@ -419,7 +419,9 @@ AND p.PlotNumber = @p4; ",
     max(tm.TotalHeight, tm.MerchHeightPrimary, tm.UpperStemHeight) AS Height,
     max(tm.DBH, tm.DRC, tm.DBHDoubleBarkThickness) AS Diameter,
     t.CountOrMeasure,
-    st.Method
+    st.Method,
+    (SELECT count(*) FROM TreeError AS te WHERE Level = 'E' AND te.TreeID = tl.TreeID AND IsResolved = 0) AS ErrorCount,
+    (SELECT count(*) FROM TreeError AS te WHERE Level = 'W' AND te.TreeID = tl.TreeID AND IsResolved = 0) AS WarningCount
 FROM Tree AS t
 JOIN Stratum AS st USING (StratumCode, CruiseID)
 LEFT JOIN TallyLedger_Tree_Totals AS tl USING (TreeID)
@@ -477,6 +479,7 @@ ORDER BY t.TreeNumber
                 plotID).ToArray();
         }
 
+        // TODO remove unused method
         public IEnumerable<TreeError> GetTreeErrorsByPlot(string plotID)
         {
             return Database.Query<TreeError>(

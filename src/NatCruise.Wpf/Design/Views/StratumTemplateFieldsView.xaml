@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -33,6 +34,7 @@
             <ComboBox x:Name="_treeFieldCombobox"  ItemsSource="{Binding AvalibleTreeFields}" />
             <Button Style="{StaticResource AddButton}"
                     Grid.Column="1"
+                    Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
                     IsEnabled="{Binding SelectedItem, ElementName=_treeFieldCombobox, Converter={StaticResource NotNullConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -44,6 +46,7 @@
             </Button>
             <Button Style="{StaticResource RemoveButton}"
                     Grid.Column="2"
+                    Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                     IsEnabled="{Binding SelectedItem, ElementName=_tfsdListView, Converter={StaticResource NotNullConverter}}"
                     Command="{Binding RemoveCommand}"
                     CommandParameter="{Binding SelectedItem, ElementName=_tfsdListView}"/>

@@ -57,8 +57,8 @@ namespace NatCruise.Cruise.Data
             if (typeof(ILogDataservice).IsAssignableFrom(type))
             { return new LogDataservice(database, cruiseID, deviceID); }
 
-            if (typeof(IPlotTallyDataservice).IsAssignableFrom(type))
-            { return new PlotTallyDataservice(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
+            if (typeof(IPlotTreeDataservice).IsAssignableFrom(type))
+            { return new PlotTreeDataservice(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
 
             if (typeof(ISampleSelectorDataService).IsAssignableFrom(type))
             { return SampleSelectorDataService; }
@@ -100,7 +100,7 @@ namespace NatCruise.Cruise.Data
             containerRegistry.Register<ISaleDataservice>(x => GetDataservice<ISaleDataservice>());
             containerRegistry.Register<IFixCNTDataservice>(x => GetDataservice<IFixCNTDataservice>());
             containerRegistry.Register<ITallyDataservice>(x => GetDataservice<ITallyDataservice>());
-            containerRegistry.Register<IPlotTallyDataservice>(e => GetDataservice<IPlotTallyDataservice>());
+            containerRegistry.Register<IPlotTreeDataservice>(e => GetDataservice<IPlotTreeDataservice>());
             containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
             containerRegistry.Register<ISampleInfoDataservice>(x => GetDataservice<ISampleInfoDataservice>());
             containerRegistry.Register<ITreeFieldDataservice>(x => GetDataservice<ITreeFieldDataservice>());

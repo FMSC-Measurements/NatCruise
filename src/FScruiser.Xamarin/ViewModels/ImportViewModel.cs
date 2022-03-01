@@ -1,5 +1,4 @@
 ﻿using CruiseDAL;
-using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Sync;
 using FScruiser.XF.Services;
 using NatCruise;
@@ -21,7 +20,7 @@ namespace FScruiser.XF.ViewModels
 {
     public class ImportViewModel : XamarinViewModelBase
     {
-        private static readonly string[] FILE_EXTENSIONS = new[] { ".cruise", ".crz3", ".crz3db" };
+        private static readonly string[] FILE_EXTENSIONS = new[] { ".crz3", ".crz3db" };
 
         private IEnumerable<Cruise> _cruises;
         private string _selectedCruiseFile;
@@ -194,38 +193,42 @@ namespace FScruiser.XF.ViewModels
             string importPath;
             if (System.IO.Path.GetExtension(path).ToLowerInvariant() == ".cruise")
             {
-                var fileName = System.IO.Path.GetFileNameWithoutExtension(path);
-                var convertedFileName = fileName + ".crz3";
-                var convertFromPath = FileSystemService.GetFileForConvert(path);
-                var convertToPath = Path.Combine(FileSystemService.ConvertTempDir, convertedFileName);
+                // code should not be reachable, see file type check in BrowseCruiseFileAsync
+                DialogService.ShowNotification(".cruise file type not supported");
+                return null;
 
-                File.Delete(convertToPath);
-                try
-                {
-                    using var v2db = new CruiseDatastore(convertFromPath, false, null, new Updater_V2());
-                    using var v3db = new CruiseDatastore_V3(convertToPath, true);
+                //var fileName = System.IO.Path.GetFileNameWithoutExtension(path);
+                //var convertedFileName = fileName + ".crz3";
+                //var convertFromPath = FileSystemService.GetFileForConvert(path);
+                //var convertToPath = Path.Combine(FileSystemService.ConvertTempDir, convertedFileName);
 
-                    var migrator = new Migrator();
-                    if (migrator.EnsureCanMigrate(v2db, out var msg))
-                    {
-                        new Migrator().MigrateFromV2ToV3(convertFromPath, convertToPath, DeviceInfoService.DeviceID);
-                    }
-                    else
-                    {
-                        Log.LogEvent("Import Error", new Dictionary<string, string> { { "Message", msg }, });
-                        DialogService.ShowNotification(msg, "Import Error");
-                    }
-                }
-                catch (Exception e)
-                {
-                    var data = new Dictionary<string, string>() { { "FileName", path } };
-                    Log.LogException("File Error", "Unable to Migrate File", e, data);
-                    DialogService.ShowNotification("Unable to Migrate File", "File Error");
+                //File.Delete(convertToPath);
+                //try
+                //{
+                //    using var v2db = new CruiseDatastore(convertFromPath, false, null, new Updater_V2());
+                //    using var v3db = new CruiseDatastore_V3(convertToPath, true);
 
-                    return null;
-                }
+                //    var migrator = new Migrator();
+                //    if (migrator.EnsureCanMigrate(v2db, out var msg))
+                //    {
+                //        new Migrator().MigrateFromV2ToV3(convertFromPath, convertToPath, DeviceInfoService.DeviceID);
+                //    }
+                //    else
+                //    {
+                //        Log.LogEvent("Import Error", new Dictionary<string, string> { { "Message", msg }, });
+                //        DialogService.ShowNotification(msg, "Import Error");
+                //    }
+                //}
+                //catch (Exception e)
+                //{
+                //    var data = new Dictionary<string, string>() { { "FileName", path } };
+                //    Log.LogException("File Error", "Unable to Migrate File", e, data);
+                //    DialogService.ShowNotification("Unable to Migrate File", "File Error");
 
-                importPath = FileSystemService.GetFileForImport(convertToPath);
+                //    return null;
+                //}
+
+                //importPath = FileSystemService.GetFileForImport(convertToPath);
             }
             else
             {

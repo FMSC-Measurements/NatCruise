@@ -3,9 +3,11 @@ using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
+using NatCruise.Util;
 using Prism.Common;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -38,29 +40,32 @@ namespace FScruiser.XF.ViewModels
             get => _volumeFactor;
         }
 
-        public ICommand AddPlotCommand => _addPlotCommand ?? (_addPlotCommand = new Command(async () => await AddPlotAsync()));
+        public ICommand AddPlotCommand => _addPlotCommand ??= new Command(() => AddPlotAsync().FireAndForget());
 
-        public ICommand CancelCommand => _cancelCommand ?? (_cancelCommand = new Command(Cancel));
+        public ICommand CancelCommand => _cancelCommand ??= new Command(() => Cancel().FireAndForget());
 
         protected ICruiseNavigationService NavigationService { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
+        public Random Random { get; }
         protected IPlotDataservice PlotDataservice { get; }
-        protected IPlotTallyDataservice PlotTallyDataservice { get; }
+        protected IPlotTreeDataservice PlotTallyDataservice { get; }
         protected ICruiseDialogService DialogService { get; }
 
         public Plot_Stratum StratumPlot { get; protected set; }
 
         public ThreePPNTPlotViewModel(ICruiseNavigationService navigationService,
             IPlotDataservice plotDataservice,
-            IPlotTallyDataservice plotTallyDataservice,
+            IPlotTreeDataservice plotTallyDataservice,
             ICruiseDialogService dialogService,
-            ICuttingUnitDataservice cuttingUnitDataservice)
+            ICuttingUnitDataservice cuttingUnitDataservice,
+            Random random)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             PlotTallyDataservice = plotTallyDataservice ?? throw new ArgumentNullException(nameof(plotTallyDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
+            Random = random ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
         }
 
         protected override void Load(IParameters parameters)
@@ -92,12 +97,12 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        private void Cancel()
+        private Task Cancel()
         {
-            NavigationService.GoBackAsync();
+            return NavigationService.GoBackAsync();
         }
 
-        private async System.Threading.Tasks.Task AddPlotAsync()
+        private async Task AddPlotAsync()
         {
             var kpi = CalculateKPI();
             if (kpi <= 0)
@@ -105,8 +110,6 @@ namespace FScruiser.XF.ViewModels
                 await DialogService.ShowMessageAsync("Invalid Input");
                 return;
             }
-
-
 
             var datastore = PlotDataservice;
 
@@ -118,10 +121,7 @@ namespace FScruiser.XF.ViewModels
             var sampleGroupCodes = CuttingUnitDataservice.GetSampleGroupCodes(stratumCode);
             var sgCode = sampleGroupCodes.First();
 
-            
-
-            var random = new Random();
-            var randomValue = random.Next(1, StratumPlot.KZ3PPNT);
+            var randomValue = Random.Next(1, StratumPlot.KZ3PPNT);
 
             plotStratum.InCruise = true;
             plotStratum.TreeCount = TreeCount;

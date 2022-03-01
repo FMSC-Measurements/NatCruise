@@ -19,6 +19,7 @@ namespace FScruiser.XF
             containerRegistry.RegisterInstance<ILoggingService>(new AppCenterLoggerService());
             containerRegistry.Register<IPlotTallyService, PlotTallyService>();
             containerRegistry.Register<ITreeBasedTallyService, TreeBasedTallyService>();
+            containerRegistry.RegisterInstance<System.Random>(FMSC.Sampling.MersenneTwister.Instance);
 
             RegisterViews(containerRegistry);
         }

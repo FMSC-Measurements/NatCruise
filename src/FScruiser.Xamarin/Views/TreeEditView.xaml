@@ -188,11 +188,11 @@
             <StackLayout Orientation="Horizontal">
                 <Label Text="Initials"
                        AutomationProperties.IsInAccessibleTree="False" />
-                <Picker x:Name="_initialsPicker"
+                <controls:ValuePicker x:Name="_initialsPicker"
                         WidthRequest="60"
                         HeightRequest="{StaticResource minTouchableHeight}"
-                        SelectedItem="{Binding Initials}"
-                        ItemsSource="{Binding Cruisers}"
+                        SelectedValue="{Binding Initials}"
+                        ValueSource="{Binding Cruisers}"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Initials" />
             </StackLayout>

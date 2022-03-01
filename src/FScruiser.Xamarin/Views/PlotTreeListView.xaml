@@ -175,7 +175,8 @@
                            Columns="{Binding TreeFields, Converter={StaticResource treeFieldToDataGridColumnConverter}}"
                            ItemsSource="{Binding Trees}"
                            VerticalOptions="FillAndExpand"
-                           SelectionMode="Single">
+                           SelectionMode="Single"
+                           BackgroundColor="White">
                 <dg:NGDataGrid.Resources>
                     <ResourceDictionary>
                         <converters:TreeFieldToDataGridColumnConverter x:Key="treeFieldToDataGridColumnConverter" PlotNumber="True" />

@@ -33,7 +33,7 @@ namespace FScruiser.XF.Views
                 try
                 {
                     _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm.TreeFieldValues);
+                    var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
                     _treeEditControlGrid.Children.AddRange(editControls);
                 }
                 finally
@@ -65,7 +65,7 @@ namespace FScruiser.XF.Views
                 try
                 {
                     _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm.TreeFieldValues);
+                    var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
                     _treeEditControlGrid.Children.AddRange(editControls);
                 }
                 finally
@@ -80,7 +80,7 @@ namespace FScruiser.XF.Views
         }
 
 
-        private IEnumerable<View> MakeEditControls(IEnumerable<TreeFieldValue> treeFieldValues)
+        private IEnumerable<View> MakeEditControls(IEnumerable<TreeFieldValue> treeFieldValues, IEnumerable<string> cruisers)
         {
             var controls = new List<View>();
 
@@ -120,7 +120,7 @@ namespace FScruiser.XF.Views
                         .Column(counter)
                         .Row(1));
                 }
-                else if (field.Field == nameof(TreeEditViewModel.Initials))
+                else if (field.Field.Equals(nameof(TreeEditViewModel.Initials), StringComparison.OrdinalIgnoreCase))
                 {
                     var fieldLabel = new Label()
                     {
@@ -128,13 +128,23 @@ namespace FScruiser.XF.Views
                     }
                     .Column(counter)
                     .Row(0);
+                    controls.Add(fieldLabel);
 
-                    var initPicker = new ValuePicker()
-                        .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Initials))
-                        .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.Cruisers));
-                    AjustEditView(initPicker);
-
-                    controls.Add(initPicker.Column(counter).Row(1));
+                    if (cruisers.Count() > 1)
+                    {
+                        var initPicker = new ValuePicker()
+                            .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Initials))
+                            .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.Cruisers));
+                        AjustEditView(initPicker);
+                        controls.Add(initPicker.Column(counter).Row(1));
+                    }
+                    else
+                    {
+                        var initEntry = new Entry()
+                            .Bind(Entry.TextProperty, nameof(TreeEditViewModel.Initials));
+                        AjustEditView(initEntry);
+                        controls.Add(initEntry.Column(counter).Row(1));
+                    }
                 }
                 else
                 {

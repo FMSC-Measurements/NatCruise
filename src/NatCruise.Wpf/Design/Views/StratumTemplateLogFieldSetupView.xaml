@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:prism="http://prismlibrary.com/"
@@ -34,6 +35,7 @@
                       ItemsSource="{Binding AvalibleLogFields}" />
             <Button Style="{StaticResource AddButton}"
                     Grid.Column="1"
+                    Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
                     IsEnabled="{Binding SelectedItem, ElementName=_logFieldCombobox, Converter={StaticResource NotNullConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -45,6 +47,7 @@
             </Button>
             <Button Style="{StaticResource RemoveButton}"
                     Grid.Column="2"
+                    Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                     IsEnabled="{Binding SelectedItem, ElementName=_lfsListView, Converter={StaticResource NotNullConverter}}"
                     Command="{Binding RemoveCommand}"
                     CommandParameter="{Binding SelectedItem, ElementName=_lfsListView}" />

@@ -75,7 +75,7 @@
                 <DataGridTextColumn Header="Species"
                                     Binding="{Binding SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}"
                                     IsReadOnly="True" />
-                <DataGridTextColumn Header="LiveDead"
+                <DataGridTextColumn Header="Live/Dead"
                                     Binding="{Binding LiveDead, Converter={StaticResource ReplaceAnyWithNullConverter}}"
                                     IsReadOnly="True" />
                 <DataGridTextColumn Header="Product"
