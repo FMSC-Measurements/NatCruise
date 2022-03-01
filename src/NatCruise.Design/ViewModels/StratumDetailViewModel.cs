@@ -206,7 +206,7 @@ namespace NatCruise.Design.ViewModels
 
         public IEnumerable<string> YieldComponentOptions => YealdComponent_Options;
 
-        public bool IsPlot => CruiseMethods.PLOT_METHODS.Contains(Stratum?.Method) || Stratum?.Method == CruiseMethods.FIXCNT;
+        public bool IsPlot => CruiseMethods.PLOT_METHODS.Contains(Stratum?.Method) || Stratum?.Method == CruiseMethods.FIXCNT || Stratum?.Method == CruiseMethods.THREEPPNT;
 
         public bool IsVariableRariousePlot => CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(Stratum?.Method);
 
