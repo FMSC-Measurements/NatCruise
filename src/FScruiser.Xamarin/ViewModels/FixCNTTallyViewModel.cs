@@ -1,7 +1,9 @@
 ﻿using FScruiser.XF.Constants;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.Util;
 using Prism.Common;
 using System;
 using System.Collections.Generic;
@@ -23,6 +25,7 @@ namespace FScruiser.XF.ViewModels
         public IEnumerable<FixCntTallyPopulation> TallyPopulations { get; set; }
 
         public IFixCNTDataservice FixCNTDataservice { get; }
+        public ISoundService SoundService { get; }
 
         public ICommand ProcessTallyCommand => _processTallyCommand ??= new Command<FixCNTTallyBucket>(ProcessTally);
 
@@ -49,9 +52,10 @@ namespace FScruiser.XF.ViewModels
         {
         }
 
-        public FixCNTTallyViewModel(IFixCNTDataservice fixCNTDataservice)
+        public FixCNTTallyViewModel(IFixCNTDataservice fixCNTDataservice, ISoundService soundService)
         {
             FixCNTDataservice = fixCNTDataservice ?? throw new ArgumentNullException(nameof(fixCNTDataservice));
+            SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
             OneTreePerTally = fixCNTDataservice.GetOneTreePerTallyOption();
         }
 
@@ -87,6 +91,7 @@ namespace FScruiser.XF.ViewModels
             
 
             tallyBucket.TreeCount += 1;
+            SoundService.SignalTallyAsync().FireAndForget();
         }
 
         public void UnTally(FixCNTTallyBucket tallyBucket)
