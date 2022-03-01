@@ -14,6 +14,7 @@ namespace NatCruise.Cruise.Models
         private string _speciesCode;
         private string _liveDead;
         private string _countOrMeasure;
+        private int? _treeNumber;
 
         public TallyEntry()
         { }
@@ -37,7 +38,7 @@ namespace NatCruise.Cruise.Models
         // non changing fields
         public string TallyLedgerID { get; set; }
         public string TreeID { get; set; }
-        public int? TreeNumber { get; set; }
+        
         public string CuttingUnitCode { get; set; }
         public int? PlotNumber { get; set; }
         public string EntryType { get; set; }
@@ -50,6 +51,12 @@ namespace NatCruise.Cruise.Models
         // we need to implement INPC on fields that can be updated
         // this may change if we find a better way of doing reloads
         // on the Tally page
+        public int? TreeNumber
+        {
+            get => _treeNumber;
+            set => SetProperty(ref _treeNumber, value);
+        }
+
         public string StratumCode
         {
             get => _stratumCode;
