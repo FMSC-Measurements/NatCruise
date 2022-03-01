@@ -118,6 +118,13 @@ namespace FScruiser.XF.ViewModels
                     tree.LiveDead = vm.LiveDead;
                 }
             }
+            if (e.PropertyName == nameof(TreeEditViewModel.TreeCount))
+            {
+                if (tree != null)
+                {
+                    tree.TreeCount = vm.TreeCount;
+                }
+            }
         }
 
         public PlotTallyViewModel(ICruiseNavigationService navigationService,
