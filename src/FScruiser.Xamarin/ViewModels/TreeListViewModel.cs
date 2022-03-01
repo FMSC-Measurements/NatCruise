@@ -22,7 +22,6 @@ namespace FScruiser.XF.ViewModels
         private ICollection<Tree_Ex> _allTrees;
         private ICommand _addTreeCommand;
         private ICommand _showLogsCommand;
-        private string _unitCode;
         private bool _onlyShowTreesWithErrorsOrWarnings;
         private IEnumerable<TreeField> _treeFields;
         private CuttingUnit _cuttingUnit;
