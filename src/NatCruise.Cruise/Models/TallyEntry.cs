@@ -30,6 +30,7 @@ namespace NatCruise.Cruise.Models
             SpeciesCode = action.SpeciesCode;
             TreeCount = action.TreeCount;
             KPI = action.KPI;
+            STM = action.STM;
             LiveDead = action.LiveDead;
             EntryType = action.EntryType;
             CountOrMeasure = action.SampleResult.ToString();
@@ -45,6 +46,7 @@ namespace NatCruise.Cruise.Models
         public int TreeCount { get; set; }
         public int KPI { get; set; }
         public string Reason { get; set; }
+        public bool STM { get; set; }
 
         // fields that can get changed when entry gets reloaded
         // because we are refreshing TallyEntry records inplace

@@ -177,6 +177,8 @@
                                                     <ColumnDefinition Width="Auto" />
                                                     <!-- KPI -->
                                                     <ColumnDefinition Width="50" />
+                                                    <!-- STM -->
+                                                    <ColumnDefinition Width="Auto" />
                                                     <!-- errors and warnings -->
                                                     <ColumnDefinition Width="50" />
                                                     <!-- button -->
@@ -212,7 +214,7 @@
                                                        VerticalTextAlignment="Center"
                                                        HorizontalOptions="Start" />
 
-                                                
+
 
                                                 <!-- skip column 3 -->
 
@@ -231,13 +233,23 @@
                                                              Grid.Row="0"
                                                              Orientation="Vertical"
                                                              IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
-                                                    <Label Text="KPI" FontSize="Small"/>
-                                                    <Label Text="{Binding KPI}" FontAttributes="Bold" />
+                                                    <Label Text="KPI"
+                                                           FontSize="Small" />
+                                                    <Label Text="{Binding KPI}"
+                                                           FontAttributes="Bold" />
                                                 </StackLayout>
+
+                                                <!-- STM -->
+                                                <Label Grid.Column="6"
+                                                       WidthRequest="50"
+                                                       Text="STM"
+                                                       FontAttributes="Bold"
+                                                       HorizontalTextAlignment="Center"
+                                                       IsVisible="{Binding STM}" />
 
                                                 <!--Error and warnings-->
                                                 <StackLayout Grid.Row="0"
-                                                             Grid.Column="6">
+                                                             Grid.Column="7">
 
                                                     <Frame Padding="0"
                                                            CornerRadius="5"
@@ -273,7 +285,7 @@
                                                 </StackLayout>
 
                                                 <!-- show untally button-->
-                                                <ImageButton Grid.Column="7"
+                                                <ImageButton Grid.Column="8"
                                                              BackgroundColor="Transparent"
                                                              Clicked="openUntallyButton_Clicked"
                                                              Source="ic_more_vert_black_24dp.png"
@@ -331,6 +343,8 @@
                                                 <ColumnDefinition Width="Auto" />
                                                 <!-- KPI -->
                                                 <ColumnDefinition Width="50" />
+                                                <!-- STM -->
+                                                <ColumnDefinition Width="Auto" />
                                                 <!-- errors and warnings -->
                                                 <ColumnDefinition Width="50" />
                                                 <!-- empty -->
@@ -382,13 +396,23 @@
                                                          Grid.Row="0"
                                                          Orientation="Vertical"
                                                          IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
-                                                <Label Text="KPI" FontSize="Small" />
-                                                <Label Text="{Binding KPI}" FontAttributes="Bold"  />
+                                                <Label Text="KPI"
+                                                       FontSize="Small" />
+                                                <Label Text="{Binding KPI}"
+                                                       FontAttributes="Bold" />
                                             </StackLayout>
+
+                                            <!-- STM -->
+                                            <Label Grid.Column="6"
+                                                   WidthRequest="50"
+                                                   Text="STM"
+                                                   FontAttributes="Bold"
+                                                   HorizontalTextAlignment="Center"
+                                                   IsVisible="{Binding STM}" />
 
                                             <!--Error and warnings-->
                                             <StackLayout Grid.Row="0"
-                                                         Grid.Column="6">
+                                                         Grid.Column="7">
 
                                                 <Frame Padding="0"
                                                        CornerRadius="5"
@@ -451,8 +475,15 @@
                                                     <RowDefinition Height="50" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
+                                                    <!-- icon -->
                                                     <ColumnDefinition Width="40" />
+                                                    <!-- pop indicator -->
                                                     <ColumnDefinition Width="*" />
+                                                    <!-- KPI -->
+                                                    <ColumnDefinition Width="50" />
+                                                    <!-- STM -->
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <!-- show untally button-->
                                                     <ColumnDefinition Width="50" />
                                                 </Grid.ColumnDefinitions>
 
@@ -473,8 +504,27 @@
                                                                                  HorizontalOptions="Start"
                                                                                  FontSize="Small" />
 
+                                                <!-- KPI -->
+                                                <StackLayout Grid.Column="2"
+                                                             Grid.Row="0"
+                                                             Orientation="Vertical"
+                                                             IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
+                                                    <Label Text="KPI"
+                                                           FontSize="Small" />
+                                                    <Label Text="{Binding KPI}"
+                                                           FontAttributes="Bold" />
+                                                </StackLayout>
+
+                                                <!-- STM -->
+                                                <Label Grid.Column="3"
+                                                       WidthRequest="50"
+                                                       Text="STM"
+                                                       FontAttributes="Bold"
+                                                       HorizontalTextAlignment="Center"
+                                                       IsVisible="{Binding STM}" />
+
                                                 <!-- show untally button-->
-                                                <ImageButton Grid.Column="2"
+                                                <ImageButton Grid.Column="4"
                                                              BackgroundColor="Transparent"
                                                              Clicked="openUntallyButton_Clicked"
                                                              Source="ic_more_vert_black_24dp.png"
@@ -526,7 +576,7 @@
                         <Label Grid.ColumnSpan="3"
                                Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
                                TextColor="{StaticResource darkText}"
-                               FontSize="Large"/>
+                               FontSize="Large" />
 
                         <ScrollView x:Name="_treeEditScrollView"
                                     Grid.Row="1"
