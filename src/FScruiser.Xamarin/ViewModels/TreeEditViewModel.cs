@@ -275,23 +275,24 @@ namespace FScruiser.XF.ViewModels
             if (string.IsNullOrWhiteSpace(curStratumCode) == false
                 && curStratumCode == newStratum)
             { return false; }
+            return true;
 
-            if (curStratumCode != null)
-            {
-                //if (!DialogService.AskYesNoAsync("You are changing the stratum of a tree" +
-                //    ", are you sure you want to do this?", "!").Result)
-                //{
-                //    return false;//do not change stratum
-                //}
-                //else
-                //{
-                return true;
-                //}
-            }
-            else
-            {
-                return true;
-            }
+            //if (curStratumCode != null)
+            //{
+            //    if (!DialogService.AskYesNoAsync("You are changing the stratum of a tree" +
+            //        ", are you sure you want to do this?", "!").Result)
+            //    {
+            //        return false;//do not change stratum
+            //    }
+            //    else
+            //    {
+            //        return true;
+            //    }
+            //}
+            //else
+            //{
+            //    return true;
+            //}
         }
 
         #endregion Stratum
@@ -354,21 +355,22 @@ namespace FScruiser.XF.ViewModels
         {
             if (string.IsNullOrWhiteSpace(newSG)) { return false; }
             if (oldValue == newSG) { return false; }
-            if (string.IsNullOrWhiteSpace(oldValue)) { return true; }
-            else
-            {
-                //TODO find a way to conferm sampleGroup canges
-                //if (!DialogService.AskYesNoAsync("You are changing the Sample Group of a tree, are you sure you want to do this?"
-                //    , "!"
-                //    , true).Result)
-                //{
-                //    return false;
-                //}
-                //else
-                //{
-                return true;
-                //}
-            }
+            return true;
+            //if (string.IsNullOrWhiteSpace(oldValue)) { return true; }
+            //else
+            //{
+            //    //TODO find a way to conferm sampleGroup canges
+            //    if (!DialogService.AskYesNoAsync("You are changing the Sample Group of a tree, are you sure you want to do this?"
+            //        , "!"
+            //        , true).Result)
+            //    {
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        return true;
+            //    }
+            //}
         }
 
         #endregion SampleGroup
