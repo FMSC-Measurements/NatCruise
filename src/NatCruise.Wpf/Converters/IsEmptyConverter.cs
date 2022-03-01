@@ -13,7 +13,7 @@ namespace NatCruise.Wpf.Converters
         {
             var v = value as IEnumerable;
 
-            var isEmpty = v != null && v.GetEnumerator().MoveNext();
+            var isEmpty = v == null || !v.GetEnumerator().MoveNext();
             return isEmpty ^ Invert;
         }
 
