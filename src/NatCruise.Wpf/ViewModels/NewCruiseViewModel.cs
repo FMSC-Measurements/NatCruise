@@ -4,6 +4,7 @@ using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Util;
 using NatCruise.Design.Validation;
 using NatCruise.Services;
 using NatCruise.Wpf.Validation;
@@ -32,6 +33,9 @@ namespace NatCruise.Wpf.ViewModels
         private bool _useCrossStrataPlotTreeNumbering = true;
         private string _templatePath;
         private ICommand _selectTemplateCommand;
+        private IEnumerable<Purpose> _purposeOptions;
+        private IEnumerable<Region> _regionOptions;
+        private IEnumerable<UOM> _uomOptions;
 
         public NewCruiseViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
             : base(new NewCruiseValidator())
@@ -114,28 +118,15 @@ namespace NatCruise.Wpf.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public ICommand CreateCruiseCommand => _createCruiseCommand ??= new DelegateCommand(() => CreateCruise());
-
+        public ICommand CreateCruiseCommand => _createCruiseCommand ??= new DelegateCommand(() => CreateCruise().FireAndForget());
         public ICommand SelectTemplateCommand => _selectTemplateCommand ??= new DelegateCommand(SelectTemplate);
-
         public ICommand CancelCommand => _cancelCommand ??= new DelegateCommand(Cancel);
 
-        public IEnumerable<Purpose> PurposeOptions => SetupinfoDataservice.GetPurposes();
-
-        public IEnumerable<Region> RegionOptions => SetupinfoDataservice.GetRegions();
-
+        public IEnumerable<Purpose> PurposeOptions => _purposeOptions ??= SetupinfoDataservice.GetPurposes();
+        public IEnumerable<Region> RegionOptions => _regionOptions ??= SetupinfoDataservice.GetRegions();
         public IEnumerable<Forest> ForestOptions => SetupinfoDataservice.GetForests(Region);
-
-        public IEnumerable<District> DistrictOptions
-        {
-            get
-            {
-                var stuff = SetupinfoDataservice.GetDistricts(Region, Forest);
-                return stuff;
-            }
-        }
-
-        public IEnumerable<UOM> UOMOptions => SetupinfoDataservice.GetUOMCodes();
+        public IEnumerable<District> DistrictOptions => SetupinfoDataservice.GetDistricts(Region, Forest);
+        public IEnumerable<UOM> UOMOptions => _uomOptions ??= SetupinfoDataservice.GetUOMCodes();
 
         public void Cancel()
         {

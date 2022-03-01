@@ -45,7 +45,7 @@
 
             <!-- Unit Code -->
             <StackPanel Orientation="Horizontal">
-                <Label Content="Code"
+                <Label Content="Code*"
                        Width="123" />
                 <TextBox Text="{Binding CuttingUnitCode}"
                          MaxLength="{x:Static dsgn:Constants.UNITCODE_MAXLENGTH}" />
@@ -79,7 +79,7 @@
 
             <!-- Payment Unit -->
             <StackPanel Orientation="Horizontal">
-                <Label Content="PaymentUnit"
+                <Label Content="Payment Unit"
                        Width="123" />
                 <TextBox Text="{Binding PaymentUnit}" />
             </StackPanel>

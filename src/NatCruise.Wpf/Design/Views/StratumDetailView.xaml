@@ -125,7 +125,7 @@
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
-                       Content="FPS:"
+                       Content="FPS*"
                        Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}" />
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
@@ -135,7 +135,7 @@
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
-                       Content="KZ (3PPNT)"
+                       Content="KZ (3PPNT)*"
                        Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}" />
                 <TextBox Grid.Row="2"
                          Grid.Column="1"
@@ -145,7 +145,7 @@
 
                 <Label Grid.Column="0"
                        Grid.Row="3"
-                       Content="FIXCNT Field"
+                       Content="FIXCNT Field*"
                        Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
                 <ComboBox Grid.Column="1"
                           Grid.Row="3"

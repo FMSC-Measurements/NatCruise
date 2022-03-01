@@ -101,7 +101,7 @@
         <WrapPanel Grid.RowSpan="2"
                    Grid.Column="1">
             <GroupBox Grid.Column="1"
-                      Header="FixNT"
+                      Header="FixCNT"
                       Margin="3"
                       Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsFixCNTMethodVisibilityConverter}, FallbackValue=Visible}">
                 <Grid DataContext="{Binding SelectedItem, ElementName=_subpopListView}">
@@ -115,19 +115,19 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Label Content="Interval"
+                    <Label Content="Interval*"
                            Grid.Row="0" />
                     <TextBox Text="{Binding IntervalSize}"
                              Grid.Column="1" />
 
-                    <Label Content="Min"
+                    <Label Content="Min*"
                            Grid.Row="1" />
                     <TextBox Text="{Binding Min}"
                              Grid.Column="1"
                              Grid.Row="1" />
 
                     <Label Grid.Row="2"
-                           Content="Max" />
+                           Content="Max*" />
                     <TextBox Text="{Binding Max}"
                              Grid.Column="1"
                              Grid.Row="2" />

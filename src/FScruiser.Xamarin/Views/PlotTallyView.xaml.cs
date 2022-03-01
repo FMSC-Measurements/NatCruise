@@ -159,22 +159,39 @@ namespace FScruiser.XF.Views
                     controls.Add(fieldLabel);
                     controls.Add(editControl);
                 }
-                else if (field.Field == nameof(TreeEditViewModel.Initials))
+                else if (field.Field.Equals(nameof(TreeEditViewModel.Initials), StringComparison.OrdinalIgnoreCase))
                 {
                     var fieldLabel = new Label()
                     {
                         Text = field.Heading
+                    };
+                    controls.Add(fieldLabel.Column(colCounter).Row(0));
+
+                    var cruisers = vm.Cruisers;
+
+                    if (cruisers.Count() > 1)
+                    {
+                        var initPicker = new ValuePicker()
+                            .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Initials))
+                            .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.Cruisers));
+                        SetupEditView(initPicker, fieldLabel);
+                        controls.Add(initPicker.Column(colCounter).Row(1));
                     }
-                    .Column(colCounter)
-                    .Row(0);
+                    else
+                    {
+                        var initEntry = new Entry()
+                            .Bind(Entry.TextProperty, nameof(TreeEditViewModel.Initials));
+                        SetupEditView(initEntry, fieldLabel);
+                        controls.Add(initEntry.Column(colCounter).Row(1));
+                    }
 
-                    var initPicker = new ValuePicker()
-                        .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Initials))
-                        .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.Cruisers));
-                    SetupEditView(initPicker, fieldLabel);
+                    //var initPicker = new ValuePicker()
+                    //    .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Initials))
+                    //    .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.Cruisers));
+                    //SetupEditView(initPicker, fieldLabel);
 
-                    controls.Add(fieldLabel);
-                    controls.Add(initPicker.Column(colCounter).Row(1));
+                    
+                    //controls.Add(initPicker.Column(colCounter).Row(1));
                 }
                 else
                 {

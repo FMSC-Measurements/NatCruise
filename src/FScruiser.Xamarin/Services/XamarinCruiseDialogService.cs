@@ -26,6 +26,8 @@ namespace FScruiser.XF.Services
 
         private Page GetCurrentPage()
         {
+            // TODO do we need to get the Navigation using this method
+            // or can we get the Navigation in the constructor
             Page page = null;
             if (ApplicationProvider.MainPage.Navigation.ModalStack.Count > 0)
                 page = ApplicationProvider.MainPage.Navigation.ModalStack.LastOrDefault();
@@ -40,6 +42,7 @@ namespace FScruiser.XF.Services
 
         public Task<bool> AskCancelAsync(string message, string caption, bool defaultCancel)
         {
+            // TODO
             //throw new NotImplementedException();
             return Task.FromResult(false);
         }
@@ -49,6 +52,7 @@ namespace FScruiser.XF.Services
             var cruisers = GetCruisers();
 
             if (cruisers.Count() == 0) { return null; }
+            if (cruisers.Count() == 1) { return cruisers[0]; }
 
             var result = await GetCurrentPage().DisplayActionSheet("Select Cruiser", "Cancel", null, cruisers);
 
@@ -73,6 +77,7 @@ namespace FScruiser.XF.Services
                 throw new InvalidOperationException("only one dialog can be active at a time");
             }
 
+            // TODO can we improve performance by reusing view?
             var view = new AskKpiView() { MinKPI = min, MaxKPI = max };
 
             void handelClose(object sender, object output)

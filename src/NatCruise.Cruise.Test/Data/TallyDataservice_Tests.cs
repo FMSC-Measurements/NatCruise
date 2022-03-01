@@ -35,9 +35,10 @@ namespace NatCruise.Cruise.Test.Data
                 var pop = tpds.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead);
 
                 // insert entry using InsertTallyAction
-                datastore.InsertTallyAction(new TallyAction(unit, pop));
+                datastore.InsertTallyAction(new TallyAction(unit, pop) { STM = true, KPI = 123});
                 var tallyEntries = datastore.GetTallyEntriesByUnitCode(unit);
                 tallyEntries.Should().HaveCount(1);
+                tallyEntries.Should().Contain(x => x.STM == true && x.KPI == 123);
 
                 // add another entry using insertTallyLedger
                 datastore.InsertTallyLedger(new TallyLedger(unit, pop));

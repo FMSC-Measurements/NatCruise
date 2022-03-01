@@ -1,10 +1,14 @@
 ﻿using NatCruise.Cruise.Models;
 using NatCruise.Data;
+using System.Collections.Generic;
 
 namespace NatCruise.Cruise.Data
 {
-    public interface IPlotTallyDataservice : IDataservice
+    public interface IPlotTreeDataservice : IDataservice
     {
+
+        IEnumerable<PlotTreeEntry> GetPlotTrees(string unitCode, int plotNumber);
+
         void InsertTree(PlotTreeEntry tree, SamplerState samplerState);
 
         string CreatePlotTree(string unitCode,
@@ -19,5 +23,7 @@ namespace NatCruise.Cruise.Data
             bool stm = false);
 
         int GetNextPlotTreeNumber(string unitCode, string stratumCode, int plotNumber);
+
+        void RefreshErrorsAndWarnings(PlotTreeEntry treeEntry);
     }
 }

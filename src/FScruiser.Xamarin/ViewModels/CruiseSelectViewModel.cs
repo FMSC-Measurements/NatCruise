@@ -7,6 +7,7 @@ using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Models;
 using NatCruise.Services;
+using NatCruise.Util;
 using Prism.Common;
 using System;
 using System.Collections.Generic;
@@ -36,10 +37,10 @@ namespace FScruiser.XF.ViewModels
         protected IDialogService DialogService { get; }
         protected IDeviceInfoService DeviceInfo { get; }
 
-        public ICommand OpenSelectedCruiseCommand => new Command(OpenSelectedCruise);
-        public ICommand ShareSelectedCruiseCommand => new Command(ShareSelectedCruise);
-        public ICommand ExportSelectedCruiseCommand => new Command(async () => await ExportSelectedCruise());
-        public ICommand DeleteSelectedCruiseCommand => new Command(DeleteSelectedCruise);
+        public ICommand OpenSelectedCruiseCommand => new Command(() => OpenSelectedCruise().FireAndForget());
+        public ICommand ShareSelectedCruiseCommand => new Command(() => ShareSelectedCruise().FireAndForget());
+        public ICommand ExportSelectedCruiseCommand => new Command(() => ExportSelectedCruise().FireAndForget());
+        public ICommand DeleteSelectedCruiseCommand => new Command(() => DeleteSelectedCruise().FireAndForget());
 
         public Cruise SelectedCruise
         {
@@ -72,54 +73,25 @@ namespace FScruiser.XF.ViewModels
             DeviceInfo = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
         }
 
-        public void OpenSelectedCruise()
+        public Task OpenSelectedCruise()
         {
             var selectedCruise = SelectedCruise;
-            if (selectedCruise == null) { return; }
-            SelectCruise(selectedCruise);
+            if (selectedCruise == null) { return Task.CompletedTask; }
+            return SelectCruise(selectedCruise);
         }
 
-        public void SelectCruise(Cruise cruise)
+        public Task SelectCruise(Cruise cruise)
         {
             var cruiseID = cruise.CruiseID;
             DataserviceProvider.CruiseID = cruiseID;
-            NavigationService.ShowCruiseLandingLayout();
+            return NavigationService.ShowCruiseLandingLayout();
         }
 
         public Task ExportSelectedCruise()
         {
             var selectedCruise = SelectedCruise;
-            if (selectedCruise == null) { return null; }
+            if (selectedCruise == null) { return Task.CompletedTask; }
             return ExportCruise(selectedCruise);
-        }
-
-        public void ShareSelectedCruise()
-        {
-            var selectedCruise = SelectedCruise;
-            if (selectedCruise == null) { return; }
-            ShareCruise(selectedCruise);
-        }
-
-        public void ShareCruise(Cruise cruise)
-        {
-            var timestamp = DateTime.Now.ToString(EXPORT_TIMESTAMP_FORMAT);
-            var deviceName = DeviceInfo.DeviceName;
-            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.PurposeShortCode.Replace(' ', '_')}_{timestamp}_{deviceName}.crz3";
-            var exportTempDir = FileSystemService.ExportTempDir;
-            var fileToExport = Path.Combine(exportTempDir, defaultFileName);
-
-            var db = DataserviceProvider.Database;
-            using (var destDb = new CruiseDatastore_V3(fileToExport, true))
-            {
-                var cruiseCopier = new CruiseCopier();
-                cruiseCopier.Copy(db, destDb, cruise.CruiseID);
-            }
-
-            Share.RequestAsync(new ShareFileRequest
-            {
-                Title = defaultFileName,
-                File = new ShareFile(fileToExport),
-            });
         }
 
         public async Task ExportCruise(Cruise cruise)
@@ -151,14 +123,45 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public void DeleteSelectedCruise()
+        public Task ShareSelectedCruise()
         {
             var selectedCruise = SelectedCruise;
-            if (selectedCruise == null) { return; }
-            DeleteSelectedCruise(selectedCruise);
+            if (selectedCruise == null) { return Task.CompletedTask; }
+            return ShareCruise(selectedCruise);
         }
 
-        public async void DeleteSelectedCruise(Cruise cruise)
+        public Task ShareCruise(Cruise cruise)
+        {
+            var timestamp = DateTime.Now.ToString(EXPORT_TIMESTAMP_FORMAT);
+            var deviceName = DeviceInfo.DeviceName;
+            var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.PurposeShortCode.Replace(' ', '_')}_{timestamp}_{deviceName}.crz3";
+            var exportTempDir = FileSystemService.ExportTempDir;
+            var fileToExport = Path.Combine(exportTempDir, defaultFileName);
+
+            var db = DataserviceProvider.Database;
+            using (var destDb = new CruiseDatastore_V3(fileToExport, true))
+            {
+                var cruiseCopier = new CruiseCopier();
+                cruiseCopier.Copy(db, destDb, cruise.CruiseID);
+            }
+
+            return Share.RequestAsync(new ShareFileRequest
+            {
+                Title = defaultFileName,
+                File = new ShareFile(fileToExport),
+            });
+        }
+
+        
+
+        public Task DeleteSelectedCruise()
+        {
+            var selectedCruise = SelectedCruise;
+            if (selectedCruise == null) { return Task.CompletedTask; }
+            return DeleteSelectedCruise(selectedCruise);
+        }
+
+        public async Task DeleteSelectedCruise(Cruise cruise)
         {
             if (await DialogService.AskYesNoAsync("Do you want to delete the cruise", "Warning", true) == true)
             {

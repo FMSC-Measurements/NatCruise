@@ -147,7 +147,7 @@ namespace NatCruise.Cruise.Test.Data
             using (var db = init.CreateDatabase())
             {
                 var ds = new PlotDataservice(db, init.CruiseID, init.DeviceID);
-                var plotTallyds = new PlotTallyDataservice(db, init.CruiseID, init.DeviceID, new SamplerInfoDataservice(db, init.CruiseID, init.DeviceID));
+                var plotTallyds = new PlotTreeDataservice(db, init.CruiseID, init.DeviceID, new SamplerInfoDataservice(db, init.CruiseID, init.DeviceID));
                 var plotid = ds.AddNewPlot(unitCode);
 
                 var plot_stratum = ds.GetPlot_Strata(unitCode, plotNumber).First();
@@ -542,7 +542,7 @@ namespace NatCruise.Cruise.Test.Data
             using (var database = init.CreateDatabase())
             {
                 var datastore = new PlotDataservice(database, init.CruiseID, init.DeviceID);
-                var plotTallyds = new PlotTallyDataservice(database, init.CruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
+                var plotTallyds = new PlotTreeDataservice(database, init.CruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
                 var plotID = datastore.AddNewPlot(unitCode);

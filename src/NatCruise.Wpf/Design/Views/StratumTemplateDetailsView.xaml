@@ -71,7 +71,7 @@
                          MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
 
                 <Label Grid.Row="0"
-                       Content="Template Name" />
+                       Content="Template Name*" />
 
                 <TextBox Grid.Row="0"
                          Grid.Column="1"

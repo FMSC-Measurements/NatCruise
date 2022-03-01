@@ -22,9 +22,15 @@ namespace NatCruise.Wpf.Services
 
         public string SelectCruiseFile()
         {
+            var initialDir = AppSettings.LastOpenCruiseDir;
+            if(!System.IO.Directory.Exists(initialDir))
+            {
+                initialDir = AppSettings.DefaultOpenCruiseDir;
+            }
+
             var dialog = new OpenFileDialog()
             {
-                InitialDirectory = AppSettings.LastOpenCruiseDir,
+                InitialDirectory = initialDir,
                 DefaultExt = "*.crz3",
                 Filter = "All V3 file types|*.crz3;*.crz3t;|" +
                          "cruise files V3 (*.crz3)|*.crz3|" +
@@ -91,9 +97,13 @@ namespace NatCruise.Wpf.Services
 
         public string SelectTemplateFile()
         {
+            var initialDir = AppSettings.LastOpenTemplateDir;
+            if(!System.IO.Directory.Exists(initialDir))
+            { initialDir = AppSettings.DefaultOpenTemplateDir; }
+
             var dialog = new OpenFileDialog()
             {
-                InitialDirectory = AppSettings.LastOpenTemplateDir,
+                InitialDirectory = initialDir,
                 DefaultExt = "*.crz3t",
                 Filter = "All Template Files|*.crz3t;*.cut|V3 Template File|*.crz3t| V2 Template File|*.cut",
             };
