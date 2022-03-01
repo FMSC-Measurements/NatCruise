@@ -226,7 +226,7 @@
 
                                         <!--Error and warnings -->
                                         <StackLayout Grid.Row="0"
-                                                     Grid.Column="6">
+                                                     Grid.Column="5">
 
                                             <Frame Padding="0"
                                                    CornerRadius="5"
@@ -262,7 +262,7 @@
                                         </StackLayout>
 
                                         <!-- show delete button-->
-                                        <ImageButton Grid.Column="5"
+                                        <ImageButton Grid.Column="6"
                                                      BackgroundColor="Transparent"
                                                      Clicked="openDeleteButton_Clicked"
                                                      Source="ic_more_vert_black_24dp.png"
