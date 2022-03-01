@@ -33,8 +33,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.4.4.10100" />
-		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.4.4.10102" />
+		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.5.0.10200" />
+		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.5.0.10200" />
 	</ItemGroup>
 	
 	<ItemGroup>
