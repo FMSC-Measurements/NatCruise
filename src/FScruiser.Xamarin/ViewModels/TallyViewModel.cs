@@ -271,7 +271,7 @@ namespace FScruiser.XF.ViewModels
                 // and add any new items
                 // we should only need to add entries when coming back from edit tree counts and only be adding one entry when doing so
 
-                var newTallyEntries = new List<TallyEntry>();
+                //var newTallyEntries = new List<TallyEntry>();
                 var tallyEntries = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse();
 
                 var tfIDLookup = tf.ToDictionary(x => x.TallyLedgerID);
@@ -282,6 +282,7 @@ namespace FScruiser.XF.ViewModels
                     if(tfIDLookup.ContainsKey(eTlID))
                     {
                         var e = tfIDLookup[eTlID];
+                        e.TreeNumber = entry.TreeNumber;
                         e.StratumCode = entry.StratumCode;
                         e.SampleGroupCode = entry.SampleGroupCode;
                         e.SpeciesCode = entry.SpeciesCode;
@@ -292,7 +293,7 @@ namespace FScruiser.XF.ViewModels
                     }
                     else
                     {
-                        newTallyEntries.Add(entry);
+                        tf.Add(entry);
                     }
                 }
             }
@@ -370,12 +371,13 @@ namespace FScruiser.XF.ViewModels
             TallyDataservice.DeleteTallyEntry(tallyLedgerID);
 
             var tallyEntry = TallyFeed.First(x => x.TallyLedgerID == tallyLedgerID);
-            var tallyPopulation = Tallies.First(x => x.StratumCode == tallyEntry.StratumCode
+            var tallyPopulation = Tallies.FirstOrDefault(x => x.StratumCode == tallyEntry.StratumCode
             && x.SampleGroupCode == tallyEntry.SampleGroupCode
-            && x.SpeciesCode == tallyEntry.SpeciesCode
-            && x.LiveDead == tallyEntry.LiveDead);
+            && (x.SpeciesCode == tallyEntry.SpeciesCode || x.SpeciesCode is null)
+            && (x.LiveDead == tallyEntry.LiveDead || x.LiveDead is null));
+            if (tallyPopulation != null)
+            { tallyPopulation.TreeCount -= tallyEntry.TreeCount; }
 
-            tallyPopulation.TreeCount -= tallyEntry.TreeCount;
             TallyFeed.Remove(TallyFeed.First(x => x.TallyLedgerID == tallyLedgerID));
         }
 
