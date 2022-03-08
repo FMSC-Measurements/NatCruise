@@ -8,4 +8,7 @@ for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio
 
 if exist "%MsBuildPath%" (
   "%MsBuildPath%" %*
+) ELSE (
+	Echo MsBuild not found
+	Exit /B 1
 )
