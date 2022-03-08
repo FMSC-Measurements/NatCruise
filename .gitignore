@@ -1,3 +1,7 @@
+*.keystore
+*.keyinfo
+*.jks
+
 Artifacts
 
 ## Local only source files (possibly generated)

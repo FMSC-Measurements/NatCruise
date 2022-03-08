@@ -17,12 +17,15 @@ SET msbuild="%parent%tools\msbuild.cmd"
 
 IF NOT DEFINED build_config SET build_config="Release"
 
-::IF NOT DEFINED fscruiser_ks_password SET /p fscruiser_ks_password="Enter FScruiser Key Store Password "
+IF NOT DEFINED fscruiser_uploadks_password SET /p fscruiser_uploadks_password="Enter FScruiser Upload Key Store Password "
 
 :: msbuild xamarin doc https://docs.microsoft.com/en-us/xamarin/android/deploy-test/building-apps/
 
 call %msbuild% -restore "%parent%FScruiser.Droid\FScruiser.Droid.csproj" ^
 					-t:SignAndroidPackage ^
+					-p:AndroidKeyStore=True ^
+					-p:AndroidSigningKeyStore="%parent%FScruiser.Droid\uploadKeystore.jks" ^
+					-p:AndroidSigningStorePass=env:fscruiser_uploadks_password ^
 					-p:Configuration=%build_config% ^
 					-p:AndroidPackageFormat=aab 
 
