@@ -25,6 +25,8 @@ call %msbuild% -restore "%parent%FScruiser.Droid\FScruiser.Droid.csproj" ^
 					-t:SignAndroidPackage ^
 					-p:AndroidKeyStore=True ^
 					-p:AndroidSigningKeyStore="%parent%FScruiser.Droid\uploadKeystore.jks" ^
+					-p:AndroidSigningKeyAlias=upload ^
+					-p:AndroidSigningKeyPass=env:fscruiser_uploadks_password ^
 					-p:AndroidSigningStorePass=env:fscruiser_uploadks_password ^
 					-p:Configuration=%build_config% ^
 					-p:AndroidPackageFormat=aab 
