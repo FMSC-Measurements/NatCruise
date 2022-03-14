@@ -13,12 +13,12 @@
 		<PackageReference Include="Prism.Core" Version="8.0.0.1909" />
 	</ItemGroup>
 
-	<!--<ItemGroup>
-    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
-    <ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
-  </ItemGroup>-->
-
-	<ItemGroup>
+	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'True'">
+		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
+		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'false' OR $(UseCruiseDALProjRefs) == '' ">
 		<PackageReference Include="CruiseDAL.V3" Version="3.5.0.102" />
 		<PackageReference Include="CruiseDAL.V3.Models" Version="3.5.0.102" />
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.2" />
