@@ -146,6 +146,21 @@ namespace NatCruise.Test
             return database;
         }
 
+        public static void InitializeDatabase(DatastoreInitializer @this, CruiseDatastore_V3 db)
+        {
+            InitializeDatabase(db,
+                @this.DeviceID,
+                @this.CruiseID,
+                @this.SaleID,
+                @this.Units,
+                @this.Strata,
+                @this.UnitStrata,
+                @this.SampleGroups,
+                @this.Species,
+                @this.TreeDefaults,
+                @this.Subpops);
+        }
+
         public static void InitializeDatabase(CruiseDatastore_V3 db,
     string deviceID,
     string cruiseID,

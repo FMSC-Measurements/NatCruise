@@ -34,7 +34,8 @@ namespace NatCruise.Cruise.Data
             (SELECT ifnull(sum(TreeCount), 0) FROM
                 TallyLedger AS tl
             WHERE
-                tl.CuttingUnitCode = cust.CuttingUnitCode
+                tl.CruiseID = tp.CruiseID
+                AND tl.CuttingUnitCode = cust.CuttingUnitCode
                 AND tl.StratumCode = tp.StratumCode
                 AND tl.SampleGroupCode = tp.SampleGroupCode
                 AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
@@ -43,6 +44,7 @@ namespace NatCruise.Cruise.Data
             (SELECT ifnull(sum(KPI), 0) FROM
                 TallyLedger AS tl
             WHERE
+                tl.CruiseID = tp.CruiseID
                 tl.CuttingUnitCode = cust.CuttingUnitCode
                 AND tl.StratumCode = tp.StratumCode
                 AND tl.SampleGroupCode = tp.SampleGroupCode
