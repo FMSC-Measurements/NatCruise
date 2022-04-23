@@ -4,8 +4,6 @@ using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Data
 {
@@ -24,8 +22,10 @@ namespace NatCruise.Data
             var database = Database;
             var saleNumber = database.ExecuteScalar<string>("SELECT SaleNumber FROM Cruise WHERE CruiseID = @p1;", cruiseID);
             database.Execute("DELETE FROM Cruise WHERE CruiseID = @p1;", cruiseID);
+            // clean up sale records if there is no more cruise associated with them
             database.Execute("DELETE FROM Sale WHERE SaleNumber = @p1 AND (SELECT count(*) FROM Cruise WHERE SaleNumber = @p1) = 0; ", saleNumber);
 
+            // clean up tombstone records
             database.Execute2(
 @"DELETE FROM TreeDefaultValue_Tombstone WHERE CruiseID = @CruiseID;
 DELETE FROM CuttingUnit_Tombstone WHERE CruiseID = @CruiseID;
@@ -54,7 +54,6 @@ DELETE FROM VolumeEquation_Tombstone WHERE CruiseID = @CruiseID;
 DELETE FROM StratumTemplate_Tombstone WHERE CruiseID = @CruiseID;
 DELETE FROM StratumTemplateTreeFieldSetup_Tombstone WHERE CruiseID = @CruiseID;
 DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;", new { CruiseID = cruiseID });
-
         }
 
         public IEnumerable<Cruise> GetCruises()
@@ -64,20 +63,20 @@ DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;",
                 .Query().ToArray();
         }
 
-        public IEnumerable<Cruise> GetCruisesBySaleNumber(string saleNumber)
-        {
-            return Database.From<Cruise>()
-                .LeftJoin("LK_Purpose", "USING (Purpose)")
-                .Where("SaleNumber = @p1")
-                .Query(saleNumber).ToArray();
-        }
-
         public IEnumerable<Cruise> GetCruises(string saleID)
         {
             return Database.From<Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("SaleID = @p1")
                 .Query(saleID).ToArray();
+        }
+
+        public IEnumerable<Cruise> GetCruisesBySaleNumber(string saleNumber)
+        {
+            return Database.From<Cruise>()
+                .LeftJoin("LK_Purpose", "USING (Purpose)")
+                .Where("SaleNumber = @p1")
+                .Query(saleNumber).ToArray();
         }
 
         public Cruise GetCruise()
@@ -137,7 +136,7 @@ DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;",
             if (cruise is null) { throw new ArgumentNullException(nameof(cruise)); }
 
             Database.Execute2(
-@"UPDATE Cruise SET 
+@"UPDATE Cruise SET
     Purpose = @Purpose,
     Remarks = @Remarks,
     DefaultUOM = @DefaultUOM,
