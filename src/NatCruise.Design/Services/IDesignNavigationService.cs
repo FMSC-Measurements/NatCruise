@@ -33,5 +33,7 @@ namespace NatCruise.Design.Services
 
         Task ShowLogFields();
         Task ShowDesignChecks();
+
+        Task ShowCombineFile();
     }
 }

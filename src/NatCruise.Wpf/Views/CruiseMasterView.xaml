@@ -68,6 +68,8 @@
                     Click="_logFieldsButton_Click" />
             <Button Content="Design Checks"
                     Click="_designChecks_Click" />
+            <Button Content="Combine File"
+                    Click="_combineFile_Click" />
 
         </StackPanel>
 
