@@ -11,6 +11,23 @@
              Background="White"
              d:DesignHeight="450"
              d:DesignWidth="800">
+
+    <!--<DataGrid ItemsSource="{Binding TreeFields}"
+              SelectionMode="Single"
+              AutoGenerateColumns="False"
+              GridLinesVisibility="All">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Field"
+                                Binding="{Binding Field}"
+                                Width="150"/>
+            <DataGridTextColumn Header="Heading"
+                                Binding="{Binding Heading}"
+                                Width="150"/>
+        </DataGrid.Columns>
+        
+
+    </DataGrid>-->
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="29*" />
@@ -30,6 +47,8 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        
+        
         <Grid Grid.Column="1"
               Grid.Row="1">
             <Grid.RowDefinitions>

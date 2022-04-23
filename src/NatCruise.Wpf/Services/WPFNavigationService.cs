@@ -132,5 +132,11 @@ namespace NatCruise.Wpf.Services
             RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(DesignChecksView));
             return Task.CompletedTask;
         }
+
+        public Task ShowCombineFile()
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(CombineFileView));
+            return Task.CompletedTask;
+        }
     }
 }

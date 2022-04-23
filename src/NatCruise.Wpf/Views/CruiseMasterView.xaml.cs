@@ -5,6 +5,7 @@ using Prism.Regions;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using NatCruise.Util;
 
 namespace NatCruise.Wpf.Views
 {
@@ -87,6 +88,11 @@ namespace NatCruise.Wpf.Views
         private void _designChecks_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.ShowDesignChecks();
+        }
+
+        private void _combineFile_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.ShowCombineFile().FireAndForget();
         }
     }
 }

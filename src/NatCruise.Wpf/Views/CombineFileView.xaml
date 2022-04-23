@@ -1,0 +1,744 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sync="clr-namespace:CruiseDAL.V3.Sync;assembly=CruiseDAL.V3.Sync"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
+             x:Class="NatCruise.Wpf.Views.CombineFileView"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:ResolutionDescriptionToConflictResolutionTypeConverter x:Key="resolutionConverter" />
+            <converters:IsValueConverter x:Key="isResolveModifyDest"
+                                         Value="{x:Static sync:ConflictResolutionType.ModifyDest}" />
+            <converters:IsValueConverter x:Key="isResolveModifySource"
+                                         Value="{x:Static sync:ConflictResolutionType.ModifySource}" />
+
+            <converters:IsResolutionTypeValueConverter x:Key="isResolveChoseAndMerge">
+                <sync:ConflictResolutionType>ChoseSourceMergeData</sync:ConflictResolutionType>
+                <sync:ConflictResolutionType>ChoseDestMergeData</sync:ConflictResolutionType>
+            </converters:IsResolutionTypeValueConverter>
+
+            <!-- Control Template: Downstream Conflict List -->
+            <ControlTemplate x:Key="downstreamConflitList"
+                             TargetType="DataGrid">
+                <DataGrid Height="200"
+                          ItemsSource="{TemplateBinding ItemsSource}"
+                          DataContext="{TemplateBinding DataContext}"
+                          RowDetailsTemplate="{TemplateBinding RowDetailsTemplate}"
+                          RowDetailsVisibilityMode="VisibleWhenSelected"
+                          AutoGenerateColumns="False">
+                    <!--<DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Label Content="Dest Rec Info" />
+                                <Label Content="Crew Rec Info" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>-->
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Table"
+                                            Binding="{Binding Table}" />
+                        <DataGridComboBoxColumn Header="Resolution"
+                                                ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_CHOSE}"
+                                                SelectedItemBinding="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+                        <DataGridTextColumn Header="Identity"
+                                            Binding="{Binding Identity}" />
+                        <DataGridTextColumn Header="Dest Rec Changed"
+                                            Binding="{Binding DestMod}" />
+                        <DataGridTextColumn Header="Crew Rec Changed"
+                                            Binding="{Binding SourceMod}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </ControlTemplate>
+
+            
+
+            <!-- Data Template: Cutting Unit -->
+            <DataTemplate x:Key="cuttingUnitDataTemplate">
+                <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Cutting Unit Code" />
+                        <TextBox Text="{Binding CuttingUnitCode}"
+                                 Width="50" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- Data Template: Stratum-->
+            <DataTemplate x:Key="stratumDataTemplate">
+                <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Stratum Code" />
+                        <TextBox Text="{Binding StratumCode}"
+                                 Width="50" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+            
+            <!-- Data Template: SampleGroup-->
+            <DataTemplate x:Key="sampleGroupDataTemplate">
+                <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Stratum Code" />
+                        <TextBox Text="{Binding StratumCode}"
+                                 Width="50" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Sample Group Code" />
+                        <TextBox Text="{Binding SampleGroupCode}"
+                                 Width="50" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- Data Template: Tree -->
+            <DataTemplate x:Key="treeDataTemplate">
+                <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Cutting Unit Code" />
+                        <TextBox Text="{Binding CuttingUnitCode}"
+                                 Width="50" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Tree Number" />
+                        <TextBox Text="{Binding TreeNumber}"
+                                 Width="50" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- Data Template: Plot Tree -->
+            <DataTemplate x:Key="plotTreeDataTemplate">
+                <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Cutting Unit Code" />
+                        <TextBox Text="{Binding CuttingUnitCode}"
+                                 Width="50" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Plot Number" />
+                        <TextBox Text="{Binding PlotNumber}"
+                                 Width="50" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Tree Number" />
+                        <TextBox Text="{Binding TreeNumber}"
+                                 Width="50" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- Data Template: Plot -->
+            <DataTemplate x:Key="plotDataTemplate">
+                <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Cutting Unit Code" />
+                        <TextBox Text="{Binding CuttingUnitCode}"
+                                 Width="50" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Plot Number" />
+                        <TextBox Text="{Binding PlotNumber}"
+                                 Width="50" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- Data Template: Log -->
+            <DataTemplate x:Key="logDataTemplate">
+                <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Cutting Unit Code" />
+                        <TextBox Text="{Binding CuttingUnitCode}"
+                                 Width="50" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Plot Number" />
+                        <TextBox Text="{Binding PlotNumber}"
+                                 Width="50" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Tree Number" />
+                        <TextBox Text="{Binding TreeNumber}"
+                                 Width="50" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Log Number" />
+                        <TextBox Text="{Binding LogNumber}"
+                                 Width="50" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+
+            <controls:ConflictRecordDataTemplateSelector x:Key="conflictRecordDataTemplateSelector"
+                                                         Tree="{StaticResource treeDataTemplate}"
+                                                         Plot="{StaticResource plotDataTemplate}"
+                                                         Log="{StaticResource logDataTemplate}"/>
+
+            <!-- Control Template: Conflict List -->
+            <ControlTemplate x:Key="conflictList"
+                             TargetType="ListView">
+                <ListView SelectionMode="Single"
+                          ItemsSource="{TemplateBinding ItemsSource}"
+                          SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ConflictResolution}"
+                                             Value="sync:ConflictResolutionType.NotSet">
+                                    <Setter Property="Background"
+                                            Value="{StaticResource brush_listItemError}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding Identity}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </ControlTemplate>
+
+            <!-- Control Template: Record Comparer -->
+            <ControlTemplate x:Key="recordComparer"
+                             TargetType="ContentControl">
+                <Border BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Header="Established Record"
+                                  Grid.Column="0"
+                                  Background="{DynamicResource MahApps.Brushes.Control.Background}"
+                                  IsEnabled="{Binding ConflictResolution, Converter={StaticResource isResolveModifyDest}}">
+                            <ContentControl Content="{Binding DestRec}"
+                                            d:Content="{d:SampleData}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"/>
+                        </GroupBox>
+                        <GroupBox Header="Crew Record"
+                                  Grid.Column="1"
+                                  Background="{DynamicResource MahApps.Brushes.Control.Background}"
+                                  IsEnabled="{Binding ConflictResolution, Converter={StaticResource isResolveModifySource}}">
+                            <ContentControl Content="{Binding SourceRec}"
+                                            d:Content="{d:SampleData}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"/>
+                        </GroupBox>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+
+            <!-- Control Template: Conflict Page Layout -->
+            <!--<ControlTemplate x:Key="conflictPageLayout" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ContentPresenter />
+                </Grid>
+                
+            </ControlTemplate>-->
+
+            <!-- Control Template: Resolution Picker -->
+            <ControlTemplate x:Key="resolutionPicker"
+                             TargetType="ComboBox">
+                <StackPanel Orientation="Horizontal"
+                            Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                    <Label Content="Resolution" />
+                    <ComboBox Width="100"
+                              ItemsSource="{TemplateBinding ItemsSource}"
+                              SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                </StackPanel>
+            </ControlTemplate>
+
+            <!-- Style: CollapseWhenChoseAndMergeNotSelected -->
+            <Style x:Key="collapseWhenChoseAndMergeNotSelected"
+                   TargetType="FrameworkElement">
+                <Setter Property="Visibility"
+                        Value="Collapsed" />
+                <d:Setter Property="Visibility"
+                          Value="Visible" />
+
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ConflictResolution, Converter={StaticResource isResolveChoseAndMerge}}"
+                                 Value="true">
+                        <Setter Property="Visibility"
+                                Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="166*" />
+            <RowDefinition Height="24*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Content="Select File"
+                    HorizontalAlignment="Left"
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    Command="{Binding SelectSourceFileCommand}" />
+
+            <Label Grid.Column="1"
+                   Content="{Binding FileName}"
+                   d:Content="somethingVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong.crz3"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center"
+                   Margin="0,0,10,0"
+                   FontWeight="Bold"
+                   FontSize="20" />
+
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="199*" />
+                <ColumnDefinition Width="456*" />
+                <ColumnDefinition Width="145*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="2"
+                  Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="77*" />
+                    <RowDefinition Height="89*" />
+                </Grid.RowDefinitions>
+                <Border BorderBrush="Black"
+                        BorderThickness="1"
+                        Margin="5">
+                    <ListView d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Border>
+                <Expander HorizontalAlignment="Stretch"
+                          Header="Advanced Options"
+                          Grid.Row="1"
+                          Margin="5"
+                          VerticalAlignment="Stretch">
+                    <ScrollViewer>
+                        <Grid />
+                    </ScrollViewer>
+                </Expander>
+            </Grid>
+            <TabControl Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        FlowDirection="LeftToRight"
+                        TabStripPlacement="Left"
+                        mah:HeaderedControlHelper.HeaderFontSize="11">
+
+                <!-- Cutting Units Tab -->
+                <TabItem Header="Cutting Units">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Conflicts List -->
+                        <ListView x:Name="_cuttingUnitConflictList"
+                                  Template="{StaticResource conflictList}"
+                                  ItemsSource="{Binding CuttingUnitConflicts}"
+                                  d:ItemsSource="{d:SampleData ItemCount=5}" />
+
+                        <!-- Resolution Panel -->
+                        <Grid Grid.Column="1"
+                              DataContext="{Binding SelectedItem, ElementName=_cuttingUnitConflictList}"
+                              IsEnabled="{Binding SelectedItem, ElementName=_cuttingUnitConflictList, Converter={StaticResource NotNullConverter}}"
+                              Background="{DynamicResource MahApps.Brushes.Gray}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Resolution Picker -->
+                            <ComboBox Grid.Row="0"
+                                      Template="{StaticResource resolutionPicker}"
+                                      ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS}"
+                                      SelectedItem="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+
+                            <!-- Record Comparison Panel -->
+                            <ContentControl Grid.Row="1"
+                                            Content="{Binding .}"
+                                            Template="{StaticResource recordComparer}"
+                                            ContentTemplate="{StaticResource cuttingUnitDataTemplate}" />
+
+                            <!-- Downstream Conflicts -->
+                            <Border Grid.Row="2"
+                                    BorderThickness="1"
+                                    Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
+
+                                <StackPanel>
+
+                                    <Label Content="Downstream Conflicts"
+                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
+                                    <DataGrid Template="{StaticResource downstreamConflitList}"
+                                              ItemsSource="{Binding DownstreamConflicts}"
+                                              d:ItemsSource="{d:SampleData ItemCount=5}">
+                                        <DataGrid.RowDetailsTemplate>
+                                            <DataTemplate>
+                                                <Border BorderThickness="3">
+                                                    <ContentControl Content="{Binding .}"
+                                                                    Template="{StaticResource recordComparer}"
+                                                                    ContentTemplateSelector="{StaticResource conflictRecordDataTemplateSelector}" />
+                                                </Border>
+                                            </DataTemplate>
+                                        </DataGrid.RowDetailsTemplate>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Strata Tab -->
+                <TabItem Header="Strata">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Conflict List -->
+                        <ListView x:Name="_strataConflictList"
+                                  Template="{StaticResource conflictList}"
+                                  ItemsSource="{Binding StratumConflicts}"
+                                  d:ItemsSource="{d:SampleData ItemCount=5}" />
+
+                        <!-- Resolution Panel -->
+                        <Grid Grid.Column="1"
+                                    DataContext="{Binding SelectedItem, ElementName=_strataConflictList}"
+                                    DataContextChanged="SelectedConflictChanged"
+                                    Background="{DynamicResource MahApps.Brushes.Gray}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <!--<RowDefinition Height="Auto" />-->
+                            </Grid.RowDefinitions>
+
+                            <!-- Resolution Picker -->
+                            <ComboBox Grid.Row="0" Template="{StaticResource resolutionPicker}"
+                                      ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_NO_MERGE}"
+                                      SelectedItem="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+
+                            <!-- Record Comparison Panel -->
+                            <ContentControl Grid.Row="1" Content="{Binding .}"
+                                            Template="{StaticResource recordComparer}"
+                                            ContentTemplate="{StaticResource stratumDataTemplate}" />
+
+                            <!-- Downstream Conflicts -->
+                            <!--
+                            <Border>
+                                <StackPanel>
+                                    <Label Content="Downstream Conflicts"
+                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
+                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
+                                </StackPanel>
+                            </Border>-->
+                        </Grid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Sample Group Tab -->
+                <TabItem Header="Sample Groups">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Conflict List -->
+                        <ListView x:Name="_sampleGroupConflictList"
+                                  Template="{StaticResource conflictList}"
+                                  ItemsSource="{Binding SampleGroupConflicts}"
+                                  d:ItemsSource="{d:SampleData ItemCount=5}" />
+
+                        <!-- Resolution Panel -->
+                        <Grid Grid.Column="1"
+                                    DataContext="{Binding SelectedItem, ElementName=_sampleGroupConflictList}"
+                                    DataContextChanged="SelectedConflictChanged"
+                                    Background="{DynamicResource MahApps.Brushes.Gray}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <!--<RowDefinition Height="Auto" />-->
+                            </Grid.RowDefinitions>
+
+                            <!-- Resolution Picker -->
+                            <ComboBox Grid.Row="0" Template="{StaticResource resolutionPicker}"
+                                      ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_NO_MERGE}"
+                                      SelectedItem="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+
+                            <!-- Record Comparison Panel -->
+                            <ContentControl Grid.Row="1"
+                                            Content="{Binding .}"
+                                            Template="{StaticResource recordComparer}"
+                                            ContentTemplate="{StaticResource sampleGroupDataTemplate}" />
+
+                            <!-- Downstream Conflicts -->
+                            <!--
+                            <Border>
+                                <StackPanel>
+                                    <Label Content="Downstream Conflicts"
+                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
+                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
+                                </StackPanel>
+                            </Border>-->
+                        </Grid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Plots Tab -->
+                <TabItem Header="Plots">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Conflict List -->
+                        <ListView x:Name="_plotConflictList"
+                                  Template="{StaticResource conflictList}"
+                                  ItemsSource="{Binding PlotConflicts}"
+                                  d:ItemsSource="{d:SampleData ItemCount=5}" />
+
+                        <!-- Resolution Panel -->
+                        <Grid Grid.Column="1"
+                                    DataContext="{Binding SelectedItem, ElementName=_plotConflictList}"
+                                    DataContextChanged="SelectedConflictChanged"
+                                    Background="{DynamicResource MahApps.Brushes.Gray}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Resolution Picker -->
+                            <ComboBox Grid.Row="0" Template="{StaticResource resolutionPicker}"
+                                      ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS}"
+                                      SelectedItem="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+
+                            <!-- Record Comparison Panel -->
+                            <ContentControl Grid.Row="1"
+                                            Content="{Binding .}"
+                                            Template="{StaticResource recordComparer}"
+                                            ContentTemplate="{StaticResource plotDataTemplate}" />
+
+                            <!-- Downstream Conflicts -->
+                            <Border Grid.Row="2">
+                                <StackPanel  Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
+                                    <Label Content="Downstream Conflicts"
+                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
+                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Tree Tab -->
+                <TabItem Header="Trees">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Conflict List -->
+                        <ListView x:Name="_treeConflictList"
+                                  Template="{StaticResource conflictList}"
+                                  ItemsSource="{Binding TreeConflicts}"
+                                  d:ItemsSource="{d:SampleData ItemCount=5}" />
+
+                        <!-- Resolution Panel -->
+                        <Grid Grid.Column="1"
+                                    DataContext="{Binding SelectedItem, ElementName=_treeConflictList}"
+                                    DataContextChanged="SelectedConflictChanged"
+                                    Background="{DynamicResource MahApps.Brushes.Gray}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Resolution Picker -->
+                            <ComboBox Grid.Row="0" Template="{StaticResource resolutionPicker}"
+                                      ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_NO_MERGE}"
+                                      SelectedItem="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+
+                            <!-- Record Comparison Panel -->
+                            <ContentControl Grid.Row="1"
+                                            Content="{Binding .}"
+                                            Template="{StaticResource recordComparer}"
+                                            ContentTemplate="{StaticResource treeDataTemplate}" />
+
+                            <!-- Downstream Conflicts -->
+                            <Border Grid.Row="2">
+                                <StackPanel  Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
+                                    <Label Content="Downstream Conflicts"
+                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
+                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Plot Tree Tab -->
+                <TabItem Header="Plot Trees">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Conflict List -->
+                        <ListView x:Name="_plotTreeConflictList"
+                                  Template="{StaticResource conflictList}"
+                                  ItemsSource="{Binding PlotTreeConflicts}"
+                                  d:ItemsSource="{d:SampleData ItemCount=5}" />
+
+                        <!-- Resolution Panel -->
+                        <Grid Grid.Column="1"
+                                    DataContext="{Binding SelectedItem, ElementName=_plotTreeConflictList}"
+                                    DataContextChanged="SelectedConflictChanged"
+                                    Background="{DynamicResource MahApps.Brushes.Gray}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Resolution Picker -->
+                            <ComboBox Grid.Row="0" Template="{StaticResource resolutionPicker}"
+                                      ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_NO_MERGE}"
+                                      SelectedItem="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+
+                            <!-- Record Comparison Panel -->
+                            <ContentControl Grid.Row="1"
+                                            Content="{Binding .}"
+                                            Template="{StaticResource recordComparer}"
+                                            ContentTemplate="{StaticResource plotTreeDataTemplate}" />
+
+                            <!-- Downstream Conflicts -->
+                            <Border Grid.Row="2">
+                                <StackPanel  Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
+                                    <Label Content="Downstream Conflicts"
+                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
+                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Logs Tab -->
+                <TabItem Header="Logs">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Conflict List -->
+                        <ListView x:Name="_logConflictList"
+                                  Template="{StaticResource conflictList}"
+                                  ItemsSource="{Binding TreeConflicts}"
+                                  d:ItemsSource="{d:SampleData ItemCount=5}" />
+
+                        <!-- Resolution Panel -->
+                        <Grid Grid.Column="1"
+                                    DataContext="{Binding SelectedItem, ElementName=_logConflictList}"
+                                    DataContextChanged="SelectedConflictChanged"
+                                    Background="{DynamicResource MahApps.Brushes.Gray}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Resolution Picker -->
+                            <ComboBox Grid.Row="0" Template="{StaticResource resolutionPicker}"
+                                      ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_NO_MERGE}"
+                                      SelectedItem="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+
+                            <!-- Record Comparison Panel -->
+                            <ContentControl Grid.Row="1"
+                                            Content="{Binding .}"
+                                            Template="{StaticResource recordComparer}"
+                                            ContentTemplate="{StaticResource logDataTemplate}" />
+
+                            <!-- Downstream Conflicts -->
+                            <Border Grid.Row="2">
+                                <StackPanel  Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
+                                    <Label Content="Downstream Conflicts"
+                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
+                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ProgressBar Grid.Column="0"
+                         VerticalAlignment="Center"
+                         Margin="40,0"
+                         Visibility="{Binding ProgressValue, Mode=OneWay, Converter={StaticResource IsVisableConverter}}"
+                         Value="{Binding ProgressValue, Mode=OneWay}"
+                         Minimum="0.0"
+                         Maximum="1.0">
+            </ProgressBar>
+
+            <Button Grid.Column="1"
+                    Content="Combine"
+                    Command="{Binding CombineFileCommand}"
+                    IsEnabled="{Binding CanCombine}"
+                    HorizontalAlignment="Left"
+                    Margin="10,0"
+                    VerticalAlignment="Center" />
+        </Grid>
+    </Grid>
+</UserControl>
