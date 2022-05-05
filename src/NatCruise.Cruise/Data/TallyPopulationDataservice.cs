@@ -45,7 +45,7 @@ namespace NatCruise.Cruise.Data
                 TallyLedger AS tl
             WHERE
                 tl.CruiseID = tp.CruiseID
-                tl.CuttingUnitCode = cust.CuttingUnitCode
+                AND tl.CuttingUnitCode = cust.CuttingUnitCode
                 AND tl.StratumCode = tp.StratumCode
                 AND tl.SampleGroupCode = tp.SampleGroupCode
                 AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
