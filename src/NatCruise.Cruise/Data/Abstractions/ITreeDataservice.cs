@@ -23,7 +23,6 @@ namespace NatCruise.Cruise.Data
 
         IEnumerable<Tree_Ex> GetPlotTreesByUnitCode(string unitCode);
 
-        IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID);
 
         void UpdateTree(Tree tree);
 
@@ -35,7 +34,6 @@ namespace NatCruise.Cruise.Data
 
         void UpdateTreeRemarks(string treeID, string remarks);
 
-        void UpdateTreeFieldValue(TreeFieldValue treeFieldValue);
 
         void DeleteTree(string treeGuid);
 

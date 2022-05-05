@@ -82,6 +82,10 @@ namespace NatCruise.Cruise.Data
 
             if (typeof(ISampleInfoDataservice).IsAssignableFrom(type))
             { return new SamplerInfoDataservice(database, cruiseID, deviceID); }
+            if (typeof(ITreeFieldValueDataservice).IsAssignableFrom(type))
+            {
+                return new TreeFieldValueDataservice(database, cruiseID, deviceID);
+            }
             else
             {
                 throw new InvalidOperationException("no dataservice found for type " + type.FullName);
@@ -95,6 +99,7 @@ namespace NatCruise.Cruise.Data
             containerRegistry.Register<ICuttingUnitDataservice>(x => GetDataservice<ICuttingUnitDataservice>());
             containerRegistry.Register<IPlotDataservice>(x => GetDataservice<IPlotDataservice>());
             containerRegistry.Register<ITreeDataservice>(x => GetDataservice<ITreeDataservice>());
+            containerRegistry.Register<ITreeFieldValueDataservice>(x => GetDataservice<ITreeFieldValueDataservice>());
             containerRegistry.Register<ILogDataservice>(x => GetDataservice<ILogDataservice>());
             containerRegistry.Register<ISampleSelectorDataService>(x => GetDataservice<ISampleSelectorDataService>());
             containerRegistry.Register<ISaleDataservice>(x => GetDataservice<ISaleDataservice>());
