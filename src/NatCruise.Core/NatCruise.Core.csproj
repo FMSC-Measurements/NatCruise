@@ -19,8 +19,8 @@
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'false' OR $(UseCruiseDALProjRefs) == '' ">
-		<PackageReference Include="CruiseDAL.V3" Version="3.5.0.102" />
-		<PackageReference Include="CruiseDAL.V3.Models" Version="3.5.0.102" />
+		<PackageReference Include="CruiseDAL.V3" Version="3.5.2.104" />
+		<PackageReference Include="CruiseDAL.V3.Models" Version="3.5.2.104" />
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.2" />
 	</ItemGroup>
 
