@@ -72,11 +72,11 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
-        private void SampleGroup_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            var sampleGroup = (SampleGroup)sender;
-            SampleGroupDataservice.UpdateSampleGroup(sampleGroup);
-        }
+        //private void SampleGroup_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        //{
+        //    var sampleGroup = (SampleGroup)sender;
+        //    SampleGroupDataservice.UpdateSampleGroup(sampleGroup);
+        //}
 
         public string SampleGroupCode
         {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using Xunit.Abstractions;
 
 namespace NatCruise.Test
@@ -45,13 +46,18 @@ namespace NatCruise.Test
             }
         }
 
-        public string TestTempPath
+        public string TestExecutionDirectory
         {
             get
             {
-                return _testTempPath ?? (_testTempPath = Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName));
+                var codeBase = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+                return Path.GetDirectoryName(codeBase);
             }
         }
+
+        public string TestTempPath => _testTempPath ??= Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName);
+
+        public string TestFilesDirectory => Path.Combine(TestExecutionDirectory, "TestFiles");
 
         public void StartTimer()
         {
@@ -80,6 +86,20 @@ namespace NatCruise.Test
         public string GetTempFilePath(string extention, string fileName = null)
         {
             return Path.Combine(TestTempPath, (fileName ?? Guid.NewGuid().ToString()) + extention);
+        }
+
+        public string GetTestFile(string fileName) => InitializeTestFile(fileName);
+
+        protected string InitializeTestFile(string fileName)
+        {
+            var sourcePath = Path.Combine(TestFilesDirectory, fileName);
+            if (File.Exists(sourcePath) == false) { throw new FileNotFoundException(sourcePath); }
+
+            var targetPath = Path.Combine(TestTempPath, fileName);
+
+            RegesterFileForCleanUp(targetPath);
+            File.Copy(sourcePath, targetPath, true);
+            return targetPath;
         }
 
         public void RegesterFileForCleanUp(string path)

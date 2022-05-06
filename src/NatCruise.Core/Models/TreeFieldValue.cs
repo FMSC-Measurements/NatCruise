@@ -1,10 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using NatCruise.Models;
+using Prism.Mvvm;
 using System;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
-    public class TreeFieldValue : Model_Base, IHasTreeID
+    public class TreeFieldValue : BindableBase
     {
         private string _dbType;
         private string _field;
@@ -14,6 +14,7 @@ namespace NatCruise.Cruise.Models
         private string _valueText;
 
         public string TreeID { get; set; }
+
         public string Field
         {
             get => _field;
@@ -37,25 +38,25 @@ namespace NatCruise.Cruise.Models
         public double? ValueReal
         {
             get => _valueReal;
-            set => SetValue(ref _valueReal, value);
+            set => SetProperty(ref _valueReal, value);
         }
 
         public int? ValueInt
         {
             get => _valueInt;
-            set => SetValue(ref _valueInt, value);
+            set => SetProperty(ref _valueInt, value);
         }
 
         public bool? ValueBool
         {
             get => _valueBool;
-            set => SetValue(ref _valueBool, value);
+            set => SetProperty(ref _valueBool, value);
         }
 
         public string ValueText
         {
             get => _valueText;
-            set => SetValue(ref _valueText, value);
+            set => SetProperty(ref _valueText, value);
         }
 
         public bool IsHidden { get; set; }

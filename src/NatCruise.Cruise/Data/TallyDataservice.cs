@@ -238,9 +238,11 @@ namespace NatCruise.Cruise.Data
     @CreatedBy
 );
 INSERT INTO TreeMeasurment (
-    TreeID
+    TreeID,
+    CreatedBy
 ) VALUES (
-    @TreeID
+    @TreeID,
+    @CreatedBy
 );",
                         new
                         {

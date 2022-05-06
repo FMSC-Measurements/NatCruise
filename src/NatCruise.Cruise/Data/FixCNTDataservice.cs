@@ -55,7 +55,8 @@ namespace NatCruise.Cruise.Data
     SpeciesCode,
     LiveDead,
     EntryType,
-    TreeCount
+    TreeCount,
+    CreatedBy
 ) VALUES (
     @TallyLedgerID,
     @TreeID,
@@ -67,7 +68,8 @@ namespace NatCruise.Cruise.Data
     @SpeciesCode,
     @LiveDead,
     'tally',
-    1 -- TreeCount
+    1, -- TreeCount
+    @CreatedBy
 );",
                 new
                 {
@@ -80,6 +82,7 @@ namespace NatCruise.Cruise.Data
                     SampleGroupCode = sgCode,
                     SpeciesCode = species,
                     LiveDead = liveDead,
+                    CreatedBy = DeviceID,
                 });
         }
 
@@ -110,7 +113,8 @@ namespace NatCruise.Cruise.Data
     SpeciesCode,
     LiveDead,
     EntryType,
-    TreeCount
+    TreeCount,
+    CreatedBy
 ) VALUES (
     @TallyLedgerID,
     @TreeID,
@@ -122,7 +126,8 @@ namespace NatCruise.Cruise.Data
     @SpeciesCode,
     @LiveDead,
     'tally',
-    -1
+    -1,
+    @CreatedBy
 );",
                     new
                     {
@@ -135,6 +140,7 @@ namespace NatCruise.Cruise.Data
                         SampleGroupCode = sgCode,
                         SpeciesCode = species,
                         LiveDead = liveDead,
+                        CreatedBy = DeviceID,
                     });
             }
         }
@@ -159,7 +165,8 @@ namespace NatCruise.Cruise.Data
     SpeciesCode,
     LiveDead,
     EntryType,
-    TreeCount
+    TreeCount,
+    CreatedBy
 ) VALUES (
     @TallyLedgerID,
     @TreeID,
@@ -171,7 +178,8 @@ namespace NatCruise.Cruise.Data
     @SpeciesCode,
     @LiveDead,
     'tally',
-    1 -- TreeCount
+    1, -- TreeCount
+    @CreatedBy
 );",
                 new
                 {
@@ -184,6 +192,7 @@ namespace NatCruise.Cruise.Data
                     SampleGroupCode = sgCode,
                     SpeciesCode = species,
                     LiveDead = liveDead,
+                    CreatedBy = DeviceID,
                 });
         }
 
@@ -222,7 +231,8 @@ $@"INSERT INTO Tree (
     SampleGroupCode,
     SpeciesCode,
     LiveDead,
-    CountOrMeasure
+    CountOrMeasure,
+    CreatedBy
 ) VALUES (
     @TreeID,
     (SELECT ifnull(max(TreeNumber), 0) + 1
@@ -235,7 +245,8 @@ $@"INSERT INTO Tree (
     @SampleGroupCode,
     @SpeciesCode,
     @LiveDead,
-    'C' -- countMeasure
+    'C', -- countMeasure
+    @CreatedBy
 );
 
 INSERT INTO TreeMeasurment
@@ -252,6 +263,7 @@ INSERT INTO TreeMeasurment
                     SpeciesCode = species,
                     LiveDead = liveDead,
                     value,
+                    CreatedBy = DeviceID,
                 }
             );
 

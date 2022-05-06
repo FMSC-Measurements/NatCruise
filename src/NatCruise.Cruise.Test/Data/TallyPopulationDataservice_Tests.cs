@@ -463,6 +463,190 @@ namespace NatCruise.Cruise.Test.Data
             }
         }
 
+        [Fact]
+        public void GetTallyPopulationsByUnitCode_mutiCruiseDb()
+        {
+            var init1 = new DatastoreInitializer();
+            var init2 = new DatastoreInitializer();
+
+            using var db = init1.CreateDatabase();
+
+            // add a second cruise to the database
+            DatastoreInitializer.InitializeDatabase(init2, db);
+
+
+            var unit = init1.Units.First();
+            var tallyPopDs = new TallyPopulationDataservice(db, init1.CruiseID, init1.DeviceID);
+
+            var tp = tallyPopDs.GetTallyPopulationsByUnitCode(unit).First();
+
+            // add some tally ledger entries
+            foreach (var i in Enumerable.Range(0, 10))
+            {
+                var tl = new TallyLedger
+                {
+                    TallyLedgerID = Guid.NewGuid().ToString(),
+                    CruiseID = init1.CruiseID,
+                    CuttingUnitCode = unit,
+                    StratumCode = tp.StratumCode,
+                    SampleGroupCode = tp.SampleGroupCode,
+                    SpeciesCode = tp.SpeciesCode,
+                    LiveDead = tp.LiveDead,
+
+                    TreeCount = 10,
+                };
+                db.Insert(tl);
+
+                var tl2 = new TallyLedger
+                {
+                    TallyLedgerID = Guid.NewGuid().ToString(),
+                    CruiseID = init2.CruiseID,
+                    CuttingUnitCode = unit,
+                    StratumCode = tp.StratumCode,
+                    SampleGroupCode = tp.SampleGroupCode,
+                    SpeciesCode = tp.SpeciesCode,
+                    LiveDead = tp.LiveDead,
+
+                    TreeCount = 10,
+                };
+                db.Insert(tl2);
+            }
+
+            var tpAgian = tallyPopDs.GetTallyPopulationsByUnitCode(unit).First();
+
+            tpAgian.TreeCount.Should().Be(10 * 10);
+
+        }
+
+        [Fact]
+        public void GetTallyPopulation_mutiCruiseDb()
+        {
+            var init1 = new DatastoreInitializer();
+            var init2 = new DatastoreInitializer();
+
+            using var db = init1.CreateDatabase();
+
+            // add a second cruise to the database
+            DatastoreInitializer.InitializeDatabase(init2, db);
+
+
+            var unit = init1.Units.First();
+            var tallyPopDs = new TallyPopulationDataservice(db, init1.CruiseID, init1.DeviceID);
+
+            var tp = tallyPopDs.GetTallyPopulationsByUnitCode(unit).First();
+
+            // add some tally ledger entries
+            foreach (var i in Enumerable.Range(0, 10))
+            {
+                var tl = new TallyLedger
+                {
+                    TallyLedgerID = Guid.NewGuid().ToString(),
+                    CruiseID = init1.CruiseID,
+                    CuttingUnitCode = unit,
+                    StratumCode = tp.StratumCode,
+                    SampleGroupCode = tp.SampleGroupCode,
+                    SpeciesCode = tp.SpeciesCode,
+                    LiveDead = tp.LiveDead,
+
+                    TreeCount = 10,
+                };
+                db.Insert(tl);
+
+                var tl2 = new TallyLedger
+                {
+                    TallyLedgerID = Guid.NewGuid().ToString(),
+                    CruiseID = init2.CruiseID,
+                    CuttingUnitCode = unit,
+                    StratumCode = tp.StratumCode,
+                    SampleGroupCode = tp.SampleGroupCode,
+                    SpeciesCode = tp.SpeciesCode,
+                    LiveDead = tp.LiveDead,
+
+                    TreeCount = 10,
+                };
+                db.Insert(tl2);
+            }
+
+            var tpAgian = tallyPopDs.GetTallyPopulation(unit, tp.StratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead);
+
+            tpAgian.TreeCount.Should().Be(10 * 10);
+
+        }
+
+        // Plot Tally Populations dont display tree counts.... yet?
+
+        //[Fact]
+        //public void GetPlotTallyPopulationsByUnitCode_mutiCruiseDb()
+        //{
+        //    var init1 = new DatastoreInitializer();
+        //    var init2 = new DatastoreInitializer();
+
+        //    using var db = init1.CreateDatabase();
+
+        //    // add a second cruise to the database
+        //    DatastoreInitializer.InitializeDatabase(init2, db);
+
+        //    var tallyPopDs = new TallyPopulationDataservice(db, init1.CruiseID, init1.DeviceID);
+
+        //    var unit = init1.Units.First();
+        //    var plotNumber = 1;
+        //    var stCode = init1.PlotStrata.First().StratumCode;
+
+
+        //    var plot = new Plot
+        //    {
+        //        CruiseID = init1.CruiseID,
+        //        PlotID = Guid.NewGuid().ToString(),
+        //        CuttingUnitCode = unit,
+        //        PlotNumber = plotNumber,
+        //    };
+        //    db.Insert(plot);
+            
+
+        //    var tp = tallyPopDs.GetPlotTallyPopulationsByUnitCode(unit, plotNumber).First();
+
+        //    // add some tally ledger entries
+        //    foreach (var i in Enumerable.Range(0, 10))
+        //    {
+        //        var tl = new TallyLedger
+        //        {
+        //            TallyLedgerID = Guid.NewGuid().ToString(),
+        //            CruiseID = init1.CruiseID,
+        //            CuttingUnitCode = unit,
+        //            PlotNumber = plotNumber,
+        //            StratumCode = tp.StratumCode,
+        //            SampleGroupCode = tp.SampleGroupCode,
+        //            SpeciesCode = tp.SpeciesCode,
+        //            LiveDead = tp.LiveDead,
+
+        //            TreeCount = 10,
+        //        };
+        //        db.Insert(tl);
+
+        //        var tl2 = new TallyLedger
+        //        {
+        //            TallyLedgerID = Guid.NewGuid().ToString(),
+        //            CruiseID = init2.CruiseID,
+        //            CuttingUnitCode = unit,
+        //            PlotNumber = plotNumber,
+        //            StratumCode = tp.StratumCode,
+        //            SampleGroupCode = tp.SampleGroupCode,
+        //            SpeciesCode = tp.SpeciesCode,
+        //            LiveDead = tp.LiveDead,
+
+        //            TreeCount = 10,
+        //        };
+        //        db.Insert(tl2);
+        //    }
+
+        //    var tpAgian = tallyPopDs.GetPlotTallyPopulationsByUnitCode(unit, plotNumber).First();
+
+        //    tpAgian.TreeCount.Should().Be(10 * 10);
+
+        //}
+
+
+
         private static void VerifyTallyPopulation(Models.TallyPopulation result, string species = null)
         {
             if (species != null)

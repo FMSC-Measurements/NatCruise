@@ -179,7 +179,7 @@ namespace FScruiser.XF.ViewModels
 
                 var hasDesignKeyChanges = cruiseChecker.HasDesignKeyChanges(importDb, db, cruiseID);
                 if(hasDesignKeyChanges)
-                { eList.Add("Has chages in design key values"); }
+                { eList.Add("Has changes in design key values"); }
 
                 return !errors.Any() ;
             }
