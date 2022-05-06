@@ -51,14 +51,14 @@ namespace FScruiser.XF.ViewModels
 
         public async Task ResetDatabase()
         {
-            if (await DialogService.AskYesNoAsync("This will delete all cruise data do you want to continue", "Warning", defaultNo: true))
+            if (await DialogService.AskYesNoAsync("Backup Cruise Data Before Resetting Database?", "", defaultNo: true))
             {
-                if (await DialogService.AskYesNoAsync("Backup Cruise Data Before Resetting Database?", "", defaultNo: true))
-                {
-                    if (!await BackupDatabase())
-                    { return; }
-                }
+                if (!await BackupDatabase())
+                { return; }
+            }
 
+            if (await DialogService.AskYesNoAsync("Resetting Database will delete all cruise data.\r\n Do you want to continue", "Warning", defaultNo: true))
+            {
                 var database = DataserviceProvider.Database;
                 database.ReleaseConnection(true);
                 var databasePath = FileSystemService.DefaultCruiseDatabasePath;
@@ -81,6 +81,7 @@ namespace FScruiser.XF.ViewModels
             if (string.IsNullOrEmpty(backupPath) == false)
             {
                 FileSystemService.CopyTo(FileSystemService.DefaultCruiseDatabasePath, backupPath);
+                Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Backup Database");
                 return true;
             }
             else
@@ -103,6 +104,7 @@ namespace FScruiser.XF.ViewModels
             var databasePath = database.Path;
             File.Copy(loadPath, databasePath, true);
             var newDatabase = new CruiseDatastore_V3(databasePath);
+            Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Load Database");
             if (DataserviceProvider != null)
             {
                 DataserviceProvider.CruiseID = null;
