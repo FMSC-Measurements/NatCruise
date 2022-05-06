@@ -218,7 +218,6 @@ treeWarningCount AS
     GROUP BY TreeID
 )
 
-
 SELECT
     t.*,
     CAST (ifnull(tl.KPI, 0) AS REAL) AS KPI,
@@ -260,7 +259,7 @@ SELECT
         tm.Remarks,
         tm.IsFallBuckScale,
 
-        tm.MetaData, 
+        tm.MetaData,
         tm.Initials
 
 FROM Tree AS t
@@ -421,33 +420,6 @@ INSERT INTO TallyLedger (
                 unitCode, CruiseID);
         }
 
-        public IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID)
-        {
-            return Database.Query<TreeFieldValue>(
-                "SELECT " +
-                    "t.TreeID, " +
-                    "tfs.Field, " +
-                    "ifnull(tfh.Heading, tf.DefaultHeading) AS Heading, " +
-                    "tf.DbType, " +
-                    "tfv.ValueReal, " +
-                    "tfv.ValueBool, " +
-                    "tfv.ValueText, " +
-                    "tfv.ValueInt, " +
-                    "tfs.DefaultValueInt, " +
-                    "tfs.DefaultValueReal, " +
-                    "tfs.DefaultValueBool, " +
-                    "tfs.DefaultValueText, " +
-                    "tfs.IsHidden, " +
-                    "tfs.IsLocked " +
-                "FROM Tree AS t " +
-                "JOIN TreeFieldSetup AS tfs ON t.StratumCode = tfs.StratumCode AND t.CruiseID = tfs.CruiseID AND (tfs.SampleGroupCode IS NULL OR t.SampleGroupCode = tfs.SampleGroupCode) " +
-                "LEFT JOIN TreeFieldHeading AS tfh USING (Field, CruiseID) " +
-                "JOIN TreeField AS tf USING (Field) " +
-                "LEFT JOIN TreeFieldValue_All AS tfv USING (TreeID, Field) " +
-                "WHERE t.TreeID = @p1 " +
-                "ORDER BY tfs.FieldOrder;", treeID).ToArray();
-        }
-
         public void UpdateTree(Tree tree)
         {
             if (tree is null) { throw new ArgumentNullException(nameof(tree)); }
@@ -600,38 +572,13 @@ UPSERT_TREEMEASURMENT_COMMAND,
 
         public void UpdateTreeRemarks(string treeID, string remarks)
         {
-            //try
-            //{
-            //    var stuff = Database.QueryGeneric($"Select * from TreeMeasurment where treeid = '{treeID}';").ToArray();
-
-            UpdateTreeFieldValue(
-                new TreeFieldValue
-                {
-                    TreeID = treeID,
-                    Field = "Remarks",
-                    ValueText = remarks,
-                    DBType = "TEXT",
-                });
-
-            //    var stuffagain = Database.QueryGeneric($"Select * from TreeMeasurment where treeid = '{treeID}';").ToArray();
-            //}
-            //catch(Exception e)
-            //{
-            //    Logger.Log.E(e);
-            //}
-        }
-
-        public void UpdateTreeFieldValue(TreeFieldValue treeFieldValue)
-        {
-            if (treeFieldValue is null) { throw new ArgumentNullException(nameof(treeFieldValue)); }
-
             Database.Execute(
                 "INSERT INTO TreeMeasurment " +
-                $"(TreeID, {treeFieldValue.Field}, CreatedBy)" +
+                $"(TreeID, Remarks, CreatedBy)" +
                 $"VALUES (@p1, @p2, @p3)" +
                 $"ON CONFLICT (TreeID) DO " +
-                $"UPDATE SET {treeFieldValue.Field} = @p2, ModifiedBy = @p3 WHERE TreeID = @p1;",
-                treeFieldValue.TreeID, treeFieldValue.Value, DeviceID);
+                $"UPDATE SET Remarks = @p2, ModifiedBy = @p3 WHERE TreeID = @p1;",
+                treeID, remarks, DeviceID);
         }
 
         public void DeleteTree(string tree_guid)
@@ -643,7 +590,6 @@ UPSERT_TREEMEASURMENT_COMMAND,
         {
             return Database.ExecuteScalar<int>("SELECT total(TreeCount) FROM TallyLedger WHERE TreeID = @p1", treeID);
         }
-
 
         public void UpdateTreeCount(string treeID, int treeCount)
         {

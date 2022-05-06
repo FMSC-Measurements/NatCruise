@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NatCruise.Data;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -99,5 +100,116 @@ namespace NatCruise.Test.Data
 
         //    tfvFields.Should().BeEquivalentTo(tfsFields);
         //}
+
+        [Fact]
+        public void GetTreeFieldValues_nonExistantTree()
+        {
+            var initializer = new DatastoreInitializer();
+
+            using var db = initializer.CreateDatabase();
+
+            var dataservice = new TreeFieldValueDataservice(db, initializer.CruiseID, initializer.DeviceID);
+
+            var treeID = Guid.NewGuid().ToString();
+            var tfvs = dataservice.GetTreeFieldValues(treeID);
+            tfvs.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void GetTreeFieldValues_NoFieldSetup()
+        {
+            var initializer = new DatastoreInitializer();
+
+            using var db = initializer.CreateDatabase();
+
+            var dataservice = new TreeFieldValueDataservice(db, initializer.CruiseID, initializer.DeviceID);
+
+            //var treeID = dataservice.InsertManualTree("u1", "st1", "sg1");
+            var treeID = Guid.NewGuid().ToString();
+            var tree = new Tree
+            {
+                CruiseID = initializer.CruiseID,
+                TreeID = treeID,
+                TreeNumber = 1,
+                CuttingUnitCode = "u1",
+                StratumCode = "st1",
+                SampleGroupCode = "sg1",
+            };
+            db.Insert(tree);
+            var tm = new TreeMeasurment
+            {
+                TreeID = tree.TreeID,
+            };
+            db.Insert(tm);
+
+            var tfvs = dataservice.GetTreeFieldValues(treeID);
+            tfvs.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void GetTreeFieldValues()
+        {
+            var rand = new Bogus.Randomizer(8675309);
+            var initializer = new DatastoreInitializer();
+
+            using var db = initializer.CreateDatabase();
+
+            var treeFields = db.From<TreeField>().Query().ToArray();
+
+            var treeFieldSetupList = new List<TreeFieldSetup>();
+            foreach (var tf in treeFields)
+            {
+                var tfs = new CruiseDAL.V3.Models.TreeFieldSetup
+                {
+                    CruiseID = initializer.CruiseID,
+                    Field = tf.Field,
+                    StratumCode = "st1",
+                };
+
+                switch (tf.DbType)
+                {
+                    case "REAL": tfs.DefaultValueReal = rand.Double(); break;
+                    case "TEXT": tfs.DefaultValueText = rand.Word(); break;
+                    case "BOOLEAN": tfs.DefaultValueBool = rand.Bool(); break;
+                    case "INTEGER": tfs.DefaultValueInt = rand.Int(); break;
+                }
+                db.Insert(tfs);
+
+                treeFieldSetupList.Add(tfs);
+            }
+
+            var dataservice = new TreeFieldValueDataservice(db, initializer.CruiseID, initializer.DeviceID);
+
+            //var treeID = dataservice.InsertManualTree("u1", "st1", "sg1");
+            var treeID = Guid.NewGuid().ToString();
+            var tree = new Tree
+            {
+                CruiseID = initializer.CruiseID,
+                TreeID = treeID,
+                TreeNumber = 1,
+                CuttingUnitCode = "u1",
+                StratumCode = "st1",
+                SampleGroupCode = "sg1",
+            };
+            db.Insert(tree);
+            var tm = new TreeMeasurment
+            {
+                TreeID = tree.TreeID,
+            };
+            db.Insert(tm);
+
+            var tfvs = dataservice.GetTreeFieldValues(treeID);
+            tfvs.Should().HaveSameCount(treeFieldSetupList);
+
+            foreach (var tf in treeFieldSetupList)
+            {
+                var tfv = tfvs.FirstOrDefault(x => string.Equals(x.Field, tf.Field, StringComparison.OrdinalIgnoreCase));
+                tfv.Should().NotBeNull(tf.Field);
+                tfv.DefaultValueReal.Should().Be(tf.DefaultValueReal, tf.Field);
+                tfv.DefaultValueText.Should().Be(tf.DefaultValueText, tf.Field);
+                tfv.DefaultValueInt.Should().Be(tf.DefaultValueInt, tf.Field);
+                tfv.DefaultValueBool.Should().Be(tf.DefaultValueBool, tf.Field);
+            }
+        }
     }
 }
