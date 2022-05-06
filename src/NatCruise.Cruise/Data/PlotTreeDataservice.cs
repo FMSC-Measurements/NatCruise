@@ -78,7 +78,8 @@ ORDER BY t.TreeNumber
     SampleGroupCode,
     SpeciesCode,
     LiveDead,
-    CountOrMeasure
+    CountOrMeasure,
+    CreatedBy
 ) VALUES (
     @CruiseID,
     @TreeID,
@@ -89,7 +90,8 @@ ORDER BY t.TreeNumber
     @SampleGroupCode,
     @SpeciesCode,
     @LiveDead,
-    @CountOrMeasure
+    @CountOrMeasure,
+    @CreatedBy
 );
 INSERT INTO TallyLedger (
     CruiseID,
@@ -104,7 +106,8 @@ INSERT INTO TallyLedger (
     TreeCount,
     KPI,
     ThreePRandomValue,
-    STM
+    STM,
+    CreatedBy
 ) VALUES (
     @CruiseID,
     @TreeID,
@@ -118,7 +121,8 @@ INSERT INTO TallyLedger (
     @TreeCount,
     @KPI,
     @ThreePRandomValue,
-    @STM
+    @STM,
+    @CreatedBy
 ); "
                     , new
                     {
@@ -136,6 +140,7 @@ INSERT INTO TallyLedger (
                         tree.KPI,
                         tree.ThreePRandomValue,
                         tree.STM,
+                        CreatedBy = DeviceID,
                     });
 
                 tree.TreeID = treeID;
@@ -201,7 +206,8 @@ $@"INSERT INTO Tree (
     SampleGroupCode,
     SpeciesCode,
     LiveDead,
-    CountOrMeasure
+    CountOrMeasure,
+    CreatedBy
 ) VALUES (
     @CruiseID,
     @TreeID,
@@ -213,7 +219,8 @@ $@"INSERT INTO Tree (
     @SampleGroupCode,
     @SpeciesCode,
     @LiveDead,
-    @CountOrMeasure);
+    @CountOrMeasure,
+    @CreatedBy);
 INSERT INTO TallyLedger (
     CruiseID,
     TallyLedgerID,
@@ -227,7 +234,8 @@ INSERT INTO TallyLedger (
     LiveDead,
     TreeCount,
     KPI,
-    STM
+    STM,
+    CreatedBy
 ) VALUES (
     @CruiseID,
     @TallyLedgerID,
@@ -241,7 +249,8 @@ INSERT INTO TallyLedger (
     @LiveDead,
     @TreeCount,
     @KPI,
-    @STM
+    @STM,
+    @CreatedBy
 );"
                 , new
                 {
@@ -258,6 +267,7 @@ INSERT INTO TallyLedger (
                     TreeCount = treeCount,
                     KPI = kpi,
                     STM = stm,
+                    CreatedBy = DeviceID,
                 }
             );
         }
