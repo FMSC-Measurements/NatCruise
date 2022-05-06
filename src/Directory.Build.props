@@ -5,7 +5,7 @@
   </PropertyGroup>
   
  <PropertyGroup Label="Custom Properties">
-   <FScruiserVersion>3.0.0.0</FScruiserVersion>
+   <FScruiserVersion>3.0.1.0</FScruiserVersion>
 	 <UseCruiseDALProjRefs>false</UseCruiseDALProjRefs>
  </PropertyGroup>
   
@@ -13,7 +13,7 @@
     <CruiseDALVersion>3.0.3.78</CruiseDALVersion>
   </PropertyGroup>
 
-  <!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 becuase of xunit's shadow coppy feature
+  <!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 because of xunit's shadow copy feature
   see https://github.com/reactiveui/Akavache/pull/496 and https://github.com/xunit/xunit/issues/1198 -->
   <ItemGroup Condition="$(IsTestProject) == 'true' AND $(TargetFramework) == 'net472'">
     <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
