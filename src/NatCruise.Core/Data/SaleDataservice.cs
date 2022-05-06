@@ -26,34 +26,36 @@ namespace NatCruise.Data
             database.Execute("DELETE FROM Sale WHERE SaleNumber = @p1 AND (SELECT count(*) FROM Cruise WHERE SaleNumber = @p1) = 0; ", saleNumber);
 
             // clean up tombstone records
-            database.Execute2(
-@"DELETE FROM TreeDefaultValue_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM CuttingUnit_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM Stratum_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM CuttingUnit_Stratum_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM Plot_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM Plot_Stratum_Tombstone WHERE CruiseID = @CruiseID;
---DELETE FROM PlotLocation_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM SampleGroup_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM TreeFieldSetup_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM LogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM SubPopulation_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM Tree_Tombstone WHERE CruiseID = @CruiseID;
---DELETE FROM TreeMeasurment_Tombstone WHERE CruiseID = @CruiseID;
---DELETE FROM TreeLocation_Tombstone WHERE CruiseID = @CruiseID;
---DELETE FROM TreeFieldValue_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM Log_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM Stem_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM TallyLedger_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM TreeAuditRule_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM TreeAuditRuleSelector_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM TreeAuditResolution_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM LogGradeAuditRule_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM Reports_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM VolumeEquation_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM StratumTemplate_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM StratumTemplateTreeFieldSetup_Tombstone WHERE CruiseID = @CruiseID;
-DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;", new { CruiseID = cruiseID });
+            CruiseDAL.V3.Sync.CruiseFileUtilities.ClearTombstoneRecords(database, cruiseID);
+
+//            database.Execute2(
+//@"DELETE FROM TreeDefaultValue_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM CuttingUnit_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM Stratum_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM CuttingUnit_Stratum_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM Plot_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM Plot_Stratum_Tombstone WHERE CruiseID = @CruiseID;
+//--DELETE FROM PlotLocation_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM SampleGroup_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM TreeFieldSetup_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM LogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM SubPopulation_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM Tree_Tombstone WHERE CruiseID = @CruiseID;
+//--DELETE FROM TreeMeasurment_Tombstone WHERE CruiseID = @CruiseID;
+//--DELETE FROM TreeLocation_Tombstone WHERE CruiseID = @CruiseID;
+//--DELETE FROM TreeFieldValue_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM Log_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM Stem_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM TallyLedger_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM TreeAuditRule_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM TreeAuditRuleSelector_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM TreeAuditResolution_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM LogGradeAuditRule_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM Reports_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM VolumeEquation_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM StratumTemplate_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM StratumTemplateTreeFieldSetup_Tombstone WHERE CruiseID = @CruiseID;
+//DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;", new { CruiseID = cruiseID });
         }
 
         public IEnumerable<Cruise> GetCruises()
