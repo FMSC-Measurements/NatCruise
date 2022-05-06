@@ -11,6 +11,7 @@ using Xunit.Abstractions;
 using FScruiser.XF.Data;
 using NatCruise.Cruise.Data;
 using NatCruise.Test;
+using Moq;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -100,7 +101,7 @@ namespace FScruiser.XF.ViewModels
                     CruiseID = init.CruiseID
                 };
 
-                var viewModel = new FixCNTTallyViewModel(dsp.GetDataservice<IFixCNTDataservice>() );
+                var viewModel = new FixCNTTallyViewModel(dsp.GetDataservice<IFixCNTDataservice>(), new Mock<ISoundService>().Object);
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
 
@@ -136,7 +137,7 @@ namespace FScruiser.XF.ViewModels
                     CruiseID = init.CruiseID,
                 };
 
-                var viewModel = new FixCNTTallyViewModel( dsp.GetDataservice<IFixCNTDataservice>() );
+                var viewModel = new FixCNTTallyViewModel( dsp.GetDataservice<IFixCNTDataservice>(), new Mock<ISoundService>().Object);
 
                 var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
                 viewModel.Initialize(navParams);

@@ -112,7 +112,7 @@
                           Grid.Column="0"
                           Grid.ColumnSpan="6"
                           IsVisible="False">
-                <!-- default to not visable, when view cell expands visability will be set to true -->
+                <!-- default to not visible, when view cell expands visibility will be set to true -->
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

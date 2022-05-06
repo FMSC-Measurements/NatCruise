@@ -37,8 +37,8 @@
 		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.5.0.10200" />
+	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'True'">
+		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

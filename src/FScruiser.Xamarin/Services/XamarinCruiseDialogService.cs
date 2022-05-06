@@ -72,7 +72,7 @@ namespace FScruiser.XF.Services
         {
             var newTcs = new TaskCompletionSource<int?>();
 
-            if (System.Threading.Interlocked.CompareExchange(ref _askKpiTcs, newTcs, null) != null)//if _askKpiTcs == null then _askKpiTcs = newTcs; return origianl value of _askKpiTcs
+            if (System.Threading.Interlocked.CompareExchange(ref _askKpiTcs, newTcs, null) != null)//if _askKpiTcs == null then _askKpiTcs = newTcs; return original value of _askKpiTcs
             {
                 throw new InvalidOperationException("only one dialog can be active at a time");
             }
@@ -113,7 +113,7 @@ namespace FScruiser.XF.Services
         {
             var newTcs = new TaskCompletionSource<AskTreeCountResult>();
 
-            if (System.Threading.Interlocked.CompareExchange(ref _askTreeCountTcs, newTcs, null) != null)//if _askKpiTcs == null then _askKpiTcs = newTcs; return origianl value of _askKpiTcs
+            if (System.Threading.Interlocked.CompareExchange(ref _askTreeCountTcs, newTcs, null) != null)//if _askKpiTcs == null then _askKpiTcs = newTcs; return original value of _askKpiTcs
             {
                 throw new InvalidOperationException("only one dialog can be active at a time");
             }

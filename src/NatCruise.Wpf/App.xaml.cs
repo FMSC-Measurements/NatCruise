@@ -64,6 +64,7 @@ namespace NatCruise.Wpf
             //regionManager.RegisterViewWithRegion(Regions.ContentRegion, typeof(CruiseMasterPage));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(SaleView));
             regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CruiseView));
+            //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CombineFileView));
 
             //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(CuttingUnitListView));
             regionManager.RegisterViewWithRegion(Regions.CuttingUnitDetailsRegion, typeof(CuttingUnitDetailView));
@@ -165,6 +166,7 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterForNavigation<TreeFieldsView>();
             containerRegistry.RegisterForNavigation<LogFieldsView>();
             containerRegistry.RegisterForNavigation<DesignChecksView>();
+            containerRegistry.RegisterForNavigation<CombineFileView>();
 
 
             // register validators

@@ -3,6 +3,8 @@ using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Common;
@@ -15,12 +17,12 @@ using Xamarin.Forms;
 namespace FScruiser.XF.ViewModels
 {
     //TODO the validation of species and sample group could use some improvement
-    // rightnow it is done when saving the tree. It is important that we validate sampleGroup before saving,
+    // right now it is done when saving the tree. It is important that we validate sampleGroup before saving,
     // because we do want to prevent saving a tree that is going to throw a database exception
     // but validation requires that the sampleGroup options be updated before.
     // Currently this is done but not in a very elegant way.
     // also it would be nice if the view model had a Errors property that exposed a observable dictionary
-    // which exposed all the errors rather than having properties to indecated if a property had an error
+    // which exposed all the errors rather than having properties to indelicate if a property had an error
 
     public class TreeEditViewModel : XamarinViewModelBase
     {
@@ -41,6 +43,7 @@ namespace FScruiser.XF.ViewModels
         public bool IsLoading { get; set; }
         protected ICuttingUnitDataservice CuttingUnitDatastore { get; }
         protected ITreeDataservice TreeDataservice { get; }
+        public ITreeFieldValueDataservice TreeFieldValueDataservice { get; }
         public ICruisersDataservice CruisersDataservice { get; }
         protected ICruiseDialogService DialogService { get; }
         protected ICruiseNavigationService NavigationService { get; }
@@ -65,7 +68,31 @@ namespace FScruiser.XF.ViewModels
         public IEnumerable<TreeFieldValue> TreeFieldValues
         {
             get => _treeFieldValues;
-            set => SetProperty(ref _treeFieldValues, value);
+            set
+            {
+                if (_treeFieldValues != null)
+                {
+                    foreach (var tfv in _treeFieldValues)
+                    {
+                        tfv.PropertyChanged += treeFieldValue_PropertyChanged;
+                    }
+                }
+                SetProperty(ref _treeFieldValues, value);
+                if (value != null)
+                {
+                    foreach (var tfv in value)
+                    {
+                        tfv.PropertyChanged += treeFieldValue_PropertyChanged;
+                    }
+                }
+
+                void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+                {
+                    var treeFieldValue = (TreeFieldValue)sender;
+                    TreeFieldValueDataservice.UpdateTreeFieldValue(treeFieldValue);
+                    RefreshErrorsAndWarnings();
+                }
+            }
         }
 
         public Tree_Ex Tree
@@ -359,7 +386,7 @@ namespace FScruiser.XF.ViewModels
             //if (string.IsNullOrWhiteSpace(oldValue)) { return true; }
             //else
             //{
-            //    //TODO find a way to conferm sampleGroup canges
+            //    //TODO find a way to confirm sampleGroup changes
             //    if (!DialogService.AskYesNoAsync("You are changing the Sample Group of a tree, are you sure you want to do this?"
             //        , "!"
             //        , true).Result)
@@ -539,6 +566,7 @@ namespace FScruiser.XF.ViewModels
         public TreeEditViewModel(
             ICuttingUnitDataservice cuttingUnitDatastore,
             ITreeDataservice treeDataservice,
+            ITreeFieldValueDataservice treeFieldValueDataservice,
             ICruiseDialogService dialogService,
             ICruiseNavigationService navigationService,
             ICruisersDataservice cruisersDataservice,
@@ -546,6 +574,7 @@ namespace FScruiser.XF.ViewModels
         {
             CuttingUnitDatastore = cuttingUnitDatastore ?? throw new ArgumentNullException(nameof(cuttingUnitDatastore));
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
+            TreeFieldValueDataservice = treeFieldValueDataservice ?? throw new ArgumentNullException(nameof(treeFieldValueDataservice));
             CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
@@ -575,7 +604,7 @@ namespace FScruiser.XF.ViewModels
                 var cruisers = CruisersDataservice.GetCruisers()
                     .ToArray();
                 var initials = tree.Initials;
-                if(!string.IsNullOrEmpty(initials)
+                if (!string.IsNullOrEmpty(initials)
                     && !cruisers.Contains(initials, StringComparer.OrdinalIgnoreCase))
                 {
                     cruisers = cruisers.Append(initials).ToArray();
@@ -629,21 +658,8 @@ namespace FScruiser.XF.ViewModels
 
         private void RefreshTreeFieldValues(Tree tree)
         {
-            var treeFieldValues = TreeDataservice.GetTreeFieldValues(tree.TreeID);
-
-            foreach (var tfv in treeFieldValues)
-            {
-                tfv.PropertyChanged += treeFieldValue_PropertyChanged;
-            }
-
+            var treeFieldValues = TreeFieldValueDataservice.GetTreeFieldValues(tree.TreeID);
             TreeFieldValues = treeFieldValues;
-        }
-
-        private void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            var treeFieldValue = (TreeFieldValue)sender;
-            TreeDataservice.UpdateTreeFieldValue(treeFieldValue);
-            RefreshErrorsAndWarnings();
         }
 
         public void RefreshErrorsAndWarnings()

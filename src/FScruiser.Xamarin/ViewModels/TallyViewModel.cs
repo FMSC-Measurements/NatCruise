@@ -259,7 +259,7 @@ namespace FScruiser.XF.ViewModels
             else
             { StrataFilterOptions = new string[0]; }
 
-            // we need to reload tally pops on each load incase coming back from edit tree counts
+            // we need to reload tally pops on each load in case coming back from edit tree counts
             Tallies = tallyPopulations;
 
             
@@ -267,7 +267,7 @@ namespace FScruiser.XF.ViewModels
             if(tf != null)
             {
                 // HACK reassigning tally feed causes us to lose the scroll position
-                // to mantain the scroll position we need update each item in the list in place
+                // to maintain the scroll position we need update each item in the list in place
                 // and add any new items
                 // we should only need to add entries when coming back from edit tree counts and only be adding one entry when doing so
 
@@ -304,7 +304,7 @@ namespace FScruiser.XF.ViewModels
 
             
 
-            // refresh selected tree incase coming back from TreeEdit page
+            // refresh selected tree in case coming back from TreeEdit page
 
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
@@ -376,7 +376,10 @@ namespace FScruiser.XF.ViewModels
             && (x.SpeciesCode == tallyEntry.SpeciesCode || x.SpeciesCode is null)
             && (x.LiveDead == tallyEntry.LiveDead || x.LiveDead is null));
             if (tallyPopulation != null)
-            { tallyPopulation.TreeCount -= tallyEntry.TreeCount; }
+            {
+                tallyPopulation.TreeCount -= tallyEntry.TreeCount;
+                tallyPopulation.SumKPI -= tallyEntry.KPI;
+            }
 
             TallyFeed.Remove(TallyFeed.First(x => x.TallyLedgerID == tallyLedgerID));
         }

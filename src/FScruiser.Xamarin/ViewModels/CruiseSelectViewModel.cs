@@ -100,8 +100,8 @@ namespace FScruiser.XF.ViewModels
             var deviceName = DeviceInfo.DeviceName;
             var defaultFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.PurposeShortCode.Replace(' ', '_')}_{timestamp}_{deviceName}.crz3";
 
-            // create file to export before geting the destination path
-            // on android requesting the desination file creates an empty file
+            // create file to export before getting the destination path
+            // on android requesting the destination file creates an empty file
             // if creating the file to export fails we don't want to create an empty file
             var exportTempDir = FileSystemService.ExportTempDir;
             var fileToExport = Path.Combine(exportTempDir, defaultFileName);

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Xamarin.CommunityToolkit.Markup;
 using FScruiser.XF.Controls;
 using FScruiser.XF.Util;
+using NatCruise.Models;
 
 namespace FScruiser.XF.Views
 {

@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="NatCruise.Wpf.Views.SelectCombineFileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:NatCruise.Wpf.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220*" />
+            <ColumnDefinition Width="343*" />
+            <ColumnDefinition Width="237*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <Border BorderBrush="Black"
+                    BorderThickness="1"
+                    Margin="7">
+                <StackPanel Height="Auto">
+                    <StackPanel Height="Auto">
+                        <RadioButton Content="Combine Into New File"
+                                     Margin="5" />
+                        <Grid Height="Auto"
+                              Margin=" 5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     TextWrapping="NoWrap"
+                                     Text="" />
+                            <Button Grid.Column="1"
+                                    Content="Browse" />
+                        </Grid>
+                    </StackPanel>
+                    <RadioButton Content="Combine Into Current File"
+                                 Margin="5" />
+                </StackPanel>
+            </Border>
+            <Expander Height="100"
+                      Margin="7"
+                      Header="Advanced Options">
+                <Grid Background="#FFE5E5E5" />
+            </Expander>
+        </StackPanel>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="32" />
+                    <ColumnDefinition Width="32" />
+                </Grid.ColumnDefinitions>
+                <Label 
+                       Content="File List" />
+                <Button Grid.Column="1" Style="{StaticResource AddButton}"
+                        Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                        IsEnabled="{Binding Text, ElementName=_unitCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
+                </Button>
+                <Button  Grid.Column="2"
+                         Style="{StaticResource RemoveButton}"
+                         Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
+                         Command="{Binding RemoveCuttingUnitCommand}"
+                         CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}"
+                         IsEnabled="{Binding SelectedItem, ElementName=_cuttingUnitListView, Converter={StaticResource NotNullConverter}}" />
+            </Grid>
+            
+            <ListView d:ItemsSource="{d:SampleData ItemCount=5}"
+                      Grid.Row="1">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
+    </Grid>
+</UserControl>
