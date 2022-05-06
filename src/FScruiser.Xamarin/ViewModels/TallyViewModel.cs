@@ -376,7 +376,10 @@ namespace FScruiser.XF.ViewModels
             && (x.SpeciesCode == tallyEntry.SpeciesCode || x.SpeciesCode is null)
             && (x.LiveDead == tallyEntry.LiveDead || x.LiveDead is null));
             if (tallyPopulation != null)
-            { tallyPopulation.TreeCount -= tallyEntry.TreeCount; }
+            {
+                tallyPopulation.TreeCount -= tallyEntry.TreeCount;
+                tallyPopulation.SumKPI -= tallyEntry.KPI;
+            }
 
             TallyFeed.Remove(TallyFeed.First(x => x.TallyLedgerID == tallyLedgerID));
         }
