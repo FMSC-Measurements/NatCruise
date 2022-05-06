@@ -46,7 +46,7 @@ namespace FScruiser.XF.Views
         {
             var myTcs = new TaskCompletionSource<object>();
 
-            if (System.Threading.Interlocked.CompareExchange(ref _tcs, myTcs, null) != null)//if _tcs == null then _tcs = newTcs; return origianl value of _tcs
+            if (System.Threading.Interlocked.CompareExchange(ref _tcs, myTcs, null) != null)//if _tcs == null then _tcs = newTcs; return original value of _tcs
             {
                 throw new InvalidOperationException($"ShowDialog can only be called once at a time");
             }

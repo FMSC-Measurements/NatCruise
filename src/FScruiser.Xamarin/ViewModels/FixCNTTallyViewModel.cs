@@ -150,7 +150,7 @@ namespace FScruiser.XF.ViewModels
             //read fixcount tally populations
             var tallyPopulations = FixCNTDataservice.GetFixCNTTallyPopulations(stratumCode).ToArray();
 
-            //foreach tally population calculate and itterate through interval values
+            //foreach tally population calculate and iterate through interval values
             foreach (var tp in tallyPopulations)
             {
                 var buckets = new List<FixCNTTallyBucket>();

@@ -88,7 +88,7 @@ namespace FScruiser.XF.Views
                     ,
                 }
                 .Column(index % COLUMN_COUNT)
-                .Row((index / COLUMN_COUNT) + 1);//ajust down one because logNumber is first
+                .Row((index / COLUMN_COUNT) + 1);//adjust down one because logNumber is first
 
                 grid.Children.Add(frame);
             }

@@ -557,7 +557,7 @@
                         AutomationProperties.Name="Tree Edit Panel">
 
                     <Grid>
-                        <!--default to not visable, when view cell expands visability will be set to true -->
+                        <!--default to not visible, when view cell expands visibility will be set to true -->
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />

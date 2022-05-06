@@ -17,7 +17,7 @@ namespace FScruiser.XF.Views
         {
             InitializeComponent();
 
-            // setting automation id on hamberger menu button
+            // setting automation id on hamburger menu button
             // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/accessibility/automation-properties#flyoutpage
             // see btnMDPAutomationID_open and btnMDPAutomationID_close values
             // in src\FScruiser.Droid\Resources\values\strings.xml
