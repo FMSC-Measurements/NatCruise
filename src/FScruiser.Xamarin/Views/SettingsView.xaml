@@ -10,7 +10,7 @@
             <StackLayout>
                 <StackLayout Orientation="Horizontal">
 
-                    <Label Text="Analitics"
+                    <Label Text="Analytics"
                            VerticalTextAlignment="Center"
                            AutomationProperties.IsInAccessibleTree="False"/>
 
