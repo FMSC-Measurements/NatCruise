@@ -93,6 +93,15 @@ ORDER BY t.TreeNumber
     @CountOrMeasure,
     @CreatedBy
 );
+
+INSERT INTO TreeMeasurment (
+    TreeID,
+    CreatedBy
+) VALUES (
+    @TreeID,
+    @CreatedBy
+);
+
 INSERT INTO TallyLedger (
     CruiseID,
     TallyLedgerID,
@@ -221,6 +230,15 @@ $@"INSERT INTO Tree (
     @LiveDead,
     @CountOrMeasure,
     @CreatedBy);
+
+INSERT INTO TreeMeasurment (
+    TreeID,
+    CreatedBy
+) VALUES (
+    @TreeID,
+    @CreatedBy
+);
+
 INSERT INTO TallyLedger (
     CruiseID,
     TallyLedgerID,

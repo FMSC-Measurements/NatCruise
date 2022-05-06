@@ -305,7 +305,8 @@ LEFT JOIN treeWarningCount AS tw USING (TreeID)
     SampleGroupCode,
     SpeciesCode,
     LiveDead,
-    CountOrMeasure
+    CountOrMeasure,
+    CreatedBy
 ) VALUES (
     @TreeID,
     (SELECT ifnull(max(TreeNumber), 0) +1
@@ -318,13 +319,16 @@ LEFT JOIN treeWarningCount AS tw USING (TreeID)
     @SampleGroupCode,
     @SpeciesCode,
     @LiveDead,
-    'M'
+    'M',
+    @CreatedBy
 );
 
 INSERT INTO TreeMeasurment (
-    TreeID
+    TreeID,
+    CreatedBy
 ) VALUES (
-    @TreeID
+    @TreeID,
+    @CreatedBy
 );
 
 INSERT INTO TallyLedger (
@@ -339,7 +343,8 @@ INSERT INTO TallyLedger (
     TreeCount,
     KPI,
     STM,
-    EntryType
+    EntryType,
+    CreatedBy
 ) VALUES (
     @TallyLedgerID,
     @TreeID,
@@ -352,7 +357,8 @@ INSERT INTO TallyLedger (
     @TreeCount,
     @KPI,
     @STM,
-    @EntryType
+    @EntryType,
+    @CreatedBy
 );"
 ,
                 new
@@ -369,6 +375,7 @@ INSERT INTO TallyLedger (
                     KPI = kpi,
                     STM = stm,
                     EntryType = TallyLedger.EntryTypeValues.MANUAL_TREE,
+                    CreatedBy = DeviceID,
                 });
         }
 
@@ -608,7 +615,8 @@ UPSERT_TREEMEASURMENT_COMMAND,
     SampleGroupCode,
     SpeciesCode,
     LiveDead,
-    TreeCount
+    TreeCount,
+    CreatedBy
 ) VALUES (
     @TallyLedgerID,
     @CruiseID,
@@ -619,7 +627,8 @@ UPSERT_TREEMEASURMENT_COMMAND,
     @SampleGroupCode,
     @SpeciesCode,
     @LiveDead,
-    @TreeCount
+    @TreeCount,
+    @CreatedBy
 );", new
 {
     TallyLedgerID = Guid.NewGuid().ToString(),
@@ -632,6 +641,7 @@ UPSERT_TREEMEASURMENT_COMMAND,
     tree.SpeciesCode,
     tree.LiveDead,
     TreeCount = treeCountDiff,
+    CreatedBy = DeviceID,
 });
         }
 
@@ -672,18 +682,21 @@ UPSERT_TREEMEASURMENT_COMMAND,
             Database.Execute2(
 @"INSERT INTO TreeMeasurment (
     TreeID,
-    Initials
+    Initials,
+    CreatedBy
 ) VALUES (
     @TreeID,
-    @Initials
+    @Initials,
+    @DeviceID
 )
 ON CONFLICT (TreeID) DO
-UPDATE SET Initials = @Initials
+UPDATE SET Initials = @Initials, ModifiedBy = @DeviceID
 WHERE TreeID = @TreeID;",
                 new
                 {
                     TreeID = tree_guid,
                     Initials = value,
+                    DeviceID,
                 });
         }
 
