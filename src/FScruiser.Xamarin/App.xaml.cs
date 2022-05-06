@@ -89,7 +89,7 @@ namespace FScruiser.XF
             var isFirstRun = Properties.GetValueOrDefault<bool>("isFirstLaunch", true);
             if (isFirstRun)
             {
-                var enableDiagnostics = await DialogService.DisplayAlertAsync("", $"FScruiser can automaticly send dianostics and crash reports.{Environment.NewLine}{Environment.NewLine} " +
+                var enableDiagnostics = await DialogService.DisplayAlertAsync("", $"FScruiser can automatically send diagnostics and crash reports.{Environment.NewLine}{Environment.NewLine} " +
                     $"This feature is optional, however, it helps us to create a better experience.{Environment.NewLine}{Environment.NewLine}" +
                     $"Would you like to enable this feature?{Environment.NewLine}{Environment.NewLine}" +
                     "You can also change this option in the settings page.", "Enable", "No Thanks");

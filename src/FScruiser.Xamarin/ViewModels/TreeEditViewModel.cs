@@ -17,12 +17,12 @@ using Xamarin.Forms;
 namespace FScruiser.XF.ViewModels
 {
     //TODO the validation of species and sample group could use some improvement
-    // rightnow it is done when saving the tree. It is important that we validate sampleGroup before saving,
+    // right now it is done when saving the tree. It is important that we validate sampleGroup before saving,
     // because we do want to prevent saving a tree that is going to throw a database exception
     // but validation requires that the sampleGroup options be updated before.
     // Currently this is done but not in a very elegant way.
     // also it would be nice if the view model had a Errors property that exposed a observable dictionary
-    // which exposed all the errors rather than having properties to indecated if a property had an error
+    // which exposed all the errors rather than having properties to indelicate if a property had an error
 
     public class TreeEditViewModel : XamarinViewModelBase
     {
@@ -386,7 +386,7 @@ namespace FScruiser.XF.ViewModels
             //if (string.IsNullOrWhiteSpace(oldValue)) { return true; }
             //else
             //{
-            //    //TODO find a way to conferm sampleGroup canges
+            //    //TODO find a way to confirm sampleGroup changes
             //    if (!DialogService.AskYesNoAsync("You are changing the Sample Group of a tree, are you sure you want to do this?"
             //        , "!"
             //        , true).Result)

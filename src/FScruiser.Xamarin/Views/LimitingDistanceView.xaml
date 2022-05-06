@@ -26,7 +26,7 @@
         <StackLayout>
 
             <!-- the order that the entries appear on the screen is significant as this is the order that 
-            users typicaly enter in their measurments Dbh, then slope, then slope distance-->
+            users typically enter in their measurements Dbh, then slope, then slope distance-->
 
             <StackLayout IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}">
                 <Label Text="{Binding Plot.StratumCode, StringFormat='{}Stratum {0}'}" />

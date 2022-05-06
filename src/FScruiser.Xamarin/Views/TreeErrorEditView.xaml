@@ -50,7 +50,7 @@
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
-                       Text="Supress"
+                       Text="Suppress"
                        AutomationProperties.IsInAccessibleTree="False" />
 
                 <Switch Grid.Row="1"
