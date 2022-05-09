@@ -283,7 +283,7 @@ namespace NatCruise.Wpf.ViewModels
             {
                 ConflictOptions = conflicts;
 
-                DialogService.ShowNotification("Please Resolve All Conflicts Before Continuing");
+                DialogService.ShowNotification("Some conflicts remain unresolved, please recheck conflicts and ensure all conflicts have a resolution");
                 return;
             }
 
@@ -306,7 +306,7 @@ namespace NatCruise.Wpf.ViewModels
 
                 destination.BackupDatabase(DestinationDatabase);
 
-                await DialogService.ShowNotificationAsync("done", "message");
+                await DialogService.ShowNotificationAsync("combine complete", "message");
             }
             finally
             {
