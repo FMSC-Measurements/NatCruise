@@ -1,10 +1,8 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Sync;
-using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using NatCruise.Core.Services;
 using NatCruise.Data;
-using NatCruise.Data.Abstractions;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Services;

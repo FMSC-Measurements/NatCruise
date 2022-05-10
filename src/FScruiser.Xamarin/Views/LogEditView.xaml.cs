@@ -1,5 +1,6 @@
 ﻿using FScruiser.XF.Util;
 using NatCruise.Cruise.Models;
+using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

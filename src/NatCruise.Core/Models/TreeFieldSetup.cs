@@ -1,7 +1,6 @@
-﻿using NatCruise.Models;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 
-namespace NatCruise.Design.Models
+namespace NatCruise.Models
 {
     public class TreeFieldSetup : BindableBase
     {

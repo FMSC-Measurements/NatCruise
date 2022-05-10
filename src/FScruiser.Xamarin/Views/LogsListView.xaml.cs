@@ -1,12 +1,12 @@
 ﻿using Backpack.XF.Converters;
-using NatCruise.Cruise.Models;
+using FScruiser.XF.Util;
 using FScruiser.XF.ViewModels;
+using NatCruise.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Xamarin.CommunityToolkit.Markup;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Xamarin.CommunityToolkit.Markup;
-using FScruiser.XF.Util;
 
 namespace FScruiser.XF.Views
 {
@@ -148,10 +148,8 @@ namespace FScruiser.XF.Views
                     .Bind(SwipeItem.CommandProperty, path: nameof(View.BindingContext) + "." + nameof(LogsListViewModel.DeleteLogCommand), source: this)
                     .Bind(SwipeItem.CommandParameterProperty, path: ".")
                 })
-
             };
             swipeView.Content = grid;
-
 
             return swipeView;
 
@@ -161,8 +159,6 @@ namespace FScruiser.XF.Views
                 swipeview.Open(OpenSwipeItem.LeftItems);
             }
         }
-
-        
 
         /// <summary>
         /// Gets or sets the <see cref="LogFields" /> property. This is a bindable property.
@@ -187,8 +183,6 @@ namespace FScruiser.XF.Views
             this.SetBinding(logFieldsProperty, "LogFields");
 
             //_logListView. += _logListView_ItemTapped;
-
-
         }
 
         private void _logListView_ItemTapped(object sender, ItemTappedEventArgs e)

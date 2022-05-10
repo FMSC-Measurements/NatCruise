@@ -1,15 +1,23 @@
 ﻿using CruiseDAL;
 using NatCruise.Data;
-using NatCruise.Design.Models;
 using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NatCruise.Design.Data
+namespace NatCruise.Data
 {
     public class FieldSetupDataservice : CruiseDataserviceBase, IFieldSetupDataservice
     {
+        private static readonly LogFieldSetup[] DEFAULT_LOG_FIELDS = new LogFieldSetup[]{
+            new LogFieldSetup(){
+                Field = nameof(Log.LogNumber), Heading = "LogNum"},
+            new LogFieldSetup(){
+                Field = nameof(Log.Grade), Heading = "Grade"},
+            new LogFieldSetup() {
+                Field = nameof(Log.SeenDefect), Heading = "PctSeenDef"}
+        };
+
         public FieldSetupDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -17,6 +25,8 @@ namespace NatCruise.Design.Data
         public FieldSetupDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
         {
         }
+
+        #region TreeFieldSetup
 
         protected TreeField GetTreeField(string field)
         {
@@ -186,6 +196,32 @@ COMMIT;",
                 });
         }
 
+        #endregion TreeFieldSetup
+
+        #region LogFieldSetup
+
+        public IEnumerable<LogFieldSetup> GetLogFieldSetupsByTreeID(string treeID)
+        {
+            var fields = Database.Query<LogFieldSetup>(
+@"SELECT
+    lfs.Field,
+    ifnull(lfh.Heading, lf.DefaultHeading) AS Heading
+FROM LogFieldSetup AS lfs
+JOIN LogField AS lf USING (Field)
+LEFT JOIN LogFieldHeading AS lfh USING (Field, CruiseID)
+WHERE StratumCode = (SELECT StratumCode FROM Tree WHERE TreeID = @p1) AND CruiseID = (SELECT CruiseID FROM Tree WHERE TreeID = @p1)
+ORDER BY lfs.FieldOrder;", treeID).ToArray();
+
+            if (fields.Length == 0)
+            {
+                return DEFAULT_LOG_FIELDS;
+            }
+            else
+            {
+                return fields;
+            }
+        }
+
         public IEnumerable<LogFieldSetup> GetLogFieldSetups(string stratumCode)
         {
             return Database.From<LogFieldSetup>()
@@ -265,5 +301,7 @@ COMMIT;",
                     StratumTemplateName = stratumTemplateName,
                 });
         }
+
+        #endregion LogFieldSetup
     }
 }

@@ -1,6 +1,4 @@
-﻿using FScruiser.XF.Constants;
-using NatCruise.Data;
-using NatCruise.Data.Abstractions;
+﻿using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using Prism.Common;

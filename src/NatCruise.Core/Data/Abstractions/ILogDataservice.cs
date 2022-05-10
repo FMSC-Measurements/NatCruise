@@ -1,8 +1,7 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Data;
+﻿using NatCruise.Models;
 using System.Collections.Generic;
 
-namespace NatCruise.Cruise.Data
+namespace NatCruise.Data
 {
     public interface ILogDataservice : IDataservice
     {
@@ -17,11 +16,5 @@ namespace NatCruise.Cruise.Data
         void UpdateLog(Log log);
 
         void DeleteLog(string log_guid);
-
-        IEnumerable<LogFieldSetup> GetLogFields(string tree_guid);
-
-        IEnumerable<LogError> GetLogErrorsByLog(string logID);
-
-        IEnumerable<LogError> GetLogErrorsByTree(string treeID);
     }
 }

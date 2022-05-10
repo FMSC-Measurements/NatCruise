@@ -1,23 +1,13 @@
 ﻿using CruiseDAL;
-using NatCruise.Cruise.Models;
-using NatCruise.Data;
+using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NatCruise.Cruise.Data
+namespace NatCruise.Data
 {
     public class LogDataservice : CruiseDataserviceBase, ILogDataservice
     {
-        private static readonly LogFieldSetup[] DEFAULT_LOG_FIELDS = new LogFieldSetup[]{
-            new LogFieldSetup(){
-                Field = nameof(Log.LogNumber), Heading = "LogNum"},
-            new LogFieldSetup(){
-                Field = nameof(Log.Grade), Heading = "Grade"},
-            new LogFieldSetup() {
-                Field = nameof(Log.SeenDefect), Heading = "PctSeenDef"}
-        };
-
         public LogDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -196,54 +186,6 @@ namespace NatCruise.Cruise.Data
             Database.Execute("DELETE FROM Log WHERE LogID = @p1;", logID);
         }
 
-        public IEnumerable<LogFieldSetup> GetLogFields(string treeID)
-        {
-            var fields = Database.Query<LogFieldSetup>(
-@"SELECT
-    lfs.Field,
-    ifnull(lfh.Heading, lf.DefaultHeading) AS Heading
-FROM LogFieldSetup AS lfs
-JOIN LogField AS lf USING (Field)
-LEFT JOIN LogFieldHeading AS lfh USING (Field, CruiseID)
-WHERE StratumCode = (SELECT StratumCode FROM Tree WHERE TreeID = @p1) AND CruiseID = (SELECT CruiseID FROM Tree WHERE TreeID = @p1)
-ORDER BY lfs.FieldOrder;", treeID).ToArray();
-
-            if (fields.Length == 0)
-            {
-                return DEFAULT_LOG_FIELDS;
-            }
-            else
-            {
-                return fields;
-            }
-        }
-
-        public IEnumerable<LogError> GetLogErrorsByLog(string logID)
-        {
-            return Database.Query<LogError>(
-@"SELECT
-    lge.LogID,
-    l.LogNumber,
-    lge.Message
-FROM LogGradeError AS lge
-JOIN Log AS l USING (LogID)
-WHERE lge.LogID = @p1;",
-                new object[] { logID })
-                .ToArray();
-        }
-
-        public IEnumerable<LogError> GetLogErrorsByTree(string treeID)
-        {
-            return Database.Query<LogError>(
-@"SELECT
-    LogID,
-    l.LogNumber,
-    Message
-FROM LogGradeError
-JOIN Log AS l USING (LogID)
-WHERE l.TreeID  = @p1;",
-                new object[] { treeID })
-                .ToArray();
-        }
+        
     }
 }
