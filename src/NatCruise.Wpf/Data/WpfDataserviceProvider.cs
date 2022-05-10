@@ -75,6 +75,22 @@ namespace NatCruise.Data
                 {
                     return new DesignCheckDataservice(database, cruiseID, deviceID);
                 }
+                else if (type == typeof(IMessageLogDataservice))
+                {
+                    return new MessageLogDataservice(database, deviceID);
+                }
+                else if (type == typeof(ITreeDataservice))
+                {
+                    return new TreeDataservice(database, cruiseID, deviceID);
+                }
+                else if (type == typeof(ITreeErrorDataservice))
+                {
+                    return new TreeErrorDataservice(database, cruiseID, deviceID);
+                }
+                else if (type == typeof(ITreeFieldValueDataservice))
+                {
+                    return new TreeFieldValueDataservice(database, cruiseID, deviceID);
+                }
 
                 return null;
             }
@@ -96,6 +112,13 @@ namespace NatCruise.Data
             containerRegistry.Register<ITemplateDataservice>(x => GetDataservice<ITemplateDataservice>());
             containerRegistry.Register<IFieldSetupDataservice>(x => GetDataservice<IFieldSetupDataservice>());
             containerRegistry.Register<IDesignCheckDataservice>(x => GetDataservice<IDesignCheckDataservice>());
+            containerRegistry.Register<IMessageLogDataservice>(x => GetDataservice<IMessageLogDataservice>());
+            //containerRegistry.Register<ISetupInfoDataservice>(x => GetDataservice<ISetupInfoDataservice>());
+            containerRegistry.Register<ITreeDataservice>(x => GetDataservice<ITreeDataservice>());
+            containerRegistry.Register<ITreeErrorDataservice>(x => GetDataservice<ITreeErrorDataservice>());
+            containerRegistry.Register<ITreeFieldDataservice>(x => GetDataservice<ITreeFieldDataservice>());
+            containerRegistry.Register<ITreeFieldValueDataservice>(x => GetDataservice<ITreeFieldValueDataservice>()); 
+
         }
     }
 }

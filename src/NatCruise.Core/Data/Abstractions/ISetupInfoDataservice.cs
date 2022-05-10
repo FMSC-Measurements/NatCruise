@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NatCruise.Data 
 {
-    public interface ISetupInfoDataservice 
+    public interface ISetupInfoDataservice
     {
         IEnumerable<Region> GetRegions();
 
