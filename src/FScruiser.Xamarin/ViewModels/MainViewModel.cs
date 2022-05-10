@@ -1,8 +1,6 @@
 ﻿using FScruiser.XF.Services;
 using NatCruise.Core.Services;
-using NatCruise.Cruise.Services;
 using NatCruise.Data;
-using NatCruise.Data.Abstractions;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Services;

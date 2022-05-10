@@ -2,6 +2,7 @@
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Util;
 using Prism.Commands;
@@ -45,6 +46,7 @@ namespace FScruiser.XF.ViewModels
         protected ILogDataservice LogDataservice { get; }
         protected ICuttingUnitDataservice Datastore { get; }
         protected ICruiseNavigationService NavigationService { get; }
+        public IFieldSetupDataservice FieldSetupDataservice { get; }
 
         public ICommand AddLogCommand => _addLogCommand ?? (_addLogCommand = new DelegateCommand(ShowAddLogPage));
 
@@ -58,11 +60,13 @@ namespace FScruiser.XF.ViewModels
         public LogsListViewModel(
             ICruiseNavigationService navigationService,
             ITreeDataservice treeDataservice,
-            ILogDataservice logDataservice)
+            ILogDataservice logDataservice,
+            IFieldSetupDataservice fieldSetupDataservice)
         {
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
         }
 
         protected override void Load(IParameters parameters)
@@ -74,7 +78,7 @@ namespace FScruiser.XF.ViewModels
 
             TreeNumber = TreeDataservice.GetTreeNumber(tree_guid);
 
-            LogFields = LogDataservice.GetLogFields(tree_guid);
+            LogFields = FieldSetupDataservice.GetLogFieldSetupsByTreeID(tree_guid);
 
             Logs = LogDataservice.GetLogs(tree_guid).ToObservableCollection()
                 ?? new ObservableCollection<Log>();

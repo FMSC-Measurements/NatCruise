@@ -1,10 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using NatCruise.Models;
+using Prism.Mvvm;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
     [Table("Log")]
-    public class Log : Model_Base
+    public class Log : BindableBase
     {
         public string LogID { get; set; }
 
