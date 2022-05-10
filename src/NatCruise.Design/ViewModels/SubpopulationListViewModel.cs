@@ -2,6 +2,8 @@
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
 using System;
@@ -21,7 +23,7 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<string> _speciesOptions;
         private bool _isFixCNT;
 
-        public SubpopulationListViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
+        public SubpopulationListViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
 
@@ -35,7 +37,7 @@ namespace NatCruise.Design.ViewModels
 
         protected ISubpopulationDataservice SubpopulationDataservice { get; }
 
-        protected IDialogService DialogService { get; }
+        protected INatCruiseDialogService DialogService { get; }
 
         //public InteractionRequest<INotification> NotificationRequest { get; set; }
 

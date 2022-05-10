@@ -1,7 +1,7 @@
 ﻿using FScruiser.XF.Constants;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
 using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using Prism.Common;
 using System;
 using System.ComponentModel;
@@ -10,11 +10,11 @@ namespace FScruiser.XF.ViewModels
 {
     public class CuttingUnitInfoViewModel : XamarinViewModelBase
     {
-        private CuttingUnit_Ex _cuttingUnit;
+        private CuttingUnit _cuttingUnit;
 
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
 
-        public CuttingUnit_Ex CuttingUnit
+        public CuttingUnit CuttingUnit
         {
             get => _cuttingUnit;
             set
@@ -43,7 +43,7 @@ namespace FScruiser.XF.ViewModels
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
-            var unit = CuttingUnitDataservice.GetUnit(unitCode);
+            var unit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
             CuttingUnit = unit;
         }
     }

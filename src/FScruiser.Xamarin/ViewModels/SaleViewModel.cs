@@ -2,6 +2,7 @@
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Models;
+using NatCruise.Navigation;
 using Prism.Common;
 
 namespace FScruiser.XF.ViewModels

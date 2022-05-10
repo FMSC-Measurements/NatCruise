@@ -2,6 +2,7 @@
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Models;
+using NatCruise.Navigation;
 using Prism.Common;
 using System;
 using System.Collections.Generic;

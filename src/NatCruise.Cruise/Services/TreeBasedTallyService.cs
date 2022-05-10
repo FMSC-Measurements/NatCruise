@@ -4,6 +4,7 @@ using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
+using NatCruise.Navigation;
 using System;
 using System.Threading.Tasks;
 
@@ -12,10 +13,10 @@ namespace NatCruise.Cruise.Services
     public class TreeBasedTallyService : ITreeBasedTallyService
     {
         public ISampleSelectorDataService SampleSelectorDataservice { get; }
-        public ICruiseDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public ITallyDataservice TallyDataservice { get; }
 
-        public TreeBasedTallyService(ICruiseDialogService dialogService, ITallyDataservice tallyDataservice, ISampleSelectorDataService sampleSelectorDataservice)
+        public TreeBasedTallyService(INatCruiseDialogService dialogService, ITallyDataservice tallyDataservice, ISampleSelectorDataService sampleSelectorDataservice)
         {
             TallyDataservice = tallyDataservice ?? throw new ArgumentNullException(nameof(TallyDataservice));
             SampleSelectorDataservice = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(SampleSelectorDataservice));

@@ -1,18 +1,16 @@
-﻿using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
+using Prism.Commands;
 using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -26,26 +24,30 @@ namespace FScruiser.XF.ViewModels
 
     public class TreeEditViewModel : XamarinViewModelBase
     {
-        private Command _showLogsCommand;
+        private ICommand _showLogsCommand;
         private IEnumerable<string> _stratumCodes;
         private IEnumerable<string> _sampleGroupCodes;
-        private IEnumerable<SubPopulation> _subPopulations;
+        private IEnumerable<Subpopulation> _subPopulations;
         private IEnumerable<TreeError> _errorsAndWarnings;
         private IEnumerable<TreeFieldValue> _treeFieldValues;
-        private Tree_Ex _tree;
+        private TreeEx _tree;
         private bool _hasSampleGroupError;
         private bool _hasSpeciesError;
-        private Command<TreeError> _showEditTreeErrorCommand;
+        private DelegateCommand<TreeError> _showEditTreeErrorCommand;
         private IEnumerable<string> _cruisers;
         private string _cruiseMethod;
         private IEnumerable<string> _countOrMeasureOptions;
+        private IEnumerable<string> _speciesOptions;
 
         public bool IsLoading { get; set; }
-        protected ICuttingUnitDataservice CuttingUnitDatastore { get; }
+        public IStratumDataservice StratumDataservice { get; }
+        public ISampleGroupDataservice SampleGroupDataservice { get; }
+        public ISubpopulationDataservice SubpopulationDataservice { get; }
         protected ITreeDataservice TreeDataservice { get; }
+        public ITreeErrorDataservice TreeErrorDataservice { get; }
         public ITreeFieldValueDataservice TreeFieldValueDataservice { get; }
         public ICruisersDataservice CruisersDataservice { get; }
-        protected ICruiseDialogService DialogService { get; }
+        protected INatCruiseDialogService DialogService { get; }
         protected ICruiseNavigationService NavigationService { get; }
         protected ILoggingService LoggingService { get; }
 
@@ -95,7 +97,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public Tree_Ex Tree
+        public TreeEx Tree
         {
             get { return _tree; }
             protected set
@@ -402,70 +404,26 @@ namespace FScruiser.XF.ViewModels
 
         #endregion SampleGroup
 
-        //#region SubPopulation
-
         // TODO remove SubPopulations?
-        protected IEnumerable<SubPopulation> SubPopulations
+        protected IEnumerable<Subpopulation> SubPopulations
         {
             get => _subPopulations;
             set
             {
                 SetProperty(ref _subPopulations, value);
-                //RaisePropertyChanged(nameof(SubPopulation));
-                RaisePropertyChanged(nameof(SpeciesOptions));
+
+                SpeciesOptions = SubPopulations.OrEmpty()
+                        .Select(x => x.SpeciesCode)
+                        .ToArray();
             }
         }
-
-        //public SubPopulation SubPopulation
-        //{
-        //    get
-        //    {
-        //        var tree = Tree;
-        //        if(tree == null) { return null; }
-
-        //        return SubPopulations.OrEmpty()
-        //        .Where(x => x.Species == tree.Species && x.LiveDead == tree.LiveDead)
-        //        .FirstOrDefault();
-        //    }
-
-        //    set
-        //    {
-        //        var tree = Tree;
-        //        if(tree == null) { return; }
-
-        //        if (value != null)
-        //        {
-        //            tree.Species = value.Species;
-        //            tree.LiveDead = value.LiveDead;
-        //        }
-        //        else
-        //        {
-        //            tree.Species = null;
-        //            tree.LiveDead = null;
-        //        }
-        //        OnSubPopulationChanged(tree);
-        //    }
-        //}
-
-        //protected void OnSubPopulationChanged(Tree tree)
-        //{
-        //    SaveTree(tree);
-        //    RefreshErrorsAndWarnings(tree);
-        //}
-
-        //#endregion SubPopulation
 
         #region Species
 
         public IEnumerable<string> SpeciesOptions
         {
-            get
-            {
-                var tree = Tree;
-                return _subPopulations.OrEmpty()
-                  .Select(x => x.SpeciesCode)
-                  .ToArray();
-            }
+            get => _speciesOptions;
+            protected set => SetProperty(ref _speciesOptions, value);
         }
 
         public string SpeciesCode
@@ -480,6 +438,7 @@ namespace FScruiser.XF.ViewModels
                 if (OnSpeciesChanging(oldValue, value))
                 {
                     tree.SpeciesCode = value;
+
                     OnSpeciesChanged(tree, value);
                 }
             }
@@ -545,9 +504,9 @@ namespace FScruiser.XF.ViewModels
             protected set => SetProperty(ref _cruiseMethod, value);
         }
 
-        public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new Command(ShowLogs));
+        public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new DelegateCommand(ShowLogs));
 
-        public ICommand ShowEditTreeErrorCommand => _showEditTreeErrorCommand ?? (_showEditTreeErrorCommand = new Command<TreeError>(ShowEditTreeError));
+        public ICommand ShowEditTreeErrorCommand => _showEditTreeErrorCommand ?? (_showEditTreeErrorCommand = new DelegateCommand<TreeError>(ShowEditTreeError));
 
         private void ShowEditTreeError(TreeError treeError)
         {
@@ -564,16 +523,22 @@ namespace FScruiser.XF.ViewModels
         }
 
         public TreeEditViewModel(
-            ICuttingUnitDataservice cuttingUnitDatastore,
+            IStratumDataservice stratumDataservice,
+            ISampleGroupDataservice sampleGroupDataservice,
+            ISubpopulationDataservice subpopulationDataservice,
             ITreeDataservice treeDataservice,
+            ITreeErrorDataservice treeErrorDataservice,
             ITreeFieldValueDataservice treeFieldValueDataservice,
-            ICruiseDialogService dialogService,
+            INatCruiseDialogService dialogService,
             ICruiseNavigationService navigationService,
             ICruisersDataservice cruisersDataservice,
             ILoggingService loggingService)
         {
-            CuttingUnitDatastore = cuttingUnitDatastore ?? throw new ArgumentNullException(nameof(cuttingUnitDatastore));
+            StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
+            SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
+            SubpopulationDataservice = subpopulationDataservice ?? throw new ArgumentNullException(nameof(subpopulationDataservice));
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
+            TreeErrorDataservice = treeErrorDataservice ?? throw new ArgumentNullException(nameof(treeErrorDataservice));
             TreeFieldValueDataservice = treeFieldValueDataservice ?? throw new ArgumentNullException(nameof(treeFieldValueDataservice));
             CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -592,7 +557,7 @@ namespace FScruiser.XF.ViewModels
                 IsLoading = true;
                 var tree = TreeDataservice.GetTree(treeID) ?? throw new NullReferenceException("GetTree returned null"); ;
                 var unitCode = tree.CuttingUnitCode;
-                var stratumCodes = CuttingUnitDatastore.GetStratumCodesByUnit(unitCode);
+                var stratumCodes = StratumDataservice.GetStratumCodesByUnit(unitCode);
                 StratumCodes = stratumCodes;
 
                 RefreshCruiseMethod(tree);
@@ -612,7 +577,7 @@ namespace FScruiser.XF.ViewModels
 
                 Cruisers = cruisers;
 
-                var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(tree.StratumCode);
+                var cruiseMethod = StratumDataservice.GetCruiseMethod(tree.StratumCode);
                 var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod) || cruiseMethod == "FIXCNT";
                 if (isPlotMethod == false)
                 {
@@ -635,7 +600,7 @@ namespace FScruiser.XF.ViewModels
         {
             var stratumCode = tree?.StratumCode;
             if (string.IsNullOrEmpty(stratumCode) == false)
-            { CruiseMethod = CuttingUnitDatastore.GetCruiseMethod(stratumCode); }
+            { CruiseMethod = StratumDataservice.GetCruiseMethod(stratumCode); }
             else
             { CruiseMethod = null; }
         }
@@ -643,7 +608,7 @@ namespace FScruiser.XF.ViewModels
         private void RefreshSampleGroups(Tree tree)
         {
             var stratum = tree.StratumCode;
-            var sampleGroups = CuttingUnitDatastore.GetSampleGroupCodes(stratum);
+            var sampleGroups = SampleGroupDataservice.GetSampleGroupCodes(stratum);
             SampleGroupCodes = sampleGroups;
         }
 
@@ -652,7 +617,7 @@ namespace FScruiser.XF.ViewModels
             var stratumCode = tree.StratumCode;
             var sampleGroupCode = tree.SampleGroupCode;
 
-            var subPopulations = CuttingUnitDatastore.GetSubPopulations(stratumCode, sampleGroupCode);
+            var subPopulations = SubpopulationDataservice.GetSubpopulations(stratumCode, sampleGroupCode);
             SubPopulations = subPopulations;
         }
 
@@ -671,7 +636,7 @@ namespace FScruiser.XF.ViewModels
         {
             if (tree == null) { return; }
 
-            ErrorsAndWarnings = TreeDataservice.GetTreeErrors(tree.TreeID);
+            ErrorsAndWarnings = TreeErrorDataservice.GetTreeErrors(tree.TreeID);
         }
 
         public void ShowLogs()

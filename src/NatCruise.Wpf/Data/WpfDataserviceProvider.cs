@@ -1,6 +1,5 @@
 ﻿using CruiseDAL;
 using NatCruise.Core.Services;
-using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Design.Data;
 using Prism.Ioc;

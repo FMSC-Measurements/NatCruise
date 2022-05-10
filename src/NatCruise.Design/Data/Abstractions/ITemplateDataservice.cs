@@ -1,5 +1,6 @@
 ﻿using NatCruise.Data;
 using NatCruise.Design.Models;
+using NatCruise.Models;
 using System.Collections.Generic;
 
 namespace NatCruise.Design.Data

@@ -1,4 +1,5 @@
 ﻿using NatCruise.Cruise.Services;
+using NatCruise.Navigation;
 using System;
 
 using Xamarin.Forms;

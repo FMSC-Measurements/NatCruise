@@ -1,10 +1,5 @@
 ﻿using FluentValidation;
-using NatCruise.Design.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NatCruise.Models;
 
 namespace NatCruise.Design.Validation
 {
@@ -27,7 +22,6 @@ namespace NatCruise.Design.Validation
                 .NotEmpty()
                 .WithSeverity(Severity.Info)
                 .WithMessage("Cutting Unit Description is Recommended");
-
         }
     }
 }

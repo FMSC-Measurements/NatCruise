@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using NatCruise.Models;
+using Prism.Mvvm;
 
 namespace NatCruise.Design.Models
 {

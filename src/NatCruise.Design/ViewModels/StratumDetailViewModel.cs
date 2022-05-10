@@ -2,8 +2,8 @@
 using NatCruise.Data;
 using NatCruise.Data.Abstractions;
 using NatCruise.Design.Data;
-using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +20,7 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<CruiseMethod> _methods;
         private IEnumerable<TreeField> _treefieldOptions;
 
-        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupDataservice, ISaleDataservice saleDataservice, StratumValidator validator)
+        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupDataservice, ISaleDataservice saleDataservice, ICuttingUnitDataservice cuttingUnitDataservice, StratumValidator validator)
             : base(validator)
         {
             if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
@@ -29,6 +29,7 @@ namespace NatCruise.Design.ViewModels
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             TemplateDataservice = dataserviceProvider.GetDataservice<ITemplateDataservice>() ?? throw new ArgumentNullException(nameof(TemplateDataservice));
             SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
+            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
 
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
 
@@ -60,6 +61,7 @@ namespace NatCruise.Design.ViewModels
 
         public ITemplateDataservice TemplateDataservice { get; }
         public ISaleDataservice SaleDataservice { get; }
+        public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
         protected IStratumDataservice StratumDataservice { get; }
 
@@ -72,7 +74,7 @@ namespace NatCruise.Design.ViewModels
                 if (value != null)
                 {
                     var stratumCode = value.StratumCode;
-                    CuttingUnits = StratumDataservice.GetCuttingUnitCodesByStratum(stratumCode);
+                    CuttingUnits = CuttingUnitDataservice.GetCuttingUnitCodesByStratum(stratumCode);
                 }
                 ValidateAll(value);
                 RaisePropertyChanged();

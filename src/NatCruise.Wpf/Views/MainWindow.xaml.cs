@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using NatCruise.Design.Data;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Ioc;
 using System;
@@ -41,7 +42,7 @@ namespace NatCruise.Wpf.Views
                 var designChecks = designChecksds.GetDesignChecks();
                 if (designChecks.Any(x => x.Level == "Error"))
                 {
-                    var dialogService = Container.Resolve<IDialogService>();
+                    var dialogService = Container.Resolve<INatCruiseDialogService>();
                     if (!dialogService.AskYesNoAsync(
 @"Cruise Has Design Errors.
 See Design Checks Page For Details.", "Do You Want To Exit?", defaultNo: true).Result)

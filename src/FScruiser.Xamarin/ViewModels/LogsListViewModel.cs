@@ -1,22 +1,23 @@
-﻿using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+﻿using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Navigation;
 using NatCruise.Util;
+using Prism.Commands;
 using Prism.Common;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
     public class LogsListViewModel : XamarinViewModelBase
     {
         private ICommand _addLogCommand;
-        private Command<Log> _editLogCommand;
+        private ICommand _editLogCommand;
         private ObservableCollection<Log> _logs;
         private IEnumerable<LogFieldSetup> _logFields;
         private int? _treeNumber;
@@ -45,12 +46,12 @@ namespace FScruiser.XF.ViewModels
         protected ICuttingUnitDataservice Datastore { get; }
         protected ICruiseNavigationService NavigationService { get; }
 
-        public ICommand AddLogCommand => _addLogCommand ?? (_addLogCommand = new Command(ShowAddLogPage));
+        public ICommand AddLogCommand => _addLogCommand ?? (_addLogCommand = new DelegateCommand(ShowAddLogPage));
 
-        public ICommand DeleteLogCommand => _deleteLogCommand ??= new Command<Log>(DeleteLog);
+        public ICommand DeleteLogCommand => _deleteLogCommand ??= new DelegateCommand<Log>(DeleteLog);
         
 
-        public ICommand EditLogCommand => _editLogCommand ?? (_editLogCommand = new Command<Log>(ShowEditLogPage));
+        public ICommand EditLogCommand => _editLogCommand ?? (_editLogCommand = new DelegateCommand<Log>(ShowEditLogPage));
 
         public string Tree_GUID { get; private set; }
 
@@ -71,7 +72,7 @@ namespace FScruiser.XF.ViewModels
             var tree_guid = Tree_GUID = parameters.GetValue<string>(NavParams.TreeID)
                 ?? parameters.GetValue<string>(KnownNavigationParameters.XamlParam);
 
-            TreeNumber = TreeDataservice.GetTreeStub(tree_guid)?.TreeNumber;
+            TreeNumber = TreeDataservice.GetTreeNumber(tree_guid);
 
             LogFields = LogDataservice.GetLogFields(tree_guid);
 
@@ -86,7 +87,7 @@ namespace FScruiser.XF.ViewModels
             Logs.Remove(log);
         }
 
-        private void ShowAddLogPage(object obj)
+        private void ShowAddLogPage()
         {
             var newLog = new Log()
             {

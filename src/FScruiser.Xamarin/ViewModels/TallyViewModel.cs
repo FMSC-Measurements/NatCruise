@@ -1,9 +1,11 @@
 ﻿using CruiseDAL.Schema;
-using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Commands;
@@ -15,7 +17,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -89,7 +90,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public ICommand SelectTallyEntryCommand => new Command<object>(SelectTallyEntry);
+        public ICommand SelectTallyEntryCommand => new DelegateCommand<object>(SelectTallyEntry);
         //public ICommand ChangeSelectedTallyEntryCommand => new Command(ChangeSelectedTallyEntry);
 
         public CuttingUnit CuttingUnit
@@ -164,15 +165,15 @@ namespace FScruiser.XF.ViewModels
         private TallyEntry _selectedEntry;
         private CuttingUnit _cuttingUnit;
 
-        public ICommand ShowTallyMenuCommand => _showTallyMenuCommand ??= new Command<TallyPopulation>((tp) => ShowTallyMenu(tp).FireAndForget());
+        public ICommand ShowTallyMenuCommand => _showTallyMenuCommand ??= new DelegateCommand<TallyPopulation>((tp) => ShowTallyMenu(tp).FireAndForget());
 
         public ICommand TallyCommand => _tallyCommand ??= new DelegateCommand<TallyPopulation>((tp) => TallyAsync(tp).FireAndForget("TallyAsync"));
 
-        public ICommand StratumSelectedCommand => _stratumSelectedCommand ??= new Command<string>(x => SetStratumFilter(x));
+        public ICommand StratumSelectedCommand => _stratumSelectedCommand ??= new DelegateCommand<string>(x => SetStratumFilter(x));
 
-        public ICommand EditTreeCommand => _editTreeCommand ??= new Command<string>((treeID) => EditTree(treeID).FireAndForget());
+        public ICommand EditTreeCommand => _editTreeCommand ??= new DelegateCommand<string>((treeID) => EditTree(treeID).FireAndForget());
 
-        public ICommand UntallyCommand => _untallyCommand ??= new Command<string>(Untally);
+        public ICommand UntallyCommand => _untallyCommand ??= new DelegateCommand<string>(Untally);
 
         #endregion Commands
 
@@ -181,9 +182,7 @@ namespace FScruiser.XF.ViewModels
         public ITreeDataservice TreeDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
-
-        public ICruiseDialogService CruiseDialogService { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public ISampleSelectorDataService SampleSelectorService { get; }
         public ICruisersDataservice CruisersDataService { get; }
         public ISoundService SoundService { get; }
@@ -196,8 +195,8 @@ namespace FScruiser.XF.ViewModels
             ICuttingUnitDataservice cuttingUnitDataservice,
             ITallyPopulationDataservice tallyPopulationDataservice,
             ISampleSelectorDataService sampleSelectorDataservice,
-            ICruiseDialogService cruiseDialogService,
-            IDialogService dialogService, 
+            //ICruiseDialogService cruiseDialogService,
+            INatCruiseDialogService dialogService, 
             ISoundService soundService,
             ICruisersDataservice cruisersDataservice,
             IContainerProvider containerProvider,
@@ -208,7 +207,7 @@ namespace FScruiser.XF.ViewModels
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
             SampleSelectorService = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
-            CruiseDialogService = cruiseDialogService ?? throw new ArgumentNullException(nameof(cruiseDialogService));
+            //CruiseDialogService = cruiseDialogService ?? throw new ArgumentNullException(nameof(cruiseDialogService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             CruisersDataService = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
@@ -242,7 +241,7 @@ namespace FScruiser.XF.ViewModels
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
-            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
+            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
 
             Title = $"Unit {unitCode} - {cuttingUnit.Description}";
 
@@ -346,7 +345,7 @@ namespace FScruiser.XF.ViewModels
 
                 if (CruisersDataService.PromptCruiserOnSample)
                 {
-                    var cruiser = await CruiseDialogService.AskCruiserAsync();
+                    var cruiser = await DialogService.AskCruiserAsync();
                     if (cruiser != null)
                     {
                         TreeDataservice.UpdateTreeInitials(entry.TreeID, cruiser);
