@@ -1,4 +1,5 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
+using NatCruise.Models;
 using System;
 
 namespace NatCruise.Cruise.Models

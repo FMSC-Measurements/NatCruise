@@ -1,15 +1,9 @@
 ﻿using FluentAssertions;
-using NatCruise.Design.Data;
-using NatCruise.Test;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NatCruise.Data;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace NatCruise.Design.Test.Data
+namespace NatCruise.Test.Data
 {
     public class SetupInfoDataservice_Test : TestBase
     {

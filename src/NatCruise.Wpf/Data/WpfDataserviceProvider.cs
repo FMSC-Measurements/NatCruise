@@ -35,10 +35,6 @@ namespace NatCruise.Data
                 {
                     return new SpeciesCodeDataservice(database, cruiseID, deviceID);
                 }
-                
-                else if (type == typeof(ITallyPopulationDataservice))
-                {
-                }
                 else if (type == typeof(ITallySettingsDataservice))
                 {
                 }

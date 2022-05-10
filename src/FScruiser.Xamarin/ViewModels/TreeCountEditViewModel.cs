@@ -2,6 +2,7 @@
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Navigation;
 using Prism.Common;
 using System;
@@ -19,7 +20,7 @@ namespace FScruiser.XF.ViewModels
         private int _kPIDelta;
         private string _editReason;
         private string _remarks;
-        private TallyPopulation _tallyPopulation;
+        private TallyPopulationEx _tallyPopulation;
         private ICommand _saveTreeCountEditCommand;
         private string _cruiseMethod;
 
@@ -46,7 +47,7 @@ namespace FScruiser.XF.ViewModels
             set { SetProperty(ref _unitCode, value); }
         }
 
-        public TallyPopulation TallyPopulation
+        public TallyPopulationEx TallyPopulation
         {
             get => _tallyPopulation;
 

@@ -1,6 +1,5 @@
 ﻿using CruiseDAL.Schema;
 using NatCruise.Data;
-using NatCruise.Data.Abstractions;
 using NatCruise.Design.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;

@@ -2,6 +2,8 @@
 using FMSC.Sampling;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Test;
 using System;
 using System.Linq;
@@ -179,7 +181,7 @@ namespace NatCruise.Cruise.Test.Data
             }
         }
 
-        private static void VerifyTallyPopulation(Models.TallyPopulation result, string species = null)
+        private static void VerifyTallyPopulation(TallyPopulationEx result, string species = null)
         {
             if (species != null)
             {

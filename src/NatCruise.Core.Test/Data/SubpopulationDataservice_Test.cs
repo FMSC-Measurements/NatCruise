@@ -1,13 +1,12 @@
 ﻿using FluentAssertions;
-using NatCruise.Design.Data;
-using NatCruise.Design.Models;
-using NatCruise.Test;
+using NatCruise.Data;
+using NatCruise.Models;
 using System;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace NatCruise.Design.Test.Data
+namespace NatCruise.Test.Data
 {
     public class SubpopulationDataservice_Test : TestBase
     {

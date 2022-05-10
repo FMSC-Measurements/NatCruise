@@ -148,12 +148,13 @@ namespace NatCruise.Cruise.Test.Data
             using (var db = init.CreateDatabase())
             {
                 var ds = new PlotDataservice(db, init.CruiseID, init.DeviceID);
+                var tpDs = new TallyPopulationDataservice(db, init.CruiseID, init.DeviceID);
                 var plotTallyds = new PlotTreeDataservice(db, init.CruiseID, init.DeviceID, new SamplerInfoDataservice(db, init.CruiseID, init.DeviceID));
                 var plotid = ds.AddNewPlot(unitCode);
 
                 var plot_stratum = ds.GetPlot_Strata(unitCode, plotNumber).First();
 
-                var tp = ds.GetPlotTallyPopulationsByUnitCode(unitCode, plotNumber).First();
+                var tp = tpDs.GetPlotTallyPopulationsByUnitCode(unitCode, plotNumber).First();
 
                 var firstTreeid = plotTallyds.CreatePlotTree(unitCode, plotNumber, tp.StratumCode, tp.SampleGroupCode);
                 plotTallyds.CreatePlotTree(unitCode, plotNumber, tp.StratumCode, tp.SampleGroupCode);
@@ -594,111 +595,7 @@ namespace NatCruise.Cruise.Test.Data
             }
         }
 
-        [Fact]
-        public void GetPlotTallyPopulationsByUnitCode()
-        {
-            var init = new DatastoreInitializer();
-            var unit = init.Units[0];
-            using (var db = init.CreateDatabase())
-            {
-                var ds = new PlotDataservice(db, init.CruiseID, init.DeviceID);
 
-                ds.AddNewPlot(unit);
-
-                var plots = ds.GetPlotsByUnitCode(unit);
-                plots.Should().HaveCount(1);
-                var plot = plots.Single();
-
-                var plotStrata = ds.GetPlot_Strata(unit, plot.PlotNumber, insertIfNotExists: false);
-                plotStrata.Should().HaveCount(2);
-
-                var tallyPops = ds.GetPlotTallyPopulationsByUnitCode(unit, plot.PlotNumber);
-                tallyPops.Should().NotBeEmpty();
-            }
-        }
-
-        [Theory]
-        [InlineData(false)]
-        [InlineData(true)]
-        public void GetPlotTallyPopulationsByUnitCode_PNT_FIX_noPlot(bool tallyBySp)
-        {
-            var init = new DatastoreInitializer();
-            var unitCode = "u3";
-            var stCode = "st5";
-            var sgCode = "sg4";
-
-            var method = CruiseDAL.Schema.CruiseMethods.PNT;
-
-            using (var database = init.CreateDatabase())
-            {
-                var datastore = new PlotDataservice(database, init.CruiseID, init.DeviceID);
-
-                DatastoreInitializer.InitializeDatabase(
-                    database,
-                    init.DeviceID,
-                    init.CruiseID,
-                    init.SaleID,
-                    new[] { unitCode },
-                    new[]
-                    {
-                        new CruiseDAL.V3.Models.Stratum {StratumCode = stCode, Method = method},
-                    },
-                    new[]
-                    {
-                        new CruiseDAL.V3.Models.CuttingUnit_Stratum { CuttingUnitCode = unitCode, StratumCode = stCode},
-                    },
-                    new[]
-                    {
-                        new CruiseDAL.V3.Models.SampleGroup {StratumCode = stCode, SampleGroupCode = sgCode, SamplingFrequency = 101, TallyBySubPop = tallyBySp}
-                    },
-                    // species
-                    new[] { "sp4" },
-                    new[]
-                    {
-                        new CruiseDAL.V3.Models.TreeDefaultValue {SpeciesCode ="sp4", PrimaryProduct = "01"},
-                    },
-                    new[]
-                    {
-                        new CruiseDAL.V3.Models.SubPopulation {StratumCode = stCode, SampleGroupCode = sgCode, SpeciesCode = "sp4", LiveDead = "L" },
-                        new CruiseDAL.V3.Models.SubPopulation {StratumCode = stCode, SampleGroupCode = sgCode, SpeciesCode = "sp4", LiveDead = "D" },
-                    }
-                );
-
-                {
-                    //we are going to check that the tally population returned is vallid for a
-                    //tally population with no count tree record associated
-                    //it should return one tally pop per sample group in the unit, that is associated with a FIX or PNT stratum
-                    var unit3tallyPops = datastore.GetPlotTallyPopulationsByUnitCode(unitCode, 1);
-
-                    if (tallyBySp == false)
-                    {
-                        unit3tallyPops.Should().HaveCount(1);
-
-                        var tp = unit3tallyPops.Single();
-                        tp.SpeciesCode.Should().BeNull("Species");
-                        tp.LiveDead.Should().BeNull("liveDead");
-
-                        ValidateTallyPop(tp);
-                    }
-                    else
-                    {
-                        unit3tallyPops.Should().HaveCount(2);
-
-                        foreach (var tp in unit3tallyPops)
-                        {
-                            tp.SpeciesCode.Should().NotBeNullOrWhiteSpace();
-                            tp.LiveDead.Should().NotBeNullOrWhiteSpace();
-                        }
-                    }
-
-                    void ValidateTallyPop(Models.TallyPopulation_Plot tp)
-                    {
-                        tp.StratumCode.Should().Be(stCode);
-                        tp.SampleGroupCode.Should().Be(sgCode);
-                        tp.InCruise.Should().BeFalse();
-                    }
-                }
-            }
-        }
+        
     }
 }

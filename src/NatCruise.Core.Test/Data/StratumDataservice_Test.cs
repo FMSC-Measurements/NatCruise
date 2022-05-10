@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Test;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,29 @@ namespace NatCruise.Test.Data
                 var results = datastore.GetPlotStrata(unit).ToArray();
 
                 results.Should().HaveCount(1);
+            }
+        }
+
+        [Theory]
+        [InlineData("u1", "st3", "st4")]
+        [InlineData("u2", "st4")]
+        public void GetStrataByUnitCode_Test(string unitCode, params string[] expectedStrataCodes)
+        {
+            var init = new DatastoreInitializer();
+            using (var database = init.CreateDatabase())
+            {
+                var datastore = new StratumDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                var strata = database.Query<Stratum>
+                    ("select * from stratum;").ToArray();
+
+                var stuff = database.QueryGeneric("select * from Stratum;").ToArray();
+
+                var results = datastore.GetStrataByUnitCode(unitCode);
+
+                var strata_codes = results.Select(x => x.StratumCode);
+                strata_codes.Should().Contain(expectedStrataCodes);
+                strata_codes.Should().HaveSameCount(expectedStrataCodes);
             }
         }
     }

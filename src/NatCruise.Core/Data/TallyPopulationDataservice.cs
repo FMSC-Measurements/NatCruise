@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CruiseDAL;
-using NatCruise.Cruise.Models;
+using NatCruise.Models;
 using NatCruise.Data;
 
-namespace NatCruise.Cruise.Data
+namespace NatCruise.Data
 {
     public class TallyPopulationDataservice : CruiseDataserviceBase, ITallyPopulationDataservice
     {
@@ -63,34 +63,18 @@ namespace NatCruise.Cruise.Data
     JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
 ";
 
-        public IEnumerable<TallyPopulation> GetTallyPopulationsByUnitCode(string unitCode)
+        public IEnumerable<TallyPopulationEx> GetTallyPopulationsByUnitCode(string unitCode)
         {
-            return Database.Query<TallyPopulation>(
+            return Database.Query<TallyPopulationEx>(
                 SELECT_TALLYPOPULATION_CORE +
                 "WHERE cust.CuttingUnitCode = @p1 AND tp.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)"
                 , new object[] { unitCode, CruiseID }).ToArray();
-
-            //return Database.From<TallyPopulation>()
-            //    .Join("Tally", "USING (Tally_CN)")
-            //    .Join("SampleGroup", "USING (SampleGroup_CN)")
-            //    .LeftJoin("TreeDefaultValue", "USING (TreeDefaultValue_CN)")
-            //    .Join("Stratum", "USING (Stratum_CN)")
-            //    .Join("CuttingUnit", "USING (CuttingUnit_CN)")
-            //    .Where($"CuttingUnit.Code = @p1 AND Stratum.Method NOT IN ({PLOT_METHODS})")
-            //    .Query(unitCode).ToArray();
         }
 
-        public TallyPopulation GetTallyPopulation(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        public TallyPopulationEx GetTallyPopulation(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
         {
-            //var tPops = Database.QueryGeneric(
-            //    "SELECT * FROM TallyPopulation AS tp " +
-            //    "WHERE tp.StratumCode = @p2 " +
-            //        "AND tp.SampleGroupCode = @p3 " +
-            //        "AND ifNull(tp.Species, '') = ifNull(@p4,'') " +
-            //        "AND ifNull(tp.LiveDead, '') = ifNull(@p5,'')"
-            //    , new  { p1 = unitCode, p2 = stratumCode, p3= sampleGroupCode, p4 = species, p5 = liveDead }).ToArray();
 
-            return Database.Query<TallyPopulation>(
+            return Database.Query<TallyPopulationEx>(
                 SELECT_TALLYPOPULATION_CORE +
                 "WHERE cust.CuttingUnitCode = @p1 " +
                     "AND tp.CruiseID = @p2 " +
@@ -130,6 +114,16 @@ namespace NatCruise.Cruise.Data
                         "AND CuttingUnitCode = @p3 " +
                         "AND PlotNumber = @p4);",
                 stratumCode, CruiseID, unitCode, plotNumber) ?? false;
+        }
+
+        public IEnumerable<TallyPopulation> GetTallyPopulations(string stratumCode, string sampleGroupCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateTallyPopulation(TallyPopulation tallyPop)
+        {
+            throw new NotImplementedException();
         }
     }
 }

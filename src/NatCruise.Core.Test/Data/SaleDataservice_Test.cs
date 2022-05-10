@@ -29,5 +29,22 @@ namespace NatCruise.Core.Test.Data
                 cruise.HasPlotStrata.Should().BeTrue();
             }
         }
+
+        [Fact]
+        public void DeleteCruise()
+        {
+            var init = new DatastoreInitializer();
+
+            using var db = init.CreateDatabase();
+
+            var ds = new SaleDataservice(db, init.CruiseID, init.DeviceID);
+
+
+            var plotds = new Cruise.Data.PlotDataservice(db, init.CruiseID, init.DeviceID);
+            var unit = init.Units.First();
+            var plotID = plotds.AddNewPlot(unit);
+
+            ds.DeleteCruise(init.CruiseID);
+        }
     }
 }

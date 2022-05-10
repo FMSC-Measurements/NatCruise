@@ -4,6 +4,7 @@ using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Navigation;
 using System;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace NatCruise.Cruise.Services
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
-        public async Task<TallyEntry> TallyAsync(string unitCode, TallyPopulation pop)
+        public async Task<TallyEntry> TallyAsync(string unitCode, TallyPopulationEx pop)
         {
             if (pop is null) { throw new ArgumentNullException(nameof(pop)); }
             var samplerService = SampleSelectorDataservice;
