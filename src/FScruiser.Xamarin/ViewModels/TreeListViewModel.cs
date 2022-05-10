@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeListViewModel : ViewModelBase
+    public class TreeListViewModel : XamarinViewModelBase
     {
         private ICommand _deleteTreeCommand;
         private ICommand _editTreeCommand;
