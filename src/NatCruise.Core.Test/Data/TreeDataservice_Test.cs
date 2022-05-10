@@ -1,6 +1,7 @@
 ﻿using CruiseDAL.V3.Models;
 using FluentAssertions;
 using NatCruise.Cruise.Data;
+using NatCruise.Data;
 using NatCruise.Test;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace NatCruise.Cruise.Test.Data
+namespace NatCruise.Test.Data
 {
     public class TreeDataservice_Test : TestBase
     {
@@ -314,84 +315,7 @@ namespace NatCruise.Cruise.Test.Data
             }
         }
 
-        [Theory]
-        [InlineData("u1", "st1", null, "", "", Skip = "sampleGroup is required now")]
-        [InlineData("u1", "st1", "sg1", "sp1", "L")]
-        public void GetTreeStub(string unitCode, string stratumCode, string sgCode, string species, string liveDead)
-        {
-            var init = new DatastoreInitializer();
-            using (var database = init.CreateDatabase())
-            {
-                var datastore = new TreeDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
-
-                var tree_GUID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead);
-
-                var tree = datastore.GetTreeStub(tree_GUID);
-                tree.Should().NotBeNull();
-
-                tree.TreeID.Should().Be(tree_GUID);
-                tree.StratumCode.Should().Be(stratumCode);
-                tree.SampleGroupCode.Should().Be(sgCode);
-                tree.SpeciesCode.Should().Be(species);
-                //tree.CountOrMeasure.Should().Be(countMeasure);
-            }
-        }
-
-        [Theory]
-        [InlineData("u1", "st1", null, "", "", Skip = "sampleGroup is required now")]
-        [InlineData("u1", "st1", "sg1", "sp1", "L")]
-        [InlineData("u1", "st1", "sg1", null, null)]
-        public void GetTreeStubByUnitCode(string unitCode, string stratumCode, string sgCode, string species, string liveDead)
-        {
-            var init = new DatastoreInitializer();
-            using (var database = init.CreateDatabase())
-            {
-                var datastore = new TreeDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
-
-                var tree_GUID = datastore.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead);
-                //datastore.GetTreeStub(tree_GUID).Should().NotBeNull();
-
-                var trees = datastore.GetTreeStubsByUnitCode(unitCode).ToArray();
-
-                trees.Should().HaveCount(1);
-
-                var tree = trees.First();
-                tree.TreeID.Should().Be(tree_GUID);
-                tree.StratumCode.Should().Be(stratumCode);
-                tree.SampleGroupCode.Should().Be(sgCode);
-                tree.SpeciesCode.Should().Be(species);
-                //tree.CountOrMeasure.Should().Be(countMeasure);
-            }
-        }
-
-        [Fact]
-        public void GetTreeError_SpeciesMissing()
-        {
-            var unitCode = "u1";
-            var stratumCode = "st1";
-            var sgCode = "sg1";
-            var species = (string)null;
-            var liveDead = "L";
-            //var countMeasure = "M";
-            var treeCount = 1;
-
-            var init = new DatastoreInitializer();
-
-            using (var database = init.CreateDatabase())
-            {
-                var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
-
-                var treeID = treeDS.InsertManualTree(unitCode, stratumCode, sgCode, species, liveDead, treeCount);
-
-                var treeErrors = treeDS.GetTreeErrors(treeID).ToArray();
-
-                treeErrors.Should().HaveCount(3);
-
-                var speciesError = treeErrors.First();
-                speciesError.Level.Should().Be("E");
-                speciesError.Field.Should().Be(nameof(Models.Tree.SpeciesCode));
-            }
-        }
+        
 
         [Fact]
         public void UpdateTreeInitials()

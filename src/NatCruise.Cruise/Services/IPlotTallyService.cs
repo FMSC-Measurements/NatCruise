@@ -1,4 +1,5 @@
 ﻿using NatCruise.Cruise.Models;
+using NatCruise.Models;
 using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services

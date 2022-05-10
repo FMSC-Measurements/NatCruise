@@ -3,6 +3,7 @@ using FMSC.Sampling;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
+using NatCruise.Models;
 using NatCruise.Navigation;
 using System;
 using System.Linq;

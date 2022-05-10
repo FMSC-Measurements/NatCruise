@@ -2,18 +2,126 @@
 using CruiseDAL.V3.Models;
 using FluentAssertions;
 using NatCruise.Cruise.Data;
-using NatCruise.Test;
+using NatCruise.Data;
 using System;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace NatCruise.Cruise.Test.Data
+namespace NatCruise.Test.Data
 {
-    public class TallyPopulationDataservice_Tests : Datastore_TestBase
+    public class TallyPopulationDataservice_Tests : TestBase
     {
         public TallyPopulationDataservice_Tests(ITestOutputHelper output) : base(output)
         {
+        }
+
+        [Fact]
+        public void GetPlotTallyPopulationsByUnitCode()
+        {
+            var init = new DatastoreInitializer();
+            var unit = init.Units[0];
+            using (var db = init.CreateDatabase())
+            {
+                var plotDs = new PlotDataservice(db, init.CruiseID, init.DeviceID);
+                var ds = new TallyPopulationDataservice(db, init.CruiseID, init.DeviceID);
+
+                plotDs.AddNewPlot(unit);
+
+                var plots = plotDs.GetPlotsByUnitCode(unit);
+                plots.Should().HaveCount(1);
+                var plot = plots.Single();
+
+                var plotStrata = plotDs.GetPlot_Strata(unit, plot.PlotNumber, insertIfNotExists: false);
+                plotStrata.Should().HaveCount(2);
+
+                var tallyPops = ds.GetPlotTallyPopulationsByUnitCode(unit, plot.PlotNumber);
+                tallyPops.Should().NotBeEmpty();
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void GetPlotTallyPopulationsByUnitCode_PNT_FIX_noPlot(bool tallyBySp)
+        {
+            var init = new DatastoreInitializer();
+            var unitCode = "u3";
+            var stCode = "st5";
+            var sgCode = "sg4";
+
+            var method = CruiseDAL.Schema.CruiseMethods.PNT;
+
+            using (var database = init.CreateDatabase())
+            {
+                var datastore = new TallyPopulationDataservice(database, init.CruiseID, init.DeviceID);
+
+                DatastoreInitializer.InitializeDatabase(
+                    database,
+                    init.DeviceID,
+                    init.CruiseID,
+                    init.SaleID,
+                    new[] { unitCode },
+                    new[]
+                    {
+                        new CruiseDAL.V3.Models.Stratum {StratumCode = stCode, Method = method},
+                    },
+                    new[]
+                    {
+                        new CruiseDAL.V3.Models.CuttingUnit_Stratum { CuttingUnitCode = unitCode, StratumCode = stCode},
+                    },
+                    new[]
+                    {
+                        new CruiseDAL.V3.Models.SampleGroup {StratumCode = stCode, SampleGroupCode = sgCode, SamplingFrequency = 101, TallyBySubPop = tallyBySp}
+                    },
+                    // species
+                    new[] { "sp4" },
+                    new[]
+                    {
+                        new CruiseDAL.V3.Models.TreeDefaultValue {SpeciesCode ="sp4", PrimaryProduct = "01"},
+                    },
+                    new[]
+                    {
+                        new CruiseDAL.V3.Models.SubPopulation {StratumCode = stCode, SampleGroupCode = sgCode, SpeciesCode = "sp4", LiveDead = "L" },
+                        new CruiseDAL.V3.Models.SubPopulation {StratumCode = stCode, SampleGroupCode = sgCode, SpeciesCode = "sp4", LiveDead = "D" },
+                    }
+                );
+
+                {
+                    //we are going to check that the tally population returned is vallid for a
+                    //tally population with no count tree record associated
+                    //it should return one tally pop per sample group in the unit, that is associated with a FIX or PNT stratum
+                    var unit3tallyPops = datastore.GetPlotTallyPopulationsByUnitCode(unitCode, 1);
+
+                    if (tallyBySp == false)
+                    {
+                        unit3tallyPops.Should().HaveCount(1);
+
+                        var tp = unit3tallyPops.Single();
+                        tp.SpeciesCode.Should().BeNull("Species");
+                        tp.LiveDead.Should().BeNull("liveDead");
+
+                        ValidateTallyPop(tp);
+                    }
+                    else
+                    {
+                        unit3tallyPops.Should().HaveCount(2);
+
+                        foreach (var tp in unit3tallyPops)
+                        {
+                            tp.SpeciesCode.Should().NotBeNullOrWhiteSpace();
+                            tp.LiveDead.Should().NotBeNullOrWhiteSpace();
+                        }
+                    }
+
+                    void ValidateTallyPop(Models.TallyPopulation_Plot tp)
+                    {
+                        tp.StratumCode.Should().Be(stCode);
+                        tp.SampleGroupCode.Should().Be(sgCode);
+                        tp.InCruise.Should().BeFalse();
+                    }
+                }
+            }
         }
 
         [Theory]
@@ -21,10 +129,11 @@ namespace NatCruise.Cruise.Test.Data
         [InlineData("u1", "st1", "sg1", null, null, false)]
         public void GetTallyPopulation(string unitCode, string stratum, string sampleGroup, string species, string liveDead, bool tallyBySubpop)
         {
+            var init = new DatastoreInitializer();
             var tallyDescription = $"{stratum} {sampleGroup} {species} {liveDead}";
             var hotKey = "A";
             var method = CruiseDAL.Schema.CruiseMethods.STR;
-            var cruiseID = CruiseID;
+            var cruiseID = init.CruiseID;
 
             var units = new[] { unitCode };
             var strata = new[]
@@ -68,7 +177,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = new CruiseDatastore_V3())
             {
-                base.InitializeDatabase(database, cruiseID, SaleID, units, strata, unit_strata, sampleGroups, new[] { species ?? "dummy" }, null, subPop);
+                DatastoreInitializer.InitializeDatabase(database, init.DeviceID, cruiseID, init.SaleID, units, strata, unit_strata, sampleGroups, new[] { species ?? "dummy" }, null, subPop);
 
                 //database.Execute($"INSERT INTO CuttingUnit (CuttingUnitCode, CruiseID) VALUES ('{unitCode}', '{cruiseID}');");
 
@@ -121,10 +230,11 @@ namespace NatCruise.Cruise.Test.Data
         [InlineData("u1", "st1", "sg1", null, null, false)]
         public void GetTallyPopulation_With_TreeCountsAndKPIs(string unitCode, string stratum, string sampleGroup, string species, string liveDead, bool tallyBySubpop)
         {
+            var init = new DatastoreInitializer();
             var tallyDescription = $"{stratum} {sampleGroup} {species} {liveDead}";
             var hotKey = "A";
             var method = CruiseDAL.Schema.CruiseMethods.STR;
-            var cruiseID = CruiseID;
+            var cruiseID = init.CruiseID;
 
             var units = new[] { unitCode };
             var strata = new[]
@@ -168,7 +278,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var db = new CruiseDatastore_V3())
             {
-                base.InitializeDatabase(db, cruiseID, SaleID, units, strata, unit_strata, sampleGroups, new[] { species ?? "dummy" }, null, subPop);
+                DatastoreInitializer.InitializeDatabase(db, init.DeviceID, cruiseID, init.SaleID, units, strata, unit_strata, sampleGroups, new[] { species ?? "dummy" }, null, subPop);
 
                 db.Insert(new TallyLedger { TallyLedgerID = Guid.NewGuid().ToString(), CruiseID = cruiseID, CuttingUnitCode = unitCode, StratumCode = stratum, SampleGroupCode = sampleGroup, SpeciesCode = species, LiveDead = liveDead ?? "L", TreeCount = 101, KPI = 201 });
                 db.Insert(new TallyLedger { TallyLedgerID = Guid.NewGuid().ToString(), CruiseID = cruiseID, CuttingUnitCode = unitCode, StratumCode = stratum, SampleGroupCode = sampleGroup, SpeciesCode = species, LiveDead = liveDead ?? "L", TreeCount = 103, KPI = 203 });
@@ -218,6 +328,7 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void GetTallyPopulationsByUnitCode_with_tallybysubpop_Test()
         {
+            var init = new DatastoreInitializer();
             string unitCode = "u1";
             string stratum = "st1";
             string sampleGroup = "sg1";
@@ -227,7 +338,7 @@ namespace NatCruise.Cruise.Test.Data
             var tallyBySubpop = true;
             var method = CruiseDAL.Schema.CruiseMethods.STR;
 
-            var cruiseID = CruiseID;
+            var cruiseID = init.CruiseID;
 
             var units = new[] { unitCode };
             var strata = new[]
@@ -266,9 +377,9 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = new CruiseDatastore_V3())
             {
-                base.InitializeDatabase(database, cruiseID, SaleID, units, strata, unit_strata, sampleGroups, species, null, subPop);
+                DatastoreInitializer.InitializeDatabase(database, init.DeviceID, cruiseID, init.SaleID, units, strata, unit_strata, sampleGroups, species, null, subPop);
 
-                var datastore = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var datastore = new TallyPopulationDataservice(database, init.CruiseID, init.DeviceID);
 
                 var results = datastore.GetTallyPopulationsByUnitCode(unitCode);
                 results.Should().HaveCount(species.Count());
@@ -283,6 +394,7 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void GetTallyPopulationsByUnitCode_with_TallyBySG_Test()
         {
+            var init = new DatastoreInitializer();
             string unitCode = "u1";
             string stratum = "st1";
             string sampleGroup = "sg1";
@@ -292,7 +404,7 @@ namespace NatCruise.Cruise.Test.Data
             var tallyBySubpop = false;
             //var method = CruiseDAL.Schema.CruiseMethods.FIX;
 
-            var cruiseID = CruiseID;
+            var cruiseID = init.CruiseID;
 
             var units = new[] { unitCode };
             var strata = new[]
@@ -331,7 +443,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = new CruiseDatastore_V3())
             {
-                base.InitializeDatabase(database, cruiseID, SaleID, units, strata, unit_strata, sampleGroups, species, null, subPop);
+                DatastoreInitializer.InitializeDatabase(database, init.DeviceID, cruiseID, init.SaleID, units, strata, unit_strata, sampleGroups, species, null, subPop);
 
                 //database.Execute($"INSERT INTO CuttingUnit (Code) VALUES ('{unitCode}');");
 
@@ -357,7 +469,7 @@ namespace NatCruise.Cruise.Test.Data
                 //        $"('{stratum}', '{sampleGroup}', '{sp}', '{liveDead}');");
                 //}
 
-                var datastore = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var datastore = new TallyPopulationDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var results = datastore.GetTallyPopulationsByUnitCode(unitCode);
                 results.Should().HaveCount(1);
@@ -372,6 +484,7 @@ namespace NatCruise.Cruise.Test.Data
         [Fact]
         public void GetTallyPopulationsByUnitCode_Test_with_clicker_tally()
         {
+            var init = new DatastoreInitializer();
             string unitCode = "u1";
             string stratum = "st1";
             string sampleGroup = "sg1";
@@ -380,7 +493,7 @@ namespace NatCruise.Cruise.Test.Data
 
             var tallyBySubpop = false;
 
-            var cruiseID = CruiseID;
+            var cruiseID = init.CruiseID;
 
             var units = new[] { unitCode };
             var strata = new[]
@@ -420,7 +533,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = new CruiseDatastore_V3())
             {
-                InitializeDatabase(database, cruiseID, SaleID, units, strata, unit_strata, sampleGroups, species, null, subPop);
+                DatastoreInitializer.InitializeDatabase(database, init.DeviceID, cruiseID, init.SaleID, units, strata, unit_strata, sampleGroups, species, null, subPop);
 
                 //database.Execute($"INSERT INTO CuttingUnit (Code) VALUES ('{unitCode}');");
 
@@ -446,7 +559,7 @@ namespace NatCruise.Cruise.Test.Data
                 //        $"('{stratum}', '{sampleGroup}', '{sp}', '{liveDead}');");
                 //}
 
-                var ds = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var ds = new TallyPopulationDataservice(database, init.CruiseID, init.DeviceID);
 
                 //database.Execute($"INSERT INTO SamplerState (StratumCode, SampleGroupCode, SampleSelectorType) " +
                 //    $"SELECT StratumCode, SampleGroupCode, '{CruiseDAL.Schema.CruiseMethods.CLICKER_SAMPLER_TYPE}' AS SampleSelectorType FROM SampleGroup_V3;");
@@ -647,7 +760,7 @@ namespace NatCruise.Cruise.Test.Data
 
 
 
-        private static void VerifyTallyPopulation(Models.TallyPopulation result, string species = null)
+        private static void VerifyTallyPopulation(Models.TallyPopulationEx result, string species = null)
         {
             if (species != null)
             {

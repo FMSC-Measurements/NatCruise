@@ -1,10 +1,9 @@
 ﻿using CruiseDAL.V3.Models;
 using FluentAssertions;
-using NatCruise.Cruise.Data;
-using NatCruise.Test;
+using NatCruise.Data;
 using Xunit;
 
-namespace NatCruise.Cruise.Test.Data
+namespace NatCruise.Test.Data
 {
     public class TreeFieldDataservice_Test
     {

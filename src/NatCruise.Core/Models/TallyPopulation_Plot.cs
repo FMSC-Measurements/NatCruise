@@ -1,8 +1,8 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
-    public class TallyPopulation_Plot : TallyPopulation_Base
+    public class TallyPopulation_Plot : TallyPopulation
     {
         [IgnoreField]
         public bool InCruise { get; set; }

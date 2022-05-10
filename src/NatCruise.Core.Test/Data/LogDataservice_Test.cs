@@ -1,17 +1,12 @@
 ﻿using Bogus;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
-using NatCruise.Test;
+using NatCruise.Data;
+using NatCruise.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace NatCruise.Cruise.Test.Data
+namespace NatCruise.Test.Data
 {
     public class LogDataservice_Test
     {
@@ -21,7 +16,6 @@ namespace NatCruise.Cruise.Test.Data
             var init = new DatastoreInitializer();
             using (var database = init.CreateDatabase())
             {
-
                 var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
@@ -63,7 +57,6 @@ namespace NatCruise.Cruise.Test.Data
             var init = new DatastoreInitializer();
             using (var database = init.CreateDatabase())
             {
-
                 var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
@@ -109,7 +102,6 @@ namespace NatCruise.Cruise.Test.Data
             var init = new DatastoreInitializer();
             using (var database = init.CreateDatabase())
             {
-
                 var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
                 var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
 
@@ -125,31 +117,6 @@ namespace NatCruise.Cruise.Test.Data
             }
         }
 
-        [Fact]
-        public void GetLogFields()
-        {
-            var init = new DatastoreInitializer();
-            using (var database = init.CreateDatabase())
-            {
-                var stratum = "st1";
-                var lfs = new CruiseDAL.V3.Models.LogFieldSetup
-                {
-                    CruiseID = init.CruiseID,
-                    StratumCode = stratum,
-                    Field = "Grade",
-                    FieldOrder = 1,
-                };
-                database.Insert(lfs);
-
-                var datastore = new LogDataservice(database, init.CruiseID, init.DeviceID);
-                var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
-
-                var tree_guid = treeDS.InsertManualTree("u1", "st1", "sg1");
-
-                var logFields = datastore.GetLogFields(tree_guid);
-                logFields.Should().HaveCount(1);
-
-            }
-        }
+        
     }
 }

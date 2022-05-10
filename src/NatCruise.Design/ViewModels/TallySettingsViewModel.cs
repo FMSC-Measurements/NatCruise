@@ -62,20 +62,20 @@ namespace NatCruise.Design.ViewModels
         {
             var tallyPopulation = (TallyPopulation)sender;
             var propertyName = e.PropertyName;
-            if (propertyName == nameof(TallyPopulation.HotKey))
+            if (propertyName == nameof(TallyPopulation.TallyHotKey))
             {
-                TallySettingsDataservice.SetHotKey(tallyPopulation.HotKey,
+                TallySettingsDataservice.SetHotKey(tallyPopulation.TallyHotKey,
                     tallyPopulation.StratumCode,
                     tallyPopulation.SampleGroupCode,
-                    tallyPopulation.Species,
+                    tallyPopulation.SpeciesCode,
                     tallyPopulation.LiveDead);
             }
-            else if (propertyName == nameof(TallyPopulation.Description))
+            else if (propertyName == nameof(TallyPopulation.TallyDescription))
             {
-                TallySettingsDataservice.SetDescription(tallyPopulation.HotKey,
+                TallySettingsDataservice.SetDescription(tallyPopulation.TallyHotKey,
                     tallyPopulation.StratumCode,
                     tallyPopulation.SampleGroupCode,
-                    tallyPopulation.Species,
+                    tallyPopulation.SpeciesCode,
                     tallyPopulation.LiveDead);
             }
         }

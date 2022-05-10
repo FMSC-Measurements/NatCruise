@@ -24,7 +24,7 @@ namespace FScruiser.XF.ViewModels
     {
         public static readonly string STRATUM_FILTER_ALL = "All";
 
-        private IEnumerable<TallyPopulation> _tallies;
+        private IEnumerable<TallyPopulationEx> _tallies;
         private IEnumerable<string> _stratumCodes;
         private string _selectedStratumCode = STRATUM_FILTER_ALL;
 
@@ -44,7 +44,7 @@ namespace FScruiser.XF.ViewModels
             set { SetProperty(ref _tallyFeed, value); }
         }
 
-        public IEnumerable<TallyPopulation> Tallies
+        public IEnumerable<TallyPopulationEx> Tallies
         {
             get { return _tallies; }
             protected set
@@ -71,14 +71,14 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public IEnumerable<TallyPopulation> TalliesFiltered
+        public IEnumerable<TallyPopulationEx> TalliesFiltered
         {
             get
             {
                 var tallies = Tallies;
                 var selectedStratum = SelectedStratumCode;
 
-                if (tallies == null) { return Enumerable.Empty<TallyPopulation>(); }
+                if (tallies == null) { return Enumerable.Empty<TallyPopulationEx>(); }
                 if (selectedStratum == STRATUM_FILTER_ALL)
                 {
                     return tallies;
@@ -165,9 +165,9 @@ namespace FScruiser.XF.ViewModels
         private TallyEntry _selectedEntry;
         private CuttingUnit _cuttingUnit;
 
-        public ICommand ShowTallyMenuCommand => _showTallyMenuCommand ??= new DelegateCommand<TallyPopulation>((tp) => ShowTallyMenu(tp).FireAndForget());
+        public ICommand ShowTallyMenuCommand => _showTallyMenuCommand ??= new DelegateCommand<TallyPopulationEx>((tp) => ShowTallyMenu(tp).FireAndForget());
 
-        public ICommand TallyCommand => _tallyCommand ??= new DelegateCommand<TallyPopulation>((tp) => TallyAsync(tp).FireAndForget("TallyAsync"));
+        public ICommand TallyCommand => _tallyCommand ??= new DelegateCommand<TallyPopulationEx>((tp) => TallyAsync(tp).FireAndForget("TallyAsync"));
 
         public ICommand StratumSelectedCommand => _stratumSelectedCommand ??= new DelegateCommand<string>(x => SetStratumFilter(x));
 
@@ -308,7 +308,7 @@ namespace FScruiser.XF.ViewModels
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
         }
 
-        private Task ShowTallyMenu(TallyPopulation tp)
+        private Task ShowTallyMenu(TallyPopulationEx tp)
         {
             return NavigationService.ShowTreeCountEdit(UnitCode, tp.StratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead);
         }
@@ -318,7 +318,7 @@ namespace FScruiser.XF.ViewModels
             return NavigationService.ShowTreeEdit(treeID);
         }
 
-        public async Task TallyAsync(TallyPopulation pop)
+        public async Task TallyAsync(TallyPopulationEx pop)
         {
             var entry = await TallyService.TallyAsync(UnitCode, pop);
             if (entry == null) { return; }

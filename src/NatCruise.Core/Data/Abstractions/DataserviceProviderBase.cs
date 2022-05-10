@@ -61,6 +61,8 @@ namespace NatCruise.Data
             containerRegistry.Register<ILogErrorDataservice>(x => GetDataservice<ILogErrorDataservice>());
             containerRegistry.Register<IFieldSetupDataservice>(x => GetDataservice<IFieldSetupDataservice>());
             containerRegistry.Register<IMessageLogDataservice>(x => GetDataservice<IMessageLogDataservice>());
+            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
+
         }
 
         public DataserviceProviderBase(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService)
@@ -144,6 +146,10 @@ namespace NatCruise.Data
             else if (type == typeof(IMessageLogDataservice))
             {
                 return new MessageLogDataservice(database, deviceID);
+            }
+            else if (type == typeof(ITallyPopulationDataservice))
+            {
+                return new TallyPopulationDataservice(database, cruiseID, deviceID);
             }
             else
             {
