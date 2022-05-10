@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Behaviors;
 using Prism.Common;
@@ -11,11 +12,11 @@ namespace FScruiser.XF
 {
     public class TestNavigationService : ICruiseNavigationService
     {
-        public INavigationService NavigationService { get; }
+        //public INavigationService NavigationService { get; }
 
-        public TestNavigationService(INavigationService navigationService)
+        public TestNavigationService()//INavigationService navigationService)
         {
-            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            //NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         public Task ShowImport()
@@ -43,7 +44,7 @@ namespace FScruiser.XF
             throw new NotImplementedException();
         }
 
-        public Task<INavigationResult> ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber)
+        public Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber)
         {
             throw new NotImplementedException();
         }
@@ -53,7 +54,7 @@ namespace FScruiser.XF
             throw new NotImplementedException();
         }
 
-        public Task<INavigationResult> ShowLogsList(string treeID)
+        public Task ShowLogsList(string treeID)
         {
             throw new NotImplementedException();
         }
@@ -108,7 +109,7 @@ namespace FScruiser.XF
             throw new NotImplementedException();
         }
 
-        public Task<INavigationResult> ShowTreeEdit(string treeID)
+        public Task ShowTreeEdit(string treeID)
         {
             throw new NotImplementedException();
         }
@@ -123,7 +124,7 @@ namespace FScruiser.XF
             throw new NotImplementedException();
         }
 
-        public Task<INavigationResult> GoBackAsync()
+        public Task GoBackAsync()
         {
             throw new NotImplementedException();
         }
@@ -153,27 +154,7 @@ namespace FScruiser.XF
             throw new NotImplementedException();
         }
 
-        Task ICruiseNavigationService.ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task ICruiseNavigationService.ShowLogsList(string treeID)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task ShowSale(string cruiseID)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task ICruiseNavigationService.ShowTreeEdit(string treeID)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task ICoreNavigationService.GoBackAsync()
         {
             throw new NotImplementedException();
         }

@@ -211,17 +211,17 @@ WHERE cust.CuttingUnitCode = @p1 AND tp.CruiseID = @p2 AND st.Method IN (SELECT 
 
         #region plot stratum
 
-        public IEnumerable<StratumProxy> GetPlotStrataProxies(string unitCode)
-        {
-            return Database.Query<StratumProxy>(
-                "SELECT " +
-                "st.* " +
-                "FROM Stratum AS st " +
-                "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
-                "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)",
-                new object[] { unitCode, CruiseID })
-                .ToArray();
-        }
+        //public IEnumerable<StratumProxy> GetPlotStrataProxies(string unitCode)
+        //{
+        //    return Database.Query<StratumProxy>(
+        //        "SELECT " +
+        //        "st.* " +
+        //        "FROM Stratum AS st " +
+        //        "JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID) " +
+        //        "WHERE CuttingUnitCode = @p1 AND st.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)",
+        //        new object[] { unitCode, CruiseID })
+        //        .ToArray();
+        //}
 
         public void InsertPlot_Stratum(Plot_Stratum plotStratum)
         {
@@ -480,21 +480,21 @@ ORDER BY t.TreeNumber
         }
 
         // TODO remove unused method
-        public IEnumerable<TreeError> GetTreeErrorsByPlot(string plotID)
-        {
-            return Database.Query<TreeError>(
-@"SELECT
-    te.TreeID,
-    te.Field,
-    te.Level,
-    te.Message,
-    te.IsResolved,
-    te.Resolution
-FROM TreeError AS te
-JOIN Tree AS t USING (TreeID)
-JOIN Plot AS p USING (CuttingUnitCode, CruiseID, PlotNumber)
-WHERE p.PlotID = @p1;",
-                new object[] { plotID }).ToArray();
-        }
+//        public IEnumerable<TreeError> GetTreeErrorsByPlot(string plotID)
+//        {
+//            return Database.Query<TreeError>(
+//@"SELECT
+//    te.TreeID,
+//    te.Field,
+//    te.Level,
+//    te.Message,
+//    te.IsResolved,
+//    te.Resolution
+//FROM TreeError AS te
+//JOIN Tree AS t USING (TreeID)
+//JOIN Plot AS p USING (CuttingUnitCode, CruiseID, PlotNumber)
+//WHERE p.PlotID = @p1;",
+//                new object[] { plotID }).ToArray();
+//        }
     }
 }

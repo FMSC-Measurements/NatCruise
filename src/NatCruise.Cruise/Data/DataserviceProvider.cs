@@ -46,7 +46,7 @@ namespace NatCruise.Cruise.Data
             { throw new InvalidOperationException("DataserviceProvider: no cruise selected"); }
 
             if (typeof(ICuttingUnitDataservice).IsAssignableFrom(type))
-            { return new CuttingUnitDatastore(database, cruiseID, deviceID); }
+            { return new CuttingUnitDataservice(database, cruiseID, deviceID); }
 
             if (typeof(IPlotDataservice).IsAssignableFrom(type))
             { return new PlotDataservice(database, cruiseID, deviceID); }
@@ -82,13 +82,34 @@ namespace NatCruise.Cruise.Data
 
             if (typeof(ISampleInfoDataservice).IsAssignableFrom(type))
             { return new SamplerInfoDataservice(database, cruiseID, deviceID); }
+
+            if (typeof(IStratumDataservice).IsAssignableFrom(type))
+            {
+                return new StratumDataservice(database, cruiseID, deviceID);
+            }
+            if (typeof(ISampleGroupDataservice).IsAssignableFrom(type))
+            {
+                return new SampleGroupDataservice(database, cruiseID, deviceID);
+            }
+            if (typeof(ISubpopulationDataservice).IsAssignableFrom(type))
+            {
+                return new SubpopulationDataservice(database, cruiseID, deviceID);
+            }
+            if (typeof(ITreeErrorDataservice).IsAssignableFrom(type))
+            {
+                return new TreeErrorDataservice(database, cruiseID, deviceID);
+            }
             if (typeof(ITreeFieldValueDataservice).IsAssignableFrom(type))
             {
                 return new TreeFieldValueDataservice(database, cruiseID, deviceID);
             }
+
             else
             {
+
                 throw new InvalidOperationException("no dataservice found for type " + type.FullName);
+
+                
 
                 //return null;
             }
@@ -97,8 +118,12 @@ namespace NatCruise.Cruise.Data
         public override void RegisterDataservices(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<ICuttingUnitDataservice>(x => GetDataservice<ICuttingUnitDataservice>());
+            containerRegistry.Register<IStratumDataservice>(x => GetDataservice<IStratumDataservice>());
+            containerRegistry.Register<ISampleGroupDataservice>(x => GetDataservice<ISampleGroupDataservice>());
+            containerRegistry.Register<ISubpopulationDataservice>(x => GetDataservice<ISubpopulationDataservice>());
             containerRegistry.Register<IPlotDataservice>(x => GetDataservice<IPlotDataservice>());
             containerRegistry.Register<ITreeDataservice>(x => GetDataservice<ITreeDataservice>());
+            containerRegistry.Register<ITreeErrorDataservice>(x => GetDataservice<ITreeErrorDataservice>());
             containerRegistry.Register<ITreeFieldValueDataservice>(x => GetDataservice<ITreeFieldValueDataservice>());
             containerRegistry.Register<ILogDataservice>(x => GetDataservice<ILogDataservice>());
             containerRegistry.Register<ISampleSelectorDataService>(x => GetDataservice<ISampleSelectorDataService>());

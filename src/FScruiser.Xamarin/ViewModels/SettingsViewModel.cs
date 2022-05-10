@@ -9,6 +9,7 @@ using CruiseDAL;
 using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using NatCruise.Data;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Ioc;
@@ -20,7 +21,7 @@ namespace FScruiser.XF.ViewModels
     public class SettingsViewModel : XamarinViewModelBase, INavigatedAware
     {
         public IApplicationSettingService AppSettings { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public IFileSystemService FileSystemService { get; }
         public IDataserviceProvider DataserviceProvider { get; }
 
@@ -33,7 +34,7 @@ namespace FScruiser.XF.ViewModels
         public IFileDialogService FileDialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
 
-        public SettingsViewModel(IDialogService dialogService, IFileSystemService fileSystemService, IFileDialogService fileDialogService, ICruiseNavigationService navigationService, IContainerProvider containerProvicer)
+        public SettingsViewModel(INatCruiseDialogService dialogService, IFileSystemService fileSystemService, IFileDialogService fileDialogService, ICruiseNavigationService navigationService, IContainerProvider containerProvicer)
         {
             AppSettings = new XamarinApplicationSettingService();
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));

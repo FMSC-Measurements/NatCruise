@@ -1,5 +1,5 @@
 ﻿using Backpack.XF.Converters;
-using NatCruise.Cruise.Models;
+using NatCruise.Models;
 using FScruiser.XF.Converters;
 using FScruiser.XF.ViewModels;
 using System;

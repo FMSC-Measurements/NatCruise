@@ -1,6 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using FluentValidation;
-using NatCruise.Design.Models;
+using NatCruise.Models;
 using System;
 using System.Linq;
 

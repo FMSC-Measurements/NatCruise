@@ -24,7 +24,7 @@ namespace NatCruise.Cruise.Data
 
         #region plot stratum
 
-        IEnumerable<StratumProxy> GetPlotStrataProxies(string unitCode);
+        //IEnumerable<StratumProxy> GetPlotStrataProxies(string unitCode);
 
         void InsertPlot_Stratum(Plot_Stratum stratumPlot);
 
@@ -53,7 +53,7 @@ namespace NatCruise.Cruise.Data
 
         IEnumerable<PlotError> GetPlotErrors(string unit, int plotNumber);
 
-        IEnumerable<TreeError> GetTreeErrorsByPlot(string plotID);
+        //IEnumerable<TreeError> GetTreeErrorsByPlot(string plotID);
 
         int GetNextPlotNumber(string unitCode);
 

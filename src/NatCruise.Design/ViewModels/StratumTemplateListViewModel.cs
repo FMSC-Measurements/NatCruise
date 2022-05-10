@@ -1,6 +1,9 @@
-﻿using NatCruise.Data.Abstractions;
+﻿using NatCruise.Data;
+using NatCruise.Data.Abstractions;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
 using System;
@@ -24,7 +27,7 @@ namespace NatCruise.Design.ViewModels
 
         protected ITemplateDataservice TemplateDataservice { get; }
 
-        public StratumTemplateListViewModel(ITemplateDataservice templateDataservice, ISaleDataservice saleDataservice, ISetupInfoDataservice setupDataservice, IDialogService dialogService)
+        public StratumTemplateListViewModel(ITemplateDataservice templateDataservice, ISaleDataservice saleDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -93,7 +96,7 @@ namespace NatCruise.Design.ViewModels
             protected set => SetProperty(ref _treefieldOptions, value);
         }
 
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public ISaleDataservice SaleDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
 

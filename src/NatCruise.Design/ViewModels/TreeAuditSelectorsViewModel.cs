@@ -1,5 +1,8 @@
-﻿using NatCruise.Design.Data;
+﻿using NatCruise.Data;
+using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
 using System;
@@ -20,7 +23,7 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand _addNewRuleSelectorCommand;
         private DelegateCommand<TreeAuditRuleSelector> _deleteRuleSelectorCommand;
 
-        public TreeAuditSelectorsViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice, IDialogService dialogService)
+        public TreeAuditSelectorsViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
@@ -32,7 +35,7 @@ namespace NatCruise.Design.ViewModels
 
         public ITemplateDataservice TemplateDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
         public TreeAuditRule TreeAuditRule
         {

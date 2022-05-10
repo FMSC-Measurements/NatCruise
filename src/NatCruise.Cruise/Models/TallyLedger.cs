@@ -4,7 +4,7 @@ using System;
 namespace NatCruise.Cruise.Models
 {
     [Table("TallyLedger")]
-    public class TallyLedger : IHasTreeID
+    public class TallyLedger 
     {
         public static class EntryTypeValues
         {

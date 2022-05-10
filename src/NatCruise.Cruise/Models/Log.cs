@@ -4,7 +4,7 @@ using NatCruise.Models;
 namespace NatCruise.Cruise.Models
 {
     [Table("Log")]
-    public class Log : Model_Base, IHasTreeID
+    public class Log : Model_Base
     {
         public string LogID { get; set; }
 

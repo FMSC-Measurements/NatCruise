@@ -8,6 +8,7 @@ using NatCruise.Design.Data;
 using NatCruise.Design.Services;
 using NatCruise.Design.Validation;
 using NatCruise.Design.Views;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Services;
@@ -134,7 +135,7 @@ namespace NatCruise.Wpf
 
             containerRegistry.RegisterInstance<IAppService>(this);
             containerRegistry.Register<IWpfApplicationSettingService, WpfApplicationSettingService>();
-            containerRegistry.Register<IDialogService, WpfDialogService>();
+            containerRegistry.Register<INatCruiseDialogService, WpfDialogService>();
             containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();
             containerRegistry.Register<IDeviceInfoService, WpfDeviceInfoService>();
             containerRegistry.RegisterSingleton<ISetupInfoDataservice, SetupInfoDataservice>();

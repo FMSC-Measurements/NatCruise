@@ -2,6 +2,7 @@
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Services;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using NatCruise.Wpf.Services;
@@ -34,7 +35,7 @@ namespace NatCruise.Wpf.ViewModels
             IFileDialogService fileDialogService,
             IRecentFilesDataservice recentFilesDataservice,
             Prism.Services.Dialogs.IDialogService prismDialogService,
-            NatCruise.Services.IDialogService dialogService,
+            INatCruiseDialogService dialogService,
             IDeviceInfoService deviceInfo)
         {
             AppService = appService ?? throw new ArgumentNullException(nameof(appService));
@@ -54,7 +55,7 @@ namespace NatCruise.Wpf.ViewModels
         protected IDesignNavigationService NavigationService { get; }
         protected IRecentFilesDataservice RecentFilesDataservice { get; }
         public Prism.Services.Dialogs.IDialogService PrismDialogService { get; }
-        protected NatCruise.Services.IDialogService DialogService { get; }
+        protected INatCruiseDialogService DialogService { get; }
         protected IFileDialogService FileDialogService { get; }
         protected IDeviceInfoService DeviceInfoService { get; }
 

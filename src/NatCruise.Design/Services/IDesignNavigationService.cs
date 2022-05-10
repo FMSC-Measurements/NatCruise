@@ -1,13 +1,9 @@
-﻿using NatCruise.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using NatCruise.Navigation;
 using System.Threading.Tasks;
 
 namespace NatCruise.Design.Services
 {
-    public interface IDesignNavigationService : ICoreNavigationService
+    public interface IDesignNavigationService : INatCruiseNavigationService
     {
         Task ShowCruise();
 
@@ -32,6 +28,7 @@ namespace NatCruise.Design.Services
         Task ShowTreeFields();
 
         Task ShowLogFields();
+
         Task ShowDesignChecks();
 
         Task ShowCombineFile();

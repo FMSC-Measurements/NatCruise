@@ -1,7 +1,9 @@
-﻿using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+﻿using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
+using Prism.Commands;
 using Prism.Common;
 using System;
 using System.Collections.Generic;
@@ -14,13 +16,13 @@ namespace FScruiser.XF.ViewModels
     public class PlotTreeListViewModel : XamarinViewModelBase
     {
         public const string ALL_PLOTS_FILTEROPTION = "ALL";
-        private IEnumerable<Tree_Ex> _allTrees;
+        private IEnumerable<TreeEx> _allTrees;
         private IEnumerable<string> _plotFilterOptions;
         private bool _onlyShowTreesWithErrorsOrWarnings;
         private string _plotFilter;
-        private Command<Tree_Ex> _deleteTreeCommand;
-        private Command<Tree_Ex> _editTreeCommand;
-        private Command<Tree_Ex> _showLogsCommand;
+        private ICommand _deleteTreeCommand;
+        private ICommand _editTreeCommand;
+        private ICommand _showLogsCommand;
         private IEnumerable<TreeField> _treeFields;
         private CuttingUnit _cuttingUnit;
 
@@ -30,14 +32,14 @@ namespace FScruiser.XF.ViewModels
         public ICruiseNavigationService NavigationService { get; }
         public ITreeFieldDataservice TreeFieldDataservice { get; }
 
-        public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new Command<Tree_Ex>(DeleteTree);
+        public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new DelegateCommand<TreeEx>(DeleteTree);
 
-        public ICommand EditTreeCommand => _editTreeCommand ??= new Command<Tree_Ex>((tree) =>
+        public ICommand EditTreeCommand => _editTreeCommand ??= new DelegateCommand<TreeEx>((tree) =>
                  {
                      if (tree != null) NavigationService.ShowTreeEdit(tree.TreeID);
                  });
 
-        public ICommand ShowLogsCommand => _showLogsCommand ??= new Command<Tree_Ex>((tree) =>
+        public ICommand ShowLogsCommand => _showLogsCommand ??= new Command<TreeEx>((tree) =>
                  {
                      if (tree != null) NavigationService.ShowLogsList(tree.TreeID);
                  });
@@ -54,7 +56,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public IEnumerable<Tree_Ex> AllTrees
+        public IEnumerable<TreeEx> AllTrees
         {
             get => _allTrees;
             protected set
@@ -64,7 +66,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public IEnumerable<Tree_Ex> Trees => AllTrees?.Where(x =>
+        public IEnumerable<TreeEx> Trees => AllTrees?.Where(x =>
                          (PlotFilter == ALL_PLOTS_FILTEROPTION || x.PlotNumber.ToString() == PlotFilter) &&
                          (!OnlyShowTreesWithErrorsOrWarnings || x.ErrorCount > 0 || x.WarningCount > 0));
 
@@ -118,7 +120,7 @@ namespace FScruiser.XF.ViewModels
             base.Load(parameters);
 
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
-            var cuttingUnit = CuttingUnit = CuttingUnitDeataservice.GetUnit(unitCode);
+            var cuttingUnit = CuttingUnit = CuttingUnitDeataservice.GetCuttingUnit(unitCode);
 
             var plotNumbers = PlotDataservice.GetPlotsByUnitCode(unitCode).Select(x => x.PlotNumber.ToString());
             PlotFilterOptions = new[] { ALL_PLOTS_FILTEROPTION }.Concat(plotNumbers).ToArray();
@@ -135,7 +137,7 @@ namespace FScruiser.XF.ViewModels
             PlotFilter = ALL_PLOTS_FILTEROPTION;
         }
 
-        private void DeleteTree(Tree_Ex obj)
+        private void DeleteTree(TreeEx obj)
         {
             throw new NotImplementedException();
         }

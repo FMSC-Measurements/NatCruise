@@ -4,7 +4,7 @@ using Prism.Mvvm;
 namespace NatCruise.Cruise.Models
 {
     [Table("Tree")]
-    public class PlotTreeEntry : BindableBase, IHasTreeID
+    public class PlotTreeEntry : BindableBase
     {
         private string _speciesCode;
         private string _liveDead;
@@ -44,7 +44,7 @@ namespace NatCruise.Cruise.Models
 
         public string CountOrMeasure { get; set; }
 
-        // used because we wan't to display TreeCount for just FixCNT trees
+        // used because we want to display TreeCount for just FixCNT trees
         public string Method { get; set; }
 
         public bool STM { get; set; }

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using NatCruise.Models;
 
 namespace NatCruise.Wpf.ViewModels
 {

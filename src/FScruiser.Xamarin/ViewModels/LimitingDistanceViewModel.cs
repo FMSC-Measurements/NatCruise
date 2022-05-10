@@ -1,8 +1,8 @@
-﻿using FScruiser.XF.Constants;
-using NatCruise.Cruise.Data;
+﻿using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Common;
 using Prism.Navigation;
@@ -33,7 +33,7 @@ namespace FScruiser.XF.ViewModels
 
         protected IDataserviceProvider DataserviceProvider { get; }
         public IPlotDataservice PlotDataservice { get; protected set; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
         public Plot_Stratum Plot
         {
@@ -174,7 +174,7 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand SaveReportToPlotCommand => new Command(SaveReport);
 
-        public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
+        public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService)
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));

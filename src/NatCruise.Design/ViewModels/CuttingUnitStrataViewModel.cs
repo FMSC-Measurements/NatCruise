@@ -1,7 +1,7 @@
 ﻿using NatCruise.Data;
-using NatCruise.Design.Data;
-using NatCruise.Design.Models;
 using NatCruise.Design.Util;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Commands;
@@ -30,12 +30,10 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
-        public CuttingUnitStrataViewModel(IDataserviceProvider dataserviceProvider, IDialogService dialogService)
+        public CuttingUnitStrataViewModel(ICuttingUnitDataservice cuttingUnitDataservice, IStratumDataservice stratumDataservice, INatCruiseDialogService dialogService)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
-
-            StratumDataservice = dataserviceProvider.GetDataservice<IStratumDataservice>();
-            CuttingUnitDataservice = dataserviceProvider.GetDataservice<ICuttingUnitDataservice>();
+            StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
+            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
@@ -47,7 +45,7 @@ namespace NatCruise.Design.ViewModels
 
         public IStratumDataservice StratumDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
         public IEnumerable<string> SelectedUnitCodes
         {
@@ -98,7 +96,7 @@ namespace NatCruise.Design.ViewModels
 
             if (stratum != null)
             {
-                SelectedUnitCodes = StratumDataservice.GetCuttingUnitCodesByStratum(stratum.StratumCode)
+                SelectedUnitCodes = CuttingUnitDataservice.GetCuttingUnitCodesByStratum(stratum.StratumCode)
                     .ToHashSet();
             }
             else
