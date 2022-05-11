@@ -1,8 +1,8 @@
 ﻿using FMSC.Sampling;
 using Microsoft.AppCenter.Analytics;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Logic;
-using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Sampling;
 using System;
 using System.Collections.Generic;
 
@@ -17,14 +17,16 @@ namespace NatCruise.Cruise.Services
 
         private Dictionary<string, ISampleSelector> _sampleSelectors = new Dictionary<string, ISampleSelector>();
 
-        public SampleSelectorRepository(ISampleInfoDataservice dataservice)
+        public SampleSelectorRepository(ISamplerStateDataservice dataservice, ISampleGroupDataservice sampleGroupDataservice)
         {
-            Dataservice = dataservice ?? throw new ArgumentNullException(nameof(dataservice));
+            SamplerStateDataservice = dataservice ?? throw new ArgumentNullException(nameof(dataservice));
+            SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
         }
 
-        public ISampleInfoDataservice Dataservice { get; set; }
+        public ISamplerStateDataservice SamplerStateDataservice { get; set; }
+        public ISampleGroupDataservice SampleGroupDataservice { get; }
 
-        public string DeviceID => Dataservice.DeviceID;
+        public string DeviceID => SamplerStateDataservice.DeviceID;
 
         public ISampleSelector GetSamplerBySampleGroupCode(string stratumCode, string sgCode)
         {
@@ -35,7 +37,7 @@ namespace NatCruise.Cruise.Services
 
             if (_sampleSelectors.ContainsKey(key) == false)
             {
-                var samplerInfo = Dataservice.GetSamplerInfo(stratumCode, sgCode);
+                var samplerInfo = SampleGroupDataservice.GetSampleGroup(stratumCode, sgCode);
 
                 var sampler = MakeSampleSelecter(samplerInfo);
 
@@ -45,12 +47,12 @@ namespace NatCruise.Cruise.Services
             return _sampleSelectors[key];
         }
 
-        public ISampleSelector MakeSampleSelecter(SamplerInfo samplerInfo)
+        public ISampleSelector MakeSampleSelecter(SampleGroup sampleGroup)
         {
-            if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
+            if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
 
-            var method = samplerInfo.Method;
-            var sampleSelectortype = samplerInfo.SampleSelectorType;
+            var method = sampleGroup.CruiseMethod;
+            var sampleSelectortype = sampleGroup.SampleSelectorType;
 
             //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
             //{
@@ -61,7 +63,7 @@ namespace NatCruise.Cruise.Services
             {
                 case "FIXCNT":
                     {
-                        return new ZeroFrequencySelecter(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+                        return new ZeroFrequencySelecter(sampleGroup.StratumCode, sampleGroup.SampleGroupCode);
                     }
                 case "100":
                 case "FIX":
@@ -69,8 +71,8 @@ namespace NatCruise.Cruise.Services
                     {
                         return new HundredPCTSelector()
                         {
-                            SampleGroupCode = samplerInfo.SampleGroupCode,
-                            StratumCode = samplerInfo.StratumCode,
+                            SampleGroupCode = sampleGroup.SampleGroupCode,
+                            StratumCode = sampleGroup.StratumCode,
                         };
                     }
 
@@ -78,28 +80,28 @@ namespace NatCruise.Cruise.Services
                     {
                         // default sample selector for STR is blocked
                         if (sampleSelectortype == SAMPLESELECTORTYPE_SYSTEMATICSELECTER)
-                        { return MakeSystematicSampleSelector(samplerInfo); }
+                        { return MakeSystematicSampleSelector(sampleGroup); }
                         else
-                        { return MakeBlockSampleSelector(samplerInfo); }
+                        { return MakeBlockSampleSelector(sampleGroup); }
                     }
                 case "S3P":
                     {
-                        return MakeS3PSampleSelector(samplerInfo);
+                        return MakeS3PSampleSelector(sampleGroup);
                     }
                 case "3P":
                 case "P3P":
                 case "F3P":
                     {
-                        return MakeThreePSampleSelector(samplerInfo);
+                        return MakeThreePSampleSelector(sampleGroup);
                     }
                 case "FCM":
                 case "PCM":
                     {
                         // default sample selector for plot methods is systematic
                         if (sampleSelectortype == SAMPLESELECTORTYPE_BLOCKSELECTER)
-                        { return MakeBlockSampleSelector(samplerInfo); }
+                        { return MakeBlockSampleSelector(sampleGroup); }
                         else
-                        { return MakeSystematicSampleSelector(samplerInfo); }
+                        { return MakeSystematicSampleSelector(sampleGroup); }
                     }
                 case null:
                     { throw new NullReferenceException("method should not be null"); }
@@ -110,107 +112,107 @@ namespace NatCruise.Cruise.Services
             }
         }
 
-        public ISampleSelector MakeS3PSampleSelector(SamplerInfo samplerState)
+        public ISampleSelector MakeS3PSampleSelector(SampleGroup sampleGroup)
         {
-            if (samplerState is null) { throw new ArgumentNullException(nameof(samplerState)); }
+            if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
 
-            var state = Dataservice.GetSamplerState(samplerState.StratumCode, samplerState.SampleGroupCode);
+            var state = SamplerStateDataservice.GetSamplerState(sampleGroup.StratumCode, sampleGroup.SampleGroupCode);
 
             if (state != null)
             {
-                var selector = new S3PSelector(samplerState.SamplingFrequency, samplerState.KZ, state.Counter, state.BlockState);
-                selector.StratumCode = samplerState.StratumCode;
-                selector.SampleGroupCode = samplerState.SampleGroupCode;
+                var selector = new S3PSelector(sampleGroup.SamplingFrequency, sampleGroup.KZ, state.Counter, state.BlockState);
+                selector.StratumCode = sampleGroup.StratumCode;
+                selector.SampleGroupCode = sampleGroup.SampleGroupCode;
                 return selector;
             }
             else
             {
-                var selector = new S3PSelector(samplerState.SamplingFrequency, samplerState.KZ);
-                selector.StratumCode = samplerState.StratumCode;
-                selector.SampleGroupCode = samplerState.SampleGroupCode;
+                var selector = new S3PSelector(sampleGroup.SamplingFrequency, sampleGroup.KZ);
+                selector.StratumCode = sampleGroup.StratumCode;
+                selector.SampleGroupCode = sampleGroup.SampleGroupCode;
                 return selector;
             }
         }
 
-        public ISampleSelector MakeThreePSampleSelector(SamplerInfo samplerInfo)
+        public ISampleSelector MakeThreePSampleSelector(SampleGroup sampleGroup)
         {
-            if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
+            if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
 
-            var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+            var state = SamplerStateDataservice.GetSamplerState(sampleGroup.StratumCode, sampleGroup.SampleGroupCode);
 
             if (state != null)
             {
-                var selector = new ThreePSelecter(samplerInfo.KZ,
-                    samplerInfo.InsuranceFrequency,
+                var selector = new ThreePSelecter(sampleGroup.KZ,
+                    sampleGroup.InsuranceFrequency,
                     state.Counter,
                     state.InsuranceIndex,
                     state.InsuranceCounter);
-                selector.StratumCode = samplerInfo.StratumCode;
-                selector.SampleGroupCode = samplerInfo.SampleGroupCode;
+                selector.StratumCode = sampleGroup.StratumCode;
+                selector.SampleGroupCode = sampleGroup.SampleGroupCode;
                 return selector;
             }
             else
             {
-                var selector = new ThreePSelecter(samplerInfo.KZ, samplerInfo.InsuranceFrequency);
-                selector.StratumCode = samplerInfo.StratumCode;
-                selector.SampleGroupCode = samplerInfo.SampleGroupCode;
+                var selector = new ThreePSelecter(sampleGroup.KZ, sampleGroup.InsuranceFrequency);
+                selector.StratumCode = sampleGroup.StratumCode;
+                selector.SampleGroupCode = sampleGroup.SampleGroupCode;
                 return selector;
             }
         }
 
-        public ISampleSelector MakeSystematicSampleSelector(SamplerInfo samplerInfo)
+        public ISampleSelector MakeSystematicSampleSelector(SampleGroup sampleGroup)
         {
-            if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
+            if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
 
-            var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+            var state = SamplerStateDataservice.GetSamplerState(sampleGroup.StratumCode, sampleGroup.SampleGroupCode);
 
-            var freq = samplerInfo.SamplingFrequency;
+            var freq = sampleGroup.SamplingFrequency;
 
             if (freq == 0)
             {
                 // frequency shouldn't be 0,
                 // but I don't want it to break the program if it is, so for now lets just track it
                 Analytics.TrackEvent("ZeroFrequencySelecter Created", new Dictionary<string, string> { { "Method", "MakeSystematicSampleSelector" }, });
-                return new ZeroFrequencySelecter(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+                return new ZeroFrequencySelecter(sampleGroup.StratumCode, sampleGroup.SampleGroupCode);
             }
             else
             {
                 if (state != null)
                 {
                     var selecter = new SystematicSelecter(freq,
-                        samplerInfo.InsuranceFrequency,
+                        sampleGroup.InsuranceFrequency,
                         state.Counter,
                         state.InsuranceIndex,
                         state.InsuranceCounter,
                         state.SystematicIndex);
-                    selecter.StratumCode = samplerInfo.StratumCode;
-                    selecter.SampleGroupCode = samplerInfo.SampleGroupCode;
+                    selecter.StratumCode = sampleGroup.StratumCode;
+                    selecter.SampleGroupCode = sampleGroup.SampleGroupCode;
                     return selecter;
                 }
                 else
                 {
-                    var selecter = new SystematicSelecter(freq, samplerInfo.InsuranceFrequency, true);
-                    selecter.StratumCode = samplerInfo.StratumCode;
-                    selecter.SampleGroupCode = samplerInfo.SampleGroupCode;
+                    var selecter = new SystematicSelecter(freq, sampleGroup.InsuranceFrequency, true);
+                    selecter.StratumCode = sampleGroup.StratumCode;
+                    selecter.SampleGroupCode = sampleGroup.SampleGroupCode;
                     return selecter;
                 }
             }
         }
 
-        public ISampleSelector MakeBlockSampleSelector(SamplerInfo samplerInfo)
+        public ISampleSelector MakeBlockSampleSelector(SampleGroup sampleGroup)
         {
-            if (samplerInfo is null) { throw new ArgumentNullException(nameof(samplerInfo)); }
+            if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
 
-            var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+            var state = SamplerStateDataservice.GetSamplerState(sampleGroup.StratumCode, sampleGroup.SampleGroupCode);
 
-            var freq = samplerInfo.SamplingFrequency;
+            var freq = sampleGroup.SamplingFrequency;
 
             if (freq == 0)
             {
                 // frequency shouldn't be 0,
                 // but I don't want it to break the program if it is, so for now lets just track it
                 Analytics.TrackEvent("ZeroFrequencySelecter Created", new Dictionary<string, string> { { "Method", "MakeBlockSampleSelector" }, });
-                return new ZeroFrequencySelecter(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+                return new ZeroFrequencySelecter(sampleGroup.StratumCode, sampleGroup.SampleGroupCode);
             }
 
             // we need to gruard against a empty block state
@@ -219,20 +221,20 @@ namespace NatCruise.Cruise.Services
             if (state != null && string.IsNullOrWhiteSpace(state.BlockState) == false)
             {
                 var selector = new BlockSelecter(freq,
-                    samplerInfo.InsuranceFrequency,
+                    sampleGroup.InsuranceFrequency,
                     state.BlockState,
                     state.Counter,
                     state.InsuranceIndex,
                     state.InsuranceCounter);
-                selector.StratumCode = samplerInfo.StratumCode;
-                selector.SampleGroupCode = samplerInfo.SampleGroupCode;
+                selector.StratumCode = sampleGroup.StratumCode;
+                selector.SampleGroupCode = sampleGroup.SampleGroupCode;
                 return selector;
             }
             else
             {
-                var selector = new BlockSelecter(freq, samplerInfo.InsuranceFrequency);
-                selector.StratumCode = samplerInfo.StratumCode;
-                selector.SampleGroupCode = samplerInfo.SampleGroupCode;
+                var selector = new BlockSelecter(freq, sampleGroup.InsuranceFrequency);
+                selector.StratumCode = sampleGroup.StratumCode;
+                selector.SampleGroupCode = sampleGroup.SampleGroupCode;
                 return selector;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using NatCruise.Cruise.Services;
+using NatCruise.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace FScruiser.XF
 {
-    public class TestDialogService : ICruiseDialogService
+    public class TestDialogService : INatCruiseDialogService
     {
         public TestDialogService(ITestOutputHelper output)
         {
@@ -63,6 +64,17 @@ namespace FScruiser.XF
         {
             Output.WriteLine($"AskTreeCount::defaultTreeCount={defaultTreeCount}");
             return Task.FromResult(new AskTreeCountResult { TreeCount = defaultTreeCount });
+        }
+
+        public void ShowNotification(string message, string title = null)
+        {
+            Output.WriteLine($"ShowNotification::msg={message}::title={title}");
+        }
+
+        public Task ShowNotificationAsync(string message, string title = null)
+        {
+            Output.WriteLine($"ShowNotification::msg={message}::title={title}");
+            return Task.CompletedTask;
         }
     }
 }

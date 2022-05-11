@@ -1,9 +1,9 @@
-﻿using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+﻿using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using Prism.Common;
 using System;
 using System.Linq;
@@ -20,11 +20,11 @@ namespace FScruiser.XF.ViewModels
         private int _kPIDelta;
         private string _editReason;
         private string _remarks;
-        private TallyPopulation _tallyPopulation;
+        private TallyPopulationEx _tallyPopulation;
         private ICommand _saveTreeCountEditCommand;
         private string _cruiseMethod;
 
-        public TreeCountEditViewModel(ICruiseNavigationService navigationService, IDataserviceProvider datastoreProvider, ICruiseDialogService dialogService)
+        public TreeCountEditViewModel(ICruiseNavigationService navigationService, IDataserviceProvider datastoreProvider, INatCruiseDialogService dialogService)
         {
             if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
 
@@ -37,7 +37,7 @@ namespace FScruiser.XF.ViewModels
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
         public ITallyDataservice TallyDataservice { get; }
         public ICruiseNavigationService NavigationService { get; }
-        public ICruiseDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
         public ICommand SaveTreeCountEditCommand => _saveTreeCountEditCommand ?? (_saveTreeCountEditCommand = new Command(SaveEdit));
 
@@ -47,7 +47,7 @@ namespace FScruiser.XF.ViewModels
             set { SetProperty(ref _unitCode, value); }
         }
 
-        public TallyPopulation TallyPopulation
+        public TallyPopulationEx TallyPopulation
         {
             get => _tallyPopulation;
 

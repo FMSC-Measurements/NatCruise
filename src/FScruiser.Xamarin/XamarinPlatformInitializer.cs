@@ -5,6 +5,7 @@ using Prism.Ioc;
 using FScruiser.XF.Views;
 using FScruiser.XF.ViewModels;
 using NatCruise.Services;
+using NatCruise.Navigation;
 
 namespace FScruiser.XF
 {
@@ -13,9 +14,8 @@ namespace FScruiser.XF
         public virtual void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<ICruiseNavigationService, XamarinNavigationService>();
-            containerRegistry.Register<IDialogService, XamarinDialogService>();
+            containerRegistry.Register<INatCruiseDialogService, XamarinDialogService>();
             containerRegistry.RegisterSingleton<ITallySettingsDataService, TallySettingsDataService>();
-            containerRegistry.RegisterSingleton<ICruiseDialogService, XamarinCruiseDialogService>();
             containerRegistry.RegisterInstance<ILoggingService>(new AppCenterLoggerService());
             containerRegistry.Register<IPlotTallyService, PlotTallyService>();
             containerRegistry.Register<ITreeBasedTallyService, TreeBasedTallyService>();
@@ -26,7 +26,7 @@ namespace FScruiser.XF
 
         protected virtual void RegisterViews(IContainerRegistry containerRegistry)
         {
-            // override built in navigation page with custom one
+            // override the built in navigation page with custom one
             // this is needed to set the color of the navigation bar and the navigation bar text color
             containerRegistry.RegisterForNavigation<MyNavigationView>("Navigation");
 

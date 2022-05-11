@@ -37,10 +37,6 @@
 		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
 	</ItemGroup>
 
-	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'True'">
-		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<!--<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />-->
 		<ProjectReference Include="..\..\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid.csproj" />
@@ -135,9 +131,6 @@
 		</Compile>
 		<Compile Update="Views\TreeErrorEditView.xaml.cs">
 			<DependentUpon>TreeErrorEditView.xaml</DependentUpon>
-		</Compile>
-		<Compile Update="Views\TreeListView.xaml.cs">
-			<DependentUpon>TreeListView.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Views\TallyView.xaml.cs">
 			<DependentUpon>TallyView.xaml</DependentUpon>

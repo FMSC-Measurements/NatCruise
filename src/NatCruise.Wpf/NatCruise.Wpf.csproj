@@ -33,7 +33,6 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'True'">
-		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
 		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
 	</ItemGroup>
 
@@ -103,11 +102,6 @@
 		<Page Update="Design\Views\SubpopulationListView.xaml">
 			<SubType>Designer</SubType>
 		</Page>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Cruise\ViewModels\" />
-		<Folder Include="Cruise\Views\" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,9 +1,9 @@
-﻿using NatCruise.Services;
+﻿using NatCruise.Navigation;
 using System.Threading.Tasks;
 
 namespace FScruiser.XF.Services
 {
-    public interface ICruiseNavigationService : ICoreNavigationService
+    public interface ICruiseNavigationService : INatCruiseNavigationService
     {
         Task ShowBlank();
 

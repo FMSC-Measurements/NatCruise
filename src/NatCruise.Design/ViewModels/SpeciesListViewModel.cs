@@ -1,15 +1,15 @@
-﻿using NatCruise.Design.Data;
+﻿using NatCruise.Data;
+using NatCruise.Design.Data;
 using NatCruise.Design.Models;
-using NatCruise.Services;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
@@ -25,9 +25,9 @@ namespace NatCruise.Design.ViewModels
 
         public ITemplateDataservice TemplateDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
-        public SpeciesListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice, IDialogService dialogService)
+        public SpeciesListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
@@ -49,10 +49,10 @@ namespace NatCruise.Design.ViewModels
             get => _selectedSpecies;
             set
             {
-                if(_selectedSpecies != null)
+                if (_selectedSpecies != null)
                 { _selectedSpecies.PropertyChanged -= SelectedSpecies_PropertyChanged; }
                 _selectedSpecies = value;
-                if(value != null)
+                if (value != null)
                 { value.PropertyChanged += SelectedSpecies_PropertyChanged; }
                 RaisePropertyChanged();
 
@@ -81,12 +81,12 @@ namespace NatCruise.Design.ViewModels
         public void AddSpecies(string speciesCode)
         {
             speciesCode = speciesCode.Trim();
-            if(Regex.IsMatch(speciesCode, "^[a-zA-Z0-9]+$") is false) { return; }
+            if (Regex.IsMatch(speciesCode, "^[a-zA-Z0-9]+$") is false) { return; }
 
             var speciesList = Species;
             var alreadyExists = speciesList.Any(x => x.SpeciesCode.Equals(speciesCode, StringComparison.OrdinalIgnoreCase));
 
-            if(alreadyExists == false)
+            if (alreadyExists == false)
             {
                 var newSpecies = new Species()
                 {

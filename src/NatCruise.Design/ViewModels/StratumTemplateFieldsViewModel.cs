@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using NatCruise.Util;
+using NatCruise.Models;
 
 namespace NatCruise.Design.ViewModels
 {

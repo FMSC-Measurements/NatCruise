@@ -1,6 +1,8 @@
-﻿using FScruiser.XF.Constants;
-using NatCruise.Cruise.Data;
+﻿using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using Prism.Common;
 using Prism.Navigation;
 using System;
@@ -24,10 +26,14 @@ namespace FScruiser.XF.ViewModels
 
         public IEnumerable<LogError> Errors { get => _errors; set => SetProperty(ref _errors, value); }
         public ILogDataservice LogDataservice { get; }
+        public ILogErrorDataservice LogErrorDataservice { get; }
+        public IFieldSetupDataservice FieldSetupDataservice { get; }
 
-        public LogEditViewModel(ILogDataservice logDataservice)
+        public LogEditViewModel(ILogDataservice logDataservice, ILogErrorDataservice logErrorDataservice, IFieldSetupDataservice fieldSetupDataservice)
         {
             LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
+            LogErrorDataservice = logErrorDataservice ?? throw new ArgumentNullException(nameof(logErrorDataservice));
+            FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
         }
 
         protected override void Load(IParameters parameters)
@@ -38,8 +44,8 @@ namespace FScruiser.XF.ViewModels
 
             var log = LogDataservice.GetLog(log_guid);
 
-            LogFields = LogDataservice.GetLogFields(log.TreeID);
-            Errors = LogDataservice.GetLogErrorsByLog(log.LogID);
+            LogFields = FieldSetupDataservice.GetLogFieldSetupsByTreeID(log.TreeID);
+            Errors = LogErrorDataservice.GetLogErrorsByLog(log.LogID);
             Log = log;
         }
 

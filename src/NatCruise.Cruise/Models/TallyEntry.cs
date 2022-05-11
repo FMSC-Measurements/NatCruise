@@ -5,7 +5,7 @@ using System;
 namespace NatCruise.Cruise.Models
 {
     [Table("TallyLedger")]
-    public class TallyEntry : BindableBase, IHasTreeID
+    public class TallyEntry : BindableBase
     {
         private int _warningCount;
         private int _errorCount;

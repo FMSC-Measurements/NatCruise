@@ -1,8 +1,7 @@
 ﻿using CruiseDAL.Schema;
 using NatCruise.Data;
-using NatCruise.Design.Data;
-using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

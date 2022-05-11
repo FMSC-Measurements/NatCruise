@@ -1,8 +1,7 @@
 ﻿using FScruiser.XF.Services;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using Prism.Common;
 using System;
 using System.Collections.Generic;
@@ -20,11 +19,12 @@ namespace FScruiser.XF.ViewModels
         }
 
         public IDataserviceProvider DatastoreProvider { get; }
+        public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ICruiseNavigationService NavigationService { get; }
 
-        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider, ICruiseNavigationService navigationService)
+        public CuttingUnitListViewModel(ICruiseNavigationService navigationService, ICuttingUnitDataservice cuttingUnitDataservice)
         {
-            DatastoreProvider = datastoreProvider ?? throw new ArgumentNullException(nameof(datastoreProvider));
+            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
@@ -37,11 +37,7 @@ namespace FScruiser.XF.ViewModels
 
         protected override void Load(IParameters parameters)
         {
-            var datastore = DatastoreProvider.GetDataservice<ICuttingUnitDataservice>();
-            if (datastore != null)
-            {
-                Units = datastore.GetUnits();
-            }
+            Units = CuttingUnitDataservice.GetCuttingUnits();
         }
     }
 }

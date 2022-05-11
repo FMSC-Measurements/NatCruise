@@ -2,6 +2,7 @@
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Models;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
