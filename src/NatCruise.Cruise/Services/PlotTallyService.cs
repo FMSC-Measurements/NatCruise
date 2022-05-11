@@ -1,10 +1,9 @@
 ﻿using CruiseDAL.Schema;
 using FMSC.Sampling;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Logic;
-using NatCruise.Cruise.Models;
+using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
+using NatCruise.Sampling;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

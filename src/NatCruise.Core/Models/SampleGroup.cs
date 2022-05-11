@@ -148,8 +148,8 @@ namespace NatCruise.Models
         [Field(PersistanceFlags = PersistanceFlags.Never)]
         public string CruiseMethod { get; set; }
 
-        [Obsolete]
-        public string Method { get; set; }
+        //[Obsolete]
+        //public string Method { get; set; }
 		
 		[IgnoreField]
         public IEnumerable<string> Errors

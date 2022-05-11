@@ -1,10 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using NatCruise.Models;
+using Prism.Mvvm;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
     [Table("Plot_Stratum")]
-    public class Plot_Stratum : Model_Base
+    public class Plot_Stratum : BindableBase
     {
         private int _plotNumber;
         private bool _inCruise;
@@ -17,7 +17,7 @@ namespace NatCruise.Cruise.Models
         public bool InCruise
         {
             get => _inCruise;
-            set => SetValue(ref _inCruise, value);
+            set => SetProperty(ref _inCruise, value);
         }
 
         //[Field("PlotID")]
@@ -26,7 +26,7 @@ namespace NatCruise.Cruise.Models
         public int PlotNumber
         {
             get => _plotNumber;
-            set => SetValue(ref _plotNumber, value);
+            set => SetProperty(ref _plotNumber, value);
         }
 
         public string CuttingUnitCode { get; set; }
@@ -45,13 +45,13 @@ namespace NatCruise.Cruise.Models
         public bool IsEmpty
         {
             get => _isEmpty;
-            set => SetValue(ref _isEmpty, value);
+            set => SetProperty(ref _isEmpty, value);
         }
 
         public int KPI
         {
             get => _kpi;
-            set => SetValue(ref _kpi, value);
+            set => SetProperty(ref _kpi, value);
         }
 
         public int TreeCount { get; set; }

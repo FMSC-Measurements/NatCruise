@@ -1,7 +1,7 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 using Prism.Mvvm;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
     [Table("Tree")]
     public class PlotTreeEntry : BindableBase

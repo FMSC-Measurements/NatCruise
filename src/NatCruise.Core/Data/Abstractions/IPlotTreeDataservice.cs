@@ -1,8 +1,7 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Data;
+﻿using NatCruise.Models;
 using System.Collections.Generic;
 
-namespace NatCruise.Cruise.Data
+namespace NatCruise.Data
 {
     public interface IPlotTreeDataservice : IDataservice
     {

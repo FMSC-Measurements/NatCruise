@@ -163,7 +163,7 @@ namespace NatCruise.Test.Data
                 //tree.CountOrMeasure.Should().Be(countMeasure);
                 //tree.TreeCount.Should().Be(treeCount);
 
-                var tds = new TallyDataservice(database, init.CruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
+                var tds = new TallyDataservice(database, init.CruiseID, init.DeviceID, new SamplerStateDataservice(database, init.CruiseID, init.DeviceID));
 
                 var tallyLedger = tds.GetTallyEntry(treeID);
                 tallyLedger.Should().NotBeNull();

@@ -1,6 +1,6 @@
 ﻿using FMSC.Sampling;
 
-namespace NatCruise.Cruise.Logic
+namespace NatCruise.Sampling
 {
     public class HundredPCTSelector : IFrequencyBasedSelecter
     {
