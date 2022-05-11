@@ -1,11 +1,6 @@
-﻿using NatCruise.Cruise.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿using NatCruise.Models;
 using Xamarin.CommunityToolkit.Markup;
+using Xamarin.Forms;
 
 namespace FScruiser.XF.Util
 {

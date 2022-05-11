@@ -1,5 +1,7 @@
-﻿using NatCruise.Design.Data;
+﻿using NatCruise.Data;
+using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -60,20 +62,20 @@ namespace NatCruise.Design.ViewModels
         {
             var tallyPopulation = (TallyPopulation)sender;
             var propertyName = e.PropertyName;
-            if (propertyName == nameof(TallyPopulation.HotKey))
+            if (propertyName == nameof(TallyPopulation.TallyHotKey))
             {
-                TallySettingsDataservice.SetHotKey(tallyPopulation.HotKey,
+                TallySettingsDataservice.SetHotKey(tallyPopulation.TallyHotKey,
                     tallyPopulation.StratumCode,
                     tallyPopulation.SampleGroupCode,
-                    tallyPopulation.Species,
+                    tallyPopulation.SpeciesCode,
                     tallyPopulation.LiveDead);
             }
-            else if (propertyName == nameof(TallyPopulation.Description))
+            else if (propertyName == nameof(TallyPopulation.TallyDescription))
             {
-                TallySettingsDataservice.SetDescription(tallyPopulation.HotKey,
+                TallySettingsDataservice.SetDescription(tallyPopulation.TallyHotKey,
                     tallyPopulation.StratumCode,
                     tallyPopulation.SampleGroupCode,
-                    tallyPopulation.Species,
+                    tallyPopulation.SpeciesCode,
                     tallyPopulation.LiveDead);
             }
         }

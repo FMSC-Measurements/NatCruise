@@ -1,12 +1,11 @@
-﻿using NatCruise.Design.Data;
-using NatCruise.Design.Models;
-using NatCruise.Data;
+﻿using NatCruise.Data;
 using Prism.Mvvm;
 using System;
 using System.ComponentModel;
 using NatCruise.Services;
 using NatCruise.Design.Validation;
 using System.Collections.Generic;
+using NatCruise.Models;
 
 namespace NatCruise.Design.ViewModels
 {

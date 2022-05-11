@@ -1,6 +1,7 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Sync;
 using NatCruise.Data;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Commands;
@@ -33,7 +34,7 @@ namespace NatCruise.Wpf.ViewModels
         private CruiseDatastore_V3 _workingDestinationDb;
         private CruiseDatastore_V3 _workingSourceDb;
 
-        public CombineFileViewModel(IFileDialogService fileDialogService, IDataserviceProvider dataserviceProvider, IDialogService dialogService)
+        public CombineFileViewModel(IFileDialogService fileDialogService, IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService)
         {
             Syncer = new CruiseSyncer();
             DeleteSyncer = new DeleteSysncer();
@@ -83,7 +84,7 @@ namespace NatCruise.Wpf.ViewModels
         public string CruiseID { get; protected set; }
 
         public IFileDialogService FileDialogService { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
         public CruiseDatastore_V3 SourceDatabase
         {
@@ -283,7 +284,7 @@ namespace NatCruise.Wpf.ViewModels
             {
                 ConflictOptions = conflicts;
 
-                DialogService.ShowNotification("Please Resolve All Conflicts Before Continuing");
+                DialogService.ShowNotification("Some conflicts remain unresolved, please recheck conflicts and ensure all conflicts have a resolution");
                 return;
             }
 
@@ -306,7 +307,7 @@ namespace NatCruise.Wpf.ViewModels
 
                 destination.BackupDatabase(DestinationDatabase);
 
-                await DialogService.ShowNotificationAsync("done", "message");
+                await DialogService.ShowNotificationAsync("combine complete", "message");
             }
             finally
             {

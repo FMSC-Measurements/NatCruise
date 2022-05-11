@@ -1,4 +1,5 @@
 ﻿using NatCruise.Design.Models;
+using NatCruise.Models;
 using Prism.Common;
 using System;
 using System.Collections.Generic;

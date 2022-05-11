@@ -1,6 +1,6 @@
 ﻿using System;
 using NatCruise.Cruise.Models;
-
+using NatCruise.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -70,7 +70,7 @@ namespace FScruiser.XF.Controls
             typeof(PopulationIndicator),
             default(string));
 
-        private TallyPopulation_Base _tallyPopulation;
+        private TallyPopulation _tallyPopulation;
 
         [TypeConverter(typeof(FontSizeConverter))]
         public double FontSize
@@ -113,7 +113,7 @@ namespace FScruiser.XF.Controls
             set => SetValue(CellMarginProperty, value);
         }
 
-        public TallyPopulation_Base TallyPopulation
+        public TallyPopulation TallyPopulation
         {
             get => _tallyPopulation;
             set

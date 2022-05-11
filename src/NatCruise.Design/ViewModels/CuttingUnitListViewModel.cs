@@ -2,6 +2,8 @@
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
 using System;
@@ -22,7 +24,7 @@ namespace NatCruise.Design.ViewModels
         private CuttingUnit _selectedUnit;
         private Dictionary<CuttingUnit, IEnumerable<string>> _unitErrorLookup;
 
-        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider, IDialogService dialogService)
+        public CuttingUnitListViewModel(IDataserviceProvider datastoreProvider, INatCruiseDialogService dialogService)
         {
             if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
 
@@ -34,7 +36,7 @@ namespace NatCruise.Design.ViewModels
         }
 
         private ICuttingUnitDataservice UnitDataservice { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public CuttingUnitValidator CuttingUnitValidator { get; }
 
         public ObservableCollection<CuttingUnit> CuttingUnits

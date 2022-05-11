@@ -1,5 +1,4 @@
 ﻿using CruiseDAL;
-using NatCruise.Data.Abstractions;
 using NatCruise.Models;
 using System;
 using System.Collections.Generic;
@@ -58,37 +57,37 @@ namespace NatCruise.Data
 //DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;", new { CruiseID = cruiseID });
         }
 
-        public IEnumerable<Cruise> GetCruises()
+        public IEnumerable<Models.Cruise> GetCruises()
         {
-            return Database.From<Cruise>()
+            return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Query().ToArray();
         }
 
-        public IEnumerable<Cruise> GetCruises(string saleID)
+        public IEnumerable<Models.Cruise> GetCruises(string saleID)
         {
-            return Database.From<Cruise>()
+            return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("SaleID = @p1")
                 .Query(saleID).ToArray();
         }
 
-        public IEnumerable<Cruise> GetCruisesBySaleNumber(string saleNumber)
+        public IEnumerable<Models.Cruise> GetCruisesBySaleNumber(string saleNumber)
         {
-            return Database.From<Cruise>()
+            return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("SaleNumber = @p1")
                 .Query(saleNumber).ToArray();
         }
 
-        public Cruise GetCruise()
+        public Models.Cruise GetCruise()
         {
             return GetCruise(CruiseID);
         }
 
-        public Cruise GetCruise(string cruiseID)
+        public Models.Cruise GetCruise(string cruiseID)
         {
-            return Database.From<Cruise>()
+            return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).First();
@@ -133,7 +132,7 @@ namespace NatCruise.Data
                 .Query().ToArray();
         }
 
-        public void UpdateCruise(Cruise cruise)
+        public void UpdateCruise(Models.Cruise cruise)
         {
             if (cruise is null) { throw new ArgumentNullException(nameof(cruise)); }
 

@@ -1,7 +1,8 @@
-﻿using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+﻿using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Common;
 using System;
@@ -141,8 +142,6 @@ namespace FScruiser.XF.ViewModels
 
         public string UnitCode => Plot?.CuttingUnitCode;
 
-        public IEnumerable<StratumProxy> Strata { get; set; }
-
         public IEnumerable<Plot_Stratum> StratumPlots
         {
             get { return _stratumPlots; }
@@ -170,10 +169,10 @@ namespace FScruiser.XF.ViewModels
         }
 
         public IPlotDataservice PlotDataservice { get; }
-        public IDialogService DialogService { get; set; }
+        public INatCruiseDialogService DialogService { get; set; }
 
         public PlotEditViewModel(IPlotDataservice plotDataservice
-            , IDialogService dialogService
+            , INatCruiseDialogService dialogService
             , ICruiseNavigationService navigationService)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));

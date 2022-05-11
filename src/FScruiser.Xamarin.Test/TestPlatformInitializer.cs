@@ -3,6 +3,7 @@ using FScruiser.XF.TestServices;
 using Moq;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Test;
 using Prism.Ioc;
@@ -24,14 +25,15 @@ namespace FScruiser.XF
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             var mockSoundService = new Mock<ISoundService>();
-            var mockDialogService = new Mock<IDialogService>();
+            var mockDialogService = new Mock<INatCruiseDialogService>();
             var mockFileDialogService = new Mock<IFileDialogService>();
             var mockTallySettingsDataservice = new Mock<ITallySettingsDataService>();
             var mockAppInfoService = new Mock<IAppInfoService>();
             //var mockNavService = new Mock<TestNavigationService>();
 
-            containerRegistry.Register<ICruiseDialogService, XamarinCruiseDialogService>();
+            containerRegistry.Register<INatCruiseDialogService, TestDialogService>();
 
+            //containerRegistry.Register<ICruiseNavigationService, TestNavigationService>();
             containerRegistry.Register<ICruiseNavigationService, TestNavigationService>();
             //var navigationService = new TestNavigationService();
             //containerRegistry.RegisterInstance<INavigationService>(navigationService);
@@ -40,7 +42,7 @@ namespace FScruiser.XF
             containerRegistry.RegisterInstance<IAppInfoService>(mockAppInfoService.Object);
             containerRegistry.RegisterInstance<ITallySettingsDataService>(mockTallySettingsDataservice.Object);
             containerRegistry.RegisterInstance<ISoundService>(mockSoundService.Object);
-            containerRegistry.RegisterInstance<IDialogService>(mockDialogService.Object);
+            containerRegistry.RegisterInstance<INatCruiseDialogService>(mockDialogService.Object);
             containerRegistry.RegisterInstance<IFileDialogService>(mockFileDialogService.Object);
             containerRegistry.RegisterInstance<ILoggingService>(new TestLogger(TestOutput));
             //containerRegistry.RegisterInstance<Prism.Logging.ILoggerFacade>(new TestLogger(TestOutput));

@@ -1,6 +1,9 @@
-﻿using NatCruise.Design.Data;
+﻿using NatCruise.Data;
+using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
 using System;
@@ -22,7 +25,7 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<StratumTemplate> _stratumTemplateOptions;
         private StratumTemplate _selectedStratumTemplate;
 
-        public StratumListViewModel(IStratumDataservice stratumDataservice, ITemplateDataservice templateDataservice, IFieldSetupDataservice fieldSetupDataservice, IDialogService dialogService)
+        public StratumListViewModel(IStratumDataservice stratumDataservice, ITemplateDataservice templateDataservice, IFieldSetupDataservice fieldSetupDataservice, INatCruiseDialogService dialogService)
         {
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
@@ -35,7 +38,7 @@ namespace NatCruise.Design.ViewModels
         protected IStratumDataservice StratumDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
         public ITemplateDataservice TemplateDataservice { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public StratumValidator StratumValidator { get; }
         public ObservableCollection<Stratum> Strata
         {

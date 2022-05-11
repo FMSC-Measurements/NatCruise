@@ -1,6 +1,4 @@
-﻿using NatCruise.Data.Abstractions;
-using NatCruise.Design.Data;
-using NatCruise.Design.Models;
+﻿using NatCruise.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
 using System;

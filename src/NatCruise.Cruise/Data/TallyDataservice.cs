@@ -10,19 +10,19 @@ namespace NatCruise.Cruise.Data
 {
     public class TallyDataservice : CruiseDataserviceBase, ITallyDataservice
     {
-        public TallyDataservice(string path, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice)
+        public TallyDataservice(string path, string cruiseID, string deviceID, ISamplerStateDataservice sampleInfoDataservice)
             : base(path, cruiseID, deviceID)
         {
             SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        public TallyDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice)
+        public TallyDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISamplerStateDataservice sampleInfoDataservice)
             : base(database, cruiseID, deviceID)
         {
             SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        public ISampleInfoDataservice SampleInfoDataservice { get; }
+        public ISamplerStateDataservice SampleInfoDataservice { get; }
 
         private const string QUERY_TALLYENTRY_BASE =
 @"SELECT

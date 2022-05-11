@@ -1,11 +1,10 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Sync;
-using FScruiser.XF.Constants;
 using FScruiser.XF.Services;
 using NatCruise.Core.Services;
 using NatCruise.Data;
-using NatCruise.Data.Abstractions;
 using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Common;
@@ -34,7 +33,7 @@ namespace FScruiser.XF.ViewModels
         protected IDataserviceProvider DataserviceProvider { get; }
         protected IFileSystemService FileSystemService { get; }
         protected IFileDialogService FileDialogService { get; }
-        protected IDialogService DialogService { get; }
+        protected INatCruiseDialogService DialogService { get; }
         protected IDeviceInfoService DeviceInfo { get; }
 
         public ICommand OpenSelectedCruiseCommand => new Command(() => OpenSelectedCruise().FireAndForget());
@@ -62,7 +61,7 @@ namespace FScruiser.XF.ViewModels
 
         
 
-        public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, IDialogService dialogService, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
+        public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, INatCruiseDialogService dialogService, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
         {
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();

@@ -1,5 +1,5 @@
-﻿using NatCruise.Cruise.Models;
-using FScruiser.XF.ViewModels;
+﻿using FScruiser.XF.ViewModels;
+using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

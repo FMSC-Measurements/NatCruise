@@ -1,8 +1,9 @@
 ﻿using CruiseDAL.Schema;
 using FMSC.Sampling;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Logic;
-using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
+using NatCruise.Sampling;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,10 +15,10 @@ namespace NatCruise.Cruise.Services
         private static readonly string[] SINGLE_STAGE_PLOT = new string[] { CruiseMethods.PNT, CruiseMethods.FIX };
 
         public ISampleSelectorDataService SampleSelectorDataservice { get; }
-        public ICruiseDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public IPlotTreeDataservice PlotTreeDataservice { get; }
 
-        public PlotTallyService(ICruiseDialogService dialogService, IPlotTreeDataservice plotTreeDataservice, ISampleSelectorDataService sampleSelectorDataservice)
+        public PlotTallyService(INatCruiseDialogService dialogService, IPlotTreeDataservice plotTreeDataservice, ISampleSelectorDataService sampleSelectorDataservice)
         {
             PlotTreeDataservice = plotTreeDataservice ?? throw new ArgumentNullException(nameof(plotTreeDataservice));
             SampleSelectorDataservice = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));

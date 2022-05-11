@@ -1,7 +1,9 @@
-﻿using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+﻿using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Util;
 using Prism.Common;
 using Prism.Services;
@@ -44,6 +46,7 @@ namespace FScruiser.XF.ViewModels
 
         protected IPlotDataservice PlotDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
+        public IStratumDataservice StratumDataservice { get; }
         protected ICruiseNavigationService NavigationService { get; }
 
         public ICommand AddPlotCommand => _addPlotCommand ??= new Command(() => AddPlot().FireAndForget());
@@ -54,10 +57,12 @@ namespace FScruiser.XF.ViewModels
         public PlotListViewModel(ICruiseNavigationService navigationService,
             IPageDialogService dialogService,
             IPlotDataservice plotDataservice,
-            ICuttingUnitDataservice cuttingUnitDataservice)
+            ICuttingUnitDataservice cuttingUnitDataservice,
+            IStratumDataservice stratumDataservice)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
+            StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
@@ -67,7 +72,7 @@ namespace FScruiser.XF.ViewModels
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
-            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
+            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
             RefreshPlots();
         }
 
@@ -78,8 +83,9 @@ namespace FScruiser.XF.ViewModels
             Plots = PlotDataservice.GetPlotsByUnitCode(UnitCode).ToArray();
             RaisePropertyChanged(nameof(Plots));
 
-            HasFixCNTStrata = PlotDataservice.GetPlotStrataProxies(UnitCode)
-                .Any(x => x.Method == CruiseDAL.Schema.CruiseMethods.FIXCNT);
+            HasFixCNTStrata = CuttingUnitDataservice.GetCuttingUnitStrataSummary(UnitCode)
+                .Methods
+                .Any(x => x == CruiseDAL.Schema.CruiseMethods.FIXCNT);
         }
 
         public Task AddPlot()
@@ -105,7 +111,9 @@ namespace FScruiser.XF.ViewModels
 
         public async Task ShowTallyPlot(Plot plot)
         {
-            var fixCNTstrata = PlotDataservice.GetPlotStrataProxies(UnitCode).Where(x => x.Method == CruiseDAL.Schema.CruiseMethods.FIXCNT).ToArray();
+            var fixCNTstrata = StratumDataservice.GetPlotStrata(UnitCode)
+                .Where(x => x.Method == CruiseDAL.Schema.CruiseMethods.FIXCNT)
+                .ToArray();
 
             if (fixCNTstrata.Any()
                 && await DialogService.DisplayAlertAsync("Show FixCNT Tally Page?", "", "FixCNT", "Standard"))

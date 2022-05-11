@@ -1,15 +1,15 @@
-﻿using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+﻿using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using NatCruise.Navigation;
 using NatCruise.Util;
+using Prism.Commands;
 using Prism.Common;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -19,9 +19,9 @@ namespace FScruiser.XF.ViewModels
 
         private int _averageHeight;
         private int _treeCount;
-        private double _volumeFactor = 0.333;
-        private Command _addPlotCommand;
-        private Command _cancelCommand;
+        private double _volumeFactor = DEFAULT_VOLUME_FACTOR;
+        private ICommand _addPlotCommand;
+        private ICommand _cancelCommand;
 
         public int AverageHeight
         {
@@ -38,34 +38,35 @@ namespace FScruiser.XF.ViewModels
         public double VolumeFactor
         {
             get => _volumeFactor;
+            set => SetProperty(ref _volumeFactor, value);
         }
 
-        public ICommand AddPlotCommand => _addPlotCommand ??= new Command(() => AddPlotAsync().FireAndForget());
+        public ICommand AddPlotCommand => _addPlotCommand ??= new DelegateCommand(() => AddPlotAsync().FireAndForget());
 
-        public ICommand CancelCommand => _cancelCommand ??= new Command(() => Cancel().FireAndForget());
+        public ICommand CancelCommand => _cancelCommand ??= new DelegateCommand(() => Cancel().FireAndForget());
 
         protected ICruiseNavigationService NavigationService { get; }
-        public ICuttingUnitDataservice CuttingUnitDataservice { get; }
+        public ISampleGroupDataservice SampleGroupDataservice { get; }
         public Random Random { get; }
         protected IPlotDataservice PlotDataservice { get; }
         protected IPlotTreeDataservice PlotTallyDataservice { get; }
-        protected ICruiseDialogService DialogService { get; }
+        protected INatCruiseDialogService DialogService { get; }
 
         public Plot_Stratum StratumPlot { get; protected set; }
 
         public ThreePPNTPlotViewModel(ICruiseNavigationService navigationService,
             IPlotDataservice plotDataservice,
             IPlotTreeDataservice plotTallyDataservice,
-            ICruiseDialogService dialogService,
-            ICuttingUnitDataservice cuttingUnitDataservice,
+            INatCruiseDialogService dialogService,
+            ISampleGroupDataservice sampleGroupDataservice,
             Random random)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             PlotTallyDataservice = plotTallyDataservice ?? throw new ArgumentNullException(nameof(plotTallyDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
-            Random = random ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
+            SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
+            Random = random ?? throw new ArgumentNullException(nameof(random));
         }
 
         protected override void Load(IParameters parameters)
@@ -118,7 +119,7 @@ namespace FScruiser.XF.ViewModels
             var stratumCode = plotStratum.StratumCode;
             var plotNumber = plotStratum.PlotNumber;
 
-            var sampleGroupCodes = CuttingUnitDataservice.GetSampleGroupCodes(stratumCode);
+            var sampleGroupCodes = SampleGroupDataservice.GetSampleGroupCodes(stratumCode);
             var sgCode = sampleGroupCodes.First();
 
             var randomValue = Random.Next(1, StratumPlot.KZ3PPNT);

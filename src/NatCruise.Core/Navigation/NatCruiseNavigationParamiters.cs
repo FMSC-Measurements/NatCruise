@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NatCruise.Wpf.Navigation
+namespace NatCruise.Navigation
 {
     public class NatCruiseNavigationParamiters : Dictionary<string, object>
     {
