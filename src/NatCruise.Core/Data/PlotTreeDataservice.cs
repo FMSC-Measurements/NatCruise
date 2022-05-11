@@ -1,21 +1,20 @@
 ﻿using CruiseDAL;
-using NatCruise.Cruise.Models;
-using NatCruise.Data;
+using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 
-namespace NatCruise.Cruise.Data
+namespace NatCruise.Data
 {
     public class PlotTreeDataservice : CruiseDataserviceBase, IPlotTreeDataservice
     {
-        public ISampleInfoDataservice SampleInfoDataservice { get; }
+        public ISamplerStateDataservice SampleInfoDataservice { get; }
 
-        public PlotTreeDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice) : base(database, cruiseID, deviceID)
+        public PlotTreeDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISamplerStateDataservice sampleInfoDataservice) : base(database, cruiseID, deviceID)
         {
             SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }
 
-        public PlotTreeDataservice(string path, string cruiseID, string deviceID, ISampleInfoDataservice sampleInfoDataservice) : base(path, cruiseID, deviceID)
+        public PlotTreeDataservice(string path, string cruiseID, string deviceID, ISamplerStateDataservice sampleInfoDataservice) : base(path, cruiseID, deviceID)
         {
             SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
         }

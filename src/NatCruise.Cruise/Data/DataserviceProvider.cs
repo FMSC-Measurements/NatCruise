@@ -24,7 +24,9 @@ namespace NatCruise.Cruise.Data
             base.OnCruiseIDChanged(value);
             if (value != null)
             {
-                SampleSelectorDataService = new SampleSelectorRepository(GetDataservice<ISampleInfoDataservice>());
+                SampleSelectorDataService = new SampleSelectorRepository(
+                    GetDataservice<ISamplerStateDataservice>(),
+                    GetDataservice<ISampleGroupDataservice>());
             }
             else
             {
@@ -50,12 +52,6 @@ namespace NatCruise.Cruise.Data
             if (cruiseID == null)
             { throw new InvalidOperationException("DataserviceProvider: no cruise selected"); }
 
-            if (typeof(IPlotDataservice).IsAssignableFrom(type))
-            { return new PlotDataservice(database, cruiseID, deviceID); }
-
-            if (typeof(IPlotTreeDataservice).IsAssignableFrom(type))
-            { return new PlotTreeDataservice(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
-
             if (typeof(ISampleSelectorDataService).IsAssignableFrom(type))
             { return SampleSelectorDataService; }
 
@@ -63,16 +59,7 @@ namespace NatCruise.Cruise.Data
             { return new FixCNTDataservice(database, cruiseID, deviceID); }
 
             if (typeof(ITallyDataservice).IsAssignableFrom(type))
-            { return new TallyDataservice(database, cruiseID, deviceID, GetDataservice<ISampleInfoDataservice>()); }
-
-            if (typeof(ISampleInfoDataservice).IsAssignableFrom(type))
-            { return new SamplerInfoDataservice(database, cruiseID, deviceID); }
-
-            if (typeof(ITallyPopulationDataservice).IsAssignableFrom(type))
-            { return new TallyPopulationDataservice(database, cruiseID, deviceID); }
-
-            if (typeof(ISampleInfoDataservice).IsAssignableFrom(type))
-            { return new SamplerInfoDataservice(database, cruiseID, deviceID); }
+            { return new TallyDataservice(database, cruiseID, deviceID, GetDataservice<ISamplerStateDataservice>()); }
             else
             {
                 throw new InvalidOperationException("no dataservice found for type " + type.FullName);
@@ -85,13 +72,10 @@ namespace NatCruise.Cruise.Data
         {
             base.RegisterDataservices(containerRegistry);
 
-            containerRegistry.Register<IPlotDataservice>(x => GetDataservice<IPlotDataservice>());
-            containerRegistry.Register<IPlotTreeDataservice>(e => GetDataservice<IPlotTreeDataservice>());
+            
             containerRegistry.Register<ISampleSelectorDataService>(x => GetDataservice<ISampleSelectorDataService>());
             containerRegistry.Register<IFixCNTDataservice>(x => GetDataservice<IFixCNTDataservice>());
             containerRegistry.Register<ITallyDataservice>(x => GetDataservice<ITallyDataservice>());
-            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
-            containerRegistry.Register<ISampleInfoDataservice>(x => GetDataservice<ISampleInfoDataservice>());
         }
     }
 }

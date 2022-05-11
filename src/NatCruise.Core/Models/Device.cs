@@ -1,6 +1,6 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
     public class Device
     {

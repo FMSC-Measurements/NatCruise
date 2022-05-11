@@ -62,6 +62,9 @@ namespace NatCruise.Data
             containerRegistry.Register<IFieldSetupDataservice>(x => GetDataservice<IFieldSetupDataservice>());
             containerRegistry.Register<IMessageLogDataservice>(x => GetDataservice<IMessageLogDataservice>());
             containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
+            containerRegistry.Register<IPlotDataservice>(x => GetDataservice<IPlotDataservice>());
+            containerRegistry.Register<IPlotTreeDataservice>(e => GetDataservice<IPlotTreeDataservice>());
+            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
 
         }
 
@@ -151,6 +154,16 @@ namespace NatCruise.Data
             {
                 return new TallyPopulationDataservice(database, cruiseID, deviceID);
             }
+            if (typeof(IPlotDataservice).IsAssignableFrom(type))
+            { return new PlotDataservice(database, cruiseID, deviceID); }
+
+            if (typeof(IPlotTreeDataservice).IsAssignableFrom(type))
+            { return new PlotTreeDataservice(database, cruiseID, deviceID, GetDataservice<ISamplerStateDataservice>()); }
+            if (typeof(ISamplerStateDataservice).IsAssignableFrom(type))
+            { return new SamplerStateDataservice(database, cruiseID, deviceID); }
+
+            if (typeof(ITallyPopulationDataservice).IsAssignableFrom(type))
+            { return new TallyPopulationDataservice(database, cruiseID, deviceID); }
             else
             {
                 return null;

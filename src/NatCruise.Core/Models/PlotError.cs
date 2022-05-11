@@ -1,9 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using NatCruise.Models;
+using Prism.Mvvm;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
-    public class PlotError : Model_Base
+    [Table]
+    public class PlotError : BindableBase
     {
         public string PlotID { get; set; }
 

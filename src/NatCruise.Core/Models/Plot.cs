@@ -1,10 +1,10 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using NatCruise.Models;
+using Prism.Mvvm;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
     [Table("Plot")]
-    public class Plot : Model_Base
+    public class Plot : BindableBase
     {
         private double _slope;
         private double _aspect;
@@ -17,27 +17,25 @@ namespace NatCruise.Cruise.Models
         public int PlotNumber
         {
             get => _plotNumber;
-            set => SetValue(ref _plotNumber, value);
+            set => SetProperty(ref _plotNumber, value);
         }
 
         public double Slope
         {
             get => _slope;
-            set => SetValue(ref _slope, value);
+            set => SetProperty(ref _slope, value);
         }
 
         public double Aspect
         {
             get => _aspect;
-            set => SetValue(ref _aspect, value);
+            set => SetProperty(ref _aspect, value);
         }
 
         public string Remarks
         {
             get => _remarks;
-            set => SetValue(ref _remarks, value);
+            set => SetProperty(ref _remarks, value);
         }
-
-        //public int CuttingUnit_CN { get; set; }
     }
 }

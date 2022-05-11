@@ -1,39 +1,19 @@
 ﻿using CruiseDAL;
-using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
-using NatCruise.Data;
-using System;
-using System.Collections.Generic;
+using NatCruise.Models;
 using System.Linq;
 
-namespace NatCruise.Cruise.Data
+namespace NatCruise.Data
 {
-    public class SamplerInfoDataservice : CruiseDataserviceBase, ISampleInfoDataservice
+    public class SamplerStateDataservice : CruiseDataserviceBase, ISamplerStateDataservice
     {
         
 
-        public SamplerInfoDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        public SamplerStateDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
         {
         }
 
-        public SamplerInfoDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
+        public SamplerStateDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
-        }
-
-        public SamplerInfo GetSamplerInfo(string stratumCode, string sampleGroupCode)
-        {
-            if (string.IsNullOrEmpty(stratumCode)) { throw new System.ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }
-            if (string.IsNullOrEmpty(sampleGroupCode)) { throw new System.ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or empty", nameof(sampleGroupCode)); }
-
-            return Database.Query<SamplerInfo>(
-@"SELECT
-    sg.*,
-    st.Method
-FROM SampleGroup AS sg
-    JOIN Stratum AS st USING (StratumCode, CruiseID)
-WHERE sg.StratumCode = @p1
-    AND sg.SampleGroupCode = @p2
-    AND sg.CruiseID = @p3;", stratumCode, sampleGroupCode, CruiseID).FirstOrDefault();
         }
 
         public SamplerState GetSamplerState(string stratumCode, string sampleGroupCode, string deviceID)
@@ -114,34 +94,6 @@ UPDATE SET
                     samplerState.StratumCode,
                 }
             );
-        }
-
-        public IEnumerable<Device> GetDevices()
-        {
-            return Database.Query<Device>(
-@"WITH ssModifiedDate AS (
-SELECT max(ss.ModifiedDate) AS LastModified, DeviceID, CruiseID
-FROM SamplerState AS ss
-    WHERE CruiseID = @p1
-GROUP BY ss.DeviceID, CruiseID )
-
-SELECT d.*, ss.LastModified FROM DEVICE AS d
-LEFT JOIN ssModifiedDate AS ss USING (DeviceID, CruiseID)
-WHERE d.CruiseID = @p1;", CruiseID).ToArray();
-        }
-
-        public IEnumerable<Device> GetOtherDevices()
-        {
-            return Database.Query<Device>(
-@"WITH ssModifiedDate AS (
-SELECT max(ss.ModifiedDate) AS LastModified, DeviceID, CruiseID
-FROM SamplerState AS ss
-WHERE CruiseID =  @p2
-GROUP BY ss.DeviceID )
-
-SELECT d.*, ss.LastModified FROM DEVICE AS d
-LEFT JOIN ssModifiedDate AS ss USING (DeviceID)
-WHERE d.DeviceID != @p1 AND CruiseID = @p2;", DeviceID, CruiseID).ToArray();
         }
 
         public void CopySamplerStates(string deviceFrom, string deviceTo)

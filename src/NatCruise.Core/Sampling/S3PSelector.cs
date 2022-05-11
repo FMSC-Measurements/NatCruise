@@ -1,7 +1,7 @@
 ﻿using FMSC.Sampling;
 using System;
 
-namespace NatCruise.Cruise.Logic
+namespace NatCruise.Sampling
 {
     public class S3PSelector : ISampleSelector
     {

@@ -1,7 +1,7 @@
 ﻿using FMSC.Sampling;
-using NatCruise.Cruise.Logic;
+using NatCruise.Sampling;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
     public class SamplerState
     {
@@ -46,7 +46,6 @@ namespace NatCruise.Cruise.Models
 
         public string StratumCode { get; set; }
         public string SampleGroupCode { get; set; }
-
         public string SampleSelectorType { get; set; }
         public string BlockState { get; set; }
         public int SystematicIndex { get; set; }

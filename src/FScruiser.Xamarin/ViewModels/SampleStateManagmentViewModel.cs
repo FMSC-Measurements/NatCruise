@@ -1,5 +1,4 @@
 ﻿using Microsoft.AppCenter.Crashes;
-using NatCruise.Cruise.Data;
 using NatCruise.Data;
 using Prism.Common;
 using System;
@@ -14,18 +13,20 @@ namespace FScruiser.XF.ViewModels
         //private NatCruise.Cruise.Models.Device _currentDevice;
         private Command<string> _copyDeviceStateCommand;
 
-        private IEnumerable<NatCruise.Cruise.Models.Device> _devices;
+        private IEnumerable<NatCruise.Models.Device> _devices;
 
-        protected ISampleInfoDataservice SampleInfoDataservice { get; }
+        protected ISamplerStateDataservice SampleStateDataservice { get; }
+        public IDeviceDataservice DeviceDataservice { get; }
+
         //public IDeviceInfoService DeviceInfoService { get; }
 
         public ICommand CopyDeviceStateCommand => _copyDeviceStateCommand ?? (_copyDeviceStateCommand = new Command<string>(CopyDeviceState));
 
-        public SampleStateManagmentViewModel(IDataserviceProvider dataserviceProvider)
+        public SampleStateManagmentViewModel(ISamplerStateDataservice samplerStateDataservice, IDeviceDataservice deviceDataservice)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
+            SampleStateDataservice = samplerStateDataservice ?? throw new ArgumentNullException(nameof(samplerStateDataservice));
+            DeviceDataservice = deviceDataservice ?? throw new ArgumentNullException(nameof(deviceDataservice));
 
-            SampleInfoDataservice = dataserviceProvider.GetDataservice<ISampleInfoDataservice>();
             //DeviceInfoService = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
             //CurrentDevice = new NatCruise.Cruise.Models.Device
             //{
@@ -40,7 +41,7 @@ namespace FScruiser.XF.ViewModels
         //    protected set => SetProperty(ref _currentDevice, value);
         //}
 
-        public IEnumerable<NatCruise.Cruise.Models.Device> OtherDevices
+        public IEnumerable<NatCruise.Models.Device> OtherDevices
         {
             get => _devices;
             protected set => SetProperty(ref _devices, value);
@@ -50,9 +51,7 @@ namespace FScruiser.XF.ViewModels
         {
             try
             {
-                var sids = SampleInfoDataservice;
-                //CurrentDevice = sids.CurrentDevice;
-                OtherDevices = sids.GetOtherDevices();
+                OtherDevices = DeviceDataservice.GetOtherDevices();
             }
             catch (Exception e)
             {
@@ -62,7 +61,7 @@ namespace FScruiser.XF.ViewModels
 
         public void CopyDeviceState(string deviceID)
         {
-            var ds = SampleInfoDataservice;
+            var ds = SampleStateDataservice;
 
             var currentDeviceID = ds.DeviceID;
             if (currentDeviceID == deviceID) { return; }
