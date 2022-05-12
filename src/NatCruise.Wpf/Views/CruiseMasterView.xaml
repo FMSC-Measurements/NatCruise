@@ -52,6 +52,8 @@
                     Click="_unitsButton_Click">Units</Button>
             <Button x:Name="_strataButton"
                     Click="_strataButton_Click">Strata</Button>
+            <Button x:Name="_fieldDataButton"
+                    Click="_fieldDataButton_Click">Field Data</Button>
             <Button x:Name="_speciesButton"
                     Content="Species"
                     Click="_speciesButton_Click" />

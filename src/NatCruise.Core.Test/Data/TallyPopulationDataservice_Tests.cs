@@ -24,7 +24,8 @@ namespace NatCruise.Test.Data
             using (var db = init.CreateDatabase())
             {
                 var plotDs = new PlotDataservice(db, init.CruiseID, init.DeviceID);
-                var ds = new TallyPopulationDataservice(db, init.CruiseID, init.DeviceID);
+                var plotStDs = new PlotStratumDataservice(db, init.CruiseID, init.DeviceID);
+                var tallyPopDs = new TallyPopulationDataservice(db, init.CruiseID, init.DeviceID);
 
                 plotDs.AddNewPlot(unit);
 
@@ -32,10 +33,10 @@ namespace NatCruise.Test.Data
                 plots.Should().HaveCount(1);
                 var plot = plots.Single();
 
-                var plotStrata = plotDs.GetPlot_Strata(unit, plot.PlotNumber, insertIfNotExists: false);
+                var plotStrata = plotStDs.GetPlot_Strata(unit, plot.PlotNumber, insertIfNotExists: false);
                 plotStrata.Should().HaveCount(2);
 
-                var tallyPops = ds.GetPlotTallyPopulationsByUnitCode(unit, plot.PlotNumber);
+                var tallyPops = tallyPopDs.GetPlotTallyPopulationsByUnitCode(unit, plot.PlotNumber);
                 tallyPops.Should().NotBeEmpty();
             }
         }

@@ -89,7 +89,7 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
         public IEnumerable<Plot> GetPlotsByUnitCode(string unit)
         {
             return Database.Query<Plot>("SELECT *  FROM Plot " +
-                "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2;"
+                "WHERE (@p1 IS NULL OR CuttingUnitCode = @p1) AND CruiseID = @p2;"
                 , new object[] { unit, CruiseID });
         }
 

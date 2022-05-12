@@ -90,6 +90,21 @@ LEFT JOIN TreeFieldHeading AS tfh ON tf.Field = tfh.Field AND tfh.CruiseID = @p1
 ORDER BY ifnull(tfh.Heading, tf.DefaultHeading);", CruiseID).ToArray();
         }
 
+        public IEnumerable<TreeField> GetTreeFieldsUsedInCruise()
+        {
+            return Database.Query<TreeField>(
+@"SELECT
+    tf.Field,
+    tfh.Heading,
+    tf.DefaultHeading,
+    DbType,
+    IsTreeMeasurmentField
+FROM TreeField AS tf
+LEFT JOIN TreeFieldHeading AS tfh ON tf.Field = tfh.Field AND tfh.CruiseID = @p1
+WHERE tf.Field IN (SELECT DISTINCT Field FROM TreeFieldSetup WHERE CruiseID = @p1)
+ORDER BY ifnull(tfh.Heading, tf.DefaultHeading);", CruiseID).ToArray();
+        }
+
         public void UpdateTreeField(TreeField treeField)
         {
             if (string.IsNullOrEmpty(treeField.Heading))

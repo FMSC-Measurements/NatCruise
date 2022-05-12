@@ -5,11 +5,9 @@ namespace NatCruise.Data
 {
     public interface ISampleGroupDataservice : IDataservice
     {
-        public IEnumerable<string> GetSampleGroupCodes(string stratumCode);
+        IEnumerable<string> GetSampleGroupCodes(string stratumCode = null);
 
-        IEnumerable<SampleGroup> GetSampleGroups();
-
-        IEnumerable<SampleGroup> GetSampleGroups(string stratumCode);
+        IEnumerable<SampleGroup> GetSampleGroups(string stratumCode = null);
 
         SampleGroup GetSampleGroup(string stratumCode, string sampleGroupCode);
 

@@ -290,6 +290,23 @@ WHERE TreeID = @TreeID;";
             return Database.Query<TreeEx>(GET_TREEEX_BASE_COMMAND_2 + "WHERE t.TreeID = @p1;", treeID).FirstOrDefault();
         }
 
+        public IEnumerable<TreeEx> GetTrees(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null, string speciesCode = null)
+        {
+            return Database.Query2<TreeEx>(GET_TREEEX_BASE_COMMAND_2 +
+                "WHERE t.CruiseID = @CruiseID AND (@CuttingUnitCode IS NULL OR t.CuttingUnitCode = @CuttingUnitCode) " +
+                "AND (@StratumCode IS NULL OR t.StratumCode = @StratumCode) " +
+                "AND (@SampleGroupCode IS NULL OR t.SampleGroupCode = @SampleGroupCode) " +
+                "AND (@SpeciesCode IS NULL OR t.SpeciesCode = @SpeciesCode);",
+                new
+                {
+                    CruiseID,
+                    CuttingUnitCode = cuttingUnitCode,
+                    StratumCode = stratumCode,
+                    SampleGroupCode = sampleGroupCode,
+                    SpeciesCode = speciesCode,
+                }).ToArray();
+        }
+
         public int GetTreeCount(string treeID)
         {
             return Database.ExecuteScalar<int>("SELECT total(TreeCount) FROM TallyLedger WHERE TreeID = @p1", treeID);

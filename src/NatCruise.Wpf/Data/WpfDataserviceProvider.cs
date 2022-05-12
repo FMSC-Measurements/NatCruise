@@ -60,6 +60,8 @@ namespace NatCruise.Data
 
         public override void RegisterDataservices(IContainerRegistry containerRegistry)
         {
+            base.RegisterDataservices(containerRegistry);
+
             containerRegistry.Register<ISpeciesCodeDataservice>(x => GetDataservice<ISpeciesCodeDataservice>());
             containerRegistry.Register<ITemplateDataservice>(x => GetDataservice<ITemplateDataservice>());
             containerRegistry.Register<IDesignCheckDataservice>(x => GetDataservice<IDesignCheckDataservice>());

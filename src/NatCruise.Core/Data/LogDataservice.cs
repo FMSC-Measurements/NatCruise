@@ -16,6 +16,27 @@ namespace NatCruise.Data
         {
         }
 
+        public IEnumerable<Log> GetLogs(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null)
+        {
+            return Database.Query2<Log>(
+                "SELECT " +
+                "l.*, " +
+                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount " +
+                "FROM Log AS l " +
+                "JOIN Tree AS t USING (TreeID) " +
+                "WHERE t.CruiseID = @CruiseID " +
+                "AND (@CuttingUnitCode IS NULL OR t.CuttingUnitCode = @CuttingUnitCode) " +
+                "AND (@StratumCode IS NULL OR t.StratumCode = @StratumCode) " +
+                "AND (@SampleGroupCode IS NULL OR t.SampleGroupCode = @SampleGroupCode);",
+                new
+                {
+                    CruiseID,
+                    CuttingUnitCode = cuttingUnitCode,
+                    StratumCode = stratumCode,
+                    SampleGroupCode = sampleGroupCode,
+                }).ToArray();
+        }
+
         public IEnumerable<Log> GetLogs(string treeID)
         {
             return Database.Query<Log>(

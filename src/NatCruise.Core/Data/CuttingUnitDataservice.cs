@@ -70,9 +70,11 @@ namespace NatCruise.Data
 
         public IEnumerable<string> GetCuttingUnitCodesByStratum(string stratumCode)
         {
-            return Database.ExecuteScalar<string>("SELECT group_concat(CuttingUnitCode) FROM CuttingUnit AS cu " +
-                "JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID) " +
-                "WHERE cust.StratumCode = @p1 AND cu.CruiseID = @p2;", stratumCode, CruiseID)?.Split(',') ?? new string[0];
+            return Database.QueryScalar2<string>(
+@"SELECT cust.CuttingUnitCode
+FROM CuttingUnit_Stratum AS cust
+WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
+                new { StratumCode = stratumCode, CruiseID }).ToArray();
         }
 
         public CuttingUnit GetCuttingUnit(string unitCode)

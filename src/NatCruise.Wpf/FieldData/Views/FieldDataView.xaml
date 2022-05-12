@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="NatCruise.Wpf.FieldData.Views.FieldDataView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
+             xmlns:Controls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="17*" />
+            <RowDefinition Height="208*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal">
+
+            <StackPanel Orientation="Horizontal"
+                                          Width="200">
+                <Label Content="Cutting Unit" />
+                <ComboBox Width="100"
+                          ItemsSource="{Binding CuttingUnitOptions, Converter={StaticResource PrependAnyConverter}}"
+                          SelectedValue="{Binding SelectedCuttingUnit, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                                          Width="200">
+                <Label Content="Strata" />
+                <ComboBox Width="100"
+                          ItemsSource="{Binding StrataOptions, Converter={StaticResource PrependAnyConverter}}"
+                          SelectedValue="{Binding SelectedStratum, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                                          Width="200">
+                <Label Content="Sample Group" />
+                <ComboBox Width="100"
+                          ItemsSource="{Binding SampleGroupOptions, Converter={StaticResource PrependAnyConverter}}"
+                          SelectedValue="{Binding SelectedSampleGroup, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+            </StackPanel>
+
+        </StackPanel>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Trees">
+                <local:TreeListView DataContext="{Binding TreeListViewModel}" />
+            </TabItem>
+            <TabItem Header="Plots">
+                <local:PlotListView DataContext="{Binding PlotListViewModel}" />
+            </TabItem>
+            <TabItem Header="Logs">
+                <local:PlotListView DataContext="{Binding LogListViewModel}" />
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</UserControl>

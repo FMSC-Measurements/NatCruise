@@ -16,9 +16,20 @@ namespace NatCruise.Data
         {
         }
 
-        public IEnumerable<Stratum> GetStrata()
+        public IEnumerable<Stratum> GetStrata(string cuttingUnitCode = null)
         {
-            return Database.From<Stratum>().Query();
+            if (!string.IsNullOrEmpty(cuttingUnitCode))
+            {
+                return Database.From<Stratum>()
+                .Where("CruiseID = @p1").Query(CruiseID);
+            }
+            else
+            {
+                return Database.From<Stratum>()
+                    .Join("CuttingUnitStratum AS cust", "USING (CruiseID, StratumCode)")
+                    .Where("Stratum.CruiseID = @p1 AND (@p2 IS NULL OR cust.CuttingUnitCode = @p2")
+                    .Query(CruiseID, cuttingUnitCode);
+            }
         }
 
         public void AddStratum(Stratum stratum)
@@ -106,21 +117,18 @@ namespace NatCruise.Data
             return Database.ExecuteScalar<string>("SELECT Method FROM Stratum WHERE StratumCode = @p1 AND CruiseID = @p2;", stratumCode, CruiseID);
         }
 
+        public IEnumerable<string> GetStratumCodes(string cuttingUnitCode = null)
+        {
+            return Database.QueryScalar<string>(
+                "SELECT StratumCode FROM CuttingUnit_Stratum " +
+                "WHERE (@p1 IS NULL OR CuttingUnitCode = @p1) AND CruiseID = @p2;", cuttingUnitCode, CruiseID);
+        }
+
         public IEnumerable<string> GetStratumCodesByUnit(string unitCode)
         {
             return Database.QueryScalar<string>(
                 "SELECT StratumCode FROM CuttingUnit_Stratum " +
                 "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2;", unitCode, CruiseID);
-        }
-
-        public IEnumerable<string> GetCuttingUnitCodesByStratum(string stratumCode)
-        {
-            return Database.QueryScalar2<string>(
-@"SELECT cu.CuttingUnitCode
-FROM CuttingUnit AS cu
-JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID)
-WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
-                new { StratumCode = stratumCode, CruiseID }).ToArray();
         }
 
         // TODO method just returns tree based strata, check logic

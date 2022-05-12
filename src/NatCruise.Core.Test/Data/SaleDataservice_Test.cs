@@ -40,7 +40,7 @@ namespace NatCruise.Core.Test.Data
             var ds = new SaleDataservice(db, init.CruiseID, init.DeviceID);
 
 
-            var plotds = new Cruise.Data.PlotDataservice(db, init.CruiseID, init.DeviceID);
+            var plotds = new PlotDataservice(db, init.CruiseID, init.DeviceID);
             var unit = init.Units.First();
             var plotID = plotds.AddNewPlot(unit);
 
