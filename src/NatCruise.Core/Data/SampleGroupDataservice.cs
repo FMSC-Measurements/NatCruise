@@ -112,7 +112,7 @@ JOIN Stratum AS st USING (StratumCode, CruiseID)
 WHERE sg.StratumCode = @p1 AND sg.SampleGroupCode = @p2 AND sg.CruiseID = @p3;", stratumCode, sampleGroupCode, CruiseID).FirstOrDefault();
         }
 
-        public IEnumerable<SampleGroup> GetSampleGroups()
+        public IEnumerable<SampleGroup> GetSampleGroups(string stratumCode = null)
         {
             return Database.Query<SampleGroup>(
 @"SELECT
@@ -120,24 +120,13 @@ WHERE sg.StratumCode = @p1 AND sg.SampleGroupCode = @p2 AND sg.CruiseID = @p3;",
     st.Method AS CruiseMethod
 FROM SampleGroup AS sg
 JOIN Stratum AS st USING (StratumCode, CruiseID)
-WHERE sg.CruiseID = @p1;", CruiseID);
+WHERE (@p1 IS NULL OR sg.StratumCode = @p1) AND sg.CruiseID = @p2;", stratumCode, CruiseID);
         }
 
-        public IEnumerable<SampleGroup> GetSampleGroups(string stratumCode)
-        {
-            return Database.Query<SampleGroup>(
-@"SELECT
-    sg.*,
-    st.Method AS CruiseMethod
-FROM SampleGroup AS sg
-JOIN Stratum AS st USING (StratumCode, CruiseID)
-WHERE sg.StratumCode = @p1 AND sg.CruiseID = @p2;", stratumCode, CruiseID);
-        }
-
-        public IEnumerable<string> GetSampleGroupCodes(string stratumCode)
+        public IEnumerable<string> GetSampleGroupCodes(string stratumCode = null)
         {
             return Database.QueryScalar<string>("SELECT SampleGroupCode FROM SampleGroup " +
-                "WHERE StratumCode = @p1 AND CruiseID = @p2;", stratumCode, CruiseID);
+                "WHERE (@p1 IS NULL OR StratumCode = @p1) AND CruiseID = @p2;", stratumCode, CruiseID);
         }
 
         public void SetTallyBySubPop(bool tallyBySubpop, string stratumCode, string sampleGroupCode)

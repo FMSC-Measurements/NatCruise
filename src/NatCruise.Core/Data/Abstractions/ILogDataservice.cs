@@ -5,6 +5,8 @@ namespace NatCruise.Data
 {
     public interface ILogDataservice : IDataservice
     {
+        IEnumerable<Log> GetLogs(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null);
+
         IEnumerable<Log> GetLogs(string tree_guid);
 
         Log GetLog(string log_guid);

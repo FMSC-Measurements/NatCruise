@@ -5,7 +5,7 @@ namespace NatCruise.Data
 {
     public interface IStratumDataservice : IDataservice
     {
-        IEnumerable<Stratum> GetStrata();
+        IEnumerable<Stratum> GetStrata(string cuttingUnitCode = null);
         void AddStratum(Stratum stratum);
 
         void AddStratumToCuttingUnit(string cuttingUnitCode, string stratumCode);
@@ -15,6 +15,8 @@ namespace NatCruise.Data
         void DeleteStratum(string stratumCode);
 
         string GetCruiseMethod(string stratumCode);
+
+        IEnumerable<string> GetStratumCodes(string cuttingUnitCode = null);
 
         IEnumerable<string> GetStratumCodesByUnit(string unitCode);
 

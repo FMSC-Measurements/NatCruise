@@ -18,6 +18,39 @@ namespace NatCruise.Test.Data
         }
 
         [Fact]
+        public void GetTrees()
+        {
+            var unit = "u1";
+            var stratum = "st1";
+            var sg = "sg1";
+            var sp = "sp1";
+
+            var init = new DatastoreInitializer();
+            using var db = init.CreateDatabase();
+
+            var treeID = Guid.NewGuid().ToString();
+            var tree = new Tree()
+            {
+                CruiseID = init.CruiseID,
+                TreeID = treeID,
+                TreeNumber = 1,
+                CuttingUnitCode = unit,
+                StratumCode = stratum,
+                SampleGroupCode = sg,
+                SpeciesCode = sp,
+            };
+            db.Insert(tree);
+
+            var treeDs = new TreeDataservice(db, init.CruiseID, init.DeviceID);
+            var treesAgain = treeDs.GetTrees(unit, stratum, sg, sp);
+            treesAgain.Should().HaveCount(1);
+
+            var treeAgain = treesAgain.Single();
+            treeAgain.TreeID.Should().Be(treeID);
+
+        }
+
+        [Fact]
         public void IsTreeNumberAvalible_noPlot()
         {
             var init = new DatastoreInitializer();

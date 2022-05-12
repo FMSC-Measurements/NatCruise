@@ -15,8 +15,10 @@ namespace NatCruise.Data
 
         IEnumerable<TreeField> GetTreeFieldsByStratum(string stratumCode);
 
-        public IEnumerable<TreeField> GetNonPlotTreeFields(string unitCode);
+        IEnumerable<TreeField> GetNonPlotTreeFields(string unitCode);
 
-        public IEnumerable<TreeField> GetPlotTreeFields(string unitCode);
+        IEnumerable<TreeField> GetPlotTreeFields(string unitCode);
+
+        IEnumerable<TreeField> GetTreeFieldsUsedInCruise();
     }
 }

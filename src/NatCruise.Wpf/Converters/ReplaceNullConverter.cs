@@ -15,6 +15,7 @@ namespace NatCruise.Wpf.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            // if original value is null or equals parameter/value, return null. Otherwise return value
             return value == null || value.Equals(parameter ?? Value) ? null : value;
         }
     }
