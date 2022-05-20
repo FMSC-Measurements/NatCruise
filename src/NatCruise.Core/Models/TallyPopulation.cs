@@ -9,6 +9,8 @@ namespace NatCruise.Models
     [Table("TallyPopulation")]
     public class TallyPopulation : BindableBase
     {
+        public string CuttingUnitCode { get; set; }
+
         public string StratumCode { get; set; }
 
         public string SampleGroupCode { get; set; }

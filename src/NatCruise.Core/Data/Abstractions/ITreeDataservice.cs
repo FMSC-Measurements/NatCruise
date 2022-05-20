@@ -12,7 +12,7 @@ namespace NatCruise.Data
 
         TreeEx GetTree(string treeID);
 
-        IEnumerable<TreeEx> GetTrees(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null, string speciesCode = null);
+        IEnumerable<TreeEx> GetTrees(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null, string speciesCode = null, int? plotNumber = null);
 
         IEnumerable<TreeEx> GetTreesByUnitCode(string unitCode);
 

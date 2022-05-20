@@ -10,8 +10,8 @@ namespace NatCruise.Data
     public class FieldSetupDataservice : CruiseDataserviceBase, IFieldSetupDataservice
     {
         private static readonly LogFieldSetup[] DEFAULT_LOG_FIELDS = new LogFieldSetup[]{
-            new LogFieldSetup(){
-                Field = nameof(Log.LogNumber), Heading = "LogNum"},
+            //new LogFieldSetup(){
+            //    Field = nameof(Log.LogNumber), Heading = "LogNum"},
             new LogFieldSetup(){
                 Field = nameof(Log.Grade), Heading = "Grade"},
             new LogFieldSetup() {
@@ -209,7 +209,9 @@ COMMIT;",
 FROM LogFieldSetup AS lfs
 JOIN LogField AS lf USING (Field)
 LEFT JOIN LogFieldHeading AS lfh USING (Field, CruiseID)
-WHERE StratumCode = (SELECT StratumCode FROM Tree WHERE TreeID = @p1) AND CruiseID = (SELECT CruiseID FROM Tree WHERE TreeID = @p1)
+WHERE StratumCode = (SELECT StratumCode FROM Tree WHERE TreeID = @p1)
+    AND CruiseID = (SELECT CruiseID FROM Tree WHERE TreeID = @p1)
+    AND Field != 'LogNumber' -- don't include LogNumber because its not really a log field
 ORDER BY lfs.FieldOrder;", treeID).ToArray();
 
             if (fields.Length == 0)

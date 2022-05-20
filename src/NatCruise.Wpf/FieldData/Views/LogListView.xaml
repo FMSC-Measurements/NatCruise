@@ -4,10 +4,46 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:LogFieldsToDataGridColumnsConverter x:Key="LogFieldsToColumnsConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding Logs}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        
+        <DataGrid ItemsSource="{Binding Logs}"
+                  SelectedItem="{Binding SelectedLog}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  SelectionChanged="OnLogSelectionChanged"
+                  controls:DataGridHelper.ColumnsBinding="{Binding Fields, Converter={StaticResource LogFieldsToColumnsConverter}}" />
+
+        <Expander Grid.Column="1"
+                  ExpandDirection="Left"
+                  MaxWidth="460"
+                  d:IsExpanded="True"
+                  x:Name="_logEditExpander">
+            <Grid>
+
+                <local:LogEditView DataContext="{Binding LogEditViewModel}" />
+                <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                      mah_ctrls:VisibilityHelper.IsHidden="{Binding SelectedLog, Converter={StaticResource NotNullConverter}}"
+                      d:Visibility="Hidden">
+                    <Label Content="No Log Selected"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+                </Grid>
+            </Grid>
+        </Expander>
     </Grid>
 </UserControl>

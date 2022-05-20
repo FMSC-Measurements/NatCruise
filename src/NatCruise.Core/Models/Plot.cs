@@ -37,5 +37,10 @@ namespace NatCruise.Models
             get => _remarks;
             set => SetProperty(ref _remarks, value);
         }
+
+        public override string ToString()
+        {
+            return $"{PlotNumber}";
+        }
     }
 }

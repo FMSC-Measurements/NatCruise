@@ -18,17 +18,17 @@ namespace NatCruise.Data
 
         public IEnumerable<Stratum> GetStrata(string cuttingUnitCode = null)
         {
-            if (!string.IsNullOrEmpty(cuttingUnitCode))
+            if (string.IsNullOrEmpty(cuttingUnitCode))
             {
                 return Database.From<Stratum>()
-                .Where("CruiseID = @p1").Query(CruiseID);
+                .Where("CruiseID = @p1").Query(CruiseID).ToArray();
             }
             else
             {
                 return Database.From<Stratum>()
-                    .Join("CuttingUnitStratum AS cust", "USING (CruiseID, StratumCode)")
-                    .Where("Stratum.CruiseID = @p1 AND (@p2 IS NULL OR cust.CuttingUnitCode = @p2")
-                    .Query(CruiseID, cuttingUnitCode);
+                    .Where("Stratum.CruiseID = @p1 " +
+                        "AND Stratum.StratumCode IN (SELECT StratumCode FROM CuttingUnit_Stratum WHERE CruiseID = @p1)")
+                    .Query(CruiseID, cuttingUnitCode).ToArray();
             }
         }
 

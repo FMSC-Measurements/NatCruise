@@ -103,5 +103,10 @@ namespace NatCruise.Models
             get => _errors;
             set => SetProperty(ref _errors, value);
         }
+
+        public override string ToString()
+        {
+            return $"{StratumCode}: {Description}";
+        }
     }
 }

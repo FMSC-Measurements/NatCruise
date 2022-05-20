@@ -63,8 +63,12 @@ namespace NatCruise.Data
             containerRegistry.Register<IMessageLogDataservice>(x => GetDataservice<IMessageLogDataservice>());
             containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
             containerRegistry.Register<IPlotDataservice>(x => GetDataservice<IPlotDataservice>());
+            containerRegistry.Register<IPlotStratumDataservice>(x => GetDataservice<IPlotStratumDataservice>());
+            containerRegistry.Register<IPlotErrorDataservice>(x => GetDataservice<IPlotErrorDataservice>());
             containerRegistry.Register<IPlotTreeDataservice>(e => GetDataservice<IPlotTreeDataservice>());
             containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
+            containerRegistry.Register<ILogFieldDataservice>(e => GetDataservice<ILogFieldDataservice>());
+            containerRegistry.Register<ITallyLedgerDataservice>(x => GetDataservice<ITallyLedgerDataservice>());
 
         }
 
@@ -154,16 +158,39 @@ namespace NatCruise.Data
             {
                 return new TallyPopulationDataservice(database, cruiseID, deviceID);
             }
-            if (typeof(IPlotDataservice).IsAssignableFrom(type))
-            { return new PlotDataservice(database, cruiseID, deviceID); }
-
-            if (typeof(IPlotTreeDataservice).IsAssignableFrom(type))
-            { return new PlotTreeDataservice(database, cruiseID, deviceID, GetDataservice<ISamplerStateDataservice>()); }
+            else if(typeof(IPlotDataservice) == type)
+            {
+                return new PlotDataservice(database, cruiseID, deviceID);
+            }
+            else if (typeof(IPlotStratumDataservice) == type )
+            {
+                return new PlotStratumDataservice(database, cruiseID, deviceID);
+            }
+            else if (typeof(IPlotErrorDataservice) == type)
+            {
+                return new PlotErrorDataservice(database, cruiseID, deviceID);
+            }
+            else if(typeof(IPlotTreeDataservice)== type)
+            {
+                return new PlotTreeDataservice(database, cruiseID, deviceID, GetDataservice<ISamplerStateDataservice>());
+            }
             if (typeof(ISamplerStateDataservice).IsAssignableFrom(type))
-            { return new SamplerStateDataservice(database, cruiseID, deviceID); }
+            {
+                return new SamplerStateDataservice(database, cruiseID, deviceID);
+            }
+            else if(typeof(ITallyPopulationDataservice) == type)
+            {
+                return new TallyPopulationDataservice(database, cruiseID, deviceID);
+            }
+            if (type == typeof(ILogFieldDataservice))
+            {
+                return new LogFieldDataservice(database, cruiseID, deviceID);
+            }
+            if (type == typeof(ITallyLedgerDataservice))
+            {
+                return new TallyLedgerDataservice(database, cruiseID, deviceID);
+            }
 
-            if (typeof(ITallyPopulationDataservice).IsAssignableFrom(type))
-            { return new TallyPopulationDataservice(database, cruiseID, deviceID); }
             else
             {
                 return null;

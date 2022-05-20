@@ -16,9 +16,39 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding Trees}" IsReadOnly="True"
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <DataGrid Grid.Row="0"
+                  ItemsSource="{Binding Trees}"
+                  SelectedItem="{Binding SelectedTree}"
+                  SelectionChanged="TreeListSelectionChanged"
                   AutoGenerateColumns="False"
-                  controls:DataGridHelper.ColumnsBinding="{Binding Fields, Converter={StaticResource TreeFieldsToColumnsConverter}}" >
+                  IsReadOnly="True"
+                  controls:DataGridHelper.ColumnsBinding="{Binding Fields, Converter={StaticResource TreeFieldsToColumnsConverter}}">
         </DataGrid>
+
+        <Expander Grid.Column="1"
+                  ExpandDirection="Left"
+                  MaxWidth="460"
+                  d:IsExpanded="True"
+                  x:Name="_treeEditExpander">
+            <Grid>
+                
+                <local:TreeEditView DataContext="{Binding TreeEditViewModel}" />
+                <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                      Visibility="{Binding SelectedTree, Converter={StaticResource IsNotVisableConverter}}">
+                    <Label Content="No Tree Selected"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+                </Grid>
+            </Grid>
+        </Expander>
+
+
     </Grid>
 </UserControl>
