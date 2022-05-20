@@ -16,21 +16,21 @@ using System.Windows.Shapes;
 namespace NatCruise.Wpf.FieldData.Views
 {
     /// <summary>
-    /// Interaction logic for TreeListView.xaml
+    /// Interaction logic for TallyPopulationListView.xaml
     /// </summary>
-    public partial class TreeListView : UserControl
+    public partial class TallyPopulationListView : UserControl
     {
-        public TreeListView()
+        public TallyPopulationListView()
         {
             InitializeComponent();
         }
 
-        private void TreeListSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OnTallyPopulationSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var deselectedItems = e.RemovedItems;
-            if(deselectedItems.Count == 0)
+            if (deselectedItems.Count == 0)
             {
-                _treeEditExpander.IsExpanded = true;
+                _treeCountEditExpander.IsExpanded = true;
             }
         }
     }

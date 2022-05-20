@@ -1,6 +1,5 @@
 ﻿using CruiseDAL.Schema;
 using NatCruise.Models;
-using NatCruise.Wpf.FieldData.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,7 +9,7 @@ using System.Windows.Data;
 
 namespace NatCruise.Wpf.Converters
 {
-    public class TreeFieldsToDataGridColumnsConverter : IValueConverter
+    public class LogFieldsToDataGridColumnsConverter : IValueConverter
     {
         public const string DBTYPE_REAL = TreeFieldTableDefinition.DBTYPE_REAL;
         public const string DBTYPE_TEXT = TreeFieldTableDefinition.DBTYPE_TEXT;
@@ -19,10 +18,10 @@ namespace NatCruise.Wpf.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var treeFields = value as IEnumerable<TreeField>;
-            if (treeFields == null) { return null; }
+            var logFields = value as IEnumerable<LogField>;
+            if (logFields == null) { return null; }
 
-            return treeFields.Select(x =>
+            return logFields.Select(x =>
             {
                 switch (x.DbType)
                 {
@@ -39,7 +38,6 @@ namespace NatCruise.Wpf.Converters
                     default:
                         return (DataGridColumn)new DataGridTextColumn
                         {
-                            IsReadOnly = TreeListViewModel.LOCKED_FIELDS.Contains(x.Field),
                             Header = x.Heading ?? x.DefaultHeading ?? x.Field,
                             Binding = new Binding(x.Field),
                         };

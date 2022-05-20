@@ -12,6 +12,7 @@
             <converters:IsNullOrWhiteSpaceConverter x:Key="NotNullOrWhiteSpaceConverter"
                                                     Invert="True" />
             <converters:IsVisableConverter x:Key="IsVisableConverter" />
+            <converters:IsVisableConverter x:Key="IsNotVisableConverter" Invert="True"/>
 
             <converters:IsEmptyConverter x:Key="IsNotNullOrEmptyConverter"
                                          Invert="True" />

@@ -101,73 +101,7 @@ namespace NatCruise.Cruise.Data
             //    .Query(unitCode, plotNumber);
         }
 
-        public void InsertTallyLedger(TallyLedger tallyLedger)
-        {
-            if (tallyLedger is null) { throw new ArgumentNullException(nameof(tallyLedger)); }
-
-            var tallyLedgerID = tallyLedger.TallyLedgerID ?? Guid.NewGuid().ToString();
-
-            Database.Execute2(
-@"INSERT INTO TallyLedger (
-    TallyLedgerID,
-    CruiseID,
-    CuttingUnitCode,
-    StratumCode,
-    SampleGroupCode,
-    PlotNumber,
-    SpeciesCode,
-    LiveDead,
-    TreeCount,
-    KPI,
-    ThreePRandomValue,
-    TreeID,
-    CreatedBy,
-    Reason,
-    Signature,
-    Remarks,
-    EntryType
-) VALUES (
-    @TallyLedgerID,
-    @CruiseID,
-    @CuttingUnitCode,
-    @StratumCode,
-    @SampleGroupCode,
-    @PlotNumber,
-    @SpeciesCode,
-    @LiveDead,
-    @TreeCount,
-    @KPI,
-    @ThreePRandomValue,
-    @TreeID,
-    @CreatedBy,
-    @Reason,
-    @Signature,
-    @Remarks,
-    @EntryType
-);",
-                new
-                {
-                    CruiseID,
-                    TallyLedgerID = tallyLedgerID,
-                    tallyLedger.CuttingUnitCode,
-                    tallyLedger.StratumCode,
-                    tallyLedger.SampleGroupCode,
-                    tallyLedger.PlotNumber,
-                    tallyLedger.SpeciesCode,
-                    tallyLedger.LiveDead,
-                    tallyLedger.TreeCount,
-                    tallyLedger.KPI,
-                    tallyLedger.ThreePRandomValue,
-                    tallyLedger.TreeID,
-                    tallyLedger.CreatedBy,
-                    tallyLedger.Reason,
-                    tallyLedger.Signature,
-                    tallyLedger.Remarks,
-                    tallyLedger.EntryType,
-                });
-
-            tallyLedger.TallyLedgerID = tallyLedgerID;
-        }
+        
 
         public Task<TallyEntry> InsertTallyActionAsync(TallyAction tallyAction)
         {

@@ -1,20 +1,13 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using NatCruise.Models;
 using System;
 
-namespace NatCruise.Cruise.Models
+namespace NatCruise.Models
 {
     [Table("TallyLedger")]
     public class TallyLedger 
     {
-        public static class EntryTypeValues
-        {
-            public const string TALLY = "tally";
-            public const string UTILITY = "utility";
-            public const string TREECOUNT_EDIT = "treecount_edit";
-            public const string CLICKER = "clicker";
-            public const string MANUAL_TREE = "manual_tree";
-        }
+        public TallyLedger()
+        { }
 
         public TallyLedger(string unitCode, TallyPopulation tallyPopulation)
         {

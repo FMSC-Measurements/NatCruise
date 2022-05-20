@@ -24,5 +24,14 @@ namespace NatCruise.Wpf.FieldData.Views
         {
             InitializeComponent();
         }
+
+        private void SelectedPlotChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var deselectedItems = e.RemovedItems;
+            if (deselectedItems.Count == 0)
+            {
+                _plotEditExpander.IsExpanded = true;
+            }
+        }
     }
 }

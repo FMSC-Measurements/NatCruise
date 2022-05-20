@@ -1,32 +1,31 @@
-﻿using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
-using NatCruise.Data;
+﻿using NatCruise.Data;
 using NatCruise.Models;
-using NatCruise.Navigation;
-using Prism.Common;
-using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace FScruiser.XF.ViewModels
+namespace NatCruise.Wpf.FieldData.ViewModels
 {
-    public class LogEditViewModel : XamarinViewModelBase, INavigatedAware
+    public class LogEditViewModel : ViewModelBase
     {
         private Log _log;
         private IEnumerable<LogFieldSetup> _logFields;
         private IEnumerable<LogError> _errors;
+        private IEnumerable<string> _gradeOptions;
 
         public Log Log
         {
             get => _log;
             set
             {
-                if(_log != null)
+                if (_log != null)
                 { _log.PropertyChanged -= Log_PropertyChanged; }
                 OnLogChanged(value);
                 SetProperty(ref _log, value);
-                if(value != null)
+                if (value != null)
                 { value.PropertyChanged += Log_PropertyChanged; }
             }
         }
@@ -57,6 +56,12 @@ namespace FScruiser.XF.ViewModels
         public ILogErrorDataservice LogErrorDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
 
+        public IEnumerable<string> GradeOptions
+        {
+            get => _gradeOptions;
+            set => SetProperty(ref _gradeOptions, value);
+        }
+
         public LogEditViewModel(ILogDataservice logDataservice, ILogErrorDataservice logErrorDataservice, IFieldSetupDataservice fieldSetupDataservice)
         {
             LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
@@ -64,24 +69,24 @@ namespace FScruiser.XF.ViewModels
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
         }
 
-        protected override void Load(IParameters parameters)
-        {
-            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+        //protected override void Load(IParameters parameters)
+        //{
+        //    if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-            var log_guid = parameters.GetValue<string>(NavParams.LogID);
+        //    var log_guid = parameters.GetValue<string>(NavParams.LogID);
 
-            Log = LogDataservice.GetLog(log_guid);
-        }
+        //    Log = LogDataservice.GetLog(log_guid);
+        //}
 
-        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
-        {
-            // do nothing
-        }
+        //void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
+        //{
+        //    // do nothing
+        //}
 
-        public void OnNavigatedFrom(INavigationParameters parameters)
-        {
-            SaveLog();
-        }
+        //public void OnNavigatedFrom(INavigationParameters parameters)
+        //{
+        //    SaveLog();
+        //}
 
         public void SaveLog()
         {

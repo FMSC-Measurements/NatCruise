@@ -23,6 +23,7 @@ namespace NatCruise.Data
 
         private string SELECT_TALLYPOPULATION_CORE =
 @"SELECT
+        cust.CuttingUnitCode,
         tp.Description,
         tp.StratumCode,
         st.Method AS StratumMethod,
@@ -119,6 +120,23 @@ namespace NatCruise.Data
         public IEnumerable<TallyPopulation> GetTallyPopulations(string stratumCode, string sampleGroupCode)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<TallyPopulationEx> GetTallyPopulations(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null)
+        {
+            return Database.Query2<TallyPopulationEx>(
+                SELECT_TALLYPOPULATION_CORE +
+                "WHERE tp.CruiseID = @CruiseID " +
+                    "AND (@CuttingUnitCode IS NULL OR cust.CuttingUnitCode = @CuttingUnitCode) " +
+                    "AND (@StratumCode IS NULL OR tp.StratumCode = @StratumCode) " +
+                    "AND (@SampleGroupCode IS NULL OR tp.SampleGroupCode = @SampleGroupCode);"
+                ,
+                new {
+                    CruiseID,
+                    CuttingUnitCode = cuttingUnitCode,
+                    StratumCode = stratumCode,
+                    SampleGroupCode = sampleGroupCode
+                }).ToArray();
         }
 
         public void UpdateTallyPopulation(TallyPopulation tallyPop)

@@ -12,40 +12,42 @@ namespace NatCruise.Wpf.Converters
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class IsVisableConverter : IValueConverter
     {
+        public bool Invert { get; set; }
+
+        public Visibility FalseValue { get; set; } = Visibility.Collapsed;
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
+                bool isVisable;
                 if(value is bool)
                 {
-                    var isVisable = (bool)value;
-                    return isVisable ? Visibility.Visible : Visibility.Collapsed;
+                    isVisable = (bool)value;
                 }
                 else if(value is string sValue)
                 {
-                    var isVisable = !string.IsNullOrEmpty(sValue);
-                    return isVisable ? Visibility.Visible : Visibility.Collapsed;
+                    isVisable = !string.IsNullOrEmpty(sValue);
                 }
                 else if(value is double dValue)
                 {
-                    var isVisable = dValue > 0;
-                    return isVisable ? Visibility.Visible : Visibility.Collapsed;
+                    isVisable = dValue > 0;
                 }
                 else if (value is float fValue)
                 {
-                    var isVisable = fValue > 0;
-                    return isVisable ? Visibility.Visible : Visibility.Collapsed;
+                    isVisable = fValue > 0;
                 }
                 else if ((value is int iValue))
                 {
-                    var isVisable = iValue > 0;
-                    return isVisable ? Visibility.Visible : Visibility.Collapsed;
+                    isVisable = iValue > 0;
                 }
                 else
                 {
-                    return value != null ? Visibility.Visible : Visibility.Collapsed;
+                    isVisable = value != null;
                 }
-                
+
+                return isVisable ^ Invert ? Visibility.Visible : FalseValue;
+
             }
             catch
             { return Visibility.Visible; }

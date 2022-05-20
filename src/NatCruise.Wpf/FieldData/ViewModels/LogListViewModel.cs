@@ -10,17 +10,35 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 {
     public class LogListViewModel : ViewModelBase
     {
+        private readonly IEnumerable<LogField> COMMON_LOGFIELDS = new[]
+        {
+            //new LogField{DbType = "TEXT", Heading = "Cutting Unit", Field = nameof(Log.CuttingUnitCode)},
+            //new LogField{DbType = "TEXT", Heading = "Plot Number", Field = nameof(Log.PlotNumber)},
+            //new LogField{DbType = "TEXT", Heading = "Tree Number", Field = nameof(Log.TreeNumber)},
+            //new LogField{DbType = "TEXT", Heading = "Stratum", Field = nameof(Log.StratumCode)},
+            //new LogField{DbType = "TEXT", Heading = "Sample Group", Field = nameof(Log.SampleGroupCode)},
+            //new LogField{DbType = "TEXT", Heading = "Species", Field = nameof(Log.SpeciesCode)},
+            //new LogField{DbType = "TEXT", Heading = "Live/Dead", Field = nameof(Log.LiveDead)},
+            new LogField{DbType = "TEXT", Heading = "Log Number", Field = nameof(Log.LogNumber)},
+        };
+
         private string _cuttingUnitCode;
         private string _stratumCode;
         private string _sampleGroupCode;
         private IEnumerable<Log> _logs;
+        private IEnumerable<LogField> _fields;
+        private Log _selectedLog;
 
-        public LogListViewModel(ILogDataservice logDataservice)
+        public LogListViewModel(ILogDataservice logDataservice, ILogFieldDataservice logFieldDataservice, LogEditViewModel logEditViewModel)
         {
             LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
+            LogFieldDataservice = logFieldDataservice ?? throw new ArgumentNullException(nameof(logFieldDataservice));
+            LogEditViewModel = logEditViewModel ?? throw new ArgumentNullException(nameof(logEditViewModel));
         }
 
         public ILogDataservice LogDataservice { get; }
+        public ILogFieldDataservice LogFieldDataservice { get; }
+        public LogEditViewModel LogEditViewModel { get; }
 
         public string CuttingUnitCode
         {
@@ -61,6 +79,22 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
+        public Log SelectedLog
+        {
+            get => _selectedLog;
+            set
+            {
+                SetProperty(ref _selectedLog, value);
+                LogEditViewModel.Log = value;
+            }
+        }
+
+        public IEnumerable<LogField> Fields
+        {
+            get => _fields;
+            set => SetProperty(ref _fields, value);
+        }
+
         public override void Load()
         {
             base.Load();
@@ -71,6 +105,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
             var logs = LogDataservice.GetLogs(unitCode, stCode, sgCode);
             Logs = logs;
+
+            Fields = COMMON_LOGFIELDS.Concat(LogFieldDataservice.GetLogFieldsUsedInCruise());
         }
     }
 }

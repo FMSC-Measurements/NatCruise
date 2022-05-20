@@ -12,13 +12,26 @@ namespace NatCruise.Wpf.FieldData.ViewModels
     {
         private IEnumerable<Plot> _plots;
         private string _cuttingUnitCode;
+        private Plot _selectedPlot;
 
-        public PlotListViewModel(IPlotDataservice plotDataservice)
+        public PlotListViewModel(IPlotDataservice plotDataservice, PlotEditViewModel plotEditViewModel)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
+            PlotEditViewModel = plotEditViewModel ?? throw new ArgumentNullException(nameof(plotEditViewModel));
         }
 
         public IPlotDataservice PlotDataservice { get; }
+        public PlotEditViewModel PlotEditViewModel { get; }
+
+        public Plot SelectedPlot
+        {
+            get => _selectedPlot;
+            set
+            {
+                PlotEditViewModel.Plot = value;
+                SetProperty(ref _selectedPlot, value);
+            }
+        }
 
         public string CuttingUnitCode
         {

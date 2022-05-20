@@ -11,7 +11,7 @@ namespace NatCruise.Data
 
         IEnumerable<TallyPopulation_Plot> GetPlotTallyPopulationsByUnitCode(string unitCode, int plotNumber);
 
-        IEnumerable<TallyPopulation> GetTallyPopulations(string stratumCode, string sampleGroupCode);
+        IEnumerable<TallyPopulationEx> GetTallyPopulations(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null);
 
         void UpdateTallyPopulation(TallyPopulation tallyPop);
     }

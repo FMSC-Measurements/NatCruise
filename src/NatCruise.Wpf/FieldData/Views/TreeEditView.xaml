@@ -1,0 +1,300 @@
+﻿<UserControl x:Class="NatCruise.Wpf.FieldData.Views.TreeEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             xmlns:e="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="400"
+             Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+             x:Name="_page">
+    <UserControl.Resources>
+        <converters:ErrorToBrushConverter x:Key="errorToColorConverter"
+                                          Default="White"
+                                          Error="Red"
+                                          Warning="Gold"
+                                          SuppressedColor="LightGray" />
+
+        <Style x:Key="errorWarningButton"
+               TargetType="Button">
+            <Setter Property="Foreground"
+                    Value="Black" />
+
+            <Setter Property="FontSize"
+                    Value="12" />
+
+            <Setter Property="Margin"
+                    Value="0,0,0,7" />
+
+            <Setter Property="Background"
+                    Value="{Binding ., Converter={StaticResource errorToColorConverter}}" />
+
+            <Setter Property="Content"
+                    Value="{Binding Message}" />
+        </Style>
+
+        <converters:BoolToBrushConverter x:Key="hasErrorConverter"
+                                         TrueObject="Red"
+                                         FalseObject="Transparent" />
+
+        <converters:CruiseMethodToBoolConverter x:Key="isfixCNTConverter"
+                                                MethodMap="FIXCNT" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--main fields-->
+        <WrapPanel Grid.Row="0"
+                   x:Name="_primaryFieldsPanel">
+            <WrapPanel.Resources>
+                <converters:DivideConverter Divisor="3"
+                                            x:Key="colWidthConverter" />
+                <Style TargetType="controls:LastChildWidthPanel">
+                    <Style.Resources>
+                        <Style TargetType="TextBox">
+                            <Setter Property="mah:TextBoxHelper.SelectAllOnFocus"
+                                    Value="True" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment"
+                                    Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Right" />
+                            
+                        </Style>
+                    </Style.Resources>
+                    <Setter Property="LastChildWidth"
+                            Value="60" />
+                    <Setter Property="Width"
+                            Value="160" />
+                    <Setter Property="Margin"
+                            Value="1" />
+                </Style>
+            </WrapPanel.Resources>
+
+            <!--Tree Number-->
+            <controls:LastChildWidthPanel>
+                <TextBlock Text="Tree #" />
+                <TextBox x:Name="_treeNumberEntry"
+                         Text="{Binding TreeNumber}"
+                         AutomationProperties.Name="Tree Number">
+                </TextBox>
+            </controls:LastChildWidthPanel>
+
+            <!--Stratum-->
+            <controls:LastChildWidthPanel>
+                <TextBlock Text="Stratum" />
+                <ComboBox x:Name="_stratumCodeEntry"
+                          SelectedItem="{Binding StratumCode}"
+                          ItemsSource="{Binding StratumCodes}"
+                          AutomationProperties.Name="Stratum">
+                </ComboBox>
+
+            </controls:LastChildWidthPanel>
+
+            <!--Sample Group-->
+            <controls:LastChildWidthPanel Background="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}">
+                <TextBlock Text="Sample Group" />
+                <ComboBox x:Name="_sampleGroupEntry"
+                          SelectedValue="{Binding SampleGroupCode}"
+                          ItemsSource="{Binding SampleGroupCodes}"
+                          AutomationProperties.Name="Sample Group">
+                </ComboBox>
+            </controls:LastChildWidthPanel>
+
+            <!--Species-->
+            <controls:LastChildWidthPanel Background="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}">
+                <TextBlock Text="Species" />
+                <ComboBox x:Name="_speciesEntry"
+                          SelectedValue="{Binding SpeciesCode}"
+                          ItemsSource="{Binding SpeciesOptions}"
+                          AutomationProperties.Name="Species">
+                </ComboBox>
+            </controls:LastChildWidthPanel>
+
+            <!--Live Dead-->
+            <controls:LastChildWidthPanel>
+
+                <TextBlock Text="Live/Dead" />
+                <ComboBox x:Name="_liveDeadPicker"
+                          SelectedValue="{Binding LiveDead}"
+                          AutomationProperties.Name="Live Dead">
+                    <ComboBox.ItemsSource>
+                        <x:Array Type="{x:Type sys:String}">
+                            <sys:String>L</sys:String>
+                            <sys:String>D</sys:String>
+                        </x:Array>
+                    </ComboBox.ItemsSource>
+                </ComboBox>
+
+            </controls:LastChildWidthPanel>
+
+            <!--Initials-->
+            <controls:LastChildWidthPanel>
+                <TextBlock Text="Initials" />
+                <ComboBox x:Name="_initialsPicker"
+                          Text="{Binding Initials}"
+                          ItemsSource="{Binding Cruisers}"
+                          IsEditable="True"
+                          AutomationProperties.Name="Initials" />
+            </controls:LastChildWidthPanel>
+
+            <!--Count Or Measure-->
+            <controls:LastChildWidthPanel>
+                <TextBlock Text="Count/Measure" />
+                <ComboBox SelectedItem="{Binding CountOrMeasure}"
+                          ItemsSource="{Binding CountOrMeasureOptions}"
+                          AutomationProperties.Name="Count or Measure">
+                </ComboBox>
+            </controls:LastChildWidthPanel>
+
+            <!-- Tree Count -->
+            <!--
+            <StackPanel Orientation="Horizontal"
+                         IsVisible="{Binding CruiseMethod, Converter={StaticResource isfixCNTConverter}}">
+                <Label Content="Tree Count"/>
+                <TextBox Text="{Binding TreeCount}"
+                       AutomationProperties.Name="Tree Count" />
+            </StackPanel>
+
+            -->
+            <!-- KPI -->
+            <!--
+            <StackPanel Orientation="Horizontal"
+                         IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
+                <Label Content="KPI"
+                       x:Name="_kpiLabel"/>
+                <Label Content="{Binding Tree.KPI}"
+                       AutomationProperties.LabeledBy="{x:Reference _kpiLabel}" />
+            </StackPanel>-->
+
+        </WrapPanel>
+
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}"
+                BorderThickness="0">
+            <ScrollViewer 
+                          VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="_editViewsHost"
+                              ItemsSource="{Binding TreeFieldValues}">
+                    <ItemsControl.Resources>
+                        <ResourceDictionary>
+                            <Style TargetType="Border"
+                                   x:Key="propPanel">
+                                <Style.Resources>
+                                    <Style TargetType="controls:LastChildWidthPanel">
+                                        <Style.Resources>
+                                            <Style TargetType="Control">
+                                                <Setter Property="Height"
+                                                        Value="25" />
+                                                <Setter Property="VerticalContentAlignment"
+                                                        Value="Center" />
+                                                
+                                            </Style>
+                                        </Style.Resources>
+                                        <Setter Property="LastChildWidth"
+                                                Value="50" />
+                                    </Style>
+                                </Style.Resources>
+                                <Setter Property="Background"
+                                        Value="{DynamicResource MahApps.Brushes.Accent4}" />
+                                <Setter Property="BorderBrush"
+                                        Value="{DynamicResource MahApps.Brushes.Control.Border}" />
+                                <Setter Property="BorderThickness"
+                                        Value="0,0,0,1" />
+                                <Setter Property="Margin"
+                                        Value="0,1" />
+                                <Setter Property="Padding"
+                                        Value="0,3" />
+                            </Style>
+                            <!--<Style TargetType="Switch">
+                <Setter Property="TextColor" Value="Black"/>
+            </Style>-->
+                        </ResourceDictionary>
+                    </ItemsControl.Resources>
+
+                    <ItemsControl.ItemTemplateSelector>
+                        <controls:TreeFieldValueDataTemplateSelector>
+                            <controls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource propPanel}">
+                                        <controls:LastChildWidthPanel>
+                                            <Label Content="{Binding Heading}" />
+                                            <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
+                                                     Text="{Binding ValueReal}" />
+                                        </controls:LastChildWidthPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </controls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                            <controls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource propPanel}">
+                                        <controls:LastChildWidthPanel>
+                                            <Label Content="{Binding Heading}" />
+                                            <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
+                                                     Text="{Binding ValueInt}" />
+                                        </controls:LastChildWidthPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </controls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                            <controls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource propPanel}">
+                                        <controls:LastChildWidthPanel>
+                                            <Label Content="{Binding Heading}" />
+                                            <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
+                                                     Text="{Binding ValueText}" />
+                                        </controls:LastChildWidthPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </controls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                            <controls:TreeFieldValueDataTemplateSelector.BoolTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource propPanel}">
+                                        <controls:LastChildWidthPanel>
+                                            <Label Content="{Binding Heading}" />
+                                            <CheckBox IsChecked="{Binding ValueBool}" />
+                                        </controls:LastChildWidthPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </controls:TreeFieldValueDataTemplateSelector.BoolTemplate>
+                        </controls:TreeFieldValueDataTemplateSelector>
+                    </ItemsControl.ItemTemplateSelector>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <!--Remarks-->
+        <StackPanel Grid.Row="2">
+            <Label x:Name="_remarksHeading"
+                   Content="Remarks" />
+            <TextBox Height="80"
+                     Text="{Binding Remarks}" />
+        </StackPanel>
+
+        <ItemsControl Grid.Row="3"
+                      ItemsSource="{Binding ErrorsAndWarnings}"
+                      AutomationProperties.Name="Errors List">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Style="{StaticResource errorWarningButton}"
+                            Command="{Binding BindingContext.ShowEditTreeErrorCommand, Source={x:Reference _page}}"
+                            CommandParameter="{Binding .}"
+                            AutomationProperties.Name="Error Item" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

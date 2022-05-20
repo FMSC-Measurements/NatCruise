@@ -19,6 +19,8 @@ namespace NatCruise.Data
 
         void UpdatePlot(Plot plot);
 
+        void UpdatePlotNumber(string plotID, int plotNumber);
+
         #endregion plot
 
         //IEnumerable<TreeError> GetTreeErrorsByPlot(string plotID);

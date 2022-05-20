@@ -290,13 +290,14 @@ WHERE TreeID = @TreeID;";
             return Database.Query<TreeEx>(GET_TREEEX_BASE_COMMAND_2 + "WHERE t.TreeID = @p1;", treeID).FirstOrDefault();
         }
 
-        public IEnumerable<TreeEx> GetTrees(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null, string speciesCode = null)
+        public IEnumerable<TreeEx> GetTrees(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null, string speciesCode = null, int? plotNumber = null)
         {
             return Database.Query2<TreeEx>(GET_TREEEX_BASE_COMMAND_2 +
                 "WHERE t.CruiseID = @CruiseID AND (@CuttingUnitCode IS NULL OR t.CuttingUnitCode = @CuttingUnitCode) " +
                 "AND (@StratumCode IS NULL OR t.StratumCode = @StratumCode) " +
                 "AND (@SampleGroupCode IS NULL OR t.SampleGroupCode = @SampleGroupCode) " +
-                "AND (@SpeciesCode IS NULL OR t.SpeciesCode = @SpeciesCode);",
+                "AND (@SpeciesCode IS NULL OR t.SpeciesCode = @SpeciesCode) " +
+                "AND (@PlotNumber IS NULL OR t.PlotNumber = @PlotNumber);",
                 new
                 {
                     CruiseID,
@@ -304,6 +305,7 @@ WHERE TreeID = @TreeID;";
                     StratumCode = stratumCode,
                     SampleGroupCode = sampleGroupCode,
                     SpeciesCode = speciesCode,
+                    PlotNumber = plotNumber,
                 }).ToArray();
         }
 
