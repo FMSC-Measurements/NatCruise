@@ -144,7 +144,7 @@
 
                         <controls:LastChildWidthPanel>
                             <TextBlock Text="New SumKPI:" />
-                            <TextBlock Text="{Binding AjustedSumKPI}"
+                            <TextBlock Text="{Binding AdjustedSumKPI}"
                                        d:Text="0000" />
                         </controls:LastChildWidthPanel>
                     </StackPanel>
