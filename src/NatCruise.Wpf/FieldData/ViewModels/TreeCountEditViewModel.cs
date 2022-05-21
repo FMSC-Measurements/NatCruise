@@ -92,7 +92,20 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
-        public int KPIDelta { get => _kPIDelta; set => SetProperty(ref _kPIDelta, value); }
+        public int KPIDelta
+        {
+            get => _kPIDelta;
+            set
+            {
+                SetProperty(ref _kPIDelta, value);
+                RaisePropertyChanged(nameof(AdjustedSumKPI));
+            }
+        }
+
+        public int AdjustedSumKPI
+        {
+            get => (TallyPopulation?.SumKPI ?? 0) + KPIDelta;
+        }
 
         public string Initials
         {
