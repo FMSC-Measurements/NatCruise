@@ -120,11 +120,11 @@
                       ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
                       SelectedValuePath="ProductCode"
                       SelectedValue="{Binding SecondaryProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
-            <Label Content="Biomas Product"
+            <Label Content="Biomass Product"
                    Grid.Row="4" />
             <ComboBox Grid.Row="4"
                       Grid.Column="1"
-                      ToolTip="Biomas Product"
+                      ToolTip="Biomass Product"
                       ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
                       SelectedValuePath="ProductCode"
                       SelectedValue="{Binding BiomassProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
