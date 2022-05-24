@@ -16,7 +16,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <Style TargetType="TextBox"
-                   BasedOn="{StaticResource {x:Type TextBox}}">
+                   BasedOn="{StaticResource MahApps.Styles.TextBox}">
                 <Setter Property="Margin"
                         Value="0,0,0,10" />
                 <Setter Property="Width"
@@ -24,7 +24,8 @@
                 <Setter Property="HorizontalAlignment"
                         Value="Left" />
             </Style>
-            <Style TargetType="Label">
+            <Style TargetType="Label"
+                   BasedOn="{StaticResource MahApps.Styles.Label}">
                 <Setter Property="HorizontalAlignment"
                         Value="Right" />
                 <Setter Property="Margin"
@@ -32,7 +33,7 @@
             </Style>
 
             <Style TargetType="ComboBox"
-                   BasedOn="{StaticResource {x:Type ComboBox}}">
+                   BasedOn="{StaticResource MahApps.Styles.ComboBox}">
                 <Setter Property="Margin"
                         Value="0,0,0,10" />
                 <Setter Property="HorizontalAlignment"
@@ -41,8 +42,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <WrapPanel 
-               Background="{StaticResource brush_background}">
+    <WrapPanel Background="{StaticResource brush_background}">
 
         <StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -58,7 +58,7 @@
                 <Label Width="103">Description</Label>
                 <TextBox Width="100"
                          Text="{Binding Description}"
-                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
@@ -80,12 +80,14 @@
 
         <GroupBox Header="Plot Options"
                   Visibility="{Binding IsPlot, Converter={StaticResource IsVisableConverter}}"
+                  d:Visibility="Visible"
                   Margin="5"
                   VerticalAlignment="Top">
             <Grid>
                 <Grid.Resources>
                     <ResourceDictionary>
-                        <Style TargetType="TextBox">
+                        <Style TargetType="TextBox"
+                               BasedOn="{StaticResource MahApps.Styles.TextBox}">
                             <Setter Property="Margin"
                                     Value="0,0,0,10" />
                             <Setter Property="Width"
@@ -95,7 +97,8 @@
                             <Setter Property="VerticalContentAlignment"
                                     Value="Center" />
                         </Style>
-                        <Style TargetType="Label">
+                        <Style TargetType="Label"
+                               BasedOn="{StaticResource MahApps.Styles.Label}">
                             <Setter Property="HorizontalAlignment"
                                     Value="Right" />
                             <Setter Property="Margin"
@@ -125,7 +128,7 @@
                          ToolTip="Basal Area Factor"
                          Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
                          Text="{Binding BasalAreaFactor}"
-                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
 
                 <Label Grid.Row="1"
                        Grid.Column="0"

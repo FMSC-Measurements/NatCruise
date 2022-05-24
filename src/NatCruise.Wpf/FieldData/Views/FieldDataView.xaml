@@ -21,13 +21,15 @@
             <StackPanel.Resources>
                 <Style TargetType="Controls:LastChildWidthPanel">
                     <Style.Resources>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="TextBlock"
+                               BasedOn="{StaticResource MahApps.Styles.TextBlock}">
                             <Setter Property="VerticalAlignment"
                                     Value="Center" />
                             <Setter Property="Margin"
                                     Value="3,0" />
                         </Style>
-                        <Style TargetType="ComboBox">
+                        <Style TargetType="ComboBox"
+                               BasedOn="{StaticResource MahApps.Styles.ComboBox}">
                             <!--<Setter Property="Height"
                                     Value="50" />-->
                             <Setter Property="Margin"
@@ -49,7 +51,7 @@
             <Controls:LastChildWidthPanel>
                 <TextBlock Text="Cutting Unit" />
                 <ComboBox ItemsSource="{Binding CuttingUnitOptions, Converter={StaticResource PrependAnyConverter}}"
-                          SelectedValue="{Binding SelectedCuttingUnit, Converter={StaticResource ReplaceAnyWithNullConverter}}"/>
+                          SelectedValue="{Binding SelectedCuttingUnit, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
             </Controls:LastChildWidthPanel>
             <Controls:LastChildWidthPanel>
                 <TextBlock Text="Plot"
@@ -68,7 +70,7 @@
                 <TextBlock Text="Sample Group" />
                 <ComboBox ItemsSource="{Binding SampleGroupOptions, Converter={StaticResource PrependAnyConverter}}"
                           SelectedValue="{Binding SelectedSampleGroup, Converter={StaticResource ReplaceAnyWithNullConverter}}"
-                          IsEnabled="{Binding SampleGroupOptions, Converter={StaticResource IsNotNullOrEmptyConverter}}"/>
+                          IsEnabled="{Binding SampleGroupOptions, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
             </Controls:LastChildWidthPanel>
 
         </StackPanel>

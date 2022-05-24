@@ -203,7 +203,8 @@
                           ItemsSource="{TemplateBinding ItemsSource}"
                           SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                     <ListView.Resources>
-                        <Style TargetType="{x:Type ListViewItem}">
+                        <Style TargetType="ListViewItem"
+                               BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ConflictResolution}"
                                              Value="sync:ConflictResolutionType.NotSet">

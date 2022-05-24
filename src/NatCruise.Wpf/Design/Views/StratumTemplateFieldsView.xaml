@@ -32,7 +32,8 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <ComboBox x:Name="_treeFieldCombobox"  ItemsSource="{Binding AvalibleTreeFields}" />
+            <ComboBox x:Name="_treeFieldCombobox"
+                      ItemsSource="{Binding AvalibleTreeFields}" />
             <Button Style="{StaticResource AddButton}"
                     Grid.Column="1"
                     Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
@@ -50,7 +51,7 @@
                     Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                     IsEnabled="{Binding SelectedItem, ElementName=_tfsdListView, Converter={StaticResource NotNullConverter}}"
                     Command="{Binding RemoveCommand}"
-                    CommandParameter="{Binding SelectedItem, ElementName=_tfsdListView}"/>
+                    CommandParameter="{Binding SelectedItem, ElementName=_tfsdListView}" />
         </Grid>
         <ListBox Grid.Row="1"
                  SelectionMode="Single"
@@ -68,7 +69,8 @@
                             <ColumnDefinition Width="20" />
                         </Grid.ColumnDefinitions>
                         <Grid.Resources>
-                            <Style TargetType="Button">
+                            <Style TargetType="Button"
+                                   BasedOn="{StaticResource MahApps.Styles.Button}">
                                 <Setter Property="Control.Background"
                                         Value="{x:Null}" />
                                 <Setter Property="Control.BorderBrush"
@@ -93,15 +95,15 @@
                                 </Style.Triggers>
                             </Style>
                         </Grid.Resources>
-                        <TextBlock Text="{Binding Field}"/>
+                        <TextBlock Text="{Binding Field}" />
                         <Button Content="^"
                                 Grid.Column="1"
                                 Command="{Binding DataContext.MoveDownCommand, RelativeSource={RelativeSource AncestorType=ItemsControl} }"
-                                CommandParameter="{Binding .}"/>
+                                CommandParameter="{Binding .}" />
                         <Button Content="˅"
                                 Grid.Column="2"
-                                Command="{Binding DataContext.MoveUpCommand, RelativeSource={RelativeSource AncestorType=ItemsControl} }" 
-                                CommandParameter="{Binding .}"/>
+                                Command="{Binding DataContext.MoveUpCommand, RelativeSource={RelativeSource AncestorType=ItemsControl} }"
+                                CommandParameter="{Binding .}" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

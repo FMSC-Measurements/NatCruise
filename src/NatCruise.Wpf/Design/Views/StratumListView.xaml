@@ -90,7 +90,7 @@
                           SelectedItem="{Binding SelectedStratum}"
                           SelectionMode="Single">
                     <ListView.Resources>
-                        <Style TargetType="{x:Type ListViewItem}">
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Errors, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                                              Value="True">
@@ -134,8 +134,8 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch">
             <TabControl.Resources>
-                <Style TargetType="{x:Type TabItem}"
-                       BasedOn="{StaticResource {x:Type TabItem}}">
+                <Style TargetType="TabItem"
+                       BasedOn="{StaticResource MahApps.Styles.TabItem}">
                     <Setter Property="Header"
                             Value="{Binding Tag}" />
                     <Setter Property="HorizontalContentAlignment"
