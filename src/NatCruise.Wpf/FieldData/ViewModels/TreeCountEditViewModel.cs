@@ -32,6 +32,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             //NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
+        public event EventHandler TreeCountModified;
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
         public ITallyLedgerDataservice TallyDataservice { get; }
 
@@ -196,6 +197,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
 
             ResetInputs();
+            TreeCountModified?.Invoke(this, EventArgs.Empty);
 
             //NavigationService.GoBackAsync();
         }
