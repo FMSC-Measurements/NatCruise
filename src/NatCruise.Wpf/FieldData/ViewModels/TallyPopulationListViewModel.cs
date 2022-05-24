@@ -14,6 +14,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private TallyPopulationEx _selectedTallyPopulation;
         private string _speciesCode;
         private string _liveDead;
+        private TreeCountEditViewModel _treeCountEditViewModel;
 
         public TallyPopulationListViewModel(ITallyPopulationDataservice tallyPopulationDataservice, TreeCountEditViewModel treeCountEditViewModel, TallyLedgerListViewModel tallyLedgerListViewModel)
         {
@@ -70,7 +71,22 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         }
 
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
-        public TreeCountEditViewModel TreeCountEditViewModel { get; }
+        public TreeCountEditViewModel TreeCountEditViewModel
+        {
+            get => _treeCountEditViewModel;
+            private set
+            {
+                if (_treeCountEditViewModel != null) { _treeCountEditViewModel.TreeCountModified -= TreeCountEditViewModel_TreeCountModified; }
+                _treeCountEditViewModel = value;
+                if(value != null) { _treeCountEditViewModel.TreeCountModified += TreeCountEditViewModel_TreeCountModified;}
+            }
+        }
+
+        private void TreeCountEditViewModel_TreeCountModified(object sender, EventArgs e)
+        {
+            TallyLedgerListViewModel.Load();
+        }
+
         public TallyLedgerListViewModel TallyLedgerListViewModel { get; }
 
         public override void Load()
