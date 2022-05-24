@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Reflection;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
@@ -42,7 +43,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         protected INatCruiseDialogService DialogService { get; }
         //protected ICruiseNavigationService NavigationService { get; }
         protected ILoggingService LoggingService { get; }
-
+        public Dictionary<string, PropertyInfo> TreeProperties { get; }
         public bool UseSimplifiedTreeFields { get; set; } = false;
 
         public IEnumerable<string> Cruisers
@@ -85,6 +86,11 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                     var treeFieldValue = (TreeFieldValue)sender;
                     TreeFieldValueDataservice.UpdateTreeFieldValue(treeFieldValue);
                     RefreshErrorsAndWarnings();
+
+                    if(TreeProperties.TryGetValue(treeFieldValue.Field.ToLower(), out var treeProp))
+                    {
+                        treeProp.SetValue(Tree, treeFieldValue.Value);
+                    }
                 }
             }
         }
@@ -169,6 +175,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 if (oldValue != value)
                 {
                     TreeDataservice.UpdateTreeInitials(tree.TreeID, value);
+                    tree.Initials = value;
                 }
             }
         }
@@ -319,7 +326,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
-        private void OnStratumChanged(Tree tree, string oldValue, string newValue)
+        private void OnStratumChanged(TreeEx tree, string oldValue, string newValue)
         {
             //Dataservice.LogMessage($"Tree Stratum Tree_GUID:{tree.Tree_GUID} OldStratumCode:{oldValue} NewStratumCode:{newValue}", "I");
 
@@ -411,7 +418,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
-        private void OnSampleGroupChanged(Tree tree, string oldValue, string newValue)
+        private void OnSampleGroupChanged(TreeEx tree, string oldValue, string newValue)
         {
             //Dataservice.LogMessage($"Tree SampleGroupCanged, Tree_GUID:{Tree.Tree_GUID}, OldSG:{oldValue}, NewSG:{newValue}", "high");
 
@@ -499,7 +506,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
-        private void OnSpeciesChanged(Tree tree, string value)
+        private void OnSpeciesChanged(TreeEx tree, string value)
         {
             SaveTree(tree);
 
@@ -531,7 +538,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
-        private void OnLiveDeadChanged(Tree tree, object oldValue)
+        private void OnLiveDeadChanged(TreeEx tree, object oldValue)
         {
             SaveTree(tree);
             RefreshErrorsAndWarnings(tree);
@@ -585,6 +592,10 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             //NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
+
+            TreeProperties = typeof(TreeEx)
+                .GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)
+                .ToDictionary(x => x.Name.ToLower());
         }
 
         //protected override void Load()
@@ -638,11 +649,18 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             RefreshErrorsAndWarnings(Tree);
         }
 
-        protected void RefreshErrorsAndWarnings(Tree tree)
+        protected void RefreshErrorsAndWarnings(TreeEx tree)
         {
             if (tree == null) { return; }
 
-            ErrorsAndWarnings = TreeErrorDataservice.GetTreeErrors(tree.TreeID);
+            var errorsAndWarnings = TreeErrorDataservice.GetTreeErrors(tree.TreeID);
+            var errorCount = errorsAndWarnings.Count(x => x.Level == "E");
+            var warningCount = errorsAndWarnings.Count(y => y.Level == "W" && !y.IsResolved);
+
+            ErrorsAndWarnings = errorsAndWarnings;
+
+            tree.ErrorCount = errorCount;
+            tree.WarningCount = warningCount;
         }
 
         //public void ShowLogs()
