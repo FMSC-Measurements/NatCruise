@@ -10,7 +10,7 @@ namespace NatCruise.Design.ViewModels
 {
     public class SampleGroupDetailViewModel : ValidationViewModelBase
     {
-        protected readonly string[] SampleSelector_Type_Options = new[] { CruiseMethods.BLOCK_SAMPLER_TYPE, CruiseMethods.SYSTEMATIC_SAMPLER_TYPE, };
+        protected readonly string[] SampleSelector_Type_Options = new[] { CruiseMethods.BLOCK_SAMPLER_TYPE, CruiseMethods.SYSTEMATIC_SAMPLER_TYPE, CruiseMethods.CLICKER_SAMPLER_TYPE };
         protected readonly string[] Supports_SamplerType_Selection = new[] { CruiseMethods.STR, };
 
         private SampleGroup _sampleGroup;

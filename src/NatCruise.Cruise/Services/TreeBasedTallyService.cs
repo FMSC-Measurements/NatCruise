@@ -45,8 +45,7 @@ namespace NatCruise.Cruise.Services
                     return null;
                 }
             }
-
-            if (pop.Method == CruiseMethods.S3P)
+            else if (pop.Method == CruiseMethods.S3P)
             {
                 tallyAction = await TallyS3P(unitCode, pop);
             }
