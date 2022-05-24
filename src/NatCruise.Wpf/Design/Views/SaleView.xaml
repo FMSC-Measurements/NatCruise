@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -54,6 +55,7 @@
                 <TextBox Height="23"
                          TextWrapping="Wrap"
                          Text="{Binding Name}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          VerticalAlignment="Top"
                          Width="120"
                          HorizontalAlignment="Right" />
@@ -68,6 +70,7 @@
                          Height="23"
                          TextWrapping="Wrap"
                          Text="{Binding SaleNumber}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          MaxLength="{x:Static dsgn:Constants.SALENUMBER_MAXLENGTH}"
                          VerticalAlignment="Top"
                          Width="120" />
@@ -122,6 +125,7 @@
                 <TextBox HorizontalAlignment="Right"
                          Height="23"
                          Text="{Binding District}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          VerticalAlignment="Top"
                          Width="50" />
             </DockPanel>

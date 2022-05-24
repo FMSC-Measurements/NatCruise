@@ -5,6 +5,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -68,6 +69,7 @@
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          Text="{Binding StratumTemplate.StratumCode}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
 
                 <Label Grid.Row="0"
@@ -77,7 +79,8 @@
                          Grid.Column="1"
                          Width="100"
                          IsReadOnly="True"
-                         Text="{Binding StratumTemplate.StratumTemplateName}" />
+                         Text="{Binding StratumTemplate.StratumTemplateName}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
@@ -132,21 +135,24 @@
                                 Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsVariableRadiousPlotMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="BAF" />
                         <TextBox ToolTip="Basal Area Factor"
-                                 Text="{Binding StratumTemplate.BasalAreaFactor}" />
+                                 Text="{Binding StratumTemplate.BasalAreaFactor}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
                                 Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsFixedSizePlotMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="FPS" />
                         <TextBox ToolTip="Fixed Plot Size"
-                                 Text="{Binding StratumTemplate.FixedPlotSize}" />
+                                 Text="{Binding StratumTemplate.FixedPlotSize}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
                                 Visibility="{Binding StratumTemplate.Method, Converter={StaticResource Is3PPNTMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="KZ (3PPNT)" />
                         <TextBox ToolTip="KZ (3PPNT)"
-                                 Text="{Binding StratumTemplate.KZ3PPNT}" />
+                                 Text="{Binding StratumTemplate.KZ3PPNT}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"

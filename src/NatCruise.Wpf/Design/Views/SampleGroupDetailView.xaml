@@ -7,6 +7,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              ToolTip="Sample Group Details"
              mc:Ignorable="d"
@@ -90,6 +91,7 @@
             <TextBox Grid.Column="1"
                      ToolTip="Sample Group Code"
                      Text="{Binding SampleGroupCode}"
+                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                      MaxLength="{x:Static dsgn:Constants.SGCODE_MAXLENGTH}" />
             <Label Content="Description&#xD;&#xA;"
                    Grid.Row="1" />
@@ -98,7 +100,8 @@
                      Grid.Row="1"
                      Grid.Column="1"
                      ToolTip="Description"
-                     Text="{Binding Description}" />
+                     Text="{Binding Description}"
+                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
             <Label Content="Primary Product*"
                    Grid.Row="2" />
             <ComboBox Grid.Row="2"
@@ -174,13 +177,15 @@
                 </StackPanel.Resources>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Sampling Frequency*" />
-                    <TextBox Text="{Binding SamplingFrequency}" />
+                    <TextBox Text="{Binding SamplingFrequency}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
                             Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsNotPlotMethodConverter}, FallbackValue=Visible}">
                     <Label Content="Insurance Frequency" />
-                    <TextBox Text="{Binding InsuranceFrequency}" />
+                    <TextBox Text="{Binding InsuranceFrequency}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -206,6 +211,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Label Content="KZ*" />
                     <TextBox Text="{Binding KZ}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              ToolTip="KZ" />
                 </StackPanel>
 
@@ -213,17 +219,20 @@
                             Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsNotPlotMethodConverter}, FallbackValue=Visible}">
                     <Label Content="Insurance Frequency" />
                     <TextBox ToolTip="Insurance Frequency"
-                             Text="{Binding InsuranceFrequency}" />
+                             Text="{Binding InsuranceFrequency}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Min KPI" />
-                    <TextBox Text="{Binding MinKPI}" />
+                    <TextBox Text="{Binding MinKPI}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Max KPI" />
-                    <TextBox Text="{Binding MaxKPI}" />
+                    <TextBox Text="{Binding MaxKPI}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
