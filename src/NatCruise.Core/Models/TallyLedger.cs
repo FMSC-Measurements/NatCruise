@@ -37,6 +37,9 @@ namespace NatCruise.Models
 
         public string TreeID { get; set; }
 
+        [Field(SQLExpression = "Tree.TreeNumber", Alias = "TreeNumber", PersistanceFlags = PersistanceFlags.Never)]
+        public int? TreeNumber { get; set; }
+
         public int TreeCount { get; set; }
 
         public int KPI { get; set; }

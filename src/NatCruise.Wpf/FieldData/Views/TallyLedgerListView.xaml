@@ -18,6 +18,8 @@
                                     Binding="{Binding StratumCode}" />
                 <DataGridTextColumn Header="Sample Group"
                                     Binding="{Binding SampleGroupCode}" />
+                <DataGridTextColumn Header="Tree Number"
+                                    Binding="{Binding TreeNumber}" />
                 <DataGridTextColumn Header="Plot"
                                     Binding="{Binding PlotNumber}" />
                 <DataGridTextColumn Header="Species"
