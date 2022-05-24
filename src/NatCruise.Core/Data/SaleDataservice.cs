@@ -138,6 +138,7 @@ namespace NatCruise.Data
 
             Database.Execute2(
 @"UPDATE Cruise SET
+    CruiseNumber = @CruiseNumber,
     Purpose = @Purpose,
     Remarks = @Remarks,
     DefaultUOM = @DefaultUOM,
@@ -147,6 +148,7 @@ WHERE CruiseID = @CruiseID",
                 new
                 {
                     cruise.CruiseID,
+                    cruise.CruiseNumber,
                     cruise.Purpose,
                     cruise.Remarks,
                     cruise.DefaultUOM,
@@ -162,7 +164,6 @@ WHERE CruiseID = @CruiseID",
             Database.Execute2(
 @"UPDATE Sale SET
     Name = @Name,
-    SaleNumber = @SaleNumber,
     Region = @Region,
     Forest = @Forest,
     District = @District,
@@ -172,11 +173,27 @@ WHERE SaleID = @SaleID;",
 new
 {
     sale.Name,
-    sale.SaleNumber,
     sale.Region,
     sale.Forest,
     sale.District,
     sale.Remarks,
+    sale.SaleID,
+    DeviceID,
+});
+        }
+
+        public void UpdateSaleNumber(Sale sale)
+        {
+            if (sale is null) { throw new ArgumentNullException(nameof(sale)); }
+
+            Database.Execute2(
+@"UPDATE Sale SET
+    SaleNumber = @SaleNumber,
+    ModifiedBy = @DeviceID
+WHERE SaleID = @SaleID;",
+new
+{
+    sale.SaleNumber,
     sale.SaleID,
     DeviceID,
 });
