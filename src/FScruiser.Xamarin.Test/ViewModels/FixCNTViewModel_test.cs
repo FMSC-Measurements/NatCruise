@@ -1,8 +1,9 @@
 ﻿using CruiseDAL;
 using FluentAssertions;
-using NatCruise.Cruise.Services;
-using FScruiser.XF.Constants;
-using FScruiser.XF.Test;
+using FScruiser.XF.TestServices;
+using NatCruise.Cruise.Data;
+using NatCruise.Navigation;
+using NatCruise.Test;
 using Prism.Navigation;
 using System;
 using System.Linq;
@@ -12,6 +13,7 @@ using FScruiser.XF.Data;
 using NatCruise.Cruise.Data;
 using NatCruise.Test;
 using Moq;
+using NatCruise.Cruise.Services;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -131,7 +133,6 @@ namespace FScruiser.XF.ViewModels
                 InitializeFizCNT(database, init.CruiseID);
 
                 var deviceInfo = new TestDeviceInfoService();
-                var datastore = new CuttingUnitDatastore(database, init.CruiseID, deviceInfo.DeviceID);
                 var dsp = new DataserviceProvider(database, deviceInfo)
                 {
                     CruiseID = init.CruiseID,
