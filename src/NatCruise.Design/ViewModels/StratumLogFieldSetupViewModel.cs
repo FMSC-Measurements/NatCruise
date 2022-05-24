@@ -143,7 +143,7 @@ namespace NatCruise.Design.ViewModels
             var newLfs = new LogFieldSetup
             {
                 Field = lf.Field,
-                FieldOrder = FieldSetups.Count,
+                FieldOrder = FieldSetups.Count + 1,
                 StratumCode = Stratum.StratumCode,
             };
             FieldSetupDataservice.UpsertLogFieldSetup(newLfs);
@@ -165,15 +165,8 @@ namespace NatCruise.Design.ViewModels
             var selectedIndex = FieldSetups.IndexOf(selectedLf);
             if (selectedIndex == FieldSetups.Count - 1) { return; }
             var newIndex = selectedIndex + 1;
-            var otherLf = FieldSetups[newIndex];
-
-            selectedLf.FieldOrder = newIndex;
-            otherLf.FieldOrder = selectedIndex;
-
-            FieldSetupDataservice.UpsertLogFieldSetup(selectedLf);
-            FieldSetupDataservice.UpsertLogFieldSetup(otherLf);
-
             FieldSetups.Move(selectedIndex, newIndex);
+            SaveFieldOrder();
         }
 
         protected void MoveUp(LogFieldSetup selectedLfs)
@@ -182,15 +175,20 @@ namespace NatCruise.Design.ViewModels
             var selectedIndex = FieldSetups.IndexOf(selectedLfs);
             if (selectedIndex < 1) { return; }
             var newIndex = selectedIndex - 1;
-            var otherLf = FieldSetups[newIndex];
-
-            selectedLfs.FieldOrder = newIndex;
-            otherLf.FieldOrder = selectedIndex;
-
-            FieldSetupDataservice.UpsertLogFieldSetup(selectedLfs);
-            FieldSetupDataservice.UpsertLogFieldSetup(otherLf);
-
             FieldSetups.Move(selectedIndex, newIndex);
+            SaveFieldOrder();
+        }
+
+        protected void SaveFieldOrder()
+        {
+            var fieldSetups = FieldSetups;
+
+
+            foreach (var (field, i) in fieldSetups.Select((x, i) => (x, i + 1)))
+            {
+                field.FieldOrder = i;
+                FieldSetupDataservice.UpsertLogFieldSetup(field);
+            }
         }
     }
 }

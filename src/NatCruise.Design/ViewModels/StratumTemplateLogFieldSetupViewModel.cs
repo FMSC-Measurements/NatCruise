@@ -102,7 +102,7 @@ namespace NatCruise.Design.ViewModels
             var newstlfs = new StratumTemplateLogFieldSetup
             {
                 Field = lf.Field,
-                FieldOrder = FieldSetups.Count,
+                FieldOrder = FieldSetups.Count + 1,
                 StratumTemplateName = stratumTemplateName,
             };
 
@@ -118,15 +118,8 @@ namespace NatCruise.Design.ViewModels
             var selectedIndex = FieldSetups.IndexOf(selectedLf);
             if (selectedIndex == FieldSetups.Count - 1) { return; }
             var newIndex = selectedIndex + 1;
-            var otherLf = FieldSetups[newIndex];
-
-            selectedLf.FieldOrder = newIndex;
-            otherLf.FieldOrder = selectedIndex;
-
-            TemplateDataservice.UpsertStratumTemplateLogFieldSetup(selectedLf);
-            TemplateDataservice.UpsertStratumTemplateLogFieldSetup(otherLf);
-
             FieldSetups.Move(selectedIndex, newIndex);
+            SaveFieldOrder();
         }
 
         private void MoveUp(StratumTemplateLogFieldSetup selectedLf)
@@ -135,15 +128,18 @@ namespace NatCruise.Design.ViewModels
             var selectedIndex = FieldSetups.IndexOf(selectedLf);
             if (selectedIndex < 1) { return; }
             var newIndex = selectedIndex - 1;
-            var otherLf = FieldSetups[newIndex];
-
-            selectedLf.FieldOrder = newIndex;
-            otherLf.FieldOrder = selectedIndex;
-
-            TemplateDataservice.UpsertStratumTemplateLogFieldSetup(selectedLf);
-            TemplateDataservice.UpsertStratumTemplateLogFieldSetup(otherLf);
-
             FieldSetups.Move(selectedIndex, newIndex);
+            SaveFieldOrder();
+        }
+
+        protected void SaveFieldOrder()
+        {
+            var fieldSetups = FieldSetups;
+            foreach (var (field, i) in fieldSetups.Select((x, i) => (x, i + 1)))
+            {
+                field.FieldOrder = i;
+                TemplateDataservice.UpsertStratumTemplateLogFieldSetup(field);
+            }
         }
 
         private void RemoveLogField(StratumTemplateLogFieldSetup lfs)
