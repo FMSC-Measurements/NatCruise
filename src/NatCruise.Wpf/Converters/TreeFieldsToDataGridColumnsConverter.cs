@@ -44,7 +44,12 @@ namespace NatCruise.Wpf.Converters
                             Binding = new Binding(x.Field),
                         };
                 }
-            }).ToArray();
+            }).Concat(
+                new[]
+                {
+                    new DataGridTextColumn{ IsReadOnly = true, Header = "Errors", Binding = new Binding(nameof(TreeEx.ErrorCount))},
+                    new DataGridTextColumn{ IsReadOnly = true, Header = "Warnings", Binding = new Binding(nameof(TreeEx.WarningCount))},
+                }).ToArray();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

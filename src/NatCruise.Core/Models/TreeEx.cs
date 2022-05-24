@@ -20,7 +20,7 @@
         private double _crownRatio;
         private double _dbh;
         private double _drc;
-        private float _totalHeight;
+        private double _totalHeight;
         private double _merchHeightPrimary;
         private double _merchHeightSecondary;
         private double _formClass;
@@ -37,6 +37,8 @@
         private bool _isFallBuckScale;
         private string _remarks = "";
         private string _initials;
+        private int _errorCount;
+        private int _warningCount;
 
         public bool IsFallBuckScale
         {
@@ -110,7 +112,7 @@
             set { SetProperty(ref _drc, value); }
         }
 
-        public virtual float TotalHeight
+        public double TotalHeight
         {
             get { return _totalHeight; }
             set { SetProperty(ref _totalHeight, value); }
@@ -208,8 +210,16 @@
 
         public int KPI { get; set; }
 
-        public int ErrorCount { get; set; }
+        public int ErrorCount
+        {
+            get => _errorCount;
+            set => SetProperty(ref _errorCount, value);
+        }
 
-        public int WarningCount { get; set; }
+        public int WarningCount
+        {
+            get => _warningCount;
+            set => SetProperty(ref _warningCount, value);
+        }
     }
 }
