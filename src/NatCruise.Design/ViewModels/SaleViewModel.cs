@@ -12,12 +12,10 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<Forest> _forestOptions;
         private bool _isLoadingForestOptions = false;
 
-        public SaleViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, SaleValidator saleValidator)
+        public SaleViewModel(ISaleDataservice saleDataservice, ISetupInfoDataservice setupInfo, SaleValidator saleValidator)
             : base(saleValidator)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
-
-            SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
+            SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             SetupinfoDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
         }
 
@@ -46,13 +44,21 @@ namespace NatCruise.Design.ViewModels
         public string SaleNumber
         {
             get => Sale?.SaleNumber;
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.SaleNumber = x, s => SaleDataservice?.UpdateSale(s));
+            set
+            {
+                SetPropertyAndValidate(Sale, value, (s, x) => s.SaleNumber = x);
+                SaleDataservice.UpdateSaleNumber(Sale);
+            }
         }
 
         public string Name
         {
             get => Sale?.Name;
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Name = x, s => SaleDataservice?.UpdateSale(s));
+            set
+            {
+                SetPropertyAndValidate(Sale, value, (s, x) => s.Name = x);
+                SaleDataservice.UpdateSale(Sale);
+            }
         }
 
         public string Region
@@ -64,7 +70,8 @@ namespace NatCruise.Design.ViewModels
                 var curValue = sale?.Region;
                 if (curValue != value)
                 {
-                    SetPropertyAndValidate(sale, value, (s, x) => s.Region = x, s => SaleDataservice?.UpdateSale(s));
+                    SetPropertyAndValidate(sale, value, (s, x) => s.Region = x);
+                    SaleDataservice.UpdateSale(Sale);
                     UpdateForestOptions(sale);
                     Forest = null;
                 }
@@ -77,26 +84,39 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 if (_isLoadingForestOptions) { return; }
-                SetPropertyAndValidate(Sale, value, (s, x) => s.Forest = x, s => SaleDataservice?.UpdateSale(s));
+                SetPropertyAndValidate(Sale, value, (s, x) => s.Forest = x);
+                SaleDataservice.UpdateSale(Sale);
             }
         }
 
         public string District
         {
             get => Sale?.District;
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.District = x, s => SaleDataservice?.UpdateSale(s));
+            set
+            {
+                SetPropertyAndValidate(Sale, value, (s, x) => s.District = x);
+                SaleDataservice.UpdateSale(Sale);
+            }
         }
 
         public int CalendarYear
         {
             get => Sale?.CalendarYear ?? default(int);
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.CalendarYear = x, s => SaleDataservice?.UpdateSale(s));
+            set
+            {
+                SetPropertyAndValidate(Sale, value, (s, x) => s.CalendarYear = x);
+                SaleDataservice.UpdateSale(Sale);
+            }
         }
 
         public string Remarks
         {
             get => Sale?.Remarks;
-            set => SetPropertyAndValidate(Sale, value, (s, x) => s.Remarks = x, s => SaleDataservice?.UpdateSale(s));
+            set
+            {
+                SetPropertyAndValidate(Sale, value, (s, x) => s.Remarks = x);
+                SaleDataservice.UpdateSale(Sale);
+            }
         }
 
         //public string DefaultUOM

@@ -146,7 +146,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.IsLocked = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.IsLocked = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -157,7 +160,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.IsHidden = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.IsHidden = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -168,7 +174,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueBool = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x));  }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueBool = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -179,7 +188,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueInt = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueInt = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -190,7 +202,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueReal = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueReal = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -201,7 +216,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if(tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueText = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueText = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 

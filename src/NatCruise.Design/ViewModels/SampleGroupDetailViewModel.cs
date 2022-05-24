@@ -16,10 +16,9 @@ namespace NatCruise.Design.ViewModels
         private SampleGroup _sampleGroup;
         private IEnumerable<Product> _productOptions;
 
-        public SampleGroupDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, SampleGroupValidator validator)
+        public SampleGroupDetailViewModel(ISampleGroupDataservice sampleGroupDataservice, ISetupInfoDataservice setupInfo, SampleGroupValidator validator)
             : base(validator)
         {
-            var sampleGroupDataservice = dataserviceProvider.GetDataservice<ISampleGroupDataservice>();
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
             SetupDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
 
@@ -84,20 +83,17 @@ namespace NatCruise.Design.ViewModels
             {
                 var origValue = SampleGroup?.SampleGroupCode;
 
-                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SampleGroupCode = x, sg => UpdateSampleGroupCode(sg));
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SampleGroupCode = x);
 
-                void UpdateSampleGroupCode(SampleGroup sg)
+                try
                 {
-                    try
-                    {
-                        SampleGroupDataservice.UpdateSampleGroupCode(sg);
-                    }
-                    catch (FMSC.ORM.UniqueConstraintException)
-                    {
-                        SampleGroup.SampleGroupCode = origValue;
-                        RaisePropertyChanged(nameof(SampleGroupCode));
-                        //DialogService.ShowNotification("Unit Code Already Exists");
-                    }
+                    SampleGroupDataservice.UpdateSampleGroupCode(SampleGroup);
+                }
+                catch (FMSC.ORM.UniqueConstraintException)
+                {
+                    SampleGroup.SampleGroupCode = origValue;
+                    RaisePropertyChanged(nameof(SampleGroupCode));
+                    //DialogService.ShowNotification("Unit Code Already Exists");
                 }
             }
         }
@@ -105,97 +101,161 @@ namespace NatCruise.Design.ViewModels
         public string Description
         {
             get => SampleGroup?.Description;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.Description = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.Description = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public string CutLeave
         {
             get => SampleGroup?.CutLeave;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.CutLeave = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.CutLeave = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public string UOM
         {
             get => SampleGroup?.UOM;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.UOM = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.UOM = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public string PrimaryProduct
         {
             get => SampleGroup?.PrimaryProduct;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.PrimaryProduct = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.PrimaryProduct = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public string SecondaryProduct
         {
             get => SampleGroup?.SecondaryProduct;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SecondaryProduct = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SecondaryProduct = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public string BiomassProduct
         {
             get => SampleGroup?.BiomassProduct;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.BiomassProduct = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.BiomassProduct = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public string DefaultLiveDead
         {
             get => SampleGroup?.DefaultLiveDead;
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.DefaultLiveDead = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.DefaultLiveDead = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public int SamplingFrequency
         {
             get => SampleGroup?.SamplingFrequency ?? default(int);
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SamplingFrequency = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SamplingFrequency = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public int InsuranceFrequency
         {
             get => SampleGroup?.InsuranceFrequency ?? default(int);
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.InsuranceFrequency = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.InsuranceFrequency = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public int KZ
         {
             get => SampleGroup?.KZ ?? default(int);
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.KZ = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.KZ = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public int BigBAF
         {
             get => SampleGroup?.BigBAF ?? default(int);
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.BigBAF = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.BigBAF = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public bool TallyBySubPop
         {
             get => (CruiseMethodType.ThreePMethods.HasFlag(this.CruiseMethodType)) ? true :  SampleGroup?.TallyBySubPop ?? default(bool);
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.TallyBySubPop = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.TallyBySubPop = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public bool UseExternalSampler
         {
             get => SampleGroup?.UseExternalSampler ?? default(bool);
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.UseExternalSampler = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.UseExternalSampler = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public int MinKPI
         {
             get => SampleGroup?.MinKPI ?? default(int);
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.MinKPI = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.MinKPI = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public int MaxKPI
         {
             get => SampleGroup?.MaxKPI ?? default(int);
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.MaxKPI = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.MaxKPI = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public double SmallFPS
         {
             get => SampleGroup?.SmallFPS ?? default(double);
-            set => SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SmallFPS = x, sg => SampleGroupDataservice.UpdateSampleGroup(sg));
+            set
+            {
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SmallFPS = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
+            }
         }
 
         public string SampleSelectorType

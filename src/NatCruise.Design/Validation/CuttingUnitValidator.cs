@@ -15,7 +15,7 @@ namespace NatCruise.Design.Validation
 
             RuleFor(x => x.Area)
                 .Must(x => x > 0)
-                .WithMessage("Cutting Unit Area Should Be Grater Than 0")
+                .WithMessage("Cutting Unit Area Grater Than 0 Is Recommended")
                 .WithSeverity(Severity.Info);
 
             RuleFor(x => x.Description)

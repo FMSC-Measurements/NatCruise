@@ -108,21 +108,18 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 var origValue = Stratum?.StratumCode;
-                SetPropertyAndValidate(Stratum, value, (st, x) => st.StratumCode = x, st => UpdateStratumCode(st));
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.StratumCode = x);
 
-                void UpdateStratumCode(Stratum st)
+                try
                 {
-                    try
-                    {
-                        StratumDataservice.UpdateStratumCode(st);
-                        
-                    }
-                    catch (FMSC.ORM.UniqueConstraintException)
-                    {
-                        Stratum.StratumCode = origValue;
-                        RaisePropertyChanged(nameof(StratumCode));
-                        //DialogService.ShowNotification("Stratum Code Already Exists");
-                    }
+                    StratumDataservice.UpdateStratumCode(Stratum);
+
+                }
+                catch (FMSC.ORM.UniqueConstraintException)
+                {
+                    Stratum.StratumCode = origValue;
+                    RaisePropertyChanged(nameof(StratumCode));
+                    //DialogService.ShowNotification("Stratum Code Already Exists");
                 }
             }
         }
@@ -130,7 +127,11 @@ namespace NatCruise.Design.ViewModels
         public string Description
         {
             get => Stratum?.Description;
-            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.Description = x, st => StratumDataservice.UpdateStratum(st));
+            set
+            {
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.Description = x);
+                StratumDataservice.UpdateStratum(Stratum);
+            }
         }
 
         public string Method
@@ -138,7 +139,8 @@ namespace NatCruise.Design.ViewModels
             get => Stratum?.Method;
             set
             {
-                SetPropertyAndValidate(Stratum, value, (st, x) => st.Method = x, st => StratumDataservice.UpdateStratum(st));
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.Method = x);
+                StratumDataservice.UpdateStratum(Stratum);
                 NotifyCruiseMethodChanged();
             }
         }
@@ -146,25 +148,41 @@ namespace NatCruise.Design.ViewModels
         public double BasalAreaFactor
         {
             get => Stratum?.BasalAreaFactor ?? default(double);
-            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.BasalAreaFactor = x, st => StratumDataservice.UpdateStratum(st));
+            set
+            {
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.BasalAreaFactor = x);
+                StratumDataservice.UpdateStratum(Stratum);
+            }
         }
 
         public double FixedPlotSize
         {
             get => Stratum?.FixedPlotSize ?? default(double);
-            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.FixedPlotSize = x, st => StratumDataservice.UpdateStratum(st));
+            set
+            {
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.FixedPlotSize = x);
+                StratumDataservice.UpdateStratum(Stratum);
+            }
         }
 
         public int KZ3PPNT
         {
             get => Stratum?.KZ3PPNT ?? default(int);
-            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.KZ3PPNT = x, st => StratumDataservice.UpdateStratum(st));
+            set
+            {
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.KZ3PPNT = x);
+                StratumDataservice.UpdateStratum(Stratum);
+            }
         }
 
         public int SamplingFrequency
         {
             get => Stratum?.SamplingFrequency ?? default(int);
-            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.SamplingFrequency = x, st => StratumDataservice.UpdateStratum(st));
+            set
+            {
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.SamplingFrequency = x);
+                StratumDataservice.UpdateStratum(Stratum);
+            }
         }
 
         //public string HotKey
@@ -182,13 +200,21 @@ namespace NatCruise.Design.ViewModels
         public string YieldComponent
         {
             get => Stratum?.YieldComponent;
-            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.YieldComponent = x, st => StratumDataservice.UpdateStratum(st));
+            set
+            {
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.YieldComponent = x);
+                StratumDataservice.UpdateStratum(Stratum);
+            }
         }
 
         public string FixCNTField
         {
             get => Stratum?.FixCNTField;
-            set => SetPropertyAndValidate(Stratum, value, (st, x) => st.FixCNTField = x, st => StratumDataservice.UpdateStratum(st));
+            set
+            {
+                SetPropertyAndValidate(Stratum, value, (st, x) => st.FixCNTField = x);
+                StratumDataservice.UpdateStratum(Stratum);
+            }
         }
 
         public IEnumerable<string> CuttingUnits { get; set; }
