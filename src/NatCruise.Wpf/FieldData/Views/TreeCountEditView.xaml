@@ -110,6 +110,7 @@
                             <TextBlock Text="Tree Count (+/-)" />
                             <TextBox x:Name="_treeCountDifferenceEntry"
                                      Text="{Binding TreeCountDelta}"
+                                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                                      AutomationProperties.Name="Tree Count Difference" />
                         </controls:LastChildWidthPanel>
 
@@ -139,6 +140,7 @@
                         <controls:LastChildWidthPanel>
                             <TextBlock Text="KPI (+/-)" />
                             <TextBox Text="{Binding KPIDelta}"
+                                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                                      AutomationProperties.Name="KPI" />
                         </controls:LastChildWidthPanel>
 
@@ -161,6 +163,7 @@
                 <controls:LastChildWidthPanel>
                     <TextBlock Text="Initials" />
                     <TextBox Text="{Binding Initials}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              AutomationProperties.Name="Initials Textbox"/>
                 </controls:LastChildWidthPanel>
                 

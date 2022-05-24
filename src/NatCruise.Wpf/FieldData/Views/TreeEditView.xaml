@@ -88,7 +88,8 @@
             <controls:LastChildWidthPanel>
                 <TextBlock Text="Tree #" />
                 <TextBox x:Name="_treeNumberEntry"
-                         Text="{Binding TreeNumber}"
+                         Text="{Binding TreeNumber, UpdateSourceTrigger=PropertyChanged, Delay=500}"
+                         mah:TextBoxHelper.SelectAllOnFocus="True"
                          AutomationProperties.Name="Tree Number">
                 </TextBox>
             </controls:LastChildWidthPanel>
@@ -145,7 +146,7 @@
             <controls:LastChildWidthPanel>
                 <TextBlock Text="Initials" />
                 <ComboBox x:Name="_initialsPicker"
-                          Text="{Binding Initials}"
+                          Text="{Binding Initials, UpdateSourceTrigger=PropertyChanged, Delay=500}"
                           ItemsSource="{Binding Cruisers}"
                           IsEditable="True"
                           AutomationProperties.Name="Initials" />
@@ -233,7 +234,8 @@
                                         <controls:LastChildWidthPanel>
                                             <Label Content="{Binding Heading}" />
                                             <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
-                                                     Text="{Binding ValueReal}" />
+                                                     mah:TextBoxHelper.SelectAllOnFocus="True"
+                                                     Text="{Binding ValueReal, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
                                         </controls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
@@ -244,7 +246,8 @@
                                         <controls:LastChildWidthPanel>
                                             <Label Content="{Binding Heading}" />
                                             <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
-                                                     Text="{Binding ValueInt}" />
+                                                     mah:TextBoxHelper.SelectAllOnFocus="True"
+                                                     Text="{Binding ValueInt, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
                                         </controls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
@@ -255,7 +258,8 @@
                                         <controls:LastChildWidthPanel>
                                             <Label Content="{Binding Heading}" />
                                             <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
-                                                     Text="{Binding ValueText}" />
+                                                     mah:TextBoxHelper.SelectAllOnFocus="True"
+                                                     Text="{Binding ValueText, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
                                         </controls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
