@@ -17,6 +17,8 @@ namespace NatCruise.Data
 
         void UpdateSale(Sale sale);
 
+        void UpdateSaleNumber(Sale sale);
+
         void DeleteCruise(string cruiseID);
 
         IEnumerable<Models.Cruise> GetCruises();
