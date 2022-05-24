@@ -87,11 +87,12 @@ namespace NatCruise.Data
         public IEnumerable<TallyLedger> GetTallyLedgers(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null, string speciesCode = null, string liveDead = null)
         {
             return Database.From<TallyLedger>()
-                .Where("(@CuttingUnitCode IS NULL OR CuttingUnitCode = @CuttingUnitCode) " +
-                "AND (@StratumCode IS NULL OR StratumCode = @StratumCode) " +
-                "AND (@SampleGroupCode IS NULL OR SampleGroupCode = @SampleGroupCode) " +
-                "AND (@SpeciesCode IS NULL OR SpeciesCode = @SpeciesCode) " +
-                "AND (@LiveDead IS NULL OR LiveDead = @LiveDead)")
+                .LeftJoin("Tree", "USING (TreeID)")
+                .Where("(@CuttingUnitCode IS NULL OR TallyLedger.CuttingUnitCode = @CuttingUnitCode) " +
+                "AND (@StratumCode IS NULL OR TallyLedger.StratumCode = @StratumCode) " +
+                "AND (@SampleGroupCode IS NULL OR TallyLedger.SampleGroupCode = @SampleGroupCode) " +
+                "AND (@SpeciesCode IS NULL OR TallyLedger.SpeciesCode = @SpeciesCode) " +
+                "AND (@LiveDead IS NULL OR TallyLedger.LiveDead = @LiveDead)")
                 .Query2(
                     new {
                         CuttingUnitCode = cuttingUnitCode,
