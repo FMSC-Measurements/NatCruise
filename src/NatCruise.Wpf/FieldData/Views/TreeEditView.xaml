@@ -59,8 +59,6 @@
         <WrapPanel Grid.Row="0"
                    x:Name="_primaryFieldsPanel">
             <WrapPanel.Resources>
-                <converters:DivideConverter Divisor="3"
-                                            x:Key="colWidthConverter" />
                 <Style TargetType="controls:LastChildWidthPanel">
                     <Style.Resources>
                         <Style TargetType="TextBox">
@@ -192,6 +190,15 @@
                               ItemsSource="{Binding TreeFieldValues}">
                     <ItemsControl.Resources>
                         <ResourceDictionary>
+                            <converters:ContainsConverter x:Key="isHiddenFieldConverter">
+                                <converters:ContainsConverter.Items>
+                                    <x:Array Type="sys:String">
+                                        <sys:String>Remarks</sys:String>
+                                        <sys:String>Initials</sys:String>
+                                    </x:Array>
+                                </converters:ContainsConverter.Items>
+                            </converters:ContainsConverter>
+
                             <Style TargetType="Border"
                                    x:Key="propPanel">
                                 <Style.Resources>
@@ -219,6 +226,8 @@
                                         Value="0,1" />
                                 <Setter Property="Padding"
                                         Value="0,3" />
+                                <Setter Property="mah:VisibilityHelper.IsCollapsed"
+                                        Value="{Binding Field, Converter={StaticResource isHiddenFieldConverter}}" />
                             </Style>
                             <!--<Style TargetType="Switch">
                 <Setter Property="TextColor" Value="Black"/>
@@ -293,9 +302,7 @@
                       AutomationProperties.Name="Errors List">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Style="{StaticResource errorWarningButton}"
-                            Command="{Binding BindingContext.ShowEditTreeErrorCommand, Source={x:Reference _page}}"
-                            CommandParameter="{Binding .}"
+                    <Button Style="{StaticResource errorWarningButton}"  
                             AutomationProperties.Name="Error Item" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
