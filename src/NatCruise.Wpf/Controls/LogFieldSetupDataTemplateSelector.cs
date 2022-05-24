@@ -65,7 +65,9 @@ namespace NatCruise.Wpf.Controls
                                     new Binding("DataContext.Log." + logFieldSetup.Field)
                                     {
                                         RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)
-                                        { AncestorType = typeof(ItemsControl) }
+                                        { AncestorType = typeof(ItemsControl) },
+                                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                                        Delay = 500,
                                     }
                                 );
                             layoutFactory.AppendChild(editCtrlFactory);

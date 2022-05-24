@@ -19,7 +19,7 @@ namespace NatCruise.Design.ViewModels
     public class TreeDefaultValueListViewModel : ViewModelBase
     {
         private ObservableCollection<TreeDefaultValue> _treeDefaultValues;
-        private TreeDefaultValue _newTreeDefaultValue = new TreeDefaultValue();
+        private TreeDefaultValue _newTreeDefaultValue;
         private IEnumerable<string> _speciesCodeOptions;
         private IEnumerable<Product> _productOptions;
         private ICommand _addNewTreeDefaultValueCommand;
@@ -30,6 +30,7 @@ namespace NatCruise.Design.ViewModels
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             SetupDataservice = setupInfoDataservice ?? throw new ArgumentNullException(nameof(setupInfoDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NewTreeDefaultValue = MakeNewTreeDefaultValue();
         }
 
         public ITemplateDataservice TemplateDataservice { get; }
@@ -97,17 +98,37 @@ namespace NatCruise.Design.ViewModels
             var newTDV = NewTreeDefaultValue;
             if(newTDV == null) { return; }
 
+
             try
             {
                 TemplateDataservice.AddTreeDefaultValue(newTDV);
                 TreeDefaultValues.Add(newTDV);
                 newTDV.PropertyChanged += TreeDefaultValue_PropertyChanged;
-                NewTreeDefaultValue = new TreeDefaultValue();
+                NewTreeDefaultValue = MakeNewTreeDefaultValue();
             }
             catch (FMSC.ORM.UniqueConstraintException)
             {
                 DialogService.ShowNotification("Tree Default Already Exists");
             }
+        }
+
+        protected TreeDefaultValue MakeNewTreeDefaultValue()
+        {
+            return new TreeDefaultValue
+            {
+                AverageZ = 0.0,
+                BarkThicknessRatio = 0.0,
+                CullPrimary = 0.0,
+                CullPrimaryDead = 0.0,
+                CullSecondary = 0.0,
+                FormClass = 0.0,
+                HiddenPrimary = 0.0,
+                HiddenPrimaryDead = 0.0,
+                HiddenSecondary = 0.0,
+                MerchHeightLogLength = 0,
+                Recoverable = 0.0,
+                ReferenceHeightPercent = 0.0,
+            };
         }
 
         public void DeleteTreeDefaultValue(TreeDefaultValue tdv)
