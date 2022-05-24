@@ -10,6 +10,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              ToolTip="Subpopulations"
              mc:Ignorable="d"
@@ -118,17 +119,20 @@
                     <Label Content="Interval*"
                            Grid.Row="0" />
                     <TextBox Text="{Binding IntervalSize}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              Grid.Column="1" />
 
                     <Label Content="Min*"
                            Grid.Row="1" />
                     <TextBox Text="{Binding Min}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              Grid.Column="1"
                              Grid.Row="1" />
 
                     <Label Grid.Row="2"
                            Content="Max*" />
                     <TextBox Text="{Binding Max}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              Grid.Column="1"
                              Grid.Row="2" />
                 </Grid>

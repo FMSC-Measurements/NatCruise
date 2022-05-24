@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
@@ -49,12 +50,14 @@
                         <Label Content="Min"
                                FontSize="9" />
                         <TextBox Text="{Binding NewTreeAuditRule.Min, StringFormat={}{0:F}}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                                  Width="100" />
                     </StackPanel>
                     <StackPanel>
                         <Label Content="Max"
                                FontSize="9" />
                         <TextBox Text="{Binding NewTreeAuditRule.Max, StringFormat={}{0:F}}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                                  Width="100" />
                     </StackPanel>
 
@@ -64,6 +67,7 @@
                         <Label Content="Description"
                                FontSize="9" />
                         <TextBox Text="{Binding NewTreeAuditRule.Description}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                                  Width="250" />
                     </StackPanel>
                     <Button Content="Add"
