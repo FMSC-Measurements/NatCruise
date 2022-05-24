@@ -218,7 +218,7 @@
                               Grid.ColumnSpan="2"
                               Header="Advanced Options"
                               Foreground="{DynamicResource TextBrush}">
-                        <CheckBox Content="Number Plot Trees Sequentialy Across Strata"
+                        <CheckBox Content="Number Plot Trees Sequentially Across Strata"
                                   IsChecked="{Binding UseCrossStrataPlotTreeNumbering}" />
                     </Expander>
                 </Grid>

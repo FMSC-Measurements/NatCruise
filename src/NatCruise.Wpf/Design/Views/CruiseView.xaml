@@ -62,10 +62,10 @@
                           Margin="0,0,0,10" />
             </DockPanel>
 
-            <Expander Header="Advanded Options"
+            <Expander Header="Advanced Options"
                       Margin="0,0,0,10">
                 <CheckBox IsChecked="{Binding UseCrossStrataPlotTreeNumbering}"
-                          Content="Number Plot Trees Sequentialy Across Strata" />
+                          Content="Number Plot Trees Sequentially Across Strata" />
             </Expander>
 
             <!-- Remarks -->
