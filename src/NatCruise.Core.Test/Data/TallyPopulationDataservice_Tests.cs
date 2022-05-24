@@ -1,4 +1,5 @@
 ﻿using CruiseDAL;
+using CruiseDAL.Schema;
 using CruiseDAL.V3.Models;
 using FluentAssertions;
 using NatCruise.Cruise.Data;
@@ -521,7 +522,7 @@ namespace NatCruise.Test.Data
                     SampleGroupCode = sampleGroup,
                     SamplingFrequency = 101,
                     TallyBySubPop = tallyBySubpop,
-                    UseExternalSampler = true,
+                    SampleSelectorType = CruiseMethods.CLICKER_SAMPLER_TYPE,
                 }
             };
             var subPop = species.Select(x => new SubPopulation()
@@ -536,41 +537,13 @@ namespace NatCruise.Test.Data
             {
                 DatastoreInitializer.InitializeDatabase(database, init.DeviceID, cruiseID, init.SaleID, units, strata, unit_strata, sampleGroups, species, null, subPop);
 
-                //database.Execute($"INSERT INTO CuttingUnit (Code) VALUES ('{unitCode}');");
-
-                //database.Execute($"INSERT INTO Stratum (Code) VALUES ('{stratum}');");
-
-                //database.Execute($"INSERT INTO CuttingUnit_Stratum (CuttingUnitCode, StratumCode) VALUES " +
-                //    $"('{unitCode}','{stratum}');");
-
-                //database.Execute($"INSERT INTO SampleGroup_V3 (StratumCode, SampleGroupCode, SamplingFrequency, TallyBySubPop, UseExternalSampler) VALUES " +
-                //    $"('{stratum}', '{sampleGroup}', 101, {tallyBySubpop}, 1);");
-
-                //foreach (var sp in species)
-                //{
-                //    database.Execute($"INSERT INTO SpeciesCode (Species) VALUES ('{sp}');");
-
-                //    database.Execute(
-                //        "INSERT INTO SubPopulation (" +
-                //        "StratumCode, " +
-                //        "SampleGroupCode, " +
-                //        "Species, " +
-                //        "LiveDead)" +
-                //        "VALUES " +
-                //        $"('{stratum}', '{sampleGroup}', '{sp}', '{liveDead}');");
-                //}
-
                 var ds = new TallyPopulationDataservice(database, init.CruiseID, init.DeviceID);
 
-                //database.Execute($"INSERT INTO SamplerState (StratumCode, SampleGroupCode, SampleSelectorType) " +
-                //    $"SELECT StratumCode, SampleGroupCode, '{CruiseDAL.Schema.CruiseMethods.CLICKER_SAMPLER_TYPE}' AS SampleSelectorType FROM SampleGroup_V3;");
-
                 var results = ds.GetTallyPopulationsByUnitCode(unitCode);
-                //results.Should().HaveCount(2);
 
                 foreach (var pop in results)
                 {
-                    pop.UseExternalSampler.Should().BeTrue();
+                    pop.IsClickerTally.Should().BeTrue();
 
                     VerifyTallyPopulation(pop);
                 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CruiseDAL;
 using NatCruise.Models;
 using NatCruise.Data;
+using CruiseDAL.Schema;
 
 namespace NatCruise.Data
 {
@@ -22,7 +23,7 @@ namespace NatCruise.Data
         }
 
         private string SELECT_TALLYPOPULATION_CORE =
-@"SELECT
+$@"SELECT
         cust.CuttingUnitCode,
         tp.Description,
         tp.StratumCode,
@@ -55,8 +56,7 @@ namespace NatCruise.Data
         sg.SamplingFrequency AS Frequency,
         sg.MinKPI AS sgMinKPI,
         sg.MaxKPI AS sgMaxKPI,
-        sg.UseExternalSampler
-    -- ss.SampleSelectorType == '{CruiseMethods.CLICKER_SAMPLER_TYPE}' AS IsClickerTally
+        sg.SampleSelectorType == '{CruiseMethods.CLICKER_SAMPLER_TYPE}' AS IsClickerTally
     FROM TallyPopulation AS tp
     JOIN SampleGroup AS sg USING (CruiseID, StratumCode, SampleGroupCode)
     -- Left JOIN SamplerState ss USING (CruiseID, StratumCode, SampleGroupCode)

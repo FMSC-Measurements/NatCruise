@@ -20,7 +20,9 @@
 
         public bool IsClickerTally { get; set; }
 
-        public bool UseExternalSampler { get; set; }
+        // depreciated in favor of using SampleSelectorType with "ClickerSelecter"
+        // IsClickerTally will reflect this
+        //public bool UseExternalSampler { get; set; }
 
         public int Frequency { get; set; }
     }
