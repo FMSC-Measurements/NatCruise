@@ -24,7 +24,7 @@
                                                        MethodMap="PlotMethods" />
             <converters:CruiseMethodToBoolConverter x:Key="IsNotThreePMethodsConverter"
                                                     MethodMap="ThreePMethods"
-                                                    Invert="True"/>
+                                                    Invert="True" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -32,7 +32,8 @@
                Margin="0,0,0,-99">
         <WrapPanel.Resources>
             <ResourceDictionary>
-                <Style TargetType="Label">
+                <Style TargetType="Label"
+                       BasedOn="{StaticResource MahApps.Styles.Label}">
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                     <Setter Property="HorizontalAlignment"
@@ -40,7 +41,7 @@
                 </Style>
 
                 <Style TargetType="TextBox"
-                       BasedOn="{StaticResource {x:Type TextBox}}">
+                       BasedOn="{StaticResource MahApps.Styles.TextBox}">
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                     <Setter Property="Width"
@@ -48,7 +49,7 @@
                 </Style>
 
                 <Style TargetType="ComboBox"
-                       BasedOn="{StaticResource {x:Type ComboBox}}">
+                       BasedOn="{StaticResource MahApps.Styles.ComboBox}">
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                     <Setter Property="Width"
@@ -56,7 +57,7 @@
                 </Style>
 
                 <Style TargetType="CheckBox"
-                       BasedOn="{StaticResource {x:Type CheckBox}}">
+                       BasedOn="{StaticResource MahApps.Styles.CheckBox}">
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                 </Style>
@@ -101,7 +102,7 @@
                      Grid.Column="1"
                      ToolTip="Description"
                      Text="{Binding Description}"
-                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
             <Label Content="Primary Product*"
                    Grid.Row="2" />
             <ComboBox Grid.Row="2"
@@ -160,7 +161,7 @@
                       Grid.Column="1"
                       ToolTip="Tally By Species"
                       IsChecked="{Binding TallyBySubPop}"
-                      IsEnabled="{Binding CruiseMethod, Converter={StaticResource IsNotThreePMethodsConverter}}"/>
+                      IsEnabled="{Binding CruiseMethod, Converter={StaticResource IsNotThreePMethodsConverter}}" />
         </Grid>
 
         <GroupBox Header="Sampling Frequency Options"
@@ -170,7 +171,8 @@
                   VerticalAlignment="Top">
             <StackPanel>
                 <StackPanel.Resources>
-                    <Style TargetType="Label">
+                    <Style TargetType="Label"
+                           BasedOn="{StaticResource MahApps.Styles.Label}">
                         <Setter Property="Width"
                                 Value="123" />
                     </Style>
@@ -178,14 +180,14 @@
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Sampling Frequency*" />
                     <TextBox Text="{Binding SamplingFrequency}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
                             Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsNotPlotMethodConverter}, FallbackValue=Visible}">
                     <Label Content="Insurance Frequency" />
                     <TextBox Text="{Binding InsuranceFrequency}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -203,7 +205,8 @@
                   VerticalAlignment="Top">
             <StackPanel>
                 <StackPanel.Resources>
-                    <Style TargetType="{x:Type Label}">
+                    <Style TargetType="Label"
+                           BasedOn="{StaticResource MahApps.Styles.Label}">
                         <Setter Property="Width"
                                 Value="123" />
                     </Style>
@@ -220,19 +223,19 @@
                     <Label Content="Insurance Frequency" />
                     <TextBox ToolTip="Insurance Frequency"
                              Text="{Binding InsuranceFrequency}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Min KPI" />
                     <TextBox Text="{Binding MinKPI}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Max KPI" />
                     <TextBox Text="{Binding MaxKPI}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>

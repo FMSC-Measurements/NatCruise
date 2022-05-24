@@ -28,7 +28,8 @@
             <WrapPanel.Resources>
                 <Style TargetType="controls:LastChildWidthPanel">
                     <Style.Resources>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="TextBlock"
+                               BasedOn="{StaticResource MahApps.Styles.TextBlock}">
                             <Setter Property="VerticalAlignment"
                                     Value="Center" />
                         </Style>
@@ -75,11 +76,13 @@
                 <StackPanel.Resources>
                     <Style TargetType="controls:LastChildWidthPanel">
                         <Style.Resources>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="TextBlock"
+                                   BasedOn="{StaticResource MahApps.Styles.TextBlock}">
                                 <Setter Property="VerticalAlignment"
                                         Value="Center" />
                             </Style>
-                            <Style TargetType="TextBox">
+                            <Style TargetType="TextBox"
+                                   BasedOn="{StaticResource MahApps.Styles.TextBox}">
                                 <Setter Property="Width"
                                         Value="50" />
                                 <Setter Property="HorizontalAlignment"
@@ -104,7 +107,7 @@
                             <TextBlock Text="{Binding TallyPopulation.TreeCount}"
                                        d:Text="0000" />
                         </controls:LastChildWidthPanel>
-                        
+
                         <!--Tree Count-->
                         <controls:LastChildWidthPanel>
                             <TextBlock Text="Tree Count (+/-)" />
@@ -164,9 +167,9 @@
                     <TextBlock Text="Initials" />
                     <TextBox Text="{Binding Initials}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             AutomationProperties.Name="Initials Textbox"/>
+                             AutomationProperties.Name="Initials Textbox" />
                 </controls:LastChildWidthPanel>
-                
+
                 <!--Remarks-->
                 <StackPanel>
                     <TextBlock Text="Remarks" />
@@ -176,7 +179,7 @@
                              Background="{DynamicResource MahApps.Brushes.Gray9}" />
                 </StackPanel>
 
-                
+
             </StackPanel>
 
         </ScrollViewer>

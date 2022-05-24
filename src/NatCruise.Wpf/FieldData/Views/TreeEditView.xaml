@@ -61,16 +61,18 @@
             <WrapPanel.Resources>
                 <Style TargetType="controls:LastChildWidthPanel">
                     <Style.Resources>
-                        <Style TargetType="TextBox">
+                        <Style TargetType="TextBox"
+                               BasedOn="{StaticResource MahApps.Styles.TextBox}">
                             <Setter Property="mah:TextBoxHelper.SelectAllOnFocus"
                                     Value="True" />
                         </Style>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="TextBlock"
+                               BasedOn="{StaticResource MahApps.Styles.TextBlock}">
                             <Setter Property="VerticalAlignment"
                                     Value="Center" />
                             <Setter Property="HorizontalAlignment"
                                     Value="Right" />
-                            
+
                         </Style>
                     </Style.Resources>
                     <Setter Property="LastChildWidth"
@@ -184,8 +186,7 @@
         <Border Grid.Row="1"
                 BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}"
                 BorderThickness="0">
-            <ScrollViewer 
-                          VerticalScrollBarVisibility="Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="_editViewsHost"
                               ItemsSource="{Binding TreeFieldValues}">
                     <ItemsControl.Resources>
@@ -209,7 +210,7 @@
                                                         Value="25" />
                                                 <Setter Property="VerticalContentAlignment"
                                                         Value="Center" />
-                                                
+
                                             </Style>
                                         </Style.Resources>
                                         <Setter Property="LastChildWidth"
@@ -302,7 +303,7 @@
                       AutomationProperties.Name="Errors List">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Style="{StaticResource errorWarningButton}"  
+                    <Button Style="{StaticResource errorWarningButton}"
                             AutomationProperties.Name="Error Item" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

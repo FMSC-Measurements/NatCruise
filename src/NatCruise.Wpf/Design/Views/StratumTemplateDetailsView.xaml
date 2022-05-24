@@ -14,8 +14,8 @@
              Tag="Stratum Template"
              IsEnabled="{Binding StratumTemplate, Converter={StaticResource NotNullConverter}}">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBox}"
-               BasedOn="{StaticResource {x:Type TextBox}}">
+        <Style TargetType="TextBox"
+               BasedOn="{StaticResource MahApps.Styles.TextBox}">
             <Setter Property="Margin"
                     Value="0,0,0,10" />
             <Setter Property="Width"
@@ -25,7 +25,7 @@
         </Style>
 
         <Style TargetType="ComboBox"
-               BasedOn="{StaticResource {x:Type ComboBox}}">
+               BasedOn="{StaticResource MahApps.Styles.ComboBox}">
             <Setter Property="Margin"
                     Value="0,0,0,10" />
         </Style>
@@ -36,8 +36,8 @@
 
                 <Grid.Resources>
                     <ResourceDictionary>
-                        <Style TargetType="{x:Type TextBox}"
-                               BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Style TargetType="TextBox"
+                               BasedOn="{StaticResource MahApps.Styles.TextBox}">
                             <Setter Property="Margin"
                                     Value="0,0,0,10" />
                             <Setter Property="Width"
@@ -80,7 +80,7 @@
                          Width="100"
                          IsReadOnly="True"
                          Text="{Binding StratumTemplate.StratumTemplateName}"
-                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
@@ -110,7 +110,8 @@
                 <StackPanel>
                     <StackPanel.Resources>
                         <ResourceDictionary>
-                            <Style TargetType="{x:Type TextBox}">
+                            <Style TargetType="TextBox"
+                                   BasedOn="{StaticResource MahApps.Styles.TextBox}">
                                 <Setter Property="Width"
                                         Value="50" />
                                 <Setter Property="HorizontalAlignment"
@@ -118,7 +119,8 @@
                                 <Setter Property="VerticalContentAlignment"
                                         Value="Center" />
                             </Style>
-                            <Style TargetType="{x:Type Label}">
+                            <Style TargetType="Label"
+                                   BasedOn="{StaticResource MahApps.Styles.Label}">
                                 <Setter Property="HorizontalAlignment"
                                         Value="Left" />
                                 <Setter Property="Width"
@@ -136,7 +138,7 @@
                         <Label Content="BAF" />
                         <TextBox ToolTip="Basal Area Factor"
                                  Text="{Binding StratumTemplate.BasalAreaFactor}"
-                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
@@ -144,7 +146,7 @@
                         <Label Content="FPS" />
                         <TextBox ToolTip="Fixed Plot Size"
                                  Text="{Binding StratumTemplate.FixedPlotSize}"
-                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
@@ -152,7 +154,7 @@
                         <Label Content="KZ (3PPNT)" />
                         <TextBox ToolTip="KZ (3PPNT)"
                                  Text="{Binding StratumTemplate.KZ3PPNT}"
-                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
