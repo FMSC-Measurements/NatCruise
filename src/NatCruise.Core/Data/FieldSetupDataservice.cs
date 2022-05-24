@@ -1,5 +1,4 @@
 ﻿using CruiseDAL;
-using NatCruise.Data;
 using NatCruise.Models;
 using System;
 using System.Collections.Generic;
