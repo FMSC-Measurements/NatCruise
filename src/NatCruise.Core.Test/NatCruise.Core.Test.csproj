@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<RootNamespace>NatCruise.Test</RootNamespace>
 
 		<IsPackable>false</IsPackable>
 
@@ -20,6 +21,14 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\NatCruise.Core\NatCruise.Core.csproj" />
+		<ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="TestFiles\*" />
+		<Content Include="TestFiles\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<Import Project="..\NatCruise.Test.Common\NatCruise.Test.Common.projitems" Label="Shared" />

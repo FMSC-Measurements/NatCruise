@@ -6,6 +6,7 @@ using NatCruise.Core.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
 using System;
@@ -32,7 +33,7 @@ namespace FScruiser.XF.ViewModels
         public IDataserviceProvider DataserviceProvider { get; }
         public IFileDialogService FileDialogService { get; }
         public IFileSystemService FileSystemService { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
         public IDeviceInfoService DeviceInfoService { get; }
 
@@ -79,7 +80,7 @@ namespace FScruiser.XF.ViewModels
             IDataserviceProvider dataserviceProvider,
             IFileDialogService fileDialogService,
             IFileSystemService fileSystemService,
-            IDialogService dialogService,
+            INatCruiseDialogService dialogService,
             ILoggingService loggingService,
             ICruiseNavigationService navigationService,
             IDeviceInfoService deviceInfoService

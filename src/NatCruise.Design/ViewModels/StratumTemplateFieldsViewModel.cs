@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using NatCruise.Util;
+using NatCruise.Models;
 
 namespace NatCruise.Design.ViewModels
 {
@@ -145,7 +146,7 @@ namespace NatCruise.Design.ViewModels
             var newtfsd = new StratumTemplateTreeFieldSetup()
             {
                 Field = treeField.Field,
-                FieldOrder = TreeFieldSetups.Count,
+                FieldOrder = TreeFieldSetups.Count + 1,
                 StratumTemplateName = stratumTemplateName,
             };
 
@@ -168,15 +169,8 @@ namespace NatCruise.Design.ViewModels
             var selectedIndex = TreeFieldSetups.IndexOf(tfsd);
             if (selectedIndex == TreeFieldSetups.Count - 1) { return; }
             var newIndex = selectedIndex + 1;
-            var otherTfsd = TreeFieldSetups[newIndex];
-
-            tfsd.FieldOrder = newIndex;
-            otherTfsd.FieldOrder = selectedIndex;
-
-            TemplateDataservice.UpsertStratumTemplateTreeFieldSetup(tfsd);
-            TemplateDataservice.UpsertStratumTemplateTreeFieldSetup(otherTfsd);
-
             TreeFieldSetups.Move(selectedIndex, newIndex);
+            SaveFieldOrder();
         }
 
         public void MoveDown(StratumTemplateTreeFieldSetup tfsd)
@@ -185,15 +179,18 @@ namespace NatCruise.Design.ViewModels
             var selectedIndex = TreeFieldSetups.IndexOf(tfsd);
             if (selectedIndex < 1) { return; }
             var newIndex = selectedIndex - 1;
-            var otherTfsd = TreeFieldSetups[newIndex];
-
-            tfsd.FieldOrder = newIndex;
-            otherTfsd.FieldOrder = selectedIndex;
-
-            TemplateDataservice.UpsertStratumTemplateTreeFieldSetup(tfsd);
-            TemplateDataservice.UpsertStratumTemplateTreeFieldSetup(otherTfsd);
-
             TreeFieldSetups.Move(selectedIndex, newIndex);
+            SaveFieldOrder();
+        }
+
+        protected void SaveFieldOrder()
+        {
+            var fieldSetups = TreeFieldSetups;
+            foreach (var (field, i) in fieldSetups.Select((x, i) => (x, i + 1)))
+            {
+                field.FieldOrder = i;
+                TemplateDataservice.UpsertStratumTemplateTreeFieldSetup(field);
+            }
         }
     }
 }

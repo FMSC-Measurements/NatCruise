@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:prism="http://prismlibrary.com/"
@@ -64,7 +65,7 @@
 
             <Grid Grid.Row="0">
                 <Grid.Resources>
-                    <Style TargetType="{x:Type Button}"
+                    <Style TargetType="Button"
                            BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                         <Setter Property="FontWeight"
                                 Value="Bold" />
@@ -123,7 +124,8 @@
                                     <ColumnDefinition Width="20" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.Resources>
-                                    <Style TargetType="Button">
+                                    <Style TargetType="Button"
+                                           BasedOn="{StaticResource MahApps.Styles.Button}">
                                         <Setter Property="Control.Background"
                                                 Value="{x:Null}" />
                                         <Setter Property="Control.BorderBrush"
@@ -194,13 +196,12 @@
 
             <Label Content="Default Value"
                    Grid.Row="1"
-                   Grid.Column="1"
-                    />
+                   Grid.Column="1" />
             <CheckBox Content="Locked"
                       Grid.Column="1"
                       Grid.Row="2"
                       Grid.ColumnSpan="2"
-                      IsChecked="{Binding IsLocked}"/>
+                      IsChecked="{Binding IsLocked}" />
             <CheckBox Content="Hidden"
                       Grid.Column="1"
                       Grid.Row="3"
@@ -211,23 +212,26 @@
                      Visibility="{Binding IsDefaultInt, Converter={StaticResource IsVisableConverter}}"
                      Grid.Row="1"
                      Background="SkyBlue"
-                     Text="{Binding DefaultValueInt, TargetNullValue=''}"/>
+                     Text="{Binding DefaultValueInt, TargetNullValue=''}"
+                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
             <TextBox x:Name="_realDefaultValueTextBox"
                      Grid.Column="2"
                      Visibility="{Binding IsDefaultReal, Converter={StaticResource IsVisableConverter}}"
                      Grid.Row="1"
-                     Text="{Binding DefaultValueReal, TargetNullValue=''}"/>
+                     Text="{Binding DefaultValueReal, TargetNullValue=''}"
+                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
             <TextBox x:Name="_textDefaultValueTextBox"
                      Grid.Column="2"
                      Visibility="{Binding IsDefaultText, Converter={StaticResource IsVisableConverter}}"
                      Grid.Row="1"
-                     Text="{Binding DefaultValueText}"/>
+                     Text="{Binding DefaultValueText}"
+                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
             <CheckBox x:Name="_boolDefaultValueCheckBox"
                       Grid.Column="2"
                       Visibility="{Binding IsDefaultBoolean, Converter={StaticResource IsVisableConverter}}"
                       Grid.Row="1"
                       IsThreeState="True"
-                      IsChecked="{Binding DefaultValueBool}"/>
+                      IsChecked="{Binding DefaultValueBool}" />
             <!--<Button Grid.ColumnSpan="2"
                     Content="Move Up"
                     HorizontalAlignment="Left"

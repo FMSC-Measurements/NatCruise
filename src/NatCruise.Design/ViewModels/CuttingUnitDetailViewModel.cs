@@ -1,12 +1,11 @@
-﻿using NatCruise.Design.Data;
-using NatCruise.Design.Models;
-using NatCruise.Data;
+﻿using NatCruise.Data;
 using Prism.Mvvm;
 using System;
 using System.ComponentModel;
 using NatCruise.Services;
 using NatCruise.Design.Validation;
 using System.Collections.Generic;
+using NatCruise.Models;
 
 namespace NatCruise.Design.ViewModels
 {
@@ -67,20 +66,17 @@ namespace NatCruise.Design.ViewModels
             {
                 var origValue = CuttingUnit?.CuttingUnitCode;
 
-                SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.CuttingUnitCode = x, cu => UpdateCuttingUnitCode(cu));
+                SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.CuttingUnitCode = x);
 
-                void UpdateCuttingUnitCode(CuttingUnit cu)
+                try
                 {
-                    try
-                    {
-                        UnitDataservice.UpdateCuttingUnitCode(cu);
-                    }
-                    catch (FMSC.ORM.UniqueConstraintException)
-                    {
-                        CuttingUnit.CuttingUnitCode = origValue;
-                        RaisePropertyChanged(nameof(CuttingUnitCode));
-                        //DialogService.ShowNotification("Unit Code Already Exists");
-                    }
+                    UnitDataservice.UpdateCuttingUnitCode(CuttingUnit);
+                }
+                catch (FMSC.ORM.UniqueConstraintException)
+                {
+                    CuttingUnit.CuttingUnitCode = origValue;
+                    RaisePropertyChanged(nameof(CuttingUnitCode));
+                    //DialogService.ShowNotification("Unit Code Already Exists");
                 }
             }
         }
@@ -88,37 +84,61 @@ namespace NatCruise.Design.ViewModels
         public double Area
         {
             get => CuttingUnit?.Area ?? default(double);
-            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Area = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+            set
+            {
+                SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Area = x);
+                UnitDataservice.UpdateCuttingUnit(CuttingUnit);
+            }
         }
 
         public string Description
         {
             get => CuttingUnit?.Description;
-            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Description = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+            set
+            {
+                SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Description = x);
+                UnitDataservice.UpdateCuttingUnit(CuttingUnit);
+            }
         }
 
         public string LoggingMethod
         {
             get => CuttingUnit?.LoggingMethod;
-            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.LoggingMethod = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+            set
+            {
+                SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.LoggingMethod = x);
+                UnitDataservice.UpdateCuttingUnit(CuttingUnit);
+            }
         }
 
         public string PaymentUnit
         {
             get => CuttingUnit?.PaymentUnit;
-            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.PaymentUnit = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+            set
+            {
+                SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.PaymentUnit = x);
+                UnitDataservice.UpdateCuttingUnit(CuttingUnit);
+            }
         }
 
         public string Remarks
         {
             get => CuttingUnit?.Remarks;
-            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Remarks = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+            set
+            {
+                SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Remarks = x);
+                UnitDataservice.UpdateCuttingUnit(CuttingUnit);
+            }
         }
 
         public string Rx
         {
             get => CuttingUnit?.Rx;
-            set => SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Rx = x, cu => UnitDataservice.UpdateCuttingUnit(cu));
+            set
+            {
+                SetPropertyAndValidate(CuttingUnit, value, (m, x) => m.Rx = x);
+                UnitDataservice.UpdateCuttingUnit(CuttingUnit);
+            }
         }
 
         public IEnumerable<LoggingMethod> LoggingMethodOptions

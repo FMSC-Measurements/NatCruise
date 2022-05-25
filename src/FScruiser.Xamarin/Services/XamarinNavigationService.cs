@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Constants;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Navigation;
 using System;
@@ -9,7 +10,9 @@ namespace FScruiser.XF.Services
 {
     public class XamarinNavigationService : ICruiseNavigationService
     {
-        public XamarinNavigationService(INavigationService navigationService, ILoggingService loggingService)
+        public XamarinNavigationService(
+            INavigationService navigationService,
+            ILoggingService loggingService)
         {
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             Log = loggingService ?? throw new ArgumentNullException(nameof(loggingService));

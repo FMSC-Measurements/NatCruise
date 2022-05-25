@@ -27,7 +27,7 @@
                         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
                     </ResourceDictionary.MergedDictionaries>-->
                     <!--<Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}"  >-->
-                    <Style TargetType="{x:Type Button}"
+                    <Style TargetType="Button"
                            BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                         <Setter Property="Background"
                                 Value="{StaticResource brush_shade_white_12}" />
@@ -52,6 +52,8 @@
                     Click="_unitsButton_Click">Units</Button>
             <Button x:Name="_strataButton"
                     Click="_strataButton_Click">Strata</Button>
+            <Button x:Name="_fieldDataButton"
+                    Click="_fieldDataButton_Click">Field Data</Button>
             <Button x:Name="_speciesButton"
                     Content="Species"
                     Click="_speciesButton_Click" />

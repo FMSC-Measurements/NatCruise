@@ -1,5 +1,6 @@
 ﻿using NatCruise.Design.Services;
 using NatCruise.Design.Views;
+using NatCruise.Wpf.FieldData.Views;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Views;
 using Prism.Regions;
@@ -20,6 +21,12 @@ namespace NatCruise.Wpf.Services
             RegionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
             CurrentRegion = currentRegion ?? throw new ArgumentNullException(nameof(currentRegion));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        }
+
+        public Task ShowFieldData(string cuttingUnit = null)
+        {
+            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(FieldDataView));
+            return Task.CompletedTask;
         }
 
         public Task GoBackAsync()

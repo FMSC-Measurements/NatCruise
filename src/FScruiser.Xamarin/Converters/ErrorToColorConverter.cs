@@ -1,4 +1,4 @@
-﻿using NatCruise.Cruise.Models;
+﻿using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -25,7 +25,7 @@ namespace FScruiser.XF.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var error = (Error_Base)value;
+            var error = (ErrorBase)value;
             if (error == null) { return Color.White; }
 
             if(error.IsResolved) { return SuppressedColor; }

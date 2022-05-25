@@ -1,10 +1,5 @@
 ﻿using FluentValidation;
-using NatCruise.Design.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NatCruise.Models;
 
 namespace NatCruise.Design.Validation
 {
@@ -20,14 +15,13 @@ namespace NatCruise.Design.Validation
 
             RuleFor(x => x.Area)
                 .Must(x => x > 0)
-                .WithMessage("Cutting Unit Area Should Be Grater Than 0")
+                .WithMessage("Cutting Unit Area Grater Than 0 Is Recommended")
                 .WithSeverity(Severity.Info);
 
             RuleFor(x => x.Description)
                 .NotEmpty()
                 .WithSeverity(Severity.Info)
                 .WithMessage("Cutting Unit Description is Recommended");
-
         }
     }
 }

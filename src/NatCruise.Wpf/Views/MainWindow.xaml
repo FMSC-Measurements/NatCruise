@@ -24,7 +24,8 @@
                 <MenuItem Header="Open Recent"
                           ItemsSource="{Binding RecentFiles}">
                     <MenuItem.ItemContainerStyle>
-                        <Style TargetType="MenuItem">
+                        <Style TargetType="MenuItem"
+                               BasedOn="{StaticResource MahApps.Styles.MenuItem}">
                             <Setter Property="Command"
                                     Value="{Binding  DataContext.OpenFileInfoCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Controls:MetroWindow}}" />
                             <Setter Property="CommandParameter"
@@ -33,7 +34,8 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
 
-                <MenuItem Header="Exit" Command="{Binding ShutdownCommand}"  />
+                <MenuItem Header="Exit"
+                          Command="{Binding ShutdownCommand}" />
             </MenuItem>
         </Menu>
         <Grid>

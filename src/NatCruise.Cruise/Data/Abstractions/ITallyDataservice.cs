@@ -13,7 +13,7 @@ namespace NatCruise.Cruise.Data
 
         IEnumerable<TallyEntry> GetTallyEntries(string unitCode, int plotNumber);
 
-        void InsertTallyLedger(TallyLedger tallyLedger);
+        
 
         Task<TallyEntry> InsertTallyActionAsync(TallyAction tallyAction);
 

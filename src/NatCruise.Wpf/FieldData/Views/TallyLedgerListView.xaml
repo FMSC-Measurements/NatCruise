@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="NatCruise.Wpf.FieldData.Views.TallyLedgerListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="400"
+             Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+    <Grid>
+        <DataGrid AutoGenerateColumns="False"
+                  ItemsSource="{Binding TallyLedgers}"
+                  IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Cutting Unit"
+                                    Binding="{Binding CuttingUnitCode}" />
+                <DataGridTextColumn Header="Stratum"
+                                    Binding="{Binding StratumCode}" />
+                <DataGridTextColumn Header="Sample Group"
+                                    Binding="{Binding SampleGroupCode}" />
+                <DataGridTextColumn Header="Tree Number"
+                                    Binding="{Binding TreeNumber}" />
+                <DataGridTextColumn Header="Plot"
+                                    Binding="{Binding PlotNumber}" />
+                <DataGridTextColumn Header="Species"
+                                    Binding="{Binding SpeciesCode}" />
+                <DataGridTextColumn Header="Live/Dead"
+                                    Binding="{Binding LiveDead}" />
+                <DataGridTextColumn Header="Tree Count"
+                                    Binding="{Binding TreeCount}" />
+                <DataGridTextColumn Header="KPI"
+                                    Binding="{Binding KPI}" />
+                <DataGridTextColumn Header="Entry Type"
+                                    Binding="{Binding EntryType}" />
+                
+            </DataGrid.Columns>
+        </DataGrid>  
+    </Grid>
+</UserControl>

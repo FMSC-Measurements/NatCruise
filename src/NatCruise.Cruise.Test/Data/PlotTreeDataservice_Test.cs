@@ -1,8 +1,11 @@
 ﻿using FluentAssertions;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Test;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace NatCruise.Cruise.Test.Data
@@ -27,7 +30,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = init.CreateDatabase())
             {
-                var datastore = new PlotTreeDataservice(database, cruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
+                var datastore = new PlotTreeDataservice(database, cruiseID, init.DeviceID, new SamplerStateDataservice(database, init.CruiseID, init.DeviceID));
                 var treeDS = new TreeDataservice(database, cruiseID, init.DeviceID);
 
                 database.Execute(
@@ -85,7 +88,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = init.CreateDatabase())
             {
-                var datastore = new PlotTreeDataservice(database, cruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
+                var datastore = new PlotTreeDataservice(database, cruiseID, init.DeviceID, new SamplerStateDataservice(database, init.CruiseID, init.DeviceID));
                 var treeDS = new TreeDataservice(database, cruiseID, init.DeviceID);
 
                 database.Execute(
@@ -112,6 +115,40 @@ namespace NatCruise.Cruise.Test.Data
         }
 
         [Fact]
+        public void GetPlotTrees()
+        {
+            var init = new DatastoreInitializer();
+            var unitCode = "u1";
+            var plotNumber = 1;
+            using (var db = init.CreateDatabase())
+            {
+                var plotDs = new PlotDataservice(db, init.CruiseID, init.DeviceID);
+                var tpDs = new TallyPopulationDataservice(db, init.CruiseID, init.DeviceID);
+                var plotStratumDs = new PlotStratumDataservice(db, init.CruiseID, init.DeviceID);
+                var plotTreeds = new PlotTreeDataservice(db, init.CruiseID, init.DeviceID, new SamplerStateDataservice(db, init.CruiseID, init.DeviceID));
+                var plotid = plotDs.AddNewPlot(unitCode);
+
+                var plot_stratum = plotStratumDs.GetPlot_Strata(unitCode, plotNumber).First();
+
+                var tp = tpDs.GetPlotTallyPopulationsByUnitCode(unitCode, plotNumber).First();
+
+                var firstTreeid = plotTreeds.CreatePlotTree(unitCode, plotNumber, tp.StratumCode, tp.SampleGroupCode);
+                plotTreeds.CreatePlotTree(unitCode, plotNumber, tp.StratumCode, tp.SampleGroupCode);
+
+                var trees = plotTreeds.GetPlotTrees(unitCode, plotNumber).ToArray();
+
+                trees.Should().HaveCount(2);
+                trees.Select(x => x.TreeNumber).Should().BeInAscendingOrder();
+
+                db.Execute("UPDATE Tree SET TreeNumber = 3 WHERE TreeNumber = 1;");
+
+                var treesAgain = plotTreeds.GetPlotTrees(unitCode, plotNumber).ToArray();
+                treesAgain.Select(x => x.TreeNumber).Should().BeInAscendingOrder();
+                treesAgain.Should().OnlyContain(x => x.Method != null);
+            }
+        }
+
+        [Fact]
         public void CreatePlotTree_WithNullLiveDead()
         {
             var unitCode = "u1";
@@ -129,7 +166,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = init.CreateDatabase())
             {
-                var datastore = new PlotTreeDataservice(database, cruiseID, init.DeviceID, new SamplerInfoDataservice(database, init.CruiseID, init.DeviceID));
+                var datastore = new PlotTreeDataservice(database, cruiseID, init.DeviceID, new SamplerStateDataservice(database, init.CruiseID, init.DeviceID));
                 var treeDS = new TreeDataservice(database, cruiseID, init.DeviceID);
 
                 database.Execute(

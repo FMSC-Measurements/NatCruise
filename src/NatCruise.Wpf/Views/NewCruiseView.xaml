@@ -218,7 +218,7 @@
                               Grid.ColumnSpan="2"
                               Header="Advanced Options"
                               Foreground="{DynamicResource TextBrush}">
-                        <CheckBox Content="Number Plot Trees Sequentialy Across Strata"
+                        <CheckBox Content="Number Plot Trees Sequentially Across Strata"
                                   IsChecked="{Binding UseCrossStrataPlotTreeNumbering}" />
                     </Expander>
                 </Grid>
@@ -230,7 +230,8 @@
         <Grid Grid.Row="2"
               Grid.Column="1">
             <Grid.Resources>
-                <Style TargetType="Button">
+                <Style TargetType="Button"
+                       BasedOn="{StaticResource MahApps.Styles.Button}">
                     <Setter Property="Margin"
                             Value="10,0,0,0" />
                     <Setter Property="Width"

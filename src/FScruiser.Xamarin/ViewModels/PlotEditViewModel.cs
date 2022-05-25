@@ -1,15 +1,14 @@
-﻿using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
-using NatCruise.Services;
+﻿using FScruiser.XF.Services;
+using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
+using Prism.Commands;
 using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -17,8 +16,8 @@ namespace FScruiser.XF.ViewModels
     {
         private Plot _plot;
         private IEnumerable<Plot_Stratum> _stratumPlots;
-        private Command<Plot_Stratum> _showLimitingDistanceCommand;
-        private Command<Plot_Stratum> _toggleInCruiseCommand;
+        private DelegateCommand<Plot_Stratum> _showLimitingDistanceCommand;
+        private DelegateCommand<Plot_Stratum> _toggleInCruiseCommand;
         private IEnumerable<PlotError> _errorsAndWarnings;
         private ICommand _updatePlotNumberCommand;
 
@@ -41,6 +40,7 @@ namespace FScruiser.XF.ViewModels
                     oldValue.PropertyChanged -= Plot_PropertyChanged;
                 }
 
+                OnPlotChanged(value);
                 SetProperty(ref _plot, value);
                 RaisePropertyChanged(nameof(PlotNumber));
 
@@ -51,11 +51,21 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public ICommand UpdatePlotNumberCommand => _updatePlotNumberCommand ?? (_updatePlotNumberCommand = new Command<string>(UpdatePlotNumber));
+        private void OnPlotChanged(Plot plot)
+        {
+            var stratumPlots = PlotStratumDataservice.GetPlot_Strata(plot.CuttingUnitCode, plot.PlotNumber);
 
-        public ICommand ShowLimitingDistanceCommand => _showLimitingDistanceCommand ?? (_showLimitingDistanceCommand = new Command<Plot_Stratum>(async x => await ShowLimitingDistanceCalculatorAsync(x)));
+            
+            StratumPlots = stratumPlots;
 
-        public ICommand ToggleInCruiseCommand => _toggleInCruiseCommand ?? (_toggleInCruiseCommand = new Command<Plot_Stratum>(async (x) => await ToggleInCruiseAsync(x)));
+            RefreshErrorsAndWarnings(plot);
+        }
+
+        public ICommand UpdatePlotNumberCommand => _updatePlotNumberCommand ?? (_updatePlotNumberCommand = new DelegateCommand<string>(UpdatePlotNumber));
+
+        public ICommand ShowLimitingDistanceCommand => _showLimitingDistanceCommand ?? (_showLimitingDistanceCommand = new DelegateCommand<Plot_Stratum>(async x => await ShowLimitingDistanceCalculatorAsync(x)));
+
+        public ICommand ToggleInCruiseCommand => _toggleInCruiseCommand ?? (_toggleInCruiseCommand = new DelegateCommand<Plot_Stratum>(async (x) => await ToggleInCruiseAsync(x)));
 
         #region PlotNumber
 
@@ -141,8 +151,6 @@ namespace FScruiser.XF.ViewModels
 
         public string UnitCode => Plot?.CuttingUnitCode;
 
-        public IEnumerable<StratumProxy> Strata { get; set; }
-
         public IEnumerable<Plot_Stratum> StratumPlots
         {
             get { return _stratumPlots; }
@@ -170,13 +178,19 @@ namespace FScruiser.XF.ViewModels
         }
 
         public IPlotDataservice PlotDataservice { get; }
-        public IDialogService DialogService { get; set; }
+        public IPlotStratumDataservice PlotStratumDataservice { get; }
+        public IPlotErrorDataservice PlotErrorDataservice { get; }
+        public INatCruiseDialogService DialogService { get; set; }
 
-        public PlotEditViewModel(IPlotDataservice plotDataservice
-            , IDialogService dialogService
-            , ICruiseNavigationService navigationService)
+        public PlotEditViewModel(IPlotDataservice plotDataservice,
+            IPlotStratumDataservice plotStratumDataservice,
+            IPlotErrorDataservice plotErrorDataservice,
+            INatCruiseDialogService dialogService,
+            ICruiseNavigationService navigationService)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
+            PlotStratumDataservice = plotStratumDataservice ?? throw new ArgumentNullException(nameof(plotStratumDataservice));
+            PlotErrorDataservice = plotErrorDataservice ?? throw new ArgumentNullException(nameof(plotErrorDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
@@ -195,13 +209,13 @@ namespace FScruiser.XF.ViewModels
                 {
                     if (await DialogService.AskYesNoAsync("Removing stratum will delete all tree data", "Continue?"))
                     {
-                        PlotDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
+                        PlotStratumDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
                         stratumPlot.InCruise = false;
                     }
                 }
                 else
                 {
-                    PlotDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
+                    PlotStratumDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
                     stratumPlot.InCruise = false;
                 }
             }
@@ -218,7 +232,7 @@ namespace FScruiser.XF.ViewModels
                 }
                 else
                 {
-                    PlotDataservice.InsertPlot_Stratum(stratumPlot);
+                    PlotStratumDataservice.InsertPlot_Stratum(stratumPlot);
                     stratumPlot.InCruise = true;
                 }
             }
@@ -237,24 +251,29 @@ namespace FScruiser.XF.ViewModels
             Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
-                plot = PlotDataservice.GetPlot(plotID);
+                Load(plotID);
             }
             else
             {
-                plot = PlotDataservice.GetPlot(unitCode, plotNumber);
+                Load(unitCode, plotNumber);
             }
+        }
 
-            var stratumPlots = PlotDataservice.GetPlot_Strata(plot.CuttingUnitCode, plot.PlotNumber);
+        public void Load(string plotID)
+        {
+            if (plotID is null) { throw new ArgumentNullException(nameof(plotID)); }
+            Plot = PlotDataservice.GetPlot(plotID);
+        }
 
-            Plot = plot;
-            StratumPlots = stratumPlots;
-
-            RefreshErrorsAndWarnings(plot);
+        public void Load(string unitCode, int plotNumber)
+        {
+            if (unitCode is null) { throw new ArgumentNullException(nameof(unitCode)); }
+            Plot = PlotDataservice.GetPlot(unitCode, plotNumber);
         }
 
         protected void RefreshErrorsAndWarnings(Plot plot)
         {
-            var errorsAndWarnings = PlotDataservice.GetPlotErrors(plot.PlotID);
+            var errorsAndWarnings = PlotErrorDataservice.GetPlotErrors(plot.PlotID);
             ErrorsAndWarnings = errorsAndWarnings;
         }
 
@@ -283,7 +302,7 @@ namespace FScruiser.XF.ViewModels
 
                 if (stratumPlot.InCruise)
                 {
-                    PlotDataservice.UpdatePlot_Stratum(stratumPlot);
+                    PlotStratumDataservice.UpdatePlot_Stratum(stratumPlot);
                 }
 
                 RefreshErrorsAndWarnings(Plot);

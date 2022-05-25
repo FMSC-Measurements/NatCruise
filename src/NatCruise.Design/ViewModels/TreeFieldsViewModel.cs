@@ -1,5 +1,5 @@
 ﻿using NatCruise.Design.Data;
-using NatCruise.Design.Models;
+using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -1,83 +1,78 @@
 ﻿using FScruiser.XF.Services;
 using NatCruise.Core.Services;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
 using NatCruise.Data;
-using NatCruise.Data.Abstractions;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
-using Prism.Navigation;
+using NatCruise.Util;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    //public class NavigationListItem
-    //{
-    //    public string Title { get; set; }
-
-    //    public string NavigationPath { get; set; }
-
-    //    public bool CanShow
-    //    {
-    //        get
-    //        {
-    //            return CanShowAction?.Invoke() ?? true;
-    //        }
-    //    }
-
-    //    public Func<NavigationParameters> GetParamaters { get; set; }
-
-    //    public Func<bool> CanShowAction { get; set; }
-    //}
-
     public class MainViewModel : XamarinViewModelBase
     {
-        private IEnumerable<CuttingUnit_Ex> _cuttingUnits;
-        private CuttingUnit_Ex _selectedCuttingUnit;
+        private IEnumerable<CuttingUnit> _cuttingUnits;
+        private CuttingUnit _selectedCuttingUnit;
+        private CuttingUnitStrataSummary _selectedUnitStratumSummary;
 
-        public ICruiseNavigationService NavigationService { get; }
+        public ICommand ShowSelectSale => new Command(() => NavigationService.ShowSaleSelect().FireAndForget());
 
-        public ICommand ShowSelectSale => new Command(async () => await NavigationService.ShowSaleSelect());
+        public ICommand ShowSaleCommand => new Command(() => NavigationService.ShowSale(DatastoreProvider?.CruiseID).FireAndForget());
 
-        public ICommand ShowSaleCommand => new Command(() => NavigationService.ShowSale(DatastoreProvider?.CruiseID));
+        public ICommand ShowUnitsCommand => new Command(() => NavigationService.ShowCuttingUnitList().FireAndForget());
 
-        public ICommand ShowUnitsCommand => new Command(() => NavigationService.ShowCuttingUnitList());
+        public ICommand ShowUnitInfoCommand => new Command(() => NavigationService.ShowCuttingUnitInfo(SelectedCuttingUnit?.CuttingUnitCode).FireAndForget());
 
-        public ICommand ShowUnitInfoCommand => new Command(() => NavigationService.ShowCuttingUnitInfo(SelectedCuttingUnit?.CuttingUnitCode));
+        public ICommand ShowTreesCommand => new Command(() => ShowTrees().FireAndForget());
 
-        public ICommand ShowTreesCommand => new Command(() => ShowTrees());
+        public ICommand ShowPlotsCommand => new Command(() => ShowPlots().FireAndForget());
 
-        public ICommand ShowPlotsCommand => new Command(() => ShowPlots());
+        public ICommand ShowPlotTreesCommand => new Command(() => NavigationService.ShowPlotTreeList(SelectedCuttingUnit?.CuttingUnitCode).FireAndForget());
 
-        public ICommand ShowPlotTreesCommand => new Command(() => NavigationService.ShowPlotTreeList(SelectedCuttingUnit?.CuttingUnitCode));
+        public ICommand ShowTallyCommand => new Command(() => ShowTally().FireAndForget());
 
-        public ICommand ShowTallyCommand => new Command(() => ShowTally());
+        public ICommand ShowSettingsCommand => new Command(() => NavigationService.ShowSettings().FireAndForget());
 
-        public ICommand ShowSettingsCommand => new Command(async () => await NavigationService.ShowSettings());
+        public ICommand ShowFeedbackCommand => new Command(() => NavigationService.ShowFeedback().FireAndForget());
 
-        public ICommand ShowFeedbackCommand => new Command(async () => await NavigationService.ShowFeedback());
+        public ICommand ShowSampleStateManagmentCommand => new Command(() => NavigationService.ShowSampleStateManagment().FireAndForget());
 
-        public ICommand ShowSampleStateManagmentCommand => new Command(async () => await NavigationService.ShowSampleStateManagment());
+        public ICommand ShowCruisersCommand => new Command(() => NavigationService.ShowManageCruisers().FireAndForget());
 
-        public ICommand ShowCruisersCommand => new Command(async () => await NavigationService.ShowManageCruisers());
-
-        public CuttingUnit_Ex SelectedCuttingUnit
+        public CuttingUnit SelectedCuttingUnit
         {
             get => _selectedCuttingUnit;
             set
             {
                 SetProperty(ref _selectedCuttingUnit, value);
+                if (value != null)
+                {
+                    var summary = CuttingUnitDataservice.GetCuttingUnitStrataSummary(value.CuttingUnitCode);
+                    SelectedUnitStrataSummary = summary;
+                }
+                else { SelectedUnitStrataSummary = null; }
+
                 RaisePropertyChanged(nameof(IsCuttingUnitSelected));
-                RaisePropertyChanged(nameof(HasPlotStrata));
-                RaisePropertyChanged(nameof(HasTreeStrata));
                 NavigationService.ShowBlank();
             }
         }
 
-        public IEnumerable<CuttingUnit_Ex> CuttingUnits
+        public CuttingUnitStrataSummary SelectedUnitStrataSummary
+        {
+            get => _selectedUnitStratumSummary;
+            set
+            {
+                SetProperty(ref _selectedUnitStratumSummary, value);
+                RaisePropertyChanged(nameof(HasPlotStrata));
+                RaisePropertyChanged(nameof(HasTreeStrata));
+            }
+        }
+
+        public IEnumerable<CuttingUnit> CuttingUnits
         {
             get => _cuttingUnits;
             protected set => SetProperty(ref _cuttingUnits, value);
@@ -107,20 +102,21 @@ namespace FScruiser.XF.ViewModels
             get { return IsCruiseSelected && SelectedCuttingUnit != null; }
         }
 
-        public bool HasPlotStrata => IsCuttingUnitSelected && SelectedCuttingUnit.HasPlotStrata;
+        public bool HasPlotStrata => IsCuttingUnitSelected && SelectedUnitStrataSummary.HasPlotStrata;
 
-        public bool HasTreeStrata => IsCuttingUnitSelected && SelectedCuttingUnit.HasTreeStrata;
+        public bool HasTreeStrata => IsCuttingUnitSelected && SelectedUnitStrataSummary.HasTreeStrata;
 
+        public ICruiseNavigationService NavigationService { get; }
         public IDataserviceProvider DatastoreProvider { get; }
         public IAppInfoService AppInfo { get; }
-        public ICruiseDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public IDeviceInfoService DeviceInfo { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ISaleDataservice SaleDataservice { get; }
 
         public MainViewModel(
                 ICruiseNavigationService navigationService,
-                ICruiseDialogService dialogService,
+                INatCruiseDialogService dialogService,
                 IDataserviceProvider datastoreProvider,
                 IDeviceInfoService deviceInfoService,
                 IAppInfoService appInfo)
@@ -137,45 +133,33 @@ namespace FScruiser.XF.ViewModels
                 SaleDataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
                 if (cuttingUnitDataservice != null)
                 {
-                    CuttingUnits = cuttingUnitDataservice.GetUnits();
+                    CuttingUnits = cuttingUnitDataservice.GetCuttingUnits();
                 }
             }
         }
 
-        private void ShowTrees()
+        private Task ShowTrees()
         {
             var selectedUnit = SelectedCuttingUnit;
-            if (selectedUnit == null) { return; }
+            if (selectedUnit == null) { return Task.CompletedTask; }
 
-            NavigationService.ShowTreeList(selectedUnit.CuttingUnitCode);
+            return NavigationService.ShowTreeList(selectedUnit.CuttingUnitCode);
         }
 
-        private void ShowPlots()
+        private Task ShowPlots()
         {
             var selectedUnit = SelectedCuttingUnit;
-            if (selectedUnit == null) { return; }
+            if (selectedUnit == null) { return Task.CompletedTask; }
 
-            NavigationService.ShowPlotList(selectedUnit.CuttingUnitCode);
+            return NavigationService.ShowPlotList(selectedUnit.CuttingUnitCode);
         }
 
-        private void ShowTally()
+        private Task ShowTally()
         {
             var selectedUnit = SelectedCuttingUnit;
-            if (selectedUnit == null) { return; }
+            if (selectedUnit == null) { return Task.CompletedTask; }
 
-            NavigationService.ShowTally(selectedUnit.CuttingUnitCode);
-        }
-
-        //public override void Load()
-        //{
-        //    base.Load();
-
-        //}
-
-        protected override void OnInitialize(INavigationParameters parameters)
-        {
-
-            base.OnInitialize(parameters);
+            return NavigationService.ShowTally(selectedUnit.CuttingUnitCode);
         }
     }
 }

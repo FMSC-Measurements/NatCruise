@@ -8,7 +8,9 @@ using NatCruise.Design.Data;
 using NatCruise.Design.Services;
 using NatCruise.Design.Validation;
 using NatCruise.Design.Views;
+using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Wpf.FieldData.Views;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Services;
 using NatCruise.Wpf.ViewModels;
@@ -134,8 +136,9 @@ namespace NatCruise.Wpf
 
             containerRegistry.RegisterInstance<IAppService>(this);
             containerRegistry.Register<IWpfApplicationSettingService, WpfApplicationSettingService>();
-            containerRegistry.Register<IDialogService, WpfDialogService>();
+            containerRegistry.Register<INatCruiseDialogService, WpfDialogService>();
             containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();
+            containerRegistry.Register<INatCruiseNavigationService, WPFNavigationService>();
             containerRegistry.Register<IDeviceInfoService, WpfDeviceInfoService>();
             containerRegistry.RegisterSingleton<ISetupInfoDataservice, SetupInfoDataservice>();
             containerRegistry.RegisterInstance<ILoggingService>(new WpfLoggingService());
@@ -167,6 +170,7 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterForNavigation<LogFieldsView>();
             containerRegistry.RegisterForNavigation<DesignChecksView>();
             containerRegistry.RegisterForNavigation<CombineFileView>();
+            containerRegistry.RegisterForNavigation<FieldDataView>();
 
 
             // register validators
@@ -200,7 +204,8 @@ namespace NatCruise.Wpf
                 var suffix = viewName.EndsWith("View") ? "Model" : "ViewModel";
                 var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);
 
-                return Type.GetType(viewModelName);
+                var type = Type.GetType(viewModelName);
+                return type;
             });
 
             //ViewModelLocationProvider.SetDefaultViewModelFactory((viewType) =>

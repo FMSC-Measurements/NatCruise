@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using NatCruise.Cruise.Models;
 using System.Collections.Generic;
 using Xamarin.CommunityToolkit.Markup;
 using FScruiser.XF.Controls;

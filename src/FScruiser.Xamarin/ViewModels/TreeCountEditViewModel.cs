@@ -1,14 +1,12 @@
-﻿using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
+﻿using FScruiser.XF.Services;
 using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
+using Prism.Commands;
 using Prism.Common;
 using System;
 using System.Linq;
 using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -20,26 +18,27 @@ namespace FScruiser.XF.ViewModels
         private int _kPIDelta;
         private string _editReason;
         private string _remarks;
-        private TallyPopulation _tallyPopulation;
+        private TallyPopulationEx _tallyPopulation;
         private ICommand _saveTreeCountEditCommand;
         private string _cruiseMethod;
 
-        public TreeCountEditViewModel(ICruiseNavigationService navigationService, IDataserviceProvider datastoreProvider, ICruiseDialogService dialogService)
+        public TreeCountEditViewModel(ICruiseNavigationService navigationService,
+            ITallyLedgerDataservice tallyLedgerDataservice,
+            ITallyPopulationDataservice tallyPopulationDataservice,
+            INatCruiseDialogService dialogService)
         {
-            if (datastoreProvider is null) { throw new ArgumentNullException(nameof(datastoreProvider)); }
-
-            TallyDataservice = datastoreProvider.GetDataservice<ITallyDataservice>();
-            TallyPopulationDataservice = datastoreProvider.GetDataservice<ITallyPopulationDataservice>();
+            TallyDataservice = tallyLedgerDataservice ?? throw new ArgumentNullException(nameof(tallyLedgerDataservice));
+            TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
-        public ITallyDataservice TallyDataservice { get; }
+        public ITallyLedgerDataservice TallyDataservice { get; }
         public ICruiseNavigationService NavigationService { get; }
-        public ICruiseDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
-        public ICommand SaveTreeCountEditCommand => _saveTreeCountEditCommand ?? (_saveTreeCountEditCommand = new Command(SaveEdit));
+        public ICommand SaveTreeCountEditCommand => _saveTreeCountEditCommand ??= new DelegateCommand(SaveEdit);
 
         public string UnitCode
         {
@@ -47,17 +46,24 @@ namespace FScruiser.XF.ViewModels
             set { SetProperty(ref _unitCode, value); }
         }
 
-        public TallyPopulation TallyPopulation
+        public TallyPopulationEx TallyPopulation
         {
             get => _tallyPopulation;
 
             set
             {
                 SetProperty(ref _tallyPopulation, value);
+                OnTallyPopulationChanged(value);
                 RaisePropertyChanged(nameof(StratumCode));
                 RaisePropertyChanged(nameof(TallyPopulationDescription));
                 RaisePropertyChanged(nameof(TreeCount));
             }
+        }
+
+        private void OnTallyPopulationChanged(TallyPopulationEx tallyPopulation)
+        {
+            UnitCode = tallyPopulation.CuttingUnitCode;
+            CruiseMethod = tallyPopulation.Method;
         }
 
         public string StratumCode => TallyPopulation?.StratumCode;
@@ -75,8 +81,6 @@ namespace FScruiser.XF.ViewModels
                 RaisePropertyChanged(nameof(AdjustedTreeCount));
             }
         }
-
-        
 
         public int KPIDelta { get => _kPIDelta; set => SetProperty(ref _kPIDelta, value); }
 
@@ -127,29 +131,34 @@ namespace FScruiser.XF.ViewModels
             var tallyPopulation = TallyPopulationDataservice.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead);
 
             TallyPopulation = tallyPopulation;
-            UnitCode = unit;
-            CruiseMethod = tallyPopulation.Method;
+        }
+
+        protected void ResetInputs()
+        {
+            TreeCountDelta = 0;
+            KPIDelta = 0;
+            EditReason = null;
+            Remarks = null;
         }
 
         public void SaveEdit()
         {
-            if(_isSaved == true) { return; } // prevent double press
+            if (_isSaved == true) { return; } // prevent double press
 
-            var reason = EditReason;
-            var treeCountDelta = TreeCountDelta;
-            var kpiDelta = KPIDelta;
             var cruiser = DialogService.AskCruiserAsync();
             if (cruiser == null) { return; }
 
             var tallyLedger = new TallyLedger(UnitCode, TallyPopulation);
-            tallyLedger.TreeCount = treeCountDelta;
-            tallyLedger.KPI = kpiDelta;
-            tallyLedger.Reason = reason;
+            tallyLedger.TreeCount = TreeCountDelta;
+            tallyLedger.KPI = KPIDelta;
+            tallyLedger.Reason = EditReason;
             tallyLedger.Remarks = Remarks;
-            tallyLedger.EntryType = TallyLedger.EntryTypeValues.TREECOUNT_EDIT;
+            tallyLedger.EntryType = TallyLedgerEntryTypeValues.TREECOUNT_EDIT;
 
             _isSaved = true;
             TallyDataservice.InsertTallyLedger(tallyLedger);
+
+            ResetInputs();
 
             NavigationService.GoBackAsync();
         }

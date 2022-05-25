@@ -5,6 +5,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -13,8 +14,8 @@
              Tag="Stratum Template"
              IsEnabled="{Binding StratumTemplate, Converter={StaticResource NotNullConverter}}">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBox}"
-               BasedOn="{StaticResource {x:Type TextBox}}">
+        <Style TargetType="TextBox"
+               BasedOn="{StaticResource MahApps.Styles.TextBox}">
             <Setter Property="Margin"
                     Value="0,0,0,10" />
             <Setter Property="Width"
@@ -24,7 +25,7 @@
         </Style>
 
         <Style TargetType="ComboBox"
-               BasedOn="{StaticResource {x:Type ComboBox}}">
+               BasedOn="{StaticResource MahApps.Styles.ComboBox}">
             <Setter Property="Margin"
                     Value="0,0,0,10" />
         </Style>
@@ -35,8 +36,8 @@
 
                 <Grid.Resources>
                     <ResourceDictionary>
-                        <Style TargetType="{x:Type TextBox}"
-                               BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Style TargetType="TextBox"
+                               BasedOn="{StaticResource MahApps.Styles.TextBox}">
                             <Setter Property="Margin"
                                     Value="0,0,0,10" />
                             <Setter Property="Width"
@@ -68,6 +69,7 @@
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          Text="{Binding StratumTemplate.StratumCode}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
 
                 <Label Grid.Row="0"
@@ -77,7 +79,8 @@
                          Grid.Column="1"
                          Width="100"
                          IsReadOnly="True"
-                         Text="{Binding StratumTemplate.StratumTemplateName}" />
+                         Text="{Binding StratumTemplate.StratumTemplateName}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
@@ -107,7 +110,8 @@
                 <StackPanel>
                     <StackPanel.Resources>
                         <ResourceDictionary>
-                            <Style TargetType="{x:Type TextBox}">
+                            <Style TargetType="TextBox"
+                                   BasedOn="{StaticResource MahApps.Styles.TextBox}">
                                 <Setter Property="Width"
                                         Value="50" />
                                 <Setter Property="HorizontalAlignment"
@@ -115,7 +119,8 @@
                                 <Setter Property="VerticalContentAlignment"
                                         Value="Center" />
                             </Style>
-                            <Style TargetType="{x:Type Label}">
+                            <Style TargetType="Label"
+                                   BasedOn="{StaticResource MahApps.Styles.Label}">
                                 <Setter Property="HorizontalAlignment"
                                         Value="Left" />
                                 <Setter Property="Width"
@@ -132,21 +137,24 @@
                                 Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsVariableRadiousPlotMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="BAF" />
                         <TextBox ToolTip="Basal Area Factor"
-                                 Text="{Binding StratumTemplate.BasalAreaFactor}" />
+                                 Text="{Binding StratumTemplate.BasalAreaFactor}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
                                 Visibility="{Binding StratumTemplate.Method, Converter={StaticResource IsFixedSizePlotMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="FPS" />
                         <TextBox ToolTip="Fixed Plot Size"
-                                 Text="{Binding StratumTemplate.FixedPlotSize}" />
+                                 Text="{Binding StratumTemplate.FixedPlotSize}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
                                 Visibility="{Binding StratumTemplate.Method, Converter={StaticResource Is3PPNTMethodVisibilityConverter}, FallbackValue=Visible}">
                         <Label Content="KZ (3PPNT)" />
                         <TextBox ToolTip="KZ (3PPNT)"
-                                 Text="{Binding StratumTemplate.KZ3PPNT}" />
+                                 Text="{Binding StratumTemplate.KZ3PPNT}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"

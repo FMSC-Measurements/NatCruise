@@ -1,7 +1,8 @@
 ﻿using NatCruise.Data;
 using NatCruise.Design.Data;
-using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
 using System;
@@ -21,7 +22,7 @@ namespace NatCruise.Design.ViewModels
         private Stratum _stratum;
         private SampleGroup _selectedSampleGroup;
 
-        public SampleGroupListViewModel(IDataserviceProvider datastoreProvider, IDialogService dialogService)
+        public SampleGroupListViewModel(IDataserviceProvider datastoreProvider, INatCruiseDialogService dialogService)
         {
             var sampleGroupDataservice = datastoreProvider.GetDataservice<ISampleGroupDataservice>();
 
@@ -32,7 +33,7 @@ namespace NatCruise.Design.ViewModels
         }
 
         protected ISampleGroupDataservice SampleGroupDataservice { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public SampleGroupValidator SampleGroupValidator { get; }
 
         public ICommand AddSampleGroupCommand => _addSampleGroupCommand ??= new DelegateCommand<string>(AddSampleGroup);
