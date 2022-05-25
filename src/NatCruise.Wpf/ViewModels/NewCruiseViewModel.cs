@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using NatCruise.Models;
 
 namespace NatCruise.Wpf.ViewModels
 {
@@ -55,13 +56,13 @@ namespace NatCruise.Wpf.ViewModels
         public string SaleName
         {
             get => _saleName;
-            set => SetPropertyAndValidate(this, value, (m, v) => _saleName = v, validated: null);
+            set => SetPropertyAndValidate(this, value, (m, v) => _saleName = v);
         }
 
         public string SaleNumber
         {
             get => _saleNumber;
-            set => SetPropertyAndValidate(this, value, (m,v) => _saleNumber = v, validated: null);
+            set => SetPropertyAndValidate(this, value, (m,v) => _saleNumber = v);
         }
 
         public string Region
@@ -69,7 +70,7 @@ namespace NatCruise.Wpf.ViewModels
             get => _region;
             set
             {
-                SetPropertyAndValidate(this, value, (m, v) => _region = v, validated: null);
+                SetPropertyAndValidate(this, value, (m, v) => _region = v);
                 RaisePropertyChanged(nameof(ForestOptions));
             }
         }
@@ -79,7 +80,7 @@ namespace NatCruise.Wpf.ViewModels
             get => _forest;
             set
             {
-                SetPropertyAndValidate(this, value, (m, v) => _forest = v, validated: null);
+                SetPropertyAndValidate(this, value, (m, v) => _forest = v);
                 RaisePropertyChanged(nameof(DistrictOptions));
             }
         }
@@ -87,19 +88,19 @@ namespace NatCruise.Wpf.ViewModels
         public string District
         {
             get => _district;
-            set => SetPropertyAndValidate(this, value, (m, v) => _district = v, validated: null);
+            set => SetPropertyAndValidate(this, value, (m, v) => _district = v);
         }
 
         public Purpose Purpose
         {
             get => _purpose;
-            set => SetPropertyAndValidate(this, value, (m, v) => _purpose = v, validated: null);
+            set => SetPropertyAndValidate(this, value, (m, v) => _purpose = v);
         }
 
         public string UOM
         {
             get => _uom;
-            set => SetPropertyAndValidate(this, value, (m, v) => _uom = v, validated: null);
+            set => SetPropertyAndValidate(this, value, (m, v) => _uom = v);
         }
 
         public bool UseCrossStrataPlotTreeNumbering
@@ -225,6 +226,20 @@ namespace NatCruise.Wpf.ViewModels
             var tdvs = src.GetTreeDefaultValues();
             foreach (var tdv in tdvs)
             {
+                tdv.AverageZ ??= 0.0;
+                tdv.BarkThicknessRatio ??= 0.0;
+                tdv.CullPrimary ??= 0.0;
+                tdv.CullPrimaryDead ??= 0.0;
+                tdv.CullSecondary ??= 0.0;
+                tdv.FormClass ??= 0.0;
+                tdv.HiddenPrimary ??= 0.0;
+                tdv.HiddenPrimaryDead ??= 0.0;
+                tdv.HiddenSecondary ??= 0.0;
+                tdv.MerchHeightLogLength ??= 0;
+                tdv.Recoverable ??= 0.0;
+                tdv.ReferenceHeightPercent ??= 0.0;
+
+
                 dest.AddTreeDefaultValue(tdv);
             }
 

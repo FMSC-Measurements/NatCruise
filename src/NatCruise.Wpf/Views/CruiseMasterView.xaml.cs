@@ -94,5 +94,10 @@ namespace NatCruise.Wpf.Views
         {
             NavigationService.ShowCombineFile().FireAndForget();
         }
+
+        private void _fieldDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.ShowFieldData().FireAndForget();
+        }
     }
 }

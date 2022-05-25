@@ -54,8 +54,8 @@
                     prism:RegionManager.RegionName="{x:Static nav:Regions.StratumTemplateRegion}"
                     prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_stratumDefaultsListBox}">
             <TabControl.Resources>
-                <Style TargetType="{x:Type TabItem}"
-                       BasedOn="{StaticResource {x:Type TabItem}}">
+                <Style TargetType="TabItem"
+                       BasedOn="{StaticResource MahApps.Styles.TabItem}">
                     <Setter Property="Header"
                             Value="{Binding Tag}" />
                     <Setter Property="HorizontalContentAlignment"

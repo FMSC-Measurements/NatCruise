@@ -2,6 +2,7 @@
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
+using NatCruise.Models;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -145,7 +146,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.IsLocked = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.IsLocked = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -156,7 +160,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.IsHidden = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.IsHidden = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -167,7 +174,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueBool = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x));  }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueBool = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -178,7 +188,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueInt = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueInt = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -189,7 +202,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if (tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueReal = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueReal = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -200,7 +216,10 @@ namespace NatCruise.Design.ViewModels
             {
                 var tfs = SelectedTreeFieldSetup;
                 if(tfs != null)
-                { SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueText = x, x => FieldSetupDataservice.UpsertTreeFieldSetup(x)); }
+                {
+                    SetPropertyAndValidate(tfs, value, (m, x) => m.DefaultValueText = x);
+                    FieldSetupDataservice.UpsertTreeFieldSetup(tfs);
+                }
             }
         }
 
@@ -225,15 +244,8 @@ namespace NatCruise.Design.ViewModels
             var selectedIndex = FieldSetups.IndexOf(selectedTf);
             if (selectedIndex == FieldSetups.Count - 1) { return; }
             var newIndex = selectedIndex + 1;
-            var otherTf = FieldSetups[newIndex];
-
-            selectedTf.FieldOrder = newIndex;
-            otherTf.FieldOrder = selectedIndex;
-
-            FieldSetupDataservice.UpsertTreeFieldSetup(selectedTf);
-            FieldSetupDataservice.UpsertTreeFieldSetup(otherTf);
-
             FieldSetups.Move(selectedIndex, newIndex);
+            SaveFieldOrder();
         }
 
         public void MoveUp()
@@ -243,15 +255,20 @@ namespace NatCruise.Design.ViewModels
             var selectedIndex = FieldSetups.IndexOf(selectedTf);
             if (selectedIndex < 1) { return; }
             var newIndex = selectedIndex - 1;
-            var otherTf = FieldSetups[newIndex];
-
-            selectedTf.FieldOrder = newIndex;
-            otherTf.FieldOrder = selectedIndex;
-
-            FieldSetupDataservice.UpsertTreeFieldSetup(selectedTf);
-            FieldSetupDataservice.UpsertTreeFieldSetup(otherTf);
-
             FieldSetups.Move(selectedIndex, newIndex);
+            SaveFieldOrder();
+        }
+
+        protected void SaveFieldOrder()
+        {
+            var fieldSetups = FieldSetups;
+            
+
+            foreach (var (field, i) in fieldSetups.Select((x, i) => (x, i + 1)))
+            {
+                field.FieldOrder = i;
+                FieldSetupDataservice.UpsertTreeFieldSetup(field);
+            }
         }
 
         private void RemoveTreeField()
@@ -270,7 +287,7 @@ namespace NatCruise.Design.ViewModels
             var newtfs = new TreeFieldSetup()
             {
                 Field = tf,
-                FieldOrder = FieldSetups.Count,
+                FieldOrder = FieldSetups.Count + 1,
                 StratumCode = Stratum.StratumCode,
             };
             FieldSetupDataservice.UpsertTreeFieldSetup(newtfs);

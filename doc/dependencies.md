@@ -17,9 +17,13 @@ MVVM framwork that provides dependency injection, and navigation services
 used to inject environment variables into code on build
 used to generate secrets.local.cs prior to build
 
- - `MahApps.Metro`
+ ## `MahApps.Metro`
 UI skinning framework. Needed to smooth out UI differences when running in windows 7. Also helps make things look pretty.
-Watter mark on textboxes
+Watter mark on textboxes, converters, VisablilityHelper.IsVisable, TextBoxHelper.SelectAllOnFocus. 
+
+ ### Useage notes
+ When defining a style that applys to all controls of a given type it is recomended to use `BasedOn` to inhrit from the base MahApps style.
+ TextBoxHelper.SelectAllOnFocus will only work if the textbox style inharits from the base mahApps style i.e. MahApps.Styles.TextBox
 
  - `DotNetProjects.WpfToolkit.Input`
 for AutoCompleteTextBox control

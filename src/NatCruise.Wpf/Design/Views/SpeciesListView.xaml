@@ -118,6 +118,8 @@
             <ComboBox Grid.Column="2"
                       Grid.Row="3"
                       ItemsSource="{Binding DataContext.FIAOptions, ElementName=_page}"
+                      IsTextSearchEnabled="True"
+                      IsEditable="True"
                       SelectedValue="{Binding FIACode}"
                       SelectedValuePath="FIACode"
                       Margin="0,2" />

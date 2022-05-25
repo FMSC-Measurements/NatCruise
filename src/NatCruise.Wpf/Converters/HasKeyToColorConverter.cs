@@ -1,4 +1,4 @@
-﻿using NatCruise.Design.Models;
+﻿using NatCruise.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;

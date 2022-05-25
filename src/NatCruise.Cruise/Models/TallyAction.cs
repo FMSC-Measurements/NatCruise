@@ -1,5 +1,6 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 using FMSC.Sampling;
+using NatCruise.Models;
 using System;
 
 namespace NatCruise.Cruise.Models
@@ -69,7 +70,7 @@ namespace NatCruise.Cruise.Models
         //If they ever ask for this plot based three p methods just say no
         public int ThreePRandomValue { get; set; }
 
-        public string EntryType => TallyLedger.EntryTypeValues.TALLY;
+        public string EntryType => TallyLedgerEntryTypeValues.TALLY;
 
         public bool IsSample => SampleResult == SampleResult.M || SampleResult == SampleResult.I;
 

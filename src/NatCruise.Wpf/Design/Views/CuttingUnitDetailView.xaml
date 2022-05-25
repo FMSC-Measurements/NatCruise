@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -20,7 +21,7 @@
             <StackPanel.Resources>
                 <ResourceDictionary>
                     <Style TargetType="TextBox"
-                           BasedOn="{StaticResource {x:Type TextBox}}">
+                           BasedOn="{StaticResource MahApps.Styles.TextBox}">
                         <Setter Property="Margin"
                                 Value="0,0,0,10" />
                         <Setter Property="Width"
@@ -28,12 +29,12 @@
                         <Setter Property="HorizontalAlignment"
                                 Value="Left" />
                     </Style>
-                    <Style TargetType="Label">
+                    <Style TargetType="Label" BasedOn="{StaticResource MahApps.Styles.Label}">
                         <Setter Property="HorizontalAlignment"
                                 Value="Right" />
                     </Style>
                     <Style TargetType="ComboBox"
-                           BasedOn="{StaticResource {x:Type ComboBox}}">
+                           BasedOn="{StaticResource MahApps.Styles.ComboBox}">
                         <Setter Property="Margin"
                                 Value="0,0,0,10" />
                     </Style>
@@ -48,6 +49,7 @@
                 <Label Content="Code*"
                        Width="123" />
                 <TextBox Text="{Binding CuttingUnitCode}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          MaxLength="{x:Static dsgn:Constants.UNITCODE_MAXLENGTH}" />
             </StackPanel>
 
@@ -58,6 +60,7 @@
                 <TextBox Margin="0,0,0,10"
                          Width="100"
                          Text="{Binding Description}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          TextWrapping="Wrap" />
             </StackPanel>
 
@@ -66,7 +69,8 @@
                 <Label Content="Area"
                        Width="123" />
 
-                <TextBox Text="{Binding Area}" />
+                <TextBox Text="{Binding Area}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
@@ -81,7 +85,8 @@
             <StackPanel Orientation="Horizontal">
                 <Label Content="Payment Unit"
                        Width="123" />
-                <TextBox Text="{Binding PaymentUnit}" />
+                <TextBox Text="{Binding PaymentUnit}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
             </StackPanel>
 
             <!-- Rx -->

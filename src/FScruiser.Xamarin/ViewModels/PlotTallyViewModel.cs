@@ -1,8 +1,10 @@
-﻿using FScruiser.XF.Constants;
-using FScruiser.XF.Services;
+﻿using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Util;
 using Prism.Common;
 using Prism.Ioc;
@@ -22,7 +24,7 @@ namespace FScruiser.XF.ViewModels
 
         private int _plotNumber;
         private ICollection<TallyPopulation_Plot> _tallyPopulations;
-        private ICollection<StratumProxy> _strata;
+        private ICollection<Stratum> _strata;
         private string _stratumFilter = STRATUM_FILTER_ALL;
         private ICollection<PlotTreeEntry> _trees;
         private ICommand _tallyCommand;
@@ -38,12 +40,12 @@ namespace FScruiser.XF.ViewModels
 
         public string Title => $"Unit {CuttingUnit?.CuttingUnitCode} - {CuttingUnit?.Description} Plot {Plot?.PlotNumber}";
 
-        public ICuttingUnitDataservice Dataservice { get; }
         public ITreeDataservice TreeDataservice { get; }
         public IPlotDataservice PlotDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
+        public IStratumDataservice StratumDataservice { get; }
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
-        public ICruiseDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
 
         public ISampleSelectorDataService SampleSelectorDataService { get; private set; }
@@ -128,10 +130,11 @@ namespace FScruiser.XF.ViewModels
         }
 
         public PlotTallyViewModel(ICruiseNavigationService navigationService,
-            ICruiseDialogService dialogService,
+            INatCruiseDialogService dialogService,
             ITreeDataservice treeDataservice,
             IPlotDataservice plotDataservice,
             ICuttingUnitDataservice cuttingUnitDataservice,
+            IStratumDataservice stratumDataservice,
             ITallyPopulationDataservice tallyPopulationDataservice,
             ISampleSelectorDataService sampleSelectorDataservice,
             ISoundService soundService,
@@ -144,6 +147,7 @@ namespace FScruiser.XF.ViewModels
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
+            StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
             SampleSelectorDataService = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
@@ -206,7 +210,7 @@ namespace FScruiser.XF.ViewModels
         public ICollection<TallyPopulation_Plot> TalliesFiltered => TallyPopulations.OrEmpty()
             .Where(x => StratumFilter == STRATUM_FILTER_ALL || x.StratumCode == StratumFilter).ToArray();
 
-        public ICollection<StratumProxy> Strata
+        public ICollection<Stratum> Strata
         {
             get { return _strata; }
             set
@@ -264,16 +268,16 @@ namespace FScruiser.XF.ViewModels
                 plot = PlotDataservice.GetPlot(unitCode, plotNumber);
             }
 
-            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetUnit(unitCode);
+            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
 
             TallyPopulations = TallyPopulationDataservice.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
-            Strata = PlotDataservice.GetPlotStrataProxies(plot.CuttingUnitCode).ToArray();
+            Strata = StratumDataservice.GetPlotStrata(plot.CuttingUnitCode).ToArray();
             Trees = PlotTreeDataservice.GetPlotTrees(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
 
             Plot = plot;
             PlotNumber = plot.PlotNumber;
 
-            // refresh selected tree incase coming back from TreeEdit page
+            // refresh selected tree in case coming back from TreeEdit page
             RaisePropertyChanged(nameof(SelectedTreeViewModel));
 
             RaisePropertyChanged(nameof(Title));
@@ -283,11 +287,11 @@ namespace FScruiser.XF.ViewModels
         {
             if (pop.InCruise == false) { return; }
 
-            ICruiseDialogService dialogService = DialogService;
+            var dialogService = DialogService;
 
             if (pop.IsEmpty)
             {
-                await dialogService.ShowMessageAsync("To tally trees, goto plot edit page and unmark stratum as empty", "Stratum Is Marked As Empty");
+                await dialogService.ShowMessageAsync("To tally trees, goto plot edit page and uncheck stratum as empty", "Stratum Is Marked As Empty");
                 return;
             }
 
@@ -332,7 +336,7 @@ namespace FScruiser.XF.ViewModels
         public void DeleteTree(string tree_guid)
         {
             TreeDataservice.DeleteTree(tree_guid);
-            var tree = Trees.Where(x => x.TreeID == tree_guid).Single();
+            var tree = Trees.Single(x => x.TreeID == tree_guid);
             Trees.Remove(tree);
         }
 

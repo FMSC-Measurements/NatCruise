@@ -1,5 +1,4 @@
 ﻿using CruiseDAL;
-using NatCruise.Data.Abstractions;
 using NatCruise.Models;
 using System;
 using System.Collections.Generic;
@@ -58,37 +57,37 @@ namespace NatCruise.Data
 //DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;", new { CruiseID = cruiseID });
         }
 
-        public IEnumerable<Cruise> GetCruises()
+        public IEnumerable<Models.Cruise> GetCruises()
         {
-            return Database.From<Cruise>()
+            return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Query().ToArray();
         }
 
-        public IEnumerable<Cruise> GetCruises(string saleID)
+        public IEnumerable<Models.Cruise> GetCruises(string saleID)
         {
-            return Database.From<Cruise>()
+            return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("SaleID = @p1")
                 .Query(saleID).ToArray();
         }
 
-        public IEnumerable<Cruise> GetCruisesBySaleNumber(string saleNumber)
+        public IEnumerable<Models.Cruise> GetCruisesBySaleNumber(string saleNumber)
         {
-            return Database.From<Cruise>()
+            return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("SaleNumber = @p1")
                 .Query(saleNumber).ToArray();
         }
 
-        public Cruise GetCruise()
+        public Models.Cruise GetCruise()
         {
             return GetCruise(CruiseID);
         }
 
-        public Cruise GetCruise(string cruiseID)
+        public Models.Cruise GetCruise(string cruiseID)
         {
-            return Database.From<Cruise>()
+            return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).First();
@@ -133,12 +132,13 @@ namespace NatCruise.Data
                 .Query().ToArray();
         }
 
-        public void UpdateCruise(Cruise cruise)
+        public void UpdateCruise(Models.Cruise cruise)
         {
             if (cruise is null) { throw new ArgumentNullException(nameof(cruise)); }
 
             Database.Execute2(
 @"UPDATE Cruise SET
+    CruiseNumber = @CruiseNumber,
     Purpose = @Purpose,
     Remarks = @Remarks,
     DefaultUOM = @DefaultUOM,
@@ -148,6 +148,7 @@ WHERE CruiseID = @CruiseID",
                 new
                 {
                     cruise.CruiseID,
+                    cruise.CruiseNumber,
                     cruise.Purpose,
                     cruise.Remarks,
                     cruise.DefaultUOM,
@@ -163,7 +164,6 @@ WHERE CruiseID = @CruiseID",
             Database.Execute2(
 @"UPDATE Sale SET
     Name = @Name,
-    SaleNumber = @SaleNumber,
     Region = @Region,
     Forest = @Forest,
     District = @District,
@@ -173,11 +173,27 @@ WHERE SaleID = @SaleID;",
 new
 {
     sale.Name,
-    sale.SaleNumber,
     sale.Region,
     sale.Forest,
     sale.District,
     sale.Remarks,
+    sale.SaleID,
+    DeviceID,
+});
+        }
+
+        public void UpdateSaleNumber(Sale sale)
+        {
+            if (sale is null) { throw new ArgumentNullException(nameof(sale)); }
+
+            Database.Execute2(
+@"UPDATE Sale SET
+    SaleNumber = @SaleNumber,
+    ModifiedBy = @DeviceID
+WHERE SaleID = @SaleID;",
+new
+{
+    sale.SaleNumber,
     sale.SaleID,
     DeviceID,
 });

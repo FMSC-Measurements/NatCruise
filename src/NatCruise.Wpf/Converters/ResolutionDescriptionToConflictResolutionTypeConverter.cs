@@ -37,6 +37,13 @@ namespace NatCruise.Wpf.Converters
             MODIFYSOURCE,
         };
 
+        public static readonly string[] RESOLUTION_OPTIONS_NO_CHOSE = new string[] {
+            CHOSEDESTMERGEDATA,
+            CHOSESOURCEMERGEDATA,
+            MODIFYDEST,
+            MODIFYSOURCE,
+        };
+
         public static readonly string[] RESOLUTION_OPTIONS_CHOSE = new string[] {
             CHOSEDEST,
             CHOSESOURCE,

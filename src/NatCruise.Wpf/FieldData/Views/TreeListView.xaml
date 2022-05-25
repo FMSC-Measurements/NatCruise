@@ -1,0 +1,54 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
+             xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             x:Class="NatCruise.Wpf.FieldData.Views.TreeListView"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:TreeFieldsToDataGridColumnsConverter x:Key="TreeFieldsToColumnsConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <DataGrid Grid.Row="0"
+                  ItemsSource="{Binding Trees}"
+                  SelectedItem="{Binding SelectedTree}"
+                  SelectionChanged="TreeListSelectionChanged"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  controls:DataGridHelper.ColumnsBinding="{Binding Fields, Converter={StaticResource TreeFieldsToColumnsConverter}}">
+        </DataGrid>
+
+        <Expander Grid.Column="1"
+                  ExpandDirection="Left"
+                  MaxWidth="460"
+                  d:IsExpanded="True"
+                  x:Name="_treeEditExpander">
+            <Grid>
+                
+                <local:TreeEditView DataContext="{Binding TreeEditViewModel}" />
+                <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                      Visibility="{Binding SelectedTree, Converter={StaticResource IsNotVisableConverter}}">
+                    <Label Content="No Tree Selected"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+                </Grid>
+            </Grid>
+        </Expander>
+
+
+    </Grid>
+</UserControl>

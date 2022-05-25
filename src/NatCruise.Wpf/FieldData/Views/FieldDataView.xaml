@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="NatCruise.Wpf.FieldData.Views.FieldDataView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
+             xmlns:Controls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="208*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="Controls:LastChildWidthPanel">
+                    <Style.Resources>
+                        <Style TargetType="TextBlock"
+                               BasedOn="{StaticResource MahApps.Styles.TextBlock}">
+                            <Setter Property="VerticalAlignment"
+                                    Value="Center" />
+                            <Setter Property="Margin"
+                                    Value="3,0" />
+                        </Style>
+                        <Style TargetType="ComboBox"
+                               BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+                            <!--<Setter Property="Height"
+                                    Value="50" />-->
+                            <Setter Property="Margin"
+                                    Value="2,3" />
+                        </Style>
+
+                    </Style.Resources>
+                    <Setter Property="LastChildWidth"
+                            Value="80" />
+                    <Setter Property="Width"
+                            Value="170" />
+                    <Setter Property="Margin"
+                            Value="3,0" />
+                    <Setter Property="Background"
+                            Value="{StaticResource MahApps.Brushes.Accent4}" />
+                </Style>
+            </StackPanel.Resources>
+
+            <Controls:LastChildWidthPanel>
+                <TextBlock Text="Cutting Unit" />
+                <ComboBox ItemsSource="{Binding CuttingUnitOptions, Converter={StaticResource PrependAnyConverter}}"
+                          SelectedValue="{Binding SelectedCuttingUnit, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+            </Controls:LastChildWidthPanel>
+            <Controls:LastChildWidthPanel>
+                <TextBlock Text="Plot"
+                           IsEnabled="{Binding IsEnabled, ElementName=_plotPicker}" />
+                <ComboBox x:Name="_plotPicker"
+                          IsEnabled="{Binding PlotOptions, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                          SelectedValue="{Binding SelectedPlot, Converter={StaticResource ReplaceAnyWithNullConverter}}"
+                          ItemsSource="{Binding PlotOptions, Converter={StaticResource PrependAnyConverter}}" />
+            </Controls:LastChildWidthPanel>
+            <Controls:LastChildWidthPanel>
+                <TextBlock Text="Strata" />
+                <ComboBox ItemsSource="{Binding StratumOptions, Converter={StaticResource PrependAnyConverter}}"
+                          SelectedValue="{Binding SelectedStratum, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+            </Controls:LastChildWidthPanel>
+            <Controls:LastChildWidthPanel>
+                <TextBlock Text="Sample Group" />
+                <ComboBox ItemsSource="{Binding SampleGroupOptions, Converter={StaticResource PrependAnyConverter}}"
+                          SelectedValue="{Binding SelectedSampleGroup, Converter={StaticResource ReplaceAnyWithNullConverter}}"
+                          IsEnabled="{Binding SampleGroupOptions, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+            </Controls:LastChildWidthPanel>
+
+        </StackPanel>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Trees">
+                <local:TreeListView DataContext="{Binding TreeListViewModel}" />
+            </TabItem>
+            <TabItem Header="Plots">
+                <local:PlotListView DataContext="{Binding PlotListViewModel}" />
+            </TabItem>
+            <TabItem Header="Logs">
+                <local:LogListView DataContext="{Binding LogListViewModel}" />
+            </TabItem>
+            <TabItem Header="Tally Populations">
+                <local:TallyPopulationListView DataContext="{Binding TallyPopulationListViewModel}" />
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</UserControl>

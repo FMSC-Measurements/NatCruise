@@ -51,12 +51,35 @@ namespace NatCruise
             
         }
 
-        protected void SetPropertyAndValidate<TModel, T>(TModel model, T value, Action<TModel, T> setter, Action<TModel> validated, [CallerMemberName] string propName = null)
+        //protected void SetPropertyAndValidate<TModel, T>(TModel model, T value, Action<TModel, T> setter, Action<TModel> validated, [CallerMemberName] string propName = null)
+        //{
+        //    if (setter is null) { throw new ArgumentNullException(nameof(setter)); }
+        //    if (string.IsNullOrEmpty(propName)) { throw new ArgumentException($"'{nameof(propName)}' cannot be null or empty.", nameof(propName)); }
+
+        //    if(model == null)
+        //    { return; }
+
+        //    setter.Invoke(model, value);
+
+        //    // we need to validate all properties just incase there are any validation rules
+        //    // that are dependant on the set property, also we don't want to invoke the validated
+        //    // action if another validation rule fails
+        //    var results = Validator.Validate(new ValidationContext<TModel>(model));
+        //    var errorDict = results.Errors.ToCollectionDictionary(x => x.PropertyName);
+        //    Errors = errorDict;
+
+        //    RaiseErrorsChanged(propName);
+
+        //    if(false == results.Errors.Any(x => x.Severity == Severity.Error))
+        //    { validated?.Invoke(model); }
+        //}
+
+        protected void SetPropertyAndValidate<TModel, T>(TModel model, T value, Action<TModel, T> setter, [CallerMemberName] string propName = null)
         {
             if (setter is null) { throw new ArgumentNullException(nameof(setter)); }
             if (string.IsNullOrEmpty(propName)) { throw new ArgumentException($"'{nameof(propName)}' cannot be null or empty.", nameof(propName)); }
 
-            if(model == null)
+            if (model == null)
             { return; }
 
             setter.Invoke(model, value);
@@ -70,8 +93,6 @@ namespace NatCruise
 
             RaiseErrorsChanged(propName);
 
-            if(false == results.Errors.Any(x => x.Severity == Severity.Error))
-            { validated?.Invoke(model); }
         }
 
         protected void ValidateAll<TModel>(TModel model)

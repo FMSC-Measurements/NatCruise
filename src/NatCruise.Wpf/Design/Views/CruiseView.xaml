@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              mc:Ignorable="d"
              xmlns:prism="http://prismlibrary.com/"
@@ -30,7 +31,7 @@
                 <Label Content="Cruise Number"
                        VerticalAlignment="Top" />
                 <TextBox Text="{Binding CruiseNumber}"
-                         IsReadOnly="True"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          HorizontalAlignment="Right"
                          Width="100"
                          Margin="0,0,0,10" />
@@ -61,10 +62,10 @@
                           Margin="0,0,0,10" />
             </DockPanel>
 
-            <Expander Header="Advanded Options"
+            <Expander Header="Advanced Options"
                       Margin="0,0,0,10">
                 <CheckBox IsChecked="{Binding UseCrossStrataPlotTreeNumbering}"
-                          Content="Number Plot Trees Sequentialy Across Strata" />
+                          Content="Number Plot Trees Sequentially Across Strata" />
             </Expander>
 
             <!-- Remarks -->

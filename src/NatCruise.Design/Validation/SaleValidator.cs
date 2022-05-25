@@ -23,10 +23,10 @@ namespace NatCruise.Design.Validation
                 .WithSeverity(Severity.Error)
                 .WithMessage("Sale Name Should Not Be Blank");
 
-            RuleFor(x => x.DefaultUOM)
-                .NotEmpty()
-                .WithSeverity(Severity.Error)
-                .WithMessage("Default UOM Should Not Be Blank");
+            //RuleFor(x => x.DefaultUOM)
+            //    .NotEmpty()
+            //    .WithSeverity(Severity.Error)
+            //    .WithMessage("Default UOM Should Not Be Blank");
         }
     }
 }

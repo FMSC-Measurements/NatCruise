@@ -4,6 +4,9 @@ using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
+using NatCruise.Models;
+using NatCruise.Navigation;
+using NatCruise.Sampling;
 using System;
 using System.Threading.Tasks;
 
@@ -12,10 +15,10 @@ namespace NatCruise.Cruise.Services
     public class TreeBasedTallyService : ITreeBasedTallyService
     {
         public ISampleSelectorDataService SampleSelectorDataservice { get; }
-        public ICruiseDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
         public ITallyDataservice TallyDataservice { get; }
 
-        public TreeBasedTallyService(ICruiseDialogService dialogService, ITallyDataservice tallyDataservice, ISampleSelectorDataService sampleSelectorDataservice)
+        public TreeBasedTallyService(INatCruiseDialogService dialogService, ITallyDataservice tallyDataservice, ISampleSelectorDataService sampleSelectorDataservice)
         {
             TallyDataservice = tallyDataservice ?? throw new ArgumentNullException(nameof(TallyDataservice));
             SampleSelectorDataservice = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(SampleSelectorDataservice));
@@ -23,7 +26,7 @@ namespace NatCruise.Cruise.Services
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
-        public async Task<TallyEntry> TallyAsync(string unitCode, TallyPopulation pop)
+        public async Task<TallyEntry> TallyAsync(string unitCode, TallyPopulationEx pop)
         {
             if (pop is null) { throw new ArgumentNullException(nameof(pop)); }
             var samplerService = SampleSelectorDataservice;
@@ -42,8 +45,7 @@ namespace NatCruise.Cruise.Services
                     return null;
                 }
             }
-
-            if (pop.Method == CruiseMethods.S3P)
+            else if (pop.Method == CruiseMethods.S3P)
             {
                 tallyAction = await TallyS3P(unitCode, pop);
             }

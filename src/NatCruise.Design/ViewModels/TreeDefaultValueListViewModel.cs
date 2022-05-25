@@ -1,5 +1,8 @@
-﻿using NatCruise.Design.Data;
+﻿using NatCruise.Data;
+using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.Models;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
 using System;
@@ -16,22 +19,23 @@ namespace NatCruise.Design.ViewModels
     public class TreeDefaultValueListViewModel : ViewModelBase
     {
         private ObservableCollection<TreeDefaultValue> _treeDefaultValues;
-        private TreeDefaultValue _newTreeDefaultValue = new TreeDefaultValue();
+        private TreeDefaultValue _newTreeDefaultValue;
         private IEnumerable<string> _speciesCodeOptions;
         private IEnumerable<Product> _productOptions;
         private ICommand _addNewTreeDefaultValueCommand;
         private ICommand _deleteTreeDefaultValueCommand;
 
-        public TreeDefaultValueListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupInfoDataservice, IDialogService dialogService)
+        public TreeDefaultValueListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupInfoDataservice, INatCruiseDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             SetupDataservice = setupInfoDataservice ?? throw new ArgumentNullException(nameof(setupInfoDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NewTreeDefaultValue = MakeNewTreeDefaultValue();
         }
 
         public ITemplateDataservice TemplateDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
-        public IDialogService DialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
         public ICommand AddNewTreeDefaultValueCommand => _addNewTreeDefaultValueCommand ?? new DelegateCommand(AddNewTreeDefaultValue);
         public ICommand DeleteTreeDefaultValueCommand => _deleteTreeDefaultValueCommand ?? new DelegateCommand<TreeDefaultValue>(DeleteTreeDefaultValue);
@@ -94,17 +98,37 @@ namespace NatCruise.Design.ViewModels
             var newTDV = NewTreeDefaultValue;
             if(newTDV == null) { return; }
 
+
             try
             {
                 TemplateDataservice.AddTreeDefaultValue(newTDV);
                 TreeDefaultValues.Add(newTDV);
                 newTDV.PropertyChanged += TreeDefaultValue_PropertyChanged;
-                NewTreeDefaultValue = new TreeDefaultValue();
+                NewTreeDefaultValue = MakeNewTreeDefaultValue();
             }
             catch (FMSC.ORM.UniqueConstraintException)
             {
                 DialogService.ShowNotification("Tree Default Already Exists");
             }
+        }
+
+        protected TreeDefaultValue MakeNewTreeDefaultValue()
+        {
+            return new TreeDefaultValue
+            {
+                AverageZ = 0.0,
+                BarkThicknessRatio = 0.0,
+                CullPrimary = 0.0,
+                CullPrimaryDead = 0.0,
+                CullSecondary = 0.0,
+                FormClass = 0.0,
+                HiddenPrimary = 0.0,
+                HiddenPrimaryDead = 0.0,
+                HiddenSecondary = 0.0,
+                MerchHeightLogLength = 0,
+                Recoverable = 0.0,
+                ReferenceHeightPercent = 0.0,
+            };
         }
 
         public void DeleteTreeDefaultValue(TreeDefaultValue tdv)

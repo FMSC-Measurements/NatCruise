@@ -2,6 +2,8 @@
 using FMSC.Sampling;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Test;
 using System;
 using System.Linq;
@@ -28,7 +30,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
                 var tpds = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
                 var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
@@ -70,7 +72,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
                 var tpds = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
                 var treeds = new TreeDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
@@ -155,7 +157,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
                 var tpds = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var pop = tpds.GetTallyPopulation(unitCode, stratum, sampleGroup, species, liveDead);
@@ -179,7 +181,7 @@ namespace NatCruise.Cruise.Test.Data
             }
         }
 
-        private static void VerifyTallyPopulation(Models.TallyPopulation result, string species = null)
+        private static void VerifyTallyPopulation(TallyPopulationEx result, string species = null)
         {
             if (species != null)
             {
@@ -207,7 +209,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var datastore = new TallyDataservice(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var datastore = new TallyDataservice(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
                 var tpds = new TallyPopulationDataservice(database, cruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var tallyPop = tpds.GetTallyPopulation(unitCode, stratumCode, sgCode, species, liveDead);

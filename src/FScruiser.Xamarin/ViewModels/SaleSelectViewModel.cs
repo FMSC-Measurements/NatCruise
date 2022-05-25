@@ -1,6 +1,5 @@
 ﻿using FScruiser.XF.Services;
 using NatCruise.Data;
-using NatCruise.Data.Abstractions;
 using NatCruise.Models;
 using Prism.Common;
 using System;

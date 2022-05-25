@@ -24,9 +24,9 @@ namespace NatCruise.Data
                 _database = value;
             }
         }
+
         public IDeviceInfoService DeviceInfoService { get; }
         public string DeviceID { get; }
-
 
         public string CruiseID
         {
@@ -46,7 +46,31 @@ namespace NatCruise.Data
             }
         }
 
-        public abstract void RegisterDataservices(IContainerRegistry containerRegistry);
+        public virtual void RegisterDataservices(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<ISaleDataservice>(x => GetDataservice<ISaleDataservice>());
+            containerRegistry.Register<ICuttingUnitDataservice>(x => GetDataservice<ICuttingUnitDataservice>());
+            containerRegistry.Register<IStratumDataservice>(x => GetDataservice<IStratumDataservice>());
+            containerRegistry.Register<ISampleGroupDataservice>(x => GetDataservice<ISampleGroupDataservice>());
+            containerRegistry.Register<ISubpopulationDataservice>(x => GetDataservice<ISubpopulationDataservice>());
+            containerRegistry.Register<ITreeDataservice>(x => GetDataservice<ITreeDataservice>());
+            containerRegistry.Register<ITreeErrorDataservice>(x => GetDataservice<ITreeErrorDataservice>());
+            containerRegistry.Register<ITreeFieldDataservice>(x => GetDataservice<ITreeFieldDataservice>());
+            containerRegistry.Register<ITreeFieldValueDataservice>(x => GetDataservice<ITreeFieldValueDataservice>());
+            containerRegistry.Register<ILogDataservice>(x => GetDataservice<ILogDataservice>());
+            containerRegistry.Register<ILogErrorDataservice>(x => GetDataservice<ILogErrorDataservice>());
+            containerRegistry.Register<IFieldSetupDataservice>(x => GetDataservice<IFieldSetupDataservice>());
+            containerRegistry.Register<IMessageLogDataservice>(x => GetDataservice<IMessageLogDataservice>());
+            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
+            containerRegistry.Register<IPlotDataservice>(x => GetDataservice<IPlotDataservice>());
+            containerRegistry.Register<IPlotStratumDataservice>(x => GetDataservice<IPlotStratumDataservice>());
+            containerRegistry.Register<IPlotErrorDataservice>(x => GetDataservice<IPlotErrorDataservice>());
+            containerRegistry.Register<IPlotTreeDataservice>(e => GetDataservice<IPlotTreeDataservice>());
+            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
+            containerRegistry.Register<ILogFieldDataservice>(e => GetDataservice<ILogFieldDataservice>());
+            containerRegistry.Register<ITallyLedgerDataservice>(x => GetDataservice<ITallyLedgerDataservice>());
+
+        }
 
         public DataserviceProviderBase(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService)
         {
@@ -72,7 +96,106 @@ namespace NatCruise.Data
             DeviceID = deviceInfoService.DeviceID;
         }
 
-        public abstract IDataservice GetDataservice(Type type);
+        public virtual IDataservice GetDataservice(Type type)
+        {
+            var cruiseID = CruiseID;
+            var database = Database;
+            var deviceID = DeviceID;
+
+            if (type == typeof(ISaleDataservice))
+            {
+                return new SaleDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ICuttingUnitDataservice))
+            {
+                return new CuttingUnitDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(IStratumDataservice))
+            {
+                return new StratumDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ISampleGroupDataservice))
+            {
+                return new SampleGroupDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ISubpopulationDataservice))
+            {
+                return new SubpopulationDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ITreeDataservice))
+            {
+                return new TreeDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ITreeErrorDataservice))
+            {
+                return new TreeErrorDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ITreeFieldDataservice))
+            {
+                return new TreeFieldDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ITreeFieldValueDataservice))
+            {
+                return new TreeFieldValueDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ILogDataservice))
+            {
+                return new LogDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ILogErrorDataservice))
+            {
+                return new LogErrorDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(IFieldSetupDataservice))
+            {
+                return new FieldSetupDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(IMessageLogDataservice))
+            {
+                return new MessageLogDataservice(database, deviceID);
+            }
+            else if (type == typeof(ITallyPopulationDataservice))
+            {
+                return new TallyPopulationDataservice(database, cruiseID, deviceID);
+            }
+            else if(typeof(IPlotDataservice) == type)
+            {
+                return new PlotDataservice(database, cruiseID, deviceID);
+            }
+            else if (typeof(IPlotStratumDataservice) == type )
+            {
+                return new PlotStratumDataservice(database, cruiseID, deviceID);
+            }
+            else if (typeof(IPlotErrorDataservice) == type)
+            {
+                return new PlotErrorDataservice(database, cruiseID, deviceID);
+            }
+            else if(typeof(IPlotTreeDataservice)== type)
+            {
+                return new PlotTreeDataservice(database, cruiseID, deviceID, GetDataservice<ISamplerStateDataservice>());
+            }
+            if (typeof(ISamplerStateDataservice).IsAssignableFrom(type))
+            {
+                return new SamplerStateDataservice(database, cruiseID, deviceID);
+            }
+            else if(typeof(ITallyPopulationDataservice) == type)
+            {
+                return new TallyPopulationDataservice(database, cruiseID, deviceID);
+            }
+            if (type == typeof(ILogFieldDataservice))
+            {
+                return new LogFieldDataservice(database, cruiseID, deviceID);
+            }
+            if (type == typeof(ITallyLedgerDataservice))
+            {
+                return new TallyLedgerDataservice(database, cruiseID, deviceID);
+            }
+
+            else
+            {
+                return null;
+            }
+        }
 
         public T GetDataservice<T>() where T : class, IDataservice
         {

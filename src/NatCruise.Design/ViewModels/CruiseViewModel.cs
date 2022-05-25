@@ -1,6 +1,4 @@
-﻿using NatCruise.Data.Abstractions;
-using NatCruise.Design.Data;
-using NatCruise.Design.Models;
+﻿using NatCruise.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
 using System;
@@ -48,31 +46,51 @@ namespace NatCruise.Design.ViewModels
         public string CruiseNumber
         {
             get => Cruise?.CruiseNumber;
-            set => SetPropertyAndValidate(Cruise, value, (c, x) => c.CruiseNumber = x, crz => SaleDataservice.UpdateCruise(crz));
+            set
+            {
+                SetPropertyAndValidate(Cruise, value, (c, x) => c.CruiseNumber = x);
+                SaleDataservice.UpdateCruise(Cruise);
+            }
         }
 
         public string Purpose
         {
             get => Cruise?.Purpose;
-            set => SetPropertyAndValidate(Cruise, value, (c, x) => c.Purpose = x, crz => SaleDataservice.UpdateCruise(crz));
+            set
+            {
+                SetPropertyAndValidate(Cruise, value, (c, x) => c.Purpose = x);
+                SaleDataservice.UpdateCruise(Cruise);
+            }
         }
 
         public string Remarks
         {
             get => Cruise?.Remarks;
-            set => SetPropertyAndValidate(Cruise, value, (c, x) => c.Remarks = x, crz => SaleDataservice.UpdateCruise(crz));
+            set
+            {
+                SetPropertyAndValidate(Cruise, value, (c, x) => c.Remarks = x);
+                SaleDataservice.UpdateCruise(Cruise);
+            }
         }
 
         public bool? UseCrossStrataPlotTreeNumbering
         {
             get => Cruise?.UseCrossStrataPlotTreeNumbering;
-            set => SetPropertyAndValidate(Cruise, value, (c, x) => c.UseCrossStrataPlotTreeNumbering = x, crz => SaleDataservice.UpdateCruise(crz));
+            set
+            {
+                SetPropertyAndValidate(Cruise, value, (c, x) => c.UseCrossStrataPlotTreeNumbering = x);
+                SaleDataservice.UpdateCruise(Cruise);
+            }
         }
 
         public string DefaultUOM
         {
             get => Cruise?.DefaultUOM;
-            set => SetPropertyAndValidate(Cruise, value, (c, x) => c.DefaultUOM = x, crz => SaleDataservice.UpdateCruise(crz));
+            set
+            {
+                SetPropertyAndValidate(Cruise, value, (c, x) => c.DefaultUOM = x);
+                SaleDataservice.UpdateCruise(Cruise);
+            }
         }
 
         public IEnumerable<UOM> UOMOptions

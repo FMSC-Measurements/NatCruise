@@ -6,6 +6,8 @@
              xmlns:sync="clr-namespace:CruiseDAL.V3.Sync;assembly=CruiseDAL.V3.Sync"
              xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Wpf.Views.CombineFileView"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -24,62 +26,87 @@
                 <sync:ConflictResolutionType>ChoseDestMergeData</sync:ConflictResolutionType>
             </converters:IsResolutionTypeValueConverter>
 
-            <!-- Control Template: Downstream Conflict List -->
-            <ControlTemplate x:Key="downstreamConflitList"
-                             TargetType="DataGrid">
-                <DataGrid Height="200"
-                          ItemsSource="{TemplateBinding ItemsSource}"
-                          DataContext="{TemplateBinding DataContext}"
-                          RowDetailsTemplate="{TemplateBinding RowDetailsTemplate}"
-                          RowDetailsVisibilityMode="VisibleWhenSelected"
-                          AutoGenerateColumns="False">
-                    <!--<DataGrid.RowDetailsTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Label Content="Dest Rec Info" />
-                                <Label Content="Crew Rec Info" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGrid.RowDetailsTemplate>-->
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Table"
-                                            Binding="{Binding Table}" />
-                        <DataGridComboBoxColumn Header="Resolution"
-                                                ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_CHOSE}"
-                                                SelectedItemBinding="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
-                        <DataGridTextColumn Header="Identity"
-                                            Binding="{Binding Identity}" />
-                        <DataGridTextColumn Header="Dest Rec Changed"
-                                            Binding="{Binding DestMod}" />
-                        <DataGridTextColumn Header="Crew Rec Changed"
-                                            Binding="{Binding SourceMod}" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </ControlTemplate>
+            
+
+            <sys:Double x:Key="stdFieldWidth">70</sys:Double>
+
+            <Style TargetType="controls:LastChildWidthPanel"
+                   x:Key="recEditPropPanelStyle">
+                <Style.Resources>
+                    <Style TargetType="TextBox"
+                           BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                        <Setter Property="IsReadOnly"
+                                Value="True" />
+                        <Setter Property="IsEnabled"
+                                Value="False" />
+                        <Setter Property="mah_ctrls:TextBoxHelper.SelectAllOnFocus"
+                                Value="True" />
+
+                    </Style>
+                    <Style TargetType="CheckBox"
+                           BasedOn="{StaticResource MahApps.Styles.CheckBox}">
+                        <Setter Property="IsEnabled"
+                                Value="False" />
+                    </Style>
+                </Style.Resources>
+                <Setter Property="LastChildWidth"
+                        Value="{StaticResource stdFieldWidth}" />
+            </Style>
 
             <!-- Data Template: Cutting Unit -->
             <DataTemplate x:Key="cuttingUnitDataTemplate">
 
                 <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
-                    <controls:LastChildWidthPanel LastChildWidth="50">
-                        <Label Content="Cutting Unit Code" />
-                        <TextBox Text="{Binding CuttingUnitCode}" />
+                    <StackPanel.Resources>
+                        <Style TargetType="controls:LastChildWidthPanel"
+                               BasedOn="{StaticResource recEditPropPanelStyle}" />
+                    </StackPanel.Resources>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Cutting Unit Code" />
+                        <TextBox Text="{Binding CuttingUnitCode}"
+                                 IsReadOnly="False"
+                                 IsEnabled="True" />
                     </controls:LastChildWidthPanel>
-                    <controls:LastChildWidthPanel LastChildWidth="50">
-                        <Label Content="Area" />
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Area" />
                         <TextBox Text="{Binding Area}" />
                     </controls:LastChildWidthPanel>
-                    <controls:LastChildWidthPanel LastChildWidth="50">
-                        <Label Content="Description" />
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Description" />
                         <TextBox Text="{Binding Description}" />
                     </controls:LastChildWidthPanel>
-                    <controls:LastChildWidthPanel LastChildWidth="50">
-                        <Label Content="Logging Method" />
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Logging Method" />
                         <TextBox Text="{Binding LoggingMethod}" />
                     </controls:LastChildWidthPanel>
-                    <controls:LastChildWidthPanel LastChildWidth="50">
-                        <Label Content="Payment Unit" />
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Payment Unit" />
                         <TextBox Text="{Binding PaymentUnit}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="CreatedBy" />
+                        <TextBox Text="{Binding CreatedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Created_TS" />
+                        <TextBox Text="{Binding Created_TS}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="ModifiedBy" />
+                        <TextBox Text="{Binding ModifiedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Modified_TS" />
+                        <TextBox Text="{Binding Modified_TS}" />
                     </controls:LastChildWidthPanel>
                 </StackPanel>
             </DataTemplate>
@@ -87,107 +114,408 @@
             <!-- Data Template: Stratum-->
             <DataTemplate x:Key="stratumDataTemplate">
                 <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Stratum Code" />
+                    <StackPanel.Resources>
+                        <Style TargetType="controls:LastChildWidthPanel"
+                               BasedOn="{StaticResource recEditPropPanelStyle}" />
+                    </StackPanel.Resources>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Stratum Code" />
                         <TextBox Text="{Binding StratumCode}"
-                                 Width="50" />
-                    </StackPanel>
+                                 IsReadOnly="False"
+                                 IsEnabled="True" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Description" />
+                        <TextBox Text="{Binding Description}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Method" />
+                        <TextBox Text="{Binding Method}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="BAF" />
+                        <TextBox Text="{Binding BasalAreaFactor}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="FPS" />
+                        <TextBox Text="{Binding FixedPlotSize}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="3PPNT KZ" />
+                        <TextBox Text="{Binding KZ3PPNT}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Yield Component" />
+                        <TextBox Text="{Binding YieldComponent}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="FixCNT Field" />
+                        <TextBox Text="{Binding FixCNTField}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="CreatedBy" />
+                        <TextBox Text="{Binding CreatedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Created_TS" />
+                        <TextBox Text="{Binding Created_TS}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="ModifiedBy" />
+                        <TextBox Text="{Binding ModifiedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Modified_TS" />
+                        <TextBox Text="{Binding Modified_TS}" />
+                    </controls:LastChildWidthPanel>
                 </StackPanel>
             </DataTemplate>
 
             <!-- Data Template: SampleGroup-->
             <DataTemplate x:Key="sampleGroupDataTemplate">
                 <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Stratum Code" />
-                        <TextBox Text="{Binding StratumCode}"
-                                 Width="50" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Sample Group Code" />
+                    <StackPanel.Resources>
+                        <Style TargetType="controls:LastChildWidthPanel"
+                               BasedOn="{StaticResource recEditPropPanelStyle}" />
+                    </StackPanel.Resources>
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Stratum Code" />
+                        <TextBox Text="{Binding StratumCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Sample Group Code" />
                         <TextBox Text="{Binding SampleGroupCode}"
-                                 Width="50" />
-                    </StackPanel>
+                                 IsReadOnly="False"
+                                 IsEnabled="True" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Description" />
+                        <TextBox Text="{Binding Description}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Primary Product" />
+                        <TextBox Text="{Binding PrimaryProduct}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Secondary Product" />
+                        <TextBox Text="{Binding SecondaryProduct}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Biomass Product" />
+                        <TextBox Text="{Binding BiomassProduct}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Cut/Leave" />
+                        <TextBox Text="{Binding CutLeave}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Live/Dead Default" />
+                        <TextBox Text="{Binding DefaultLiveDead}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Sampling Frequency" />
+                        <TextBox Text="{Binding SamplingFrequency}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Insurance Frequency" />
+                        <TextBox Text="{Binding InsuranceFrequency}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="KZ" />
+                        <TextBox Text="{Binding KZ}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Min KPI" />
+                        <TextBox Text="{Binding MinKPI}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Max KPI" />
+                        <TextBox Text="{Binding MaxKPI}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Sample Selector Type" />
+                        <TextBox Text="{Binding SampleSelectorType}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Big BAF" />
+                        <TextBox Text="{Binding BigBAF}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Tally By SubPop" />
+                        <CheckBox IsChecked="{Binding TallyBySubPop}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="CreatedBy" />
+                        <TextBox Text="{Binding CreatedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Created_TS" />
+                        <TextBox Text="{Binding Created_TS}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="ModifiedBy" />
+                        <TextBox Text="{Binding ModifiedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Modified_TS" />
+                        <TextBox Text="{Binding Modified_TS}" />
+                    </controls:LastChildWidthPanel>
                 </StackPanel>
             </DataTemplate>
 
             <!-- Data Template: Tree -->
             <DataTemplate x:Key="treeDataTemplate">
                 <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Cutting Unit Code" />
-                        <TextBox Text="{Binding CuttingUnitCode}"
-                                 Width="50" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Tree Number" />
+                    <StackPanel.Resources>
+                        <Style TargetType="controls:LastChildWidthPanel"
+                               BasedOn="{StaticResource recEditPropPanelStyle}" />
+                    </StackPanel.Resources>
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Cutting Unit" />
+                        <TextBox Text="{Binding CuttingUnitCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Stratum" />
+                        <TextBox Text="{Binding StratumCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Sample Group" />
+                        <TextBox Text="{Binding SampleGroupCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Species" />
+                        <TextBox Text="{Binding SpeciesCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Live/Dead" />
+                        <TextBox Text="{Binding LiveDead}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Number" />
                         <TextBox Text="{Binding TreeNumber}"
-                                 Width="50" />
-                    </StackPanel>
+                                 IsReadOnly="False"
+                                 IsEnabled="True" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Count/Measure" />
+                        <TextBox Text="{Binding CountOrMeasure}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="CreatedBy" />
+                        <TextBox Text="{Binding CreatedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Created_TS" />
+                        <TextBox Text="{Binding Created_TS}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="ModifiedBy" />
+                        <TextBox Text="{Binding ModifiedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Modified_TS" />
+                        <TextBox Text="{Binding Modified_TS}" />
+                    </controls:LastChildWidthPanel>
+
                 </StackPanel>
             </DataTemplate>
 
             <!-- Data Template: Plot Tree -->
             <DataTemplate x:Key="plotTreeDataTemplate">
                 <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Cutting Unit Code" />
-                        <TextBox Text="{Binding CuttingUnitCode}"
-                                 Width="50" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style TargetType="controls:LastChildWidthPanel"
+                               BasedOn="{StaticResource recEditPropPanelStyle}" />
+                    </StackPanel.Resources>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Cutting Unit" />
+                        <TextBox Text="{Binding CuttingUnitCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
                         <Label Content="Plot Number" />
-                        <TextBox Text="{Binding PlotNumber}"
-                                 Width="50" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Tree Number" />
+                        <TextBox Text="{Binding PlotNumber}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Number" />
                         <TextBox Text="{Binding TreeNumber}"
-                                 Width="50" />
-                    </StackPanel>
+                                 IsReadOnly="False"
+                                 IsEnabled="True" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Stratum" />
+                        <TextBox Text="{Binding StratumCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Sample Group" />
+                        <TextBox Text="{Binding SampleGroupCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Species" />
+                        <TextBox Text="{Binding SpeciesCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Live/Dead" />
+                        <TextBox Text="{Binding LiveDead}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Count/Measure" />
+                        <TextBox Text="{Binding CountOrMeasure}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="CreatedBy" />
+                        <TextBox Text="{Binding CreatedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Created_TS" />
+                        <TextBox Text="{Binding Created_TS}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="ModifiedBy" />
+                        <TextBox Text="{Binding ModifiedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Modified_TS" />
+                        <TextBox Text="{Binding Modified_TS}" />
+                    </controls:LastChildWidthPanel>
                 </StackPanel>
             </DataTemplate>
 
             <!-- Data Template: Plot -->
             <DataTemplate x:Key="plotDataTemplate">
                 <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                    <StackPanel.Resources>
+                        <Style TargetType="controls:LastChildWidthPanel"
+                               BasedOn="{StaticResource recEditPropPanelStyle}" />
+                    </StackPanel.Resources>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Cutting Unit Code" />
-                        <TextBox Text="{Binding CuttingUnitCode}"
-                                 Width="50" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Plot Number" />
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Cutting Unit Code" />
+                        <TextBox Text="{Binding CuttingUnitCode}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Plot Number" />
                         <TextBox Text="{Binding PlotNumber}"
-                                 Width="50" />
-                    </StackPanel>
+                                 IsReadOnly="False"
+                                 IsEnabled="True" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Slope" />
+                        <TextBox Text="{Binding Slope}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Aspect" />
+                        <TextBox Text="{Binding Aspect}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Remarks" />
+                        <TextBox Text="{Binding Remarks}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="CreatedBy" />
+                        <TextBox Text="{Binding CreatedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Created_TS" />
+                        <TextBox Text="{Binding Created_TS}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="ModifiedBy" />
+                        <TextBox Text="{Binding ModifiedBy}" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Modified_TS" />
+                        <TextBox Text="{Binding Modified_TS}" />
+                    </controls:LastChildWidthPanel>
+
                 </StackPanel>
             </DataTemplate>
 
             <!-- Data Template: Log -->
             <DataTemplate x:Key="logDataTemplate">
                 <StackPanel Background="{DynamicResource MahApps.Brushes.Control.Background}">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style TargetType="controls:LastChildWidthPanel"
+                               BasedOn="{StaticResource recEditPropPanelStyle}" />
+                    </StackPanel.Resources>
+                    <controls:LastChildWidthPanel>
                         <Label Content="Cutting Unit Code" />
-                        <TextBox Text="{Binding CuttingUnitCode}"
-                                 Width="50" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                        <TextBox Text="{Binding CuttingUnitCode}" />
+                    </controls:LastChildWidthPanel>
+                    <controls:LastChildWidthPanel>
                         <Label Content="Plot Number" />
-                        <TextBox Text="{Binding PlotNumber}"
-                                 Width="50" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                        <TextBox Text="{Binding PlotNumber}" />
+                    </controls:LastChildWidthPanel>
+                    <controls:LastChildWidthPanel>
                         <Label Content="Tree Number" />
-                        <TextBox Text="{Binding TreeNumber}"
-                                 Width="50" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                        <TextBox Text="{Binding TreeNumber}" />
+                    </controls:LastChildWidthPanel>
+                    <controls:LastChildWidthPanel>
                         <Label Content="Log Number" />
                         <TextBox Text="{Binding LogNumber}"
-                                 Width="50" />
-                    </StackPanel>
+                                 IsReadOnly="False"
+                                 IsEnabled="True" />
+                    </controls:LastChildWidthPanel>
                 </StackPanel>
             </DataTemplate>
 
@@ -203,7 +531,8 @@
                           ItemsSource="{TemplateBinding ItemsSource}"
                           SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                     <ListView.Resources>
-                        <Style TargetType="{x:Type ListViewItem}">
+                        <Style TargetType="ListViewItem"
+                               BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ConflictResolution}"
                                              Value="sync:ConflictResolutionType.NotSet">
@@ -279,22 +608,65 @@
                 </StackPanel>
             </ControlTemplate>
 
-            <!-- Style: CollapseWhenChoseAndMergeNotSelected -->
-            <Style x:Key="collapseWhenChoseAndMergeNotSelected"
-                   TargetType="FrameworkElement">
-                <Setter Property="Visibility"
-                        Value="Collapsed" />
-                <d:Setter Property="Visibility"
-                          Value="Visible" />
-
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding ConflictResolution, Converter={StaticResource isResolveChoseAndMerge}}"
-                                 Value="true">
+            <!-- Control Template: Downstream Conflict List -->
+            <ControlTemplate x:Key="downstreamConflitList"
+                             TargetType="DataGrid">
+                <ControlTemplate.Resources>
+                    <Style x:Key="collapseWhenChoseAndMergeNotSelected"
+                           TargetType="Expander"
+                           BasedOn="{StaticResource MahApps.Styles.Expander}">
                         <Setter Property="Visibility"
-                                Value="Visible" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+                                Value="Collapsed" />
+                        <d:Setter Property="Visibility"
+                                  Value="Visible" />
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ConflictResolution, Converter={StaticResource isResolveChoseAndMerge}}"
+                                         Value="true">
+                                <Setter Property="Visibility"
+                                        Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <DataTemplate x:Key="downStreamConflictDetails">
+                        <Border BorderThickness="3">
+                            <ContentControl Content="{Binding .}"
+                                            Template="{StaticResource recordComparer}"
+                                            ContentTemplateSelector="{StaticResource conflictRecordDataTemplateSelector}" />
+                        </Border>
+                    </DataTemplate>
+                </ControlTemplate.Resources>
+
+                <Expander BorderThickness="1"
+                          Style="{StaticResource collapseWhenChoseAndMergeNotSelected}"
+                          Header="Downstream Conflicts">
+
+                    <DataGrid ItemsSource="{TemplateBinding ItemsSource}"
+                              DataContext="{TemplateBinding DataContext}"
+                              RowDetailsTemplate="{StaticResource downStreamConflictDetails}"
+                              RowDetailsVisibilityMode="VisibleWhenSelected"
+                              AutoGenerateColumns="False"
+                              GridLinesVisibility="All">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Table"
+                                                Binding="{Binding Table}" />
+                            <DataGridComboBoxColumn Header="Resolution"
+                                                    ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_CHOSE}"
+                                                    SelectedItemBinding="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+                            <DataGridTextColumn Header="Identity"
+                                                Binding="{Binding Identity}" />
+                            <DataGridTextColumn Header="Dest Rec Changed"
+                                                Binding="{Binding DestMod}" />
+                            <DataGridTextColumn Header="Crew Rec Changed"
+                                                Binding="{Binding SourceMod}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Expander>
+            </ControlTemplate>
+
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -382,6 +754,7 @@
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_cuttingUnitConflictList}"
                               IsEnabled="{Binding SelectedItem, ElementName=_cuttingUnitConflictList, Converter={StaticResource NotNullConverter}}"
+                              d:IsEnabled="True"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -402,31 +775,21 @@
                                             ContentTemplate="{StaticResource cuttingUnitDataTemplate}" />
 
                             <!-- Downstream Conflicts -->
-                            <Border Grid.Row="2"
-                                    BorderThickness="1"
-                                    Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
+                            <DataGrid Grid.Row="2"
+                                Template="{StaticResource downstreamConflitList}"
+                                      ItemsSource="{Binding DownstreamConflicts}"
+                                      d:ItemsSource="{d:SampleData ItemCount=5}" />
 
-                                <StackPanel>
+                            <!--<Expander Grid.Row="2"
+                                      BorderThickness="1"
+                                      Style="{StaticResource collapseWhenChoseAndMergeNotSelected}"
+                                      Header="Downstream Conflicts">
 
-                                    <Label Content="Downstream Conflicts"
-                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
-                                           FontSize="10"
-                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
-                                    <DataGrid Template="{StaticResource downstreamConflitList}"
-                                              ItemsSource="{Binding DownstreamConflicts}"
-                                              d:ItemsSource="{d:SampleData ItemCount=5}">
-                                        <DataGrid.RowDetailsTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="3">
-                                                    <ContentControl Content="{Binding .}"
-                                                                    Template="{StaticResource recordComparer}"
-                                                                    ContentTemplateSelector="{StaticResource conflictRecordDataTemplateSelector}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGrid.RowDetailsTemplate>
-                                    </DataGrid>
-                                </StackPanel>
-                            </Border>
+                                <DataGrid Template="{StaticResource downstreamConflitList}"
+                                          ItemsSource="{Binding DownstreamConflicts}"
+                                          d:ItemsSource="{d:SampleData ItemCount=5}" />
+
+                            </Expander>-->
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -449,6 +812,7 @@
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_strataConflictList}"
                               DataContextChanged="SelectedConflictChanged"
+                              IsEnabled="{Binding SelectedItem, ElementName=_strataConflictList, Converter={StaticResource NotNullConverter}}"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -459,7 +823,7 @@
                             <!-- Resolution Picker -->
                             <ComboBox Grid.Row="0"
                                       Template="{StaticResource resolutionPicker}"
-                                      ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_NO_MERGE}"
+                                      ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_NO_CHOSE}"
                                       SelectedItem="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
 
                             <!-- Record Comparison Panel -->
@@ -469,16 +833,10 @@
                                             ContentTemplate="{StaticResource stratumDataTemplate}" />
 
                             <!-- Downstream Conflicts -->
-                            <!--
-                            <Border>
-                                <StackPanel>
-                                    <Label Content="Downstream Conflicts"
-                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
-                                           FontSize="10"
-                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
-                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
-                                </StackPanel>
-                            </Border>-->
+                            <DataGrid Grid.Row="2"
+                                      Template="{StaticResource downstreamConflitList}"
+                                      ItemsSource="{Binding DownstreamConflicts}"
+                                      d:ItemsSource="{d:SampleData ItemCount=5}" />
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -500,6 +858,7 @@
                         <!-- Resolution Panel -->
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_sampleGroupConflictList}"
+                              IsEnabled="{Binding SelectedItem, ElementName=_sampleGroupConflictList, Converter={StaticResource NotNullConverter}}"
                               DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
@@ -519,18 +878,6 @@
                                             Content="{Binding .}"
                                             Template="{StaticResource recordComparer}"
                                             ContentTemplate="{StaticResource sampleGroupDataTemplate}" />
-
-                            <!-- Downstream Conflicts -->
-                            <!--
-                            <Border>
-                                <StackPanel>
-                                    <Label Content="Downstream Conflicts"
-                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
-                                           FontSize="10"
-                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
-                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
-                                </StackPanel>
-                            </Border>-->
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -552,6 +899,7 @@
                         <!-- Resolution Panel -->
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_plotConflictList}"
+                              IsEnabled="{Binding SelectedItem, ElementName=_plotConflictList, Converter={StaticResource NotNullConverter}}"
                               DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
@@ -573,15 +921,10 @@
                                             ContentTemplate="{StaticResource plotDataTemplate}" />
 
                             <!-- Downstream Conflicts -->
-                            <Border Grid.Row="2">
-                                <StackPanel  Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
-                                    <Label Content="Downstream Conflicts"
-                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
-                                           FontSize="10"
-                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
-                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
-                                </StackPanel>
-                            </Border>
+                            <DataGrid Grid.Row="2"
+                                      Template="{StaticResource downstreamConflitList}"
+                                      ItemsSource="{Binding DownstreamConflicts}"
+                                      d:ItemsSource="{d:SampleData ItemCount=5}" />
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -603,6 +946,7 @@
                         <!-- Resolution Panel -->
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_treeConflictList}"
+                              IsEnabled="{Binding SelectedItem, ElementName=_treeConflictList, Converter={StaticResource NotNullConverter}}"
                               DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
@@ -624,15 +968,10 @@
                                             ContentTemplate="{StaticResource treeDataTemplate}" />
 
                             <!-- Downstream Conflicts -->
-                            <Border Grid.Row="2">
-                                <StackPanel  Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
-                                    <Label Content="Downstream Conflicts"
-                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
-                                           FontSize="10"
-                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
-                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
-                                </StackPanel>
-                            </Border>
+                            <DataGrid Grid.Row="2"
+                                      Template="{StaticResource downstreamConflitList}"
+                                      ItemsSource="{Binding DownstreamConflicts}"
+                                      d:ItemsSource="{d:SampleData ItemCount=5}" />
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -654,6 +993,7 @@
                         <!-- Resolution Panel -->
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_plotTreeConflictList}"
+                              IsEnabled="{Binding SelectedItem, ElementName=_plotTreeConflictList, Converter={StaticResource NotNullConverter}}"
                               DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
@@ -675,15 +1015,10 @@
                                             ContentTemplate="{StaticResource plotTreeDataTemplate}" />
 
                             <!-- Downstream Conflicts -->
-                            <Border Grid.Row="2">
-                                <StackPanel  Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
-                                    <Label Content="Downstream Conflicts"
-                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
-                                           FontSize="10"
-                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
-                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
-                                </StackPanel>
-                            </Border>
+                            <DataGrid Grid.Row="2"
+                                      Template="{StaticResource downstreamConflitList}"
+                                      ItemsSource="{Binding DownstreamConflicts}"
+                                      d:ItemsSource="{d:SampleData ItemCount=5}" />
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -705,12 +1040,13 @@
                         <!-- Resolution Panel -->
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_logConflictList}"
+                              IsEnabled="{Binding SelectedItem, ElementName=_plotTreeConflictList, Converter={StaticResource NotNullConverter}}"
                               DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
+                                <!--<RowDefinition Height="Auto" />-->
                             </Grid.RowDefinitions>
 
                             <!-- Resolution Picker -->
@@ -724,17 +1060,6 @@
                                             Content="{Binding .}"
                                             Template="{StaticResource recordComparer}"
                                             ContentTemplate="{StaticResource logDataTemplate}" />
-
-                            <!-- Downstream Conflicts -->
-                            <Border Grid.Row="2">
-                                <StackPanel  Style="{StaticResource collapseWhenChoseAndMergeNotSelected}">
-                                    <Label Content="Downstream Conflicts"
-                                           Background="{DynamicResource MahApps.Brushes.Badged.Background}"
-                                           FontSize="10"
-                                           Foreground="{DynamicResource MahApps.Brushes.Badged.Foreground}" />
-                                    <DataGrid Template="{StaticResource downstreamConflitList}" />
-                                </StackPanel>
-                            </Border>
                         </Grid>
                     </Grid>
                 </TabItem>

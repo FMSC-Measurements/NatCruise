@@ -1,7 +1,7 @@
 ﻿using NatCruise.Models;
 using System.Collections.Generic;
 
-namespace NatCruise.Data.Abstractions
+namespace NatCruise.Data
 {
     public interface ISaleDataservice : IDataservice
     {
@@ -17,18 +17,20 @@ namespace NatCruise.Data.Abstractions
 
         void UpdateSale(Sale sale);
 
+        void UpdateSaleNumber(Sale sale);
+
         void DeleteCruise(string cruiseID);
 
-        IEnumerable<Cruise> GetCruises();
+        IEnumerable<Models.Cruise> GetCruises();
 
-        IEnumerable<Cruise> GetCruisesBySaleNumber(string saleNumber);
+        IEnumerable<Models.Cruise> GetCruisesBySaleNumber(string saleNumber);
 
-        IEnumerable<Cruise> GetCruises(string saleID);
+        IEnumerable<Models.Cruise> GetCruises(string saleID);
 
-        Cruise GetCruise();
+        Models.Cruise GetCruise();
 
-        Cruise GetCruise(string cruiseID);
+        Models.Cruise GetCruise(string cruiseID);
 
-        void UpdateCruise(Cruise cruise);
+        void UpdateCruise(Models.Cruise cruise);
     }
 }
