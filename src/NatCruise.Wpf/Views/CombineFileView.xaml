@@ -642,23 +642,13 @@
                           Style="{StaticResource collapseWhenChoseAndMergeNotSelected}"
                           Header="Downstream Conflicts">
 
-
-
-
                     <DataGrid ItemsSource="{TemplateBinding ItemsSource}"
                               DataContext="{TemplateBinding DataContext}"
                               RowDetailsTemplate="{StaticResource downStreamConflictDetails}"
                               RowDetailsVisibilityMode="VisibleWhenSelected"
                               AutoGenerateColumns="False"
                               GridLinesVisibility="All">
-                        <!--<DataGrid.RowDetailsTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Label Content="Dest Rec Info" />
-                                <Label Content="Crew Rec Info" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGrid.RowDetailsTemplate>-->
+
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Table"
                                                 Binding="{Binding Table}" />
