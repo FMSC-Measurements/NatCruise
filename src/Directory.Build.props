@@ -5,7 +5,7 @@
   </PropertyGroup>
   
  <PropertyGroup Label="Custom Properties">
-   <FScruiserVersion>3.0.1.0</FScruiserVersion>
+   <FScruiserVersion>3.0.1.1</FScruiserVersion>
 	 <UseCruiseDALProjRefs>false</UseCruiseDALProjRefs>
  </PropertyGroup>
   
