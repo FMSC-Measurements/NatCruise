@@ -651,7 +651,7 @@
                             <DataTemplate>
 
                                 <Frame CornerRadius="5"
-                                       BackgroundColor="Green"
+                                       BackgroundColor="{StaticResource fs_green}"
                                        Margin="3"
                                        Padding="0"
                                        AutomationProperties.IsInAccessibleTree="True"

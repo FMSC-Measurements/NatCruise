@@ -1,9 +1,5 @@
 ﻿using NatCruise.Cruise.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NatCruise.Models;
 using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewCells
@@ -19,11 +15,11 @@ namespace FScruiser.XF.ViewCells
         {
             if (item is TallyEntry tallyEntry)
             {
-                if (tallyEntry.EntryType == TallyLedger.EntryTypeValues.TALLY)
+                if (tallyEntry.EntryType == TallyLedgerEntryTypeValues.TALLY)
                 {
                     return (tallyEntry.TreeID != null) ? TreeItemTemplate : BasicTemplate;
                 }
-                else if(tallyEntry.EntryType == TallyLedger.EntryTypeValues.MANUAL_TREE)
+                else if (tallyEntry.EntryType == TallyLedgerEntryTypeValues.MANUAL_TREE)
                 {
                     return ManualTreeTemplate;
                 }

@@ -1,11 +1,7 @@
 ﻿using CruiseDAL.Schema;
-using NatCruise.Cruise.Models;
+using NatCruise.Models;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace FScruiser.XF.Converters
