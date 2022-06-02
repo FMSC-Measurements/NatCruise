@@ -73,6 +73,11 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync("FeedBack");
         }
 
+        public Task ShowFieldData(string cuttingUnit = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task ShowFixCNT(string unitCode, int plotNumber, string stratumCode)
         {
             if (string.IsNullOrEmpty(unitCode))
