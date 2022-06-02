@@ -56,7 +56,7 @@ $@"SELECT
         sg.SamplingFrequency AS Frequency,
         sg.MinKPI AS sgMinKPI,
         sg.MaxKPI AS sgMaxKPI,
-        sg.SampleSelectorType == '{CruiseMethods.CLICKER_SAMPLER_TYPE}' AS IsClickerTally
+        sg.SampleSelectorType 
     FROM TallyPopulation AS tp
     JOIN SampleGroup AS sg USING (CruiseID, StratumCode, SampleGroupCode)
     -- Left JOIN SamplerState ss USING (CruiseID, StratumCode, SampleGroupCode)
