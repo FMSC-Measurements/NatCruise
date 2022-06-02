@@ -207,8 +207,9 @@ namespace NatCruise.Data
             var deviceID = deviceInfoService.DeviceID;
             var deviceName = deviceInfoService.DeviceName;
             var cruiseID = CruiseID;
+            var database = Database;
 
-            var device = Database.Query<Device>("SELECT * FROM Device WHERE DeviceID = @p1 AND CruiseID = @p2;", deviceID, cruiseID).FirstOrDefault();
+            var device = database.Query<Device>("SELECT * FROM Device WHERE DeviceID = @p1 AND CruiseID = @p2;", deviceID, cruiseID).FirstOrDefault();
 
             if (device == null)
             {
@@ -219,7 +220,7 @@ namespace NatCruise.Data
                     Name = deviceName,
                 };
 
-                Database.Insert(device);
+                database.Insert(device);
             }
 
             return device;

@@ -2,6 +2,7 @@
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Common;
@@ -32,10 +33,11 @@ namespace FScruiser.XF.ViewModels
         private Plot_Stratum _plot;
 
         protected IDataserviceProvider DataserviceProvider { get; }
+        public IPlotStratumDataservice PlotStratumDataservice { get; protected set; }
         public IPlotDataservice PlotDataservice { get; protected set; }
         public INatCruiseDialogService DialogService { get; }
 
-        public Plot_Stratum Plot
+        public Plot_Stratum PlotStratum
         {
             get => _plot;
             set => SetProperty(ref _plot, value);
@@ -176,6 +178,7 @@ namespace FScruiser.XF.ViewModels
 
         public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService)
         {
+            // we need DataserviceProvider because we might not know if a cruise is selected until Load gets called
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
@@ -203,16 +206,17 @@ namespace FScruiser.XF.ViewModels
 
             if (unitCode != null && stratumCode != null && plotNumber != null)
             {
-                var ds = PlotDataservice = DataserviceProvider.GetDataservice<PlotDataservice>();
-                var plot = ds.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
+                var ds = PlotStratumDataservice = DataserviceProvider.GetDataservice<IPlotStratumDataservice>();
+                var pDs = PlotDataservice = DataserviceProvider.GetDataservice<IPlotDataservice>();
+                var plotSt = ds.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
 
-                if (plot != null)
+                if (plotSt != null)
                 {
-                    var isVariableRadious = IsVariableRadius = CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(plot.CruiseMethod);
+                    var isVariableRadious = IsVariableRadius = CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(plotSt.CruiseMethod);
 
-                    BafOrFps = (isVariableRadious) ? plot.BAF : plot.FPS;
+                    BafOrFps = (isVariableRadious) ? plotSt.BAF : plotSt.FPS;
 
-                    Plot = plot;
+                    PlotStratum = plotSt;
 
                     RaisePropertyChanged(nameof(BafOrFps));
                 }
@@ -253,14 +257,14 @@ namespace FScruiser.XF.ViewModels
             if (IsTreeIn.HasValue)
             {
                 return CalculateLimitingDistance.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
-                    SlopePCT, Azimuth, BafOrFps, DBH, IsVariableRadius, IsToFace, Plot?.StratumCode);
+                    SlopePCT, Azimuth, BafOrFps, DBH, IsVariableRadius, IsToFace, PlotStratum?.StratumCode);
             }
             else { return null; }
         }
 
         public void SaveReport()
         {
-            var plot = Plot;
+            var plot = PlotStratum;
             if (plot != null)
             {
                 var report = GenerateReport();

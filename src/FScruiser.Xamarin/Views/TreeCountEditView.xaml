@@ -18,9 +18,7 @@
             <Frame  Grid.Row="0"
                     Padding="0"
                     Margin="0"
-                    BackgroundColor="Green"
-                    BorderColor="Green"
-                    CornerRadius="10">
+                    BackgroundColor="{StaticResource fs_green}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <!-- tally pop identifier -->
@@ -201,6 +199,7 @@
                             </ResourceDictionary>
                         </StackLayout.Resources>
 
+                        <!-- Tree Count -->
                         <Frame BackgroundColor="White">
 
                             <StackLayout Orientation="Horizontal">
@@ -214,6 +213,7 @@
                             </StackLayout>
                         </Frame>
 
+                        <!-- Frequency -->
                         <Frame BackgroundColor="White"
                                IsVisible="{Binding IsSTR}">
 
@@ -223,13 +223,42 @@
 
                                 <Label Text="{Binding TallyPopulation.Frequency, FallbackValue=00000}"
                                        AutomationProperties.IsInAccessibleTree="True"
-                                       AutomationProperties.Name="Tree Count"
+                                       AutomationProperties.Name="Sampling Frequency"
                                        AutomationProperties.HelpText="{Binding TallyPopulation.Frequency}" />
                             </StackLayout>
                         </Frame>
 
-                    </StackLayout >
+                        <!-- Insurance Frequency -->
+                        <Frame BackgroundColor="White"
+                               IsVisible="{Binding IsSTR}">
 
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Insurance Frequency:"
+                                       AutomationProperties.IsInAccessibleTree="False" />
+
+                                <Label Text="{Binding TallyPopulation.InsuranceFrequency, FallbackValue=00000}"
+                                       AutomationProperties.IsInAccessibleTree="True"
+                                       AutomationProperties.Name="Insurance Frequency"
+                                       AutomationProperties.HelpText="{Binding TallyPopulation.InsuranceFrequency}" />
+                            </StackLayout>
+                        </Frame>
+
+                        <!-- KZ -->
+                        <Frame BackgroundColor="White"
+                               IsVisible="{Binding Is3P}">
+
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="KZ:"
+                                       AutomationProperties.IsInAccessibleTree="False" />
+
+                                <Label Text="{Binding TallyPopulation.KZ, FallbackValue=00000}"
+                                       AutomationProperties.IsInAccessibleTree="True"
+                                       AutomationProperties.Name="KZ"
+                                       AutomationProperties.HelpText="{Binding TallyPopulation.KZ}" />
+                            </StackLayout>
+                        </Frame>
+
+                    </StackLayout >
 
                 </Grid>
             </Frame>
@@ -313,7 +342,7 @@
                             VerticalOptions="CenterAndExpand"
                             WidthRequest="150"
                             AutomationProperties.IsInAccessibleTree="True"
-                            AutomationProperties.Name="Reson Picker" />
+                            AutomationProperties.Name="Reson" />
 
                     <!--Remarks-->
                     <Label  Grid.Row="3"
@@ -327,7 +356,7 @@
                             HeightRequest="100"
                             BackgroundColor="LightGray"
                             AutomationProperties.IsInAccessibleTree="True"
-                            AutomationProperties.Name="Remaks Textbox"/>
+                            AutomationProperties.Name="Remaks"/>
                 </Grid>
 
                 <!--<TableView>
@@ -372,7 +401,7 @@
                          VerticalOptions="End">
 
                 <Button Text="Submit"
-                        BackgroundColor="Green"
+                        BackgroundColor="{StaticResource color_action}"
                         Command="{Binding SaveTreeCountEditCommand}"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Save Button" />
