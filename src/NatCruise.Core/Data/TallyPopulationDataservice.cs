@@ -54,6 +54,8 @@ $@"SELECT
                 AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
             ) AS SumKPI,
         sg.SamplingFrequency AS Frequency,
+        sg.InsuranceFrequency,
+        sg.KZ, 
         sg.MinKPI AS sgMinKPI,
         sg.MaxKPI AS sgMaxKPI,
         sg.SampleSelectorType 

@@ -31,5 +31,9 @@ namespace NatCruise.Models
         //public bool UseExternalSampler { get; set; }
 
         public int Frequency { get; set; }
+
+        public int InsuranceFrequency { get; set; }
+
+        public int KZ { get; set; }
     }
 }

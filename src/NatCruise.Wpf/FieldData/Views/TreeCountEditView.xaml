@@ -20,6 +20,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -70,7 +71,50 @@
             </controls:LastChildWidthPanel>
         </WrapPanel>
 
-        <ScrollViewer Grid.Row="1">
+        <WrapPanel Grid.Row="1">
+            <WrapPanel.Resources>
+                <Style TargetType="controls:LastChildWidthPanel">
+                    <Style.Resources>
+                        <Style TargetType="TextBlock"
+                               BasedOn="{StaticResource MahApps.Styles.TextBlock}">
+                            <Setter Property="VerticalAlignment"
+                                    Value="Center" />
+                        </Style>
+
+                    </Style.Resources>
+                    <Setter Property="Width"
+                            Value="120" />
+                    <Setter Property="LastChildWidth"
+                            Value="30" />
+                    <Setter Property="Margin"
+                            Value="3" />
+                </Style>
+            </WrapPanel.Resources>
+
+            <!-- KZ -->
+            <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding Is3P}">
+                <TextBlock Text="KZ:" />
+                <TextBlock Text="{Binding TallyPopulation.KZ}"
+                           d:Text="00" />
+            </controls:LastChildWidthPanel>
+
+            <!-- Frequency -->
+            <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding IsSTR}">
+                <TextBlock Text="Frequency:" />
+                <TextBlock Text="{Binding TallyPopulation.Frequency}"
+                           d:Text="00" />
+            </controls:LastChildWidthPanel>
+
+            <!-- Insurance Frequency -->
+            <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding IsSTR}">
+                <TextBlock Text="Frequency:" />
+                <TextBlock Text="{Binding TallyPopulation.InsuranceFrequency}"
+                           d:Text="00" />
+            </controls:LastChildWidthPanel>
+            
+        </WrapPanel>
+
+        <ScrollViewer Grid.Row="2">
             <StackPanel HorizontalAlignment="Left">
 
                 <StackPanel.Resources>
