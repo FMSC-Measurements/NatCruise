@@ -263,7 +263,8 @@ namespace NatCruise.Design.ViewModels
             get => SampleGroup?.SampleSelectorType ?? DefaultSampleSelectorType;
             set
             {
-                SampleGroup.SampleSelectorType = value;
+                SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SampleSelectorType = x);
+                SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
             }
         }
 
