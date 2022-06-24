@@ -956,6 +956,8 @@
                             </Grid.RowDefinitions>
 
                             <!-- Resolution Picker -->
+                            <!-- Tree Records merging downstream conflicts not implemented, because 
+                                    logs are linked to trees by TreeID -->
                             <ComboBox Grid.Row="0"
                                       Template="{StaticResource resolutionPicker}"
                                       ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_NO_MERGE}"
@@ -967,11 +969,11 @@
                                             Template="{StaticResource recordComparer}"
                                             ContentTemplate="{StaticResource treeDataTemplate}" />
 
-                            <!-- Downstream Conflicts -->
+                            <!-- Downstream Conflicts --><!--
                             <DataGrid Grid.Row="2"
                                       Template="{StaticResource downstreamConflitList}"
                                       ItemsSource="{Binding DownstreamConflicts}"
-                                      d:ItemsSource="{d:SampleData ItemCount=5}" />
+                                      d:ItemsSource="{d:SampleData ItemCount=5}" />-->
                         </Grid>
                     </Grid>
                 </TabItem>
