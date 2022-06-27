@@ -16,6 +16,8 @@
 
             <converters:IsEmptyConverter x:Key="IsNotNullOrEmptyConverter"
                                          Invert="True" />
+            <converters:IsEmptyConverter x:Key="IsNullOrEmptyConverter"
+                                         Invert="False" />
 
             <converters:AppendConverter x:Key="AppendConverter" />
             <converters:PrependConverter x:Key="PrependConverter" />
