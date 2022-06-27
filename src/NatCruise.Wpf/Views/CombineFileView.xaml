@@ -26,7 +26,7 @@
                 <sync:ConflictResolutionType>ChoseDestMergeData</sync:ConflictResolutionType>
             </converters:IsResolutionTypeValueConverter>
 
-            
+
 
             <sys:Double x:Key="stdFieldWidth">70</sys:Double>
 
@@ -559,7 +559,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <GroupBox Header="Established Record"
+                        <GroupBox Header="Destination Record"
                                   Grid.Column="0"
                                   Background="{DynamicResource MahApps.Brushes.Control.Background}">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -625,6 +625,8 @@
                                          Value="true">
                                 <Setter Property="Visibility"
                                         Value="Visible" />
+                                <Setter Property="IsExpanded"
+                                        Value="True" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -642,27 +644,43 @@
                           Style="{StaticResource collapseWhenChoseAndMergeNotSelected}"
                           Header="Downstream Conflicts">
 
-                    <DataGrid ItemsSource="{TemplateBinding ItemsSource}"
-                              DataContext="{TemplateBinding DataContext}"
-                              RowDetailsTemplate="{StaticResource downStreamConflictDetails}"
-                              RowDetailsVisibilityMode="VisibleWhenSelected"
-                              AutoGenerateColumns="False"
-                              GridLinesVisibility="All">
+                    <Grid>
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Table"
-                                                Binding="{Binding Table}" />
-                            <DataGridComboBoxColumn Header="Resolution"
-                                                    ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_CHOSE}"
-                                                    SelectedItemBinding="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
-                            <DataGridTextColumn Header="Identity"
-                                                Binding="{Binding Identity}" />
-                            <DataGridTextColumn Header="Dest Rec Changed"
-                                                Binding="{Binding DestMod}" />
-                            <DataGridTextColumn Header="Crew Rec Changed"
-                                                Binding="{Binding SourceMod}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                        <DataGrid ItemsSource="{TemplateBinding ItemsSource}"
+                                  DataContext="{TemplateBinding DataContext}"
+                                  RowDetailsTemplate="{StaticResource downStreamConflictDetails}"
+                                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                                  AutoGenerateColumns="False"
+                                  GridLinesVisibility="All"
+                                  x:Name="downstreamConflitList_datagrid"
+                                  Grid.Row="0">
+
+                            
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Table"
+                                                    Binding="{Binding Table}" />
+                                <DataGridComboBoxColumn Header="Resolution"
+                                                        ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_CHOSE}"
+                                                        SelectedItemBinding="{Binding ConflictResolution, Converter={StaticResource resolutionConverter}}" />
+                                <DataGridTextColumn Header="Identity"
+                                                    Binding="{Binding Identity}" />
+                                <DataGridTextColumn Header="Dest Rec Changed"
+                                                    Binding="{Binding DestMod}" />
+                                <DataGridTextColumn Header="Crew Rec Changed"
+                                                    Binding="{Binding SourceMod}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <UserControl Background="{DynamicResource MahApps.Brushes.Control.Background}"
+                                     mah_ctrls:VisibilityHelper.IsVisible="{Binding ItemsSource, Converter={StaticResource IsNullOrEmptyConverter}, RelativeSource={RelativeSource Mode=TemplatedParent} }"
+                                        Grid.Row="0">
+                            <TextBlock Text="No Downstream Conflicts"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+                        </UserControl>
+                        
+                    </Grid>
                 </Expander>
             </ControlTemplate>
 
@@ -776,7 +794,7 @@
 
                             <!-- Downstream Conflicts -->
                             <DataGrid Grid.Row="2"
-                                Template="{StaticResource downstreamConflitList}"
+                                      Template="{StaticResource downstreamConflitList}"
                                       ItemsSource="{Binding DownstreamConflicts}"
                                       d:ItemsSource="{d:SampleData ItemCount=5}" />
 
@@ -878,6 +896,8 @@
                                             Content="{Binding .}"
                                             Template="{StaticResource recordComparer}"
                                             ContentTemplate="{StaticResource sampleGroupDataTemplate}" />
+
+                            <!-- no downstream conflicts for Sample Groups -->
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -956,6 +976,8 @@
                             </Grid.RowDefinitions>
 
                             <!-- Resolution Picker -->
+                            <!-- Tree Records merging downstream conflicts not implemented, because 
+                                    logs are linked to trees by TreeID -->
                             <ComboBox Grid.Row="0"
                                       Template="{StaticResource resolutionPicker}"
                                       ItemsSource="{x:Static converters:ResolutionDescriptionToConflictResolutionTypeConverter.RESOLUTION_OPTIONS_NO_MERGE}"
@@ -968,10 +990,11 @@
                                             ContentTemplate="{StaticResource treeDataTemplate}" />
 
                             <!-- Downstream Conflicts -->
+                            <!--
                             <DataGrid Grid.Row="2"
                                       Template="{StaticResource downstreamConflitList}"
                                       ItemsSource="{Binding DownstreamConflicts}"
-                                      d:ItemsSource="{d:SampleData ItemCount=5}" />
+                                      d:ItemsSource="{d:SampleData ItemCount=5}" />-->
                         </Grid>
                     </Grid>
                 </TabItem>
