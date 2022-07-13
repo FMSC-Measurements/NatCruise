@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.XF.Views.DatabaseUtilitiesView"
+             Title="Database Utilities"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Database Utilities Page">
+    <ContentPage.Content>
+        <StackLayout>
+            <Button Text="Reset Database"
+                    Command="{Binding ResetDatabaseCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Reset Database" />
+            <Button Text="Backup Database"
+                    Command="{Binding BackupDatabaseCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Backup Database" />
+            <Button Text="Load Database"
+                    Command="{Binding LoadDatabaseCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Backup Database" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
