@@ -33,18 +33,10 @@
 
                 </StackLayout>
             </StackLayout>
-            <Button Text="Reset Database"
-                    Command="{Binding ResetDatabaseCommand}"
+            <Button Text="Database Utilities"
+                    Command="{Binding ShowDatabaseUtilitiesCommand}"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Reset Database" />
-            <Button Text="Backup Database"
-                    Command="{Binding BackupDatabaseCommand}"
-                    AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Backup Database"/>
-            <Button Text="Load Database"
-                    Command="{Binding LoadDatabaseCommand}"
-                    AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Backup Database" />
+                    AutomationProperties.Name="Database Utilities" />
 
             <Button Text="Privacy Policy"
                     Command="{Binding ShowPrivacyPolicyCommand}"

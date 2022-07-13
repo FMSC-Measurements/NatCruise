@@ -14,6 +14,9 @@ namespace FScruiser.XF.Services
         Task ShowCuttingUnitList();
 
         //Task ShowCruiseSelect(string saleID);
+
+        Task ShowDatabaseUtilities();
+
         Task ShowFixCNT(string unitCode, int plotNumber, string stratumCode);
 
         Task ShowImport();
