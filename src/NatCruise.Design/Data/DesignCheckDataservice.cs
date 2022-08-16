@@ -94,8 +94,8 @@ FROM (
             subp.*,
             (SELECT TreeDefaultValue_CN FROM TreeDefaultValue AS tdv
             WHERE  tdv.CruiseID = subp.CruiseID
-                AND SpeciesCode = subp.SpeciesCode OR SpeciesCode IS NULL
-                AND PrimaryProduct = sg.PrimaryProduct OR PrimaryProduct IS NULL
+                AND (SpeciesCode = subp.SpeciesCode OR SpeciesCode IS NULL)
+                AND (PrimaryProduct = sg.PrimaryProduct OR PrimaryProduct IS NULL)
             ORDER BY PrimaryProduct DESC, SpeciesCode DESC
             LIMIT 1
             ) AS TreeDefaultValue_CN
