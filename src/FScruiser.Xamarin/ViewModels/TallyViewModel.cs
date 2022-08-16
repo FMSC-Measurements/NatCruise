@@ -160,10 +160,12 @@ namespace FScruiser.XF.ViewModels
         private ICommand _stratumSelectedCommand;
         private ICommand _tallyCommand;
         private ICommand _untallyCommand;
+        private ICommand _selectPreviouseTreeCommand;
         private string _title;
         private TreeEditViewModel _selectedTreeViewModel;
         private TallyEntry _selectedEntry;
         private CuttingUnit _cuttingUnit;
+        private DelegateCommand _selectNextTreeCommand;
 
         public ICommand ShowTallyMenuCommand => _showTallyMenuCommand ??= new DelegateCommand<TallyPopulationEx>((tp) => ShowTallyMenu(tp).FireAndForget());
 
@@ -174,6 +176,10 @@ namespace FScruiser.XF.ViewModels
         public ICommand EditTreeCommand => _editTreeCommand ??= new DelegateCommand<string>((treeID) => EditTree(treeID).FireAndForget());
 
         public ICommand UntallyCommand => _untallyCommand ??= new DelegateCommand<string>(Untally);
+
+        public ICommand SelectPreviousTreeCommand => _selectPreviouseTreeCommand ??= new DelegateCommand(SelectPreviousTree);
+
+        public ICommand SelectNextTreeCommand => _selectNextTreeCommand ??= new DelegateCommand(SelectNextTree);
 
         #endregion Commands
 
@@ -223,16 +229,55 @@ namespace FScruiser.XF.ViewModels
             var treeID = tallyEntry?.TreeID;
             if (treeID != null)
             {
-                var treeVM = ContainerProvider.Resolve<TreeEditViewModel>((typeof(ICruiseNavigationService), NavigationService));
-                treeVM.UseSimplifiedTreeFields = true;
-                treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
-                treeVM.Load();
-
-                SelectedTreeViewModel = treeVM;
+                SetSelectedTreeViewModel(treeID);
             }
             else
             {
                 SelectedTreeViewModel = null;
+            }
+        }
+
+        protected void SetSelectedTreeViewModel(string treeID)
+        {
+            var treeVM = ContainerProvider.Resolve<TreeEditViewModel>((typeof(ICruiseNavigationService), NavigationService));
+            treeVM.UseSimplifiedTreeFields = true;
+            treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
+            treeVM.Load();
+
+            SelectedTreeViewModel = treeVM;
+        }
+
+        public void SelectPreviousTree()
+        {
+            var selectedEntry = SelectedEntry;
+            if (selectedEntry == null) { return; }
+
+            var tallyFeed = TallyFeed;
+            var i = tallyFeed.IndexOf(selectedEntry);
+            if(i == -1) { return; }
+            if(i < 1) { return; }
+
+            var prevTallyEntry = tallyFeed.ReverseSearch(x => x.TreeID != null, i - 1);
+            if (prevTallyEntry != null)
+            {
+                SelectTallyEntry(prevTallyEntry);
+            }
+        }
+
+        public void SelectNextTree()
+        {
+            var selectedEntry = SelectedEntry;
+            if (selectedEntry == null) { return; }
+
+            var tallyFeed = TallyFeed;
+            var i = tallyFeed.IndexOf(selectedEntry);
+            if (i == -1) { return; }
+            if (i == tallyFeed.Count - 1) { return; }
+
+            var prevTallyEntry = tallyFeed.Search(x => x.TreeID != null, i + 1);
+            if (prevTallyEntry != null)
+            {
+                SelectTallyEntry(prevTallyEntry);
             }
         }
 
