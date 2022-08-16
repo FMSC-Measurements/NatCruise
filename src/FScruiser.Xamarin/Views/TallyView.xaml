@@ -556,9 +556,13 @@
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Tree Edit Panel">
 
-                    <Grid>
+                    <Grid HorizontalOptions="CenterAndExpand">
                         <!--default to not visible, when view cell expands visibility will be set to true -->
 
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -566,22 +570,37 @@
                             <RowDefinition Height="2" />
                         </Grid.RowDefinitions>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
 
-                        <Label Grid.ColumnSpan="3"
-                               Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
-                               TextColor="{StaticResource darkText}"
-                               FontSize="Large" />
+
+                        <Grid >
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="5" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="1"
+                                    Text="Prev"
+                                    Command="{Binding BindingContext.SelectPreviousTreeCommand, Source={Reference _page}}" />
+                            <Label Grid.Column="3"
+                                   Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
+                                   TextColor="{StaticResource darkText}"
+                                   FontSize="Large" />
+                            <Button Grid.Column="5"
+                                    Text="Next"
+                                    Command="{Binding BindingContext.SelectNextTreeCommand, Source={Reference _page}}" />
+                        </Grid>
+                        
+                        
 
                         <ScrollView x:Name="_treeEditScrollView"
                                     Grid.Row="1"
                                     Grid.Column="0"
-                                    Grid.ColumnSpan="4"
                                     Orientation="Horizontal">
                             <Grid x:Name="_treeEditControlGrid">
                                 <Grid.RowDefinitions>
@@ -591,36 +610,41 @@
                             </Grid>
                         </ScrollView>
 
-                        <Button  x:Name="_hideTreeEditPanelButton"
-                                 Grid.Row="2"
-                                 Grid.Column="0"
-                                 Text="Hide"
-                                 HorizontalOptions="Start"
-                                 Clicked="_hideTreeEditPanelButton_Clicked"
-                                 AutomationProperties.IsInAccessibleTree="True"
-                                 AutomationProperties.Name="Hide Tree Edit Panel Button" />
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <!-- hide button -->
+                                <ColumnDefinition Width="*" />
+                                <!-- logs button -->
+                                <ColumnDefinition Width="Auto" />
+                                <!-- edit button -->
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <Button Grid.Row="2"
-                                Grid.Column="1"
-                                x:Name="_logsButton"
-                                Text="Logs"
-                                Command="{Binding ShowLogsCommand}"
-                                AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Logs Button" />
 
-                        <Button Grid.Row="2"
-                                Grid.Column="2"
-                                x:Name="_editButton"
-                                Text="Edit"
-                                Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
-                                CommandParameter="{Binding TreeID}"
-                                AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Edit Tree Button" />
+                            <Button  x:Name="_hideTreeEditPanelButton"
+                                     Grid.Column="0"
+                                     Text="Hide"
+                                     HorizontalOptions="Start"
+                                     Clicked="_hideTreeEditPanelButton_Clicked"
+                                     AutomationProperties.IsInAccessibleTree="True"
+                                     AutomationProperties.Name="Hide Tree Edit Panel Button" />
 
-                        <!--<Button Grid.Row="2"
-                            Grid.Column="3"
-                            x:Name="_untallyButton"
-                            Text="Untally" />-->
+                            <Button Grid.Column="1"
+                                    x:Name="_logsButton"
+                                    Text="Logs"
+                                    Command="{Binding ShowLogsCommand}"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Logs Button" />
+
+                            <Button Grid.Column="2"
+                                    x:Name="_editButton"
+                                    Text="Edit"
+                                    Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
+                                    CommandParameter="{Binding TreeID}"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Edit Tree Button" />
+                        </Grid>
 
                         <BoxView Grid.Row="3"
                                  Grid.ColumnSpan="4"
