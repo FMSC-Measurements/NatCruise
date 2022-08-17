@@ -11,12 +11,12 @@ namespace NatCruise.Wpf.Converters
 {
     public class ResolutionDescriptionToConflictResolutionTypeConverter : IValueConverter
     {
-        public const string CHOSEDEST = "Chose Established";
+        public const string CHOSEDEST = "Chose Destination";
         public const string CHOSESOURCE = "Chose Crew";
         public const string CHOSELATEST = "Chose Latest";
-        public const string CHOSEDESTMERGEDATA = "Chose Established And Merge";
+        public const string CHOSEDESTMERGEDATA = "Chose Destination And Merge";
         public const string CHOSESOURCEMERGEDATA = "Chose Crew And Merge";
-        public const string MODIFYDEST = "Modify Established";
+        public const string MODIFYDEST = "Modify Destination";
         public const string MODIFYSOURCE = "Modify Crew";
 
         public static readonly string[] RESOLUTION_OPTIONS = new string[] {
