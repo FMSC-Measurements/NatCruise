@@ -829,8 +829,8 @@
                         <!-- Resolution Panel -->
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_strataConflictList}"
-                              DataContextChanged="SelectedConflictChanged"
                               IsEnabled="{Binding SelectedItem, ElementName=_strataConflictList, Converter={StaticResource NotNullConverter}}"
+                              d:IsEnabled="True"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -877,7 +877,6 @@
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_sampleGroupConflictList}"
                               IsEnabled="{Binding SelectedItem, ElementName=_sampleGroupConflictList, Converter={StaticResource NotNullConverter}}"
-                              DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -920,7 +919,6 @@
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_plotConflictList}"
                               IsEnabled="{Binding SelectedItem, ElementName=_plotConflictList, Converter={StaticResource NotNullConverter}}"
-                              DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -967,7 +965,6 @@
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_treeConflictList}"
                               IsEnabled="{Binding SelectedItem, ElementName=_treeConflictList, Converter={StaticResource NotNullConverter}}"
-                              DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -1017,7 +1014,6 @@
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_plotTreeConflictList}"
                               IsEnabled="{Binding SelectedItem, ElementName=_plotTreeConflictList, Converter={StaticResource NotNullConverter}}"
-                              DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -1064,7 +1060,6 @@
                         <Grid Grid.Column="1"
                               DataContext="{Binding SelectedItem, ElementName=_logConflictList}"
                               IsEnabled="{Binding SelectedItem, ElementName=_plotTreeConflictList, Converter={StaticResource NotNullConverter}}"
-                              DataContextChanged="SelectedConflictChanged"
                               Background="{DynamicResource MahApps.Brushes.Gray}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
