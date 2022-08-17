@@ -79,34 +79,5 @@ namespace NatCruise.Wpf.Views
                 conflict.ConflictResolution = CruiseDAL.V3.Sync.ConflictResolutionType.ModifySource;
             }
         }
-
-        private void SelectedConflictChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            var stackPannel = (StackPanel)sender;
-
-            //var radioButtons = stackPannel.Children.OfType<RadioButton>().ToArray();
-            //foreach (var radioButton in radioButtons)
-            //{
-            //    radioButton.Background = System.Windows.Media.Brushes.Blue;
-            //}
-
-            //var conflict = e.NewValue as CruiseDAL.V3.Sync.Conflict;
-            //if(conflict != null)
-            //{
-            //    var resolution = conflict.ConflictResolution;
-
-            //    radioButtons[0].IsChecked = resolution == CruiseDAL.V3.Sync.ConflictResolutionType.ChoseDest;
-            //    radioButtons[1].IsChecked = resolution == CruiseDAL.V3.Sync.ConflictResolutionType.ModifyDest;
-            //    radioButtons[2].IsChecked = resolution == CruiseDAL.V3.Sync.ConflictResolutionType.ChoseSource;
-            //    radioButtons[3].IsChecked = resolution == CruiseDAL.V3.Sync.ConflictResolutionType.ModifySource;
-            //}
-            //else
-            //{
-            //    radioButtons[0].IsChecked = false;
-            //    radioButtons[1].IsChecked = false;
-            //    radioButtons[2].IsChecked = false;
-            //    radioButtons[3].IsChecked = false;
-            //}
-        }
     }
 }
