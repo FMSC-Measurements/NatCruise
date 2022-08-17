@@ -7,15 +7,19 @@ using NatCruise.Core.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism;
 using Prism.Ioc;
+using Prism.Mvvm;
 using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Forms.Xaml;
 
@@ -32,6 +36,8 @@ namespace FScruiser.XF
         //private CruiseFileSelectedEvent _cruiseFileSelectedEvent;
         //private CruiseFileOpenedEvent _cruiseFileOpenedEvent;
         private ICruisersDataservice _cruisersDataservice;
+
+        private Exception _dataserviceProviderInitError;
 
         protected IPageDialogService DialogService => Container?.Resolve<IPageDialogService>();
         public ICruiseNavigationService CruiseNavigationService => Container?.Resolve<ICruiseNavigationService>();
@@ -50,6 +56,7 @@ namespace FScruiser.XF
         {
             Xamarin.Forms.DataGrid.DataGridComponent.Init();
 
+
             // hook up our logging service to our utility TaskExtentions class
             // this helper extention class is used to get exceptions from
             // 'Fire and Forget' async actions
@@ -65,9 +72,28 @@ namespace FScruiser.XF
                 ,typeof(Crashes));
 
 #endif
-            await CruiseNavigationService.ShowCruiseLandingLayout();
+            //try
+            //{
+            //    var dsp = GetDataserviceProvider();
 
+            //    await CruiseNavigationService.ShowCruiseLandingLayout();
+            //}
+            //catch (Exception ex)
+            //{
+            //    await CruiseNavigationService.ShowDatabaseUtilities();
+            //}
 
+            var dsp = GetDataserviceProvider();
+            if (_dataserviceProviderInitError == null)
+            {
+                await CruiseNavigationService.ShowCruiseLandingLayout();
+            }
+            else
+            {
+                await CruiseNavigationService.ShowDatabaseUtilities();
+
+                await LogAndShowExceptionAsync("Dataservice Provider Error", "Error Loading Dataservice Provider\r\n Please Backup and Reset Database\r\n contact support", _dataserviceProviderInitError);
+            }
         }
 
         //protected void ReloadNavigation()
@@ -119,17 +145,15 @@ namespace FScruiser.XF
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            if(containerRegistry.IsRegistered<IFileDialogService>() == false)
+            if (containerRegistry.IsRegistered<IFileDialogService>() == false)
             {
                 containerRegistry.Register<IFileDialogService, XamarinFileDialogService>();
             }
 
             if (containerRegistry.IsRegistered<IDataserviceProvider>() == false)
             {
-                var dataserviceProvider = GetDataserviceProvider();
-                containerRegistry.RegisterInstance<IDataserviceProvider>(dataserviceProvider);
-                dataserviceProvider.RegisterDataservices(containerRegistry);
-                //containerRegistry.RegisterSingleton<IDataserviceProvider>(GetDataserviceProvider);
+                containerRegistry.Register<IDataserviceProvider>(x => GetDataserviceProvider());
+                NatCruise.Cruise.Data.DataserviceProvider.RegisterDataservices(containerRegistry);
             }
 
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)
@@ -145,20 +169,62 @@ namespace FScruiser.XF
                 var deviceInfo = Container.Resolve<IDeviceInfoService>();
                 var fileSystemService = Container.Resolve<IFileSystemService>();
                 var cruiseDbPath = fileSystemService.DefaultCruiseDatabasePath;
-                if (File.Exists(cruiseDbPath) == false)
+
+                try
                 {
-                    //throw new Exception();
-                    var newDb = new CruiseDatastore_V3(cruiseDbPath, true);
-                    _dataserviceProvider = new DataserviceProvider(newDb, deviceInfo);
+                    if (File.Exists(cruiseDbPath) == false)
+                    {
+                        var db = new CruiseDatastore_V3(cruiseDbPath, true);
+                        _dataserviceProvider = new DataserviceProvider(db, deviceInfo);
+                    }
+                    else
+                    {
+                        var db = new CruiseDatastore_V3(cruiseDbPath, false);
+                        _dataserviceProvider = new DataserviceProvider(db, deviceInfo);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    var db = new CruiseDatastore_V3(cruiseDbPath, false);
-                    _dataserviceProvider = new DataserviceProvider(db, deviceInfo);
+                    _dataserviceProviderInitError = ex;
                 }
             }
             return _dataserviceProvider;
         }
+
+        protected override void ConfigureViewModelLocator()
+        {
+            base.ConfigureViewModelLocator();
+
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
+            {
+                var viewName = viewType.FullName;
+                viewName = viewName.Replace(".Views.", ".ViewModels.");
+
+                string viewAssemblyName = null;
+                if (viewName.StartsWith("FSCruiser.Design"))
+                {
+                    viewAssemblyName = "NatCruise.Design";
+                }
+                else
+                {
+                    viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
+                }
+
+                var suffix = viewName.EndsWith("View") ? "Model" : "ViewModel";
+                var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);
+
+                var type = Type.GetType(viewModelName);
+                if (type == null)
+                {
+
+                    //LogException("ViewModelLocator", "View Model Not Found", null);
+                }
+
+                return type;
+            });
+        }
+
+
 
         public static void LogException(string catigory, string message, Exception ex, IDictionary<string, string> data = null)
         {
@@ -176,11 +242,11 @@ namespace FScruiser.XF
         public async Task LogAndShowExceptionAsync(string catigory, string message, Exception ex, IDictionary<string, string> data = null)
         {
             LogException(catigory, message, ex, data);
-
-            var result = await DialogService.DisplayAlertAsync(catigory, message, "Details", "OK");
+            var dialogService = DialogService;
+            var result = await dialogService.DisplayAlertAsync(catigory, message, "Details", "OK");
             if (result == true)//user clicked Details
             {
-                await DialogService.DisplayAlertAsync(catigory, ex.ToString(), "Close");
+                await dialogService.DisplayAlertAsync(catigory, ex.ToString(), "Close");
             }
         }
     }
