@@ -15,6 +15,18 @@ namespace NatCruise.Wpf.ViewModels
 {
     public class CombineFileViewModel : ViewModelBase, IDisposable
     {
+        //public class CombineFile
+        //{
+        //    public string OriginalPath { get; set; }
+        //    public string WorkingPath { get; set; }
+        //    public bool IsDestinationFile { get; set; }
+
+        //    public ConflictResolutionOptions Conflicts { get; set; }
+
+        //}
+
+
+
         private CruiseDatastore_V3 _sourceDatabase;
         private IEnumerable<Conflict> _cuttingUnitConflicts;
         private IEnumerable<Conflict> _stratumConflicts;
@@ -307,7 +319,7 @@ namespace NatCruise.Wpf.ViewModels
 
                 destination.BackupDatabase(DestinationDatabase);
 
-                await DialogService.ShowNotificationAsync("combine complete", "message");
+                DialogService.ShowNotificationAsync("combine complete", "message").FireAndForget();
             }
             finally
             {
