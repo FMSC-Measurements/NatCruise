@@ -87,7 +87,7 @@ WHERE sg.CruiseID = @p1
 @"SELECT
     'SubPopulation' AS Category,
     'Warning' AS Level,
-    'SubPopulation ' || SpeciesCode || ' ' || LiveDead || ' in SG ' || SampleGroupCode || ' Stratum ' || StratumCode || ' Has No Applyable Tree Defaults' AS Message,
+    'SubPopulation ' || SpeciesCode || ' ' || LiveDead || ' in SG ' || SampleGroupCode || ' Stratum ' || StratumCode || ' Has No Applicable Tree Defaults' AS Message,
     SubPopulationID AS RecordID
 FROM (
         SELECT
