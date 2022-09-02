@@ -45,9 +45,10 @@ namespace NatCruise.Design.Validation
             //    .When(x => CruiseMethods.THREE_P_METHODS.Contains(x.CruiseMethod))
             //    .WithMessage("Max KPI Should Be Greater Than Zero");
 
+            // allow MaxKPI to be 0 regardless, because we treat 0 as unbounded
             RuleFor(x => x.MaxKPI)
                 .Must((sg, x) => x > sg.MinKPI)
-                .When(x => CruiseMethods.THREE_P_METHODS.Contains(x.CruiseMethod) && x.MinKPI > 0)
+                .When(x =>  x.MaxKPI > 0 && x.MinKPI > 0 && CruiseMethods.THREE_P_METHODS.Contains(x.CruiseMethod))
                 .WithMessage("Max KPI Should Be Greater Than Min KPI");
         }
     }

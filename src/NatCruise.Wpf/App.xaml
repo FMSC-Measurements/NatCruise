@@ -33,6 +33,8 @@
             <converters:ReplaceNullConverter x:Key="ReplaceAnyWithNullConverter"
                                              Value="Any" />
 
+            <converters:DefaultToEmptyStringConverter x:Key="DefaultToEmptyStringConverter" />
+
             <converters:CruiseMethodToVisableConverter x:Key="IsPlotMethodVisibilityConverter"
                                                        MethodMap="PlotMethods" />
             <converters:CruiseMethodToVisableConverter x:Key="IsFixedSizePlotMethodVisibilityConverter"
