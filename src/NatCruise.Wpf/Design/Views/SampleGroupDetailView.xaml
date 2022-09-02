@@ -228,13 +228,13 @@
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Min KPI" />
-                    <TextBox Text="{Binding MinKPI}"
+                    <TextBox Text="{Binding MinKPI, FallbackValue={x:Null}}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Max KPI" />
-                    <TextBox Text="{Binding MaxKPI}"
+                    <TextBox Text="{Binding MaxKPI, Converter={StaticResource DefaultToEmptyStringConverter}}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                 </StackPanel>
             </StackPanel>
