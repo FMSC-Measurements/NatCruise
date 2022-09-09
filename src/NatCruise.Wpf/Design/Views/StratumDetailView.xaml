@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Tag="Stratum Details"
@@ -128,7 +129,8 @@
                          ToolTip="Basal Area Factor"
                          Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
                          Text="{Binding BasalAreaFactor}"
-                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
@@ -139,7 +141,8 @@
                          ToolTip="Fixed Plot Size"
                          Text="{Binding FixedPlotSize}"
                          mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                         Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}" />
+                         Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
@@ -150,7 +153,8 @@
                          ToolTip="KZ (3PPNT)"
                          Text="{Binding KZ3PPNT}"
                          mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                         Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}" />
+                         Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
 
                 <Label Grid.Column="0"
                        Grid.Row="3"

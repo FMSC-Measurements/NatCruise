@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              xmlns:prism="http://prismlibrary.com/"
@@ -213,13 +214,15 @@
                      Grid.Row="1"
                      Background="SkyBlue"
                      Text="{Binding DefaultValueInt, TargetNullValue=''}"
-                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                     ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
             <TextBox x:Name="_realDefaultValueTextBox"
                      Grid.Column="2"
                      Visibility="{Binding IsDefaultReal, Converter={StaticResource IsVisableConverter}}"
                      Grid.Row="1"
                      Text="{Binding DefaultValueReal, TargetNullValue=''}"
-                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                     ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"/>
             <TextBox x:Name="_textDefaultValueTextBox"
                      Grid.Column="2"
                      Visibility="{Binding IsDefaultText, Converter={StaticResource IsVisableConverter}}"

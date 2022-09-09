@@ -2,11 +2,16 @@
                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:prism="http://prismlibrary.com/"
+                        xmlns:sys="clr-namespace:System;assembly=mscorlib"
                         xmlns:converters="clr-namespace:NatCruise.Wpf.Converters">
     <Application.Resources>
         <ResourceDictionary>
 
+            <!-- constants -->
+            <sys:String x:Key="const_regex_int">^\s*[0-9]+\s*$</sys:String>
+            <sys:String x:Key="const_regex_real">^\s*([0-9]+\.?[0-9]*|\.[0-9]*)\s*$</sys:String>
 
+            <!-- converters -->
             <converters:IsNullConverter x:Key="NotNullConverter"
                                         Invert="True" />
             <converters:IsNullOrWhiteSpaceConverter x:Key="NotNullOrWhiteSpaceConverter"
@@ -51,6 +56,8 @@
                                                        MethodMap="STR" />
             <converters:CruiseMethodToVisableConverter x:Key="IsThreePMethodsVisibilityConverter"
                                                        MethodMap="ThreePMethods" />
+
+            <!-- imported resource -->
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Colors.xaml" />
