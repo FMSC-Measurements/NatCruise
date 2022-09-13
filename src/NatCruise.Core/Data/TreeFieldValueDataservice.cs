@@ -8,6 +8,45 @@ namespace NatCruise.Data
 {
     public class TreeFieldValueDataservice : CruiseDataserviceBase, ITreeFieldValueDataservice
     {
+        public const string INPUTREGEX_PERCENTAGE = "^\\s*(100|[0-9]{0,2})\\s*$";
+        public const string INPUTREGEX_POSINT = "^\\s*[0-9]+\\s*$";
+        public const string INPUTREGEX_POSREAL = "^\\s*([0-9]+\\.?[0-9]*|\\.[0-9]*)\\s*$";
+        public const string INPUTREGEX_SLOPE = "^\\s*(200|[0-1]?[0-9]{0,2})\\s*$";
+        public const string INPUTREGEX_ASPECT = "^\\s*(360|3[0-5][0-9]|[0-2]?[0-9]{0,2})\\s*$";
+
+        public static IDictionary<string, string> FIELD_INPUTREGEX_MAP { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+                {"SeenDefectPrimary", INPUTREGEX_PERCENTAGE},
+                {"SeenDefectSecondary", INPUTREGEX_PERCENTAGE},
+                { "RecoverablePrimary", INPUTREGEX_PERCENTAGE},
+                { "HiddenPrimary", INPUTREGEX_PERCENTAGE},
+                { "Grade", null},
+                { "HeightToFirstLiveLimb", INPUTREGEX_POSREAL},
+                { "PoleLength", INPUTREGEX_POSREAL},
+                { "ClearFace", null},
+                { "CrownRatio", null},
+                { "DBH", INPUTREGEX_POSREAL},
+                { "DRC", INPUTREGEX_POSREAL},
+                { "TotalHeight", INPUTREGEX_POSREAL},
+                { "MerchHeightPrimary", INPUTREGEX_POSREAL},
+                { "MerchHeightSecondary", INPUTREGEX_POSREAL},
+                { "FormClass", INPUTREGEX_POSREAL},
+                { "UpperStemDiameter", INPUTREGEX_POSREAL},
+                { "UpperStemHeight", INPUTREGEX_POSREAL},
+                { "DBHDoubleBarkThickness", INPUTREGEX_POSREAL},
+                { "TopDIBPrimary", INPUTREGEX_POSREAL},
+                { "TopDIBSecondary", INPUTREGEX_POSREAL},
+                { "DefectCode", INPUTREGEX_POSREAL},
+                { "DiameterAtDefect", INPUTREGEX_POSREAL},
+                { "VoidPercent", INPUTREGEX_PERCENTAGE},
+                { "Slope", INPUTREGEX_SLOPE},
+                { "Aspect", INPUTREGEX_ASPECT},
+                { "Remarks", null},
+                { "MetaData", null},
+                { "IsFallBuckScale", null},
+                { "Initials", null},
+        };
+
         public TreeFieldValueDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -18,7 +57,7 @@ namespace NatCruise.Data
 
         public IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID)
         {
-            return Database.Query<TreeFieldValue>(
+            var tfvs = Database.Query<TreeFieldValue>(
                 "SELECT " +
                     "t.TreeID, " +
                     "tfs.Field, " +
@@ -41,6 +80,16 @@ namespace NatCruise.Data
                 "LEFT JOIN TreeFieldValue_All AS tfv USING (TreeID, Field) " +
                 "WHERE t.TreeID = @p1 " +
                 "ORDER BY tfs.FieldOrder;", treeID).ToArray();
+
+            foreach(var x in tfvs)
+            {
+                if (FIELD_INPUTREGEX_MAP.TryGetValue(x.Field, out var inputRegex))
+                {
+                    x.InputRegex = inputRegex;
+                }
+            }
+
+            return tfvs;
         }
 
         public void UpdateTreeFieldValue(TreeFieldValue treeFieldValue)

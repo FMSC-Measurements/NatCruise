@@ -45,7 +45,7 @@ namespace NatCruise.Wpf.Controls
             var textbox = sender as TextBox;
 
             var mask = GetRegexMask(textbox);
-            if (mask == null) return;
+            if (string.IsNullOrWhiteSpace(mask)) return;
             e.Handled = true;
 
             var text = textbox.Text;

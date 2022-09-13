@@ -21,20 +21,33 @@ namespace NatCruise.Design.Views
     /// </summary>
     public partial class TreeDefaultValueListView : UserControl
     {
-        public TreeDefaultValueListView()
-        {
-            InitializeComponent();
-        }
-
-        private void _tdvDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-        {
-            e.Cancel =
-            new[]
+        static readonly string[] DEFINED_COLUMNS = new[]
             {
                 nameof(TreeDefaultValue.SpeciesCode),
                 nameof(TreeDefaultValue.PrimaryProduct),
                 nameof(TreeDefaultValue.CreatedBy),
-            }.Contains(e.PropertyName);
+            };
+
+        Style NumericCellStyle { get; }
+
+        public TreeDefaultValueListView()
+        {
+            InitializeComponent();
+
+            var baseTBstyle = TryFindResource("MahApps.Styles.TextBox") as Style;
+            var style = new Style(typeof(TextBox), baseTBstyle);
+            style.Setters.Add(new Setter(MahApps.Metro.Controls.TextBoxHelper.WatermarkProperty, "0"));
+
+            NumericCellStyle = style;
+        }
+
+        private void _tdvDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            var propName = e.PropertyName;
+            var isDefinedColumn = DEFINED_COLUMNS.Contains(propName);
+
+            e.Cancel = isDefinedColumn;
+            if (isDefinedColumn) { return; }
         }
     }
 }

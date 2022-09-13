@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
              xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              mc:Ignorable="d"
              d:DesignHeight="600"
@@ -158,6 +159,7 @@
                             <TextBox x:Name="_treeCountDifferenceEntry"
                                      Text="{Binding TreeCountDelta}"
                                      mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                     ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int_posNeg_input}"
                                      AutomationProperties.Name="Tree Count Difference" />
                         </controls:LastChildWidthPanel>
 
@@ -188,6 +190,7 @@
                             <TextBlock Text="KPI (+/-)" />
                             <TextBox Text="{Binding KPIDelta}"
                                      mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                     ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int_posNeg_input}"
                                      AutomationProperties.Name="KPI" />
                         </controls:LastChildWidthPanel>
 
