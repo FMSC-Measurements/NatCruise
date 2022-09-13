@@ -8,7 +8,7 @@
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:e="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="400"
@@ -59,7 +59,7 @@
         <WrapPanel Grid.Row="0"
                    x:Name="_primaryFieldsPanel">
             <WrapPanel.Resources>
-                <Style TargetType="controls:LastChildWidthPanel">
+                <Style TargetType="ctrls:LastChildWidthPanel">
                     <Style.Resources>
                         <Style TargetType="TextBox"
                                BasedOn="{StaticResource MahApps.Styles.TextBox}">
@@ -85,17 +85,18 @@
             </WrapPanel.Resources>
 
             <!--Tree Number-->
-            <controls:LastChildWidthPanel>
+            <ctrls:LastChildWidthPanel>
                 <TextBlock Text="Tree #" />
                 <TextBox x:Name="_treeNumberEntry"
                          Text="{Binding TreeNumber, UpdateSourceTrigger=PropertyChanged, Delay=500}"
                          mah:TextBoxHelper.SelectAllOnFocus="True"
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
                          AutomationProperties.Name="Tree Number">
                 </TextBox>
-            </controls:LastChildWidthPanel>
+            </ctrls:LastChildWidthPanel>
 
             <!--Stratum-->
-            <controls:LastChildWidthPanel>
+            <ctrls:LastChildWidthPanel>
                 <TextBlock Text="Stratum" />
                 <ComboBox x:Name="_stratumCodeEntry"
                           SelectedItem="{Binding StratumCode}"
@@ -103,30 +104,30 @@
                           AutomationProperties.Name="Stratum">
                 </ComboBox>
 
-            </controls:LastChildWidthPanel>
+            </ctrls:LastChildWidthPanel>
 
             <!--Sample Group-->
-            <controls:LastChildWidthPanel Background="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}">
+            <ctrls:LastChildWidthPanel Background="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}">
                 <TextBlock Text="Sample Group" />
                 <ComboBox x:Name="_sampleGroupEntry"
                           SelectedValue="{Binding SampleGroupCode}"
                           ItemsSource="{Binding SampleGroupCodes}"
                           AutomationProperties.Name="Sample Group">
                 </ComboBox>
-            </controls:LastChildWidthPanel>
+            </ctrls:LastChildWidthPanel>
 
             <!--Species-->
-            <controls:LastChildWidthPanel Background="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}">
+            <ctrls:LastChildWidthPanel Background="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}">
                 <TextBlock Text="Species" />
                 <ComboBox x:Name="_speciesEntry"
                           SelectedValue="{Binding SpeciesCode}"
                           ItemsSource="{Binding SpeciesOptions}"
                           AutomationProperties.Name="Species">
                 </ComboBox>
-            </controls:LastChildWidthPanel>
+            </ctrls:LastChildWidthPanel>
 
             <!--Live Dead-->
-            <controls:LastChildWidthPanel>
+            <ctrls:LastChildWidthPanel>
 
                 <TextBlock Text="Live/Dead" />
                 <ComboBox x:Name="_liveDeadPicker"
@@ -140,26 +141,26 @@
                     </ComboBox.ItemsSource>
                 </ComboBox>
 
-            </controls:LastChildWidthPanel>
+            </ctrls:LastChildWidthPanel>
 
             <!--Initials-->
-            <controls:LastChildWidthPanel>
+            <ctrls:LastChildWidthPanel>
                 <TextBlock Text="Initials" />
                 <ComboBox x:Name="_initialsPicker"
                           Text="{Binding Initials, UpdateSourceTrigger=PropertyChanged, Delay=500}"
                           ItemsSource="{Binding Cruisers}"
                           IsEditable="True"
                           AutomationProperties.Name="Initials" />
-            </controls:LastChildWidthPanel>
+            </ctrls:LastChildWidthPanel>
 
             <!--Count Or Measure-->
-            <controls:LastChildWidthPanel>
+            <ctrls:LastChildWidthPanel>
                 <TextBlock Text="Count/Measure" />
                 <ComboBox SelectedItem="{Binding CountOrMeasure}"
                           ItemsSource="{Binding CountOrMeasureOptions}"
                           AutomationProperties.Name="Count or Measure">
                 </ComboBox>
-            </controls:LastChildWidthPanel>
+            </ctrls:LastChildWidthPanel>
 
             <!-- Tree Count -->
             <!--
@@ -191,6 +192,7 @@
                               ItemsSource="{Binding TreeFieldValues}">
                     <ItemsControl.Resources>
                         <ResourceDictionary>
+                            <!-- hide Remarks and Initials Fields-->
                             <converters:ContainsConverter x:Key="isHiddenFieldConverter">
                                 <converters:ContainsConverter.Items>
                                     <x:Array Type="sys:String">
@@ -203,7 +205,7 @@
                             <Style TargetType="Border"
                                    x:Key="propPanel">
                                 <Style.Resources>
-                                    <Style TargetType="controls:LastChildWidthPanel">
+                                    <Style TargetType="ctrls:LastChildWidthPanel">
                                         <Style.Resources>
                                             <Style TargetType="Control">
                                                 <Setter Property="Height"
@@ -237,54 +239,57 @@
                     </ItemsControl.Resources>
 
                     <ItemsControl.ItemTemplateSelector>
-                        <controls:TreeFieldValueDataTemplateSelector>
-                            <controls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                        <ctrls:TreeFieldValueDataTemplateSelector>
+                            <ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
                                 <DataTemplate>
                                     <Border Style="{StaticResource propPanel}">
-                                        <controls:LastChildWidthPanel>
+                                        <ctrls:LastChildWidthPanel>
                                             <Label Content="{Binding Heading}" />
                                             <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
                                                      mah:TextBoxHelper.SelectAllOnFocus="True"
+                                                     ctrls:TextBoxHelper.RegexMask="{Binding InputRegex}"
                                                      Text="{Binding ValueReal, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
-                                        </controls:LastChildWidthPanel>
+                                        </ctrls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
-                            </controls:TreeFieldValueDataTemplateSelector.RealTemplate>
-                            <controls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                            </ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                            <ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
                                 <DataTemplate>
                                     <Border Style="{StaticResource propPanel}">
-                                        <controls:LastChildWidthPanel>
+                                        <ctrls:LastChildWidthPanel>
                                             <Label Content="{Binding Heading}" />
                                             <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
                                                      mah:TextBoxHelper.SelectAllOnFocus="True"
+                                                     ctrls:TextBoxHelper.RegexMask="{Binding InputRegex}"
                                                      Text="{Binding ValueInt, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
-                                        </controls:LastChildWidthPanel>
+                                        </ctrls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
-                            </controls:TreeFieldValueDataTemplateSelector.IntTemplate>
-                            <controls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                            </ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                            <ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
                                 <DataTemplate>
                                     <Border Style="{StaticResource propPanel}">
-                                        <controls:LastChildWidthPanel>
+                                        <ctrls:LastChildWidthPanel>
                                             <Label Content="{Binding Heading}" />
                                             <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
                                                      mah:TextBoxHelper.SelectAllOnFocus="True"
+                                                     ctrls:TextBoxHelper.RegexMask="{Binding InputRegex}"
                                                      Text="{Binding ValueText, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
-                                        </controls:LastChildWidthPanel>
+                                        </ctrls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
-                            </controls:TreeFieldValueDataTemplateSelector.TextTemplate>
-                            <controls:TreeFieldValueDataTemplateSelector.BoolTemplate>
+                            </ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                            <ctrls:TreeFieldValueDataTemplateSelector.BoolTemplate>
                                 <DataTemplate>
                                     <Border Style="{StaticResource propPanel}">
-                                        <controls:LastChildWidthPanel>
+                                        <ctrls:LastChildWidthPanel>
                                             <Label Content="{Binding Heading}" />
                                             <CheckBox IsChecked="{Binding ValueBool}" />
-                                        </controls:LastChildWidthPanel>
+                                        </ctrls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
-                            </controls:TreeFieldValueDataTemplateSelector.BoolTemplate>
-                        </controls:TreeFieldValueDataTemplateSelector>
+                            </ctrls:TreeFieldValueDataTemplateSelector.BoolTemplate>
+                        </ctrls:TreeFieldValueDataTemplateSelector>
                     </ItemsControl.ItemTemplateSelector>
                 </ItemsControl>
             </ScrollViewer>
