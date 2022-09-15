@@ -56,6 +56,7 @@ namespace NatCruise.MVVM
         public void Update(ValidationResult result)
         {
             var newErrorDict = result.Errors
+                .Where(x => x.Severity == FluentValidation.Severity.Error)
                 .GroupBy(x => x.PropertyName)
                 .ToDictionary(
                     x => x.Key,

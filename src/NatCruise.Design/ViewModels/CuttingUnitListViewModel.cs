@@ -151,7 +151,9 @@ namespace NatCruise.Design.ViewModels
 
         public void ValidateUnit(CuttingUnit unit)
         {
-            var errors = CuttingUnitValidator.Validate(unit).Errors.Select(x => x.ErrorMessage).ToArray();
+            var errors = CuttingUnitValidator.Validate(unit).Errors
+                .Where(x => x.Severity == FluentValidation.Severity.Error)
+                .Select(x => x.ErrorMessage).ToArray();
             if (errors.Length > 0)
             {
                 unit.Errors = errors;
