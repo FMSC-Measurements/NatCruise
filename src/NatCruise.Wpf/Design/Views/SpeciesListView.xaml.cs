@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Design.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,25 @@ namespace NatCruise.Design.Views
         public SpeciesListView()
         {
             InitializeComponent();
+        }
+
+        private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var oldvm = e.OldValue as SpeciesListViewModel;
+            if(oldvm != null)
+            {
+                oldvm.SpeciesAdded -= HandleSpeciesAdded;
+            }
+            var newvm = e.NewValue as SpeciesListViewModel;
+            if(newvm != null)
+            {
+                newvm.SpeciesAdded += HandleSpeciesAdded;
+            }
+        }
+
+        private void HandleSpeciesAdded(object sender, EventArgs e)
+        {
+            _newSpeciesTextBox.Clear();
         }
     }
 }

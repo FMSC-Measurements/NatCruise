@@ -34,6 +34,8 @@ namespace NatCruise.Design.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
+        public event EventHandler SpeciesAdded;
+
         public ICommand AddSpeciesCommand => _addSpeciesCommand ??= new DelegateCommand<string>(AddSpecies);
 
         public ICommand DeleteSpeciesCommand => _deleteSpeciesCommand ??= new DelegateCommand<Species>(DeleteSpecies);
@@ -94,6 +96,7 @@ namespace NatCruise.Design.ViewModels
                 };
                 TemplateDataservice.UpsertSpecies(newSpecies);
                 Species.Add(newSpecies);
+                SpeciesAdded?.Invoke(this, EventArgs.Empty);
                 SelectedSpecies = newSpecies;
             }
             else

@@ -15,7 +15,8 @@
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="800"
+             DataContextChanged="UserControl_DataContextChanged">
     <Grid Background="{StaticResource brush_background}"
           ScrollViewer.VerticalScrollBarVisibility="Auto"
           HorizontalAlignment="Stretch">
@@ -58,20 +59,28 @@
                              Grid.Row="0"
                              Grid.Column="0"
                              mah:TextBoxHelper.Watermark="Code"
-                             MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
+                             MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Return"
+                                        Command="{Binding AddStratumCommand}"
+                                        CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                        </TextBox.InputBindings>
+                    </TextBox>
                     <Button Grid.Row="0"
                             Grid.Column="1"
                             Style="{StaticResource AddButton}"
                             Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
-                            IsEnabled="{Binding Text, ElementName=_stratumCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
-                        <i:Interaction.Triggers>
+                            IsEnabled="{Binding Text, ElementName=_stratumCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
+                            Command="{Binding AddStratumCommand}"
+                            CommandParameter="{Binding Text, Source={x:Reference _stratumCodeTextBox}}">
+                        <!--<i:Interaction.Triggers>s
                             <i:EventTrigger EventName="Click">
                                 <i:InvokeCommandAction Command="{Binding AddStratumCommand}"
                                                        CommandParameter="{Binding Text, Source={x:Reference _stratumCodeTextBox}}" />
                                 <triggers:ClearTextBoxAction TargetName="_stratumCodeTextBox" />
                                 <triggers:ClearComboBoxTextAction TargetName="_stratumTemplateCombobox" />
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>
+                        </i:Interaction.Triggers>-->
                     </Button>
                     <Button Grid.Row="0"
                             Grid.Column="2"
@@ -90,7 +99,8 @@
                           SelectedItem="{Binding SelectedStratum}"
                           SelectionMode="Single">
                     <ListView.Resources>
-                        <Style TargetType="ListViewItem" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
+                        <Style TargetType="ListViewItem"
+                               BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Errors, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                                              Value="True">
