@@ -35,6 +35,8 @@ namespace NatCruise.Design.ViewModels
             CuttingUnitValidator = new CuttingUnitValidator();
         }
 
+        public event EventHandler CuttingUnitAdded;
+
         private ICuttingUnitDataservice UnitDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
         public CuttingUnitValidator CuttingUnitValidator { get; }
@@ -116,6 +118,7 @@ namespace NatCruise.Design.ViewModels
                 UnitDataservice.AddCuttingUnit(newUnit);
                 newUnit.PropertyChanged += unit_PropertyChanged;
                 CuttingUnits.Add(newUnit);
+                CuttingUnitAdded?.Invoke(this, EventArgs.Empty);
                 SelectedUnit = newUnit;
             }
             catch (FMSC.ORM.UniqueConstraintException)
