@@ -59,6 +59,10 @@
             <!--False if value is 0, True for everything else-->
             <tc_conv:IntToBoolConverter x:Key="intToBoolConverter" />
 
+            <tc_conv:VariableMultiValueConverter ConditionType="All"
+                                                 x:Key="AllTrueConverter" />
+
+
             <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
 
             <converters:ErrorLevelToColorConverter x:Key="errorLevelToColorConverter"
