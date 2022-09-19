@@ -38,6 +38,21 @@ namespace NatCruise.Models
             set => SetProperty(ref _remarks, value);
         }
 
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public int TreeCount { get; set; }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public int ErrorCount { get; set; }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public int TreeErrorCount { get; set; }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public int TreeWarningCount { get; set; }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public string NullStrata { get; set; }
+
         public override string ToString()
         {
             return $"{PlotNumber}";

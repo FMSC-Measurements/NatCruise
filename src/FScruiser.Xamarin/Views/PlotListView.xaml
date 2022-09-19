@@ -15,97 +15,192 @@
                             AutomationProperties.Name="Plot List">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <SwipeView
-                                   IsEnabled="False"
+                        <SwipeView IsEnabled="False"
                                    AutomationProperties.IsInAccessibleTree="True">
                             <SwipeView.LeftItems>
                                 <SwipeItem Text="Delete"
                                            Command="{Binding BindingContext.DeletePlotCommand, Source={Reference _page}}"
                                            CommandParameter="{Binding .}"
-                                           BackgroundColor="Red"/>
+                                           BackgroundColor="Red" />
                             </SwipeView.LeftItems>
-                            
-                            <Grid Margin="0,10,0,10"
-                                  Padding="2"
-                                  AutomationProperties.IsInAccessibleTree="True"
-                                  AutomationProperties.Name="{Binding PlotNumber, StringFormat='{}Plot Number {0}'}">
 
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BindingContext.ShowTallyPlotCommand, Source={x:Reference _page} }"
-                                                          CommandParameter="{Binding .}" />
-                                </Grid.GestureRecognizers>
+                            <Frame BorderColor="DarkGray"
+                                   Margin="3"
+                                   Padding="0"
+                                   HasShadow="True">
 
-                                <Grid.Resources>
-                                    <ResourceDictionary>
-                                        <Style x:Key="HeadingText"
-                                               TargetType="Label">
-                                            <Setter Property="FontSize"
-                                                    Value="10" />
-                                            <Setter Property="TextColor"
-                                                    Value="{StaticResource black_70}" />
-                                        </Style>
-                                        <Style x:Key="ValueText"
-                                               TargetType="Label">
-                                            <Setter Property="FontSize"
-                                                    Value="Large" />
-                                            <Setter Property="TextColor"
-                                                    Value="Black" />
-                                        </Style>
-                                    </ResourceDictionary>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="50" />
-                                </Grid.ColumnDefinitions>
+                                <Grid  Margin="7"
+                                       AutomationProperties.IsInAccessibleTree="True"
+                                       AutomationProperties.Name="{Binding PlotNumber, StringFormat='{}Plot Number {0}'}">
 
-                                <!--plot number-->
-                                <Label Grid.Column="0"
-                                       Grid.Row="0"
-                                       Text="Plot #"
-                                       Style="{StaticResource HeadingText}" />
-                                <Label Grid.Column="0"
-                                       Grid.Row="1"
-                                       Text="{Binding PlotNumber}"
-                                       Style="{StaticResource ValueText}"/>
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ShowTallyPlotCommand, Source={x:Reference _page} }"
+                                                              CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
 
-                                <!--edit button-->
-                                <Button Grid.Column="2"
-                                        Grid.Row="0"
-                                        Grid.RowSpan="2"
-                                        VerticalOptions="Center"
-                                        Image="ic_edit_white_24dp.png"
-                                        Command="{Binding BindingContext.EditPlotCommand, Source={Reference _plotListView}}"
-                                        CommandParameter="{Binding .}"
-                                        WidthRequest="50"
-                                        BackgroundColor="Orange"
-                                        AutomationProperties.IsInAccessibleTree="True"
-                                        AutomationProperties.Name="Edit Plot" />
 
-                                <!-- show item actions button -->
-                                <ImageButton Grid.Column="3"
-                                             Grid.Row="0"
-                                             Grid.RowSpan="2"
-                                             VerticalOptions="Center"
-                                             BackgroundColor="Transparent"
-                                             Clicked="openDeletePlotButton_Clicked"
-                                             Source="ic_more_vert_black_24dp.png"
-                                             Padding="0,7"
-                                             HeightRequest="{StaticResource minTouchableHeight}"
-                                             AutomationProperties.IsInAccessibleTree="True"
-                                             AutomationProperties.Name="Show Actions Item" />
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
 
-                            </Grid>
+                                    <AbsoluteLayout Grid.Row="0">
+
+                                        <!--plot number-->
+                                        <StackLayout AbsoluteLayout.LayoutBounds="0,0"
+                                                     Orientation="Horizontal">
+
+                                            <Label Grid.Column="0"
+                                                   Text="Plot "
+                                                   FontSize="Large"
+                                                   TextColor="Black" />
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding PlotNumber}"
+                                                   TextColor="Black"
+                                                   FontSize="Large" />
+
+
+                                        </StackLayout>
+
+                                        <!-- plot error indicator -->
+                                        <Frame AbsoluteLayout.LayoutBounds=".75,7"
+                                               AbsoluteLayout.LayoutFlags="XProportional"
+                                               Padding="3"
+                                               CornerRadius="3"
+                                               BackgroundColor="Red"
+                                               VerticalOptions="Center">
+
+
+                                            <Grid ColumnDefinitions="15,Auto">
+                                                <Image Grid.Column="0"
+                                                       Source="ic_error_outline_black_24dp.png"
+                                                       AutomationProperties.IsInAccessibleTree="False" />
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding ErrorCount}"
+                                                       TextColor="Black"
+                                                       Margin="3,0"
+                                                       AutomationProperties.IsInAccessibleTree="False" />
+                                            </Grid>
+                                        </Frame>
+
+                                        <Grid AbsoluteLayout.LayoutBounds="1,0"
+                                              AbsoluteLayout.LayoutFlags="PositionProportional"
+                                              ColumnDefinitions="50,50">
+                                            <!--edit button-->
+                                            <ImageButton Grid.Column="0"
+                                                         Source="ic_edit_black_24dp.png"
+                                                         Command="{Binding BindingContext.EditPlotCommand, Source={Reference _plotListView}}"
+                                                         CommandParameter="{Binding .}"
+                                                         BackgroundColor="Transparent"
+                                                         Padding="0,7"
+                                                         AutomationProperties.IsInAccessibleTree="True"
+                                                         AutomationProperties.Name="Edit Plot" />
+
+                                            <!-- show item actions button -->
+                                            <ImageButton Grid.Column="1"
+                                                         BackgroundColor="Transparent"
+                                                         Clicked="openDeletePlotButton_Clicked"
+                                                         Source="ic_more_vert_black_24dp.png"
+                                                         Padding="0,7"
+                                                         HeightRequest="{StaticResource minTouchableHeight}"
+                                                         AutomationProperties.IsInAccessibleTree="True"
+                                                         AutomationProperties.Name="Show Actions Item" />
+                                        </Grid>
+                                    </AbsoluteLayout>
+
+
+
+
+
+
+
+
+                                    <!-- 2nd row -->
+                                    <Grid Grid.Row="1" ColumnDefinitions="2*,*">
+                                        
+                                        <!-- tree summary -->
+                                        <Frame Grid.Column="0"
+                                               Padding="5">
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Tree Summary"
+                                                       Margin="3,3" />
+
+                                                <!-- tree count -->
+                                                <Label 
+                                                       Margin="5,3"
+                                                       Text="{Binding TreeCount, StringFormat='Count: {0}'}"
+                                                       TextColor="Black" />
+
+                                                <!-- tree errors -->
+                                                <Frame 
+                                                       Padding="3"
+                                                       CornerRadius="3"
+                                                       BackgroundColor="Red"
+                                                       IsVisible="{Binding TreeErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
+
+                                                    <Grid ColumnDefinitions="15,Auto">
+                                                        <Image Grid.Column="0"
+                                                               Source="ic_error_outline_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding TreeErrorCount}"
+                                                               TextColor="Black"
+                                                               Margin="3,0"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </Grid>
+                                                </Frame>
+
+                                                <!-- tree warnings -->
+                                                <Frame 
+                                                       Padding="3"
+                                                       CornerRadius="3"
+                                                       BackgroundColor="Gold"
+                                                       IsVisible="{Binding TreeWarningCount, Converter={StaticResource greaterThanZeroConverter}}">
+
+                                                    <Grid ColumnDefinitions="15,Auto">
+                                                        <Image Grid.Column="0"
+                                                               Source="ic_warning_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding TreeWarningCount}"
+                                                               TextColor="Black"
+                                                               Margin="3,0"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </Grid>
+                                                </Frame>
+
+                                            </StackLayout>
+
+
+
+                                        </Frame>
+
+                                        <!-- null strata -->
+                                        <Frame Grid.Column="1"
+                                               Padding="5"
+                                               CornerRadius="5"
+                                               HasShadow="True"
+                                               IsVisible="{Binding NullStrata, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
+                                            <Grid ColumnDefinitions="Auto,Auto">
+                                                <Label Grid.Column="0"
+                                                       Text="Null:" />
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding NullStrata}"
+                                                       Margin="3,0" />
+                                            </Grid>
+                                        </Frame>
+                                    </Grid>
+
+
+
+                                </Grid>
+
+                            </Frame>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            
+
             <StackLayout Orientation="Horizontal"
                          VerticalOptions="End">
                 <StackLayout.Resources>
@@ -138,7 +233,7 @@
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Scoll to Start of List" />
             </StackLayout>
-            
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
