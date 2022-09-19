@@ -194,6 +194,7 @@ namespace FScruiser.XF.ViewModels
         public ISoundService SoundService { get; }
         public IContainerProvider ContainerProvider { get; }
         public ITreeBasedTallyService TallyService { get; }
+        public ILoggingService LoggingService { get; }
 
         public TallyViewModel(ICruiseNavigationService navigationService,
             ITallyDataservice tallyDataservice,
@@ -206,7 +207,8 @@ namespace FScruiser.XF.ViewModels
             ISoundService soundService,
             ICruisersDataservice cruisersDataservice,
             IContainerProvider containerProvider,
-            ITreeBasedTallyService tallyService)
+            ITreeBasedTallyService tallyService,
+            ILoggingService loggingService)
         {
             TallyDataservice = tallyDataservice ?? throw new ArgumentNullException(nameof(tallyDataservice));
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
@@ -220,6 +222,7 @@ namespace FScruiser.XF.ViewModels
             SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
             ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
             TallyService = tallyService ?? throw new ArgumentNullException(nameof(tallyService));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
         public void SelectTallyEntry(object obj)
@@ -425,7 +428,14 @@ namespace FScruiser.XF.ViewModels
                 tallyPopulation.SumKPI -= tallyEntry.KPI;
             }
 
-            TallyFeed.Remove(TallyFeed.First(x => x.TallyLedgerID == tallyLedgerID));
+            LoggingService.LogEvent("Untally", new Dictionary<string, string>()
+            {
+                {"CruiseID", TallyDataservice.CruiseID },
+                {"CruiseID_CuttingUnit", $"{TallyDataservice.CruiseID}_{tallyEntry.CuttingUnitCode}" },
+                {"Data", $"St: {tallyEntry.StratumCode}, Sg: {tallyEntry.SampleGroupCode}, Sp: {tallyEntry.SpeciesCode ?? "null"}, TreeID: {tallyEntry.TreeID ?? "null"}"  },
+            });
+
+            TallyFeed.Remove(tallyEntry);
         }
 
         public void SetStratumFilter(string code)
