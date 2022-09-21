@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<controls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
              xmlns:tk_converters="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
@@ -14,13 +14,13 @@
              TreeFieldValues="{Binding TreeFieldValues}"
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Tree Edit Page">
-    <ContentPage.ToolbarItems>
+    <controls:InitializableContentPage.ToolbarItems>
         <ToolbarItem Text="Logs"
                      Command="{Binding ShowLogsCommand}"
                      AutomationProperties.IsInAccessibleTree="True"
                      AutomationProperties.Name="Logs" />
-    </ContentPage.ToolbarItems>
-    <ContentPage.Resources>
+    </controls:InitializableContentPage.ToolbarItems>
+    <controls:InitializableContentPage.Resources>
         <converters:ErrorToColorConverter x:Key="errorToColorConverter"
                                           Default="White"
                                           Error="{StaticResource error}"
@@ -52,7 +52,7 @@
 
         <converters:CruiseMethodToBoolConverter x:Key="isfixCNTConverter"
                                                 MethodMap="FIXCNT" />
-    </ContentPage.Resources>
+    </controls:InitializableContentPage.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -287,4 +287,4 @@
             </BindableLayout.ItemTemplate>
         </StackLayout>
     </Grid>
-</ContentPage>
+</controls:InitializableContentPage>

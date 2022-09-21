@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Cruise.Data;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -13,7 +14,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class PlotTreeListViewModel : XamarinViewModelBase
+    public class PlotTreeListViewModel : ViewModelBase
     {
         public const string ALL_PLOTS_FILTEROPTION = "ALL";
         private IEnumerable<TreeEx> _allTrees;

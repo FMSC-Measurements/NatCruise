@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
@@ -15,7 +16,7 @@ using System.Windows.Input;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class LogsListViewModel : XamarinViewModelBase
+    public class LogsListViewModel : ViewModelBase
     {
         private ICommand _addLogCommand;
         private ICommand _editLogCommand;

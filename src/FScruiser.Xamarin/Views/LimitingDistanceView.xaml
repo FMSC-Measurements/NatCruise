@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:tk_effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
-             x:Class="FScruiser.XF.Views.LimitingDistanceView"
-             Title="Limiting Distance Calculator">
-    <ContentPage.Resources>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:tk_effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
+                                    x:Class="FScruiser.XF.Views.LimitingDistanceView"
+                                    Title="Limiting Distance Calculator">
+    <controls:InitializableContentPage.Resources>
         <Style TargetType="Label">
             <Setter Property="VerticalTextAlignment"
                     Value="Center" />
@@ -21,8 +22,8 @@
             <Setter Property="WidthRequest"
                     Value="50" />
         </Style>
-    </ContentPage.Resources>
-    <ContentPage.Content>
+    </controls:InitializableContentPage.Resources>
+    <controls:InitializableContentPage.Content>
         <StackLayout>
 
             <!-- the order that the entries appear on the screen is significant as this is the order that 
@@ -31,8 +32,8 @@
             <StackLayout IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}">
                 <Label Text="{Binding Plot.StratumCode, StringFormat='{}Stratum {0}'}" />
             </StackLayout>
-                         
-            
+
+
             <Frame BackgroundColor="LightBlue">
                 <StackLayout Orientation="Horizontal">
 
@@ -153,5 +154,5 @@
                     IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}"
                     IsEnabled="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
         </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

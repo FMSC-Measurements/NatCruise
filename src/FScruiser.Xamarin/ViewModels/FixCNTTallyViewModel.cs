@@ -1,4 +1,5 @@
-﻿using NatCruise.Cruise.Data;
+﻿using NatCruise;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Navigation;
@@ -12,7 +13,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class FixCNTTallyViewModel : XamarinViewModelBase
+    public class FixCNTTallyViewModel : ViewModelBase
     {
         private Command<FixCNTTallyBucket> _processTallyCommand;
         private bool _isUntallyEnabled;

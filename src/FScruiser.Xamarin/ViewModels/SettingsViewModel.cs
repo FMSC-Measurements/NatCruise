@@ -8,6 +8,7 @@ using System.Windows.Input;
 using CruiseDAL;
 using FScruiser.XF.Data;
 using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Data;
 using NatCruise.Navigation;
 using NatCruise.Services;
@@ -18,7 +19,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SettingsViewModel : XamarinViewModelBase, INavigatedAware
+    public class SettingsViewModel : ViewModelBase, INavigatedAware
     {
         public IApplicationSettingService AppSettings { get; }
         public INatCruiseDialogService DialogService { get; }

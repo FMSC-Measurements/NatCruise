@@ -13,7 +13,7 @@ using NatCruise.Models;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TallyView : ContentPage
+    public partial class TallyView : InitializableContentPage
     {
         public TallyView()
         {

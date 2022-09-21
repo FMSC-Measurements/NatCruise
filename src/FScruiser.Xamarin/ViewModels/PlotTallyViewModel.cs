@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
@@ -18,7 +19,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class PlotTallyViewModel : XamarinViewModelBase
+    public class PlotTallyViewModel : ViewModelBase
     {
         private const string STRATUM_FILTER_ALL = "All";
 

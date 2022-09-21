@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FScruiser.XF.Views.PlotListView"
-             x:Name="_page"
-             Title="{Binding Title}"
-             AutomationProperties.IsInAccessibleTree="True"
-             AutomationProperties.Name="Plot List Page">
-    <ContentPage.Content>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    x:Class="FScruiser.XF.Views.PlotListView"
+                                    x:Name="_page"
+                                    Title="{Binding Title}"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Plot List Page">
+    <controls:InitializableContentPage.Content>
         <StackLayout>
             <CollectionView x:Name="_plotListView"
                             ItemsSource="{Binding Plots}"
@@ -116,8 +117,9 @@
 
 
                                     <!-- 2nd row -->
-                                    <Grid Grid.Row="1" ColumnDefinitions="2*,*">
-                                        
+                                    <Grid Grid.Row="1"
+                                          ColumnDefinitions="2*,*">
+
                                         <!-- tree summary -->
                                         <Frame Grid.Column="0"
                                                Padding="5">
@@ -126,14 +128,12 @@
                                                        Margin="3,3" />
 
                                                 <!-- tree count -->
-                                                <Label 
-                                                       Margin="5,3"
+                                                <Label Margin="5,3"
                                                        Text="{Binding TreeCount, StringFormat='Count: {0}'}"
                                                        TextColor="Black" />
 
                                                 <!-- tree errors -->
-                                                <Frame 
-                                                       Padding="3"
+                                                <Frame Padding="3"
                                                        CornerRadius="3"
                                                        BackgroundColor="Red"
                                                        IsVisible="{Binding TreeErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
@@ -151,8 +151,7 @@
                                                 </Frame>
 
                                                 <!-- tree warnings -->
-                                                <Frame 
-                                                       Padding="3"
+                                                <Frame Padding="3"
                                                        CornerRadius="3"
                                                        BackgroundColor="Gold"
                                                        IsVisible="{Binding TreeWarningCount, Converter={StaticResource greaterThanZeroConverter}}">
@@ -235,5 +234,5 @@
             </StackLayout>
 
         </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

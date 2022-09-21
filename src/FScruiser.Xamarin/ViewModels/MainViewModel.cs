@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -13,7 +14,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class MainViewModel : XamarinViewModelBase
+    public class MainViewModel : ViewModelBase
     {
         private IEnumerable<CuttingUnit> _cuttingUnits;
         private CuttingUnit _selectedCuttingUnit;

@@ -1,21 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             x:Class="FScruiser.XF.Views.SaleView"
-             Title="Sale Info"
-             AutomationProperties.IsInAccessibleTree="True"
-             AutomationProperties.Name="Sale Info Page">
-    <ContentPage.Content>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+                                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                    mc:Ignorable="d"
+                                    x:Class="FScruiser.XF.Views.SaleView"
+                                    Title="Sale Info"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Sale Info Page">
+    <controls:InitializableContentPage.Content>
         <TableView BindingContext="{Binding Sale}"
                    HasUnevenRows="True">
             <TableRoot>
                 <TableSection>
                     <EntryCell Label="Sale Name"
                                Text="{Binding Name, Mode=OneWay}"
-                               IsEnabled="False"/>
+                               IsEnabled="False" />
                     <EntryCell Label="Sale Number"
                                Text="{Binding SaleNumber, Mode=OneWay}"
                                IsEnabled="False" />
@@ -31,7 +32,8 @@
                     <ViewCell>
                         <StackLayout Orientation="Vertical"
                                      Padding="16, 0">
-                            <Label x:Name="_remarksHeading" Text="Remarks"/>
+                            <Label x:Name="_remarksHeading"
+                                   Text="Remarks" />
                             <Entry Text="{Binding Remarks}"
                                    BackgroundColor="LightGray"
                                    HeightRequest="200"
@@ -42,5 +44,5 @@
                 </TableSection>
             </TableRoot>
         </TableView>
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

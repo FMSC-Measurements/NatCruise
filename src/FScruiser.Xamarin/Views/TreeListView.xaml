@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
-             xmlns:converters="clr-namespace:FScruiser.XF.Converters"
-             xmlns:dg="clr-namespace:Xamarin.Forms.DataGrid;assembly=Xamarin.Forms.DataGrid"
-             x:Class="FScruiser.XF.Views.TreeListView"
-             x:Name="_page"
-             BackgroundColor="White"
-             Title="{Binding Title}"
-             AutomationProperties.IsInAccessibleTree="True"
-             AutomationProperties.Name="Tree List Page">
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+                                    xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
+                                    xmlns:converters="clr-namespace:FScruiser.XF.Converters"
+                                    xmlns:dg="clr-namespace:Xamarin.Forms.DataGrid;assembly=Xamarin.Forms.DataGrid"
+                                    x:Class="FScruiser.XF.Views.TreeListView"
+                                    x:Name="_page"
+                                    BackgroundColor="White"
+                                    Title="{Binding Title}"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Tree List Page">
     <StackLayout>
         <StackLayout Orientation="Horizontal"
                      HorizontalOptions="EndAndExpand"
@@ -146,4 +147,4 @@
                     AutomationProperties.Name="Scroll to Start Button" />-->
         </StackLayout>
     </StackLayout>
-</ContentPage>
+</controls:InitializableContentPage>

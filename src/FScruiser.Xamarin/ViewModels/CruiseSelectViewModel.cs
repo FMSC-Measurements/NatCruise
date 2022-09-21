@@ -1,6 +1,7 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Sync;
 using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -18,7 +19,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class CruiseSelectViewModel : XamarinViewModelBase
+    public class CruiseSelectViewModel : ViewModelBase
     {
         //public ICommand SelectCruiseCommand => new
 
