@@ -31,6 +31,7 @@ namespace NatCruise.Cruise.Test.Data
             using (var database = CreateDatabase())
             {
                 var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+                var tlds = new TallyLedgerDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
                 var tpds = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
                 var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
@@ -43,7 +44,7 @@ namespace NatCruise.Cruise.Test.Data
                 tallyEntries.Should().Contain(x => x.STM == true && x.KPI == 123);
 
                 // add another entry using insertTallyLedger
-                datastore.InsertTallyLedger(new TallyLedger(unit, pop));
+                tlds.InsertTallyLedger(new TallyLedger(unit, pop));
                 tallyEntries = datastore.GetTallyEntriesByUnitCode(unit);
                 tallyEntries.Should().HaveCount(2);
 
@@ -159,6 +160,7 @@ namespace NatCruise.Cruise.Test.Data
             {
                 var datastore = new TallyDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
                 var tpds = new TallyPopulationDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var tlds = new TallyLedgerDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 var pop = tpds.GetTallyPopulation(unitCode, stratum, sampleGroup, species, liveDead);
                 pop.Should().NotBeNull();
@@ -170,7 +172,7 @@ namespace NatCruise.Cruise.Test.Data
                 tallyLedger.TreeCount = treeCountDiff;
                 tallyLedger.KPI = 1;
 
-                datastore.InsertTallyLedger(tallyLedger);
+                tlds.InsertTallyLedger(tallyLedger);
 
                 database.ExecuteScalar<int>("SELECT count(*) FROM TallyLedger;").Should().Be(1);
                 database.ExecuteScalar<int>("SELECT sum(TreeCount) FROM TallyLedger;").Should().Be(treeCountDiff);
