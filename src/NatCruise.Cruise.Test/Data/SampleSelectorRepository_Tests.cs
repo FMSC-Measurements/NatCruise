@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
+using NatCruise.Data;
 using NatCruise.Test;
 using Xunit;
 using Xunit.Abstractions;
@@ -52,8 +53,9 @@ namespace NatCruise.Cruise.Test.Data
                     null, null
                     );
 
-                var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
-                var repo = new SampleSelectorRepository(ds);
+                var sgds = new SampleGroupDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var ssds = new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var repo = new SampleSelectorRepository(ssds, sgds);
 
                 var sampler = repo.GetSamplerBySampleGroupCode(stratumCode, sampleGroupCode);
                 sampler.ITreeFrequency.Should().Be(insuranceFreq);
