@@ -28,8 +28,8 @@
             <Color x:Key="listItemText">#345E36</Color>
             <Color x:Key="lightText">White</Color>
 
-            <!-- these colors provide semi transparent pigments to be used as background coulors or text color. 
-            using a semi trasparent color as a font or background color is a good alternative to using greys
+            <!-- these colors provide semi transparent pigments to be used as background colors or text color. 
+            using a semi transparent color as a font or background color is a good alternative to using grays
             as these semi transparent pigments will play well with any other colors lower down in the visual stack-->
             <Color x:Key="white_90">#E1ffffff</Color>
             <Color x:Key="white_70">#B2ffffff</Color>
