@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<local_ctrls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:tk_conv="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
              xmlns:my_behv="clr-namespace:FScruiser.XF.Behaviors"
@@ -11,7 +11,8 @@
              Title="{Binding Title}"
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Plot Tally Page">
-    <ContentPage.Resources>
+    
+    <local_ctrls:InitializableContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="tallyIncruiseColor"></Color>
 
@@ -23,13 +24,15 @@
             <converters:IsFixCNTorCountGreaterThanOneConverter x:Key="isFixCNTorCountGreaterThanOne" />
 
         </ResourceDictionary>
-    </ContentPage.Resources>
-    <ContentPage.ToolbarItems>
+    </local_ctrls:InitializableContentPage.Resources>
+    
+    <local_ctrls:InitializableContentPage.ToolbarItems>
         <ToolbarItem Text="Edit"
                      Icon="ic_edit_white_24dp.png"
                      Command="{Binding EditPlotCommand}" />
-    </ContentPage.ToolbarItems>
-    <ContentPage.Content>
+    </local_ctrls:InitializableContentPage.ToolbarItems>
+    
+    <local_ctrls:InitializableContentPage.Content>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -452,5 +455,5 @@
 
         </Grid>
 
-    </ContentPage.Content>
-</ContentPage>
+    </local_ctrls:InitializableContentPage.Content>
+</local_ctrls:InitializableContentPage>

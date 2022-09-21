@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FScruiser.XF.Views.FixCntTallyView"
-             x:Name="Page"
-             Title="{Binding Title}"
-             AutomationProperties.Name="Fix Count Tally Page">
-    <ContentPage.Content>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    x:Class="FScruiser.XF.Views.FixCntTallyView"
+                                    x:Name="Page"
+                                    Title="{Binding Title}"
+                                    AutomationProperties.Name="Fix Count Tally Page">
+    <controls:InitializableContentPage.Content>
         <Grid AutomationProperties.IsInAccessibleTree="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -22,7 +23,7 @@
                          AutomationProperties.IsInAccessibleTree="False">
                 <Label Text="Untally"
                        VerticalTextAlignment="Center"
-                       AutomationProperties.IsInAccessibleTree="False"/>
+                       AutomationProperties.IsInAccessibleTree="False" />
                 <Switch x:Name="_enableUntallySwitch"
                         IsToggled="{Binding IsUntallyEnabled}"
                         AutomationProperties.Name="Untally Switch"
@@ -111,5 +112,5 @@
             </StackLayout>
 
         </Grid>
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

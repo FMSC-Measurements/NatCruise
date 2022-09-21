@@ -12,7 +12,7 @@ using FScruiser.XF.Util;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PlotTallyView : ContentPage
+    public partial class PlotTallyView : InitializableContentPage
     {
         private bool _treeCellIsSelected;
 

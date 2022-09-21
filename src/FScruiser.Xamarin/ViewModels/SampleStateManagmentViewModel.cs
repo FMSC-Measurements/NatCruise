@@ -1,4 +1,5 @@
 ﻿using Microsoft.AppCenter.Crashes;
+using NatCruise;
 using NatCruise.Data;
 using Prism.Common;
 using System;
@@ -8,7 +9,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SampleStateManagmentViewModel : XamarinViewModelBase
+    public class SampleStateManagmentViewModel : ViewModelBase
     {
         //private NatCruise.Cruise.Models.Device _currentDevice;
         private Command<string> _copyDeviceStateCommand;
@@ -47,7 +48,7 @@ namespace FScruiser.XF.ViewModels
             protected set => SetProperty(ref _devices, value);
         }
 
-        protected override void Load(IParameters parameters)
+        public override void Load()
         {
             try
             {

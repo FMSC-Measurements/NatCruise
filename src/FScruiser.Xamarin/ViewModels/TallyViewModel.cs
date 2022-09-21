@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
@@ -20,7 +21,7 @@ using System.Windows.Input;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TallyViewModel : XamarinViewModelBase
+    public class TallyViewModel : ViewModelBase
     {
         public static readonly string STRATUM_FILTER_ALL = "All";
 

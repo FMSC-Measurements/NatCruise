@@ -1,4 +1,5 @@
-﻿using NatCruise.Data;
+﻿using NatCruise;
+using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using Prism.Common;
@@ -7,7 +8,8 @@ using System.Collections.Generic;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class CruiseListViewModel : XamarinViewModelBase
+    // TODO delete unused class
+    public class CruiseListViewModel : ViewModelBase
     {
         private Sale _sale;
         private IEnumerable<Cruise> _cruises;

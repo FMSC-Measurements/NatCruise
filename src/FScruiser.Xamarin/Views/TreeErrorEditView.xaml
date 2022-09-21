@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FScruiser.XF.Views.TreeErrorEditView"
-             Title="Tree Error"
-             AutomationProperties.IsInAccessibleTree="True"
-             AutomationProperties.Name="Tree Error Page">
-    <ContentPage.Content>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    x:Class="FScruiser.XF.Views.TreeErrorEditView"
+                                    Title="Tree Error"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Tree Error Page">
+    <controls:InitializableContentPage.Content>
 
         <StackLayout>
             <Grid>
@@ -95,5 +96,5 @@
             </StackLayout>
         </StackLayout>
 
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

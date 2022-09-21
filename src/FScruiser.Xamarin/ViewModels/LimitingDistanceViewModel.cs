@@ -1,4 +1,5 @@
-﻿using NatCruise.Cruise.Data;
+﻿using NatCruise;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
@@ -15,7 +16,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class LimitingDistanceViewModel : XamarinViewModelBase//, INavigatedAware
+    public class LimitingDistanceViewModel : ViewModelBase//, INavigatedAware
     {
         public const String MEASURE_TO_FACE = "Face";
         public const String MEASURE_TO_CENTER = "Center";

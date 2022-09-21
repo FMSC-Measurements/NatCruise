@@ -1,4 +1,5 @@
 using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -22,7 +23,7 @@ namespace FScruiser.XF.ViewModels
     // also it would be nice if the view model had a Errors property that exposed a observable dictionary
     // which exposed all the errors rather than having properties to indelicate if a property had an error
 
-    public class TreeEditViewModel : XamarinViewModelBase
+    public class TreeEditViewModel : ViewModelBase
     {
         private ICommand _showLogsCommand;
         private IEnumerable<string> _stratumCodes;

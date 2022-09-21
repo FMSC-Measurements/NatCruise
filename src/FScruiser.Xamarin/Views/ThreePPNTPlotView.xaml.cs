@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FScruiser.XF.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ThreePPNTPlotView : ContentPage
+    public partial class ThreePPNTPlotView : InitializableContentPage
     {
         public ThreePPNTPlotView()
         {

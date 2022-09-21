@@ -1,4 +1,5 @@
-﻿using FScruiser.XF.Util;
+﻿using FScruiser.XF.Controls;
+using FScruiser.XF.Util;
 using FScruiser.XF.ViewModels;
 using NatCruise.Models;
 using System;
@@ -10,7 +11,7 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TreeEditView : ContentPage
+    public partial class TreeEditView : InitializableContentPage
     {
         private static readonly string[] PRECONFIGED_TREE_FIELDS = new[] { nameof(TreeEditViewModel.Initials), nameof(TreeEditViewModel.Remarks) };
 

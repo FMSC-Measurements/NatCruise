@@ -1,4 +1,5 @@
-﻿using NatCruise.Cruise.Data;
+﻿using NatCruise;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -11,7 +12,7 @@ using System.ComponentModel;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class LogEditViewModel : XamarinViewModelBase, INavigatedAware
+    public class LogEditViewModel : ViewModelBase, INavigatedAware
     {
         private Log _log;
         private IEnumerable<LogFieldSetup> _logFields;

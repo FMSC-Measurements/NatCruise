@@ -1,4 +1,5 @@
-﻿using FScruiser.XF.ViewModels;
+﻿using FScruiser.XF.Controls;
+using FScruiser.XF.ViewModels;
 using NatCruise.Models;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.Views
 {
-    public partial class CuttingUnitListView : ContentPage
+    public partial class CuttingUnitListView : InitializableContentPage
     {
         protected CuttingUnitListViewModel ViewModel => (CuttingUnitListViewModel)BindingContext;
 

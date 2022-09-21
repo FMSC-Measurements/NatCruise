@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
@@ -10,7 +11,7 @@ using System.Windows.Input;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeCountEditViewModel : XamarinViewModelBase
+    public class TreeCountEditViewModel : ViewModelBase
     {
         private bool _isSaved;
         private string _unitCode;

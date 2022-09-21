@@ -1,4 +1,5 @@
-﻿using NatCruise.Cruise.Logic;
+﻿using FScruiser.XF.Controls;
+using NatCruise.Cruise.Logic;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -6,7 +7,7 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LimitingDistanceView : ContentPage
+    public partial class LimitingDistanceView : InitializableContentPage
     {
         public LimitingDistanceView()
         {

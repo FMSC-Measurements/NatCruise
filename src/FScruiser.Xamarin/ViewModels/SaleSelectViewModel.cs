@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Data;
 using NatCruise.Models;
 using Prism.Common;
@@ -9,7 +10,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SaleSelectViewModel : XamarinViewModelBase
+    public class SaleSelectViewModel : ViewModelBase
     {
         private IEnumerable<Sale> _sales;
 
@@ -40,10 +41,8 @@ namespace FScruiser.XF.ViewModels
             NavigationService.ShowCruiseSelect(saleNumber);
         }
 
-        protected override void Load(IParameters parameters)
+        public override void Load()
         {
-            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
-
             var sales = SaleDataservice.GetSales();
             Sales = sales;
         }

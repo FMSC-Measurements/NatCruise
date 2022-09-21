@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FScruiser.XF.Views.LogsListView"
              Title="{Binding TreeNumber, StringFormat='{}Logs: Tree Number {0}'}"
              AutomationProperties.Name="{Binding TreeNumber, StringFormat='{}Tree Number {0} Log List Page'}">
-    <ContentPage.Content>
+    <controls:InitializableContentPage.Content>
         <StackLayout>
             <CollectionView x:Name="_logListView"
                       ItemsSource="{Binding Logs}"
@@ -42,5 +43,5 @@
                         AutomationProperties.Name="Scroll To Start of List" />
             </StackLayout>
         </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

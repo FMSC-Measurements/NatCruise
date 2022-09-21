@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
-             xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
-             xmlns:converters="clr-namespace:FScruiser.XF.Converters"
-             x:Class="FScruiser.XF.Views.PlotEditView"
-             x:Name="_page"
-             Title="Edit Plot"
-             AutomationProperties.IsInAccessibleTree="True"
-             AutomationProperties.Name="Plot Edit Page">
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
+                                    xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
+                                    xmlns:converters="clr-namespace:FScruiser.XF.Converters"
+                                    x:Class="FScruiser.XF.Views.PlotEditView"
+                                    x:Name="_page"
+                                    Title="Edit Plot"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Plot Edit Page">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -22,8 +23,7 @@
                      AutomationProperties.Name="Plot Error List">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
-                    <Label 
-                        TextColor="{StaticResource darkText}"
+                    <Label TextColor="{StaticResource darkText}"
                            Text="{Binding Message}"
                            BackgroundColor="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}"
                            FontSize="Large"
@@ -161,8 +161,10 @@
 
                                 <Frame.Resources>
                                     <ResourceDictionary>
-                                        <converters:CruiseMethodToBoolConverter MethodMap="FixedSizePlotMethods" x:Key="IsFixedSizedPlotMethod" />
-                                        <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods" x:Key="IsVRPlotMethod" />
+                                        <converters:CruiseMethodToBoolConverter MethodMap="FixedSizePlotMethods"
+                                                                                x:Key="IsFixedSizedPlotMethod" />
+                                        <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods"
+                                                                                x:Key="IsVRPlotMethod" />
                                     </ResourceDictionary>
                                 </Frame.Resources>
 
@@ -188,21 +190,26 @@
                                     </StackLayout>
 
                                     <!-- Cruise Method -->
-                                    <StackLayout Orientation="Horizontal" Margin="10,0,10,0">
-                                        <Label Text="Method:"/>
-                                        <Label Text="{Binding CruiseMethod}"/>
+                                    <StackLayout Orientation="Horizontal"
+                                                 Margin="10,0,10,0">
+                                        <Label Text="Method:" />
+                                        <Label Text="{Binding CruiseMethod}" />
                                     </StackLayout>
-                                    
+
                                     <!-- BAF -->
-                                    <StackLayout Orientation="Horizontal" IsVisible="{Binding CruiseMethod, Converter={StaticResource IsVRPlotMethod}}" Margin="10,0,10,0">
-                                        <Label Text="BAF:"/>
-                                        <Label Text="{Binding BAF}"/>
+                                    <StackLayout Orientation="Horizontal"
+                                                 IsVisible="{Binding CruiseMethod, Converter={StaticResource IsVRPlotMethod}}"
+                                                 Margin="10,0,10,0">
+                                        <Label Text="BAF:" />
+                                        <Label Text="{Binding BAF}" />
                                     </StackLayout>
 
                                     <!-- FPS -->
-                                    <StackLayout Orientation="Horizontal" IsVisible="{Binding CruiseMethod, Converter={StaticResource IsFixedSizedPlotMethod}}" Margin="10,0,10,0">
-                                        <Label Text="FPS:"/>
-                                        <Label Text="{Binding FPS}"/>
+                                    <StackLayout Orientation="Horizontal"
+                                                 IsVisible="{Binding CruiseMethod, Converter={StaticResource IsFixedSizedPlotMethod}}"
+                                                 Margin="10,0,10,0">
+                                        <Label Text="FPS:" />
+                                        <Label Text="{Binding FPS}" />
                                     </StackLayout>
 
                                     <!--this panel hides if plot is not in cruise-->
@@ -217,14 +224,13 @@
                                         <StackLayout Orientation="Horizontal"
                                                      Margin="10,0,10,0">
 
-                                            <StackLayout Orientation="Horizontal"
-                                                         >
+                                            <StackLayout Orientation="Horizontal">
                                                 <Label Text="Is Null Plot"
                                                        VerticalTextAlignment="Center" />
                                                 <Switch IsToggled="{Binding IsEmpty}"
                                                         OnColor="{StaticResource primary_500}"
                                                         HeightRequest="{StaticResource minTouchableHeight}"
-                                                        Margin="20,0,0,0"/>
+                                                        Margin="20,0,0,0" />
                                             </StackLayout>
                                         </StackLayout>
 
@@ -251,4 +257,4 @@
 
 
     </Grid>
-</ContentPage>
+</controls:InitializableContentPage>

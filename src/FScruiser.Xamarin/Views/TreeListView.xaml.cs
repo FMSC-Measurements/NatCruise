@@ -1,10 +1,11 @@
-﻿using System;
+﻿using FScruiser.XF.Controls;
+using System;
 using System.Linq;
 using Xamarin.Forms;
 
 namespace FScruiser.XF.Views
 {
-    public partial class TreeListView : ContentPage
+    public partial class TreeListView : InitializableContentPage
     {
         public TreeListView()
         {

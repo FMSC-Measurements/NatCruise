@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<local_ctrls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:Backpack.XF.Converters;assembly=Backpack.XF.Converters"
              xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
@@ -12,13 +12,13 @@
              Title="{Binding Title}"
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Tally Page">
-    <ContentPage.Resources>
+    <local_ctrls:InitializableContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="tallyButtonBgColor">Green</Color>
         </ResourceDictionary>
-    </ContentPage.Resources>
+    </local_ctrls:InitializableContentPage.Resources>
 
-    <ContentPage.Content>
+    <local_ctrls:InitializableContentPage.Content>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -803,5 +803,5 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Grid>
-    </ContentPage.Content>
-</ContentPage>
+    </local_ctrls:InitializableContentPage.Content>
+</local_ctrls:InitializableContentPage>

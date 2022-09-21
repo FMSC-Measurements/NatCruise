@@ -1,5 +1,6 @@
 ﻿using CruiseDAL;
 using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Data;
 using NatCruise.Navigation;
 using NatCruise.Services;
@@ -16,7 +17,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class DatabaseUtilitiesViewModel : XamarinViewModelBase
+    public class DatabaseUtilitiesViewModel : ViewModelBase
     {
         public ICommand ResetDatabaseCommand => new Command(() => ResetDatabase().FireAndForget());
         public ICommand BackupDatabaseCommand => new Command(() => BackupDatabase().FireAndForget());
