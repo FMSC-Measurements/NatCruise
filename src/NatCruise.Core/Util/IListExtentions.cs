@@ -28,7 +28,7 @@ namespace NatCruise.Util
             var count = source.Count;
             if (start >= count || start < 0) { throw new ArgumentOutOfRangeException(nameof(start)); }
 
-            for (var i = start; i > 0; i--)
+            for (var i = start; i >= 0; i--)
             {
                 TSource item = source[i];
                 if (predicate(item))

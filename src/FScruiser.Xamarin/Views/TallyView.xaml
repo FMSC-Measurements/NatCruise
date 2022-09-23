@@ -545,6 +545,7 @@
                 </CollectionView>
 
                 <!--Tree Edit Panel-->
+                <!--default to not visible, when view cell expands visibility will be set to true -->
                 <Frame  x:Name="_treeEditPanel"
                         IsVisible="false"
                         RelativeLayout.XConstraint="0"
@@ -552,12 +553,11 @@
                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
                         Padding="0"
                         BindingContext="{Binding SelectedTreeViewModel}"
-                        BindingContextChanged="_treeEditPanel_BindingContextChanged"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Tree Edit Panel">
 
-                    <Grid HorizontalOptions="Fill">
-                        <!--default to not visible, when view cell expands visibility will be set to true -->
+                    <Grid>
+                        
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -586,20 +586,6 @@
                                     Text="Next"
                                     Command="{Binding BindingContext.SelectNextTreeCommand, Source={Reference _page}}" />
                         </AbsoluteLayout>
-
-
-
-                        <!--<ScrollView x:Name="_treeEditScrollView"
-                                    Grid.Row="1"
-                                    Grid.Column="0"
-                                    Orientation="Horizontal">
-                            <Grid x:Name="_treeEditControlGrid">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="15" />
-                                    <RowDefinition Height="50" />
-                                </Grid.RowDefinitions>
-                            </Grid>
-                        </ScrollView>-->
 
                         <ScrollView Grid.Row="1"
                                     Orientation="Horizontal">
@@ -752,7 +738,6 @@
                                 <!-- logs button -->
                                 <ColumnDefinition Width="Auto" />
                                 <!-- edit button -->
-                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
