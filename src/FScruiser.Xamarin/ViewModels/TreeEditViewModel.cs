@@ -556,7 +556,7 @@ namespace FScruiser.XF.ViewModels
             try
             {
                 IsLoading = true;
-                var tree = TreeDataservice.GetTree(treeID) ?? throw new NullReferenceException("GetTree returned null"); ;
+                var tree = TreeDataservice.GetTree(treeID) ?? throw new NullReferenceException("GetTree returned null");
                 var unitCode = tree.CuttingUnitCode;
                 var stratumCodes = StratumDataservice.GetStratumCodesByUnit(unitCode);
                 StratumCodes = stratumCodes;
