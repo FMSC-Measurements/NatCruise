@@ -32,9 +32,9 @@ namespace FScruiser.XF.Views
                 vm.IsLoading = true; // prevent changing controls from triggering prop changed events
                 try
                 {
-                    _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
-                    _treeEditControlGrid.Children.AddRange(editControls);
+                    //_treeEditControlGrid.Children.Clear();
+                    //var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
+                    //_treeEditControlGrid.Children.AddRange(editControls);
                 }
                 finally
                 { vm.IsLoading = false; }
@@ -58,25 +58,25 @@ namespace FScruiser.XF.Views
 
         private void _treeEditPanel_BindingContextChanged(object sender, EventArgs e)
         {
-            var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
-            if(vm != null)
-            {
-                vm.IsLoading = true; // prevent changing controls from triggering prop changed events
-                try
-                {
-                    _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
-                    _treeEditControlGrid.Children.AddRange(editControls);
-                }
-                finally
-                {
-                    vm.IsLoading = false;
-                }
-            }
-            else
-            {
-                _treeEditControlGrid.Children.Clear();
-            }
+            //var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
+            //if (vm != null)
+            //{
+            //    vm.IsLoading = true; // prevent changing controls from triggering prop changed events
+            //    try
+            //    {
+            //        _treeEditControlGrid.Children.Clear();
+            //        var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
+            //        _treeEditControlGrid.Children.AddRange(editControls);
+            //    }
+            //    finally
+            //    {
+            //        vm.IsLoading = false;
+            //    }
+            //}
+            //else
+            //{
+            //    _treeEditControlGrid.Children.Clear();
+            //}
         }
 
 

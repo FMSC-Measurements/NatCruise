@@ -62,6 +62,9 @@
             <tc_conv:VariableMultiValueConverter ConditionType="All"
                                                  x:Key="AllTrueConverter" />
 
+            <tc_conv:VariableMultiValueConverter ConditionType="Any"
+                                                 x:Key="AnyTrueConverter" />
+
 
             <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
 
