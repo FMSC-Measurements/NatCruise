@@ -67,6 +67,7 @@
                                         <Frame AbsoluteLayout.LayoutBounds=".75,7"
                                                AbsoluteLayout.LayoutFlags="XProportional"
                                                Padding="3"
+                                               IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}"
                                                CornerRadius="3"
                                                BackgroundColor="Red"
                                                VerticalOptions="Center">
