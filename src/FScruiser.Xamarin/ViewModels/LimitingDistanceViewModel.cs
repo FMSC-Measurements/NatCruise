@@ -1,13 +1,10 @@
 ﻿using NatCruise;
-using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
-using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Common;
-using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +20,12 @@ namespace FScruiser.XF.ViewModels
         public static readonly String[] MEASURE_TO_OPTIONS = new String[] { MEASURE_TO_FACE, MEASURE_TO_CENTER };
 
         private bool? _isTreeIn = null;
-        private double _bafOrFps;
-        private double _dbh;
+        private decimal _bafOrFps;
+        private decimal _dbh;
         private int _slopePCT;
-        private double? _slopeDistance;
-        private double _limitingDistance;
-        private double _azimuth;
+        private decimal? _slopeDistance;
+        private decimal _limitingDistance;
+        private decimal _azimuth;
         private bool _isToFace = true;
         private bool _isVariableRadius;
         private Plot_Stratum _plot;
@@ -44,7 +41,7 @@ namespace FScruiser.XF.ViewModels
             set => SetProperty(ref _plot, value);
         }
 
-        public double BafOrFps
+        public decimal BafOrFps
         {
             get { return _bafOrFps; }
             set
@@ -54,7 +51,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public double DBH
+        public decimal DBH
         {
             get { return _dbh; }
             set
@@ -74,7 +71,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        // HACK xamarin really doesn't like binding to nullible types
+        // HACK xamarin really doesn't like binding to nullable types
         // so instead we will bind the text box to a property that exposes SlopeDistance as a string.
         // see: https://forums.xamarin.com/discussion/144704/binding-to-nullable-int
         public string SlopeDistanceStr
@@ -82,7 +79,7 @@ namespace FScruiser.XF.ViewModels
             get => SlopeDistance?.ToString() ?? "";
             set
             {
-                if (value != null && double.TryParse(value, out var d))
+                if (value != null && decimal.TryParse(value, out var d))
                 {
                     SlopeDistance = d;
                 }
@@ -93,7 +90,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public double? SlopeDistance
+        public decimal? SlopeDistance
         {
             get { return _slopeDistance; }
             set
@@ -103,7 +100,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public double Azimuth
+        public decimal Azimuth
         {
             get { return _azimuth; }
             set
@@ -149,7 +146,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public double LimitingDistance
+        public decimal LimitingDistance
         {
             get { return _limitingDistance; }
             set { SetProperty(ref _limitingDistance, value); }
@@ -175,13 +172,26 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
+        public bool UseNewLimitingDistanceCalculator { get; }
+
+        public ILimitingDistanceCalculator LimitingDistanceCalculator { get; }
+
         public ICommand SaveReportToPlotCommand => new Command(SaveReport);
 
-        public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService)
+        public ICommand CopyReportToClipboardCommand => new Command(CopyReportToClipBoard);
+
+        public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService, IApplicationSettingService appSettings)
         {
             // we need DataserviceProvider because we might not know if a cruise is selected until Load gets called
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+
+            UseNewLimitingDistanceCalculator = appSettings.UseNewLimitingDistanceCalculator;
+
+            if (UseNewLimitingDistanceCalculator)
+            { LimitingDistanceCalculator = new CalculateLimitingDistance2(); }
+            else
+            { LimitingDistanceCalculator = new CalculateLimitingDistance(); }
         }
 
         //void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
@@ -203,9 +213,10 @@ namespace FScruiser.XF.ViewModels
 
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
-            var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
+            var strPlotNumber = parameters.GetValue<string>(NavParams.PLOT_NUMBER);
 
-            if (unitCode != null && stratumCode != null && plotNumber != null)
+            if (unitCode != null && stratumCode != null && strPlotNumber != null
+                && int.TryParse(strPlotNumber, out var plotNumber))
             {
                 var ds = PlotStratumDataservice = DataserviceProvider.GetDataservice<IPlotStratumDataservice>();
                 var pDs = PlotDataservice = DataserviceProvider.GetDataservice<IPlotDataservice>();
@@ -215,7 +226,9 @@ namespace FScruiser.XF.ViewModels
                 {
                     var isVariableRadious = IsVariableRadius = CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(plotSt.CruiseMethod);
 
-                    BafOrFps = (isVariableRadious) ? plotSt.BAF : plotSt.FPS;
+                    // BAF and FPS should be whole numbers but for some reason they are REALs in the data structure
+                    // note that FPS value is the denominator in fractions of acres
+                    BafOrFps = (isVariableRadious) ? (decimal)plotSt.BAF : (decimal)plotSt.FPS;
 
                     PlotStratum = plotSt;
 
@@ -226,7 +239,7 @@ namespace FScruiser.XF.ViewModels
 
         public bool CanCalculate()
         {
-            return BafOrFps > 0.0 && DBH > 0.0;
+            return BafOrFps > 0.0m && DBH > 0.0m;
         }
 
         public void Calculate()
@@ -234,16 +247,16 @@ namespace FScruiser.XF.ViewModels
             if (!CanCalculate())
             {
                 IsTreeIn = null;
-                LimitingDistance = 0.0;
+                LimitingDistance = 0.0m;
                 return;
             }
 
-            var limitingDistance = LimitingDistance = CalculateLimitingDistance.Calculate(BafOrFps, DBH, SlopePCT, IsVariableRadius, IsToFace);
+            var limitingDistance = LimitingDistance = LimitingDistanceCalculator.Calculate(BafOrFps, DBH, SlopePCT, IsVariableRadius, IsToFace);
             var slopeDistance = SlopeDistance;
 
             if (slopeDistance.HasValue)
             {
-                IsTreeIn = CalculateLimitingDistance.DeterminTreeInOrOut(slopeDistance.Value, limitingDistance);
+                IsTreeIn = LimitingDistanceCalculator.DeterminTreeInOrOut(slopeDistance.Value, limitingDistance);
             }
             else
             {
@@ -257,7 +270,7 @@ namespace FScruiser.XF.ViewModels
 
             if (IsTreeIn.HasValue)
             {
-                return CalculateLimitingDistance.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
+                return LimitingDistanceCalculator.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
                     SlopePCT, Azimuth, BafOrFps, DBH, IsVariableRadius, IsToFace, PlotStratum?.StratumCode);
             }
             else { return null; }
@@ -274,6 +287,16 @@ namespace FScruiser.XF.ViewModels
                     PlotDataservice.AddPlotRemark(plot.CuttingUnitCode, plot.PlotNumber, report);
                     DialogService.ShowNotification(report, "Report Saved");
                 }
+            }
+        }
+
+        public async void CopyReportToClipBoard()
+        {
+            var report = GenerateReport();
+            if (!string.IsNullOrEmpty(report))
+            {
+                await Xamarin.Essentials.Clipboard.SetTextAsync(report);
+                DialogService.ShowNotification(report, "Report Copied");
             }
         }
     }

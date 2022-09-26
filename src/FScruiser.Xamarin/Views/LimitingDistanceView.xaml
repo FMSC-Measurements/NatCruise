@@ -33,6 +33,11 @@
                 <Label Text="{Binding Plot.StratumCode, StringFormat='{}Stratum {0}'}" />
             </StackLayout>
 
+            <Label HorizontalOptions="FillAndExpand"
+                   IsVisible="{Binding UseNewLimitingDistanceCalculator}"
+                   BackgroundColor="Gold"
+                   Text="Using New Limiting Distance Calculations" />
+
 
             <Frame BackgroundColor="LightBlue">
                 <StackLayout Orientation="Horizontal">
@@ -109,8 +114,8 @@
                             </StackLayout>
                             <StackLayout Orientation="Horizontal">
                                 <Label x:Name="_measuringToPickerHeading">Measuring To</Label>
-                                <Picker SelectedItem="{Binding MeasureToSelection}"
-                                        ItemsSource="{Binding MeasureToOptions}"
+                                <controls:ValuePicker SelectedValue="{Binding MeasureToSelection}"
+                                        ValueSource="{Binding MeasureToOptions}"
                                         HorizontalOptions="FillAndExpand"
                                         AutomationProperties.LabeledBy="{x:Reference _measuringToPickerHeading}" />
                             </StackLayout>
@@ -151,7 +156,10 @@
 
             <Button Text="Save Limiting Distance Report To Remarks"
                     Command="{Binding SaveReportToPlotCommand}"
-                    IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                    IsVisible="{Binding PlotStratum, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                    IsEnabled="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+            <Button Text="Copy Limiting Distance Report To Clipboard"
+                    Command="{Binding CopyReportToClipboardCommand}"
                     IsEnabled="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
         </StackLayout>
     </controls:InitializableContentPage.Content>
