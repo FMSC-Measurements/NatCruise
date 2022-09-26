@@ -38,6 +38,22 @@
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="Database Utilities" />
 
+            <BoxView HeightRequest="2"
+                     BackgroundColor="DarkGray" />
+
+            <StackLayout Orientation="Horizontal">
+
+                <Label Text="Use New Limiting Distance Calculator"
+                       VerticalTextAlignment="Center"
+                       AutomationProperties.IsInAccessibleTree="False" />
+
+                <Switch IsToggled="{Binding AppSettings.UseNewLimitingDistanceCalculator}"
+                        HeightRequest="{StaticResource minTouchableHeight}"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Use New LimitingDistance Calculator Toggle" />
+
+            </StackLayout>
+
             <Button Text="Privacy Policy"
                     Command="{Binding ShowPrivacyPolicyCommand}"
                     VerticalOptions="EndAndExpand"

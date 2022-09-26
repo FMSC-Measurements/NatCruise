@@ -2,10 +2,6 @@
 using NatCruise.Cruise.Logic;
 using NatCruise.Test;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -13,8 +9,11 @@ namespace NatCruise.Cruise.Test.Logic
 {
     public class CalculateLimitingDistance_Test : TestBase
     {
+        ILimitingDistanceCalculator LimitingDistanceCalculator { get; }
+
         public CalculateLimitingDistance_Test(ITestOutputHelper output) : base(output)
         {
+            LimitingDistanceCalculator = new CalculateLimitingDistance();
         }
 
         [Theory]
@@ -23,12 +22,9 @@ namespace NatCruise.Cruise.Test.Logic
         [InlineData(.011, .012, true)]
         [InlineData(.02, .015, true)]
         [InlineData(.02, .014, false)]
-        //for tree to be in slope distance (first value) must be less than or equal to limiting distance (second value)
-        //both values are round to two decimal places
-        //here we test edge cases where both values should be determined to be equal
-        public void TestDeterminTreeInOrOut(double slopeDistance, double limitingDistance, bool expectedResult)
+        public void TestDeterminTreeInOrOut(decimal slopeDistance, decimal limitingDistance, bool expectedResult)
         {
-            CalculateLimitingDistance.DeterminTreeInOrOut(slopeDistance, limitingDistance).Should().Be(expectedResult);
+            LimitingDistanceCalculator.DeterminTreeInOrOut(slopeDistance, limitingDistance).Should().Be(expectedResult);
         }
 
         [Theory]
@@ -40,14 +36,11 @@ namespace NatCruise.Cruise.Test.Logic
         [InlineData(50.0, 10.0, 0, false, true, 16.236)]//to face
         [InlineData(50.0, 10.0, 50, false, true, 18.152)]//to face, w/ 50% slope
         [InlineData(50.0, 10.0, 0, false, false, 16.653)]//to center
-        // [InlineData(20.0, 18.3, 25, true, true, 35.85)]// due to rounding in plot coeficiant,
-         // hand calcualated limiting distances may be different from our calcualted values.
-         // But we are going to stick with the more precice calculated values
-        public void TestCalculateLimitingDistance(double BAForFPS, double dbh, int slopePCT, bool isVar, bool isFace, double expected)
+        public void TestCalculateLimitingDistance(decimal BAForFPS, decimal dbh, int slopePCT, bool isVar, bool isFace, decimal expected)
         {
             int sigDec = 3;
 
-            var ld = CalculateLimitingDistance.Calculate(BAForFPS, dbh, slopePCT, isVar, isFace);
+            var ld = LimitingDistanceCalculator.Calculate(BAForFPS, dbh, slopePCT, isVar, isFace);
             ld = Math.Round(ld, sigDec);
             expected = Math.Round(expected, 3);
             ld.Should().Be(expected);
