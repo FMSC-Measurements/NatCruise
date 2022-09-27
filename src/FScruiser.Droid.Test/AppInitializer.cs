@@ -22,7 +22,7 @@ namespace FScruiser.Droid.Test
                 //.KeyStore(keystorePath, keystorePW, keystorePW, keyAlias: "FMSC") // if testing a signed release version the test runner needs to be signed with the same keystore
                 .InstalledApp("com.FMSC.FScruiser")
                 //.ApkFile("../../../FScruiser/FScruiser.Droid/bin/Release/FScruiser.Droid.apk")
-                .StartApp();
+                .StartApp(Xamarin.UITest.Configuration.AppDataMode.DoNotClear);
 
             }
             else
