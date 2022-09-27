@@ -67,7 +67,6 @@ namespace NatCruise.Cruise.Logic
         public static decimal CalculateToFaceCorrection(decimal dbh)
         {
             // to calculate to face correction: Half DBH in feet (divided by 12)
-            // we round to tenths because that is the convention supported by using tenths for plot radii
             return Math.Round(dbh / (12.0m * 2), 2, MidpointRounding.AwayFromZero);
         }
 
@@ -113,6 +112,8 @@ namespace NatCruise.Cruise.Logic
         public string GenerateReport(string treeStatus, decimal limitingDistance, decimal slopeDistance, int slopePCT, decimal azimuth,
             decimal bafORfps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode)
         {
+            dbh = Math.Round(dbh, 1, MidpointRounding.AwayFromZero); // dbh should be rounded to tenth of an inch
+
             var azimuthStr = (azimuth > 0) ? "Azimuth:" + azimuth.ToString() : "";
             var isToFaceStr = (isToFace) ? "Face" : "Center";
             var toFaceCorrection = (isToFace) ? $", TFC:{CalculateToFaceCorrection(dbh)}" : "";
