@@ -226,20 +226,6 @@ namespace NatCruise.Wpf.ViewModels
             var tdvs = src.GetTreeDefaultValues();
             foreach (var tdv in tdvs)
             {
-                tdv.AverageZ ??= 0.0;
-                tdv.BarkThicknessRatio ??= 0.0;
-                tdv.CullPrimary ??= 0.0;
-                tdv.CullPrimaryDead ??= 0.0;
-                tdv.CullSecondary ??= 0.0;
-                tdv.FormClass ??= 0.0;
-                tdv.HiddenPrimary ??= 0.0;
-                tdv.HiddenPrimaryDead ??= 0.0;
-                tdv.HiddenSecondary ??= 0.0;
-                tdv.MerchHeightLogLength ??= 0;
-                tdv.Recoverable ??= 0.0;
-                tdv.ReferenceHeightPercent ??= 0.0;
-
-
                 dest.AddTreeDefaultValue(tdv);
             }
 

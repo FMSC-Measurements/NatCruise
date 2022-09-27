@@ -28,17 +28,9 @@ namespace NatCruise.Design.Views
                 nameof(TreeDefaultValue.CreatedBy),
             };
 
-        Style NumericCellStyle { get; }
-
         public TreeDefaultValueListView()
         {
             InitializeComponent();
-
-            var baseTBstyle = TryFindResource("MahApps.Styles.TextBox") as Style;
-            var style = new Style(typeof(TextBox), baseTBstyle);
-            style.Setters.Add(new Setter(MahApps.Metro.Controls.TextBoxHelper.WatermarkProperty, "0"));
-
-            NumericCellStyle = style;
         }
 
         private void _tdvDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
