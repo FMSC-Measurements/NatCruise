@@ -113,14 +113,15 @@ namespace NatCruise.Cruise.Logic
         public string GenerateReport(string treeStatus, decimal limitingDistance, decimal slopeDistance, int slopePCT, decimal azimuth,
             decimal bafORfps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode)
         {
-            var azimuthStr = (azimuth > 0) ? "Azimuth:" + azimuth.ToString() : String.Empty;
+            var azimuthStr = (azimuth > 0) ? "Azimuth:" + azimuth.ToString() : "";
             var isToFaceStr = (isToFace) ? "Face" : "Center";
+            var toFaceCorrection = (isToFace) ? $", TFC:{CalculateToFaceCorrection(dbh)}" : "";
             var isVariableRadiusStr = (isVariableRadius) ? "BAF" : "FPS";
             var slope = (slopePCT != 0 && slopePCT < 10) ? $"slope: {slopePCT}(<10%)"
                 : $"slope: {slopePCT}%, SCF: {CalculateToSlopeCorrectionFactor(slopePCT)}";
             var prf = (isVariableRadius) ? $"PRF:{CalculatePlotRadiusFactor(bafORfps)}, " : "";
 
-            return $"Tree was {treeStatus} (St:{stratumCode}, DBH:{dbh:F1}, {slope}, slope distance:{slopeDistance:F2}', limiting distance:{limitingDistance}' to {isToFaceStr} of tree, {prf}{isVariableRadiusStr}:{bafORfps}) {azimuthStr}\r\n";
+            return $"Tree was {treeStatus} (St:{stratumCode}, DBH:{dbh:F1}, {slope}, slope distance:{slopeDistance:F2}', limiting distance:{limitingDistance}' to {isToFaceStr} of tree {toFaceCorrection}, {prf}{isVariableRadiusStr}:{bafORfps}) {azimuthStr}\r\n";
         }
     }
 }
