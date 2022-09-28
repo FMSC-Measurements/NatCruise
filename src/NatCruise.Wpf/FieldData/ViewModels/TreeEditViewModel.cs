@@ -146,14 +146,17 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                     //Cruisers = cruisers;
 
                     var cruiseMethod = StratumDataservice.GetCruiseMethod(tree.StratumCode);
-                    var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod) || cruiseMethod == "FIXCNT";
-                    if (isPlotMethod == false)
+                    if (CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod))
                     {
-                        CountOrMeasureOptions = new[] { "M", "I" };
+                        CountOrMeasureOptions = new[] { "C", "M", "I" };
+                    }
+                    else if (cruiseMethod == CruiseDAL.Schema.CruiseMethods.FIXCNT)
+                    {
+                        CountOrMeasureOptions = new[] { "C" };
                     }
                     else
                     {
-                        CountOrMeasureOptions = new[] { "C", "M", "I" };
+                        CountOrMeasureOptions = new[] { "M", "I" };
                     }
                 }
             }

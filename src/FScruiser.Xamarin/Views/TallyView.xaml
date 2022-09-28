@@ -5,6 +5,7 @@
                                       xmlns:local_behaviors="clr-namespace:FScruiser.XF.Behaviors"
                                       xmlns:effects="clr-namespace:FScruiser.XF.Effects"
                                       xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
+                                      xmlns:local_vms="clr-namespace:FScruiser.XF.ViewModels"
                                       xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
                                       x:Class="FScruiser.XF.Views.TallyView"
                                       x:Name="_page"
@@ -625,7 +626,8 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
                                                         <Entry Text="{Binding ValueInt}"
-                                                               Placeholder="{Binding StrDefaultValue}">
+                                                               Placeholder="{Binding StrDefaultValue}"
+                                                               Keyboard="Numeric">
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
@@ -646,7 +648,8 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
                                                         <Entry Text="{Binding ValueReal}"
-                                                               Placeholder="{Binding StrDefaultValue}">
+                                                               Placeholder="{Binding StrDefaultValue}"
+                                                               Keyboard="Numeric">
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
@@ -688,8 +691,8 @@
                                                 <DataTemplate>
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
-                                                        <Picker SelectedItem="{Binding ValueText}"
-                                                                ItemsSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
+                                                        <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
+                                                                                 ValueSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
                                                     </local_ctrls:LastChildHeightLayout>
                                                 </DataTemplate>
                                             </local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
@@ -701,7 +704,8 @@
                                                                                        LastChildHeight="70">
                                                         <Label Text="{Binding Heading}" />
                                                         <ScrollView Orientation="Vertical">
-                                                            <Editor Text="{Binding ValueText}" AutoSize="TextChanges" >
+                                                            <Editor Text="{Binding ValueText}"
+                                                                    AutoSize="TextChanges">
                                                                 <!--<Editor.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Editor.Behaviors>-->
@@ -721,6 +725,18 @@
                                                     </local_ctrls:LastChildHeightLayout>
                                                 </DataTemplate>
                                             </local_ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
+
+                                            <local_ctrls:TreeFieldValueDataTemplateSelector.GradeTemplate>
+                                                <DataTemplate>
+                                                    <local_ctrls:LastChildHeightLayout>
+                                                        <Label Text="Grade" />
+                                                        <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
+                                                                                 ValueSource="{x:Static local_vms:TreeEditViewModel.GradeOptions}" />
+
+                                                    </local_ctrls:LastChildHeightLayout>
+                                                </DataTemplate>
+                                            </local_ctrls:TreeFieldValueDataTemplateSelector.GradeTemplate>
+                                            
                                         </local_ctrls:TreeFieldValueDataTemplateSelector>
 
                                     </BindableLayout.ItemTemplateSelector>
