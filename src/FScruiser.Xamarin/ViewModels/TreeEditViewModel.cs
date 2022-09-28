@@ -505,6 +505,8 @@ namespace FScruiser.XF.ViewModels
             protected set => SetProperty(ref _cruiseMethod, value);
         }
 
+        public static readonly string[] GradeOptions = new[] { "0", "1", "2", "3", "4", "5", "6", "6", "8", "9" };
+
         public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new DelegateCommand(ShowLogs));
 
         public ICommand ShowEditTreeErrorCommand => _showEditTreeErrorCommand ?? (_showEditTreeErrorCommand = new DelegateCommand<TreeError>(ShowEditTreeError));
@@ -579,14 +581,17 @@ namespace FScruiser.XF.ViewModels
                 Cruisers = cruisers;
 
                 var cruiseMethod = StratumDataservice.GetCruiseMethod(tree.StratumCode);
-                var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod) || cruiseMethod == "FIXCNT";
-                if (isPlotMethod == false)
+                if (CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod))
                 {
-                    CountOrMeasureOptions = new[] { "M", "I" };
+                    CountOrMeasureOptions = new[] { "C", "M", "I" };
+                }
+                else if(cruiseMethod == CruiseDAL.Schema.CruiseMethods.FIXCNT)
+                {
+                    CountOrMeasureOptions = new[] { "C" };
                 }
                 else
                 {
-                    CountOrMeasureOptions = new[] { "C", "M", "I" };
+                    CountOrMeasureOptions = new[] { "M", "I" };
                 }
 
                 Tree = tree;

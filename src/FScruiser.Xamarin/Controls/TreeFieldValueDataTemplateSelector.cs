@@ -30,6 +30,8 @@ namespace FScruiser.XF.Controls
 
         public DataTemplate LiveDeadTemplate { get; set; }
 
+        public DataTemplate GradeTemplate { get; set; }
+
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
             var useAltInitialsTemplate = (bool)container.GetValue(UseAltInitialsTemplateProperty);
@@ -41,6 +43,7 @@ namespace FScruiser.XF.Controls
 
             if (tfv.Field.Equals(nameof(TreeEx.Remarks), StringComparison.OrdinalIgnoreCase)) return RemarksTemplate;
             if (tfv.Field.Equals(nameof(TreeEx.LiveDead), StringComparison.OrdinalIgnoreCase)) return LiveDeadTemplate;
+            if (tfv.Field.Equals(nameof(TreeEx.Grade), StringComparison.OrdinalIgnoreCase)) return GradeTemplate;
 
             switch (tfv.DBType)
             {
