@@ -1,4 +1,5 @@
-﻿using NatCruise.Models;
+﻿using FScruiser.XF.Controls;
+using NatCruise.Models;
 using Xamarin.CommunityToolkit.Markup;
 using Xamarin.Forms;
 
@@ -64,10 +65,10 @@ namespace FScruiser.XF.Util
 
         public static View MakeGradePicker(LogFieldSetup field)
         {
-            var editView = new Entry();
-            ((InputView)editView).Keyboard = Keyboard.Numeric;
+            var editView = new ValuePicker();
+            editView.ValueSource = new[] { "0", "1", "2", "3", "4", "5", "6", "6", "8", "9" };
             Xamarin.Forms.PlatformConfiguration.AndroidSpecific.Entry.SetImeOptions(editView, Xamarin.Forms.PlatformConfiguration.AndroidSpecific.ImeFlags.Next);
-            editView.SetBinding(Entry.TextProperty, $"Log.{field.Field}");
+            editView.SetBinding(ValuePicker.SelectedValueProperty, $"Log.{field.Field}");
 
             return editView;
         }
