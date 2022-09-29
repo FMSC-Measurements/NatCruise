@@ -8,6 +8,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -51,6 +52,7 @@
                                FontSize="9" />
                         <TextBox Text="{Binding NewTreeAuditRule.Min, StringFormat={}{0:F}}"
                                  mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
                                  Width="100" />
                     </StackPanel>
                     <StackPanel>
@@ -58,6 +60,7 @@
                                FontSize="9" />
                         <TextBox Text="{Binding NewTreeAuditRule.Max, StringFormat={}{0:F}}"
                                  mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
                                  Width="100" />
                     </StackPanel>
 

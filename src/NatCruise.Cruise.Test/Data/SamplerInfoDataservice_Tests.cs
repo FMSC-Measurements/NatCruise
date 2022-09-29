@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
+using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.Test;
 using System.Linq;
 using Xunit;
@@ -14,17 +16,17 @@ namespace NatCruise.Cruise.Test.Data
         {
         }
 
-        [Theory]
-        [InlineData("st1", "sg1")]
-        public void GetSamplerInfo(string stratumCode, string sampleGroupCode)
-        {
-            using (var database = base.CreateDatabase())
-            {
-                var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+        //[Theory]
+        //[InlineData("st1", "sg1")]
+        //public void GetSamplerInfo(string stratumCode, string sampleGroupCode)
+        //{
+        //    using (var database = base.CreateDatabase())
+        //    {
+        //        var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
-                ds.GetSamplerInfo(stratumCode, sampleGroupCode);
-            }
-        }
+        //        ds.GetSamplerInfo(stratumCode, sampleGroupCode);
+        //    }
+        //}
 
         [Theory]
         [InlineData("st1", "sg1")]
@@ -32,7 +34,7 @@ namespace NatCruise.Cruise.Test.Data
         {
             using (var database = base.CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var ds = new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
 
                 ds.GetSamplerState(stratumCode, sampleGroupCode);
             }
@@ -47,7 +49,7 @@ namespace NatCruise.Cruise.Test.Data
                 string stratumCode = sg.StratumCode;
                 string sampleGroupCode = sg.SampleGroupCode;
 
-                var ds = new SamplerInfoDataservice(database, CruiseID, Initializer.DeviceID);
+                var ds = new SamplerStateDataservice(database, CruiseID, Initializer.DeviceID);
 
                 var ss = new SamplerState()
                 {
@@ -76,7 +78,7 @@ namespace NatCruise.Cruise.Test.Data
 
             using (var database = CreateDatabase())
             {
-                var ds = new SamplerInfoDataservice(database, cruiseID,
+                var ds = new SamplerStateDataservice(database, cruiseID,
                     fromDeviceID);
 
                 var ss = new SamplerState()

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -213,6 +214,8 @@ namespace NatCruise.Test.Data
             var unitCode = "u1";
             var isEmpty = true;
             var kpi = 101;
+            var treeCount = 11;
+            var averageHeight = 12;
             var plotID = Guid.NewGuid().ToString();
             var cruiseID = init.CruiseID;
             //var remarks = "something";
@@ -222,6 +225,8 @@ namespace NatCruise.Test.Data
                 var datastore = new PlotDataservice(database, cruiseID, init.DeviceID);
                 var plotStratumDs = new PlotStratumDataservice(database, init.CruiseID, init.DeviceID);
 
+
+                
                 var stratumPlot = new Models.Plot_Stratum()
                 {
                     CuttingUnitCode = unitCode,
@@ -229,6 +234,8 @@ namespace NatCruise.Test.Data
                     StratumCode = stratumCode,
                     IsEmpty = isEmpty,
                     KPI = kpi,
+                    TreeCount = treeCount,
+                    AverageHeight = averageHeight,
 
                     //Remarks = remarks
                 };

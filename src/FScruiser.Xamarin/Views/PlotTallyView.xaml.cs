@@ -12,7 +12,7 @@ using FScruiser.XF.Util;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PlotTallyView : ContentPage
+    public partial class PlotTallyView : InitializableContentPage
     {
         private bool _treeCellIsSelected;
 
@@ -34,9 +34,9 @@ namespace FScruiser.XF.Views
                 vm.IsLoading = true; // prevent changing controls from triggering prop changed events
                 try
                 {
-                    _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm);
-                    _treeEditControlGrid.Children.AddRange(editControls);
+                    //_treeEditControlGrid.Children.Clear();
+                    //var editControls = MakeEditControls(vm);
+                    //_treeEditControlGrid.Children.AddRange(editControls);
                 }
                 finally
                 {
@@ -64,30 +64,6 @@ namespace FScruiser.XF.Views
         private void _hideTreeEditPanelButton_Clicked(object sender, EventArgs e)
         {
             _treeEditPanel.IsVisible = false;
-        }
-
-
-        private void _treeEditPanel_BindingContextChanged(object sender, EventArgs e)
-        {
-            var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
-            if (vm != null)
-            {
-                vm.IsLoading = true; // prevent changing controls from triggering prop changed events
-                try
-                {
-                    _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm);
-                    _treeEditControlGrid.Children.AddRange(editControls);
-                }
-                finally
-                {
-                    vm.IsLoading = false;
-                }
-            }
-            else
-            {
-                _treeEditControlGrid.Children.Clear();
-            }
         }
 
 

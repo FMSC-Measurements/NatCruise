@@ -28,6 +28,8 @@ namespace NatCruise.Cruise.Services
 
         public string DeviceID => SamplerStateDataservice.DeviceID;
 
+        string IDataservice.CruiseID => throw new NotSupportedException();
+
         public ISampleSelector GetSamplerBySampleGroupCode(string stratumCode, string sgCode)
         {
             if (string.IsNullOrEmpty(stratumCode)) { throw new ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }

@@ -1,12 +1,12 @@
 ﻿<UserControl x:Class="NatCruise.Design.Views.StratumDetailView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:NatCruise.Design.Views"
-             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Tag="Stratum Details"
              mc:Ignorable="d"
@@ -15,67 +15,71 @@
              IsEnabled="{Binding Stratum, Converter={StaticResource NotNullConverter}}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style TargetType="TextBox"
-                   BasedOn="{StaticResource MahApps.Styles.TextBox}">
-                <Setter Property="Margin"
-                        Value="0,0,0,10" />
+            <Style TargetType="ctrls:LastChildWidthPanel">
+                <Style.Resources>
+                    <Style TargetType="TextBlock"
+                           BasedOn="{StaticResource MahApps.Styles.TextBlock}">
+                        <Setter Property="VerticalAlignment"
+                                Value="Center" />
+                    </Style>
+                    <Style TargetType="TextBox"
+                           BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                        <Setter Property="mah_ctrls:TextBoxHelper.SelectAllOnFocus"
+                                Value="True" />
+                    </Style>
+                </Style.Resources>
+                <Setter Property="LastChildWidth"
+                        Value="100" />
                 <Setter Property="Width"
-                        Value="50" />
+                        Value="220" />
                 <Setter Property="HorizontalAlignment"
                         Value="Left" />
-            </Style>
-            <Style TargetType="Label"
-                   BasedOn="{StaticResource MahApps.Styles.Label}">
-                <Setter Property="HorizontalAlignment"
-                        Value="Right" />
                 <Setter Property="Margin"
-                        Value="0,0,0,10" />
-            </Style>
-
-            <Style TargetType="ComboBox"
-                   BasedOn="{StaticResource MahApps.Styles.ComboBox}">
-                <Setter Property="Margin"
-                        Value="0,0,0,10" />
-                <Setter Property="HorizontalAlignment"
-                        Value="Stretch" />
+                        Value="1" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
     <WrapPanel Background="{StaticResource brush_background}">
 
-        <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Width="103">Code*</Label>
+        <StackPanel Margin="5">
+            <StackPanel.Resources>
+                <ResourceDictionary>
+                </ResourceDictionary>
+            </StackPanel.Resources>
+
+            <!-- stratum code -->
+            <ctrls:LastChildWidthPanel>
+                <TextBlock>Code*</TextBlock>
                 <TextBox Text="{Binding StratumCode}"
                          mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
-            </StackPanel>
+            </ctrls:LastChildWidthPanel>
 
-
-
-            <StackPanel Orientation="Horizontal">
-                <Label Width="103">Description</Label>
-                <TextBox Width="100"
-                         Text="{Binding Description}"
+            <!-- description -->
+            <ctrls:LastChildWidthPanel>
+                <TextBlock>Description</TextBlock>
+                <TextBox Text="{Binding Description}"
                          mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
-            </StackPanel>
+            </ctrls:LastChildWidthPanel>
 
-            <StackPanel Orientation="Horizontal">
-                <Label Width="103">Method*</Label>
+            <!-- method -->
+            <ctrls:LastChildWidthPanel>
+                <TextBlock>Method*</TextBlock>
 
                 <ComboBox SelectedValue="{Binding Method}"
                           SelectedValuePath="Method"
                           ItemsSource="{Binding Methods}" />
-            </StackPanel>
+            </ctrls:LastChildWidthPanel>
 
-            <StackPanel Orientation="Horizontal">
-                <Label Width="103">Yield Component</Label>
+            <!-- yield component -->
+            <ctrls:LastChildWidthPanel>
+                <TextBlock>Yield Component</TextBlock>
 
                 <ComboBox ToolTip="Yield Component"
                           ItemsSource="{Binding YieldComponentOptions}"
                           SelectedItem="{Binding YieldComponent, FallbackValue='CL'}" />
-            </StackPanel>
+            </ctrls:LastChildWidthPanel>
         </StackPanel>
 
         <GroupBox Header="Plot Options"
@@ -83,88 +87,63 @@
                   d:Visibility="Visible"
                   Margin="5"
                   VerticalAlignment="Top">
-            <Grid>
-                <Grid.Resources>
-                    <ResourceDictionary>
-                        <Style TargetType="TextBox"
-                               BasedOn="{StaticResource MahApps.Styles.TextBox}">
-                            <Setter Property="Margin"
-                                    Value="0,0,0,10" />
-                            <Setter Property="Width"
-                                    Value="50" />
-                            <Setter Property="HorizontalAlignment"
-                                    Value="Left" />
-                            <Setter Property="VerticalContentAlignment"
-                                    Value="Center" />
-                        </Style>
-                        <Style TargetType="Label"
-                               BasedOn="{StaticResource MahApps.Styles.Label}">
-                            <Setter Property="HorizontalAlignment"
-                                    Value="Right" />
-                            <Setter Property="Margin"
-                                    Value="0,0,0,10" />
-                        </Style>
-                    </ResourceDictionary>
-                </Grid.Resources>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <StackPanel>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                <!-- baf -->
+                <ctrls:LastChildWidthPanel>
+                    <TextBlock Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
+                               Text="BAF*" />
+                    <TextBox ToolTip="Basal Area Factor"
+                             Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
+                             Text="{Binding BasalAreaFactor}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                </ctrls:LastChildWidthPanel>
 
-                <Label Grid.Row="0"
-                       Grid.Column="0"
-                       Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
-                       Content="BAF*" />
-                <TextBox Grid.Row="0"
-                         Grid.Column="1"
-                         ToolTip="Basal Area Factor"
-                         Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
-                         Text="{Binding BasalAreaFactor}"
-                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+                <!-- fps -->
+                <ctrls:LastChildWidthPanel>
+                    <TextBlock Text="FPS*"
+                               Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
+                                 ToolTip="Fixed Plot Size"
+                                 Text="{Binding FixedPlotSize}"
+                                 HorizontalAlignment="Stretch"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                 Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                        <TextBlock Grid.Column="1"
+                                   Text="1/x Acre"
+                                   Margin="5,5" />
+                    </Grid>
+                </ctrls:LastChildWidthPanel>
 
-                <Label Grid.Row="1"
-                       Grid.Column="0"
-                       Content="FPS*"
-                       Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}" />
-                <TextBox Grid.Row="1"
-                         Grid.Column="1"
-                         ToolTip="Fixed Plot Size"
-                         Text="{Binding FixedPlotSize}"
-                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                         Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}" />
+                <!-- kz -->
+                <ctrls:LastChildWidthPanel>
+                    <TextBlock Text="KZ (3PPNT)*"
+                               Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}" />
+                    <TextBox ToolTip="KZ (3PPNT)"
+                             Text="{Binding KZ3PPNT}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                </ctrls:LastChildWidthPanel>
 
-                <Label Grid.Row="2"
-                       Grid.Column="0"
-                       Content="KZ (3PPNT)*"
-                       Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}" />
-                <TextBox Grid.Row="2"
-                         Grid.Column="1"
-                         ToolTip="KZ (3PPNT)"
-                         Text="{Binding KZ3PPNT}"
-                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                         Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}" />
-
-                <Label Grid.Column="0"
-                       Grid.Row="3"
-                       Content="FIXCNT Field*"
-                       Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
-                <ComboBox Grid.Column="1"
-                          Grid.Row="3"
-                          Width="100"
-                          ItemsSource="{Binding TreeFieldOptions}"
-                          SelectedValue="{Binding FixCNTField}"
-                          SelectedValuePath="Field"
-                          Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
-            </Grid>
+                <!-- fixcnt field -->
+                <ctrls:LastChildWidthPanel>
+                    <TextBlock Text="FIXCNT Field*"
+                               Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
+                    <ComboBox ItemsSource="{Binding TreeFieldOptions}"
+                              SelectedValue="{Binding FixCNTField}"
+                              SelectedValuePath="Field"
+                              Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
+                </ctrls:LastChildWidthPanel>
+            </StackPanel>
         </GroupBox>
-
     </WrapPanel>
 </UserControl>

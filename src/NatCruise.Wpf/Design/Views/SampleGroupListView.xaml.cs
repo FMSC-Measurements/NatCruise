@@ -37,5 +37,25 @@ namespace NatCruise.Design.Views
             var selectedStratum = (Stratum)context.Value;
             (DataContext as SampleGroupListViewModel).Stratum = selectedStratum;
         }
+
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var oldvm = e.OldValue as SampleGroupListViewModel;
+            if(oldvm != null)
+            {
+                oldvm.SampleGroupAdded -= OnSampleGroupAdded;
+            }
+            var newvm = e.NewValue as SampleGroupListViewModel;
+            if (newvm != null)
+            {
+                newvm.SampleGroupAdded += OnSampleGroupAdded;
+            }
+            
+        }
+
+        private void OnSampleGroupAdded(object sender, EventArgs e)
+        {
+            _sampleGroupCodeTextBox.Clear();
+        }
     }
 }

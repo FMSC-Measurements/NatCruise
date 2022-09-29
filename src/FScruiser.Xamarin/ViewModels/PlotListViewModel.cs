@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
@@ -16,7 +17,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class PlotListViewModel : XamarinViewModelBase
+    public class PlotListViewModel : ViewModelBase
     {
         private ICommand _addPlotCommand;
         private Command<Plot> _editPlotCommand;

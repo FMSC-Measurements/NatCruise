@@ -1,4 +1,5 @@
 ﻿using Backpack.XF.Converters;
+using FScruiser.XF.Controls;
 using FScruiser.XF.Util;
 using FScruiser.XF.ViewModels;
 using NatCruise.Models;
@@ -11,7 +12,7 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LogsListView : ContentPage
+    public partial class LogsListView : InitializableContentPage
     {
         private const int COLUMN_COUNT = 3;
         private const int error_col_width = 50;

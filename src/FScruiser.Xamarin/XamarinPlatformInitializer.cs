@@ -13,6 +13,7 @@ namespace FScruiser.XF
     {
         public virtual void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.Register<IApplicationSettingService, XamarinApplicationSettingService>();
             containerRegistry.Register<ICruiseNavigationService, XamarinNavigationService>();
             containerRegistry.Register<INatCruiseDialogService, XamarinDialogService>();
             containerRegistry.RegisterSingleton<ITallySettingsDataService, TallySettingsDataService>();
@@ -61,8 +62,8 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<LogEditView>("LogEdit");
             containerRegistry.RegisterForNavigation<FeedbackView>("Feedback");
             containerRegistry.RegisterForNavigation<UtilitiesView>("Utilities");
+            containerRegistry.RegisterForNavigation<DatabaseUtilitiesView>("DatabaseUtilities");
         }
-
 
     }
 }

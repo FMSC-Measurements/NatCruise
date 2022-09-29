@@ -8,6 +8,47 @@ namespace NatCruise.Data
 {
     public class PlotDataservice : CruiseDataserviceBase, IPlotDataservice
     {
+        const string SELECT_PLOT_CORE =
+@"SELECT
+    p.PlotID, 
+    p.CuttingUnitCode,
+    p.PlotNumber,
+    p.Slope,
+    p.Aspect,
+    p.Remarks,
+    (
+        SELECT count(*) FROM TallyLedger AS tl
+            WHERE tl.PlotNumber = p.PlotNumber
+            AND tl.CruiseID = p.CruiseID
+            AND tl.CuttingUnitCode = p.CuttingUnitCode
+    ) AS TreeCount,
+    (SELECT count(*) FROM PlotError AS pe WHERE pe.PlotID = p.PlotID AND Level = 'E') AS ErrorCount,
+    (
+        SELECT count(*) FROM TreeError AS te
+            JOIN Tree AS t USING (TreeID)
+            WHERE te.Level = 'E'
+            AND t.PlotNumber = p.PlotNumber
+            AND t.CruiseID = p.CruiseID
+            AND t.CuttingUnitCode = p.CuttingUnitCode
+    ) AS TreeErrorCount,
+    (
+        SELECT count(*) FROM TreeError AS te
+            JOIN Tree AS t USING (TreeID)
+            WHERE te.Level = 'W'
+            AND t.PlotNumber = p.PlotNumber
+            AND t.CruiseID = p.CruiseID
+            AND t.CuttingUnitCode = p.CuttingUnitCode
+    ) AS TreeWarningCount, 
+    (
+        Select group_concat(StratumCode) FROM Plot_Stratum AS ps
+            WHERE ps.PlotNumber = p.PlotNumber
+            AND ps.CruiseID = p.CruiseID
+            AND ps.CuttingUnitCode = p.CuttingUnitCode
+            AND ifnull(ps.IsEmpty, 0) != 0
+    ) AS NullStrata
+FROM Plot AS p
+";
+
         public PlotDataservice(CruiseDAL.CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -74,22 +115,17 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
         public Plot GetPlot(string cuttingUnitCode, int plotNumber)
         {
             return Database.Query<Plot>(
-                "SELECT " +
-                    "p.PlotID, " +
-                    "p.CuttingUnitCode, " +
-                    "p.PlotNumber, " +
-                    "p.Slope, " +
-                    "p.Aspect, " +
-                    "p.Remarks " +
-                "FROM Plot AS p " +
+                SELECT_PLOT_CORE +
                 "WHERE CuttingUnitCode = @p1 AND PlotNumber = @p2 AND CruiseID = @p3;", new object[] { cuttingUnitCode, plotNumber, CruiseID })
                 .FirstOrDefault();
         }
 
         public IEnumerable<Plot> GetPlotsByUnitCode(string unit)
         {
-            return Database.Query<Plot>("SELECT *  FROM Plot " +
-                "WHERE (@p1 IS NULL OR CuttingUnitCode = @p1) AND CruiseID = @p2;"
+            return Database.Query<Plot>(
+                SELECT_PLOT_CORE +
+@"WHERE (@p1 IS NULL OR CuttingUnitCode = @p1)
+    AND CruiseID = @p2;"
                 , new object[] { unit, CruiseID });
         }
 

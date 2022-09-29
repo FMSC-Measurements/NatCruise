@@ -29,13 +29,13 @@ namespace NatCruise.Test.Data
                 log.BoardFootRemoved = randomizer.Double();
                 log.CubicFootRemoved = randomizer.Double();
                 log.DIBClass = randomizer.Double();
-                log.ExportGrade = randomizer.String();
-                log.Grade = randomizer.String();
+                //log.ExportGrade = "1";
+                log.Grade = "1";
                 log.GrossBoardFoot = randomizer.Double();
                 log.GrossCubicFoot = randomizer.Double();
                 log.LargeEndDiameter = randomizer.Double();
-                log.Length = randomizer.Int();
-                log.LogNumber = randomizer.Int();
+                log.Length = randomizer.Int(min:0);
+                log.LogNumber = randomizer.Int(min: 0);
                 //log.ModifiedBy = randomizer.String();
                 log.NetBoardFoot = randomizer.Double();
                 log.NetCubicFoot = randomizer.Double();

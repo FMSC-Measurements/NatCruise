@@ -1,4 +1,5 @@
-﻿using FScruiser.XF.Util;
+﻿using FScruiser.XF.Controls;
+using FScruiser.XF.Util;
 using NatCruise.Cruise.Models;
 using NatCruise.Models;
 using System;
@@ -10,7 +11,7 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LogEditView : ContentPage
+    public partial class LogEditView : InitializableContentPage
     {
         #region LogFields
 

@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
@@ -6,6 +7,7 @@ using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Util;
+using Prism.Commands;
 using Prism.Common;
 using Prism.Ioc;
 using System;
@@ -18,7 +20,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class PlotTallyViewModel : XamarinViewModelBase
+    public class PlotTallyViewModel : ViewModelBase
     {
         private const string STRATUM_FILTER_ALL = "All";
 
@@ -26,12 +28,11 @@ namespace FScruiser.XF.ViewModels
         private ICollection<TallyPopulation_Plot> _tallyPopulations;
         private ICollection<Stratum> _strata;
         private string _stratumFilter = STRATUM_FILTER_ALL;
-        private ICollection<PlotTreeEntry> _trees;
-        private ICommand _tallyCommand;
-        private Command _editPlotCommand;
+        private IList<PlotTreeEntry> _trees;
+        
+        
         private Plot _plot;
-        private ICommand _editTreeCommand;
-        private ICommand _deleteTreeCommand;
+        
         private TreeEditViewModel _selectedTreeViewModel;
         private CuttingUnit _cuttingUnit;
         private PlotTreeEntry _selectedTree;
@@ -160,6 +161,15 @@ namespace FScruiser.XF.ViewModels
             PlotTreeDataservice = plotTreeDataservice ?? throw new ArgumentNullException(nameof(plotTreeDataservice));
         }
 
+        #region commands
+
+        private ICommand _editPlotCommand;
+        private ICommand _tallyCommand;
+        private ICommand _editTreeCommand;
+        private ICommand _deleteTreeCommand;
+        private ICommand _selectPreviouseTreeCommand;
+        private ICommand _selectNextTreeCommand;
+
         public ICommand SelectTreeCommand => new Command<object>(SelectTree);
 
         public ICommand EditTreeCommand => _editTreeCommand ??= new Command<string>(x => ShowEditTree(x).FireAndForget());
@@ -169,6 +179,12 @@ namespace FScruiser.XF.ViewModels
         public ICommand TallyCommand => _tallyCommand ??= new Command<TallyPopulation_Plot>(x =>  TallyAsync(x).FireAndForget());
 
         public ICommand EditPlotCommand => _editPlotCommand ??= new Command(() => ShowEditPlot());
+
+        public ICommand SelectPreviousTreeCommand => _selectPreviouseTreeCommand ??= new DelegateCommand(SelectPreviousTree);
+
+        public ICommand SelectNextTreeCommand => _selectNextTreeCommand ??= new DelegateCommand(SelectNextTree);
+
+        #endregion commands
 
         public Plot Plot
         {
@@ -232,7 +248,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public ICollection<PlotTreeEntry> Trees
+        public IList<PlotTreeEntry> Trees
         {
             get { return _trees; }
             set { SetProperty(ref _trees, value); }
@@ -344,6 +360,40 @@ namespace FScruiser.XF.ViewModels
         {
             TreeDataservice.DeleteTree(tree.TreeID);
             Trees.Remove(tree);
+        }
+
+        public void SelectPreviousTree()
+        {
+            var selectedTree = SelectedTree;
+            if (selectedTree == null) { return; }
+
+            var trees = Trees;
+            var i = trees.IndexOf(selectedTree);
+            if (i == -1) { return; }
+            if (i < 1) { return; }
+
+            var prevTree = trees.ReverseSearch(x => x.TreeID != null && x.CountOrMeasure == "M", i - 1);
+            if (prevTree != null)
+            {
+                SelectTree(prevTree);
+            }
+        }
+
+        public void SelectNextTree()
+        {
+            var selectedTree = SelectedTree;
+            if (selectedTree == null) { return; }
+
+            var trees = Trees;
+            var i = trees.IndexOf(selectedTree);
+            if (i == -1) { return; }
+            if (i == trees.Count - 1) { return; }
+
+            var nextTree = trees.Search(x => x.TreeID != null && x.CountOrMeasure == "M", i + 1);
+            if (nextTree != null)
+            {
+                SelectTree(nextTree);
+            }
         }
     }
 }

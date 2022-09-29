@@ -2,17 +2,21 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     x:Class="NatCruise.Wpf.Colors">
 
-    <Color x:Key="color_background">White</Color>
-    <Color x:Key="color_accent">#1e90ff</Color>
-    <Color x:Key="color_foreground">Black</Color>
     <Color x:Key="color_addItem">#00a91c</Color>
     <Color x:Key="color_removeItem">#d54309</Color>
     <Color x:Key="color_fs_brown">#312418</Color>
     <Color x:Key="color_fs_green">#345E36</Color>
+
+    <!-- do not use these colors instead use colors from colors from mah_apps theam-->
+    <Color x:Key="color_background">White</Color>
+    <Color x:Key="color_accent">#1e90ff</Color>
+    <Color x:Key="color_foreground">Black</Color>
     <Color x:Key="color_text_light">White</Color>
     <Color x:Key="color_text_dark">Black</Color>
     
-
+    <!-- shade values are pure black or white pigments with 
+            varying percentages of transparency these colors 
+            can be stacked on other colors to create shadows or highlights -->
     <Color x:Key="shade_white_90">#E1ffffff</Color>
     <Color x:Key="shade_white_50">#7FFFFFFF</Color>
     <Color x:Key="shade_white_38">#60FFFFFF</Color>

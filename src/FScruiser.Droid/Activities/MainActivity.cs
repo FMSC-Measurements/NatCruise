@@ -7,6 +7,8 @@ using Android.Views;
 using FScruiser.XF;
 using System;
 using System.Collections.Concurrent;
+using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms.Platform.Android;
 
@@ -59,7 +61,50 @@ namespace FScruiser.Droid
             //    return true;
             //}
 
+            //var x = (int)ev.GetX();
+            //var y = (int)ev.GetY();
+
+            //var rootview = FindViewById(Android.Resource.Id.Content) as ViewGroup;
+            //var touchedView = GetViewAtLocation(rootview, x, y);
+            //if (touchedView != null)
+            //{
+
+            //}
+
+
             return base.DispatchTouchEvent(ev);
+        }
+
+        View GetViewAtLocation(ViewGroup parent, int x, int y)
+        {
+            var childCount = parent.ChildCount;
+            if (childCount == 0)
+            { return parent; }
+
+            foreach (var i in Enumerable.Range(0, childCount))
+            {
+                var v = parent.GetChildAt(i);
+                var loc = new int[2];
+                v.GetLocationOnScreen(loc);
+
+                var rect = new Rectangle(loc[0], loc[1], v.Width, v.Height);
+                if (rect.Contains(x, y))
+                {
+                    if (v is ViewGroup vg)
+                    {
+                        var foundView = GetViewAtLocation(vg, x, y);
+                        if(foundView != null && foundView.IsShown)
+                        {
+                            return foundView;
+                        }
+                    }
+                    else
+                    {
+                        return v;
+                    }
+                }
+            }
+            return null;
         }
 
         protected override void OnCreate(Bundle savedInstanceState)

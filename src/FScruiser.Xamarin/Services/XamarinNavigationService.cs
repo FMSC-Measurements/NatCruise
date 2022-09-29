@@ -245,6 +245,11 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync("Navigation/Settings");
         }
 
+        public Task ShowDatabaseUtilities()
+        {
+            return NavigationService.NavigateAsync("DatabaseUtilities", parameters: null, useModalNavigation: true, animated: false);
+        }
+
         public Task ShowTally(string unitCode)
         {
             if (string.IsNullOrEmpty(unitCode))

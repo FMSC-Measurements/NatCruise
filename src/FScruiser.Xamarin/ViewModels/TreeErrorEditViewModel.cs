@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -10,7 +11,7 @@ using System.Windows.Input;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class TreeErrorEditViewModel : XamarinViewModelBase
+    public class TreeErrorEditViewModel : ViewModelBase
     {
         private int _treeNumber;
         private TreeError _treeError;
