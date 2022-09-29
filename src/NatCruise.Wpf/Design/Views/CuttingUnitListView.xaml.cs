@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Design.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,26 @@ namespace NatCruise.Design.Views
         public CuttingUnitListView()
         {
             InitializeComponent();
+        }
+
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var oldvm = e.OldValue as CuttingUnitListViewModel;
+            if (oldvm != null)
+            {
+                oldvm.CuttingUnitAdded -= CuttingUnitAdded;
+            }
+            var newvm = e.NewValue as CuttingUnitListViewModel;
+            if(newvm != null)
+            {
+                newvm.CuttingUnitAdded += CuttingUnitAdded;
+            }
+
+        }
+
+        private void CuttingUnitAdded(object sender, EventArgs e)
+        {
+            _unitCodeTextBox.Clear();
         }
     }
 }

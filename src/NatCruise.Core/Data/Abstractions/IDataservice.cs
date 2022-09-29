@@ -9,5 +9,7 @@ namespace NatCruise.Data
     public interface IDataservice
     {
         string DeviceID { get; }
+
+        string CruiseID { get; }
     }
 }

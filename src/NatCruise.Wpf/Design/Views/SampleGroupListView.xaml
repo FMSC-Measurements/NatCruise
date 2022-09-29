@@ -17,7 +17,8 @@
              mc:Ignorable="d"
              d:DesignHeight="448.881"
              d:DesignWidth="788.806"
-             IsEnabled="{Binding Stratum, Converter={StaticResource NotNullConverter}}">
+             IsEnabled="{Binding Stratum, Converter={StaticResource NotNullConverter}}"
+             DataContextChanged="UserControl_DataContextChanged">
     <ScrollViewer>
         <Grid Background="{StaticResource brush_background}"
               Margin="0,0,10,0"
@@ -55,18 +56,26 @@
                         <TextBox x:Name="_sampleGroupCodeTextBox"
                                  Grid.Column="0"
                                  mah:TextBoxHelper.Watermark="Code"
-                                 MaxLength="{x:Static dsgn:Constants.SGCODE_MAXLENGTH}" />
+                                 MaxLength="{x:Static dsgn:Constants.SGCODE_MAXLENGTH}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Return"
+                                            Command="{Binding AddSampleGroupCommand}"
+                                            CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                            </TextBox.InputBindings>
+                        </TextBox>
                         <Button Grid.Column="1"
                                 Style="{StaticResource AddButton}"
                                 Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
-                                IsEnabled="{Binding Text, ElementName=_sampleGroupCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
-                            <i:Interaction.Triggers>
+                                IsEnabled="{Binding Text, ElementName=_sampleGroupCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
+                                Command="{Binding AddSampleGroupCommand}"
+                                CommandParameter="{Binding Text, Source={x:Reference _sampleGroupCodeTextBox}}">
+                            <!--<i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <i:InvokeCommandAction Command="{Binding AddSampleGroupCommand}"
                                                            CommandParameter="{Binding Text, Source={x:Reference _sampleGroupCodeTextBox}}" />
                                     <triggers:ClearTextBoxAction TargetName="_sampleGroupCodeTextBox" />
                                 </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                            </i:Interaction.Triggers>-->
                         </Button>
                         <Button  Grid.Column="2"
                                  Style="{StaticResource RemoveButton}"

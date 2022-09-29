@@ -173,6 +173,7 @@ namespace NatCruise.Design.ViewModels
             get => SampleGroup?.SamplingFrequency ?? default(int);
             set
             {
+                if (value < 0) { throw new ArgumentOutOfRangeException(nameof(SamplingFrequency)); }
                 SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SamplingFrequency = x);
                 SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
             }
@@ -210,7 +211,7 @@ namespace NatCruise.Design.ViewModels
 
         public bool TallyBySubPop
         {
-            get => (CruiseMethodType.ThreePMethods.HasFlag(this.CruiseMethodType)) ? true :  SampleGroup?.TallyBySubPop ?? default(bool);
+            get => (CruiseMethodType.ThreePMethods.HasFlag(this.CruiseMethodType)) ? true : SampleGroup?.TallyBySubPop ?? default(bool);
             set
             {
                 SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.TallyBySubPop = x);

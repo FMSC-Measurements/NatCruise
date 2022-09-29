@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FScruiser.XF.Views.TreeCountEditView"
              Title="Edit Tree Count">
-    <ContentPage.Content>
+    <controls:InitializableContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
                 <!-- header -->
@@ -413,5 +414,5 @@
                         AutomationProperties.Name="Cancel Button" />
             </StackLayout>
         </Grid>
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
@@ -73,6 +74,8 @@
                         <Label Content="Plot " />
                         <TextBox x:Name="_plotNumberEntry"
                                  Text="{Binding PlotNumber, UpdateSourceTrigger=PropertyChanged, Delay=500}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
                                  AutomationProperties.Name="Plot Number" />
 
                     </controls:LastChildWidthPanel>
@@ -81,6 +84,8 @@
                     <controls:LastChildWidthPanel>
                         <Label Content="Slope" />
                         <TextBox Text="{Binding Plot.Slope, UpdateSourceTrigger=PropertyChanged, Delay=500}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_slope_input}"
                                  AutomationProperties.Name="Slope" />
                     </controls:LastChildWidthPanel>
 
@@ -89,6 +94,8 @@
                     <controls:LastChildWidthPanel>
                         <Label Content="Aspect" />
                         <TextBox Text="{Binding Plot.Aspect, UpdateSourceTrigger=PropertyChanged, Delay=500}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_aspect_input}"
                                  AutomationProperties.Name="Aspect" />
                     </controls:LastChildWidthPanel>
 

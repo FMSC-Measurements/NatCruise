@@ -148,7 +148,7 @@ namespace NatCruise.Wpf
 
             var deviceInfo = Container.Resolve<IDeviceInfoService>();
             var dataserviceProvider = new WpfDataserviceProvider((CruiseDatastore_V3)null, deviceInfo);
-            dataserviceProvider.RegisterDataservices(containerRegistry);
+            WpfDataserviceProvider.RegisterDataservices(containerRegistry);
             containerRegistry.RegisterInstance<IDataserviceProvider>(dataserviceProvider);
 
             containerRegistry.RegisterDialog<NewCruiseView, NewCruiseViewModel>("NewCruise");

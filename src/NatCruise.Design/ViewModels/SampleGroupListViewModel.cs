@@ -32,6 +32,8 @@ namespace NatCruise.Design.ViewModels
             SampleGroupValidator = new SampleGroupValidator();
         }
 
+        public event EventHandler SampleGroupAdded;
+
         protected ISampleGroupDataservice SampleGroupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
         public SampleGroupValidator SampleGroupValidator { get; }
@@ -113,6 +115,7 @@ namespace NatCruise.Design.ViewModels
                 SampleGroupDataservice.AddSampleGroup(newSampleGroup);
                 newSampleGroup.PropertyChanged += samplegroup_PropertyChanged;
                 SampleGroups.Add(newSampleGroup);
+                SampleGroupAdded?.Invoke(this, EventArgs.Empty);
                 SelectedSampleGroup = newSampleGroup;
             }
             catch (FMSC.ORM.UniqueConstraintException)

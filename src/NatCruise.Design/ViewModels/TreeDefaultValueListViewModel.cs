@@ -114,21 +114,7 @@ namespace NatCruise.Design.ViewModels
 
         protected TreeDefaultValue MakeNewTreeDefaultValue()
         {
-            return new TreeDefaultValue
-            {
-                AverageZ = 0.0,
-                BarkThicknessRatio = 0.0,
-                CullPrimary = 0.0,
-                CullPrimaryDead = 0.0,
-                CullSecondary = 0.0,
-                FormClass = 0.0,
-                HiddenPrimary = 0.0,
-                HiddenPrimaryDead = 0.0,
-                HiddenSecondary = 0.0,
-                MerchHeightLogLength = 0,
-                Recoverable = 0.0,
-                ReferenceHeightPercent = 0.0,
-            };
+            return new TreeDefaultValue();
         }
 
         public void DeleteTreeDefaultValue(TreeDefaultValue tdv)

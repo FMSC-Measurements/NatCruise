@@ -6,10 +6,11 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using NatCruise.Data;
 using System;
+using NatCruise;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class ManageCruisersViewModel : XamarinViewModelBase
+    public class ManageCruisersViewModel : ViewModelBase
     {
         private Command<string> _addCruiserCommand;
         private Command<string> _removeCruiserCommand;

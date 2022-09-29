@@ -1,4 +1,5 @@
 using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -22,7 +23,7 @@ namespace FScruiser.XF.ViewModels
     // also it would be nice if the view model had a Errors property that exposed a observable dictionary
     // which exposed all the errors rather than having properties to indelicate if a property had an error
 
-    public class TreeEditViewModel : XamarinViewModelBase
+    public class TreeEditViewModel : ViewModelBase
     {
         private ICommand _showLogsCommand;
         private IEnumerable<string> _stratumCodes;
@@ -504,6 +505,8 @@ namespace FScruiser.XF.ViewModels
             protected set => SetProperty(ref _cruiseMethod, value);
         }
 
+        public static readonly string[] GradeOptions = new[] { "0", "1", "2", "3", "4", "5", "6", "6", "8", "9" };
+
         public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new DelegateCommand(ShowLogs));
 
         public ICommand ShowEditTreeErrorCommand => _showEditTreeErrorCommand ?? (_showEditTreeErrorCommand = new DelegateCommand<TreeError>(ShowEditTreeError));
@@ -555,7 +558,7 @@ namespace FScruiser.XF.ViewModels
             try
             {
                 IsLoading = true;
-                var tree = TreeDataservice.GetTree(treeID) ?? throw new NullReferenceException("GetTree returned null"); ;
+                var tree = TreeDataservice.GetTree(treeID) ?? throw new NullReferenceException("GetTree returned null");
                 var unitCode = tree.CuttingUnitCode;
                 var stratumCodes = StratumDataservice.GetStratumCodesByUnit(unitCode);
                 StratumCodes = stratumCodes;
@@ -578,14 +581,17 @@ namespace FScruiser.XF.ViewModels
                 Cruisers = cruisers;
 
                 var cruiseMethod = StratumDataservice.GetCruiseMethod(tree.StratumCode);
-                var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod) || cruiseMethod == "FIXCNT";
-                if (isPlotMethod == false)
+                if (CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod))
                 {
-                    CountOrMeasureOptions = new[] { "M", "I" };
+                    CountOrMeasureOptions = new[] { "C", "M", "I" };
+                }
+                else if(cruiseMethod == CruiseDAL.Schema.CruiseMethods.FIXCNT)
+                {
+                    CountOrMeasureOptions = new[] { "C" };
                 }
                 else
                 {
-                    CountOrMeasureOptions = new[] { "C", "M", "I" };
+                    CountOrMeasureOptions = new[] { "M", "I" };
                 }
 
                 Tree = tree;

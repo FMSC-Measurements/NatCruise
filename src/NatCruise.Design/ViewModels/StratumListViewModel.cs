@@ -35,6 +35,8 @@ namespace NatCruise.Design.ViewModels
             StratumValidator = new StratumValidator();
         }
 
+        public event EventHandler StratumAdded;
+
         protected IStratumDataservice StratumDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
         public ITemplateDataservice TemplateDataservice { get; }
@@ -155,6 +157,7 @@ namespace NatCruise.Design.ViewModels
 
                 newStratum.PropertyChanged += stratum_PropertyChanged;
                 Strata.Add(newStratum);
+                StratumAdded?.Invoke(this, EventArgs.Empty);
                 SelectedStratum = newStratum;
             }
             catch(FMSC.ORM.UniqueConstraintException)

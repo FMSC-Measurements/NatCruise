@@ -37,5 +37,24 @@ namespace NatCruise.Design.Views
             var selectedStratum = (Stratum)context.Value;
             (DataContext as StratumTreeFieldSetupViewModel).Stratum = selectedStratum;
         }
+
+        private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var oldvm = e.OldValue as StratumTreeFieldSetupViewModel;
+            if (oldvm != null)
+            {
+                oldvm.TreeFieldAdded -= HandleTreeFieldAdded;
+            }
+            var vm = e.NewValue as StratumTreeFieldSetupViewModel;
+            if (vm != null)
+            {
+                vm.TreeFieldAdded += HandleTreeFieldAdded;
+            }
+        }
+
+        private void HandleTreeFieldAdded(object sender, EventArgs e)
+        {
+            _treeFieldCombobox.ClearValue(ComboBox.SelectedItemProperty);
+        }
     }
 }

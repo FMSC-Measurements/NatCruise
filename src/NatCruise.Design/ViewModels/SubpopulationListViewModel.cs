@@ -33,6 +33,8 @@ namespace NatCruise.Design.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
+        public event EventHandler SubpopulationAdded;
+
         protected ITemplateDataservice TemplateDataservice { get; }
 
         protected ISubpopulationDataservice SubpopulationDataservice { get; }
@@ -195,6 +197,7 @@ namespace NatCruise.Design.ViewModels
 
             SubpopulationDataservice.AddSubpopulation(newSubpopulation);
             Subpopulations.Add(newSubpopulation);
+            SubpopulationAdded?.Invoke(this, EventArgs.Empty);
             newSubpopulation.PropertyChanged += Sp_PropertyChanged;
 
             RefreshSpeciesOptions();

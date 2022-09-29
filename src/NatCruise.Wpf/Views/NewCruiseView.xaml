@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:NatCruise.Wpf.Views"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:controls="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="350"
@@ -117,7 +118,8 @@
                                  Text="{Binding SaleName}"
                                  VerticalAlignment="Top"
                                  Width="120"
-                                 HorizontalAlignment="Right" />
+                                 HorizontalAlignment="Right"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                     </DockPanel>
 
                     <!-- Sale Number-->
@@ -130,6 +132,8 @@
                                  TextWrapping="Wrap"
                                  Text="{Binding SaleNumber}"
                                  MaxLength="{x:Static dsgn:Constants.SALENUMBER_MAXLENGTH}"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                                  VerticalAlignment="Top"
                                  Width="120" />
                     </DockPanel>
@@ -211,7 +215,9 @@
                                  Height="23"
                                  Text="{Binding District}"
                                  VerticalAlignment="Top"
-                                 Width="50" />
+                                 Width="50"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"/>
                     </DockPanel>
 
                     <Expander Grid.Row="4"

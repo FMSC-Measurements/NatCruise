@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mah_ctrl="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
              xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
@@ -43,6 +44,7 @@
                 <TextBox Text="{Binding Log.LogNumber, UpdateSourceTrigger=PropertyChanged, Delay=500}"
                          Width="100"
                          mah_ctrl:TextBoxHelper.SelectAllOnFocus="True"
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
                          AutomationProperties.LabeledBy="{x:Reference _logNumberHeading}" />
             </StackPanel>
 

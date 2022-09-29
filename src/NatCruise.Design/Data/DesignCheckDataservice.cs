@@ -87,15 +87,15 @@ WHERE sg.CruiseID = @p1
 @"SELECT
     'SubPopulation' AS Category,
     'Warning' AS Level,
-    'SubPopulation ' || SpeciesCode || ' ' || LiveDead || ' in SG ' || SampleGroupCode || ' Stratum ' || StratumCode || ' Has No Applyable Tree Defaults' AS Message,
+    'SubPopulation ' || SpeciesCode || ' ' || LiveDead || ' in SG ' || SampleGroupCode || ' Stratum ' || StratumCode || ' Has No Applicable Tree Defaults' AS Message,
     SubPopulationID AS RecordID
 FROM (
         SELECT
             subp.*,
             (SELECT TreeDefaultValue_CN FROM TreeDefaultValue AS tdv
             WHERE  tdv.CruiseID = subp.CruiseID
-                AND SpeciesCode = subp.SpeciesCode OR SpeciesCode IS NULL
-                AND PrimaryProduct = sg.PrimaryProduct OR PrimaryProduct IS NULL
+                AND (SpeciesCode = subp.SpeciesCode OR SpeciesCode IS NULL)
+                AND (PrimaryProduct = sg.PrimaryProduct OR PrimaryProduct IS NULL)
             ORDER BY PrimaryProduct DESC, SpeciesCode DESC
             LIMIT 1
             ) AS TreeDefaultValue_CN
