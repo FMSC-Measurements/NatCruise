@@ -1,3 +1,4 @@
+using FMSC.ORM.Core;
 using FScruiser.XF.Services;
 using NatCruise;
 using NatCruise.Cruise.Services;
@@ -89,12 +90,29 @@ namespace FScruiser.XF.ViewModels
                     }
                 }
 
-                void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-                {
-                    var treeFieldValue = (TreeFieldValue)sender;
-                    TreeFieldValueDataservice.UpdateTreeFieldValue(treeFieldValue);
-                    RefreshErrorsAndWarnings();
-                }
+                
+            }
+        }
+
+        void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var treeFieldValue = (TreeFieldValue)sender;
+
+            try
+            {
+                TreeFieldValueDataservice.UpdateTreeFieldValue(treeFieldValue);
+                treeFieldValue.Error = null;
+                RefreshErrorsAndWarnings();
+            }
+            catch (FMSC.ORM.ConstraintException ex)
+            {
+                treeFieldValue.Error = "Db Constraint Exception";
+                LoggingService.LogException(nameof(TreeEditViewModel), "treeFieldValue_PropertyChanged", ex,
+                    new Dictionary<string, string>()
+                    {
+                                { "Field", treeFieldValue.Field},
+                                { "Value", treeFieldValue.Value?.ToString() ?? "null"}
+                    });
             }
         }
 
@@ -585,7 +603,7 @@ namespace FScruiser.XF.ViewModels
                 {
                     CountOrMeasureOptions = new[] { "C", "M", "I" };
                 }
-                else if(cruiseMethod == CruiseDAL.Schema.CruiseMethods.FIXCNT)
+                else if (cruiseMethod == CruiseDAL.Schema.CruiseMethods.FIXCNT)
                 {
                     CountOrMeasureOptions = new[] { "C" };
                 }
@@ -671,7 +689,7 @@ namespace FScruiser.XF.ViewModels
                     catch (Exception e)
                     {
                         LoggingService.LogException(nameof(TreeEditViewModel), "SaveTree", e);
-                        DialogService.ShowMessageAsync("Save Tree Error");
+                        DialogService.ShowMessageAsync("Save Tree Error - Invalid Field Value");
                     }
                 }
             }

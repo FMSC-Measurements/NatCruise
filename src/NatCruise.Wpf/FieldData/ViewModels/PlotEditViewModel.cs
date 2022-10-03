@@ -1,6 +1,7 @@
 ﻿using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
+using NatCruise.Services;
 using Prism.Commands;
 using Prism.Common;
 using System;
@@ -188,17 +189,20 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public IPlotStratumDataservice PlotStratumDataservice { get; }
         public IPlotErrorDataservice PlotErrorDataservice { get; }
         public INatCruiseDialogService DialogService { get; set; }
+        public ILoggingService LoggingService { get; }
 
         public PlotEditViewModel(IPlotDataservice plotDataservice,
             IPlotStratumDataservice plotStratumDataservice,
             IPlotErrorDataservice plotErrorDataservice,
-            INatCruiseDialogService dialogService)
+            INatCruiseDialogService dialogService,
+            ILoggingService loggingService)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             PlotStratumDataservice = plotStratumDataservice ?? throw new ArgumentNullException(nameof(plotStratumDataservice));
             PlotErrorDataservice = plotErrorDataservice ?? throw new ArgumentNullException(nameof(plotErrorDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             //NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
         //public async Task ToggleInCruiseAsync(Plot_Stratum stratumPlot)
@@ -300,7 +304,15 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 case nameof(Plot.Slope):
                 case nameof(Plot.Remarks):
                     {
-                        PlotDataservice.UpdatePlot(plot);
+                        try
+                        {
+                            PlotDataservice.UpdatePlot(plot);
+                        }
+                        catch (FMSC.ORM.ConstraintException ex)
+                        {
+                            LoggingService.LogException(nameof(PlotEditViewModel), "Plot_PropertyChanged", ex);
+                            DialogService.ShowMessageAsync("Save Plot Error - Invalid Field Value");
+                        }
                         break;
                     }
             }
