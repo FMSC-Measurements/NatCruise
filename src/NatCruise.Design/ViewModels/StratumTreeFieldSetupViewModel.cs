@@ -29,6 +29,8 @@ namespace NatCruise.Design.ViewModels
             FieldSetupDataservice = dataserviceProvider.GetDataservice<IFieldSetupDataservice>() ?? throw new ArgumentNullException(nameof(FieldSetupDataservice));
         }
 
+        public event EventHandler TreeFieldAdded;
+
         protected IFieldSetupDataservice FieldSetupDataservice { get; }
         protected ITemplateDataservice TemplateDataservice { get; }
 
@@ -292,6 +294,7 @@ namespace NatCruise.Design.ViewModels
             };
             FieldSetupDataservice.UpsertTreeFieldSetup(newtfs);
             FieldSetups.Add(newtfs);
+            TreeFieldAdded?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged(nameof(AvalibleTreeFields));
         }
 

@@ -14,6 +14,8 @@ namespace NatCruise.Data
 
         public string DeviceID { get; protected set; }
 
+        public string CruiseID { get; protected set; }
+
         public CruiseDatastore_V3 Database { get; }
 
         public DataserviceBase(string path, string deviceID)

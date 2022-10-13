@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:tk_effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
-             x:Class="FScruiser.XF.Views.LimitingDistanceView"
-             Title="Limiting Distance Calculator">
-    <ContentPage.Resources>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:tk_effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
+                                    x:Class="FScruiser.XF.Views.LimitingDistanceView"
+                                    Title="Limiting Distance Calculator">
+    <controls:InitializableContentPage.Resources>
         <Style TargetType="Label">
             <Setter Property="VerticalTextAlignment"
                     Value="Center" />
@@ -21,8 +22,8 @@
             <Setter Property="WidthRequest"
                     Value="50" />
         </Style>
-    </ContentPage.Resources>
-    <ContentPage.Content>
+    </controls:InitializableContentPage.Resources>
+    <controls:InitializableContentPage.Content>
         <StackLayout>
 
             <!-- the order that the entries appear on the screen is significant as this is the order that 
@@ -31,8 +32,13 @@
             <StackLayout IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}">
                 <Label Text="{Binding Plot.StratumCode, StringFormat='{}Stratum {0}'}" />
             </StackLayout>
-                         
-            
+
+            <Label HorizontalOptions="FillAndExpand"
+                   IsVisible="{Binding UseNewLimitingDistanceCalculator}"
+                   BackgroundColor="Gold"
+                   Text="Using New Limiting Distance Calculations" />
+
+
             <Frame BackgroundColor="LightBlue">
                 <StackLayout Orientation="Horizontal">
 
@@ -108,8 +114,8 @@
                             </StackLayout>
                             <StackLayout Orientation="Horizontal">
                                 <Label x:Name="_measuringToPickerHeading">Measuring To</Label>
-                                <Picker SelectedItem="{Binding MeasureToSelection}"
-                                        ItemsSource="{Binding MeasureToOptions}"
+                                <controls:ValuePicker SelectedValue="{Binding MeasureToSelection}"
+                                        ValueSource="{Binding MeasureToOptions}"
                                         HorizontalOptions="FillAndExpand"
                                         AutomationProperties.LabeledBy="{x:Reference _measuringToPickerHeading}" />
                             </StackLayout>
@@ -150,8 +156,11 @@
 
             <Button Text="Save Limiting Distance Report To Remarks"
                     Command="{Binding SaveReportToPlotCommand}"
-                    IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                    IsVisible="{Binding PlotStratum, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                    IsEnabled="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+            <Button Text="Copy Limiting Distance Report To Clipboard"
+                    Command="{Binding CopyReportToClipboardCommand}"
                     IsEnabled="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
         </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

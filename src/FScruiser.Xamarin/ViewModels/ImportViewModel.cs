@@ -19,7 +19,7 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class ImportViewModel : XamarinViewModelBase
+    public class ImportViewModel : ViewModelBase
     {
         private static readonly string[] FILE_EXTENSIONS = new[] { ".crz3", ".crz3db" };
 

@@ -1,60 +1,55 @@
-﻿using System;
+﻿using NatCruise.Util;
+using System;
 
 namespace NatCruise.Cruise.Logic
 {
-    public static class CalculateLimitingDistance
+    public class CalculateLimitingDistance : ILimitingDistanceCalculator
     {
         public const int DECIMALS = 2;
-
-        public enum MeasureToType { Face, Center };
-
-        public enum PlotType { Fixed, Variable };
-
-        public enum LimitingDistanceResultType { Unknown = 0, In, Out };
 
         public const string TREE_STATUS_IN = "IN";
         public const string TREE_STATUS_OUT = "OUT";
 
-        public static double Calculate(double bafORfps, double dbh,
+        public decimal Calculate(decimal bafORfps, decimal dbh,
             int slopPct, bool isVariableRadius, bool isToFace)
         {
-            if (dbh <= 0.0
-                || bafORfps <= 0) { return 0.0; }
+            if (dbh <= 0.0m
+                || bafORfps <= 0) { return 0.0m; }
 
-            double toFaceCorrection = (isToFace) ?
-                (dbh / 12.0) * 0.5
-                : 0.0;
+            decimal toFaceCorrection = (isToFace) ?
+                (dbh / 12.0m) * 0.5m
+                : 0.0m;
 
-            double slope = slopPct / 100.0d;
+            decimal slope = slopPct / 100.0m;
 
             if (isVariableRadius)
             {
                 // Reference: FSH 2409.12 35.22a
-                double plotRadiusFactor = (8.696 / Math.Sqrt(bafORfps));
-                double limitingDistance = dbh * plotRadiusFactor;
-                double correctedPRF = (limitingDistance - toFaceCorrection) / dbh;
+                decimal plotRadiusFactor = (8.696m / DecimalMath.Sqrt(bafORfps));
+                decimal limitingDistance = dbh * plotRadiusFactor;
+                decimal correctedPRF = (limitingDistance - toFaceCorrection) / dbh;
 
-                double slopeCorrectionFactor = Math.Sqrt(1.0d + (slope * slope));
-                double correctedLimitingDistance = dbh * correctedPRF * slopeCorrectionFactor;
+                decimal slopeCorrectionFactor = DecimalMath.Sqrt(1.0m + (slope * slope));
+                decimal correctedLimitingDistance = dbh * correctedPRF * slopeCorrectionFactor;
                 return correctedLimitingDistance;
             }
             else
             {
                 // Reference: FSH 2409.12 34.22
-                double plotRad = Math.Sqrt((43560 / bafORfps) / Math.PI);
-                double slopeCorrectionFactor = 1 / Math.Cos(Math.Atan(slope));
-                double limitingDistance = (plotRad - toFaceCorrection) * slopeCorrectionFactor;
+                decimal plotRad = DecimalMath.Sqrt((43560m / bafORfps) / new Decimal(Math.PI));
+                decimal slopeCorrectionFactor = DecimalMath.Sqrt(1.0m + (slope * slope));
+                decimal limitingDistance = (plotRad - toFaceCorrection) * slopeCorrectionFactor;
                 return limitingDistance;
             }
         }
 
-        public static bool DeterminTreeInOrOut(double slopeDistance, double limitingDistance)
+        public bool DeterminTreeInOrOut(decimal slopeDistance, decimal limitingDistance)
         {
-            return Math.Round(slopeDistance, DECIMALS) <= Math.Round(limitingDistance, DECIMALS);
+            return Math.Round(slopeDistance, DECIMALS, MidpointRounding.AwayFromZero) <= Math.Round(limitingDistance, DECIMALS, MidpointRounding.AwayFromZero);
         }
 
-        public static string GenerateReport(string treeStatus, double limitingDistance, double slopeDistance, double slopePCT, double azimuth,
-            double bafORfps, double dbh, bool isVariableRadius, bool isToFace, string stratumCode)
+        public string GenerateReport(string treeStatus, decimal limitingDistance, decimal slopeDistance, int slopePCT, decimal azimuth,
+            decimal bafORfps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode)
         {
             var azimuthStr = (azimuth > 0) ? "Azimuth:" + azimuth.ToString() : String.Empty;
             var isToFaceStr = (isToFace) ? "Face" : "Center";

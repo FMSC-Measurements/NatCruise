@@ -21,6 +21,13 @@ namespace NatCruise.Design.Views
     /// </summary>
     public partial class TreeDefaultValueListView : UserControl
     {
+        static readonly string[] DEFINED_COLUMNS = new[]
+            {
+                nameof(TreeDefaultValue.SpeciesCode),
+                nameof(TreeDefaultValue.PrimaryProduct),
+                nameof(TreeDefaultValue.CreatedBy),
+            };
+
         public TreeDefaultValueListView()
         {
             InitializeComponent();
@@ -28,13 +35,11 @@ namespace NatCruise.Design.Views
 
         private void _tdvDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
-            e.Cancel =
-            new[]
-            {
-                nameof(TreeDefaultValue.SpeciesCode),
-                nameof(TreeDefaultValue.PrimaryProduct),
-                nameof(TreeDefaultValue.CreatedBy),
-            }.Contains(e.PropertyName);
+            var propName = e.PropertyName;
+            var isDefinedColumn = DEFINED_COLUMNS.Contains(propName);
+
+            e.Cancel = isDefinedColumn;
+            if (isDefinedColumn) { return; }
         }
     }
 }

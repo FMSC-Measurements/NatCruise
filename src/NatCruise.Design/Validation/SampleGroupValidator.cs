@@ -21,6 +21,7 @@ namespace NatCruise.Design.Validation
                 .WithSeverity(Severity.Error)
                 .WithMessage("Primary Product Can Not Be Blank");
 
+            // allow Frequency to be 0 if BigBAF is set
             RuleFor(x => x.SamplingFrequency)
                 .Must(x => x > 0)
                 .When(x => CruiseMethods.FREQUENCY_SAMPLED_METHODS.Contains(x.CruiseMethod) && x.BigBAF == 0)
@@ -28,27 +29,17 @@ namespace NatCruise.Design.Validation
                 .WithSeverity(Severity.Error);
 
             RuleFor(x => x.KZ)
-                .Must(x => x > 0)
+                .GreaterThan(0)
                 .When(x => CruiseMethods.THREE_P_METHODS.Contains(x.CruiseMethod))
                 .WithMessage("KZ Should Not Be Zero")
-                .WithSeverity(Severity.Warning);
+                .WithSeverity(Severity.Error);
 
-            RuleFor(x => x.MinKPI)
-                .Must(x => x > 0)
-                .When(x => CruiseMethods.THREE_P_METHODS.Contains(x.CruiseMethod))
-                .WithMessage("Min KPI Should Be Greater Than Zero")
-                .WithSeverity(Severity.Warning);
-
-            //RuleFor(x => x.MaxKPI)
-            //    .Must(x => x > 0)
-            //    .Must((sg, x) => x > sg.MinKPI)
-            //    .When(x => CruiseMethods.THREE_P_METHODS.Contains(x.CruiseMethod))
-            //    .WithMessage("Max KPI Should Be Greater Than Zero");
-
+            // allow MaxKPI to be 0 regardless, because we treat 0 as unbounded
             RuleFor(x => x.MaxKPI)
                 .Must((sg, x) => x > sg.MinKPI)
-                .When(x => CruiseMethods.THREE_P_METHODS.Contains(x.CruiseMethod) && x.MinKPI > 0)
-                .WithMessage("Max KPI Should Be Greater Than Min KPI");
+                .When(x =>  x.MaxKPI > 0 && x.MinKPI > 0 && CruiseMethods.THREE_P_METHODS.Contains(x.CruiseMethod))
+                .WithMessage("Max KPI Should Be Greater Than Min KPI")
+                .WithSeverity(Severity.Error);
         }
     }
 }

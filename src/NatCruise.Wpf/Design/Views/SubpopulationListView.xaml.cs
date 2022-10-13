@@ -37,5 +37,24 @@ namespace NatCruise.Design.Views
             var selectedSampleGroup = (SampleGroup)context.Value;
             (DataContext as SubpopulationListViewModel).SampleGroup = selectedSampleGroup;
         }
+
+        private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var oldvm = e.OldValue as SubpopulationListViewModel;
+            if(oldvm != null)
+            {
+                oldvm.SubpopulationAdded -= HandleSubpopulationAdded;
+            }
+            var newvm = e.NewValue as SubpopulationListViewModel;
+            if (newvm != null)
+            {
+                newvm.SubpopulationAdded += HandleSubpopulationAdded;
+            }
+        }
+
+        private void HandleSubpopulationAdded(object sender, EventArgs e)
+        {
+            _speciesTextBox.ClearValue(ComboBox.TextProperty);
+        }
     }
 }

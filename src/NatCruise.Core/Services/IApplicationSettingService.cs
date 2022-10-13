@@ -12,6 +12,8 @@ namespace NatCruise.Services
 
         bool EnableAnalitics { get; set; }
 
+        bool UseNewLimitingDistanceCalculator { get; set; }
+
         void Save();
     }
 }

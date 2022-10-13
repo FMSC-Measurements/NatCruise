@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
@@ -12,7 +13,7 @@ using System.Windows.Input;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class ThreePPNTPlotViewModel : XamarinViewModelBase
+    public class ThreePPNTPlotViewModel : ViewModelBase
     {
         private const double DEFAULT_VOLUME_FACTOR = 0.333;
 

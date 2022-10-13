@@ -33,18 +33,26 @@
 
                 </StackLayout>
             </StackLayout>
-            <Button Text="Reset Database"
-                    Command="{Binding ResetDatabaseCommand}"
+            <Button Text="Database Utilities"
+                    Command="{Binding ShowDatabaseUtilitiesCommand}"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Reset Database" />
-            <Button Text="Backup Database"
-                    Command="{Binding BackupDatabaseCommand}"
-                    AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Backup Database"/>
-            <Button Text="Load Database"
-                    Command="{Binding LoadDatabaseCommand}"
-                    AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Backup Database" />
+                    AutomationProperties.Name="Database Utilities" />
+
+            <BoxView HeightRequest="2"
+                     BackgroundColor="DarkGray" />
+
+            <StackLayout Orientation="Horizontal">
+
+                <Label Text="Use New Limiting Distance Calculator"
+                       VerticalTextAlignment="Center"
+                       AutomationProperties.IsInAccessibleTree="False" />
+
+                <Switch IsToggled="{Binding AppSettings.UseNewLimitingDistanceCalculator}"
+                        HeightRequest="{StaticResource minTouchableHeight}"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Use New LimitingDistance Calculator Toggle" />
+
+            </StackLayout>
 
             <Button Text="Privacy Policy"
                     Command="{Binding ShowPrivacyPolicyCommand}"

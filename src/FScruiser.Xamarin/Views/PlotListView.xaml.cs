@@ -4,11 +4,12 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using FScruiser.XF.Util;
+using FScruiser.XF.Controls;
 
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PlotListView : ContentPage
+    public partial class PlotListView : InitializableContentPage
     {
         protected PlotListViewModel ViewModel => BindingContext as PlotListViewModel;
 

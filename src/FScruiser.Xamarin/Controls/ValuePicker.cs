@@ -7,6 +7,10 @@ using Xamarin.Forms.Internals;
 
 namespace FScruiser.XF.Controls
 {
+
+    // the standard picker works more off of object.ReferenceEquals
+    // value picker equates selectedValue from ValueSource by their string value
+    // making it work better with value types 
     public class ValuePicker : View, IFontElement
     {
         public static readonly BindableProperty SelectedValueProperty = BindableProperty.Create(

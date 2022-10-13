@@ -46,30 +46,29 @@ namespace NatCruise.Data
             }
         }
 
-        public virtual void RegisterDataservices(IContainerRegistry containerRegistry)
+        public static void RegisterDataservices(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<ISaleDataservice>(x => GetDataservice<ISaleDataservice>());
-            containerRegistry.Register<ICuttingUnitDataservice>(x => GetDataservice<ICuttingUnitDataservice>());
-            containerRegistry.Register<IStratumDataservice>(x => GetDataservice<IStratumDataservice>());
-            containerRegistry.Register<ISampleGroupDataservice>(x => GetDataservice<ISampleGroupDataservice>());
-            containerRegistry.Register<ISubpopulationDataservice>(x => GetDataservice<ISubpopulationDataservice>());
-            containerRegistry.Register<ITreeDataservice>(x => GetDataservice<ITreeDataservice>());
-            containerRegistry.Register<ITreeErrorDataservice>(x => GetDataservice<ITreeErrorDataservice>());
-            containerRegistry.Register<ITreeFieldDataservice>(x => GetDataservice<ITreeFieldDataservice>());
-            containerRegistry.Register<ITreeFieldValueDataservice>(x => GetDataservice<ITreeFieldValueDataservice>());
-            containerRegistry.Register<ILogDataservice>(x => GetDataservice<ILogDataservice>());
-            containerRegistry.Register<ILogErrorDataservice>(x => GetDataservice<ILogErrorDataservice>());
-            containerRegistry.Register<IFieldSetupDataservice>(x => GetDataservice<IFieldSetupDataservice>());
-            containerRegistry.Register<IMessageLogDataservice>(x => GetDataservice<IMessageLogDataservice>());
-            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
-            containerRegistry.Register<IPlotDataservice>(x => GetDataservice<IPlotDataservice>());
-            containerRegistry.Register<IPlotStratumDataservice>(x => GetDataservice<IPlotStratumDataservice>());
-            containerRegistry.Register<IPlotErrorDataservice>(x => GetDataservice<IPlotErrorDataservice>());
-            containerRegistry.Register<IPlotTreeDataservice>(e => GetDataservice<IPlotTreeDataservice>());
-            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>());
-            containerRegistry.Register<ILogFieldDataservice>(e => GetDataservice<ILogFieldDataservice>());
-            containerRegistry.Register<ITallyLedgerDataservice>(x => GetDataservice<ITallyLedgerDataservice>());
-
+            containerRegistry.Register<ISaleDataservice>(x => GetDataservice<ISaleDataservice>(x));
+            containerRegistry.Register<ICuttingUnitDataservice>(x => GetDataservice<ICuttingUnitDataservice>(x));
+            containerRegistry.Register<IStratumDataservice>(x => GetDataservice<IStratumDataservice>(x));
+            containerRegistry.Register<ISampleGroupDataservice>(x => GetDataservice<ISampleGroupDataservice>(x));
+            containerRegistry.Register<ISubpopulationDataservice>(x => GetDataservice<ISubpopulationDataservice>(x));
+            containerRegistry.Register<ITreeDataservice>(x => GetDataservice<ITreeDataservice>(x));
+            containerRegistry.Register<ITreeErrorDataservice>(x => GetDataservice<ITreeErrorDataservice>(x));
+            containerRegistry.Register<ITreeFieldDataservice>(x => GetDataservice<ITreeFieldDataservice>(x));
+            containerRegistry.Register<ITreeFieldValueDataservice>(x => GetDataservice<ITreeFieldValueDataservice>(x));
+            containerRegistry.Register<ILogDataservice>(x => GetDataservice<ILogDataservice>(x));
+            containerRegistry.Register<ILogErrorDataservice>(x => GetDataservice<ILogErrorDataservice>(x));
+            containerRegistry.Register<IFieldSetupDataservice>(x => GetDataservice<IFieldSetupDataservice>(x));
+            containerRegistry.Register<IMessageLogDataservice>(x => GetDataservice<IMessageLogDataservice>(x));
+            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>(x));
+            containerRegistry.Register<IPlotDataservice>(x => GetDataservice<IPlotDataservice>(x));
+            containerRegistry.Register<IPlotStratumDataservice>(x => GetDataservice<IPlotStratumDataservice>(x));
+            containerRegistry.Register<IPlotErrorDataservice>(x => GetDataservice<IPlotErrorDataservice>(x));
+            containerRegistry.Register<IPlotTreeDataservice>(x => GetDataservice<IPlotTreeDataservice>(x));
+            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>(x));
+            containerRegistry.Register<ILogFieldDataservice>(x => GetDataservice<ILogFieldDataservice>(x));
+            containerRegistry.Register<ITallyLedgerDataservice>(x => GetDataservice<ITallyLedgerDataservice>(x));
         }
 
         public DataserviceProviderBase(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService)
@@ -224,6 +223,12 @@ namespace NatCruise.Data
             }
 
             return device;
+        }
+
+        public static T GetDataservice<T>(IContainerProvider container) where T : class, IDataservice
+        {
+            var dsp = container.Resolve<IDataserviceProvider>();
+            return dsp.GetDataservice<T>();
         }
     }
 }

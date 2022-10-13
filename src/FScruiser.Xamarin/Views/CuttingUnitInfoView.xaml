@@ -1,17 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FScruiser.XF.Views.CuttingUnitInfoView"
-             Title="Cutting Unit Info"
-             AutomationProperties.IsInAccessibleTree="true"
-             AutomationProperties.Name="Cutting Unit Info Page"
-             AutomationProperties.HelpText="Displays Cutting Unit Values for The Selected Cutting Unit">
-    <ContentPage.Content>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    x:Class="FScruiser.XF.Views.CuttingUnitInfoView"
+                                    Title="Cutting Unit Info"
+                                    AutomationProperties.IsInAccessibleTree="true"
+                                    AutomationProperties.Name="Cutting Unit Info Page"
+                                    AutomationProperties.HelpText="Displays Cutting Unit Values for The Selected Cutting Unit">
+    <controls:InitializableContentPage.Content>
         <StackLayout>
             <StackLayout>
                 <StackLayout Orientation="Horizontal">
                     <Label x:Name="_cuttingUnitCodeLabel"
-                        Text="Cutting Unit Code"
+                           Text="Cutting Unit Code"
                            VerticalOptions="Center" />
                     <Entry Text="{Binding CuttingUnit.CuttingUnitCode}"
                            AutomationProperties.IsInAccessibleTree="true"
@@ -22,21 +23,21 @@
 
                 <StackLayout>
                     <Label Text="Description"
-                           x:Name="_unitDescriptionLabel"/>
+                           x:Name="_unitDescriptionLabel" />
                     <Entry Text="{Binding CuttingUnit.Description}"
                            AutomationProperties.IsInAccessibleTree="true"
-                           AutomationProperties.LabeledBy="{x:Reference _unitDescriptionLabel}"/>
+                           AutomationProperties.LabeledBy="{x:Reference _unitDescriptionLabel}" />
                 </StackLayout>
 
                 <StackLayout>
                     <Label Text="Remarks"
                            x:Name="_unitRemarksLabel"
-                           AutomationProperties.IsInAccessibleTree="true"/>
+                           AutomationProperties.IsInAccessibleTree="true" />
                     <Entry Text="{Binding CuttingUnit.Remarks}"
                            AutomationProperties.IsInAccessibleTree="true"
-                           AutomationProperties.LabeledBy="{x:Reference _unitRemarksLabel}"/>
+                           AutomationProperties.LabeledBy="{x:Reference _unitRemarksLabel}" />
                 </StackLayout>
             </StackLayout>
         </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

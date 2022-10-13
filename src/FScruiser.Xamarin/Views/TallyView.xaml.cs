@@ -13,7 +13,7 @@ using NatCruise.Models;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TallyView : ContentPage
+    public partial class TallyView : InitializableContentPage
     {
         public TallyView()
         {
@@ -32,9 +32,9 @@ namespace FScruiser.XF.Views
                 vm.IsLoading = true; // prevent changing controls from triggering prop changed events
                 try
                 {
-                    _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
-                    _treeEditControlGrid.Children.AddRange(editControls);
+                    //_treeEditControlGrid.Children.Clear();
+                    //var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
+                    //_treeEditControlGrid.Children.AddRange(editControls);
                 }
                 finally
                 { vm.IsLoading = false; }
@@ -54,29 +54,6 @@ namespace FScruiser.XF.Views
         private void _treeCellTappedGesture_Tapped(object sender, EventArgs e)
         {
             _treeEditPanel.IsVisible = true;
-        }
-
-        private void _treeEditPanel_BindingContextChanged(object sender, EventArgs e)
-        {
-            var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
-            if(vm != null)
-            {
-                vm.IsLoading = true; // prevent changing controls from triggering prop changed events
-                try
-                {
-                    _treeEditControlGrid.Children.Clear();
-                    var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
-                    _treeEditControlGrid.Children.AddRange(editControls);
-                }
-                finally
-                {
-                    vm.IsLoading = false;
-                }
-            }
-            else
-            {
-                _treeEditControlGrid.Children.Clear();
-            }
         }
 
 

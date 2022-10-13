@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
@@ -8,7 +9,8 @@ using System.Collections.Generic;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class CuttingUnitListViewModel : XamarinViewModelBase
+    // TODO delete unused view/viewmodel
+    public class CuttingUnitListViewModel : ViewModelBase
     {
         private IEnumerable<CuttingUnit> _units;
 
