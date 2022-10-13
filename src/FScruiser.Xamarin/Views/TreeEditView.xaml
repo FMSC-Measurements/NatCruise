@@ -1,26 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
-             xmlns:tk_converters="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
-             xmlns:converters="clr-namespace:FScruiser.XF.Converters"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             xmlns:controls="clr-namespace:FScruiser.XF.Controls"
-             x:Class="FScruiser.XF.Views.TreeEditView"
-             x:Name="_page"
-             Title="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
-             BackgroundColor="White"
-             TreeNumber="{Binding TreeNumber}"
-             TreeFieldValues="{Binding TreeFieldValues}"
-             AutomationProperties.IsInAccessibleTree="True"
-             AutomationProperties.Name="Tree Edit Page">
-    <ContentPage.ToolbarItems>
+<controls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                   xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
+                                   xmlns:tk_converters="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
+                                   xmlns:converters="clr-namespace:FScruiser.XF.Converters"
+                                   xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+                                   xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                   xmlns:local_behaviors="clr-namespace:FScruiser.XF.Behaviors"
+                                   xmlns:local_vms="clr-namespace:FScruiser.XF.ViewModels"
+                                   x:Class="FScruiser.XF.Views.TreeEditView"
+                                   x:Name="_page"
+                                   Title="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
+                                   BackgroundColor="White"
+                                   TreeNumber="{Binding TreeNumber}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.Name="Tree Edit Page">
+    <controls:InitializableContentPage.ToolbarItems>
         <ToolbarItem Text="Logs"
                      Command="{Binding ShowLogsCommand}"
                      AutomationProperties.IsInAccessibleTree="True"
                      AutomationProperties.Name="Logs" />
-    </ContentPage.ToolbarItems>
-    <ContentPage.Resources>
+    </controls:InitializableContentPage.ToolbarItems>
+    <controls:InitializableContentPage.Resources>
+        <converters:FilterTreeFieldValuesConverter x:Key="tfvFileterConverter" />
+
         <converters:ErrorToColorConverter x:Key="errorToColorConverter"
                                           Default="White"
                                           Error="{StaticResource error}"
@@ -52,7 +55,7 @@
 
         <converters:CruiseMethodToBoolConverter x:Key="isfixCNTConverter"
                                                 MethodMap="FIXCNT" />
-    </ContentPage.Resources>
+    </controls:InitializableContentPage.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -189,12 +192,12 @@
                 <Label Text="Initials"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_initialsPicker"
-                        WidthRequest="60"
-                        HeightRequest="{StaticResource minTouchableHeight}"
-                        SelectedValue="{Binding Initials}"
-                        ValueSource="{Binding Cruisers}"
-                        AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.Name="Initials" />
+                                      WidthRequest="60"
+                                      HeightRequest="{StaticResource minTouchableHeight}"
+                                      SelectedValue="{Binding Initials}"
+                                      ValueSource="{Binding Cruisers}"
+                                      AutomationProperties.IsInAccessibleTree="True"
+                                      AutomationProperties.Name="Initials" />
             </StackLayout>
 
             <!--Count Or Measure-->
@@ -238,7 +241,7 @@
         <ScrollView x:Name="_editViewsHost"
                     Grid.Row="1"
                     VerticalOptions="FillAndExpand">
-            <ScrollView.Resources>
+            <!--<ScrollView.Resources>
                 <ResourceDictionary>
                     <Style TargetType="Label">
                         <Setter Property="TextColor"
@@ -254,11 +257,148 @@
                         <Setter Property="TextColor"
                                 Value="Black" />
                     </Style>
-                    <!--<Style TargetType="Switch">
+                    -->
+            <!--<Style TargetType="Switch">
                 <Setter Property="TextColor" Value="Black"/>
             </Style>-->
+            <!--
                 </ResourceDictionary>
-            </ScrollView.Resources>
+
+
+            </ScrollView.Resources>-->
+
+            <StackLayout Orientation="Vertical"
+                         BindableLayout.ItemsSource="{Binding TreeFieldValues, Converter={StaticResource tfvFileterConverter}}">
+                <StackLayout.Resources>
+
+
+                    <Style TargetType="controls:LastChildWidthLayout">
+
+                        <Setter Property="HeightRequest"
+                                Value="50" />
+                        <Setter Property="LastChildWidth"
+                                Value="100" />
+
+                    </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="Margin"
+                                Value="5" />
+
+                    </Style>
+                    <Style TargetType="Frame">
+                        <Setter Property="Padding"
+                                Value="0" />
+                    </Style>
+                </StackLayout.Resources>
+
+                <BindableLayout.ItemTemplateSelector>
+                    <controls:TreeFieldValueDataTemplateSelector>
+
+                        <!-- int template -->
+                        <controls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                            <DataTemplate>
+                                <Frame>
+                                    <controls:LastChildWidthLayout>
+                                        <Label Text="{Binding Heading}" />
+                                        <Entry Text="{Binding ValueInt}"
+                                               Placeholder="{Binding StrDefaultValue}"
+                                               Keyboard="Numeric">
+                                            <Entry.Behaviors>
+                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                            </Entry.Behaviors>
+                                            <Entry.IsReadOnly>
+                                                <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                    <Binding Path="IsLocked" />
+                                                    <Binding Path="IsHidden" />
+                                                </MultiBinding>
+                                            </Entry.IsReadOnly>
+                                        </Entry>
+                                    </controls:LastChildWidthLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </controls:TreeFieldValueDataTemplateSelector.IntTemplate>
+
+                        <!-- real template -->
+                        <controls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                            <DataTemplate>
+                                <Frame>
+                                    <controls:LastChildWidthLayout>
+                                        <Label Text="{Binding Heading}" />
+                                        <Entry Text="{Binding ValueReal}"
+                                               Placeholder="{Binding StrDefaultValue}"
+                                               Keyboard="Numeric">
+                                            <Entry.Behaviors>
+                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                            </Entry.Behaviors>
+                                            <Entry.IsReadOnly>
+                                                <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                    <Binding Path="IsLocked" />
+                                                    <Binding Path="IsHidden" />
+                                                </MultiBinding>
+                                            </Entry.IsReadOnly>
+                                        </Entry>
+                                    </controls:LastChildWidthLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </controls:TreeFieldValueDataTemplateSelector.RealTemplate>
+
+                        <!-- text template -->
+                        <controls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                            <DataTemplate>
+                                <Frame>
+                                    <controls:LastChildWidthLayout>
+                                        <Label Text="{Binding Heading}" />
+                                        <Entry Text="{Binding ValueText}"
+                                               Placeholder="{Binding StrDefaultValue}">
+                                            <Entry.Behaviors>
+                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                            </Entry.Behaviors>
+                                            <Entry.IsReadOnly>
+                                                <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                    <Binding Path="IsLocked" />
+                                                    <Binding Path="IsHidden" />
+                                                </MultiBinding>
+                                            </Entry.IsReadOnly>
+                                        </Entry>
+                                    </controls:LastChildWidthLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </controls:TreeFieldValueDataTemplateSelector.TextTemplate>
+
+                        <!-- grade template -->
+                        <controls:TreeFieldValueDataTemplateSelector.GradeTemplate>
+                            <DataTemplate>
+                                <Frame>
+                                    <controls:LastChildWidthLayout>
+                                        <Label Text="Grade" />
+                                        <controls:ValuePicker SelectedValue="{Binding ValueText}"
+                                                              ValueSource="{x:Static local_vms:TreeEditViewModel.GradeOptions}" />
+
+                                    </controls:LastChildWidthLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </controls:TreeFieldValueDataTemplateSelector.GradeTemplate>
+
+                        <!-- remarks template -->
+                        <!--<controls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+                            <DataTemplate>
+                                <BoxView WidthRequest="0"
+                                         HeightRequest="0"
+                                         IsVisible="false" />
+                            </DataTemplate>
+                        </controls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+
+                        <controls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
+                            <DataTemplate>
+                                <BoxView WidthRequest="0"
+                                         HeightRequest="0"
+                                         IsVisible="false" />
+                            </DataTemplate>
+                        </controls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>-->
+
+                    </controls:TreeFieldValueDataTemplateSelector>
+                </BindableLayout.ItemTemplateSelector>
+            </StackLayout>
         </ScrollView>
 
         <!--Remarks-->
@@ -287,4 +427,4 @@
             </BindableLayout.ItemTemplate>
         </StackLayout>
     </Grid>
-</ContentPage>
+</controls:InitializableContentPage>

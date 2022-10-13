@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NatCruise.Cruise.Data;
+using NatCruise.Data;
 using NatCruise.Test;
 using System.Linq;
 using Xunit;
@@ -57,6 +58,8 @@ namespace NatCruise.Cruise.Test.Data
             using (var database = CreateDatabase())
             {
                 var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var treeds = new PlotTreeDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
@@ -80,7 +83,7 @@ namespace NatCruise.Cruise.Test.Data
 
                 database.ExecuteScalar<int>("SELECT count(*) FROM Tree;").Should().Be(1);
 
-                var plotTrees = plotds.GetPlotTreeProxies(unitCode, plotNumber);
+                var plotTrees = treeds.GetPlotTrees(unitCode, plotNumber);
                 plotTrees.Should().HaveCount(1);
             }
         }
@@ -147,6 +150,7 @@ namespace NatCruise.Cruise.Test.Data
             using (var database = CreateDatabase())
             {
                 var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var treeds = new PlotTreeDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
@@ -163,7 +167,7 @@ namespace NatCruise.Cruise.Test.Data
                 ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
                     .Should().Be(2);
 
-                var plotTrees = plotds.GetPlotTreeProxies(unitCode, plotNumber);
+                var plotTrees = treeds.GetPlotTrees(unitCode, plotNumber);
                 plotTrees.Should().HaveCount(2);
             }
         }
@@ -186,6 +190,7 @@ namespace NatCruise.Cruise.Test.Data
             using (var database = CreateDatabase())
             {
                 var plotds = new PlotDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+                var treeds = new PlotTreeDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, CruiseID, TestDeviceInfoService.TEST_DEVICEID));
 
                 var plotID = plotds.AddNewPlot(unitCode);
 
@@ -202,13 +207,13 @@ namespace NatCruise.Cruise.Test.Data
                 ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
                     .Should().Be(2);
 
-                var plotTrees = plotds.GetPlotTreeProxies(unitCode, plotNumber);
+                var plotTrees = treeds.GetPlotTrees(unitCode, plotNumber);
                 plotTrees.Should().HaveCount(2);
 
                 ds.RemoveFixCNTTree(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value);
                 ds.GetTreeCount(unitCode, plotNumber, stCode, sgCode, sp, ld, fieldName, value)
                     .Should().Be(1);
-                plotds.GetPlotTreeProxies(unitCode, plotNumber).Should().HaveCount(1);
+                treeds.GetPlotTrees(unitCode, plotNumber).Should().HaveCount(1);
             }
         }
     }

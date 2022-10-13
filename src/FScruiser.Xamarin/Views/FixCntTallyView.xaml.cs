@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FScruiser.XF.Controls;
+using System.Collections.Generic;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -6,7 +7,7 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class FixCntTallyView : ContentPage
+    public partial class FixCntTallyView : InitializableContentPage
     {
         public FixCntTallyView()
         {

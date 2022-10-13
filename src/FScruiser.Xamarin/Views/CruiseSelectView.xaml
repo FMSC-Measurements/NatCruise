@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FScruiser.XF.Views.CruiseSelectView"
-             x:Name="_page"
-             Title="Select Cruise"
-             AutomationProperties.IsInAccessibleTree="true"
-             AutomationProperties.Name="Cruise Selection Page">
-    <ContentPage.Content>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    x:Class="FScruiser.XF.Views.CruiseSelectView"
+                                    x:Name="_page"
+                                    Title="Select Cruise"
+                                    AutomationProperties.IsInAccessibleTree="true"
+                                    AutomationProperties.Name="Cruise Selection Page">
+    <controls:InitializableContentPage.Content>
         <StackLayout>
             <ListView ItemsSource="{Binding Cruises}"
                       SelectionMode="Single"
@@ -18,7 +19,7 @@
                         <TextCell  Text="{Binding .}"
                                    TextColor="{StaticResource listItemText}"
                                    AutomationProperties.IsInAccessibleTree="true"
-                                   AutomationProperties.Name="{Binding .}"/>
+                                   AutomationProperties.Name="{Binding .}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -50,5 +51,5 @@
                     Command="{Binding DeleteSelectedCruiseCommand}"
                     IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullOrEmptyConverter}}" />
         </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>

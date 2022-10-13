@@ -15,6 +15,7 @@
              ToolTip="Subpopulations"
              mc:Ignorable="d"
              d:DesignHeight="450"
+             DataContextChanged="HandleDataContextChanged"
              Width="800"
              IsEnabled="{Binding SampleGroup, Converter={StaticResource NotNullConverter}}">
     <Grid Background="{StaticResource brush_background}">
@@ -48,19 +49,27 @@
                       ItemsSource="{Binding SpeciesOptions}"
                       IsEditable="True"
                       IsTextSearchCaseSensitive="False"
-                      controls:ComboBoxHelper.MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}" />
+                      controls:ComboBoxHelper.MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}">
+                <ComboBox.InputBindings>
+                    <KeyBinding Key="Return"
+                                Command="{Binding AddSubpopulationCommand}"
+                                CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                </ComboBox.InputBindings>
+            </ComboBox>
             <Button x:Name="_addSpeciesButton"
                     Style="{StaticResource AddButton}"
                     Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
                     Grid.Column="1"
-                    IsEnabled="{Binding Text, ElementName=_speciesTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}">
-                <i:Interaction.Triggers>
+                    IsEnabled="{Binding Text, ElementName=_speciesTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
+                    Command="{Binding AddSubpopulationCommand}"
+                    CommandParameter="{Binding Text, Source={x:Reference _speciesTextBox}}">
+                <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding AddSubpopulationCommand}"
                                                CommandParameter="{Binding Text, Source={x:Reference _speciesTextBox}}" />
                         <triggers:ClearComboBoxTextAction TargetName="_speciesTextBox" />
                     </i:EventTrigger>
-                </i:Interaction.Triggers>
+                </i:Interaction.Triggers>-->
             </Button>
             <Button x:Name="_removeSpeciesButton"
                     Style="{StaticResource RemoveButton}"

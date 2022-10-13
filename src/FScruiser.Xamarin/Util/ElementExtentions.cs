@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 
 namespace FScruiser.XF.Util
 {
@@ -12,6 +13,18 @@ namespace FScruiser.XF.Util
             while (element != null)
             {
                 if (element is T found) { return found; }
+                element = element.Parent;
+            }
+            return null;
+        }
+
+        public static Element GetAncestor(this Element element, Type type)
+        {
+            if (element is null) { throw new System.ArgumentNullException(nameof(element)); }
+
+            while (element != null)
+            {
+                if (element.GetType() == type) { return element; }
                 element = element.Parent;
             }
             return null;

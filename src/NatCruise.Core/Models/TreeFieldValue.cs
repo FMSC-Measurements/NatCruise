@@ -134,5 +134,8 @@ namespace NatCruise.Models
                 }
             }
         }
+
+        [IgnoreField]
+        public string InputRegex { get; set; }
     }
 }

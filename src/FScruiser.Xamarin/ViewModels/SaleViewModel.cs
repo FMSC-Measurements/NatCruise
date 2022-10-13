@@ -1,11 +1,12 @@
-﻿using NatCruise.Data;
+﻿using NatCruise;
+using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using Prism.Common;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SaleViewModel : XamarinViewModelBase
+    public class SaleViewModel : ViewModelBase
     {
         private Sale _sale;
 

@@ -68,14 +68,16 @@ namespace NatCruise.Cruise.Data
             }
         }
 
-        public override void RegisterDataservices(IContainerRegistry containerRegistry)
+        public static void RegisterDataservices(IContainerRegistry containerRegistry)
         {
-            base.RegisterDataservices(containerRegistry);
+            DataserviceProviderBase.RegisterDataservices(containerRegistry);
 
-            
-            containerRegistry.Register<ISampleSelectorDataService>(x => GetDataservice<ISampleSelectorDataService>());
-            containerRegistry.Register<IFixCNTDataservice>(x => GetDataservice<IFixCNTDataservice>());
-            containerRegistry.Register<ITallyDataservice>(x => GetDataservice<ITallyDataservice>());
+            containerRegistry.Register<ISampleSelectorDataService>(x => GetDataservice<ISampleSelectorDataService>(x));
+            containerRegistry.Register<IFixCNTDataservice>(x => GetDataservice<IFixCNTDataservice>(x));
+            containerRegistry.Register<ITallyDataservice>(x => GetDataservice<ITallyDataservice>(x));
         }
+
+
+
     }
 }

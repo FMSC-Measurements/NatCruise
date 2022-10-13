@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              ToolTip="Sample Group Details"
              mc:Ignorable="d"
@@ -179,7 +180,8 @@
                 </StackPanel.Resources>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Sampling Frequency*" />
-                    <TextBox Text="{Binding SamplingFrequency}"
+                    <TextBox Text="{Binding SamplingFrequency}" 
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                 </StackPanel>
 
@@ -187,7 +189,8 @@
                             Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsNotPlotMethodConverter}, FallbackValue=Visible}">
                     <Label Content="Insurance Frequency" />
                     <TextBox Text="{Binding InsuranceFrequency}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -213,9 +216,10 @@
                 </StackPanel.Resources>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="KZ*" />
-                    <TextBox Text="{Binding KZ}"
+                    <TextBox Text="{Binding KZ, Converter={StaticResource DefaultToEmptyStringConverter}}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ToolTip="KZ" />
+                             ToolTip="KZ"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -223,19 +227,22 @@
                     <Label Content="Insurance Frequency" />
                     <TextBox ToolTip="Insurance Frequency"
                              Text="{Binding InsuranceFrequency}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Min KPI" />
-                    <TextBox Text="{Binding MinKPI}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+                    <TextBox Text="{Binding MinKPI, FallbackValue={x:Null}}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Max KPI" />
-                    <TextBox Text="{Binding MaxKPI}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+                    <TextBox Text="{Binding MaxKPI, Converter={StaticResource DefaultToEmptyStringConverter}}"
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -257,9 +264,10 @@
                 </Grid.RowDefinitions>
                 <Label Content="BigBAF"
                        HorizontalAlignment="Left" />
-                <TextBox Text="{Binding BigBAF}"
+                <TextBox Text="{Binding BigBAF, Converter={StaticResource DefaultToEmptyStringConverter}}"
                          ToolTip="Big BAF"
-                         Grid.Column="1" />
+                         Grid.Column="1"
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
             </Grid>
         </GroupBox>
     </WrapPanel>
