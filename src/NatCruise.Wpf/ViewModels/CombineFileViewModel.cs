@@ -46,16 +46,20 @@ namespace NatCruise.Wpf.ViewModels
         private CruiseDatastore_V3 _workingDestinationDb;
         private CruiseDatastore_V3 _workingSourceDb;
 
-        public CombineFileViewModel(IFileDialogService fileDialogService, IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService)
+        public CombineFileViewModel(IFileDialogService fileDialogService,
+            IDataserviceProvider dataserviceProvider,
+            INatCruiseDialogService dialogService,
+            ILoggingService loggingService)
         {
             Syncer = new CruiseSyncer();
             DeleteSyncer = new DeleteSysncer();
             ConflictChecker = new ConflictChecker();
             ConflictResolver = new ConflictResolver();
-            Options = new CruiseSyncOptions();
+            Options = new TableSyncOptions(SyncOption.InsertUpdateDelete);
 
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
 
             DestinationDatabase = dataserviceProvider.Database;
             CruiseID = dataserviceProvider.CruiseID;
@@ -97,6 +101,7 @@ namespace NatCruise.Wpf.ViewModels
 
         public IFileDialogService FileDialogService { get; }
         public INatCruiseDialogService DialogService { get; }
+        public ILoggingService LoggingService { get; }
 
         public CruiseDatastore_V3 SourceDatabase
         {
@@ -146,7 +151,7 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        public CruiseSyncOptions Options { get; protected set; }
+        public TableSyncOptions Options { get; protected set; }
 
         #region Conflict Properties
 
@@ -292,7 +297,7 @@ namespace NatCruise.Wpf.ViewModels
 
             var conflicts = CheckDatabases(source, destination);
 
-            if (conflicts.HasAny())
+            if (conflicts.HasConflicts)
             {
                 ConflictOptions = conflicts;
 
@@ -311,15 +316,18 @@ namespace NatCruise.Wpf.ViewModels
                 try
                 {
                     await Syncer.SyncAsync(cruiseID, sourceConn, destConn, Options, progress: progress);
+
+                    destination.ReleaseConnection();
+                    DialogService.ShowNotificationAsync("combine complete", "message").FireAndForget();
                 }
-                finally
+                catch(Exception ex)
                 {
                     destination.ReleaseConnection();
+
+                    // TODO add better ui error indication. maybe change progress bar red
+                    DialogService.ShowNotification("Combine Error");
+                    LoggingService.LogException(nameof(CombineFileViewModel), "CombineFile", ex);
                 }
-
-                destination.BackupDatabase(DestinationDatabase);
-
-                DialogService.ShowNotificationAsync("combine complete", "message").FireAndForget();
             }
             finally
             {
@@ -372,20 +380,19 @@ namespace NatCruise.Wpf.ViewModels
                         // this allows records that have been modified in the destination
                         // to be updated pre-conflict-check removing false positive conflicts
                         // where the destination record has been moved out of conflict
-                        var preCheckSyncOptions = new CruiseSyncOptions
+                        var preCheckSyncOptions = new TableSyncOptions(SyncOption.Lock)
                         {
-                            Design = SyncFlags.Update,
-                            FieldData = SyncFlags.Update,
-                            TreeFlags = SyncFlags.Update,
-                            Processing = SyncFlags.Lock,
-                            Template = SyncFlags.Lock,
-                            SamplerState = SyncFlags.Lock,
-                            TreeDataFlags = SyncFlags.Lock,
-                            TreeDefaultValue = SyncFlags.Lock,
-                            Validation = SyncFlags.Lock,
+                            CuttingUnit = SyncOption.Update,
+                            CuttingUnitStratum = SyncOption.Update,
+                            Stratum = SyncOption.Update,
+                            SampleGroup = SyncOption.Update,
+                            Plot = SyncOption.Update,
+                            TreeAuditResolution = SyncOption.Update,
+                            Log = SyncOption.Update,
+                            Stem = SyncOption.Update,
                         };
                         Syncer.Sync(cruiseID, workingDestDb, workingSourceDb, preCheckSyncOptions);
-                        // TODO way need a separate syncer that just updates record's identities 
+                        // TODO we need a separate syncer that just updates record's identities 
 
                         CheckFile();
                     }
@@ -394,10 +401,13 @@ namespace NatCruise.Wpf.ViewModels
                         DialogService.ShowNotification("Selected File Does not Contain Cruise Matches the Current Cruise");
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
                     WorkingDestinationDb = null;
                     WorkingSourceDb = null;
+
+                    DialogService.ShowNotification("Combine Precheck Error");
+                    LoggingService.LogException(nameof(CombineFileViewModel), "SelectSourceFile", ex);
                 }
             }
         }
