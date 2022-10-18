@@ -58,16 +58,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataGrid", "DataGrid", "{18
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xamarin.Forms.DataGrid", "..\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid.csproj", "{8B6F758A-697D-4C58-9E8A-9FA10CB04796}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FScruiser.Droid.Test", "FScruiser.Droid.Test\FScruiser.Droid.Test.csproj", "{649EE027-7DC2-4578-8E5E-33812482E6B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FScruiser.Droid.Test", "FScruiser.Droid.Test\FScruiser.Droid.Test.csproj", "{649EE027-7DC2-4578-8E5E-33812482E6B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NatCruise.Wpf.Test", "NatCruise.Wpf.Test\NatCruise.Wpf.Test.csproj", "{E6AFA8AC-1FAE-475C-B680-A996975A29B6}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{7e28ebd8-47b9-4909-b748-aaffc085d35d}*SharedItemsImports = 5
-		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{a8f4a493-8361-4128-83b7-abd2dc7207f3}*SharedItemsImports = 5
-		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{b0192a57-3af7-4127-a328-f2107c3da18d}*SharedItemsImports = 5
-		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{c27d43f1-b37f-4488-a829-b0c2c499102d}*SharedItemsImports = 13
-		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{f2ce2051-a22b-46d0-86bb-b243a08854d0}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
@@ -299,6 +294,18 @@ Global
 		{649EE027-7DC2-4578-8E5E-33812482E6B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{649EE027-7DC2-4578-8E5E-33812482E6B4}.Release|x86.ActiveCfg = Release|Any CPU
 		{649EE027-7DC2-4578-8E5E-33812482E6B4}.Release|x86.Build.0 = Release|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Debug|x86.Build.0 = Debug|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Profile|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Profile|Any CPU.Build.0 = Debug|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Profile|x86.ActiveCfg = Debug|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Profile|x86.Build.0 = Debug|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Release|x86.ActiveCfg = Release|Any CPU
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -317,8 +324,17 @@ Global
 		{E7707D6E-760C-4934-91E2-DD1D0C6D8E9C} = {355C4190-4178-41FA-89AE-EF202205545C}
 		{8B6F758A-697D-4C58-9E8A-9FA10CB04796} = {180EFDF1-F198-40A6-B9F8-5DEB8932C4B9}
 		{649EE027-7DC2-4578-8E5E-33812482E6B4} = {FEA7B92B-98BA-46EA-8968-CBDE76CF24D7}
+		{E6AFA8AC-1FAE-475C-B680-A996975A29B6} = {FEA7B92B-98BA-46EA-8968-CBDE76CF24D7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9C152AC2-B1C8-47CC-98C6-B566DD992425}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{7e28ebd8-47b9-4909-b748-aaffc085d35d}*SharedItemsImports = 5
+		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{a8f4a493-8361-4128-83b7-abd2dc7207f3}*SharedItemsImports = 5
+		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{b0192a57-3af7-4127-a328-f2107c3da18d}*SharedItemsImports = 5
+		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{c27d43f1-b37f-4488-a829-b0c2c499102d}*SharedItemsImports = 13
+		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{e6afa8ac-1fae-475c-b680-a996975a29b6}*SharedItemsImports = 5
+		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{f2ce2051-a22b-46d0-86bb-b243a08854d0}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
