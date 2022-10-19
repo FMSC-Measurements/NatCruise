@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" android:versionName="3.1.0.0" package="com.FMSC.FScruiser" android:versionCode="30100">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" android:versionName="3.1.1.0" package="com.FMSC.FScruiser" android:versionCode="30101">
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<application android:label="FScruiser" android:theme="@style/MyTheme.Splash"></application>
