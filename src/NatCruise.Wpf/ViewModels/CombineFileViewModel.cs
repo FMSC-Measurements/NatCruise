@@ -297,7 +297,7 @@ namespace NatCruise.Wpf.ViewModels
 
             var conflicts = CheckDatabases(source, destination);
 
-            if (conflicts.HasConflicts)
+            if (conflicts.HasAny())
             {
                 ConflictOptions = conflicts;
 
