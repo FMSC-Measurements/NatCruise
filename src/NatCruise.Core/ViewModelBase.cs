@@ -59,9 +59,10 @@ namespace NatCruise
                     IsLoaded = true;
 
                     stopwatch.Stop();
+                    var tenthsecond = stopwatch.ElapsedMilliseconds / 100; //round to tenth of second, this helps reduces the number of data points in reporting
                     Analytics.TrackEvent("view_model_load",
                         new Dictionary<string, string> {
-                        { "time_ms", stopwatch.ElapsedMilliseconds.ToString() },
+                        { "time_TenthSec", tenthsecond.ToString() },
                         { "view_model_type", this.GetType().Name },
                         });
                 }
