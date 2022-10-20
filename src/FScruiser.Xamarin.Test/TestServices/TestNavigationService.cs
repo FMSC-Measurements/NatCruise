@@ -183,5 +183,15 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowDatabaseUtilities()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowFieldData(string cuttingUnit = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

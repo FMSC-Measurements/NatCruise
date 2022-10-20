@@ -15,7 +15,7 @@ namespace NatCruise.Wpf.ViewModels
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
 
-            Options = new CruiseSyncOptions();
+            Options = new TableSyncOptions(SyncOption.InsertUpdateDelete);
 
             var curFilePath = dataserviceProvider.DatabasePath;
             var curFileDir = System.IO.Path.GetDirectoryName(curFilePath);
@@ -35,7 +35,7 @@ namespace NatCruise.Wpf.ViewModels
 
         public ObservableCollection<CruiseFile> CruiseFiles { get; } = new ObservableCollection<CruiseFile>();
 
-        public CruiseSyncOptions Options { get; protected set; }
+        public TableSyncOptions Options { get; protected set; }
 
         public async Task AddFile()
         {

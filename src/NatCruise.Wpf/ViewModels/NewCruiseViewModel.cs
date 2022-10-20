@@ -134,7 +134,7 @@ namespace NatCruise.Wpf.ViewModels
             RaiseRequestClose(new DialogResult(ButtonResult.Cancel));
         }
 
-        private async Task CreateCruise()
+        public async Task CreateCruise()
         {
             ValidateAll(this);
             if (HasErrors == true) { return; }
@@ -283,6 +283,11 @@ namespace NatCruise.Wpf.ViewModels
         {
             var templatePath = FileDialogService.SelectTemplateFileAsync().Result;
 
+            SelectTemplate(templatePath);
+        }
+
+        public void SelectTemplate(string templatePath)
+        {
             if (templatePath == null || File.Exists(templatePath) == false) { return; }
 
             var extention = Path.GetExtension(templatePath);

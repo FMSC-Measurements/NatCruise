@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net60-windows</TargetFramework>
     <RootNamespace>FScruiser.XF</RootNamespace>
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release;Profile</Configurations>

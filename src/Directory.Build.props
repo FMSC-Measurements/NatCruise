@@ -1,16 +1,16 @@
 <Project>
-  <PropertyGroup Label="Build Config">
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  
- <PropertyGroup Label="Custom Properties">
-   <FScruiserVersion>3.1.0.0</FScruiserVersion>
-	 <UseCruiseDALProjRefs>false</UseCruiseDALProjRefs>
- </PropertyGroup>
+	<PropertyGroup Label="Build Config">
+		<LangVersion>8.0</LangVersion>
+	</PropertyGroup>
 
-  <!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 because of xunit's shadow copy feature
+	<PropertyGroup Label="Custom Properties">
+		<FScruiserVersion>3.1.1.0</FScruiserVersion>
+		<UseCruiseDALProjRefs>false</UseCruiseDALProjRefs>
+	</PropertyGroup>
+
+	<!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 because of xunit's shadow copy feature
   see https://github.com/reactiveui/Akavache/pull/496 and https://github.com/xunit/xunit/issues/1198 -->
-  <ItemGroup Condition="$(IsTestProject) == 'true' AND $(TargetFramework) == 'net472'">
-    <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+	<ItemGroup Condition="$(IsTestProject) == 'true' AND $(TargetFramework) == 'net472'">
+		<Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
 </Project>
