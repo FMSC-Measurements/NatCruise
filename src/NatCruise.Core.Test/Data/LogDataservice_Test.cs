@@ -67,23 +67,23 @@ namespace NatCruise.Test.Data
 
                 var randomizer = new Randomizer(8675309);
 
-                log.BarkThickness = randomizer.Double();
-                log.BoardFootRemoved = randomizer.Double();
-                log.CubicFootRemoved = randomizer.Double();
-                log.DIBClass = randomizer.Double();
-                log.ExportGrade = randomizer.String();
-                log.Grade = randomizer.String();
-                log.GrossBoardFoot = randomizer.Double();
-                log.GrossCubicFoot = randomizer.Double();
-                log.LargeEndDiameter = randomizer.Double();
-                log.Length = randomizer.Int();
-                log.LogNumber = randomizer.Int();
+                log.BarkThickness = randomizer.Double(0.0);
+                log.BoardFootRemoved = randomizer.Double(0.0);
+                log.CubicFootRemoved = randomizer.Double(0.0);
+                log.DIBClass = randomizer.Double(0.0);
+                log.ExportGrade = "";
+                log.Grade = "0";
+                log.GrossBoardFoot = randomizer.Double(0.0);
+                log.GrossCubicFoot = randomizer.Double(0.0);
+                log.LargeEndDiameter = randomizer.Double(0.0);
+                log.Length = randomizer.Int(0);
+                log.LogNumber = randomizer.Int(0);
                 //log.ModifiedBy = randomizer.String(10);
-                log.NetBoardFoot = randomizer.Double();
-                log.NetCubicFoot = randomizer.Double();
-                log.PercentRecoverable = randomizer.Double();
-                log.SeenDefect = randomizer.Double();
-                log.SmallEndDiameter = randomizer.Double();
+                log.NetBoardFoot = randomizer.Double(0.0);
+                log.NetCubicFoot = randomizer.Double(0.0);
+                log.PercentRecoverable = randomizer.Double(0.0);
+                log.SeenDefect = randomizer.Double(0.0);
+                log.SmallEndDiameter = randomizer.Double(0.0);
 
                 datastore.UpdateLog(log);
 
