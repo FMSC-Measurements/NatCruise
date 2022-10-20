@@ -44,7 +44,7 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
         public async void CreateCruise_With_V2_Template()
         {
             var templatePath = GetTestFile("R8 Template 2015.08.05.cut");
-            var cruisePath = GetTempFilePath(".crz3");
+            var cruisePath = GetTempFilePath(".crz3", "CreateCruise_With_V2_Template");
             File.Delete(cruisePath);
 
             var dsp_moq = new Mock<IDataserviceProvider>();
