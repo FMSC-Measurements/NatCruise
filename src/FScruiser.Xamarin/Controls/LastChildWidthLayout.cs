@@ -79,10 +79,6 @@ namespace FScruiser.XF.Controls
         // that allows you to use precalculated chisSizeRequest
         private static void LayoutChildIntoBoundingRegion(View child, Rectangle region, SizeRequest childSizeRequest)
         {
-            bool isRightToLeft = false;
-            //if (child.Parent is IFlowDirectionController parent && (isRightToLeft = parent.ApplyEffectiveFlowDirectionToChildContainer && parent.EffectiveFlowDirection.IsRightToLeft()))
-            //    region = new Rectangle(parent.Width - region.Right, region.Y, region.Width, region.Height);
-
             if (region.Size != childSizeRequest.Request)
             {
                 bool canUseAlreadyDoneRequest = region.Width >= childSizeRequest.Request.Width && region.Height >= childSizeRequest.Request.Height;
@@ -93,8 +89,7 @@ namespace FScruiser.XF.Controls
                     SizeRequest request = canUseAlreadyDoneRequest ? childSizeRequest : child.Measure(region.Width, region.Height, MeasureFlags.IncludeMargins);
                     double diff = Math.Max(0, region.Width - request.Request.Width);
                     double horizontalAlign = ToDouble(horizontalOptions.Alignment);
-                    if (isRightToLeft)
-                        horizontalAlign = 1 - horizontalAlign;
+
                     region.X += (int)(diff * horizontalAlign);
                     region.Width -= diff;
                 }

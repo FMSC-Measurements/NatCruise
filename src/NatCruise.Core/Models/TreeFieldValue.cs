@@ -137,5 +137,8 @@ namespace NatCruise.Models
 
         [IgnoreField]
         public string InputRegex { get; set; }
+
+        [IgnoreField]
+        public string Error { get; set; }
     }
 }

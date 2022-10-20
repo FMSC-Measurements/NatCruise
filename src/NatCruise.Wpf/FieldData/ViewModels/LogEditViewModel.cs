@@ -1,5 +1,8 @@
 ﻿using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.Navigation;
+using NatCruise.Services;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -55,6 +58,9 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public ILogDataservice LogDataservice { get; }
         public ILogErrorDataservice LogErrorDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
+        public ILoggingService LoggingService { get; }
+        public INatCruiseDialogService DialogService { get; }
+
 
         public IEnumerable<string> GradeOptions
         {
@@ -62,11 +68,17 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             set => SetProperty(ref _gradeOptions, value);
         }
 
-        public LogEditViewModel(ILogDataservice logDataservice, ILogErrorDataservice logErrorDataservice, IFieldSetupDataservice fieldSetupDataservice)
+        public LogEditViewModel(ILogDataservice logDataservice,
+            ILogErrorDataservice logErrorDataservice,
+            IFieldSetupDataservice fieldSetupDataservice,
+            ILoggingService loggingService,
+            INatCruiseDialogService dialogService)
         {
             LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
             LogErrorDataservice = logErrorDataservice ?? throw new ArgumentNullException(nameof(logErrorDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         //protected override void Load(IParameters parameters)
@@ -91,10 +103,24 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public void SaveLog()
         {
             var log = Log;
+            SaveLog(log);
+        }
+
+        public void SaveLog(Log log)
+        {
             if (log != null)
             {
-                LogDataservice.UpdateLog(log);
+                try
+                {
+                    LogDataservice.UpdateLog(log);
+                }
+                catch (FMSC.ORM.ConstraintException ex)
+                {
+                    LoggingService.LogException(nameof(LogEditViewModel), "SaveLog", ex);
+                    DialogService.ShowMessageAsync("Save Log Error - Invalid Field Value");
+                }
             }
         }
     }
 }
+

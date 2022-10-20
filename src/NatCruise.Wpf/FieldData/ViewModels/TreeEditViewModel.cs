@@ -81,17 +81,35 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                     }
                 }
 
-                void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-                {
-                    var treeFieldValue = (TreeFieldValue)sender;
-                    TreeFieldValueDataservice.UpdateTreeFieldValue(treeFieldValue);
-                    RefreshErrorsAndWarnings();
+                
+            }
+        }
 
-                    if(TreeProperties.TryGetValue(treeFieldValue.Field.ToLower(), out var treeProp))
-                    {
-                        treeProp.SetValue(Tree, treeFieldValue.Value);
-                    }
+        void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var treeFieldValue = (TreeFieldValue)sender;
+
+            try
+            {
+                TreeFieldValueDataservice.UpdateTreeFieldValue(treeFieldValue);
+                treeFieldValue.Error = null;
+                RefreshErrorsAndWarnings();
+
+                // update value on Tree object to reflect change in Tree List View aswell. 
+                if (TreeProperties.TryGetValue(treeFieldValue.Field.ToLower(), out var treeProp))
+                {
+                    treeProp.SetValue(Tree, treeFieldValue.Value);
                 }
+            }
+            catch (FMSC.ORM.ConstraintException ex)
+            {
+                treeFieldValue.Error = "Db Constraint Exception";
+                LoggingService.LogException(nameof(TreeEditViewModel), "treeFieldValue_PropertyChanged", ex,
+                    new Dictionary<string, string>()
+                    {
+                                { "Field", treeFieldValue.Field},
+                                { "Value", treeFieldValue.Value?.ToString() ?? "null"}
+                    });
             }
         }
 
@@ -692,7 +710,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                     catch (Exception e)
                     {
                         LoggingService.LogException(nameof(TreeEditViewModel), "SaveTree", e);
-                        DialogService.ShowMessageAsync("Save Tree Error");
+                        DialogService.ShowMessageAsync("Save Tree Error - Invalid Field Value");
                     }
                 }
             }
