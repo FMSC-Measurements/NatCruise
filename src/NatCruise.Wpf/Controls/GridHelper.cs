@@ -19,19 +19,21 @@ namespace NatCruise.Wpf.Controls
 
         private static void OnColumnDefinitionsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            
+
             if (d is System.Windows.Controls.Grid source)
             {
-                if (source.ColumnDefinitions?.Count == 0)
+                if (e.OldValue != null && e.OldValue.Equals(e.NewValue)) { return; }
+                if (source.ColumnDefinitions?.Count > 0) { source.ColumnDefinitions.Clear(); }
+
+                var value = (string)e.NewValue;
+                var a = value.Split(new[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var text in a)
                 {
-                    var value = (string)e.NewValue;
-                    var a = value.Split(',');
-                    foreach (var text in a)
+                    source.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition
                     {
-                        source.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition
-                        {
-                            Width = CreateGridLength(text),
-                        });
-                    }
+                        Width = CreateGridLength(text),
+                    });
                 }
             }
         }
@@ -56,17 +58,17 @@ namespace NatCruise.Wpf.Controls
         {
             if (d is System.Windows.Controls.Grid source)
             {
-                if (source.RowDefinitions?.Count == 0)
+                if (e.OldValue != null && e.OldValue.Equals(e.NewValue)) { return; }
+                if (source.RowDefinitions?.Count > 0) { source.RowDefinitions.Clear(); }
+
+                var value = (string)e.NewValue;
+                var a = value.Split(new[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var (item, i) in a.Select((x, i) => (x, i)))
                 {
-                    var value = (string)e.NewValue;
-                    var a = value.Split(',');
-                    foreach (var item in a)
+                    source.RowDefinitions.Add(new System.Windows.Controls.RowDefinition
                     {
-                        source.RowDefinitions.Add(new System.Windows.Controls.RowDefinition
-                        {
-                            Height = CreateGridLength(item),
-                        });
-                    }
+                        Height = CreateGridLength(item),
+                    });
                 }
             }
         }
