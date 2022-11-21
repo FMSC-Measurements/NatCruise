@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NatCruise.Services
 {
     public interface IFileDialogService
     {
         Task<string> SelectCruiseFileAsync();
+
+        Task<IEnumerable<string>> SelectCruiseFilesAsync();
 
         Task<string> SelectCruiseDatabaseAsync();
 

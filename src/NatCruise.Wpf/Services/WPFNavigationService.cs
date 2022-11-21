@@ -142,7 +142,7 @@ namespace NatCruise.Wpf.Services
 
         public Task ShowCombineFile()
         {
-            RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(CombineFileView));
+            RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CombineFileView));
             return Task.CompletedTask;
         }
     }
