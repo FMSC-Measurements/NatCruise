@@ -1,4 +1,5 @@
-﻿using CruiseDAL;
+﻿using ControlzEx.Standard;
+using CruiseDAL;
 using CruiseDAL.V3.Models;
 using CruiseDAL.V3.Sync;
 using CruiseDAL.V3.Sync.Syncers;
@@ -23,10 +24,10 @@ namespace NatCruise.Wpf.ViewModels
     {
         private const string TIMESTAMP_FORMAT = "yyyyMMddhhmm";
 
-        private SyncFileInfo _currentSyncFile;
+        private CrewFileInfo _currentSyncFile;
         private FileInfo _destinationFile;
         private NatCruise.Models.Cruise _cruise;
-        private ObservableCollection<SyncFileInfo> _crewFiles;
+        private ObservableCollection<CrewFileInfo> _crewFiles;
         private string _outputFileName;
         private ICommand _selectFilesCommand;
         private ICommand _startCombineFilesCommand;
@@ -36,7 +37,7 @@ namespace NatCruise.Wpf.ViewModels
 
         public CombineFileViewModel(IFileDialogService fileDialogService, INatCruiseDialogService dialogService, ILoggingService loggingService)
         {
-            CrewFiles = new ObservableCollection<SyncFileInfo>();
+            CrewFiles = new ObservableCollection<CrewFileInfo>();
 
             Syncer = new CruiseDatabaseSyncer();
             ConflictChecker = new ConflictChecker();
@@ -70,13 +71,13 @@ namespace NatCruise.Wpf.ViewModels
 
         public ObservableCollection<NatCruise.Models.Cruise> CruiseOptions { get; set; } = new ObservableCollection<NatCruise.Models.Cruise>();
 
-        public ObservableCollection<SyncFileInfo> CrewFiles
+        public ObservableCollection<CrewFileInfo> CrewFiles
         {
             get => _crewFiles;
             protected set => SetProperty(ref _crewFiles, value);
         }
 
-        public Queue<SyncFileInfo> SyncQue { get; protected set; }
+        public Queue<CrewFileInfo> SyncQue { get; protected set; }
 
         public string OutputFileName
         {
@@ -84,7 +85,7 @@ namespace NatCruise.Wpf.ViewModels
             set => SetProperty(ref _outputFileName, value);
         }
 
-        public SyncFileInfo CurrentSyncFile
+        public CrewFileInfo CurrentSyncFile
         {
             get => _currentSyncFile;
             protected set => SetProperty(ref _currentSyncFile, value);
@@ -148,7 +149,7 @@ namespace NatCruise.Wpf.ViewModels
                         }
                     }
 
-                    CrewFiles.Add(new SyncFileInfo(path));
+                    CrewFiles.Add(new CrewFileInfo(path));
                 }
             }
 
@@ -173,7 +174,7 @@ namespace NatCruise.Wpf.ViewModels
             if (!System.IO.File.Exists(path)) throw new System.IO.FileNotFoundException();
 
             var timestamp = DateTime.Now.ToString(TIMESTAMP_FORMAT);
-            var mergeFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.PurposeShortCode.Replace(' ', '_')}_{timestamp}_MergeFile.crz3";
+            var mergeFileName = $"{cruise.SaleNumber}_{cruise.SaleName}_{cruise.PurposeShortCode?.Replace(' ', '_')}_{timestamp}_MergeFile.crz3";
 
             var dir = Path.GetDirectoryName(path);
 
@@ -206,7 +207,7 @@ namespace NatCruise.Wpf.ViewModels
 
         public Task StartSync()
         {
-            var syncQue = SyncQue = new Queue<SyncFileInfo>(CrewFiles);
+            var syncQue = SyncQue = new Queue<CrewFileInfo>(CrewFiles);
             
 
             foreach (var file in syncQue)
@@ -218,6 +219,7 @@ namespace NatCruise.Wpf.ViewModels
             var firstFile = syncQue.Dequeue();
             firstFile.OriginalFile.CopyTo(OutputFileName, true);
             firstFile.IsSynced = true;
+            firstFile.Status = CrewFileInfo.FileStatus.Combined;
 
             IsSyncRunning = true;
             return RunSync();
@@ -280,6 +282,7 @@ namespace NatCruise.Wpf.ViewModels
                 {
                     var syncResult = await SyncFile(nextFile);
                     nextFile.SyncResult = syncResult;
+                    nextFile.Status = CrewFileInfo.FileStatus.Combined;
                     nextFile.IsSynced = true;
                     CurrentSyncFile = null;
                     nextFile.DeleteSyncTempIfExists();
@@ -300,7 +303,7 @@ namespace NatCruise.Wpf.ViewModels
         protected void OnSyncDone()
         {
             IsSyncRunning = false;
-            DialogService.ShowNotification("Done Syncing");
+            DialogService.ShowNotification("Done Combining Files");
 
             Cruise = null;
             CurrentSyncFile = null;
@@ -308,12 +311,9 @@ namespace NatCruise.Wpf.ViewModels
             OutputFileName = null;
         }
 
-        protected async Task<SyncResult> SyncFile(SyncFileInfo file)
+        protected async Task<SyncResult> SyncFile(CrewFileInfo file)
         {
             var destDb = new CruiseDatastore_V3(OutputFileName);
-
-            var cruiseID = CruiseID;
-            var syncOptions = Options;
 
             file.EnsureSyncTemp();
             var sourceDb = new CruiseDatastore(file.SyncTempFile.FullName, false, builder: null, updater: new Updater_V3());
@@ -324,7 +324,7 @@ namespace NatCruise.Wpf.ViewModels
             var destTransaction = destConn.BeginTransaction();
             try
             {
-                var syncResult = await Syncer.SyncAsync(cruiseID, srcCon, destConn, Options, progress: file.Progress);
+                var syncResult = await Syncer.SyncAsync(CruiseID, srcCon, destConn, Options, progress: file.Progress);
                 destTransaction.Commit();
                 return syncResult;
             }
@@ -340,7 +340,7 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        protected void CheckFile(SyncFileInfo file)
+        protected void CheckFile(CrewFileInfo file)
         {
             var destDb = new CruiseDatastore_V3(OutputFileName);
 
@@ -386,7 +386,7 @@ namespace NatCruise.Wpf.ViewModels
 
                 if (SampleGroupSyncer.CheckHasDesignMismatchErrors(cruiseID, sourceConn, destConn, out var sgErrror))
                 {
-                    errorsList.AddRange(stratumErrors);
+                    errorsList.AddRange(sgErrror);
                 }
 
                 file.DesignErrors = designErrors;
@@ -398,9 +398,11 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        public class SyncFileInfo : INPC_Base
+        public class CrewFileInfo : INPC_Base
         {
-            public SyncFileInfo(string originalPath)
+            public enum FileStatus { NotCombined, Combined }
+
+            public CrewFileInfo(string originalPath)
             {
                 var originalFile = OriginalFile = new FileInfo(originalPath);
                 var tempSourcePath = originalFile.FullName + ".syncTemp~";
@@ -414,6 +416,7 @@ namespace NatCruise.Wpf.ViewModels
             private bool _isSynced;
             private ConflictResolutionOptions _conflicts;
             private IEnumerable<string> _designErrors;
+            private FileStatus _status;
 
             public FileInfo OriginalFile { get; set; }
 
@@ -445,12 +448,10 @@ namespace NatCruise.Wpf.ViewModels
                 set => SetProperty(ref _isChecked, value);
             }
 
-            public bool CanSync
+            public FileStatus Status
             {
-                get
-                {
-                    return IsChecked && Conflicts.AllHasResolutions();
-                }
+                get => _status;
+                set => SetProperty(ref _status, value);
             }
 
             public Progress<float> Progress
