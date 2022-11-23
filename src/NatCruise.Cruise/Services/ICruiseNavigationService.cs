@@ -7,11 +7,8 @@ namespace FScruiser.XF.Services
     {
         Task ShowBlank();
 
-        Task ShowCruiseLandingLayout();
-
         Task ShowCuttingUnitInfo(string unitCode);
 
-        Task ShowCuttingUnitList();
 
         //Task ShowCruiseSelect(string saleID);
 
@@ -20,8 +17,6 @@ namespace FScruiser.XF.Services
         Task ShowFixCNT(string unitCode, int plotNumber, string stratumCode);
 
         Task ShowImport();
-
-        Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber);
 
         Task ShowLogEdit(string logID);
 
@@ -49,7 +44,7 @@ namespace FScruiser.XF.Services
 
         Task ShowTally(string unitCode);
 
-        Task ShowThreePPNTPlot(string unitCode, string stratumCode, int plotNumber);
+
 
         Task ShowTreeCountEdit(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead);
 

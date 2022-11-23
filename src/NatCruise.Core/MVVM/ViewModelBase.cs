@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace NatCruise
-{
+namespace NatCruise.MVVM
+{ 
 
     //TODO consolidate behavior between IActiveAware and Initialize
     // ActiveAware was used because IInitialize didn't support WPF and was needed to create a common

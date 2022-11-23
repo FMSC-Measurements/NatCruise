@@ -2,6 +2,7 @@
 using NatCruise;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
@@ -141,7 +142,7 @@ namespace FScruiser.XF.ViewModels
             }
             else
             {
-                DialogService.ShowNotification("Plot Number Already Takend");
+                DialogService.ShowNotification("Plot Number Already Taken");
             }
 
             // refresh displayed value
@@ -253,7 +254,6 @@ namespace FScruiser.XF.ViewModels
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
-            Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
                 Load(plotID);
@@ -308,10 +308,10 @@ namespace FScruiser.XF.ViewModels
 
         private void StratumPlot_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (sender is Plot_Stratum stratumPlot && stratumPlot != null)
+            if (sender is Plot_Stratum stratumPlot)
             {
                 var propertyName = e.PropertyName;
-                if (e.PropertyName == nameof(Plot_Stratum.InCruise)) { return; }
+                if (propertyName == nameof(Plot_Stratum.InCruise)) { return; }
 
                 if (stratumPlot.InCruise)
                 {

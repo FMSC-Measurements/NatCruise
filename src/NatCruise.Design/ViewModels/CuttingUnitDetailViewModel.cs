@@ -6,6 +6,7 @@ using NatCruise.Services;
 using NatCruise.Design.Validation;
 using System.Collections.Generic;
 using NatCruise.Models;
+using NatCruise.MVVM;
 
 namespace NatCruise.Design.ViewModels
 {

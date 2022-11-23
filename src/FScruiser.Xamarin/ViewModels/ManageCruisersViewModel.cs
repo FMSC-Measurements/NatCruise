@@ -7,6 +7,7 @@ using Xamarin.Forms;
 using NatCruise.Data;
 using System;
 using NatCruise;
+using NatCruise.MVVM;
 
 namespace FScruiser.XF.ViewModels
 {
