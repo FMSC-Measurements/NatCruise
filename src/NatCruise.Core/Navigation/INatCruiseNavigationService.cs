@@ -6,6 +6,21 @@ namespace NatCruise.Navigation
     {
         Task ShowFieldData(string cuttingUnit = null);
 
+        Task ShowCruiseLandingLayout();
+
+        #region design pages
+        Task ShowCuttingUnitList();
+
+        #endregion
+
+        #region Cruising
+
+        Task ShowThreePPNTPlot(string unitCode, string stratumCode, int plotNumber);
+
+        #endregion
+
+        Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber);
+
         Task ShowFeedback();
 
         Task ShowSettings();

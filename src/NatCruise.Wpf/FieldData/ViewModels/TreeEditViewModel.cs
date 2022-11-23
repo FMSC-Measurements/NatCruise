@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Reflection;
+using NatCruise.MVVM;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {

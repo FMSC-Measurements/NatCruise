@@ -3,6 +3,7 @@ using NatCruise;
 using NatCruise.Cruise.Data;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using Prism.Commands;
 using Prism.Common;

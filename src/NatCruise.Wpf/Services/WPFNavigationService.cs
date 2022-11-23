@@ -1,5 +1,6 @@
 ﻿using NatCruise.Design.Services;
 using NatCruise.Design.Views;
+using NatCruise.Navigation;
 using NatCruise.Wpf.FieldData.Views;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Views;
@@ -14,12 +15,14 @@ namespace NatCruise.Wpf.Services
     {
         public IRegionManager RegionManager { get; }
         public IRegionNavigationService CurrentRegion { get; }
-        public Prism.Services.Dialogs.IDialogService DialogService { get; }
+        public Prism.Services.Dialogs.IDialogService PrismDialogService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
-        public WPFNavigationService(IRegionManager regionManager, IRegionNavigationService currentRegion, Prism.Services.Dialogs.IDialogService dialogService)
+        public WPFNavigationService(IRegionManager regionManager, IRegionNavigationService currentRegion, Prism.Services.Dialogs.IDialogService prismDialogService, INatCruiseDialogService dialogService)
         {
             RegionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
             CurrentRegion = currentRegion ?? throw new ArgumentNullException(nameof(currentRegion));
+            PrismDialogService = prismDialogService ?? throw new ArgumentNullException(nameof(prismDialogService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
@@ -144,6 +147,11 @@ namespace NatCruise.Wpf.Services
         {
             RegionManager.RequestNavigate(Regions.ContentRegion, nameof(CombineFileView));
             return Task.CompletedTask;
+        }
+
+        public Task ShowThreePPNTPlot(string unitCode, string stratumCode, int plotNumber)
+        {
+            return DialogService.ShowNotificationAsync("ThreePPNT tally not supported");
         }
     }
 }

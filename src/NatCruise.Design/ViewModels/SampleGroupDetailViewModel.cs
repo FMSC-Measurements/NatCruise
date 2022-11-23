@@ -2,6 +2,7 @@
 using NatCruise.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;

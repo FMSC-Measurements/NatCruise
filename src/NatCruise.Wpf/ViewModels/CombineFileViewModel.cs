@@ -6,6 +6,7 @@ using CruiseDAL.V3.Sync.Syncers;
 using CruiseDAL.V3.Sync.Util;
 using FMSC.ORM.SQLite;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
@@ -127,7 +128,7 @@ namespace NatCruise.Wpf.ViewModels
             foreach (var path in paths)
             {
                 var cruiseRecords = GetCruises(path);
-                if (cruiseRecords.Count() == 0)
+                if (cruiseRecords.Any() is false)
                 {
                     DialogService.ShowNotification("Warning: " + path + " doesn't contain any cruises");
                 }

@@ -1,5 +1,6 @@
 ﻿using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
@@ -18,12 +19,12 @@ namespace NatCruise.Wpf.FieldData.ViewModels
     {
         private Plot _plot;
         private IEnumerable<Plot_Stratum> _stratumPlots;
-        //private DelegateCommand<Plot_Stratum> _showLimitingDistanceCommand;
-        //private DelegateCommand<Plot_Stratum> _toggleInCruiseCommand;
+        private DelegateCommand<Plot_Stratum> _showLimitingDistanceCommand;
+        private DelegateCommand<Plot_Stratum> _toggleInCruiseCommand;
         private IEnumerable<PlotError> _errorsAndWarnings;
         private ICommand _updatePlotNumberCommand;
 
-        //protected ICruiseNavigationService NavigationService { get; }
+        protected INatCruiseNavigationService NavigationService { get; }
 
         public IEnumerable<PlotError> ErrorsAndWarnings
         {
@@ -69,9 +70,9 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public ICommand UpdatePlotNumberCommand => _updatePlotNumberCommand ?? (_updatePlotNumberCommand = new DelegateCommand<string>(UpdatePlotNumber));
 
-        //public ICommand ShowLimitingDistanceCommand => _showLimitingDistanceCommand ?? (_showLimitingDistanceCommand = new DelegateCommand<Plot_Stratum>(async x => await ShowLimitingDistanceCalculatorAsync(x)));
+        public ICommand ShowLimitingDistanceCommand => _showLimitingDistanceCommand ?? (_showLimitingDistanceCommand = new DelegateCommand<Plot_Stratum>(async x => await ShowLimitingDistanceCalculatorAsync(x)));
 
-        //public ICommand ToggleInCruiseCommand => _toggleInCruiseCommand ?? (_toggleInCruiseCommand = new DelegateCommand<Plot_Stratum>(async (x) => await ToggleInCruiseAsync(x)));
+        public ICommand ToggleInCruiseCommand => _toggleInCruiseCommand ?? (_toggleInCruiseCommand = new DelegateCommand<Plot_Stratum>(async (x) => await ToggleInCruiseAsync(x)));
 
         #region PlotNumber
 
@@ -148,7 +149,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
             else
             {
-                DialogService.ShowNotification("Plot Number Already Takend");
+                DialogService.ShowNotification("Plot Number Already Taken");
             }
 
             // refresh displayed value
@@ -195,60 +196,61 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             IPlotStratumDataservice plotStratumDataservice,
             IPlotErrorDataservice plotErrorDataservice,
             INatCruiseDialogService dialogService,
+            INatCruiseNavigationService navigationService,
             ILoggingService loggingService)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             PlotStratumDataservice = plotStratumDataservice ?? throw new ArgumentNullException(nameof(plotStratumDataservice));
             PlotErrorDataservice = plotErrorDataservice ?? throw new ArgumentNullException(nameof(plotErrorDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            //NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
-        //public async Task ToggleInCruiseAsync(Plot_Stratum stratumPlot)
-        //{
-        //    var plot = Plot;
-        //    var plotNumber = plot.PlotNumber;
-        //    var stratumCode = stratumPlot.StratumCode;
+        public async Task ToggleInCruiseAsync(Plot_Stratum stratumPlot)
+        {
+            var plot = Plot;
+            var plotNumber = plot.PlotNumber;
+            var stratumCode = stratumPlot.StratumCode;
 
-        //    if (stratumPlot.InCruise)
-        //    {
-        //        var hasTreeData = PlotDataservice.GetNumTreeRecords(UnitCode, stratumCode, plotNumber) > 0;
+            if (stratumPlot.InCruise)
+            {
+                var hasTreeData = PlotDataservice.GetNumTreeRecords(UnitCode, stratumCode, plotNumber) > 0;
 
-        //        if (hasTreeData)
-        //        {
-        //            if (await DialogService.AskYesNoAsync("Removing stratum will delete all tree data", "Continue?"))
-        //            {
-        //                PlotStratumDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
-        //                stratumPlot.InCruise = false;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            PlotStratumDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
-        //            stratumPlot.InCruise = false;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (stratumPlot.CruiseMethod == CruiseDAL.Schema.CruiseMethods.THREEPPNT)
-        //        {
-        //            //var query = $"{NavParams.UNIT}={stratumPlot.CuttingUnitCode}&{NavParams.PLOT_NUMBER}={plotNumber}&{NavParams.STRATUM}={stratumCode}";
+                if (hasTreeData)
+                {
+                    if (await DialogService.AskYesNoAsync("Removing stratum will delete all tree data", "Continue?"))
+                    {
+                        PlotStratumDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
+                        stratumPlot.InCruise = false;
+                    }
+                }
+                else
+                {
+                    PlotStratumDataservice.DeletePlot_Stratum(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
+                    stratumPlot.InCruise = false;
+                }
+            }
+            else
+            {
+                if (stratumPlot.CruiseMethod == CruiseDAL.Schema.CruiseMethods.THREEPPNT)
+                {
+                    //var query = $"{NavParams.UNIT}={stratumPlot.CuttingUnitCode}&{NavParams.PLOT_NUMBER}={plotNumber}&{NavParams.STRATUM}={stratumCode}";
 
-        //            //await NavigationService.NavigateAsync("ThreePPNTPlot",
-        //            //    new NavigationParameters(query));
+                    //await NavigationService.NavigateAsync("ThreePPNTPlot",
+                    //    new NavigationParameters(query));
 
-        //            //await NavigationService.ShowThreePPNTPlot(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
-        //        }
-        //        else
-        //        {
-        //            PlotStratumDataservice.InsertPlot_Stratum(stratumPlot);
-        //            stratumPlot.InCruise = true;
-        //        }
-        //    }
+                    await NavigationService.ShowThreePPNTPlot(stratumPlot.CuttingUnitCode, stratumCode, plotNumber);
+                }
+                else
+                {
+                    PlotStratumDataservice.InsertPlot_Stratum(stratumPlot);
+                    stratumPlot.InCruise = true;
+                }
+            }
 
-        //    RefreshErrorsAndWarnings(plot);
-        //}
+            RefreshErrorsAndWarnings(plot);
+        }
 
         protected override void Load(IParameters parameters)
         {
@@ -258,7 +260,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
 
-            Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
                 Load(plotID);
@@ -320,10 +321,10 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         private void StratumPlot_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (sender is Plot_Stratum stratumPlot && stratumPlot != null)
+            if (sender is Plot_Stratum stratumPlot)
             {
                 var propertyName = e.PropertyName;
-                if (e.PropertyName == nameof(Plot_Stratum.InCruise)) { return; }
+                if (propertyName == nameof(Plot_Stratum.InCruise)) { return; }
 
                 if (stratumPlot.InCruise)
                 {
@@ -334,9 +335,9 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
-        //public Task ShowLimitingDistanceCalculatorAsync(Plot_Stratum stratumPlot)
-        //{
-        //    return NavigationService.ShowLimitingDistance(UnitCode, stratumPlot.StratumCode, stratumPlot.PlotNumber);
-        //}
+        public Task ShowLimitingDistanceCalculatorAsync(Plot_Stratum stratumPlot)
+        {
+            return NavigationService.ShowLimitingDistance(UnitCode, stratumPlot.StratumCode, stratumPlot.PlotNumber);
+        }
     }
 }

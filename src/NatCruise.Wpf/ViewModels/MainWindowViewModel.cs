@@ -2,6 +2,7 @@
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Services;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
