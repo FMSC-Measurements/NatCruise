@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>10</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Bogus" Version="24.3.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+		<PackageReference Include="Moq" Version="4.18.2" />
+		<PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
+		<PackageReference Include="SpecFlow.xUnit" Version="3.9.40" />
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+		<PackageReference Include="FluentAssertions" Version="6.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="TestFiles\*" />
+		<Content Include="TestFiles\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="BDDTests\Drivers\" />
+		<Folder Include="BDDTests\Features\" />
+		<Folder Include="BDDTests\StepDefinitions\" />
+		<Folder Include="BDDTests\Support\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\NatCruise.Wpf\NatCruise.Wpf.csproj" />
+	</ItemGroup>
+
+	<Import Project="..\NatCruise.Test.Common\NatCruise.Test.Common.projitems" Label="Shared" />
+
+</Project>

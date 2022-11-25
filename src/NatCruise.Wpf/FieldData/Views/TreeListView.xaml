@@ -23,14 +23,29 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <DataGrid Grid.Row="0"
-                  ItemsSource="{Binding Trees}"
-                  SelectedItem="{Binding SelectedTree}"
-                  SelectionChanged="TreeListSelectionChanged"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  controls:DataGridHelper.ColumnsBinding="{Binding Fields, Converter={StaticResource TreeFieldsToColumnsConverter}}">
-        </DataGrid>
+
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <DataGrid Grid.Row="0"
+                      x:Name="_datagrid"
+                      ItemsSource="{Binding Trees}"
+                      SelectedItem="{Binding SelectedTree}"
+                      SelectionChanged="TreeListSelectionChanged"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      controls:DataGridHelper.ColumnsBinding="{Binding Fields, Converter={StaticResource TreeFieldsToColumnsConverter}}">
+            </DataGrid>
+
+            <TextBlock Grid.Row="1">
+                <Run Text="{Binding Items.Count, Source={x:Reference _datagrid}, Mode=OneWay, FallbackValue=0}" />
+                <Run Text="Records" />
+            </TextBlock>
+        </Grid>
 
         <Expander Grid.Column="1"
                   ExpandDirection="Left"
@@ -38,7 +53,6 @@
                   d:IsExpanded="True"
                   x:Name="_treeEditExpander">
             <Grid>
-                
                 <local:TreeEditView DataContext="{Binding TreeEditViewModel}" />
                 <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                       Visibility="{Binding SelectedTree, Converter={StaticResource IsNotVisableConverter}}">

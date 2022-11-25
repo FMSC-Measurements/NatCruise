@@ -18,8 +18,11 @@ namespace NatCruise.Design.Test.Data
         {
         }
 
+        /// <summary>
+        /// Test properly set up TDV doesn't return any errors
+        /// </summary>
         [Fact]
-        public void GetSubPopTDVChecks_Test()
+        public void GetSubPopTDVChecks_Test_WithTDVSetup()
         {
             var init = new DatastoreInitializer();
 
@@ -35,7 +38,13 @@ namespace NatCruise.Design.Test.Data
 
             var sampleGroups = init.SampleGroups = new[]
             {
-                new SampleGroup {SampleGroupCode = "sg1", StratumCode = strata[0].StratumCode, SamplingFrequency = 101, TallyBySubPop = true},
+                new SampleGroup {
+                    SampleGroupCode = "sg1",
+                    StratumCode = strata[0].StratumCode,
+                    SamplingFrequency = 101,
+                    TallyBySubPop = true,
+                    PrimaryProduct = "01"
+                },
             };
 
             var species = init.Species;
@@ -63,6 +72,9 @@ namespace NatCruise.Design.Test.Data
             result.Should().BeEmpty();
         }
 
+        /// <summary>
+        /// Test TDV check with a catch all TDV (a TDV with Sp, LD, and Prod set to null/any)
+        /// </summary>
         [Fact]
         public void GetSubPopTDVChecks_Test_WithCatchAll()
         {
@@ -80,7 +92,13 @@ namespace NatCruise.Design.Test.Data
 
             var sampleGroups = init.SampleGroups = new[]
             {
-                new SampleGroup {SampleGroupCode = "sg1", StratumCode = strata[0].StratumCode, SamplingFrequency = 101, PrimaryProduct = "01", TallyBySubPop = true},
+                new SampleGroup {
+                    SampleGroupCode = "sg1",
+                    StratumCode = strata[0].StratumCode,
+                    SamplingFrequency = 101,
+                    PrimaryProduct = "01",
+                    TallyBySubPop = true
+                },
             };
 
             var species = init.Species;
@@ -135,7 +153,13 @@ namespace NatCruise.Design.Test.Data
 
             var sampleGroups = init.SampleGroups = new[]
             {
-                new SampleGroup {SampleGroupCode = "sg1", StratumCode = strata[0].StratumCode, SamplingFrequency = 101, TallyBySubPop = true},
+                new SampleGroup {
+                    SampleGroupCode = "sg1",
+                    StratumCode = strata[0].StratumCode,
+                    SamplingFrequency = 101,
+                    TallyBySubPop = true,
+                    PrimaryProduct = "01",
+                },
             };
 
             var species = init.Species;
@@ -147,6 +171,7 @@ namespace NatCruise.Design.Test.Data
 
             var subPops = init.Subpops = new[]
             {
+                    // has TDV 
                     new SubPopulation
                     {
                         StratumCode = sampleGroups[0].StratumCode,
@@ -154,6 +179,7 @@ namespace NatCruise.Design.Test.Data
                         SpeciesCode = species[0],
                         LiveDead = "L",
                     },
+                    // doesn't have TDV
                     new SubPopulation
                     {
                         StratumCode = sampleGroups[0].StratumCode,

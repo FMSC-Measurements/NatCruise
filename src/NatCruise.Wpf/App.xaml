@@ -15,6 +15,8 @@
             <sys:String x:Key="const_regex_int_posNeg_input">^\s*[-]?[0-9]+\s*$</sys:String>
 
             <!-- converters -->
+            <converters:NotConverter x:Key="NotConverter" />
+
             <converters:IsNullConverter x:Key="NotNullConverter"
                                         Invert="True" />
             <converters:IsNullOrWhiteSpaceConverter x:Key="NotNullOrWhiteSpaceConverter"
