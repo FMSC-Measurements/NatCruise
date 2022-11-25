@@ -1,0 +1,59 @@
+process for combining files
+
+ - user selects primary file. this will be the destination file. maybe we should just call it the destination file.
+	this will also determin what the cruise id is 
+ - user select the additional files. it might be prefered to just allow the user to select all the files at once rather that making the user decide what file to use as the primary file.
+	may be just have one Select Files button that the user can use as many times as they want. the first selected file is used as the primary. the user can force the primary if they want by selecting it first.
+
+
+
+Properties
+
+ # util
+Syncer
+DeleteSyncer
+ConflictChecker
+ConflictResolver
+CruiseSyncOptions
+
+FileDialogService
+DialogService
+
+Progress
+ProgressValue
+
+# Destination Dependant
+CruiseID
+WorkingDirectory?
+
+
+Files
+
+
+
+Methods
+
+SelectFile(s)(IEnum<string> filePaths)
+	After files added run RefreshStatus
+
+
+RefreshStatus(allFiles) - refreshes the conflict status of all files
+	if only dest file exists but no crew files, skip
+	rerun deletion sync and rerun conflict check on all files.
+	... we will need to sync deletes for each file, with the dest
+	... when syncing deletes we will first sync the deletes from the crew files to the dest
+		then sync the deletes from the dest to each of the crew files. This 
+		will allow deletings to be propigate across all the files
+	... after deletes are synced then we can run the conflict check
+	... this whole operation will be the same as RefreshStatus.
+
+	Might be able to reduce rudundancy in this by having PullDeletesFromCrew(file) ,PushDeletesToCrewFiles(allfiles), and RefrechConflicts(allFiles). There is also a step where we need to run sync from the dest to the source, pre-conflict check. this allows already resolved conflicts in the dest to be updated in the source before conflict check
+
+SyncFile(file)
+	Syncs a file. 
+	... After file is synced. Rerun RefreshStatus on all other files. or just re run PushDeletesToCrew and RefreshConflicts
+
+
+Notes
+Need to indicate error states on each file... unable to sync deletes, unable to check conflicts, unable to sync
+If a sync operation files how to recover. 
