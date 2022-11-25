@@ -2,6 +2,7 @@
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Util;
 using Prism.Common;

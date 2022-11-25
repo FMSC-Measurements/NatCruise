@@ -64,7 +64,7 @@ namespace NatCruise.Design.Test.Data
             db.ExecuteScalar<int>("SELECT count(*) FROM Species WHERE SpeciesCode = @p1", speciesCode)
                 .Should().Be(1);
 
-            sp.ContractSpecies = Rand.String();
+            sp.ContractSpecies = Rand.Word();
             sp.FIACode = Rand.Word();
 
             ds.UpsertSpecies(sp);

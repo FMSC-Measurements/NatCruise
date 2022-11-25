@@ -14,7 +14,7 @@ namespace NatCruise.Test
     {
         protected ITestOutputHelper Output { get; }
         protected DbProviderFactory DbProvider { get; private set; }
-        protected Randomizer Rand { get; } = new Randomizer(123456);
+        protected Randomizer Rand { get; }
         protected Stopwatch _stopwatch;
         private string _testTempPath;
 
@@ -24,6 +24,8 @@ namespace NatCruise.Test
         {
             Output = output;
             Output.WriteLine($"CodeBase: {System.Reflection.Assembly.GetExecutingAssembly().CodeBase}");
+            Rand = new Randomizer(this.GetType().Name.GetHashCode()); // make the randomizer fixed based on the test class
+            // this helps make test more repeatable, we are using Rand more for generating dummy data rather than fuzzing. 
             var testTempPath = TestTempPath;
             if (!Directory.Exists(testTempPath))
             {
@@ -57,6 +59,13 @@ namespace NatCruise.Test
 
         public string TestTempPath => _testTempPath ??= Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName);
 
+        protected string GetTestTempPath()
+        {
+            var testType = this.GetType();
+            var assName = testType.Assembly.FullName;
+            return Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName);
+        }
+
         public string TestFilesDirectory => Path.Combine(TestExecutionDirectory, "TestFiles");
 
         public void StartTimer()
@@ -85,7 +94,10 @@ namespace NatCruise.Test
 
         public string GetTempFilePath(string extention, string fileName = null)
         {
-            return Path.Combine(TestTempPath, (fileName ?? Guid.NewGuid().ToString()) + extention);
+            // note since Rand is using a fixed see the guid generated will 
+            var tempFilePath = Path.Combine(TestTempPath, (fileName ?? Rand.Guid().ToString()) + extention);
+            Output.WriteLine($"Temp File Path Generated: {tempFilePath}");
+            return tempFilePath;
         }
 
         public string GetTestFile(string fileName) => InitializeTestFile(fileName);

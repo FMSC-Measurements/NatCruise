@@ -3,9 +3,12 @@ using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
+using NatCruise.Services;
 using Prism.Common;
 using Prism.Navigation;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,11 +26,11 @@ namespace FScruiser.XF.ViewModels
             get => _log;
             set
             {
-                if(_log != null)
+                if (_log != null)
                 { _log.PropertyChanged -= Log_PropertyChanged; }
                 OnLogChanged(value);
                 SetProperty(ref _log, value);
-                if(value != null)
+                if (value != null)
                 { value.PropertyChanged += Log_PropertyChanged; }
             }
         }
@@ -57,12 +60,20 @@ namespace FScruiser.XF.ViewModels
         public ILogDataservice LogDataservice { get; }
         public ILogErrorDataservice LogErrorDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
+        public ILoggingService LoggingService { get; }
+        public INatCruiseDialogService DialogService { get; }
 
-        public LogEditViewModel(ILogDataservice logDataservice, ILogErrorDataservice logErrorDataservice, IFieldSetupDataservice fieldSetupDataservice)
+        public LogEditViewModel(ILogDataservice logDataservice,
+            ILogErrorDataservice logErrorDataservice,
+            IFieldSetupDataservice fieldSetupDataservice,
+            ILoggingService loggingService,
+            INatCruiseDialogService dialogService)
         {
             LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
             LogErrorDataservice = logErrorDataservice ?? throw new ArgumentNullException(nameof(logErrorDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         protected override void Load(IParameters parameters)
@@ -87,9 +98,22 @@ namespace FScruiser.XF.ViewModels
         public void SaveLog()
         {
             var log = Log;
+            SaveLog(log);
+        }
+
+        public void SaveLog(Log log)
+        {
             if (log != null)
             {
-                LogDataservice.UpdateLog(log);
+                try
+                {
+                    LogDataservice.UpdateLog(log);
+                }
+                catch(FMSC.ORM.ConstraintException ex)
+                {
+                    LoggingService.LogException(nameof(LogEditViewModel), "SaveLog", ex);
+                    DialogService.ShowMessageAsync("Save Log Error - Invalid Field Value");
+                }
             }
         }
     }

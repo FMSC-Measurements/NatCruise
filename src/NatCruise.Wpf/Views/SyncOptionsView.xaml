@@ -1,0 +1,246 @@
+﻿<UserControl x:Class="NatCruise.Wpf.Views.SyncOptionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sync="clr-namespace:CruiseDAL.V3.Sync;assembly=CruiseDAL.V3.Sync"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Background="{DynamicResource MahApps.Brushes.Control.Background}">
+    <UserControl.Resources>
+        <ObjectDataProvider MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}"
+                            x:Key="SyncOptionsDataProvider">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="sync:SyncOption" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <WrapPanel>
+            <WrapPanel.Resources>
+                <Style TargetType="ctrls:LastChildWidthPanel">
+                    <Setter Property="LastChildWidth"
+                            Value="100" />
+                    <Setter Property="Width"
+                            Value="300" />
+                    <Setter Property="Margin"
+                            Value="0,1" />
+                </Style>
+
+                <Style TargetType="GroupBox"
+                       BasedOn="{StaticResource MahApps.Styles.GroupBox}">
+                    <Setter Property="Margin"
+                            Value="1" />
+                </Style>
+
+            </WrapPanel.Resources>
+
+            <GroupBox Header="Design">
+                <StackPanel>
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Sale" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Sale}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Cruise" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Cruise}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Cutting Unit" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding CuttingUnit}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Cutting Unit - Stratum" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding CuttingUnitStratum}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Stratum" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Stratum}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="FixCNTTallyPopulation" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding FixCNTTallyPopulation}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Sample Group" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding SampleGroup}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Subpopulation" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Subpopulation}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Species" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Species}" />
+                    </ctrls:LastChildWidthPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Field Data">
+                <StackPanel>
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Plot" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Plot}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Plot Location" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding PlotLocation}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Plot - Stratum" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding PlotStratum}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Tree}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Measurement" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding TreeMeasurment}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Location" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding TreeLocation}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Field Value" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding TreeFieldValue}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Log" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Log}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Stem" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Stem}" />
+                    </ctrls:LastChildWidthPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Field Setup">
+                <StackPanel>
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Log Field Setup" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding LogFieldSetup}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Log Field Heading" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding LogFieldHeading}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Field Setup" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding TreeFieldSetup}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Field Heading" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding TreeFieldHeading}" />
+                    </ctrls:LastChildWidthPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Audit Rules">
+                <StackPanel>
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Audit Rule" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding TreeAuditRule}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Audit Rule Selector" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding TreeAuditRuleSelector}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Audit Resolution" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding TreeAuditResolution}" />
+                    </ctrls:LastChildWidthPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="">
+                <StackPanel>
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Default Value" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding TreeDefaultValue}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Processing" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding Processing}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Cruise Log" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SyncOptionsDataProvider}}"
+                                  SelectedValue="{Binding CruiseLog}" />
+                    </ctrls:LastChildWidthPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Other Options">
+                <StackPanel>
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Allow Stratum Design Changes" />
+                        <CheckBox IsChecked="{Binding AllowStratumDesignChanges}" />
+                    </ctrls:LastChildWidthPanel>
+
+                    <ctrls:LastChildWidthPanel>
+                        <TextBlock Text="Allow Sample Group Changes" />
+                        <CheckBox IsChecked="{Binding AllowSampleGroupSamplingChanges}" />
+                    </ctrls:LastChildWidthPanel>
+                </StackPanel>
+            </GroupBox>
+        </WrapPanel>
+    </ScrollViewer>
+</UserControl>

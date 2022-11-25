@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using NatCruise.MVVM;
 using NatCruise.Util;
 using System;
 using System.Collections;
@@ -9,7 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace NatCruise
+namespace NatCruise.MVVM
 {
     public class ValidationViewModelBase : ViewModelBase, INotifyDataErrorInfo
     {

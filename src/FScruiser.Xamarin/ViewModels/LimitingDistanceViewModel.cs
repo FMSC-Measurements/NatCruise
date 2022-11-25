@@ -2,12 +2,15 @@
 using NatCruise.Cruise.Logic;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Util;
 using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -178,7 +181,7 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand SaveReportToPlotCommand => new Command(SaveReport);
 
-        public ICommand CopyReportToClipboardCommand => new Command(CopyReportToClipBoard);
+        public ICommand CopyReportToClipboardCommand => new Command(x => CopyReportToClipBoard().FireAndForget());
 
         public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService, IApplicationSettingService appSettings)
         {
@@ -290,7 +293,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public async void CopyReportToClipBoard()
+        public async Task CopyReportToClipBoard()
         {
             var report = GenerateReport();
             if (!string.IsNullOrEmpty(report))

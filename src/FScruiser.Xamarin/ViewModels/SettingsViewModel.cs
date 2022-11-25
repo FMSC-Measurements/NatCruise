@@ -10,6 +10,7 @@ using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using NatCruise;
 using NatCruise.Data;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;

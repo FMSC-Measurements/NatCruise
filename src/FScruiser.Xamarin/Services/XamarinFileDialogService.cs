@@ -51,5 +51,10 @@ namespace FScruiser.XF.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<IEnumerable<string>> SelectCruiseFilesAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
