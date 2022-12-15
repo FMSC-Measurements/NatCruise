@@ -38,7 +38,7 @@
 
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="_logNumberHeading"
-                           Text="Log #"
+                           Text="Log Number"
                            Width="100"
                            VerticalAlignment="Center" />
                 <TextBox Text="{Binding Log.LogNumber, UpdateSourceTrigger=PropertyChanged, Delay=500}"
@@ -48,6 +48,34 @@
                          AutomationProperties.LabeledBy="{x:Reference _logNumberHeading}" />
             </StackPanel>
 
+            <WrapPanel Margin="0,10">
+                <WrapPanel.Resources>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Margin"
+                                Value="0,0,7,0" />
+                    </Style>
+                </WrapPanel.Resources>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Cutting Unit:" />
+                    <TextBlock Text="{Binding Log.CuttingUnitCode}"
+                               d:Text="123" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" mah_ctrl:VisibilityHelper.IsVisible="{Binding Log.PlotNumber, Converter={StaticResource NotNullConverter}}">
+                    <TextBlock Text="Plot Number:" />
+                    <TextBlock Text="{Binding Log.PlotNumber}"
+                               d:Text="123" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Tree Number:" />
+                    <TextBlock Text="{Binding Log.TreeNumber}"
+                               d:Text="1234" />
+                </StackPanel>
+            </WrapPanel>
+
+
+
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -56,7 +84,7 @@
                 <ItemsControl x:Name="_editViewsHost"
                               ItemsSource="{Binding LogFields}"
                               Grid.Row="0"
-                              Grid.RowSpan="1">
+                              Grid.RowSpan="1" >
                     <ItemsControl.Resources>
                         <ResourceDictionary>
                             <Style TargetType="TextBlock"

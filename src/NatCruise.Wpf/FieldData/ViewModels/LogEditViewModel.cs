@@ -3,13 +3,9 @@ using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
-using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
@@ -57,11 +53,11 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public IEnumerable<LogError> Errors { get => _errors; set => SetProperty(ref _errors, value); }
         public ILogDataservice LogDataservice { get; }
+        public ITreeDataservice TreeDataservice { get; }
         public ILogErrorDataservice LogErrorDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
         public ILoggingService LoggingService { get; }
         public INatCruiseDialogService DialogService { get; }
-
 
         public IEnumerable<string> GradeOptions
         {
@@ -70,12 +66,14 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         }
 
         public LogEditViewModel(ILogDataservice logDataservice,
+            ITreeDataservice treeDataservice,
             ILogErrorDataservice logErrorDataservice,
             IFieldSetupDataservice fieldSetupDataservice,
             ILoggingService loggingService,
             INatCruiseDialogService dialogService)
         {
             LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
+            TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             LogErrorDataservice = logErrorDataservice ?? throw new ArgumentNullException(nameof(logErrorDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
@@ -124,4 +122,3 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         }
     }
 }
-
