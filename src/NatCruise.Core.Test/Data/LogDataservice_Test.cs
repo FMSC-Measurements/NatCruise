@@ -90,9 +90,16 @@ namespace NatCruise.Test.Data
                 var logAgain = datastore.GetLog(log.LogID);
 
                 var eqivConfig = new EquivalencyAssertionOptions<Log>();
-                eqivConfig.Excluding(x => x.CreatedBy);
+                eqivConfig.Excluding(x => x.CreatedBy)
+                    .Excluding(x => x.CuttingUnitCode)
+                    .Excluding(x => x.PlotNumber)
+                    .Excluding(x => x.TreeNumber);
 
-                logAgain.Should().BeEquivalentTo(log, config: x => x.Excluding(l => l.CreatedBy));
+                logAgain.Should().BeEquivalentTo(log, config:
+                    x => x.Excluding(l => l.CreatedBy)
+                    .Excluding(x => x.CuttingUnitCode)
+                    .Excluding(x => x.PlotNumber)
+                    .Excluding(x => x.TreeNumber));
             }
         }
 

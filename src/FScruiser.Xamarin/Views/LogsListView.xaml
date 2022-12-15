@@ -3,10 +3,36 @@
                                     xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FScruiser.XF.Views.LogsListView"
-             Title="{Binding TreeNumber, StringFormat='{}Logs: Tree Number {0}'}"
+             Title="{Binding Tree.TreeNumber, StringFormat='{}Logs: Tree Number {0}'}"
              AutomationProperties.Name="{Binding TreeNumber, StringFormat='{}Tree Number {0} Log List Page'}">
     <controls:InitializableContentPage.Content>
         <StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <StackLayout.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Label">
+                            <Setter Property="FontSize"
+                                    Value="Large" />
+                        </Style>
+                    </ResourceDictionary>
+                </StackLayout.Resources>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Unit:" />
+                    <Label Text="{Binding Tree.CuttingUnitCode}" />
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal" IsVisible="{Binding Tree.PlotNumber, Converter={StaticResource greaterThanZeroConverter} }">
+                    <Label Text="Plot Number:" />
+                    <Label Text="{Binding Tree.PlotNumber}" />
+                </StackLayout>
+
+                <!--<StackLayout Orientation="Horizontal">
+                    <Label Text="Tree Number:" />
+                    <Label Text="{Binding Tree.TreeNumber}" />
+                </StackLayout>-->
+                
+            </StackLayout>
+            
             <CollectionView x:Name="_logListView"
                       ItemsSource="{Binding Logs}"
                       ItemSizingStrategy="MeasureFirstItem"
