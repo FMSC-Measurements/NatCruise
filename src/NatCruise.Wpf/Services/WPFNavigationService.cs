@@ -153,5 +153,10 @@ namespace NatCruise.Wpf.Services
         {
             return DialogService.ShowNotificationAsync("ThreePPNT tally not supported");
         }
+
+        public Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
