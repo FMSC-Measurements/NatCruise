@@ -152,27 +152,21 @@
                                         </Style>
                                     </StackPanel.Resources>
                                     <!-- stratum code and add/remove button-->
-                                    <TextBlock Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
-                                               FontWeight="Bold"
-                                               FontSize="20"
-                                               Foreground="{DynamicResource MahApps.Brushes.Text}"
-                                               HorizontalAlignment="Stretch" />
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Left"
+                                                   Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
+                                                   FontWeight="Bold"
+                                                   FontSize="20"
+                                                   Foreground="{DynamicResource MahApps.Brushes.Text}" />
 
-                                    <!--<controls:LastChildWidthPanel>
-                                    <Label Content="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
-                                           FontWeight="Bold"
-                                           FontSize="20"
-                                           Foreground="{DynamicResource MahApps.Brushes.Text}"
-                                           Margin="10,0,30,0"
-                                           VerticalContentAlignment="Center"
-                                           HorizontalAlignment="Stretch" />
-
-                                    <Button Content=" Add/Remove "
-                                            Command="{Binding BindingContext.ToggleInCruiseCommand, Source={x:Reference _page }}"
-                                            CommandParameter="{Binding .}"
-                                            HorizontalAlignment="Right"
-                                            AutomationProperties.Name="Add Remove Stratum" />
-                                </controls:LastChildWidthPanel>-->
+                                        <Button DockPanel.Dock="Right"
+                                                Content=" Add/Remove "
+                                                HorizontalAlignment="Right"
+                                                mah_ctrls:VisibilityHelper.IsVisible="{Binding DataContext.CanAddRemoveStrata, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                Command="{Binding DataContext.ToggleInCruiseCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding .}"
+                                                AutomationProperties.Name="Add Remove Stratum" />
+                                    </DockPanel>
 
                                     <!-- Cruise Method -->
                                     <controls:LastChildWidthPanel>
@@ -224,6 +218,8 @@
                                             CommandParameter="{Binding .}"
                                             AutomationProperties.Name="Limiting Distance" />-->
                                     </StackPanel>
+
+
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
@@ -232,7 +228,7 @@
             </ScrollViewer>
         </DockPanel>
 
-        
+
 
 
     </Grid>

@@ -23,6 +23,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private DelegateCommand<Plot_Stratum> _toggleInCruiseCommand;
         private IEnumerable<PlotError> _errorsAndWarnings;
         private ICommand _updatePlotNumberCommand;
+        private bool _canAddRemoveStrata;
 
         protected INatCruiseNavigationService NavigationService { get; }
 
@@ -60,6 +61,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             {
                 var stratumPlots = PlotStratumDataservice.GetPlot_Strata(plot.CuttingUnitCode, plot.PlotNumber);
                 StratumPlots = stratumPlots;
+                CanAddRemoveStrata = stratumPlots.Count() > 1 || stratumPlots.Any(x => x.InCruise == false);
                 RefreshErrorsAndWarnings(plot);
             }
             else
@@ -158,6 +160,12 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         #endregion PlotNumber
 
+        public bool CanAddRemoveStrata
+        {
+            get => _canAddRemoveStrata;
+            protected set => SetProperty(ref _canAddRemoveStrata, value);
+        }
+
         public string UnitCode => Plot?.CuttingUnitCode;
 
         public IEnumerable<Plot_Stratum> StratumPlots
@@ -215,6 +223,12 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
             if (stratumPlot.InCruise)
             {
+                if(CanAddRemoveStrata == false)
+                {
+                    DialogService.ShowNotification("Can not remove stratum from plot with only one stratum");
+                    return;
+                }
+
                 var hasTreeData = PlotDataservice.GetNumTreeRecords(UnitCode, stratumCode, plotNumber) > 0;
 
                 if (hasTreeData)
