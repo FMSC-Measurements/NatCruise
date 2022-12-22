@@ -119,7 +119,8 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
                                                         <Entry Text="{Binding ValueInt}"
-                                                               Placeholder="{Binding StrDefaultValue}">
+                                                               Placeholder="{Binding StrDefaultValue}"
+                                                               Keyboard="Numeric">
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
@@ -140,7 +141,8 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
                                                         <Entry Text="{Binding ValueReal}"
-                                                               Placeholder="{Binding StrDefaultValue}">
+                                                               Placeholder="{Binding StrDefaultValue}"
+                                                               Keyboard="Numeric">
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
@@ -182,7 +184,7 @@
                                                 <DataTemplate>
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
-                                                        <Picker SelectedItem="{Binding ValueText}"
+                                                        <local_ctrls:ValuePicker SelectedItem="{Binding ValueText}"
                                                                 ItemsSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
                                                     </local_ctrls:LastChildHeightLayout>
                                                 </DataTemplate>
