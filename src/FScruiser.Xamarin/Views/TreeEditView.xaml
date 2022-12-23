@@ -304,7 +304,8 @@
                                                Placeholder="{Binding StrDefaultValue}"
                                                Keyboard="Numeric">
                                             <Entry.Behaviors>
-                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}"
+                                                                                                ParentNextElement="{x:Reference _remarksEditor}" />
                                             </Entry.Behaviors>
                                             <Entry.IsReadOnly>
                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
@@ -328,7 +329,8 @@
                                                Placeholder="{Binding StrDefaultValue}"
                                                Keyboard="Numeric">
                                             <Entry.Behaviors>
-                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}"
+                                                                                                ParentNextElement="{x:Reference _remarksEditor}"/>
                                             </Entry.Behaviors>
                                             <Entry.IsReadOnly>
                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
@@ -351,7 +353,8 @@
                                         <Entry Text="{Binding ValueText}"
                                                Placeholder="{Binding StrDefaultValue}">
                                             <Entry.Behaviors>
-                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}"
+                                                                                                ParentNextElement="{x:Reference _remarksEditor}"/>
                                             </Entry.Behaviors>
                                             <Entry.IsReadOnly>
                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
@@ -405,7 +408,8 @@
         <StackLayout Grid.Row="2">
             <Label x:Name="_remarksHeading"
                    Text="Remarks" />
-            <Editor HeightRequest="80"
+            <Editor x:Name="_remarksEditor"
+                    HeightRequest="80"
                     Text="{Binding Remarks}"
                     AutomationProperties.LabeledBy="{x:Reference _remarksHeading}" />
         </StackLayout>
