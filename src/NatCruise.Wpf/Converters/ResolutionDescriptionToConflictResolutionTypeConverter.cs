@@ -11,18 +11,18 @@ namespace NatCruise.Wpf.Converters
 {
     public class ResolutionDescriptionToConflictResolutionTypeConverter : IValueConverter
     {
-        public const string CHOSEDEST = "Chose Destination";
-        public const string CHOSESOURCE = "Chose Crew";
+        public const string CHOSEDEST = "Keep Output File Record";
+        public const string CHOSESOURCE = "Keep Crew File Record";
         public const string CHOSELATEST = "Chose Latest";
-        public const string CHOSEDESTMERGEDATA = "Chose Destination And Merge";
-        public const string CHOSESOURCEMERGEDATA = "Chose Crew And Merge";
-        public const string MODIFYDEST = "Modify Destination";
-        public const string MODIFYSOURCE = "Modify Crew";
+        public const string CHOSEDESTMERGEDATA = "Keep Output File Record And Merge Downstream Records";
+        public const string CHOSESOURCEMERGEDATA = "Keep Crew File Record And Merge Downstream Records";
+        public const string MODIFYDEST = "Modify Output File Record";
+        public const string MODIFYSOURCE = "Modify Crew File Record";
 
         public static readonly string[] RESOLUTION_OPTIONS = new string[] {
             CHOSEDEST,
             CHOSESOURCE,
-            CHOSELATEST,
+            //CHOSELATEST,
             CHOSEDESTMERGEDATA,
             CHOSESOURCEMERGEDATA,
             MODIFYDEST,
@@ -32,7 +32,7 @@ namespace NatCruise.Wpf.Converters
         public static readonly string[] RESOLUTION_OPTIONS_NO_MERGE = new string[] {
             CHOSEDEST,
             CHOSESOURCE,
-            CHOSELATEST,
+            //CHOSELATEST,
             MODIFYDEST,
             MODIFYSOURCE,
         };
@@ -47,7 +47,7 @@ namespace NatCruise.Wpf.Converters
         public static readonly string[] RESOLUTION_OPTIONS_CHOSE = new string[] {
             CHOSEDEST,
             CHOSESOURCE,
-            CHOSELATEST,
+            //CHOSELATEST,
         };
 
 

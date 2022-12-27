@@ -560,7 +560,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <GroupBox Header="Destination Record"
+                        <GroupBox Header="Output File Record"
                                   Grid.Column="0"
                                   Background="{DynamicResource MahApps.Brushes.Control.Background}">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -571,7 +571,7 @@
                                                 IsEnabled="{Binding ConflictResolution, Converter={StaticResource isResolveModifyDest}}" />
                             </ScrollViewer>
                         </GroupBox>
-                        <GroupBox Header="Crew Record"
+                        <GroupBox Header="Crew File Record"
                                   Grid.Column="1"
                                   Background="{DynamicResource MahApps.Brushes.Control.Background}">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
