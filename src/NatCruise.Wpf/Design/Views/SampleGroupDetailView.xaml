@@ -29,8 +29,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <WrapPanel Background="{StaticResource brush_background}"
-               Margin="0,0,0,-99">
+    <WrapPanel Background="{StaticResource brush_background}">
         <WrapPanel.Resources>
             <ResourceDictionary>
                 <Style TargetType="Label"
@@ -65,105 +64,108 @@
             </ResourceDictionary>
         </WrapPanel.Resources>
 
-        <Grid Margin="5"
-              VerticalAlignment="Top">
-            <Grid.Resources>
-                <ResourceDictionary>
-                </ResourceDictionary>
-            </Grid.Resources>
+        <StackPanel VerticalAlignment="Center"
+                    Margin="5"
+                    Width="255">
+            <StackPanel.Resources>
+                <Style TargetType="ctrls:LastChildWidthPanel">
+                    <Setter Property="LastChildWidth"
+                            Value="130" />
+                </Style>
+            </StackPanel.Resources>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Label Content="Code*" />
-            <TextBox Grid.Column="1"
-                     ToolTip="Sample Group Code"
-                     Text="{Binding SampleGroupCode}"
-                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                     MaxLength="{x:Static dsgn:Constants.SGCODE_MAXLENGTH}" />
-            <Label Content="Description&#xD;&#xA;"
-                   Grid.Row="1" />
-            <TextBox Height="71"
-                     TextWrapping="Wrap"
-                     Grid.Row="1"
-                     Grid.Column="1"
-                     ToolTip="Description"
-                     Text="{Binding Description}"
-                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
-            <Label Content="Primary Product*"
-                   Grid.Row="2" />
-            <ComboBox Grid.Row="2"
-                      Grid.Column="1"
-                      ToolTip="Primary Product"
-                      ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
-                      SelectedValuePath="ProductCode"
-                      SelectedValue="{Binding PrimaryProduct}" />
-            <Label Content="Secondary Product"
-                   Grid.Column="0"
-                   Grid.Row="3" />
-            <ComboBox Grid.Row="3"
-                      Grid.Column="1"
-                      ToolTip="Secondary Product"
-                      ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
-                      SelectedValuePath="ProductCode"
-                      SelectedValue="{Binding SecondaryProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
-            <Label Content="Biomass Product"
-                   Grid.Row="4" />
-            <ComboBox Grid.Row="4"
-                      Grid.Column="1"
-                      ToolTip="Biomass Product"
-                      ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
-                      SelectedValuePath="ProductCode"
-                      SelectedValue="{Binding BiomassProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
-            <Label Content="Live/Dead Default"
-                   Grid.Row="6" />
-            <ComboBox Grid.Row="6"
-                      Grid.Column="1"
-                      ToolTip="Default Live Dead Value"
-                      SelectedValue="{Binding DefaultLiveDead}">
-                <ComboBox.ItemsSource>
-                    <x:Array Type="sys:String">
-                        <sys:String>L</sys:String>
-                        <sys:String>D</sys:String>
-                    </x:Array>
-                </ComboBox.ItemsSource>
-            </ComboBox>
 
-            <Label Content="Cut/Leave"
-                   Grid.Row="5"
-                   Grid.Column="0" />
-            <ComboBox SelectedValue="{Binding CutLeave}"
-                      Grid.Row="5"
-                      Grid.Column="1">
-                <ComboBox.ItemsSource>
-                    <x:Array Type="sys:String">
-                        <sys:String>C</sys:String>
-                        <sys:String>L</sys:String>
-                    </x:Array>
-                </ComboBox.ItemsSource>
-            </ComboBox>
+            <ctrls:LastChildWidthPanel>
+                <TextBlock Text="Code*" />
+                <TextBox 
+                         ToolTip="Sample Group Code"
+                         Text="{Binding SampleGroupCode}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                         MaxLength="{x:Static dsgn:Constants.SGCODE_MAXLENGTH}" />
+            </ctrls:LastChildWidthPanel>
 
-            <CheckBox Content="Tally By Species"
-                      Grid.Row="7"
-                      Grid.Column="1"
-                      ToolTip="Tally By Species"
-                      IsChecked="{Binding TallyBySubPop}"
-                      IsEnabled="{Binding CruiseMethod, Converter={StaticResource IsNotThreePMethodsConverter}}" />
-        </Grid>
+            <ctrls:LastChildWidthPanel>
+                <TextBlock Text="Description" />
+                <TextBox Height="71"
+                         TextWrapping="Wrap"
+                         ToolTip="Description"
+                         Text="{Binding Description}"
+                         mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+            </ctrls:LastChildWidthPanel>
+
+            <ctrls:LastChildWidthPanel>
+                <TextBlock Text="Primary Product*"/>
+                <ComboBox 
+                          ToolTip="Primary Product"
+                          ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
+                          SelectedValuePath="ProductCode"
+                          SelectedValue="{Binding PrimaryProduct}" />
+            </ctrls:LastChildWidthPanel>
+
+            <ctrls:LastChildWidthPanel>
+                <TextBlock Text="Secondary Product" />
+                <ComboBox 
+                          ToolTip="Secondary Product"
+                          ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
+                          SelectedValuePath="ProductCode"
+                          SelectedValue="{Binding SecondaryProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
+            </ctrls:LastChildWidthPanel>
+
+            <ctrls:LastChildWidthPanel>
+                <TextBlock Text="Biomass Product" />
+                <ComboBox 
+                          ToolTip="Biomass Product"
+                          ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
+                          SelectedValuePath="ProductCode"
+                          SelectedValue="{Binding BiomassProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
+            </ctrls:LastChildWidthPanel>
+
+            <ctrls:LastChildWidthPanel>
+                <TextBlock Text="Live/Dead Default" />
+                <ComboBox 
+                          ToolTip="Default Live Dead Value"
+                          SelectedValue="{Binding DefaultLiveDead}">
+                    <ComboBox.ItemsSource>
+                        <x:Array Type="sys:String">
+                            <sys:String>L</sys:String>
+                            <sys:String>D</sys:String>
+                        </x:Array>
+                    </ComboBox.ItemsSource>
+                </ComboBox>
+            </ctrls:LastChildWidthPanel>
+
+            <ctrls:LastChildWidthPanel>
+                <TextBlock Text="Cut/Leave" />
+                <ComboBox SelectedValue="{Binding CutLeave}">
+                    <ComboBox.ItemsSource>
+                        <x:Array Type="sys:String">
+                            <sys:String>C</sys:String>
+                            <sys:String>L</sys:String>
+                        </x:Array>
+                    </ComboBox.ItemsSource>
+                </ComboBox>
+            </ctrls:LastChildWidthPanel>
+
+            <ctrls:LastChildWidthPanel Visibility="{Binding CruiseMethod, Converter={StaticResource IsFixCNTMethodVisibilityConverter}, FallbackValue=Collapsed}"
+                                       d:Visibility="Visible">
+                <TextBlock Text="UOM" />
+                <ComboBox SelectedValue="{Binding UOM, TargetNullValue=''}">
+                    <ComboBox.ItemsSource>
+                        <x:Array Type="sys:String">
+                            <x:Static Member="sys:String.Empty" />
+                            <sys:String>04</sys:String>
+                        </x:Array>
+                    </ComboBox.ItemsSource>
+                </ComboBox>
+            </ctrls:LastChildWidthPanel>
+
+            <ctrls:LastChildWidthPanel>
+                <CheckBox Content="Tally By Species"
+                          ToolTip="Tally By Species"
+                          IsChecked="{Binding TallyBySubPop}"
+                          IsEnabled="{Binding CruiseMethod, Converter={StaticResource IsNotThreePMethodsConverter}}" />
+            </ctrls:LastChildWidthPanel>
+        </StackPanel>
 
         <GroupBox Header="Sampling Frequency Options"
                   Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsFrequencySampleVisibilityConverter}, FallbackValue=Visible}"
@@ -180,7 +182,7 @@
                 </StackPanel.Resources>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Sampling Frequency*" />
-                    <TextBox Text="{Binding SamplingFrequency}" 
+                    <TextBox Text="{Binding SamplingFrequency}"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
                 </StackPanel>
@@ -190,7 +192,7 @@
                     <Label Content="Insurance Frequency" />
                     <TextBox Text="{Binding InsuranceFrequency}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -219,7 +221,7 @@
                     <TextBox Text="{Binding KZ, Converter={StaticResource DefaultToEmptyStringConverter}}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              ToolTip="KZ"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -228,21 +230,21 @@
                     <TextBox ToolTip="Insurance Frequency"
                              Text="{Binding InsuranceFrequency}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Min KPI" />
                     <TextBox Text="{Binding MinKPI, FallbackValue={x:Null}}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Max KPI" />
                     <TextBox Text="{Binding MaxKPI, Converter={StaticResource DefaultToEmptyStringConverter}}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -267,7 +269,7 @@
                 <TextBox Text="{Binding BigBAF, Converter={StaticResource DefaultToEmptyStringConverter}}"
                          ToolTip="Big BAF"
                          Grid.Column="1"
-                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"/>
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
             </Grid>
         </GroupBox>
     </WrapPanel>
