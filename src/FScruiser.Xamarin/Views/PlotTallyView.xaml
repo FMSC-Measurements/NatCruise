@@ -50,6 +50,7 @@
                         IsVisible="false"
                         Padding="0"
                         BindingContext="{Binding SelectedTreeViewModel}"
+                        BindingContextChanged="_treeEditPanel_BindingContextChanged"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Tree Edit Panel">
 
@@ -185,7 +186,7 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
                                                         <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                                ValueSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
+                                                                                 ValueSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
                                                     </local_ctrls:LastChildHeightLayout>
                                                 </DataTemplate>
                                             </local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>

@@ -63,8 +63,7 @@ namespace FScruiser.XF.ViewModels
             get => _selectedTree;
             set
             {
-                if (value == null) { return; }
-                var treeID = value.TreeID;
+                var treeID = value?.TreeID;
                 if (treeID != null)
                 {
                     var treeVM = ContainerProvider.Resolve<TreeEditViewModel>((typeof(ICruiseNavigationService), NavigationService));
@@ -352,15 +351,20 @@ namespace FScruiser.XF.ViewModels
 
         public void DeleteTree(string tree_guid)
         {
-            TreeDataservice.DeleteTree(tree_guid);
             var tree = Trees.Single(x => x.TreeID == tree_guid);
-            Trees.Remove(tree);
+            DeleteTree(tree);
         }
 
         public void DeleteTree(PlotTreeEntry tree)
         {
-            TreeDataservice.DeleteTree(tree.TreeID);
+            var treeID = tree.TreeID;
+            TreeDataservice.DeleteTree(treeID);
             Trees.Remove(tree);
+
+            if(SelectedTree != null && SelectedTree.TreeID == treeID)
+            {
+                SelectedTree = null;
+            }
         }
 
         public void SelectPreviousTree()

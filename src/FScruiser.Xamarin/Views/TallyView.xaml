@@ -555,7 +555,8 @@
                         Padding="0"
                         BindingContext="{Binding SelectedTreeViewModel}"
                         AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.Name="Tree Edit Panel">
+                        AutomationProperties.Name="Tree Edit Panel"
+                        BindingContextChanged="_treeEditPanel_BindingContextChanged">
 
                     <Grid>
                         

@@ -431,6 +431,15 @@ namespace FScruiser.XF.ViewModels
                 tallyPopulation.SumKPI -= tallyEntry.KPI;
             }
 
+            var treeID = tallyEntry.TreeID;
+            if (treeID != null)
+            {
+                if (SelectedTreeViewModel != null && SelectedTreeViewModel.TreeID == treeID)
+                {
+                    SelectedTreeViewModel = null;
+                }
+            }
+
             LoggingService.LogEvent("Untally", new Dictionary<string, string>()
             {
                 {"CruiseID", TallyDataservice.CruiseID },
