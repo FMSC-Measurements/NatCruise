@@ -44,8 +44,6 @@ namespace FScruiser.XF.Services
 
         Task ShowTally(string unitCode);
 
-
-
         Task ShowTreeCountEdit(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead);
 
         Task ShowTreeEdit(string treeID);

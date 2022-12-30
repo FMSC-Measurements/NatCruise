@@ -294,8 +294,14 @@ namespace FScruiser.XF.Services
                 throw new ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or empty.", nameof(sampleGroupCode));
             }
 
+            var parameters = new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}" +
+                $"&{NavParams.SAMPLE_GROUP}={sampleGroupCode}" +
+                $"&{NavParams.SPECIES}={species}" +
+                $"&{NavParams.LIVE_DEAD}={liveDead}");
+
             return NavigationService.NavigateAsync("TreeCountEdit",
-                new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}&{NavParams.SAMPLE_GROUP}={sampleGroupCode}&{NavParams.SPECIES}={species}&{NavParams.LIVE_DEAD}={liveDead}"));
+                parameters,
+                useModalNavigation: true, animated: false);
         }
 
         public async Task ShowTreeEdit(string treeID)

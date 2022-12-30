@@ -29,5 +29,9 @@
         public const string LogEdit_CreateNew = "CreateNew";
 
         public const string TreeAuditRuleID = "TreeAuditRuleID";
+
+        public const string IS_CLICKER_TALLY = "IsClickerTally";
+
+        public const string TALLYLEDGER_ID = "TallyLedgerID";
     }
 }

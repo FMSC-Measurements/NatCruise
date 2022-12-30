@@ -2,7 +2,8 @@
 <controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
                                     xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FScruiser.XF.Views.TreeCountEditView"
+                                    xmlns:effects="http://xamarin.com/schemas/2020/toolkit"
+                                    x:Class="FScruiser.XF.Views.TreeCountEditView"
              Title="Edit Tree Count">
     <controls:InitializableContentPage.Content>
         <Grid>
@@ -276,6 +277,8 @@
                         <RowDefinition Height="{StaticResource form_rowHeight}" />
                         <!--reason -->
                         <RowDefinition Height="{StaticResource form_rowHeight}" />
+                        <!--initials -->
+                        <RowDefinition Height="{StaticResource form_rowHeight}" />
                         <!--remarks -->
                         <RowDefinition Height="{StaticResource form_rowHeight}" />
                         <RowDefinition Height="150" />
@@ -303,7 +306,11 @@
                             HorizontalOptions="Start"
                             Keyboard="Numeric"
                             AutomationProperties.IsInAccessibleTree="True"
-                            AutomationProperties.Name="Tree Count Difference" />
+                            AutomationProperties.Name="Tree Count Difference">
+                        <Entry.Effects>
+                            <effects:SelectAllTextEffect />
+                        </Entry.Effects>
+                    </Entry>
 
                     <!--Adjusted Tree Count-->
                     <Label  Grid.Row="0"
@@ -327,7 +334,11 @@
                            IsEnabled="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
                            Keyboard="Numeric"
                            AutomationProperties.IsInAccessibleTree="True"
-                           AutomationProperties.Name="KPI"/>
+                           AutomationProperties.Name="KPI">
+                        <Entry.Effects>
+                            <effects:SelectAllTextEffect />
+                        </Entry.Effects>
+                    </Entry>
 
                     <!--Reason-->
                     <Label  Grid.Row="2"
@@ -345,12 +356,39 @@
                             AutomationProperties.IsInAccessibleTree="True"
                             AutomationProperties.Name="Reson" />
 
+                    <!-- Initials -->
+                    <Label Grid.Row="3"
+                           Grid.Column="0"
+                           Text="Initials"
+                           AutomationProperties.IsInAccessibleTree="False" />
+
+                    <controls:ValuePicker x:Name="_initialsPicker"
+                                          Grid.Row="3"
+                                          Grid.Column="1"
+                                          WidthRequest="50"
+                                          HeightRequest="{StaticResource minTouchableHeight}"
+                                          SelectedValue="{Binding Initials}"
+                                          ValueSource="{Binding Cruisers}"
+                                          IsVisible="{Binding Cruisers, Converter={StaticResource listIsNotNullOrEmptyConverter}}"
+                                          AutomationProperties.IsInAccessibleTree="True"
+                                          AutomationProperties.Name="Initials" />
+                    <Entry x:Name="_initialsEntry"
+                           Grid.Row="3"
+                           Grid.Column="1"
+                           WidthRequest="50"
+                           HeightRequest="{StaticResource minTouchableHeight}"
+                           Text="{Binding Initials}"
+                           IsVisible="{Binding Cruisers, Converter={StaticResource listIsNullOrEmptyConverter}}"
+                           HorizontalOptions="Start"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Initials" />
+
                     <!--Remarks-->
-                    <Label  Grid.Row="3"
+                    <Label  Grid.Row="4"
                             Grid.Column="0"
                             Text="Remarks"
                             AutomationProperties.IsInAccessibleTree="False"/>
-                    <Editor Grid.Row="4"
+                    <Editor Grid.Row="5"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Text="{Binding Remarks}"
@@ -358,6 +396,9 @@
                             BackgroundColor="LightGray"
                             AutomationProperties.IsInAccessibleTree="True"
                             AutomationProperties.Name="Remaks"/>
+                    
+                    
+
                 </Grid>
 
                 <!--<TableView>
@@ -409,7 +450,7 @@
 
                 <Button x:Name="_cancelButton"
                         Text="Cancel"
-                        Clicked="_cancelButton_Clicked"
+                        Command="{Binding CancelCommand}"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Cancel Button" />
             </StackLayout>
