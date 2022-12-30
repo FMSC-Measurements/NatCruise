@@ -55,7 +55,9 @@
 
             <!-- converters -->
             <tc_conv:IsNotNullOrEmptyConverter x:Key="isNotNullOrEmptyConverter" />
+            <tc_conv:IsNullOrEmptyConverter x:Key="isNullOrEmptyConverter" />
             <tc_conv:ListIsNotNullOrEmptyConverter x:Key="listIsNotNullOrEmptyConverter" />
+            <tc_conv:ListIsNullOrEmptyConverter x:Key="listIsNullOrEmptyConverter" />
             <!--False if value is 0, True for everything else-->
             <tc_conv:IntToBoolConverter x:Key="intToBoolConverter" />
 
