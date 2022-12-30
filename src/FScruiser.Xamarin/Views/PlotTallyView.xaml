@@ -6,6 +6,7 @@
                                       xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
                                       xmlns:local_behaviors="clr-namespace:FScruiser.XF.Behaviors"
                                       xmlns:converters="clr-namespace:FScruiser.XF.Converters"
+                                      xmlns:effects="http://xamarin.com/schemas/2020/toolkit"
                                       x:Class="FScruiser.XF.Views.PlotTallyView"
                                       BackgroundColor="White"
                                       x:Name="_page"
@@ -125,6 +126,9 @@
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
+                                                            <Entry.Effects>
+                                                                <effects:SelectAllTextEffect />
+                                                            </Entry.Effects>
                                                             <Entry.IsReadOnly>
                                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                                     <Binding Path="IsLocked" />
@@ -147,6 +151,9 @@
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
+                                                            <Entry.Effects>
+                                                                <effects:SelectAllTextEffect />
+                                                            </Entry.Effects>
                                                             <Entry.IsReadOnly>
                                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                                     <Binding Path="IsLocked" />
@@ -168,6 +175,9 @@
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
+                                                            <Entry.Effects>
+                                                                <effects:SelectAllTextEffect />
+                                                            </Entry.Effects>
                                                             <Entry.IsReadOnly>
                                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                                     <Binding Path="IsLocked" />
