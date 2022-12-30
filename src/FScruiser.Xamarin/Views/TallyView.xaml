@@ -7,6 +7,7 @@
                                       xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
                                       xmlns:local_vms="clr-namespace:FScruiser.XF.ViewModels"
                                       xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
+                                      xmlns:effects1="http://xamarin.com/schemas/2020/toolkit"
                                       x:Class="FScruiser.XF.Views.TallyView"
                                       x:Name="_page"
                                       BackgroundColor="White"
@@ -559,7 +560,7 @@
                         BindingContextChanged="_treeEditPanel_BindingContextChanged">
 
                     <Grid>
-                        
+
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -632,6 +633,9 @@
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
+                                                            <Entry.Effects>
+                                                                <effects1:SelectAllTextEffect />
+                                                            </Entry.Effects>
                                                             <Entry.IsReadOnly>
                                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                                     <Binding Path="IsLocked" />
@@ -654,6 +658,9 @@
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
+                                                            <Entry.Effects>
+                                                                <effects1:SelectAllTextEffect />
+                                                            </Entry.Effects>
                                                             <Entry.IsReadOnly>
                                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                                     <Binding Path="IsLocked" />
@@ -675,6 +682,9 @@
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
+                                                            <Entry.Effects>
+                                                                <effects1:SelectAllTextEffect />
+                                                            </Entry.Effects>
                                                             <Entry.IsReadOnly>
                                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                                     <Binding Path="IsLocked" />
@@ -737,7 +747,7 @@
                                                     </local_ctrls:LastChildHeightLayout>
                                                 </DataTemplate>
                                             </local_ctrls:TreeFieldValueDataTemplateSelector.GradeTemplate>
-                                            
+
                                         </local_ctrls:TreeFieldValueDataTemplateSelector>
 
                                     </BindableLayout.ItemTemplateSelector>

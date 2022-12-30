@@ -590,11 +590,14 @@ namespace FScruiser.XF.ViewModels
 
                 var cruisers = CruisersDataservice.GetCruisers()
                     .ToArray();
-                var initials = tree.Initials;
-                if (!string.IsNullOrEmpty(initials)
-                    && !cruisers.Contains(initials, StringComparer.OrdinalIgnoreCase))
+                if (cruisers.Length > 0)
                 {
-                    cruisers = cruisers.Append(initials).ToArray();
+                    var initials = tree.Initials;
+                    if (!string.IsNullOrEmpty(initials)
+                        && !cruisers.Contains(initials, StringComparer.OrdinalIgnoreCase))
+                    {
+                        cruisers = cruisers.Append(initials).ToArray();
+                    }
                 }
 
                 Cruisers = cruisers;

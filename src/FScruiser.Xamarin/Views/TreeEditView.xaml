@@ -65,13 +65,12 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+
         <!--main fields-->
-        <FlexLayout Grid.Row="0"
-                    Wrap="Wrap"
-                    AlignContent="Start"
-                    JustifyContent="SpaceAround"
-                    HeightRequest="80">
-            <FlexLayout.Resources>
+        <Grid Grid.Row="0"
+              RowDefinitions="Auto,Auto, Auto"
+              ColumnDefinitions="*,*,*,*">
+            <Grid.Resources>
                 <Style TargetType="Label">
                     <Setter Property="VerticalTextAlignment"
                             Value="Center" />
@@ -80,9 +79,9 @@
                 </Style>
                 <Style TargetType="controls:ValuePicker">
                     <Setter Property="WidthRequest"
-                            Value="60" />
+                            Value="70" />
                     <Setter Property="HeightRequest"
-                            Value="44" />
+                            Value="{StaticResource minTouchableHeight}" />
                 </Style>
 
                 <Style TargetType="StackLayout">
@@ -96,12 +95,14 @@
                     <Setter Property="WidthRequest"
                             Value="50" />
                     <Setter Property="HeightRequest"
-                            Value="44" />
+                            Value="{StaticResource minTouchableHeight}" />
                 </Style>
-            </FlexLayout.Resources>
+            </Grid.Resources>
 
             <!--Tree Number-->
-            <StackLayout Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal"
+                         Grid.Row="0"
+                         Grid.Column="0">
 
                 <Label Text="Tree #"
                        AutomationProperties.IsInAccessibleTree="False" />
@@ -117,15 +118,15 @@
             </StackLayout>
 
             <!--Stratum-->
-            <StackLayout Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal"
+                         Grid.Row="0"
+                         Grid.Column="1">
 
                 <Label Text="Stratum"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_stratumCodeEntry"
                                       SelectedValue="{Binding StratumCode}"
                                       ValueSource="{Binding StratumCodes}"
-                                      WidthRequest="60"
-                                      HeightRequest="{StaticResource minTouchableHeight}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Stratum">
                 </controls:ValuePicker>
@@ -134,15 +135,15 @@
 
             <!--Sample Group-->
             <StackLayout Orientation="Horizontal"
-                         BackgroundColor="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}">
+                         BackgroundColor="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}"
+                         Grid.Row="0"
+                         Grid.Column="2">
 
                 <Label Text="Sample Group"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_sampleGroupEntry"
                                       SelectedValue="{Binding SampleGroupCode}"
                                       ValueSource="{Binding SampleGroupCodes}"
-                                      WidthRequest="60"
-                                      HeightRequest="{StaticResource minTouchableHeight}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Sample Group">
                 </controls:ValuePicker>
@@ -151,15 +152,15 @@
 
             <!--Species-->
             <StackLayout Orientation="Horizontal"
-                         BackgroundColor="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}">
+                         BackgroundColor="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}"
+                         Grid.Row="0"
+                         Grid.Column="3">
 
                 <Label Text="Species"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_speciesEntry"
                                       SelectedValue="{Binding SpeciesCode}"
                                       ValueSource="{Binding SpeciesOptions}"
-                                      WidthRequest="60"
-                                      HeightRequest="{StaticResource minTouchableHeight}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Species">
                 </controls:ValuePicker>
@@ -167,14 +168,14 @@
             </StackLayout>
 
             <!--Live Dead-->
-            <StackLayout Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal"
+                         Grid.Row="1"
+                         Grid.Column="0">
 
                 <Label Text="Live/Dead"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_liveDeadPicker"
                                       SelectedValue="{Binding LiveDead}"
-                                      WidthRequest="60"
-                                      HeightRequest="{StaticResource minTouchableHeight}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Live Dead">
                     <controls:ValuePicker.ValueSource>
@@ -188,20 +189,38 @@
             </StackLayout>
 
             <!--Initials-->
-            <StackLayout Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal"
+                         Grid.Row="1"
+                         Grid.Column="1"
+                         IsVisible="{Binding Cruisers, Converter={StaticResource listIsNullOrEmptyConverter}}">
+                <Label Text="Initials"
+                       AutomationProperties.IsInAccessibleTree="False" />
+                <Entry x:Name="_initialsEntry"
+                       Text="{Binding Initials}"
+                       Keyboard="Default"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Initialss" />
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal"
+                         Grid.Row="1"
+                         Grid.Column="1"
+                         IsVisible="{Binding Cruisers, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
                 <Label Text="Initials"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_initialsPicker"
-                                      WidthRequest="60"
-                                      HeightRequest="{StaticResource minTouchableHeight}"
                                       SelectedValue="{Binding Initials}"
                                       ValueSource="{Binding Cruisers}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Initials" />
             </StackLayout>
 
+
+
             <!--Count Or Measure-->
-            <StackLayout Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal"
+                         Grid.Row="1"
+                         Grid.Column="2">
                 <Label Text="Count/Measure"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <Picker WidthRequest="60"
@@ -217,7 +236,9 @@
 
             <!-- Tree Count -->
             <StackLayout Orientation="Horizontal"
-                         IsVisible="{Binding CruiseMethod, Converter={StaticResource isfixCNTConverter}}">
+                         IsVisible="{Binding CruiseMethod, Converter={StaticResource isfixCNTConverter}}"
+                         Grid.Row="2"
+                         Grid.Column="0">
                 <Label Text="Tree Count"
                        AutomationProperties.IsInAccessibleTree="False" />
                 <Entry Text="{Binding TreeCount}"
@@ -227,7 +248,9 @@
 
             <!-- KPI -->
             <StackLayout Orientation="Horizontal"
-                         IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
+                         IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
+                         Grid.Row="2"
+                         Grid.Column="1">
                 <Label Text="KPI"
                        x:Name="_kpiLabel"
                        AutomationProperties.IsInAccessibleTree="False" />
@@ -235,12 +258,11 @@
                        AutomationProperties.IsInAccessibleTree="True"
                        AutomationProperties.LabeledBy="{Reference _kpiLabel}" />
             </StackLayout>
-
-        </FlexLayout>
+        </Grid>
 
         <ScrollView x:Name="_editViewsHost"
-                    Grid.Row="1"
-                    VerticalOptions="FillAndExpand">
+                    VerticalOptions="FillAndExpand"
+                    Grid.Row="1">
             <!--<ScrollView.Resources>
                 <ResourceDictionary>
                     <Style TargetType="Label">
@@ -307,6 +329,9 @@
                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}"
                                                                                                 ParentNextElement="{x:Reference _remarksEditor}" />
                                             </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <effects:SelectAllTextEffect />
+                                            </Entry.Effects>
                                             <Entry.IsReadOnly>
                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                     <Binding Path="IsLocked" />
@@ -330,8 +355,11 @@
                                                Keyboard="Numeric">
                                             <Entry.Behaviors>
                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}"
-                                                                                                ParentNextElement="{x:Reference _remarksEditor}"/>
+                                                                                                ParentNextElement="{x:Reference _remarksEditor}" />
                                             </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <effects:SelectAllTextEffect />
+                                            </Entry.Effects>
                                             <Entry.IsReadOnly>
                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                     <Binding Path="IsLocked" />
@@ -354,8 +382,11 @@
                                                Placeholder="{Binding StrDefaultValue}">
                                             <Entry.Behaviors>
                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}"
-                                                                                                ParentNextElement="{x:Reference _remarksEditor}"/>
+                                                                                                ParentNextElement="{x:Reference _remarksEditor}" />
                                             </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <effects:SelectAllTextEffect />
+                                            </Entry.Effects>
                                             <Entry.IsReadOnly>
                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                     <Binding Path="IsLocked" />
@@ -407,7 +438,8 @@
         <!--Remarks-->
         <StackLayout Grid.Row="2">
             <Label x:Name="_remarksHeading"
-                   Text="Remarks" />
+                   Text="Remarks"
+                   HorizontalOptions="Start" />
             <Editor x:Name="_remarksEditor"
                     HeightRequest="80"
                     Text="{Binding Remarks}"
@@ -430,5 +462,8 @@
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </StackLayout>
+
     </Grid>
+
+
 </controls:InitializableContentPage>
