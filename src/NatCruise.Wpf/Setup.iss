@@ -1,5 +1,5 @@
 #define MsBuildOutputDir ".\bin\Release\net472"
-#define VERSION "3.1.0.0"
+#define VERSION "3.1.2.0"
 
 #define APP "National Cruise System"
 #define EXEName "NatCruise.Wpf.exe"
@@ -45,7 +45,7 @@ AllowNetworkDrive=no
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 
-OutputBaseFilename=NatCruise_Setup
+OutputBaseFilename=NatCruise_Setup_{#VERSION}
 
 [Tasks]
 Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons};

@@ -1,10 +1,10 @@
 <Project>
 	<PropertyGroup Label="Build Config">
 		<LangVersion>8.0</LangVersion>
+		<Version>3.1.2.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Custom Properties">
-		<FScruiserVersion>3.1.1.0</FScruiserVersion>
 		<UseCruiseDALProjRefs>false</UseCruiseDALProjRefs>
 	</PropertyGroup>
 
