@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>NatCruise.Cruise</RootNamespace>
-    <Version>$(FScruiserVersion)</Version>
     <Configurations>Debug;Release;Profile</Configurations>
   </PropertyGroup>
 

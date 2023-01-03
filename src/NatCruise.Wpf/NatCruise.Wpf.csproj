@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
 	<PropertyGroup>
-		<Version>$(FScruiserVersion)</Version>
 		<!-- Company and ProductName effect where the user.config file use for Setting is stored-->
 		<Company>FMSC</Company>
 		<ProductName>NatCruise</ProductName>

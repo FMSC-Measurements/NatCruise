@@ -5,9 +5,7 @@
 		<!--<PackageTargetFallback>$(PackageTargetFallback);portable-win+net45+wp8+win81+wpa8</PackageTargetFallback>-->
 		<RootNamespace>FScruiser.XF</RootNamespace>
 		<AssemblyName>FScruiser.XF</AssemblyName>
-		<Version>$(FScruiserVersion)</Version>
 		<!--<Configurations>Debug;Release;Profile</Configurations>-->
-		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
 
 
