@@ -5,9 +5,7 @@
 		<!--<PackageTargetFallback>$(PackageTargetFallback);portable-win+net45+wp8+win81+wpa8</PackageTargetFallback>-->
 		<RootNamespace>FScruiser.XF</RootNamespace>
 		<AssemblyName>FScruiser.XF</AssemblyName>
-		<Version>$(FScruiserVersion)</Version>
 		<!--<Configurations>Debug;Release;Profile</Configurations>-->
-		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
 
 
@@ -28,7 +26,7 @@
 
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.1.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
 		<PackageReference Include="Scripty.MsBuild" Version="0.7.4" />
 		<PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.5" />

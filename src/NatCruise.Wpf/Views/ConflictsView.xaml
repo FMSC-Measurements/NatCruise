@@ -560,7 +560,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <GroupBox Header="Destination Record"
+                        <GroupBox Header="Output File Record"
                                   Grid.Column="0"
                                   Background="{DynamicResource MahApps.Brushes.Control.Background}">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -571,7 +571,7 @@
                                                 IsEnabled="{Binding ConflictResolution, Converter={StaticResource isResolveModifyDest}}" />
                             </ScrollViewer>
                         </GroupBox>
-                        <GroupBox Header="Crew Record"
+                        <GroupBox Header="Crew File Record"
                                   Grid.Column="1"
                                   Background="{DynamicResource MahApps.Brushes.Control.Background}">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -686,38 +686,10 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="199*" />
+            <ColumnDefinition Width="199" />
             <ColumnDefinition Width="456*" />
-            <ColumnDefinition Width="145*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0"
-              Grid.Column="2"
-              Visibility="Hidden">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="77*" />
-                <RowDefinition Height="89*" />
-            </Grid.RowDefinitions>
-            <Border BorderBrush="Black"
-                    BorderThickness="1"
-                    Margin="5">
-                <ListView d:ItemsSource="{d:SampleData ItemCount=5}">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </Border>
-            <Expander HorizontalAlignment="Stretch"
-                      Header="Advanced Options"
-                      Grid.Row="1"
-                      Margin="5"
-                      VerticalAlignment="Stretch">
-                <ScrollViewer>
-                    <Grid />
-                </ScrollViewer>
-            </Expander>
-        </Grid>
+
         <TabControl Grid.Column="0"
                     Grid.ColumnSpan="2"
                     FlowDirection="LeftToRight"
@@ -729,23 +701,25 @@
                 <Style TargetType="TabItem"
                        BasedOn="{StaticResource MahApps.Styles.TabItem}">
                     <Setter Property="Width"
-                            Value="100" />
+                            Value="90" />
                 </Style>
+
+                <GridLength x:Key="conflictListWidth">160</GridLength>
             </TabControl.Resources>
 
             <!-- Cutting Units Tab -->
             <TabItem Header="Cutting Units"
-                     mah_ctrls:VisibilityHelper.IsVisible="{Binding CuttingUnitConflicts, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                     mah_ctrls:VisibilityHelper.IsVisible="{Binding CuttingUnit, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="{StaticResource conflictListWidth}" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Conflicts List -->
                     <ListView x:Name="_cuttingUnitConflictList"
                               Template="{StaticResource conflictList}"
-                              ItemsSource="{Binding CuttingUnitConflicts}"
+                              ItemsSource="{Binding CuttingUnit}"
                               d:ItemsSource="{d:SampleData ItemCount=5}" />
 
                     <!-- Resolution Panel -->
@@ -795,17 +769,17 @@
 
             <!-- Strata Tab -->
             <TabItem Header="Strata"
-                     mah_ctrls:VisibilityHelper.IsVisible="{Binding StratumConflicts, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                     mah_ctrls:VisibilityHelper.IsVisible="{Binding Stratum, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="{StaticResource conflictListWidth}" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Conflict List -->
                     <ListView x:Name="_strataConflictList"
                               Template="{StaticResource conflictList}"
-                              ItemsSource="{Binding StratumConflicts}"
+                              ItemsSource="{Binding Stratum}"
                               d:ItemsSource="{d:SampleData ItemCount=5}" />
 
                     <!-- Resolution Panel -->
@@ -849,17 +823,17 @@
 
             <!-- Sample Group Tab -->
             <TabItem Header="Sample Groups"
-                     mah_ctrls:VisibilityHelper.IsVisible="{Binding SampleGroupConflicts, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                     mah_ctrls:VisibilityHelper.IsVisible="{Binding SampleGroup, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="{StaticResource conflictListWidth}" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Conflict List -->
                     <ListView x:Name="_sampleGroupConflictList"
                               Template="{StaticResource conflictList}"
-                              ItemsSource="{Binding SampleGroupConflicts}"
+                              ItemsSource="{Binding SampleGroup}"
                               d:ItemsSource="{d:SampleData ItemCount=5}" />
 
                     <!-- Resolution Panel -->
@@ -893,17 +867,17 @@
 
             <!-- Plots Tab -->
             <TabItem Header="Plots"
-                     mah_ctrls:VisibilityHelper.IsVisible="{Binding PlotConflicts, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                     mah_ctrls:VisibilityHelper.IsVisible="{Binding Plot, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="{StaticResource conflictListWidth}" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Conflict List -->
                     <ListView x:Name="_plotConflictList"
                               Template="{StaticResource conflictList}"
-                              ItemsSource="{Binding PlotConflicts}"
+                              ItemsSource="{Binding Plot}"
                               d:ItemsSource="{d:SampleData ItemCount=5}" />
 
                     <!-- Resolution Panel -->
@@ -941,17 +915,17 @@
 
             <!-- Tree Tab -->
             <TabItem Header="Trees"
-                     mah_ctrls:VisibilityHelper.IsVisible="{Binding TreeConflicts, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                     mah_ctrls:VisibilityHelper.IsVisible="{Binding Tree, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="{StaticResource conflictListWidth}" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Conflict List -->
                     <ListView x:Name="_treeConflictList"
                               Template="{StaticResource conflictList}"
-                              ItemsSource="{Binding TreeConflicts}"
+                              ItemsSource="{Binding Tree}"
                               d:ItemsSource="{d:SampleData ItemCount=5}" />
 
                     <!-- Resolution Panel -->
@@ -992,17 +966,17 @@
 
             <!-- Plot Tree Tab -->
             <TabItem Header="Plot Trees"
-                     mah_ctrls:VisibilityHelper.IsVisible="{Binding PlotTreeConflicts, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                     mah_ctrls:VisibilityHelper.IsVisible="{Binding PlotTree, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="{StaticResource conflictListWidth}" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Conflict List -->
                     <ListView x:Name="_plotTreeConflictList"
                               Template="{StaticResource conflictList}"
-                              ItemsSource="{Binding PlotTreeConflicts}"
+                              ItemsSource="{Binding PlotTree}"
                               d:ItemsSource="{d:SampleData ItemCount=5}" />
 
                     <!-- Resolution Panel -->
@@ -1040,17 +1014,17 @@
 
             <!-- Logs Tab -->
             <TabItem Header="Logs"
-                     mah_ctrls:VisibilityHelper.IsVisible="{Binding LogConflicts, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                     mah_ctrls:VisibilityHelper.IsVisible="{Binding Log, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="{StaticResource conflictListWidth}" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Conflict List -->
                     <ListView x:Name="_logConflictList"
                               Template="{StaticResource conflictList}"
-                              ItemsSource="{Binding LogConflicts}"
+                              ItemsSource="{Binding Log}"
                               d:ItemsSource="{d:SampleData ItemCount=5}" />
 
                     <!-- Resolution Panel -->
@@ -1083,11 +1057,11 @@
 
         <Grid Grid.Row="0"
               Grid.Column="0"
-              Grid.ColumnSpan="3"
+              Grid.ColumnSpan="2"
               controls:GridHelper.ColumnDefinitions="*,Auto,*"
               controls:GridHelper.RowDefinitions="*,Auto,*"
               Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-              mah_ctrls:VisibilityHelper.IsVisible="{Binding HasConflicts}"
+              mah_ctrls:VisibilityHelper.IsHidden="{Binding HasConflicts}"
               d:Visibility="Hidden">
             <TextBlock Grid.Row="1"
                        Grid.Column="1"

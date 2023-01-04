@@ -6,6 +6,7 @@ using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
@@ -428,6 +429,15 @@ namespace FScruiser.XF.ViewModels
             {
                 tallyPopulation.TreeCount -= tallyEntry.TreeCount;
                 tallyPopulation.SumKPI -= tallyEntry.KPI;
+            }
+
+            var treeID = tallyEntry.TreeID;
+            if (treeID != null)
+            {
+                if (SelectedTreeViewModel != null && SelectedTreeViewModel.TreeID == treeID)
+                {
+                    SelectedTreeViewModel = null;
+                }
             }
 
             LoggingService.LogEvent("Untally", new Dictionary<string, string>()

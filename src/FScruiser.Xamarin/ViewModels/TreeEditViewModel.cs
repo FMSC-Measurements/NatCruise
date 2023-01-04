@@ -4,6 +4,7 @@ using NatCruise;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
@@ -589,11 +590,14 @@ namespace FScruiser.XF.ViewModels
 
                 var cruisers = CruisersDataservice.GetCruisers()
                     .ToArray();
-                var initials = tree.Initials;
-                if (!string.IsNullOrEmpty(initials)
-                    && !cruisers.Contains(initials, StringComparer.OrdinalIgnoreCase))
+                if (cruisers.Any())
                 {
-                    cruisers = cruisers.Append(initials).ToArray();
+                    var initials = tree.Initials;
+                    if (!string.IsNullOrEmpty(initials)
+                        && !cruisers.Contains(initials, StringComparer.OrdinalIgnoreCase))
+                    {
+                        cruisers = cruisers.Append(initials).ToArray();
+                    }
                 }
 
                 Cruisers = cruisers;

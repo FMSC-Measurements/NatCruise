@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using FMSC.Sampling;
+using FScruiser.XF.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Logic;
 using NatCruise.Cruise.Models;
@@ -7,6 +8,7 @@ using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Sampling;
+using NatCruise.Util;
 using System;
 using System.Threading.Tasks;
 
@@ -15,14 +17,16 @@ namespace NatCruise.Cruise.Services
     public class TreeBasedTallyService : ITreeBasedTallyService
     {
         public ISampleSelectorDataService SampleSelectorDataservice { get; }
+        public ICruiseNavigationService NavigationService { get; }
         public INatCruiseDialogService DialogService { get; }
         public ITallyDataservice TallyDataservice { get; }
 
-        public TreeBasedTallyService(INatCruiseDialogService dialogService, ITallyDataservice tallyDataservice, ISampleSelectorDataService sampleSelectorDataservice)
+        public TreeBasedTallyService(INatCruiseDialogService dialogService, ITallyDataservice tallyDataservice, ISampleSelectorDataService sampleSelectorDataservice, ICruiseNavigationService navigationService)
         {
             TallyDataservice = tallyDataservice ?? throw new ArgumentNullException(nameof(TallyDataservice));
             SampleSelectorDataservice = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(SampleSelectorDataservice));
 
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(NavigationService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
@@ -35,6 +39,23 @@ namespace NatCruise.Cruise.Services
             TallyAction tallyAction;
             if (pop.IsClickerTally)
             {
+                // trying to set it up so that the TreeCountEditPage shows when clicker tallying
+                // this might be a better solution than just asking the user for a tree count
+                // but I'm struggling in getting TreeCountEditPage to give a dialog result
+
+                //var tallyID = await NavigationService.ShowTreeCountEdit(unitCode,
+                //                                    pop.StratumCode,
+                //                                    pop.SampleGroupCode,
+                //                                    pop.SpeciesCode,
+                //                                    pop.LiveDead,
+                //                                    isClickerTally: true);
+                //if(tallyID != null)
+                //{
+                //    return TallyDataservice.GetTallyEntry(tallyID);
+                //}
+
+                //return null;
+
                 var clickerTallyResult = await dialogService.AskTreeCount(pop.Frequency);
                 if (clickerTallyResult != null && clickerTallyResult.TreeCount.HasValue)
                 {

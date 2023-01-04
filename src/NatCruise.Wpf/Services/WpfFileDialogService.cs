@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
 using NatCruise.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NatCruise.Wpf.Services
@@ -18,6 +20,46 @@ namespace NatCruise.Wpf.Services
         public Task<string> SelectCruiseFileAsync()
         {
             return Task.Run(SelectCruiseFile);
+        }
+
+        public Task<IEnumerable<string>> SelectCruiseFilesAsync()
+        {
+            return Task.Run(SelectCruiseFiles);
+        }
+
+        public IEnumerable<string> SelectCruiseFiles()
+        {
+            var initialDir = AppSettings.LastOpenCruiseDir;
+            if (!System.IO.Directory.Exists(initialDir))
+            {
+                initialDir = AppSettings.DefaultOpenCruiseDir;
+            }
+
+            var dialog = new OpenFileDialog()
+            {
+                InitialDirectory = initialDir,
+                DefaultExt = "*.crz3",
+                Filter = "Cruise Files V3 (*.crz3)|*.crz3|" +
+                            "FScruiser Database Files (*.crz3db)|*.crz3db",
+                Multiselect = true,
+            };
+
+            var result = dialog.ShowDialog();
+            if (result == true)
+            {
+                var filePaths = dialog.FileNames;
+
+                var filePath = filePaths.FirstOrDefault();
+                if(filePath != null)
+                {
+                    var fileDir = Path.GetDirectoryName(filePath);
+                    AppSettings.LastOpenCruiseDir = fileDir;
+                }
+
+                return filePaths;
+            }
+            else
+            { return Enumerable.Empty<string>(); }
         }
 
         public string SelectCruiseFile()

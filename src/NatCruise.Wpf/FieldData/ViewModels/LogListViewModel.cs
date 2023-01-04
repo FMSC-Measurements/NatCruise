@@ -1,5 +1,6 @@
 ﻿using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,9 @@ namespace NatCruise.Wpf.FieldData.ViewModels
     {
         private readonly IEnumerable<LogField> COMMON_LOGFIELDS = new[]
         {
-            //new LogField{DbType = "TEXT", Heading = "Cutting Unit", Field = nameof(Log.CuttingUnitCode)},
-            //new LogField{DbType = "TEXT", Heading = "Plot Number", Field = nameof(Log.PlotNumber)},
-            //new LogField{DbType = "TEXT", Heading = "Tree Number", Field = nameof(Log.TreeNumber)},
+            new LogField{DbType = "TEXT", Heading = "Cutting Unit", Field = nameof(Log.CuttingUnitCode)},
+            new LogField{DbType = "TEXT", Heading = "Plot Number", Field = nameof(Log.PlotNumber)},
+            new LogField{DbType = "TEXT", Heading = "Tree Number", Field = nameof(Log.TreeNumber)},
             //new LogField{DbType = "TEXT", Heading = "Stratum", Field = nameof(Log.StratumCode)},
             //new LogField{DbType = "TEXT", Heading = "Sample Group", Field = nameof(Log.SampleGroupCode)},
             //new LogField{DbType = "TEXT", Heading = "Species", Field = nameof(Log.SpeciesCode)},

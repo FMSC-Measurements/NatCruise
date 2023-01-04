@@ -1,7 +1,9 @@
-﻿using NatCruise.Data;
+﻿using CruiseDAL.Schema;
+using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
@@ -46,8 +48,24 @@ namespace NatCruise.Design.ViewModels
             get => _stratum;
             set
             {
+                if(_stratum != null) { _stratum.PropertyChanged -= _stratum_PropertyChanged; }
                 SetProperty(ref _stratum, value);
+                if(value != null) { value.PropertyChanged += _stratum_PropertyChanged; }
+
                 LoadSampleGroups(value);
+            }
+        }
+
+        private void _stratum_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var propName = e.PropertyName;
+            if(propName == nameof(Stratum.Method))
+            {
+                var st = (Stratum)sender;
+                foreach(var sg in SampleGroups)
+                {
+                    sg.CruiseMethod = st.Method;
+                }
             }
         }
 
@@ -101,14 +119,20 @@ namespace NatCruise.Design.ViewModels
             code = code.Trim();
             if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$") is false) { return; }
 
+            var stratum = Stratum;
             var newSampleGroup = new SampleGroup()
             {
                 SampleGroupCode = code,
-                StratumCode = Stratum.StratumCode,
-                CruiseMethod = Stratum.Method,
+                StratumCode = stratum.StratumCode,
+                CruiseMethod = stratum.Method,
                 CutLeave = "C",
                 DefaultLiveDead = "L",
             };
+
+            if(stratum.Method == CruiseMethods.FIXCNT)
+            {
+                newSampleGroup.UOM = "04"; //Piece count
+            }
 
             try
             {

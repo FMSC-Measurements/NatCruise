@@ -11,9 +11,6 @@ namespace NatCruise.Design.Services
 
         Task ShowStrata();
 
-        Task ShowCuttingUnitList();
-
-        Task ShowCruiseLandingLayout();
 
         Task ShowTemplateLandingLayout();
 

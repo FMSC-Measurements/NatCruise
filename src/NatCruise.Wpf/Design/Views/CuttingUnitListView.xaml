@@ -3,6 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
@@ -19,59 +20,58 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              DataContextChanged="UserControl_DataContextChanged">
-    <ScrollViewer>
-        <StackPanel Orientation="Horizontal"
-                    Margin="0,0,10,0"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <Border BorderBrush="{DynamicResource brush_shade_black_30}"
-                    BorderThickness="1">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0"
-                          Background="{StaticResource MahApps.Brushes.Control.Background}">
+    <Grid ctrls:GridHelper.ColumnDefinitions="Auto,*"
+          Margin="0,0,10,0">
+        <Border BorderBrush="{DynamicResource brush_shade_black_30}"
+                BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition Width="32" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox x:Name="_unitCodeTextBox"
-                                 Grid.Column="0"
-                                 mah:TextBoxHelper.Watermark="Code"
-                                 MaxLength="{x:Static dsgn:Constants.UNITCODE_MAXLENGTH}">
-                            <TextBox.InputBindings>
-                                <KeyBinding Key="Enter"
-                                            Command="{Binding AddCuttingUnitCommand}"
-                                            CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
-                            </TextBox.InputBindings>
-                        </TextBox>
-                        <Button Grid.Column="1"
-                                Style="{StaticResource AddButton}"
-                                Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
-                                IsEnabled="{Binding Text, ElementName=_unitCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
-                                Command="{Binding AddCuttingUnitCommand}"
-                                CommandParameter="{Binding Text, Source={x:Reference _unitCodeTextBox}}">
-                            <!--<i:Interaction.Triggers>
+                <Grid Grid.Row="0"
+                      Background="{StaticResource MahApps.Brushes.Control.Background}">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="32" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="_unitCodeTextBox"
+                             Grid.Column="0"
+                             mah:TextBoxHelper.Watermark="Code"
+                             MaxLength="{x:Static dsgn:Constants.UNITCODE_MAXLENGTH}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter"
+                                        Command="{Binding AddCuttingUnitCommand}"
+                                        CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    <Button Grid.Column="1"
+                            Style="{StaticResource AddButton}"
+                            Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                            IsEnabled="{Binding Text, ElementName=_unitCodeTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
+                            Command="{Binding AddCuttingUnitCommand}"
+                            CommandParameter="{Binding Text, Source={x:Reference _unitCodeTextBox}}">
+                        <!--<i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <i:InvokeCommandAction Command="{Binding AddCuttingUnitCommand}"
                                                            CommandParameter="{Binding Text, Source={x:Reference _unitCodeTextBox}}" />
                                     <triggers:ClearTextBoxAction TargetName="_unitCodeTextBox" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>-->
-                        </Button>
-                        <Button  Grid.Column="2"
-                                 Style="{StaticResource RemoveButton}"
-                                 Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
-                                 Command="{Binding RemoveCuttingUnitCommand}"
-                                 CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}"
-                                 IsEnabled="{Binding SelectedItem, ElementName=_cuttingUnitListView, Converter={StaticResource NotNullConverter}}" />
-                    </Grid>
+                    </Button>
+                    <Button  Grid.Column="2"
+                             Style="{StaticResource RemoveButton}"
+                             Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
+                             Command="{Binding RemoveCuttingUnitCommand}"
+                             CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}"
+                             IsEnabled="{Binding SelectedItem, ElementName=_cuttingUnitListView, Converter={StaticResource NotNullConverter}}" />
+                </Grid>
 
-                    <!--<DataGrid x:Name="_cuttingUnitListView"  Width="200"
+                <!--<DataGrid x:Name="_cuttingUnitListView"  Width="200"
                            MinHeight="300"
                            Background="White"
                           CanUserAddRows="False"
@@ -85,42 +85,47 @@
                     </DataGrid.Columns>
                 </DataGrid>-->
 
-                    <ListView Grid.Row="1"
-                              x:Name="_cuttingUnitListView"
-                              ItemsSource="{Binding CuttingUnits}"
-                              SelectedItem="{Binding SelectedUnit}"
-                              SelectionMode="Single">
-                        <ListView.Resources>
-                            <Style TargetType="{x:Type ListViewItem}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Errors, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                                                 Value="True">
-                                        <Setter Property="Background"
-                                                Value="{StaticResource brush_listItemError}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ListView.Resources>
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="False"
-                                      ColumnHeaderToolTip="Cutting Units">
-                                <GridViewColumn Header="Code"
-                                                DisplayMemberBinding="{Binding CuttingUnitCode}"
-                                                Width="60" />
-                                <GridViewColumn Header=" Description"
-                                                DisplayMemberBinding="{Binding Description}"
-                                                Width="150" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                <ListView Grid.Row="1"
+                          x:Name="_cuttingUnitListView"
+                          ItemsSource="{Binding CuttingUnits}"
+                          d:ItemsSource="{d:SampleData ItemCount=30}"
+                          SelectedItem="{Binding SelectedUnit}"
+                          SelectionMode="Single"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Errors, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                             Value="True">
+                                    <Setter Property="Background"
+                                            Value="{StaticResource brush_listItemError}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False"
+                                  ColumnHeaderToolTip="Cutting Units">
+                            <GridViewColumn Header="Code"
+                                            DisplayMemberBinding="{Binding CuttingUnitCode}"
+                                            Width="60" />
+                            <GridViewColumn Header=" Description"
+                                            DisplayMemberBinding="{Binding Description}"
+                                            Width="150" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
 
-                </Grid>
-            </Border>
+            </Grid>
+        </Border>
 
+        <ScrollViewer Grid.Column="1"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ContentControl prism:RegionManager.RegionName="{x:Static nav:Regions.CuttingUnitDetailsRegion}"
                             prism:RegionManager.RegionContext="{Binding SelectedUnit}"
                             VerticalAlignment="Stretch" />
+        </ScrollViewer>
 
-        </StackPanel>
-    </ScrollViewer>
+    </Grid>
+
 </UserControl>

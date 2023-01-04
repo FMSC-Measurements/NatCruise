@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Wpf.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,61 +24,25 @@ namespace NatCruise.Wpf.Views
         public CombineFileView()
         {
             InitializeComponent();
+
+            DataContextChanged += CombineFileView_DataContextChanged;
         }
 
-        // HACK binding to a set up radio buttons is a nightmire
-        // Changing the IsChecked state on one radio button causes all the others
-        // in the group to change too. Even worse when you throw a value converter in there too
-        // I could probably get the binding to work but after wrestleing with it for a day
-        // I decided to go with this solution of click handlers and DataContextChanged handlers
-        // since it minimized the behind the sceans magic. 
-
-        private void SelectResolveDestAsIs(object sender, RoutedEventArgs e)
+        private void CombineFileView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var radioBtn = (RadioButton)sender;
-            var host = (System.Windows.Controls.Panel)radioBtn.Parent;
-            var conflict = host.DataContext as CruiseDAL.V3.Sync.Conflict;
-
-            if (conflict != null)
+            if(e.OldValue is CombineFileViewModel oldVm)
             {
-                conflict.ConflictResolution = CruiseDAL.V3.Sync.ConflictResolutionType.ChoseDest;
+                oldVm.ConflictsDetected -= ViewModel_ConflictDetected;
+            }
+            if(e.NewValue is CombineFileViewModel newVm)
+            {
+                newVm.ConflictsDetected += ViewModel_ConflictDetected;
             }
         }
 
-        private void SelectResolveDestWithEdits(object sender, RoutedEventArgs e)
+        private void ViewModel_ConflictDetected(object sender, EventArgs e)
         {
-            var radioBtn = (RadioButton)sender;
-            var host = (System.Windows.Controls.Panel)radioBtn.Parent;
-            var conflict = host.DataContext as CruiseDAL.V3.Sync.Conflict;
-
-            if (conflict != null)
-            {
-                conflict.ConflictResolution = CruiseDAL.V3.Sync.ConflictResolutionType.ModifyDest;
-            }
-        }
-
-        private void SelectResolveSourceAsIs(object sender, RoutedEventArgs e)
-        {
-            var radioBtn = (RadioButton)sender;
-            var host = (System.Windows.Controls.Panel)radioBtn.Parent;
-            var conflict = host.DataContext as CruiseDAL.V3.Sync.Conflict;
-
-            if (conflict != null)
-            {
-                conflict.ConflictResolution = CruiseDAL.V3.Sync.ConflictResolutionType.ChoseSource;
-            }
-        }
-
-        private void SelectResolveSourceWithEdits(object sender, RoutedEventArgs e)
-        {
-            var radioBtn = (RadioButton)sender;
-            var host = (System.Windows.Controls.Panel)radioBtn.Parent;
-            var conflict = host.DataContext as CruiseDAL.V3.Sync.Conflict;
-
-            if (conflict != null)
-            {
-                conflict.ConflictResolution = CruiseDAL.V3.Sync.ConflictResolutionType.ModifySource;
-            }
+            _currentFileDetailsPanel.IsExpanded = true;
         }
     }
 }

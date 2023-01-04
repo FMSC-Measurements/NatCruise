@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Navigation;
 using NatCruise.Services;
@@ -37,7 +38,10 @@ namespace NatCruise.Wpf.Views
 
             try
             {
-                var designChecksds = Container.Resolve<IDesignCheckDataservice>();
+                var dsp = Container.Resolve<IDataserviceProvider>();
+                if (dsp.Database == null) return;
+
+                var designChecksds = dsp.GetDataservice<IDesignCheckDataservice>();
 
                 var designChecks = designChecksds.GetDesignChecks();
                 if (designChecks.Any(x => x.Level == "Error"))

@@ -6,6 +6,7 @@
                                       xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
                                       xmlns:local_behaviors="clr-namespace:FScruiser.XF.Behaviors"
                                       xmlns:converters="clr-namespace:FScruiser.XF.Converters"
+                                      xmlns:effects="http://xamarin.com/schemas/2020/toolkit"
                                       x:Class="FScruiser.XF.Views.PlotTallyView"
                                       BackgroundColor="White"
                                       x:Name="_page"
@@ -50,6 +51,7 @@
                         IsVisible="false"
                         Padding="0"
                         BindingContext="{Binding SelectedTreeViewModel}"
+                        BindingContextChanged="_treeEditPanel_BindingContextChanged"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Tree Edit Panel">
 
@@ -119,10 +121,14 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
                                                         <Entry Text="{Binding ValueInt}"
-                                                               Placeholder="{Binding StrDefaultValue}">
+                                                               Placeholder="{Binding StrDefaultValue}"
+                                                               Keyboard="Numeric">
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
+                                                            <Entry.Effects>
+                                                                <effects:SelectAllTextEffect />
+                                                            </Entry.Effects>
                                                             <Entry.IsReadOnly>
                                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                                     <Binding Path="IsLocked" />
@@ -140,10 +146,14 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
                                                         <Entry Text="{Binding ValueReal}"
-                                                               Placeholder="{Binding StrDefaultValue}">
+                                                               Placeholder="{Binding StrDefaultValue}"
+                                                               Keyboard="Numeric">
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
+                                                            <Entry.Effects>
+                                                                <effects:SelectAllTextEffect />
+                                                            </Entry.Effects>
                                                             <Entry.IsReadOnly>
                                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                                     <Binding Path="IsLocked" />
@@ -165,6 +175,9 @@
                                                             <Entry.Behaviors>
                                                                 <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
                                                             </Entry.Behaviors>
+                                                            <Entry.Effects>
+                                                                <effects:SelectAllTextEffect />
+                                                            </Entry.Effects>
                                                             <Entry.IsReadOnly>
                                                                 <MultiBinding Converter="{StaticResource AnyTrueConverter}">
                                                                     <Binding Path="IsLocked" />
@@ -182,8 +195,8 @@
                                                 <DataTemplate>
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
-                                                        <Picker SelectedItem="{Binding ValueText}"
-                                                                ItemsSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
+                                                        <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
+                                                                                 ValueSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
                                                     </local_ctrls:LastChildHeightLayout>
                                                 </DataTemplate>
                                             </local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>

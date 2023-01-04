@@ -186,5 +186,14 @@ namespace FScruiser.XF.Views
             }
 
         }
+
+        private void _treeEditPanel_BindingContextChanged(object sender, EventArgs e)
+        {
+            var bindingContext = _treeEditPanel.BindingContext;
+            if(bindingContext == null && _treeEditPanel.IsVisible)
+            {
+                _treeEditPanel.IsVisible = false;
+            }
+        }
     }
 }

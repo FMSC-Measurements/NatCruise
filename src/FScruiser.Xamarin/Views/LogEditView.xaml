@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
                                     xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
-             x:Class="FScruiser.XF.Views.LogEditView"
-             AutomationProperties.Name="Log Edit Page">
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:viewmodels="clr-namespace:FScruiser.XF.ViewModels"
+                                    x:Class="FScruiser.XF.Views.LogEditView"
+                                    AutomationProperties.Name="Log Edit Page"
+                                    Title="Edit Log">
 
     <controls:InitializableContentPage.Resources>
         <Style x:Key="errorWarningLabel"
@@ -29,14 +30,43 @@
     <controls:InitializableContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal">
-                <Label x:Name="_logNumberHeading" Text="Log #"
+                <StackLayout.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Label">
+                            <Setter Property="FontSize"
+                                    Value="Large" />
+                        </Style>
+                    </ResourceDictionary>
+                </StackLayout.Resources>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Unit:" />
+                    <Label Text="{Binding Log.CuttingUnitCode}" />
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal"
+                             IsVisible="{Binding Log.PlotNumber, Converter={StaticResource greaterThanZeroConverter} }">
+                    <Label Text="Plot Number:" />
+                    <Label Text="{Binding Log.PlotNumber}" />
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Tree Number:" />
+                    <Label Text="{Binding Log.TreeNumber}" />
+                </StackLayout>
+
+            </StackLayout>
+
+
+            <StackLayout Orientation="Horizontal">
+                <Label x:Name="_logNumberHeading"
+                       Text="Log #"
                        WidthRequest="100"
-                       VerticalTextAlignment="Center"/>
+                       VerticalTextAlignment="Center" />
                 <Entry Text="{Binding Log.LogNumber}"
                        WidthRequest="100"
                        AutomationProperties.LabeledBy="{x:Reference _logNumberHeading}" />
             </StackLayout>
-            
+
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -78,7 +108,7 @@
                         <DataTemplate>
                             <Label Style="{StaticResource errorLabel}"
                                    AutomationProperties.IsInAccessibleTree="True"
-                                   AutomationProperties.HelpText="Log Error Item"/>
+                                   AutomationProperties.HelpText="Log Error Item" />
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </StackLayout>

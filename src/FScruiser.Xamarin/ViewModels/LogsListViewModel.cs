@@ -4,6 +4,7 @@ using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Util;
 using Prism.Commands;
@@ -24,11 +25,18 @@ namespace FScruiser.XF.ViewModels
         private IEnumerable<LogFieldSetup> _logFields;
         private int? _treeNumber;
         private ICommand _deleteLogCommand;
+        private Tree _tree;
 
-        public int? TreeNumber
+        //public int? TreeNumber
+        //{
+        //    get { return _treeNumber; }
+        //    set { SetProperty(ref _treeNumber, value); }
+        //}
+
+        public Tree Tree
         {
-            get { return _treeNumber; }
-            set { SetProperty(ref _treeNumber, value); }
+            get => _tree;
+            protected set => SetProperty(ref _tree, value);
         }
 
         public ObservableCollection<Log> Logs
@@ -77,7 +85,9 @@ namespace FScruiser.XF.ViewModels
             var tree_guid = Tree_GUID = parameters.GetValue<string>(NavParams.TreeID)
                 ?? parameters.GetValue<string>(KnownNavigationParameters.XamlParam);
 
-            TreeNumber = TreeDataservice.GetTreeNumber(tree_guid);
+            Tree = TreeDataservice.GetTree(tree_guid);
+
+            //TreeNumber = TreeDataservice.GetTreeNumber(tree_guid);
 
             LogFields = FieldSetupDataservice.GetLogFieldSetupsByTreeID(tree_guid);
 

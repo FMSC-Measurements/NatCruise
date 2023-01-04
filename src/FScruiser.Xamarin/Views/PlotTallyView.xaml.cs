@@ -218,5 +218,14 @@ namespace FScruiser.XF.Views
             var swipeview = ((Element)sender).GetAncestor<SwipeView>();
             swipeview.Open(OpenSwipeItem.LeftItems);
         }
+
+        private void _treeEditPanel_BindingContextChanged(object sender, EventArgs e)
+        {
+            var bindingContext = _treeEditPanel.BindingContext;
+            if (bindingContext == null && _treeEditPanel.IsVisible)
+            {
+                _treeEditPanel.IsVisible = false;
+            }
+        }
     }
 }
