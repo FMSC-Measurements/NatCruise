@@ -1,5 +1,6 @@
 ﻿using NatCruise.Design.Data;
 using NatCruise.Design.Models;
+using NatCruise.MVVM;
 using System;
 using System.Linq;
 

@@ -37,6 +37,10 @@
                 <MenuItem Header="Exit"
                           Command="{Binding ShutdownCommand}" />
             </MenuItem>
+            <MenuItem Header="Tools">
+                <MenuItem Header="Combine Files"
+                          Command="{Binding ShowCombineFiles}" />
+            </MenuItem>
         </Menu>
         <Grid>
             <Image StretchDirection="UpOnly"

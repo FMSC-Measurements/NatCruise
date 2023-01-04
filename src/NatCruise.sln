@@ -60,7 +60,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xamarin.Forms.DataGrid", ".
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FScruiser.Droid.Test", "FScruiser.Droid.Test\FScruiser.Droid.Test.csproj", "{649EE027-7DC2-4578-8E5E-33812482E6B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NatCruise.Wpf.Test", "NatCruise.Wpf.Test\NatCruise.Wpf.Test.csproj", "{E6AFA8AC-1FAE-475C-B680-A996975A29B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Wpf.Test", "NatCruise.Wpf.Test\NatCruise.Wpf.Test.csproj", "{E6AFA8AC-1FAE-475C-B680-A996975A29B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V2.Updater", "..\..\CruiseDAL\src\CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj", "{310C36E9-2545-466E-B6F9-F09EC4F101A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -306,6 +308,18 @@ Global
 		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Release|x86.ActiveCfg = Release|Any CPU
 		{E6AFA8AC-1FAE-475C-B680-A996975A29B6}.Release|x86.Build.0 = Release|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Debug|x86.Build.0 = Debug|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Profile|Any CPU.ActiveCfg = Debug|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Profile|Any CPU.Build.0 = Debug|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Profile|x86.ActiveCfg = Debug|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Profile|x86.Build.0 = Debug|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Release|x86.ActiveCfg = Release|Any CPU
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -325,6 +339,7 @@ Global
 		{8B6F758A-697D-4C58-9E8A-9FA10CB04796} = {180EFDF1-F198-40A6-B9F8-5DEB8932C4B9}
 		{649EE027-7DC2-4578-8E5E-33812482E6B4} = {FEA7B92B-98BA-46EA-8968-CBDE76CF24D7}
 		{E6AFA8AC-1FAE-475C-B680-A996975A29B6} = {FEA7B92B-98BA-46EA-8968-CBDE76CF24D7}
+		{310C36E9-2545-466E-B6F9-F09EC4F101A1} = {355C4190-4178-41FA-89AE-EF202205545C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9C152AC2-B1C8-47CC-98C6-B566DD992425}

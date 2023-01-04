@@ -5,6 +5,7 @@ using NatCruise;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
@@ -270,22 +271,27 @@ namespace FScruiser.XF.ViewModels
 
         public async Task<bool> ImportCruise(string cruiseID, string importPath, TableSyncOptions options = null)
         {
-            options ??= new TableSyncOptions(SyncOption.InsertUpdateDelete);
+            options ??= new TableSyncOptions(SyncOption.InsertUpdate);
 
             var destDb = DataserviceProvider.Database;
             using (var srcDb = new CruiseDatastore_V3(importPath))
             {
                 var fromConn = srcDb.OpenConnection();
                 var toConn = destDb.OpenConnection();
+
+                var transaction = toConn.BeginTransaction();
                 try
                 {
                     IsWorking = true;
-                    var syncer = new CruiseSyncer();
+                    var syncer = new CruiseDatabaseSyncer();
                     await syncer.SyncAsync(cruiseID, fromConn, toConn, options);
+
+                    transaction.Commit();
                     return true;
                 }
                 catch (Exception e)
                 {
+                    transaction.Rollback();
                     Log.LogException("Import", "Import Failed", e);
 
                     return false;

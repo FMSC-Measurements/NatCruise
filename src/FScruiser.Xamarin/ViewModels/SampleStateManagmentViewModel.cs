@@ -1,6 +1,7 @@
 ﻿using Microsoft.AppCenter.Crashes;
 using NatCruise;
 using NatCruise.Data;
+using NatCruise.MVVM;
 using Prism.Common;
 using System;
 using System.Collections.Generic;

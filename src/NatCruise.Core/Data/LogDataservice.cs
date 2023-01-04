@@ -21,7 +21,10 @@ namespace NatCruise.Data
             return Database.Query2<Log>(
                 "SELECT " +
                 "l.*, " +
-                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount " +
+                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, " +
+                "t.CuttingUnitCode, " +
+                "t.PlotNumber, " +
+                "t.TreeNumber " +
                 "FROM Log AS l " +
                 "JOIN Tree AS t USING (TreeID) " +
                 "WHERE t.CruiseID = @CruiseID " +
@@ -42,8 +45,12 @@ namespace NatCruise.Data
             return Database.Query<Log>(
                 "SELECT " +
                 "l.*, " +
-                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount " +
+                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, " +
+                "t.CuttingUnitCode, " +
+                "t.PlotNumber, " +
+                "t.TreeNumber " +
                 "FROM Log AS l " +
+                "JOIN Tree AS t USING (TreeID) " +
                 "WHERE l.TreeID = @p1;", treeID).ToArray();
         }
 
@@ -52,8 +59,12 @@ namespace NatCruise.Data
             return Database.Query<Log>(
                 "SELECT " +
                 "l.*, " +
-                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount " +
+                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, " +
+                "t.CuttingUnitCode, " +
+                "t.PlotNumber, " +
+                "t.TreeNumber " +
                 "FROM Log AS l " +
+                "JOIN Tree AS t USING (TreeID) " +
                 "WHERE l.LogID = @p1;", logID).FirstOrDefault();
         }
 
@@ -62,8 +73,12 @@ namespace NatCruise.Data
             return Database.Query<Log>(
                 "SELECT " +
                 "l.*, " +
-                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount " +
+                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, " +
+                "t.CuttingUnitCode, " +
+                "t.PlotNumber, " +
+                "t.TreeNumber " +
                 "FROM Log AS l " +
+                "JOIN Tree AS t USING (TreeID) " +
                 "WHERE l.TreeID = @p1 AND LogNumber = @p2;", treeID, logNumber).FirstOrDefault();
         }
 

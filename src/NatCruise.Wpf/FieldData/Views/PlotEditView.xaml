@@ -14,11 +14,11 @@
              d:DesignWidth="450">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
             <RowDefinition  Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ItemsControl Grid.Row="1"
+        <ItemsControl Grid.Row="0"
                       ItemsSource="{Binding ErrorsAndWarnings}"
                       VerticalAlignment="Bottom"
                       AutomationProperties.Name="Plot Error List">
@@ -26,7 +26,7 @@
                 <DataTemplate>
                     <Label Foreground="{DynamicResource MahApps.Brushes.Text}"
                            Content="{Binding Message}"
-                           Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                           Background="{DynamicResource brush_listItemError}"
                            FontSize="20"
                            Margin="0,0,0,7"
                            AutomationProperties.Name="Plot Error Item" />
@@ -34,8 +34,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <DockPanel Grid.Row="0"
-                   Grid.RowSpan="2"
+        <DockPanel Grid.Row="1 "
                    Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
 
             <StackPanel DockPanel.Dock="Top"
@@ -117,119 +116,119 @@
                 </StackPanel>
             </StackPanel>
 
-            <ItemsControl x:Name="_plotListView"
-                          ItemsSource="{Binding StratumPlots}"
-                          d:ItemsSource="{d:SampleData ItemCount=2}"
-                          DockPanel.Dock="Bottom"
-                          AutomationProperties.Name="Plot Stratum List">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="7"
-                                Padding="3,0,3,5"
-                                Background="{DynamicResource MahApps.Brushes.Accent4}">
+            <ScrollViewer DockPanel.Dock="Bottom"
+                          HorizontalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="_plotListView"
+                              ItemsSource="{Binding StratumPlots}"
+                              d:ItemsSource="{d:SampleData ItemCount=2}"
+                              AutomationProperties.Name="Plot Stratum List">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="7"
+                                    Padding="3,0,3,5"
+                                    Background="{DynamicResource MahApps.Brushes.Accent4}">
 
-                            <Border.Resources>
-                                <ResourceDictionary>
-                                    <converters:CruiseMethodToBoolConverter MethodMap="FixedSizePlotMethods"
-                                                                            x:Key="IsFixedSizedPlotMethod" />
-                                    <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods"
-                                                                            x:Key="IsVRPlotMethod" />
-                                </ResourceDictionary>
-                            </Border.Resources>
+                                <Border.Resources>
+                                    <ResourceDictionary>
+                                        <converters:CruiseMethodToBoolConverter MethodMap="FixedSizePlotMethods"
+                                                                                x:Key="IsFixedSizedPlotMethod" />
+                                        <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods"
+                                                                                x:Key="IsVRPlotMethod" />
+                                    </ResourceDictionary>
+                                </Border.Resources>
 
-                            <StackPanel>
+                                <StackPanel>
 
-                                <StackPanel.Resources>
-                                    <Style TargetType="controls:LastChildWidthPanel">
-                                        <Setter Property="HorizontalAlignment"
-                                                Value="Left" />
-                                        <Setter Property="LastChildWidth"
-                                                Value="50" />
-                                        <Setter Property="Width"
-                                                Value="150" />
-                                        <Setter Property="Margin"
-                                                Value="0,5" />
-                                    </Style>
-                                </StackPanel.Resources>
-                                <!-- stratum code and add/remove button-->
-                                <TextBlock Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
-                                           FontWeight="Bold"
-                                           FontSize="20"
-                                           Foreground="{DynamicResource MahApps.Brushes.Text}"
-                                           HorizontalAlignment="Stretch" />
+                                    <StackPanel.Resources>
+                                        <Style TargetType="controls:LastChildWidthPanel">
+                                            <Setter Property="HorizontalAlignment"
+                                                    Value="Left" />
+                                            <Setter Property="LastChildWidth"
+                                                    Value="50" />
+                                            <Setter Property="Width"
+                                                    Value="150" />
+                                            <Setter Property="Margin"
+                                                    Value="0,5" />
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <!-- stratum code and add/remove button-->
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Left"
+                                                   Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
+                                                   FontWeight="Bold"
+                                                   FontSize="20"
+                                                   Foreground="{DynamicResource MahApps.Brushes.Text}" />
 
-                                <!--<controls:LastChildWidthPanel>
-                                    <Label Content="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
-                                           FontWeight="Bold"
-                                           FontSize="20"
-                                           Foreground="{DynamicResource MahApps.Brushes.Text}"
-                                           Margin="10,0,30,0"
-                                           VerticalContentAlignment="Center"
-                                           HorizontalAlignment="Stretch" />
+                                        <Button DockPanel.Dock="Right"
+                                                Content=" Add/Remove "
+                                                HorizontalAlignment="Right"
+                                                mah_ctrls:VisibilityHelper.IsVisible="{Binding DataContext.CanAddRemoveStrata, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                Command="{Binding DataContext.ToggleInCruiseCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding .}"
+                                                AutomationProperties.Name="Add Remove Stratum" />
+                                    </DockPanel>
 
-                                    <Button Content=" Add/Remove "
-                                            Command="{Binding BindingContext.ToggleInCruiseCommand, Source={x:Reference _page }}"
-                                            CommandParameter="{Binding .}"
-                                            HorizontalAlignment="Right"
-                                            AutomationProperties.Name="Add Remove Stratum" />
-                                </controls:LastChildWidthPanel>-->
-
-                                <!-- Cruise Method -->
-                                <controls:LastChildWidthPanel>
-                                    <TextBlock Text="Method:"
-                                               VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding CruiseMethod}"
-                                               VerticalAlignment="Center" />
-                                </controls:LastChildWidthPanel>
-
-                                <!-- BAF -->
-                                <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding CruiseMethod, Converter={StaticResource IsVRPlotMethod}}">
-                                    <TextBlock Text="BAF:"
-                                               VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding BAF}"
-                                               VerticalAlignment="Center" />
-                                </controls:LastChildWidthPanel>
-
-                                <!-- FPS -->
-                                <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding CruiseMethod, Converter={StaticResource IsFixedSizedPlotMethod}}">
-                                    <TextBlock Text="FPS:"
-                                               VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding FPS}"
-                                               VerticalAlignment="Center" />
-                                </controls:LastChildWidthPanel>
-
-                                <!--this panel hides if plot is not in cruise-->
-                                <StackPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding InCruise, Mode=OneWay}">
-                                    <!--horizontal spacer-->
-                                    <Border Height="1"
-                                            VerticalAlignment="Stretch"
-                                            Margin="0"
-                                            Background="{DynamicResource MahApps.Brushes.Control.Border}" />
-
-                                    <!-- Is Null Plot -->
+                                    <!-- Cruise Method -->
                                     <controls:LastChildWidthPanel>
-                                        <TextBlock Text="Is Null Plot"
+                                        <TextBlock Text="Method:"
                                                    VerticalAlignment="Center" />
-                                        <CheckBox IsChecked="{Binding IsEmpty}" />
+                                        <TextBlock Text="{Binding CruiseMethod}"
+                                                   VerticalAlignment="Center" />
                                     </controls:LastChildWidthPanel>
-                                    <!--horizontal spacer-->
-                                    <!--<Border Height="1"
+
+                                    <!-- BAF -->
+                                    <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding CruiseMethod, Converter={StaticResource IsVRPlotMethod}}">
+                                        <TextBlock Text="BAF:"
+                                                   VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding BAF}"
+                                                   VerticalAlignment="Center" />
+                                    </controls:LastChildWidthPanel>
+
+                                    <!-- FPS -->
+                                    <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding CruiseMethod, Converter={StaticResource IsFixedSizedPlotMethod}}">
+                                        <TextBlock Text="FPS:"
+                                                   VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding FPS}"
+                                                   VerticalAlignment="Center" />
+                                    </controls:LastChildWidthPanel>
+
+                                    <!--this panel hides if plot is not in cruise-->
+                                    <StackPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding InCruise, Mode=OneWay}">
+                                        <!--horizontal spacer-->
+                                        <Border Height="1"
+                                                VerticalAlignment="Stretch"
+                                                Margin="0"
+                                                Background="{DynamicResource MahApps.Brushes.Control.Border}" />
+
+                                        <!-- Is Null Plot -->
+                                        <controls:LastChildWidthPanel>
+                                            <TextBlock Text="Is Null Plot"
+                                                       VerticalAlignment="Center" />
+                                            <CheckBox IsChecked="{Binding IsEmpty}" />
+                                        </controls:LastChildWidthPanel>
+                                        <!--horizontal spacer-->
+                                        <!--<Border Height="1"
                                             VerticalAlignment="Stretch"
                                             Margin="0"
                                             Background="{DynamicResource MahApps.Brushes.Control.Border}" />-->
 
-                                    <!--<Button Content="Calculate Limiting Distances"
+                                        <!--<Button Content="Calculate Limiting Distances"
                                             VerticalAlignment="Stretch"
                                             Command="{Binding BindingContext.ShowLimitingDistanceCommand, Source={x:Reference _page }}"
                                             CommandParameter="{Binding .}"
                                             AutomationProperties.Name="Limiting Distance" />-->
+                                    </StackPanel>
+
+
                                 </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </DockPanel>
+
+
 
 
     </Grid>

@@ -33,11 +33,16 @@ namespace NatCruise.Wpf.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var method = (string)value;
-            var methodType = StringToCruiseMethodType(method);
+            if(value is string method)
+            {
+                var methodType = StringToCruiseMethodType(method);
 
-            var andMap = (methodType & MethodMap) != 0;
-            return andMap ^ Invert; // xor to invert value
+                var andMap = (methodType & MethodMap) != 0;
+                return andMap ^ Invert; // xor to invert value
+            }
+
+            return Binding.DoNothing;
+            
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

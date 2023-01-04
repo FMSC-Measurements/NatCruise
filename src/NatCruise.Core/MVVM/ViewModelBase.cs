@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace NatCruise
-{
+namespace NatCruise.MVVM
+{ 
 
     //TODO consolidate behavior between IActiveAware and Initialize
     // ActiveAware was used because IInitialize didn't support WPF and was needed to create a common
@@ -26,7 +26,7 @@ namespace NatCruise
     // the question is what should be initialized during Initialize and what should be initialized during Load
     // see NatCruise.WPF.PlotEditViewModel for example on implementing cross platform loading
 
-    public abstract class ViewModelBase : Prism.Mvvm.BindableBase, IActiveAware, ITheRealInitialize 
+    public abstract class ViewModelBase : Prism.Mvvm.BindableBase, IActiveAware, ITheRealInitialize
     {
         public bool IsLoaded { get; private set; }
         private bool _isActive;
@@ -34,7 +34,7 @@ namespace NatCruise
 
         public event EventHandler IsActiveChanged; // TODO remove if unused
         public IParameters Parameters { get; protected set; }
-        
+
 
         public bool IsActive
         {
@@ -60,10 +60,12 @@ namespace NatCruise
 
                     stopwatch.Stop();
                     var tenthsecond = stopwatch.ElapsedMilliseconds / 100; //round to tenth of second, this helps reduces the number of data points in reporting
+                    var viewModelType = this.GetType().Name;
                     Analytics.TrackEvent("view_model_load",
                         new Dictionary<string, string> {
-                        { "time_TenthSec", tenthsecond.ToString() },
-                        { "view_model_type", this.GetType().Name },
+                            { "time_TenthSec", tenthsecond.ToString() },
+                            { "view_model_type:time_TenthSec", viewModelType + ":" + tenthsecond.ToString() },
+                            { "view_model_type", viewModelType },
                         });
                 }
                 catch (Exception ex)
@@ -72,7 +74,7 @@ namespace NatCruise
                     Crashes.TrackError(ex, new Dictionary<string, string>() { { "view_model_type", this.GetType().Name } });
                 }
 
-                
+
             }
         }
 

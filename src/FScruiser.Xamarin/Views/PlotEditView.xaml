@@ -182,6 +182,7 @@
                                                AutomationProperties.IsInAccessibleTree="False" />
 
                                         <Button Text=" Add/Remove "
+                                                IsVisible="{Binding BindingContext.CanAddRemoveStrata, Source={Reference _page }}"
                                                 Command="{Binding BindingContext.ToggleInCruiseCommand, Source={Reference _page }}"
                                                 CommandParameter="{Binding .}"
                                                 HorizontalOptions="End"

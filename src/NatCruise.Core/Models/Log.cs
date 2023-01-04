@@ -17,6 +17,12 @@ namespace NatCruise.Models
             set => SetProperty(ref _logNumber, value); 
         }
 
+        public string CuttingUnitCode { get; set; }
+
+        public int? PlotNumber { get; set; }
+
+        public int TreeNumber { get; set; }
+
         private string _grade;
         public string Grade
         {
