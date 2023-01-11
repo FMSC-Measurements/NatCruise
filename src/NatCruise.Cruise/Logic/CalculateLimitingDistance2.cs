@@ -73,13 +73,17 @@ namespace NatCruise.Cruise.Logic
         public static decimal CalculateToSlopeCorrectionFactor(int slopePct)
         {
             if (slopePct < 10) { return 1.0m; } // slope correction factor should only be calculated for slopes 10% or more
-
+            if (slopePct == 10) { return 1.01m; } // look up tables in the Forest Service Handbook list the SCF for a slope as 10 as 1.01
+                                                  // this may be due to a rounding error, but to stay consistent with the handbook we return 1.01
+                                                  
             decimal slope = slopePct / 100.0m; // convert slope percentage to decimal value
             // its not explicitly stated that slope correction factor should be rounded two decimals
             // but examples in the handbook (pg. 39) show two decimals.
             // also it is explicitly stated that slope correction factor should only be calculated for slopes 10% or more
             // which supports the idea of only using two decimals
-            return Math.Round(DecimalMath.Sqrt(1.0m + (slope * slope)), 2, MidpointRounding.AwayFromZero);
+            var slopeSqr = slope * slope;
+            var scf = DecimalMath.Sqrt(1.0m + slopeSqr);
+            return Math.Round(scf, 2, MidpointRounding.AwayFromZero);
         }
 
         public static decimal CalculateFixSize(decimal fps, decimal dbh, int slopePct, bool isToFace)
