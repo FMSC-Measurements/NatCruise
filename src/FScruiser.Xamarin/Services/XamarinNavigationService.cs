@@ -300,8 +300,7 @@ namespace FScruiser.XF.Services
                 $"&{NavParams.LIVE_DEAD}={liveDead}");
 
             return NavigationService.NavigateAsync("TreeCountEdit",
-                parameters,
-                useModalNavigation: true, animated: false);
+                parameters);
         }
 
         public async Task ShowTreeEdit(string treeID)
