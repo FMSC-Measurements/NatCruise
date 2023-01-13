@@ -1,14 +1,10 @@
-﻿using FScruiser.XF.ViewModels;
-using NatCruise.Util;
+﻿using FScruiser.XF.Controls;
+using FScruiser.XF.Util;
+using FScruiser.XF.ViewModels;
 using System;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using System.Collections.Generic;
-using Xamarin.CommunityToolkit.Markup;
-using FScruiser.XF.Controls;
-using FScruiser.XF.Util;
-using NatCruise.Models;
 
 namespace FScruiser.XF.Views
 {
@@ -20,7 +16,6 @@ namespace FScruiser.XF.Views
             InitializeComponent();
         }
 
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -29,15 +24,6 @@ namespace FScruiser.XF.Views
             if (vm != null)
             {
                 vm.Load();
-                vm.IsLoading = true; // prevent changing controls from triggering prop changed events
-                try
-                {
-                    //_treeEditControlGrid.Children.Clear();
-                    //var editControls = MakeEditControls(vm.TreeFieldValues, vm.Cruisers);
-                    //_treeEditControlGrid.Children.AddRange(editControls);
-                }
-                finally
-                { vm.IsLoading = false; }
             }
         }
 
@@ -56,119 +42,6 @@ namespace FScruiser.XF.Views
             _treeEditPanel.IsVisible = true;
         }
 
-
-        private IEnumerable<View> MakeEditControls(IEnumerable<TreeFieldValue> treeFieldValues, IEnumerable<string> cruisers)
-        {
-            var controls = new List<View>();
-
-            controls.Add(new Label
-            { Text = "Species" }
-            .Column(0)
-            .Row(0));
-
-            var speciesPicker = new ValuePicker();
-            AjustEditView(speciesPicker);
-
-            controls.Add(speciesPicker
-                .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.SpeciesCode))
-                .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.SpeciesOptions))
-                .Column(0)
-                .Row(1));
-
-
-            int counter = 1;
-            foreach (var field in treeFieldValues)
-            {
-                if (field.IsHidden || field.IsLocked) { continue; }
-
-                if (field.Field == nameof(TreeEditViewModel.LiveDead))
-                {
-                    controls.Add(new Label
-                    { Text = "L/D" }
-            .Column(counter)
-            .Row(0));
-
-                    var ldPicker = new ValuePicker();
-                    AjustEditView(ldPicker);
-
-                    controls.Add(ldPicker
-                        .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.LiveDead))
-                        .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.LiveDeadOptions))
-                        .Column(counter)
-                        .Row(1));
-                }
-                else if (field.Field.Equals(nameof(TreeEditViewModel.Initials), StringComparison.OrdinalIgnoreCase))
-                {
-                    var fieldLabel = new Label()
-                    {
-                        Text = field.Heading
-                    }
-                    .Column(counter)
-                    .Row(0);
-                    controls.Add(fieldLabel);
-
-                    if (cruisers.Count() > 1)
-                    {
-                        var initPicker = new ValuePicker()
-                            .Bind(ValuePicker.SelectedValueProperty, nameof(TreeEditViewModel.Initials))
-                            .Bind(ValuePicker.ValueSourceProperty, nameof(TreeEditViewModel.Cruisers));
-                        AjustEditView(initPicker);
-                        controls.Add(initPicker.Column(counter).Row(1));
-                    }
-                    else
-                    {
-                        var initEntry = new Entry()
-                            .Bind(Entry.TextProperty, nameof(TreeEditViewModel.Initials));
-                        AjustEditView(initEntry);
-                        controls.Add(initEntry.Column(counter).Row(1));
-                    }
-                }
-                else
-                {
-                    var fieldLabel = new Label()
-                    {
-                        Text = field.Heading
-                    }
-                    .Column(counter)
-                    .Row(0);
-
-                    var editControl = Util.TreeEditControlFactory.MakeEditView(field)
-                        .Column(counter)
-                        .Row(1);
-                    AjustEditView(editControl);
-
-
-                    if (editControl is Entry entry)
-                    {
-                        entry.Completed += _entry_Completed;
-                    }
-
-                    controls.Add(fieldLabel);
-                    controls.Add(editControl);
-                }
-                counter++;
-            }
-
-            return controls;
-        }
-
-        private static void AjustEditView(View view)
-        {
-            //view.Margin = new Thickness(5,0);
-        }
-
-        private void _entry_Completed(object sender, EventArgs e)
-        {
-            if (sender != null && sender is View view)
-            {
-                var layout = (Grid)view.Parent;
-
-                var indexOfChild = layout.Children.IndexOf(view);
-                var nextChild = layout.Children.Skip(indexOfChild + 1).Where(x => x is Entry || x is Picker).FirstOrDefault();
-                nextChild?.Focus();
-            }
-        }
-
         private void openUntallyButton_Clicked(object sender, EventArgs e)
         {
             var swipeview = ((Element)sender).GetAncestor<SwipeView>();
@@ -184,13 +57,12 @@ namespace FScruiser.XF.Views
             {
                 _tallyFeedListView.ScrollTo(itemCount - 1, position: ScrollToPosition.End, animate: false);
             }
-
         }
 
         private void _treeEditPanel_BindingContextChanged(object sender, EventArgs e)
         {
             var bindingContext = _treeEditPanel.BindingContext;
-            if(bindingContext == null && _treeEditPanel.IsVisible)
+            if (bindingContext == null && _treeEditPanel.IsVisible)
             {
                 _treeEditPanel.IsVisible = false;
             }
