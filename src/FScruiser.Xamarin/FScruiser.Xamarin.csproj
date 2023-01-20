@@ -28,7 +28,6 @@
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
-		<PackageReference Include="Scripty.MsBuild" Version="0.7.4" />
 		<PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.5" />
 		<PackageReference Include="Xamarin.CommunityToolkit.Markup" Version="2.0.5" />
 		<PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
@@ -258,9 +257,6 @@
 		<None Update="App.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
-		<None Update="Secrets.local.csx">
-			<Generator>ScriptyGenerator</Generator>
-		</None>
 		<None Update="ViewCells\PlotTreeViewCell.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
@@ -280,4 +276,12 @@
 			<Generator>MSBuild:Compile</Generator>
 		</None>
 	</ItemGroup>
+
+	<Target Name="GenerateSecrets" BeforeTargets="CoreBuild">
+		<ItemGroup>
+			<TemplateFile Include="Secrets.cst" />
+		</ItemGroup>
+
+		<ProcessCodeTemplate TemplateFiles="@(TemplateFile)" />
+	</Target>
 </Project>
