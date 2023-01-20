@@ -36,7 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'false' OR $(UseCruiseDALProjRefs) == '' ">
-		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.6.1.11600" />
+		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.6.1.11601" />
 	</ItemGroup>
 	
 	<ItemGroup>
