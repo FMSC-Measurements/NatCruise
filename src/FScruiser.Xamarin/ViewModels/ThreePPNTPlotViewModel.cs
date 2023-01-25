@@ -85,9 +85,9 @@ namespace FScruiser.XF.ViewModels
             PlotStratum = plotStratum;
         }
 
-        public double CalculateKPI()
+        public int CalculateKPI()
         {
-            return ThreePPNTPlotViewModel.CalculateKPI(TreeCount, PlotStratum.BAF, AverageHeight, VolumeFactor);
+            return CalculateKPI(TreeCount, PlotStratum.BAF, AverageHeight, VolumeFactor);
         }
 
         public static int CalculateKPI(int treeCount, double baf, int averageHeight, double volumeFactor)
@@ -130,6 +130,8 @@ namespace FScruiser.XF.ViewModels
             plotStratum.TreeCount = TreeCount;
             plotStratum.AverageHeight = AverageHeight;
             plotStratum.CountOrMeasure = (kpi > randomValue) ? "M" : "C";
+            plotStratum.KPI = kpi;
+            plotStratum.ThreePRandomValue = randomValue;
             PlotStratumDataservice.Insert3PPNT_Plot_Stratum(plotStratum);
 
             if (kpi > randomValue)
