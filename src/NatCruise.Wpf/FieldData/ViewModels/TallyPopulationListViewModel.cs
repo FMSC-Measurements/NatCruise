@@ -1,6 +1,7 @@
 ﻿using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.MVVM.ViewModels;
 using System;
 using System.Collections.Generic;
 
