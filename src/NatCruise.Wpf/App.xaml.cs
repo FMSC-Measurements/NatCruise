@@ -8,6 +8,7 @@ using NatCruise.Design.Data;
 using NatCruise.Design.Services;
 using NatCruise.Design.Validation;
 using NatCruise.Design.Views;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Wpf.FieldData.Views;
@@ -21,6 +22,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 
@@ -32,6 +34,7 @@ namespace NatCruise.Wpf
     public partial class App : PrismApplication, IAppService
     {
         private string[] StartupArgs { get; set; }
+        protected ILoggingService LoggingService { get; private set; }
 
         protected override Window CreateShell()
         {
@@ -59,7 +62,9 @@ namespace NatCruise.Wpf
 
             var container = Container;
 
-            var loggingService = container.Resolve<ILoggingService>();
+            // wire logging service up to our task extentions. this will pride logging
+            // for our FireAndForget async tasks.
+            var loggingService = LoggingService = container.Resolve<ILoggingService>();
             NatCruise.Util.TaskExtentions.LoggingService = loggingService;
 
             var regionManager = container.Resolve<IRegionManager>();
@@ -109,26 +114,36 @@ namespace NatCruise.Wpf
             //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(LogFieldsView));
 
 
+            var viewModelRegistar = new CoreViewModelRegester();
+            viewModelRegistar.RegisterViewModels();
+
             base.OnInitialized();
 
-            //var startupArgs = StartupArgs;
-
-            //if (startupArgs.Length > 0)
-            //{
-            //    var arg1 = startupArgs[0];
-            //    try
-            //    {
-            //        var path = Path.GetFullPath(arg1);
-            //        if (File.Exists(path))
-            //        {
-            //            var mainWindowVM = base.MainWindow?.DataContext as MainWindowViewModel;
-            //            mainWindowVM.OpenFile(path);
-            //        }
-            //    }
-            //    catch
-            //    { }
-            //}
+            //ProcessStartupArgs();
         }
+
+        //protected void ProcessStartupArgs()
+        //{
+        //    var startupArgs = StartupArgs;
+
+        //    if (startupArgs.Length > 0)
+        //    {
+        //        var arg1 = startupArgs[0];
+        //        try
+        //        {
+        //            var path = Path.GetFullPath(arg1);
+        //            if (File.Exists(path))
+        //            {
+        //                var mainWindowVM = base.MainWindow?.DataContext as MainWindowViewModel;
+        //                mainWindowVM.OpenFile(path);
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            LoggingService.LogException(nameof(App), nameof(ProcessStartupArgs), ex);
+        //        }
+        //    }
+        //}
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {

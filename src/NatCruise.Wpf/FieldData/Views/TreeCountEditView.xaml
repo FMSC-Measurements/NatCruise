@@ -26,6 +26,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!-- population information-->
         <WrapPanel Grid.Row="0">
             <WrapPanel.Resources>
                 <Style TargetType="controls:LastChildWidthPanel">
@@ -72,6 +73,7 @@
             </controls:LastChildWidthPanel>
         </WrapPanel>
 
+        <!-- sampling information -->
         <WrapPanel Grid.Row="1">
             <WrapPanel.Resources>
                 <Style TargetType="controls:LastChildWidthPanel">
