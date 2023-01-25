@@ -193,6 +193,9 @@ namespace FScruiser.XF
 
         protected override void ConfigureViewModelLocator()
         {
+            // note although some view models will be located using the convention established below
+            // there are some that are registered to view names explicitly. See XamarinPlatformInitializer
+
             base.ConfigureViewModelLocator();
 
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>

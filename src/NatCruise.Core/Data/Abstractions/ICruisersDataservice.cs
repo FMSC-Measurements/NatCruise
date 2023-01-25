@@ -1,7 +1,6 @@
-﻿using NatCruise.Data;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Data
 {
     public interface ICruisersDataservice
     {
@@ -12,7 +11,5 @@ namespace NatCruise.Cruise.Services
         void AddCruiser(string cruiser);
 
         void RemoveCruiser(string cruiser);
-
-        //void UpdateCruiser(string oldValue, string newValue);
     }
 }

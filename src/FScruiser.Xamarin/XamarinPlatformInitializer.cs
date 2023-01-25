@@ -6,11 +6,19 @@ using FScruiser.XF.Views;
 using FScruiser.XF.ViewModels;
 using NatCruise.Services;
 using NatCruise.Navigation;
+using NatCruise.MVVM;
 
 namespace FScruiser.XF
 {
     public class XamarinPlatformInitializer : IPlatformInitializer
     {
+        protected IViewModelRegester ViewModelRegester;
+
+        public XamarinPlatformInitializer()
+        {
+            ViewModelRegester = new CoreViewModelRegester();
+        }
+
         public virtual void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IApplicationSettingService, XamarinApplicationSettingService>();
@@ -63,6 +71,8 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<FeedbackView>("Feedback");
             containerRegistry.RegisterForNavigation<UtilitiesView>("Utilities");
             containerRegistry.RegisterForNavigation<DatabaseUtilitiesView>("DatabaseUtilities");
+
+            ViewModelRegester.RegisterViewModels();
         }
 
     }
