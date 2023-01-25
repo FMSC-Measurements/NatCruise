@@ -1,4 +1,6 @@
 ﻿using CruiseDAL;
+using CruiseDAL.UpConvert;
+using DryIoc;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Services;
@@ -207,6 +209,35 @@ namespace NatCruise.Wpf.ViewModels
                 RecentFilesDataservice.AddRecentFile(filePath);
                 CurrentFileName = Path.GetFileName(filePath);
                 RaisePropertyChanged(nameof(RecentFiles));
+            }
+            else if (extention is ".cut")
+            {
+                var dir = file.DirectoryName;
+                var fName = Path.GetFileNameWithoutExtension(file.Name);
+                var convertPath = Path.Combine(dir, fName + ".crz3t");
+                if(File.Exists(convertPath))
+                {
+                    if (await DialogService.AskYesNoAsync("Existing V3 template found (...\\" + file.Name + ") Would you like to overwrite and reconvert?",
+                    "Convert Template File"))
+                    {
+                        ConvertTemplate(file.FullName, convertPath);
+                    }
+                    await OpenFile(convertPath);
+                    return;
+                }
+                else if (await DialogService.AskYesNoAsync("Would you like to convert V2 template to .crz3t template file", "Convert Template File"))
+                {
+                    ConvertTemplate(file.FullName, convertPath);
+                    await OpenFile(convertPath);
+                    return;
+                }
+
+                void ConvertTemplate(string v2Path, string v3Path)
+                {
+                    using var v3Db = new CruiseDatastore_V3();
+                    new Migrator().MigrateFromV2ToV3(v2Path, v3Db, DeviceInfoService.DeviceID);
+                    v3Db.BackupDatabase(v3Path);
+                }
             }
         }
     }
