@@ -70,6 +70,7 @@ namespace NatCruise.Data
             containerRegistry.Register<ISpeciesCodeDataservice>(x => GetDataservice<ISpeciesCodeDataservice>(x));
             containerRegistry.Register<ITemplateDataservice>(x => GetDataservice<ITemplateDataservice>(x));
             containerRegistry.Register<IDesignCheckDataservice>(x => GetDataservice<IDesignCheckDataservice>(x));
+            containerRegistry.Register<ICruisersDataservice>(x => GetDataservice<ICruisersDataservice>(x));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace NatCruise.Data
 {
-    public interface ICruisersDataservice
+    public interface ICruisersDataservice : IDataservice
     {
         bool PromptCruiserOnSample { get; set; }
 

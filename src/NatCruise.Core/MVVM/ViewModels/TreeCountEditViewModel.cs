@@ -90,6 +90,8 @@ namespace NatCruise.MVVM.ViewModels
             {
                 UnitCode = tallyPopulation.CuttingUnitCode;
                 CruiseMethod = tallyPopulation.Method;
+
+                Cruisers = CruisersDataservice.GetCruisers();
             }
             else
             {
@@ -181,7 +183,7 @@ namespace NatCruise.MVVM.ViewModels
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-            Cruisers = CruisersDataservice.GetCruisers();
+            
 
             var unit = parameters.GetValue<string>(NavParams.UNIT);
             var stratum = parameters.GetValue<string>(NavParams.STRATUM);

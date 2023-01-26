@@ -14,6 +14,10 @@ namespace FScruiser.XF.Data
         private const string PROMPT_CRUISERS_ON_SAMPLE_KEY = "prompt_cruisers_on_sample";
         private string[] _cruisers;
 
+        public string DeviceID => throw new NotSupportedException();
+
+        public string CruiseID => throw new NotSupportedException();
+
         public CruisersDataservice(Application application)
         {
             Application = application ?? throw new ArgumentNullException(nameof(application));
