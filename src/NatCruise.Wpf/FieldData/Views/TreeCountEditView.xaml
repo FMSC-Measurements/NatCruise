@@ -114,7 +114,7 @@
                 <TextBlock Text="{Binding TallyPopulation.InsuranceFrequency}"
                            d:Text="00" />
             </controls:LastChildWidthPanel>
-            
+
         </WrapPanel>
 
         <ScrollViewer Grid.Row="2">
@@ -214,9 +214,11 @@
 
                 <controls:LastChildWidthPanel>
                     <TextBlock Text="Initials" />
-                    <TextBox Text="{Binding Initials}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             AutomationProperties.Name="Initials Textbox" />
+                    <ComboBox Text="{Binding Initials}"
+                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                              AutomationProperties.Name="Initials Textbox"
+                              ItemsSource="{Binding Cruisers}"
+                              IsEditable="True" />
                 </controls:LastChildWidthPanel>
 
                 <!--Remarks-->

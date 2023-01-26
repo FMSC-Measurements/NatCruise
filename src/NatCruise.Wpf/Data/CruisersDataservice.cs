@@ -25,7 +25,10 @@ namespace NatCruise.Wpf.Data
 
         public IEnumerable<string> GetCruisers()
         {
-            return Database.QueryScalar<string>("SELECT Initials FROM TreeMeasurment UNION SELECT;").ToArray();
+            return Database.QueryScalar2<string>(
+@"SELECT DISTINCT Initials FROM TreeMeasurment JOIN Tree USING (TreeID) WHERE CruiseID = @CruiseID
+UNION
+SELECT DISTINCT Signature FROM TallyLedger WHERE CruiseID = @CruiseID;", new { CruiseID }).ToArray();
         }
 
         public void RemoveCruiser(string cruiser)
