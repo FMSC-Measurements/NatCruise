@@ -1,4 +1,5 @@
 ﻿using NatCruise.Cruise.Services;
+using NatCruise.Data;
 using NatCruise.Util;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,10 @@ namespace FScruiser.XF.Data
         private const string CRUISERS_PROP_KEY = "cruisers";
         private const string PROMPT_CRUISERS_ON_SAMPLE_KEY = "prompt_cruisers_on_sample";
         private string[] _cruisers;
+
+        public string DeviceID => throw new NotSupportedException();
+
+        public string CruiseID => throw new NotSupportedException();
 
         public CruisersDataservice(Application application)
         {

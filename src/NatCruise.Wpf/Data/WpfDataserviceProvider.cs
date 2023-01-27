@@ -1,6 +1,7 @@
 ﻿using CruiseDAL;
 using NatCruise.Core.Services;
 using NatCruise.Design.Data;
+using NatCruise.Wpf.Data;
 using Prism.Ioc;
 using System;
 
@@ -47,6 +48,10 @@ namespace NatCruise.Data
                 {
                     return new DesignCheckDataservice(database, cruiseID, deviceID);
                 }
+                else if (type == typeof(ICruisersDataservice))
+                {
+                    return new CruisersDataservice(database, cruiseID, deviceID);
+                }
                 
 
                 return null;
@@ -65,6 +70,7 @@ namespace NatCruise.Data
             containerRegistry.Register<ISpeciesCodeDataservice>(x => GetDataservice<ISpeciesCodeDataservice>(x));
             containerRegistry.Register<ITemplateDataservice>(x => GetDataservice<ITemplateDataservice>(x));
             containerRegistry.Register<IDesignCheckDataservice>(x => GetDataservice<IDesignCheckDataservice>(x));
+            containerRegistry.Register<ICruisersDataservice>(x => GetDataservice<ICruisersDataservice>(x));
         }
     }
 }
