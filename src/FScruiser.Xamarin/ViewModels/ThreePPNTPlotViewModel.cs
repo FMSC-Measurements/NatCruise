@@ -49,7 +49,6 @@ namespace FScruiser.XF.ViewModels
         protected ICruiseNavigationService NavigationService { get; }
         public ISampleGroupDataservice SampleGroupDataservice { get; }
         public Random Random { get; }
-        protected IPlotDataservice PlotDataservice { get; }
         public IPlotStratumDataservice PlotStratumDataservice { get; }
         protected IPlotTreeDataservice PlotTallyDataservice { get; }
         protected INatCruiseDialogService DialogService { get; }
@@ -57,14 +56,12 @@ namespace FScruiser.XF.ViewModels
         public Plot_Stratum PlotStratum { get; protected set; }
 
         public ThreePPNTPlotViewModel(ICruiseNavigationService navigationService,
-            IPlotDataservice plotDataservice,
             IPlotTreeDataservice plotTallyDataservice,
             IPlotStratumDataservice plotStratumDataservice,
             INatCruiseDialogService dialogService,
             ISampleGroupDataservice sampleGroupDataservice,
             Random random)
         {
-            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             PlotStratumDataservice = plotStratumDataservice ?? throw new ArgumentNullException(nameof(plotStratumDataservice));
             PlotTallyDataservice = plotTallyDataservice ?? throw new ArgumentNullException(nameof(plotTallyDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
