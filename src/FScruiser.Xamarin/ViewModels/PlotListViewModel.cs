@@ -74,7 +74,22 @@ namespace FScruiser.XF.ViewModels
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
-            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
+            if (string.IsNullOrEmpty(unitCode) is false)
+            {
+                CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
+            }
+            //else
+            //{
+            //    // when Plot Tally Page is navigated we want to load Plot List behind it in the nav stack
+            //    // because we just have the plot ID, so we need to read the plot and get the unit code. 
+            //    var plotID = parameters.GetValue<string>(NavParams.PlotID);
+            //    if (string.IsNullOrEmpty(plotID) == false)
+            //    {
+            //        var plot = PlotDataservice.GetPlot(plotID);
+            //        CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(plot.CuttingUnitCode);
+            //    }
+            //}
+
             RefreshPlots();
         }
 

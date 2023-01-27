@@ -5,6 +5,7 @@ using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Util;
 using Prism.Commands;
 using Prism.Common;
 using System;
@@ -25,6 +26,7 @@ namespace FScruiser.XF.ViewModels
         private IEnumerable<PlotError> _errorsAndWarnings;
         private ICommand _updatePlotNumberCommand;
         private bool _canAddRemoveStrata;
+        private ICommand _showPlotTallyCommand;
 
         public IEnumerable<PlotError> ErrorsAndWarnings
         {
@@ -69,11 +71,13 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public ICommand UpdatePlotNumberCommand => _updatePlotNumberCommand ?? (_updatePlotNumberCommand = new DelegateCommand<string>(UpdatePlotNumber));
+        public ICommand UpdatePlotNumberCommand => _updatePlotNumberCommand ??= new DelegateCommand<string>(UpdatePlotNumber);
 
-        public ICommand ShowLimitingDistanceCommand => _showLimitingDistanceCommand ?? (_showLimitingDistanceCommand = new DelegateCommand<Plot_Stratum>(async x => await ShowLimitingDistanceCalculatorAsync(x)));
+        public ICommand ShowLimitingDistanceCommand => _showLimitingDistanceCommand ??= new DelegateCommand<Plot_Stratum>(x => ShowLimitingDistanceCalculatorAsync(x).FireAndForget());
 
-        public ICommand ToggleInCruiseCommand => _toggleInCruiseCommand ?? (_toggleInCruiseCommand = new DelegateCommand<Plot_Stratum>(async (x) => await ToggleInCruiseAsync(x)));
+        public ICommand ShowPlotTallyCommand => _showPlotTallyCommand ??= new DelegateCommand(() => NavigationService.ShowPlotTally(Plot.PlotID).FireAndForget());
+
+        public ICommand ToggleInCruiseCommand => _toggleInCruiseCommand ??= new DelegateCommand<Plot_Stratum>((x) => ToggleInCruiseAsync(x).FireAndForget());
 
         #region PlotNumber
 
