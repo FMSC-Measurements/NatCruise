@@ -11,10 +11,10 @@
                                     AutomationProperties.IsInAccessibleTree="True"
                                     AutomationProperties.Name="Plot Edit Page">
 
-    <controls:InitializableContentPage.ToolbarItems>
+    <!--<controls:InitializableContentPage.ToolbarItems>
         <ToolbarItem Text="Tally"
                      Command="{Binding ShowPlotTallyCommand}" />
-    </controls:InitializableContentPage.ToolbarItems>
+    </controls:InitializableContentPage.ToolbarItems>-->
 
     <Grid>
         <Grid.RowDefinitions>
