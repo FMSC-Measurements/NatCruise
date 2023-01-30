@@ -7,6 +7,7 @@ using NatCruise.Core.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
@@ -45,6 +46,7 @@ namespace FScruiser.XF
         public IDataserviceProvider DataserviceProvider => _dataserviceProvider;
 
         public IApplicationSettingService Settings { get; } = new XamarinApplicationSettingService();
+        public NatCruiseViewModelProvider ViewModelProvider { get; } = new NatCruiseViewModelProvider();
 
         public App() : this(new XamarinPlatformInitializer())
         { }
@@ -198,33 +200,7 @@ namespace FScruiser.XF
 
             base.ConfigureViewModelLocator();
 
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
-            {
-                var viewName = viewType.FullName;
-                viewName = viewName.Replace(".Views.", ".ViewModels.");
-
-                string viewAssemblyName = null;
-                if (viewName.StartsWith("FSCruiser.Design"))
-                {
-                    viewAssemblyName = "NatCruise.Design";
-                }
-                else
-                {
-                    viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
-                }
-
-                var suffix = viewName.EndsWith("View") ? "Model" : "ViewModel";
-                var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);
-
-                var type = Type.GetType(viewModelName);
-                if (type == null)
-                {
-
-                    //LogException("ViewModelLocator", "View Model Not Found", null);
-                }
-
-                return type;
-            });
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelProvider.GetViewModel(viewType));
         }
 
 
