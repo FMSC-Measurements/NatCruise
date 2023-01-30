@@ -14,15 +14,13 @@ namespace FScruiser.XF
     {
         protected IViewModelRegester ViewModelRegester;
 
-        public XamarinPlatformInitializer()
-        {
-            ViewModelRegester = new CoreViewModelRegester();
-        }
-
         public virtual void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IApplicationSettingService, XamarinApplicationSettingService>();
+
             containerRegistry.Register<ICruiseNavigationService, XamarinNavigationService>();
+            containerRegistry.Register<INatCruiseNavigationService, XamarinNavigationService>();
+
             containerRegistry.Register<INatCruiseDialogService, XamarinDialogService>();
             containerRegistry.RegisterSingleton<ITallySettingsDataService, TallySettingsDataService>();
             containerRegistry.RegisterInstance<ILoggingService>(new AppCenterLoggerService());
@@ -71,8 +69,6 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<FeedbackView>("Feedback");
             containerRegistry.RegisterForNavigation<UtilitiesView>("Utilities");
             containerRegistry.RegisterForNavigation<DatabaseUtilitiesView>("DatabaseUtilities");
-
-            ViewModelRegester.RegisterViewModels();
         }
 
     }
