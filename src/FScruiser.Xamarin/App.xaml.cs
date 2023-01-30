@@ -32,7 +32,7 @@ namespace FScruiser.XF
         public const string CURRENT_NAV_PATH = "current_nav_path";
         public const string CURRENT_NAV_PARAMS = "current_nav_params";
 
-        private DataserviceProvider _dataserviceProvider;
+        private FScruiserDataserviceProvider _dataserviceProvider;
 
         //private CruiseFileSelectedEvent _cruiseFileSelectedEvent;
         //private CruiseFileOpenedEvent _cruiseFileOpenedEvent;
@@ -155,7 +155,7 @@ namespace FScruiser.XF
             if (containerRegistry.IsRegistered<IDataserviceProvider>() == false)
             {
                 containerRegistry.Register<IDataserviceProvider>(x => GetDataserviceProvider());
-                NatCruise.Cruise.Data.DataserviceProvider.RegisterDataservices(containerRegistry);
+                FScruiser.XF.Data.FScruiserDataserviceProvider.RegisterDataservices(containerRegistry);
             }
 
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)
@@ -164,7 +164,7 @@ namespace FScruiser.XF
             }
         }
 
-        protected DataserviceProvider GetDataserviceProvider()
+        protected FScruiserDataserviceProvider GetDataserviceProvider()
         {
             if (_dataserviceProvider is null)
             {
@@ -177,12 +177,12 @@ namespace FScruiser.XF
                     if (File.Exists(cruiseDbPath) == false)
                     {
                         var db = new CruiseDatastore_V3(cruiseDbPath, true);
-                        _dataserviceProvider = new DataserviceProvider(db, deviceInfo);
+                        _dataserviceProvider = new FScruiserDataserviceProvider(db, deviceInfo);
                     }
                     else
                     {
                         var db = new CruiseDatastore_V3(cruiseDbPath, false);
-                        _dataserviceProvider = new DataserviceProvider(db, deviceInfo);
+                        _dataserviceProvider = new FScruiserDataserviceProvider(db, deviceInfo);
                     }
                 }
                 catch (Exception ex)
