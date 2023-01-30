@@ -7,6 +7,7 @@ using NatCruise.Core.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
@@ -31,7 +32,7 @@ namespace FScruiser.XF
         public const string CURRENT_NAV_PATH = "current_nav_path";
         public const string CURRENT_NAV_PARAMS = "current_nav_params";
 
-        private DataserviceProvider _dataserviceProvider;
+        private FScruiserDataserviceProvider _dataserviceProvider;
 
         //private CruiseFileSelectedEvent _cruiseFileSelectedEvent;
         //private CruiseFileOpenedEvent _cruiseFileOpenedEvent;
@@ -45,6 +46,7 @@ namespace FScruiser.XF
         public IDataserviceProvider DataserviceProvider => _dataserviceProvider;
 
         public IApplicationSettingService Settings { get; } = new XamarinApplicationSettingService();
+        public NatCruiseViewModelProvider ViewModelProvider { get; } = new NatCruiseViewModelProvider();
 
         public App() : this(new XamarinPlatformInitializer())
         { }
@@ -153,7 +155,7 @@ namespace FScruiser.XF
             if (containerRegistry.IsRegistered<IDataserviceProvider>() == false)
             {
                 containerRegistry.Register<IDataserviceProvider>(x => GetDataserviceProvider());
-                NatCruise.Cruise.Data.DataserviceProvider.RegisterDataservices(containerRegistry);
+                FScruiser.XF.Data.FScruiserDataserviceProvider.RegisterDataservices(containerRegistry);
             }
 
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)
@@ -162,7 +164,7 @@ namespace FScruiser.XF
             }
         }
 
-        protected DataserviceProvider GetDataserviceProvider()
+        protected FScruiserDataserviceProvider GetDataserviceProvider()
         {
             if (_dataserviceProvider is null)
             {
@@ -175,12 +177,12 @@ namespace FScruiser.XF
                     if (File.Exists(cruiseDbPath) == false)
                     {
                         var db = new CruiseDatastore_V3(cruiseDbPath, true);
-                        _dataserviceProvider = new DataserviceProvider(db, deviceInfo);
+                        _dataserviceProvider = new FScruiserDataserviceProvider(db, deviceInfo);
                     }
                     else
                     {
                         var db = new CruiseDatastore_V3(cruiseDbPath, false);
-                        _dataserviceProvider = new DataserviceProvider(db, deviceInfo);
+                        _dataserviceProvider = new FScruiserDataserviceProvider(db, deviceInfo);
                     }
                 }
                 catch (Exception ex)
@@ -198,33 +200,7 @@ namespace FScruiser.XF
 
             base.ConfigureViewModelLocator();
 
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
-            {
-                var viewName = viewType.FullName;
-                viewName = viewName.Replace(".Views.", ".ViewModels.");
-
-                string viewAssemblyName = null;
-                if (viewName.StartsWith("FSCruiser.Design"))
-                {
-                    viewAssemblyName = "NatCruise.Design";
-                }
-                else
-                {
-                    viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
-                }
-
-                var suffix = viewName.EndsWith("View") ? "Model" : "ViewModel";
-                var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);
-
-                var type = Type.GetType(viewModelName);
-                if (type == null)
-                {
-
-                    //LogException("ViewModelLocator", "View Model Not Found", null);
-                }
-
-                return type;
-            });
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelProvider.GetViewModel(viewType));
         }
 
 

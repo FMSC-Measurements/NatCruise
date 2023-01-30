@@ -23,7 +23,7 @@ namespace NatCruise.Cruise.Test.Logic
 
         [Theory]
         [InlineData(20.0, 12.0, 0, false, 23.33)]
-        [InlineData(20.0, 12.0, 0, true, 23.82)]
+        [InlineData(20.0, 12.0, 0, true, 23.82)] // discrepancy due to small difference in to-face correction
         public void TestCalculateVariableRadious(decimal baf, decimal dbh, int slopePCT, bool isFace, decimal expected)
         {
             int sigDec = 3;
@@ -34,8 +34,14 @@ namespace NatCruise.Cruise.Test.Logic
             ld.Should().Be(expected);
         }
 
-
+        // values from https://www.fs.usda.gov/Internet/FSE_DOCUMENTS/stelprdb5413736.pdf
+        [InlineData(10.0, 2.750)]
         [InlineData(20.0, 1.944)]
+        [InlineData(30.0, 1.588)]
+        [InlineData(40.0, 1.375)]
+        [InlineData(60.0, 1.123)]
+        [InlineData(75.0, 1.004)]
+        [InlineData(80.0, 0.972)]
         [Theory]
         public void TestCalculatePlotRadiusFactor(decimal baf, decimal expected)
         {

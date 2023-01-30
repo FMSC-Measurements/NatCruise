@@ -33,8 +33,14 @@ namespace NatCruise.Wpf
     /// </summary>
     public partial class App : PrismApplication, IAppService
     {
+
         private string[] StartupArgs { get; set; }
         protected ILoggingService LoggingService { get; private set; }
+
+        public NatCruiseViewModelProvider ViewModelProvider { get; } = new NatCruiseViewModelProvider();
+
+        public App()
+        { }
 
         protected override Window CreateShell()
         {
@@ -112,10 +118,6 @@ namespace NatCruise.Wpf
             //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(StratumTemplateListView));
             //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(TreeFieldsView));
             //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(LogFieldsView));
-
-
-            var viewModelRegistar = new CoreViewModelRegester();
-            viewModelRegistar.RegisterViewModels();
 
             base.OnInitialized();
 
@@ -200,33 +202,7 @@ namespace NatCruise.Wpf
         {
             base.ConfigureViewModelLocator();
 
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
-            {
-                var viewName = viewType.FullName;
-                viewName = viewName.Replace(".Views.", ".ViewModels.");
-
-                string viewAssemblyName = null;
-                if (viewName.StartsWith("NatCruise.Design"))
-                {
-                    //var assemblyName = Assembly.GetAssembly(typeof(CuttingUnitDetailPage)).FullName;
-                    viewAssemblyName = "NatCruise.Design";
-                }
-                else
-                {
-                    viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
-                }
-
-                var suffix = viewName.EndsWith("View") ? "Model" : "ViewModel";
-                var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);
-
-                var type = Type.GetType(viewModelName);
-                return type;
-            });
-
-            //ViewModelLocationProvider.SetDefaultViewModelFactory((viewType) =>
-            //{
-            //    var viewName =
-            //})
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelProvider.GetViewModel(viewType));
         }
     }
 }

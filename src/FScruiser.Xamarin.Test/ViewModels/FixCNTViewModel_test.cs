@@ -98,7 +98,7 @@ namespace FScruiser.XF.ViewModels
             using (var database = init.CreateDatabase())
             {
                 InitializeFizCNT(database, init.CruiseID);
-                var dsp = new DataserviceProvider(database, new TestDeviceInfoService())
+                var dsp = new FScruiserDataserviceProvider(database, new TestDeviceInfoService())
                 {
                     CruiseID = init.CruiseID
                 };
@@ -133,7 +133,7 @@ namespace FScruiser.XF.ViewModels
                 InitializeFizCNT(database, init.CruiseID);
 
                 var deviceInfo = new TestDeviceInfoService();
-                var dsp = new DataserviceProvider(database, deviceInfo)
+                var dsp = new FScruiserDataserviceProvider(database, deviceInfo)
                 {
                     CruiseID = init.CruiseID,
                 };
