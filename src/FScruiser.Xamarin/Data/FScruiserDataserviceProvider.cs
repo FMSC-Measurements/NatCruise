@@ -1,19 +1,20 @@
 ﻿using CruiseDAL;
 using NatCruise.Core.Services;
+using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using Prism.Ioc;
 using System;
 
-namespace NatCruise.Cruise.Data
-{
-    public class DataserviceProvider : DataserviceProviderBase
+namespace FScruiser.XF.Data
+{ 
+    public class FScruiserDataserviceProvider : DataserviceProviderBase
     {
-        public DataserviceProvider(string databasePath, IDeviceInfoService deviceInfo) : base(databasePath, deviceInfo)
+        public FScruiserDataserviceProvider(string databasePath, IDeviceInfoService deviceInfo) : base(databasePath, deviceInfo)
         {
         }
 
-        public DataserviceProvider(CruiseDatastore_V3 datastore, IDeviceInfoService deviceInfo) : base(datastore, deviceInfo)
+        public FScruiserDataserviceProvider(CruiseDatastore_V3 datastore, IDeviceInfoService deviceInfo) : base(datastore, deviceInfo)
         {
         }
 
@@ -60,6 +61,7 @@ namespace NatCruise.Cruise.Data
 
             if (typeof(ITallyDataservice).IsAssignableFrom(type))
             { return new TallyDataservice(database, cruiseID, deviceID, GetDataservice<ISamplerStateDataservice>()); }
+
             else
             {
                 throw new InvalidOperationException("no dataservice found for type " + type.FullName);
