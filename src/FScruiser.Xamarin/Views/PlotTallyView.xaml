@@ -464,6 +464,7 @@
 
             </StackLayout>
 
+            <!-- Tally Buttons -->
             <CollectionView Grid.Row="1"
                             x:Name="TallyListView"
                             IsVisible="{Binding TalliesFiltered, Converter={StaticResource listIsNotNullOrEmptyConverter}}"

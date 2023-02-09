@@ -30,10 +30,10 @@ namespace FScruiser.XF.ViewModels
         private ICollection<Stratum> _strata;
         private string _stratumFilter = STRATUM_FILTER_ALL;
         private IList<PlotTreeEntry> _trees;
-        
-        
+
+
         private Plot _plot;
-        
+
         private TreeEditViewModel _selectedTreeViewModel;
         private CuttingUnit _cuttingUnit;
         private PlotTreeEntry _selectedTree;
@@ -101,7 +101,7 @@ namespace FScruiser.XF.ViewModels
             var tree = SelectedTree;
             if (e.PropertyName == nameof(TreeEditViewModel.ErrorsAndWarnings))
             {
-                
+
                 if (tree != null)
                 {
                     PlotTreeDataservice.RefreshErrorsAndWarnings(tree);
@@ -169,6 +169,7 @@ namespace FScruiser.XF.ViewModels
         private ICommand _deleteTreeCommand;
         private ICommand _selectPreviouseTreeCommand;
         private ICommand _selectNextTreeCommand;
+        private IEnumerable<string> _stratumFilterOptions;
 
         public ICommand SelectTreeCommand => new Command<object>(SelectTree);
 
@@ -176,7 +177,7 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new Command<string>(DeleteTree);
 
-        public ICommand TallyCommand => _tallyCommand ??= new Command<TallyPopulation_Plot>(x =>  TallyAsync(x).FireAndForget());
+        public ICommand TallyCommand => _tallyCommand ??= new Command<TallyPopulation_Plot>(x => TallyAsync(x).FireAndForget());
 
         public ICommand EditPlotCommand => _editPlotCommand ??= new Command(() => ShowEditPlot());
 
@@ -232,11 +233,17 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _strata, value);
-                RaisePropertyChanged(nameof(StrataFilterOptions));
+                //RaisePropertyChanged(nameof(StrataFilterOptions));
             }
         }
 
-        public ICollection<string> StrataFilterOptions => Strata.OrEmpty().Select(x => x.StratumCode).Append(STRATUM_FILTER_ALL).ToArray();
+        public IEnumerable<string> StrataFilterOptions
+        {
+            get => _stratumFilterOptions;
+            protected set => SetProperty(ref _stratumFilterOptions, value);
+        }
+
+        //public ICollection<string> StrataFilterOptions => Strata.OrEmpty().Select(x => x.StratumCode).Append(STRATUM_FILTER_ALL).ToArray();
 
         public string StratumFilter
         {
@@ -287,7 +294,17 @@ namespace FScruiser.XF.ViewModels
             var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
 
             TallyPopulations = TallyPopulationDataservice.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
-            Strata = StratumDataservice.GetPlotStrata(plot.CuttingUnitCode).ToArray();
+            var strata = Strata = StratumDataservice.GetPlotStrata(plot.CuttingUnitCode).ToArray();
+            if (strata.Count() > 1)
+            {
+                StrataFilterOptions = strata
+                    .Select(x => x.StratumCode)
+                    .Append(STRATUM_FILTER_ALL)
+                    .ToArray();
+            }
+            else
+            { StrataFilterOptions = new string[0]; }
+
             Trees = PlotTreeDataservice.GetPlotTrees(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
 
             Plot = plot;
@@ -361,7 +378,7 @@ namespace FScruiser.XF.ViewModels
             TreeDataservice.DeleteTree(treeID);
             Trees.Remove(tree);
 
-            if(SelectedTree != null && SelectedTree.TreeID == treeID)
+            if (SelectedTree != null && SelectedTree.TreeID == treeID)
             {
                 SelectedTree = null;
             }
