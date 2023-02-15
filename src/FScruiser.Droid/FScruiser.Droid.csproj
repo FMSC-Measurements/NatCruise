@@ -103,6 +103,7 @@
     <Compile Include="Services\AndroidSoundService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Assets\fonts\FontAwesomeSolid.otf" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
