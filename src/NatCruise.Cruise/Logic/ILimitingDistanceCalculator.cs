@@ -14,6 +14,6 @@ namespace NatCruise.Cruise.Logic
         bool DeterminTreeInOrOut(decimal slopeDistance, decimal limitingDistance);
 
         string GenerateReport(string treeStatus, decimal limitingDistance, decimal slopeDistance, int slopePCT, decimal azimuth,
-            decimal baf, decimal fps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode);
+            decimal baf, decimal fps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode, string treeNumber = "");
     }
 }

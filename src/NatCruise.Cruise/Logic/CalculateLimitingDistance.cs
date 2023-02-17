@@ -52,13 +52,13 @@ namespace NatCruise.Cruise.Logic
         }
 
         public string GenerateReport(string treeStatus, decimal limitingDistance, decimal slopeDistance, int slopePCT, decimal azimuth,
-            decimal baf, decimal fps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode)
+            decimal baf, decimal fps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode, string treeNumber = "")
         {
             var azimuthStr = (azimuth > 0) ? "Azimuth:" + azimuth.ToString() : String.Empty;
             var isToFaceStr = (isToFace) ? "Face" : "Center";
             var baf_fps = (isVariableRadius) ? "BAF:" + baf  : "FPS:" + fps;
 
-            return $"Tree was {treeStatus} (St:{stratumCode}, DBH:{dbh}, slope:{slopePCT}%, slope distance:{slopeDistance:F2}', limiting distance:{limitingDistance:F2}' to {isToFaceStr} of tree, {baf_fps}) {azimuthStr}\r\n";
+            return $"Tree {treeNumber} was {treeStatus} (St:{stratumCode}, DBH:{dbh}, slope:{slopePCT}%, slope distance:{slopeDistance:F2}', limiting distance:{limitingDistance:F2}' to {isToFaceStr} of tree, {baf_fps}) {azimuthStr}\r\n";
         }
     }
 }

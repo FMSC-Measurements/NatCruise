@@ -6,6 +6,7 @@
                                    xmlns:tk_effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
                                    xmlns:tk="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
                                    xmlns:vm="clr-namespace:FScruiser.XF.ViewModels"
+                                   xmlns:behaviors="clr-namespace:FScruiser.XF.Behaviors"
                                    x:Class="FScruiser.XF.Views.LimitingDistanceView"
                                    Title="Limiting Distance Calculator">
     <controls:InitializableContentPage.Resources>
@@ -45,12 +46,20 @@
                        CornerRadius="5"
                        Padding="0">
                     <tk:Expander x:Name="_expander">
+                        <tk:Expander.Triggers>
+                            <DataTrigger TargetType="tk:Expander"
+                                         Binding="{Binding StratumSettingsSummary}"
+                                         Value="">
+                                <Setter Property="IsExpanded"
+                                        Value="true" />
+                            </DataTrigger>
+                        </tk:Expander.Triggers>
                         <tk:Expander.Header>
                             <controls:LastChildWidthLayout LastChildWidth="30"
                                                            MinimumHeightRequest="{StaticResource minTouchableHeight}"
                                                            Margin="5,10">
                                 <StackLayout>
-                                    <Label Text="{Binding StratumSettingsSummary}" />
+                                    <Label x:Name="_stratumSummaryHeader" Text="{Binding StratumSettingsSummary}" />
                                 </StackLayout>
                                 <Label FontFamily="FA-solid"
                                        Text="{Static const:FAIcons.ChevronDown}">
@@ -130,10 +139,9 @@
                                                          IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}">
                                                 <Label Text="Stratum" />
                                                 <StackLayout Orientation="Horizontal">
-                                                    <Picker WidthRequest="150"
-                                                            ItemsSource="{Binding StratumOptions}"
-                                                            SelectedItem="{Binding Stratum}"
-                                                            ItemDisplayBinding="{Binding StratumCode}" />
+                                                    <controls:ValuePicker WidthRequest="150"
+                                                                          ValueSource="{Binding StratumOptions}"
+                                                                          SelectedValue="{Binding Stratum}" />
                                                     <StackLayout Orientation="Horizontal"
                                                                  IsVisible="{Binding BigBAFSampleGroupOptions, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
                                                         <Label Text="Use Big-BAF" />
@@ -351,7 +359,8 @@
                     <!-- DBH -->
                     <Frame>
                         <controls:LastChildWidthLayout>
-                            <Label x:Name="_dbhEntryHeader">DBH</Label>
+                            <Label x:Name="_dbhEntryHeader"
+                                   VerticalOptions="Center">DBH</Label>
                             <Entry x:Name="_dbhEntry"
                                    Text="{Binding DBH}"
                                    Keyboard="Numeric"
@@ -359,6 +368,9 @@
                                 <Entry.Effects>
                                     <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
+                                <Entry.Behaviors>
+                                    <behaviors:SelectNextOnCompleatedBehavior />
+                                </Entry.Behaviors>
                             </Entry>
                         </controls:LastChildWidthLayout>
                     </Frame>
@@ -366,7 +378,8 @@
                     <!-- Slope PCT -->
                     <Frame>
                         <controls:LastChildWidthLayout>
-                            <Label x:Name="_slopePCTEntryHeading">Slope (%)</Label>
+                            <Label x:Name="_slopePCTEntryHeading"
+                                   VerticalOptions="Center">Slope (%)</Label>
                             <Entry x:Name="_slopePctEntry"
                                    Text="{Binding SlopePCT}"
                                    Keyboard="Numeric"
@@ -374,6 +387,9 @@
                                 <Entry.Effects>
                                     <tk_effects:SelectAllTextEffect />
                                 </Entry.Effects>
+                                <Entry.Behaviors>
+                                    <behaviors:SelectNextOnCompleatedBehavior />
+                                </Entry.Behaviors>
                             </Entry>
                         </controls:LastChildWidthLayout>
                     </Frame>
@@ -382,7 +398,8 @@
                     <Frame>
                         <StackLayout>
                             <controls:LastChildWidthLayout>
-                                <Label x:Name="_slopeDistanceEntryHeading">Slope Distance</Label>
+                                <Label x:Name="_slopeDistanceEntryHeading"
+                                       VerticalOptions="Center">Slope Distance</Label>
                                 <Entry x:Name="_slopeDistanceEntry"
                                        Text="{Binding SlopeDistanceStr}"
                                        Keyboard="Numeric"
@@ -421,24 +438,77 @@
                 </StackLayout>
 
                 <!-- Limiting Distance and Tree Status -->
-                <Frame BackgroundColor="Orange">
+                <Frame BackgroundColor="Orange"
+                       CornerRadius="5">
                     <StackLayout Orientation="Vertical">
-                        <Label x:Name="_limitingDistanceLabel">Limiting Distance</Label>
-                        <Label AutomationProperties.LabeledBy="{x:Reference _limitingDistanceLabel}"
-                               Text="{Binding LimitingDistance, StringFormat='{}{0:f2}'}" />
-                        <Label x:Name="_treeInOutLabel"
-                               Text="{Binding TreeStatus, StringFormat='{}Tree is {0}'}"
-                               IsVisible="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}"
-                               AutomationProperties.IsInAccessibleTree="True"
-                               AutomationProperties.Name="Tree In Out" />
+                        <StackLayout Orientation="Horizontal">
+                            <Label x:Name="_limitingDistanceLabel">Limiting Distance</Label>
+                            <Label AutomationProperties.LabeledBy="{x:Reference _limitingDistanceLabel}"
+                                   Text="{Binding LimitingDistance, StringFormat='{}{0:f2}'}" />
+                            <Label x:Name="_treeInOutLabel"
+                                   Text="{Binding TreeStatus, StringFormat='{}Tree is {0}'}"
+                                   IsVisible="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.Name="Tree In Out">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding TreeStatus}"
+                                                 Value="{Static vm:LimitingDistanceViewModel.TREE_STATUS_IN}">
+                                        <Setter Property="BackgroundColor"
+                                                Value="Green" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding TreeStatus}"
+                                                 Value="{Static vm:LimitingDistanceViewModel.TREE_STATUS_OUT}">
+                                        <Setter Property="BackgroundColor"
+                                                Value="Red" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
 
-                        <Button Text="Save Limiting Distance Report To Remarks"
-                                Command="{Binding SaveReportToPlotCommand}"
-                                IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}"
-                                IsEnabled="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
-                        <Button Text="Copy Limiting Distance Report To Clipboard"
-                                Command="{Binding CopyReportToClipboardCommand}"
-                                IsEnabled="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+
+                        </StackLayout>
+                        <!-- Azimuth -->
+
+                        <Frame Padding="0">
+
+                            <StackLayout Orientation="Vertical"
+                                         IsEnabled="{Binding TreeStatus, Converter={StaticResource isNotNullOrEmptyConverter}}">
+                                <StackLayout Orientation="Horizontal"
+                                             Margin="5,0">
+                                    <Label x:Name="_azimuthEntryHeading"
+                                           VerticalOptions="Center">Azimuth</Label>
+                                    <Entry x:Name="_azimuthEntry"
+                                           Text="{Binding Azimuth}"
+                                           Keyboard="Numeric"
+                                           AutomationProperties.LabeledBy="{x:Reference _azimuthEntryHeading}"
+                                           WidthRequest="50">
+                                        <Entry.Effects>
+                                            <tk_effects:SelectAllTextEffect />
+                                        </Entry.Effects>
+                                        <Entry.Behaviors>
+                                            <behaviors:SelectNextOnCompleatedBehavior />
+                                        </Entry.Behaviors>
+                                    </Entry>
+
+                                    <Label x:Name="_treeNumberHeading" VerticalOptions="Center">Tree Number</Label>
+                                    <Entry Text="{Binding TreeNumber}"
+                                           Keyboard="Numeric"
+                                           WidthRequest="50"
+                                           AutomationProperties.LabeledBy="_treeNumberHeading">
+                                        <Entry.Effects>
+                                            <tk_effects:SelectAllTextEffect />
+                                        </Entry.Effects>
+                                    </Entry>
+                                </StackLayout>
+
+                                <Button Text="Save Limiting Distance Report To Remarks"
+                                        Command="{Binding SaveReportToPlotCommand}"
+                                        IsVisible="{Binding Plot, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+                                <Button Text="Copy Limiting Distance Report To Clipboard"
+                                        Command="{Binding CopyReportToClipboardCommand}" />
+                            </StackLayout>
+                        </Frame>
                     </StackLayout>
                 </Frame>
             </StackLayout>

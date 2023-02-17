@@ -115,7 +115,7 @@ namespace NatCruise.Cruise.Logic
         }
 
         public string GenerateReport(string treeStatus, decimal limitingDistance, decimal slopeDistance, int slopePCT, decimal azimuth,
-            decimal baf, decimal fps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode)
+            decimal baf, decimal fps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode, string treeNumber = "")
         {
             dbh = Math.Round(dbh, 1, MidpointRounding.AwayFromZero); // dbh should be rounded to tenth of an inch
 
@@ -127,7 +127,7 @@ namespace NatCruise.Cruise.Logic
                 : $"slope: {slopePCT}%, SCF: {CalculateToSlopeCorrectionFactor(slopePCT)}";
             var prf = (isVariableRadius) ? $"PRF:{CalculatePlotRadiusFactor(baf)}, " : "";
 
-            return $"Tree was {treeStatus} (St:{stratumCode}, DBH:{dbh:F1}, {slope}, slope distance:{slopeDistance:F2}', limiting distance:{limitingDistance}' to {isToFaceStr} of tree {toFaceCorrection}, {prf}{baf_fps}) {azimuthStr}\r\n";
+            return $"Tree {treeNumber} was {treeStatus} (St:{stratumCode}, DBH:{dbh:F1}, {slope}, slope distance:{slopeDistance:F2}', limiting distance:{limitingDistance}' to {isToFaceStr} of tree {toFaceCorrection}, {prf}{baf_fps}) {azimuthStr}\r\n";
         }
     }
 }

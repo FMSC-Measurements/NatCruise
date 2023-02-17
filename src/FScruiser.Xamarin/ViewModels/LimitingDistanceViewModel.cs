@@ -18,6 +18,9 @@ namespace FScruiser.XF.ViewModels
 {
     public class LimitingDistanceViewModel : ViewModelBase//, INavigatedAware
     {
+        public const string TREE_STATUS_IN = "IN";
+        public const string TREE_STATUS_OUT = "OUT";
+
         public const String MEASURE_TO_FACE = "Face";
         public const String MEASURE_TO_CENTER = "Center";
         public static readonly String[] MEASURE_TO_OPTIONS = new String[] { MEASURE_TO_FACE, MEASURE_TO_CENTER };
@@ -27,7 +30,6 @@ namespace FScruiser.XF.ViewModels
         public const String MODE_STRATUM = "stratum";
 
         private bool? _isTreeIn = null;
-        private decimal _bafOrFps;
         private decimal _dbh;
         private int _slopePCT;
         private decimal? _slopeDistance;
@@ -43,6 +45,7 @@ namespace FScruiser.XF.ViewModels
         private bool _useBigBAF;
         private IEnumerable<SampleGroup> _bigBAFSampleGroupOptions;
         private SampleGroup _bigBAFSampleGroup;
+        private string _treeNumber;
 
         public INatCruiseDialogService DialogService { get; }
         protected IDataserviceProvider DataserviceProvider { get; }
@@ -315,13 +318,14 @@ namespace FScruiser.XF.ViewModels
             get
             {
                 if (IsTreeIn.HasValue == false) { return ""; }
-                else if (IsTreeIn == true) { return "IN"; }
-                else { return "OUT"; }
+                else if (IsTreeIn == true) { return TREE_STATUS_IN; }
+                else { return TREE_STATUS_OUT; }
             }
         }
 
         #endregion result properties
 
+        #region report properties
         /// <summary>
         /// Azimuth is recorded for the purpose of helping check cruisers
         /// identify which tree was LDed
@@ -334,6 +338,13 @@ namespace FScruiser.XF.ViewModels
                 _azimuth = value;
             }
         }
+
+        public string TreeNumber
+        {
+            get => _treeNumber;
+            set => SetProperty(ref _treeNumber, value);
+        }
+        #endregion
 
         #region commands
 
@@ -392,8 +403,8 @@ namespace FScruiser.XF.ViewModels
                 if (stratumCode != null)
                 {
                     var ds = DataserviceProvider.GetDataservice<IStratumDataservice>();
+                    _stratumMode = MODE_STRATUM;
                     Stratum = ds.GetStratum(stratumCode);
-                    Mode = MODE_STRATUM;
                 }
 
                 if (plotNumber != null
@@ -458,8 +469,10 @@ namespace FScruiser.XF.ViewModels
 
             if (IsTreeIn.HasValue)
             {
+                var treeNumber = (IsTreeIn.Value) ? TreeNumber : "";
+
                 return LimitingDistanceCalculator.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
-                    SlopePCT, Azimuth, BAF, FPS, DBH, IsVariableRadius, IsToFace, Stratum?.StratumCode);
+                    SlopePCT, Azimuth, BAF, FPS, DBH, IsVariableRadius, IsToFace, Stratum?.StratumCode, treeNumber);
             }
             else { return null; }
         }
