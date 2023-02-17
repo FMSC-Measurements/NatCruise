@@ -1,4 +1,4 @@
-﻿using NatCruise;
+﻿//using CruiseDAL.V3.Models;
 using NatCruise.Cruise.Logic;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -22,6 +22,10 @@ namespace FScruiser.XF.ViewModels
         public const String MEASURE_TO_CENTER = "Center";
         public static readonly String[] MEASURE_TO_OPTIONS = new String[] { MEASURE_TO_FACE, MEASURE_TO_CENTER };
 
+        public const String MODE_FPS = "fps";
+        public const String MODE_BAF = "bar";
+        public const String MODE_STRATUM = "stratum";
+
         private bool? _isTreeIn = null;
         private decimal _bafOrFps;
         private decimal _dbh;
@@ -30,29 +34,187 @@ namespace FScruiser.XF.ViewModels
         private decimal _limitingDistance;
         private decimal _azimuth;
         private bool _isToFace = true;
-        private bool _isVariableRadius;
-        private Plot_Stratum _plot;
+        private Plot _plot;
+        private decimal _baf;
+        private decimal _fps;
+        private string _stratumMode;
+        private IEnumerable<Stratum> _stratumOptions;
+        private Stratum _stratum;
+        private bool _useBigBAF;
+        private IEnumerable<SampleGroup> _bigBAFSampleGroupOptions;
+        private SampleGroup _bigBAFSampleGroup;
 
-        protected IDataserviceProvider DataserviceProvider { get; }
-        public IPlotStratumDataservice PlotStratumDataservice { get; protected set; }
-        public IPlotDataservice PlotDataservice { get; protected set; }
         public INatCruiseDialogService DialogService { get; }
+        protected IDataserviceProvider DataserviceProvider { get; }
+        public IPlotDataservice PlotDataservice { get; protected set; }
+        public ISampleGroupDataservice SampleGroupDataservice { get; protected set; }
+        public IStratumDataservice StratumDataservice { get; protected set; }
 
-        public Plot_Stratum PlotStratum
+        public ILimitingDistanceCalculator LimitingDistanceCalculator { get; }
+
+        public bool UseNewLimitingDistanceCalculator { get; }
+
+        #region stratum settings
+
+        public IEnumerable<Stratum> StratumOptions
         {
-            get => _plot;
-            set => SetProperty(ref _plot, value);
+            get => _stratumOptions;
+            set => SetProperty(ref _stratumOptions, value);
         }
 
-        public decimal BafOrFps
+        public Stratum Stratum
         {
-            get { return _bafOrFps; }
+            get => _stratum;
             set
             {
-                _bafOrFps = value;
+                if(_stratum == value) { return; }
+                SetProperty(ref _stratum, value);
+                BigBAFSampleGroup = null;
+                UseBigBAF = false;
+
+                if (value != null)
+                {
+                    var isVariableRadious = CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(value.Method);
+
+                    // BAF and FPS should be whole numbers but for some reason they are REALs in the data structure
+                    // note that FPS value is the denominator in fractions of acres
+                    if (isVariableRadious)
+                    {
+                        BAF = (decimal)value.BasalAreaFactor;
+                        FPS = 0.0m;
+
+                        BigBAFSampleGroupOptions = SampleGroupDataservice.GetSampleGroups(value.StratumCode).Where(x => x.BigBAF > 0);
+                    }
+                    else
+                    {
+                        FPS = (decimal)value.FixedPlotSize;
+                        BAF = 0.0m;
+                    }
+                    RaisePropertyChanged(nameof(IsVariableRadius));
+                    RaisePropertyChanged(nameof(StratumSettingsSummary));
+                    Calculate();
+                }
+                else
+                {
+                    BigBAFSampleGroupOptions = null;
+                }
+            }
+        }
+
+        public IEnumerable<SampleGroup> BigBAFSampleGroupOptions
+        {
+            get => _bigBAFSampleGroupOptions;
+            set => SetProperty(ref _bigBAFSampleGroupOptions, value);
+        }
+
+        public SampleGroup BigBAFSampleGroup
+        {
+            get => _bigBAFSampleGroup;
+            set
+            {
+                SetProperty(ref _bigBAFSampleGroup, value);
+                RaisePropertyChanged(nameof(StratumSettingsSummary));
                 Calculate();
             }
         }
+
+        public bool UseBigBAF
+        {
+            get => _useBigBAF;
+            set
+            {
+                SetProperty(ref _useBigBAF, value);
+                RaisePropertyChanged(nameof(StratumSettingsSummary));
+                Calculate();
+            }
+        }
+
+        public Plot Plot
+        {
+            get => _plot;
+            set
+            {
+                SetProperty(ref _plot, value);
+            }
+        }
+
+        public decimal BAF
+        {
+            get
+            {
+                if (Mode == MODE_STRATUM && Stratum != null)
+                {
+                    return (UseBigBAF && BigBAFSampleGroup != null) ? (decimal)BigBAFSampleGroup.BigBAF : (decimal)Stratum.BasalAreaFactor;
+                }
+                return _baf;
+            }
+            set
+            {
+                SetProperty(ref _baf, value);
+                RaisePropertyChanged(nameof(StratumSettingsSummary));
+                Calculate();
+            }
+        }
+
+        public decimal FPS
+        {
+            get => _fps;
+            set
+            {
+                SetProperty(ref _fps, value);
+                RaisePropertyChanged(nameof(StratumSettingsSummary));
+                Calculate();
+            }
+        }
+
+        public string Mode
+        {
+            get => _stratumMode;
+            set
+            {
+                SetProperty(ref _stratumMode, value);
+                RaisePropertyChanged(nameof(IsVariableRadius));
+                RaisePropertyChanged(nameof(StratumSettingsSummary));
+                Calculate();
+            }
+        }
+
+        public bool IsVariableRadius
+        {
+            get
+            {
+                var stMode = Mode;
+                if (stMode == MODE_BAF) { return true; }
+                if (stMode == MODE_FPS) { return false; }
+                if (stMode == MODE_STRATUM && Stratum != null)
+                {
+                    return CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(Stratum.Method);
+                }
+                return false;
+            }
+        }
+
+        public string StratumSettingsSummary
+        {
+            get
+            {
+                var mode = Mode;
+                if (mode == MODE_BAF)
+                { return "BAF: " + BAF; }
+                if (mode == MODE_FPS)
+                { return "FPS: " + FPS; }
+
+                var st = Stratum;
+                if (mode == MODE_STRATUM && st != null)
+                {
+                    var stuff = (IsVariableRadius) ? "BAF: " + BAF : "FPS: " + FPS;
+                    return "Stratum: " + st.StratumCode + " " + stuff;
+                }
+                return "";
+            }
+        }
+
+        #endregion stratum settings
 
         public decimal DBH
         {
@@ -103,15 +265,6 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public decimal Azimuth
-        {
-            get { return _azimuth; }
-            set
-            {
-                _azimuth = value;
-            }
-        }
-
         public bool IsToFace
         {
             get { return _isToFace; }
@@ -120,16 +273,6 @@ namespace FScruiser.XF.ViewModels
                 SetProperty(ref _isToFace, value);
                 Calculate();
                 RaisePropertyChanged(nameof(MeasureToSelection));
-            }
-        }
-
-        public bool IsVariableRadius
-        {
-            get { return _isVariableRadius; }
-            set
-            {
-                SetProperty(ref _isVariableRadius, value);
-                Calculate();
             }
         }
 
@@ -155,6 +298,8 @@ namespace FScruiser.XF.ViewModels
             set { SetProperty(ref _limitingDistance, value); }
         }
 
+        #region result properties
+
         public bool? IsTreeIn
         {
             get { return _isTreeIn; }
@@ -175,13 +320,28 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public bool UseNewLimitingDistanceCalculator { get; }
+        #endregion result properties
 
-        public ILimitingDistanceCalculator LimitingDistanceCalculator { get; }
+        /// <summary>
+        /// Azimuth is recorded for the purpose of helping check cruisers
+        /// identify which tree was LDed
+        /// </summary>
+        public decimal Azimuth
+        {
+            get { return _azimuth; }
+            set
+            {
+                _azimuth = value;
+            }
+        }
+
+        #region commands
 
         public ICommand SaveReportToPlotCommand => new Command(SaveReport);
 
         public ICommand CopyReportToClipboardCommand => new Command(x => CopyReportToClipBoard().FireAndForget());
+
+        #endregion commands
 
         public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService, IApplicationSettingService appSettings)
         {
@@ -190,6 +350,10 @@ namespace FScruiser.XF.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             UseNewLimitingDistanceCalculator = appSettings.UseNewLimitingDistanceCalculator;
+
+            SampleGroupDataservice = DataserviceProvider.GetDataservice<ISampleGroupDataservice>();
+            PlotDataservice = DataserviceProvider.GetDataservice<IPlotDataservice>();
+            StratumDataservice = DataserviceProvider.GetDataservice<IStratumDataservice>();
 
             if (UseNewLimitingDistanceCalculator)
             { LimitingDistanceCalculator = new CalculateLimitingDistance2(); }
@@ -216,33 +380,54 @@ namespace FScruiser.XF.ViewModels
 
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
-            var strPlotNumber = parameters.GetValue<string>(NavParams.PLOT_NUMBER);
+            var plotNumber = parameters.GetValue<string>(NavParams.PLOT_NUMBER);
 
-            if (unitCode != null && stratumCode != null && strPlotNumber != null
-                && int.TryParse(strPlotNumber, out var plotNumber))
+            if (unitCode != null)
             {
-                var ds = PlotStratumDataservice = DataserviceProvider.GetDataservice<IPlotStratumDataservice>();
-                var pDs = PlotDataservice = DataserviceProvider.GetDataservice<IPlotDataservice>();
-                var plotSt = ds.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
+                var stDs = StratumDataservice;
 
-                if (plotSt != null)
+                var strata = stDs.GetStrata(unitCode);
+                StratumOptions = strata;
+
+                if (stratumCode != null)
                 {
-                    var isVariableRadious = IsVariableRadius = CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(plotSt.CruiseMethod);
+                    var ds = DataserviceProvider.GetDataservice<IStratumDataservice>();
+                    Stratum = ds.GetStratum(stratumCode);
+                    Mode = MODE_STRATUM;
+                }
 
-                    // BAF and FPS should be whole numbers but for some reason they are REALs in the data structure
-                    // note that FPS value is the denominator in fractions of acres
-                    BafOrFps = (isVariableRadious) ? (decimal)plotSt.BAF : (decimal)plotSt.FPS;
-
-                    PlotStratum = plotSt;
-
-                    RaisePropertyChanged(nameof(BafOrFps));
+                if (plotNumber != null
+                && int.TryParse(plotNumber, out var iplotNumber))
+                {
+                    var pDs = PlotDataservice;
+                    var plot = Plot = pDs.GetPlot(unitCode, iplotNumber);
+                }
+                else
+                { Plot = null; }
+            }
+            else // if no unit selected load all strata
+            {
+                var stDs = DataserviceProvider.GetDataservice<IStratumDataservice>();
+                if (stDs != null)
+                {
+                    var strata = stDs.GetStrata();
+                    StratumOptions = strata;
                 }
             }
         }
 
         public bool CanCalculate()
         {
-            return BafOrFps > 0.0m && DBH > 0.0m;
+            if (DBH <= 0.0m) { return false; }
+
+            if (IsVariableRadius)
+            {
+                return BAF > 0.0m;
+            }
+            else
+            {
+                return FPS > 0.0m;
+            }
         }
 
         public void Calculate()
@@ -254,7 +439,7 @@ namespace FScruiser.XF.ViewModels
                 return;
             }
 
-            var limitingDistance = LimitingDistance = LimitingDistanceCalculator.Calculate(BafOrFps, DBH, SlopePCT, IsVariableRadius, IsToFace);
+            var limitingDistance = LimitingDistance = LimitingDistanceCalculator.Calculate(BAF, FPS, DBH, SlopePCT, IsVariableRadius, IsToFace);
             var slopeDistance = SlopeDistance;
 
             if (slopeDistance.HasValue)
@@ -274,14 +459,14 @@ namespace FScruiser.XF.ViewModels
             if (IsTreeIn.HasValue)
             {
                 return LimitingDistanceCalculator.GenerateReport(TreeStatus, LimitingDistance, SlopeDistance.Value,
-                    SlopePCT, Azimuth, BafOrFps, DBH, IsVariableRadius, IsToFace, PlotStratum?.StratumCode);
+                    SlopePCT, Azimuth, BAF, FPS, DBH, IsVariableRadius, IsToFace, Stratum?.StratumCode);
             }
             else { return null; }
         }
 
         public void SaveReport()
         {
-            var plot = PlotStratum;
+            var plot = Plot;
             if (plot != null)
             {
                 var report = GenerateReport();

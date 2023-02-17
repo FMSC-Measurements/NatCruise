@@ -13,11 +13,11 @@ namespace FScruiser.XF.Views
         {
             InitializeComponent();
 
-            _treeInOutLabel.PropertyChanged += _treeInOutLabel_PropertyChanged;
-            _bafOrFpsEntry.Completed += (s, e) => _dbhEntry.Focus();
-            _dbhEntry.Completed += (sender, e) => _slopePctEntry.Focus();
-            _slopePctEntry.Completed += (s, e) => _slopeDistanceEntry.Focus();
-            _slopeDistanceEntry.Completed += (s, e) => _azimuthEntry.Focus();
+            //_treeInOutLabel.PropertyChanged += _treeInOutLabel_PropertyChanged;
+            //_bafOrFpsEntry.Completed += (s, e) => _dbhEntry.Focus();
+            //_dbhEntry.Completed += (sender, e) => _slopePctEntry.Focus();
+            //_slopePctEntry.Completed += (s, e) => _slopeDistanceEntry.Focus();
+            //_slopeDistanceEntry.Completed += (s, e) => _azimuthEntry.Focus();
         }
 
         private void _treeInOutLabel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

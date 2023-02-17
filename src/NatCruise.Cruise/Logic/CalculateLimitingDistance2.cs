@@ -19,19 +19,20 @@ namespace NatCruise.Cruise.Logic
         public const string TREE_STATUS_IN = "IN";
         public const string TREE_STATUS_OUT = "OUT";
 
-        public decimal Calculate(decimal bafORfps, decimal dbh,
+        public decimal Calculate(decimal baf, decimal fps, decimal dbh,
             int slopPct, bool isVariableRadius, bool isToFace)
         {
-            if (dbh <= 0.0m
-                || bafORfps <= 0) { return 0.0m; }
+            if (dbh <= 0.0m) { return 0.0m; }
 
             if (isVariableRadius)
             {
-                return CalculateVariableRadious(bafORfps, dbh, slopPct, isToFace);
+                if(baf <= 0) { return 0.0m; }
+                return CalculateVariableRadious(baf, dbh, slopPct, isToFace);
             }
             else
             {
-                return CalculateFixSize(bafORfps, dbh, slopPct, isToFace);
+                if (fps <= 0) { return 0.0m; }
+                return CalculateFixSize(fps, dbh, slopPct, isToFace);
             }
         }
 
@@ -114,19 +115,19 @@ namespace NatCruise.Cruise.Logic
         }
 
         public string GenerateReport(string treeStatus, decimal limitingDistance, decimal slopeDistance, int slopePCT, decimal azimuth,
-            decimal bafORfps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode)
+            decimal baf, decimal fps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode)
         {
             dbh = Math.Round(dbh, 1, MidpointRounding.AwayFromZero); // dbh should be rounded to tenth of an inch
 
             var azimuthStr = (azimuth > 0) ? "Azimuth:" + azimuth.ToString() : "";
             var isToFaceStr = (isToFace) ? "Face" : "Center";
             var toFaceCorrection = (isToFace) ? $", TFC:{CalculateToFaceCorrection(dbh)}" : "";
-            var isVariableRadiusStr = (isVariableRadius) ? "BAF" : "FPS";
+            var baf_fps = (isVariableRadius) ? "BAF:" + baf : "FPS:" + fps;
             var slope = (slopePCT != 0 && slopePCT < 10) ? $"slope: {slopePCT}(<10%)"
                 : $"slope: {slopePCT}%, SCF: {CalculateToSlopeCorrectionFactor(slopePCT)}";
-            var prf = (isVariableRadius) ? $"PRF:{CalculatePlotRadiusFactor(bafORfps)}, " : "";
+            var prf = (isVariableRadius) ? $"PRF:{CalculatePlotRadiusFactor(baf)}, " : "";
 
-            return $"Tree was {treeStatus} (St:{stratumCode}, DBH:{dbh:F1}, {slope}, slope distance:{slopeDistance:F2}', limiting distance:{limitingDistance}' to {isToFaceStr} of tree {toFaceCorrection}, {prf}{isVariableRadiusStr}:{bafORfps}) {azimuthStr}\r\n";
+            return $"Tree was {treeStatus} (St:{stratumCode}, DBH:{dbh:F1}, {slope}, slope distance:{slopeDistance:F2}', limiting distance:{limitingDistance}' to {isToFaceStr} of tree {toFaceCorrection}, {prf}{baf_fps}) {azimuthStr}\r\n";
         }
     }
 }
