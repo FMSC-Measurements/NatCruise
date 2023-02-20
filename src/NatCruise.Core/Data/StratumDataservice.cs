@@ -32,6 +32,14 @@ namespace NatCruise.Data
             }
         }
 
+        public Stratum GetStratum(string stratumCode)
+        {
+            if (stratumCode is null) { throw new ArgumentNullException(nameof(stratumCode)); }
+
+            return Database.From<Stratum>()
+                .Where("CruiseID = @p1 AND StratumCode = @p2").Query(CruiseID, stratumCode).Single();
+        }
+
         public void AddStratum(Stratum stratum)
         {
             if (stratum is null) { throw new ArgumentNullException(nameof(stratum)); }

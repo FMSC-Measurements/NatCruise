@@ -22,7 +22,11 @@ namespace FScruiser.XF.Controls
         public double LastChildWidth
         {
             get => (double)GetValue(LastChildWidthProperty);
-            set => SetValue(LastChildWidthProperty, value);
+            set
+            {
+                SetValue(LastChildWidthProperty, value);
+                base.InvalidateLayout();
+            }
         }
 
         public static readonly BindableProperty SpacingProperty = BindableProperty.Create(nameof(Spacing), typeof(double), typeof(LastChildWidthLayout), 6d,

@@ -27,7 +27,7 @@ namespace FScruiser.XF.ViewModels
         public static readonly string STRATUM_FILTER_ALL = "All";
 
         private IEnumerable<TallyPopulationEx> _tallies;
-        private IEnumerable<string> _stratumCodes;
+        private IEnumerable<string> _stratumFilterOptions;
         private string _selectedStratumCode = STRATUM_FILTER_ALL;
 
         private IList<TallyEntry> _tallyFeed;
@@ -59,8 +59,8 @@ namespace FScruiser.XF.ViewModels
 
         public IEnumerable<string> StrataFilterOptions
         {
-            get => _stratumCodes;
-            set => SetProperty(ref _stratumCodes, value);
+            get => _stratumFilterOptions;
+            set => SetProperty(ref _stratumFilterOptions, value);
         }
 
         public string SelectedStratumCode

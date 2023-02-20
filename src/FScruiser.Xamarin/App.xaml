@@ -17,9 +17,26 @@
 
             <!-- colors -->
             <Color x:Key="fs_brown">#312418</Color>
-            <Color x:Key="primary_500">#345E36</Color>
             <Color x:Key="fs_green">#345E36</Color>
-            <Color x:Key="color_action">#FFBF00</Color>
+            
+            <!-- FS digital playbook colors -->
+            <Color x:Key="usfs_green">#345E36</Color>
+            <Color x:Key="usfs_gold">#ffc425</Color>
+            <Color x:Key="usfs_text">#333333</Color>
+            <Color x:Key="usfs_footer_top">#797979</Color>
+            <Color x:Key="usfs_footer_bottom">#E1E1E1</Color>
+            <Color x:Key="usda_blue">#002D72</Color>
+            <Color x:Key="usda_dk_green">#005440</Color>
+            <Color x:Key="usda_brgt_blue">#0068B1</Color>
+            <Color x:Key="uswds_data_table_row_alt">#E8F2D9</Color>
+            <Color x:Key="uswds_lgt_tan">#F1E5CD</Color>
+            <Color x:Key="uswds_vivid_green">#538200</Color>
+
+            <Color x:Key="fsdp_radioButtonColor">#4c6424</Color>
+            
+            <!-- legacy colors -->
+            <Color x:Key="primary_500">#345E36</Color>
+            <Color x:Key="color_action">#ffc425</Color>
 
             <!-- Dodger blue -->
             <Color x:Key="accent">#1E90FF</Color>
@@ -82,8 +99,6 @@
 
             <converters:Is3PConverter x:Key="is3pConverter" />
             <converters:IsSTRConverter x:Key="isStrConverter" />
-            
-
 
             <!-- base styles -->
             <Style x:Key="button_base"

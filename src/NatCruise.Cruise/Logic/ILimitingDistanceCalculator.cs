@@ -8,12 +8,12 @@ namespace NatCruise.Cruise.Logic
 {
     public interface ILimitingDistanceCalculator
     {
-        decimal Calculate(decimal bafORfps, decimal dbh,
+        decimal Calculate(decimal baf, decimal fps, decimal dbh,
             int slopPct, bool isVariableRadius, bool isToFace);
 
         bool DeterminTreeInOrOut(decimal slopeDistance, decimal limitingDistance);
 
         string GenerateReport(string treeStatus, decimal limitingDistance, decimal slopeDistance, int slopePCT, decimal azimuth,
-            decimal bafORfps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode);
+            decimal baf, decimal fps, decimal dbh, bool isVariableRadius, bool isToFace, string stratumCode, string treeNumber = "");
     }
 }

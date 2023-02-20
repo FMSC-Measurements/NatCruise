@@ -9,14 +9,12 @@
   <InheritIgnoredWords>True</InheritIgnoredWords>
   <IgnoredWords>
     <Ignore>FScruiser</Ignore>
-	<Ignore>FScruiser</Ignore>
     <Ignore>ifnull</Ignore>
     <Ignore>NatCruise</Ignore>
     <Ignore>syncer</Ignore>
     <Ignore>untally</Ignore>
-	<Ignore>Untally</Ignore>
     <Ignore>xunit</Ignore>
-	<Ignore>XUnit</Ignore>
+    <Ignore>playbook</Ignore>
   </IgnoredWords>
   <IgnoredWordsFile></IgnoredWordsFile>
   <InheritExclusionExpressions>True</InheritExclusionExpressions>
