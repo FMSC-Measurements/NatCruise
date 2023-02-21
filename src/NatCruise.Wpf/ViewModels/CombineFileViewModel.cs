@@ -373,8 +373,6 @@ namespace NatCruise.Wpf.ViewModels
             var conflicts = ConflictChecker.CheckConflicts(workingSourceDb, destDb, cruiseID);
             file.Conflicts = conflicts;
 
-            var designErrors = new List<string>();
-
             var destConn = destDb.OpenConnection();
             var sourceConn = sourceDb.OpenConnection();
             try
@@ -390,7 +388,7 @@ namespace NatCruise.Wpf.ViewModels
                     errorsList.AddRange(sgErrror);
                 }
 
-                file.DesignErrors = designErrors;
+                file.DesignErrors = errorsList;
             }
             finally
             {
