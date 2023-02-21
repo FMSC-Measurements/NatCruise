@@ -186,7 +186,8 @@ AND p.PlotNumber = @p4; ",
 
         public void DeletePlot_Stratum(string cuttingUnitCode, string stratumCode, int plotNumber)
         {
-            Database.Execute("DELETE FROM Plot_Stratum WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND PlotNumber = @p3 AND CruiseID = @p4; "
+            Database.Execute("DELETE FROM Plot_Stratum WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND PlotNumber = @p3 AND CruiseID = @p4; " +
+                "DELETE FROM Tree WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND PlotNumber = @p3 AND CruiseID = @p4;"
                 , cuttingUnitCode, stratumCode, plotNumber, CruiseID);
         }
     }

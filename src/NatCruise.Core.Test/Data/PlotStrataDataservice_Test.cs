@@ -300,6 +300,7 @@ namespace NatCruise.Test.Data
             var init = new DatastoreInitializer();
             var unitCode = "u1";
             var stratumCode = "st1";
+            var sgCode = "sg1";
             var plotNumber = 1;
             var plotID = Guid.NewGuid().ToString();
 
@@ -307,6 +308,8 @@ namespace NatCruise.Test.Data
             {
                 var datastore = new PlotDataservice(database, init.CruiseID, init.DeviceID);
                 var plotStratumDs = new PlotStratumDataservice(database, init.CruiseID, init.DeviceID);
+                var plotTreeDs = new PlotTreeDataservice(database, init.CruiseID, init.DeviceID,
+                    new SamplerStateDataservice(database, init.CruiseID, init.DeviceID));
 
                 var stratumPlot = new Models.Plot_Stratum()
                 {
@@ -319,11 +322,27 @@ namespace NatCruise.Test.Data
                     $"('{init.CruiseID}', '{plotID}', '{unitCode}', {plotNumber});");
 
                 plotStratumDs.InsertPlot_Stratum(stratumPlot);
+                plotTreeDs.InsertTree(new PlotTreeEntry
+                {
+                    CuttingUnitCode = unitCode,
+                    StratumCode = stratumCode,
+                    SampleGroupCode = sgCode,
+                    PlotNumber = plotNumber,
+                    TreeCount = 1,
+                }, null);
 
                 var echo = plotStratumDs.GetPlot_Stratum(unitCode, stratumCode, plotNumber);
                 echo.Should().NotBeNull("where's my echo");
 
+                database.From<Tree>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3")
+                    .Count(init.CruiseID, unitCode, plotNumber)
+                    .Should().Be(1);
+
                 plotStratumDs.DeletePlot_Stratum(echo.CuttingUnitCode, echo.StratumCode, echo.PlotNumber);
+
+                database.From<Tree>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3")
+                    .Count(init.CruiseID, unitCode, plotNumber)
+                    .Should().Be(0);
             }
         }
 
