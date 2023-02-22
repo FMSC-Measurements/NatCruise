@@ -16,6 +16,7 @@ namespace NatCruise.MVVM
         public NatCruiseViewModelProvider()
         {
             Register("TreeCountEditView", typeof(TreeCountEditViewModel));
+            Register("TreeEditView", typeof(TreeEditViewModel));
         }
 
         public Type GetViewModel(Type view)

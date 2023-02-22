@@ -1,20 +1,26 @@
 ﻿using NatCruise.Data;
-using NatCruise.Util;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Util;
 using Prism.Commands;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Reflection;
-using NatCruise.MVVM;
 
-namespace NatCruise.Wpf.FieldData.ViewModels
+namespace NatCruise.MVVM.ViewModels
 {
+
+    public class TreeFieldValueChangedEventArgs
+    {
+        public string Field { get; set; }
+        public object Value { get; set; }
+    }
+
     public class TreeEditViewModel : ViewModelBase
     {
         private ICommand _showLogsCommand;
@@ -31,21 +37,25 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private string _cruiseMethod;
         private IEnumerable<string> _countOrMeasureOptions;
         private IEnumerable<string> _speciesOptions;
-        private string _treeID;
 
-        public bool IsLoading { get; set; }
-        public IStratumDataservice StratumDataservice { get; }
-        public ISampleGroupDataservice SampleGroupDataservice { get; }
-        public ISubpopulationDataservice SubpopulationDataservice { get; }
+        
+
+        protected IStratumDataservice StratumDataservice { get; }
+        protected ISampleGroupDataservice SampleGroupDataservice { get; }
+        protected ISubpopulationDataservice SubpopulationDataservice { get; }
         protected ITreeDataservice TreeDataservice { get; }
-        public ITreeErrorDataservice TreeErrorDataservice { get; }
-        public ITreeFieldValueDataservice TreeFieldValueDataservice { get; }
-        //public ICruisersDataservice CruisersDataservice { get; }
+        protected ITreeErrorDataservice TreeErrorDataservice { get; }
+        protected ITreeFieldValueDataservice TreeFieldValueDataservice { get; }
+        protected ICruisersDataservice CruisersDataservice { get; }
         protected INatCruiseDialogService DialogService { get; }
-        //protected ICruiseNavigationService NavigationService { get; }
+        protected INatCruiseNavigationService NavigationService { get; }
         protected ILoggingService LoggingService { get; }
-        public Dictionary<string, PropertyInfo> TreeProperties { get; }
+
+
+        public event EventHandler<TreeFieldValueChangedEventArgs> TreeFieldValueChanged;
+
         public bool UseSimplifiedTreeFields { get; set; } = false;
+        public bool IsLoading { get; set; }
 
         public IEnumerable<string> Cruisers
         {
@@ -58,8 +68,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             get => _errorsAndWarnings;
             set => SetProperty(ref _errorsAndWarnings, value);
         }
-
-        public IDictionary<string, string> Errors { get; set; }
 
         public IEnumerable<TreeFieldValue> TreeFieldValues
         {
@@ -81,12 +89,10 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                         tfv.PropertyChanged += treeFieldValue_PropertyChanged;
                     }
                 }
-
-                
             }
         }
 
-        void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             var treeFieldValue = (TreeFieldValue)sender;
 
@@ -96,11 +102,18 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 treeFieldValue.Error = null;
                 RefreshErrorsAndWarnings();
 
-                // update value on Tree object to reflect change in Tree List View aswell. 
-                if (TreeProperties.TryGetValue(treeFieldValue.Field.ToLower(), out var treeProp))
+                // update value on Tree object to reflect change in Tree List View as well.
+                //if (TreeProperties.TryGetValue(treeFieldValue.Field.ToLower(), out var treeProp))
+                //{
+                //    treeProp.SetValue(Tree, treeFieldValue.Value);
+                //}
+
+                var field = treeFieldValue.Field;
+                TreeFieldValueChanged?.Invoke(this, new TreeFieldValueChangedEventArgs
                 {
-                    treeProp.SetValue(Tree, treeFieldValue.Value);
-                }
+                    Field = field,
+                    Value = treeFieldValue.Value,
+                });
             }
             catch (FMSC.ORM.ConstraintException ex)
             {
@@ -152,17 +165,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                     RefreshSubPopulations(tree);
                     RefreshTreeFieldValues(tree);
                     RefreshErrorsAndWarnings(tree);
-
-                    //var cruisers = CruisersDataservice.GetCruisers()
-                    //    .ToArray();
-                    //var initials = tree.Initials;
-                    //if (!string.IsNullOrEmpty(initials)
-                    //    && !cruisers.Contains(initials, StringComparer.OrdinalIgnoreCase))
-                    //{
-                    //    cruisers = cruisers.Append(initials).ToArray();
-                    //}
-
-                    //Cruisers = cruisers;
+                    RefreshCruisers(tree);
 
                     var cruiseMethod = StratumDataservice.GetCruiseMethod(tree.StratumCode);
                     if (CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod))
@@ -214,6 +217,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 if (value != oldValue)
                 {
                     TreeDataservice.UpdateTreeRemarks(tree.TreeID, value);
+                    tree.Remarks = value;
                 }
             }
         }
@@ -233,8 +237,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public bool HasSampleGroupError { get => _hasSampleGroupError; set => SetProperty(ref _hasSampleGroupError, value); }
 
         public bool HasSpeciesError { get => _hasSpeciesError; set => SetProperty(ref _hasSpeciesError, value); }
-
-        //public string TreeID => Tree?.TreeID;
 
         #region CountOrMeasure
 
@@ -574,23 +576,31 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             protected set => SetProperty(ref _cruiseMethod, value);
         }
 
-        //public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new DelegateCommand(ShowLogs));
+        public readonly string[] GradeOptions = new[] { "0", "1", "2", "3", "4", "5", "6", "6", "8", "9" };
 
-        //public ICommand ShowEditTreeErrorCommand => _showEditTreeErrorCommand ?? (_showEditTreeErrorCommand = new DelegateCommand<TreeError>(ShowEditTreeError));
 
-        //private void ShowEditTreeError(TreeError treeError)
-        //{
-        //    if (treeError.Level != "W"
-        //        || treeError.TreeAuditRuleID == null)
-        //    { return; }
-        //    else
-        //    {
-        //        //NavigationService.NavigateAsync("TreeErrorEdit",
-        //        //    new Prism.Navigation.NavigationParameters($"{NavParams.TreeID}={treeError.TreeID}&{NavParams.TreeAuditRuleID}={treeError.TreeAuditRuleID}"));
+        public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new DelegateCommand(ShowLogs));
 
-        //        NavigationService.ShowTreeErrorEdit(treeError.TreeID, treeError.TreeAuditRuleID);
-        //    }
-        //}
+        public ICommand ShowEditTreeErrorCommand => _showEditTreeErrorCommand ?? (_showEditTreeErrorCommand = new DelegateCommand<TreeError>(ShowEditTreeError));
+
+        private void ShowEditTreeError(TreeError treeError)
+        {
+            if (treeError.Level != "W"
+                || treeError.TreeAuditRuleID == null)
+            { return; }
+            else
+            {
+                //NavigationService.NavigateAsync("TreeErrorEdit",
+                //    new Prism.Navigation.NavigationParameters($"{NavParams.TreeID}={treeError.TreeID}&{NavParams.TreeAuditRuleID}={treeError.TreeAuditRuleID}"));
+
+                NavigationService.ShowTreeErrorEdit(treeError.TreeID, treeError.TreeAuditRuleID);
+            }
+        }
+
+        public void ShowLogs()
+        {
+            NavigationService.ShowLogsList(Tree.TreeID);
+        }
 
         public TreeEditViewModel(
             IStratumDataservice stratumDataservice,
@@ -600,8 +610,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             ITreeErrorDataservice treeErrorDataservice,
             ITreeFieldValueDataservice treeFieldValueDataservice,
             INatCruiseDialogService dialogService,
-            //ICruiseNavigationService navigationService,
-            //ICruisersDataservice cruisersDataservice,
+            INatCruiseNavigationService navigationService,
+            ICruisersDataservice cruisersDataservice,
             ILoggingService loggingService)
         {
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
@@ -610,26 +620,21 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             TreeErrorDataservice = treeErrorDataservice ?? throw new ArgumentNullException(nameof(treeErrorDataservice));
             TreeFieldValueDataservice = treeFieldValueDataservice ?? throw new ArgumentNullException(nameof(treeFieldValueDataservice));
-            //CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
+            CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            //NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
-
-            TreeProperties = typeof(TreeEx)
-                .GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)
-                .ToDictionary(x => x.Name.ToLower());
         }
 
-        //protected override void Load()
-        //{
-        //    if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+        protected override void Load(IParameters parameters)
+        {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-        //    TreeID = parameters.GetValue<string>(NavParams.TreeID);
+            var treeID = parameters.GetValue<string>(NavParams.TreeID);
+            Load(treeID);
+        }
 
-
-        //}
-
-        protected void Load(string treeID)
+        public void Load(string treeID)
         {
             if (treeID is null) { throw new ArgumentNullException(nameof(treeID)); }
             Tree = TreeDataservice.GetTree(treeID) ?? throw new NullReferenceException("GetTree returned null"); ;
@@ -685,10 +690,21 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             tree.WarningCount = warningCount;
         }
 
-        //public void ShowLogs()
-        //{
-        //    NavigationService.ShowLogsList(Tree.TreeID);
-        //}
+        protected void RefreshCruisers(TreeEx tree)
+        {
+            var cruisers = CruisersDataservice.GetCruisers().ToArray();
+            if (cruisers.Any())
+            {
+                var initials = tree.Initials;
+                if (!string.IsNullOrEmpty(initials)
+                    && !cruisers.Contains(initials, StringComparer.OrdinalIgnoreCase))
+                {
+                    cruisers = cruisers.Append(initials).ToArray();
+                }
+            }
+
+            Cruisers = cruisers;
+        }
 
         public void SaveTree()
         {
@@ -716,30 +732,5 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 }
             }
         }
-
-        //public static void SetTreeTDV(Tree tree, TreeDefaultValueDO tdv)
-        //{
-        //    if (tdv != null)
-        //    {
-        //        tree.TreeDefaultValue_CN = tdv.TreeDefaultValue_CN;
-        //        tree.Species = tdv.Species;
-
-        //        tree.LiveDead = tdv.LiveDead;
-        //        tree.Grade = tdv.TreeGrade;
-        //        tree.FormClass = tdv.FormClass;
-        //        tree.RecoverablePrimary = tdv.Recoverable;
-        //        //tree.HiddenPrimary = tdv.HiddenPrimary;//#367
-        //    }
-        //    else
-        //    {
-        //        tree.TreeDefaultValue_CN = null;
-        //        tree.Species = string.Empty;
-        //        tree.LiveDead = string.Empty;
-        //        tree.Grade = string.Empty;
-        //        tree.FormClass = 0;
-        //        tree.RecoverablePrimary = 0;
-        //        //this.HiddenPrimary = 0;
-        //    }
-        //}
     }
 }

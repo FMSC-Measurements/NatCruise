@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace NatCruise.Data
 {
-    public abstract class DataserviceProviderBase : IDataserviceProvider
+    public class DataserviceProviderBase : IDataserviceProvider
     {
         private string _cruiseID;
         private CruiseDatastore_V3 _database;

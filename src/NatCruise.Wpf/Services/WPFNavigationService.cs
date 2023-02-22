@@ -158,5 +158,15 @@ namespace NatCruise.Wpf.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowLogsList(string treeID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

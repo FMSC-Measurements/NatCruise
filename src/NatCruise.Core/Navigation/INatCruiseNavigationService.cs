@@ -21,6 +21,8 @@ namespace NatCruise.Navigation
 
         Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber);
 
+        Task ShowLogsList(string treeID);
+
         Task ShowFeedback();
 
         Task ShowSettings();
@@ -30,6 +32,8 @@ namespace NatCruise.Navigation
         //Task ShowImport();
 
         Task ShowCruiseSelect(string saleNumber);
+
+        Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID);
 
         Task GoBackAsync();
     }
