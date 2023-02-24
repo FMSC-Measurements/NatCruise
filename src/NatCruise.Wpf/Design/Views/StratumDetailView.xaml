@@ -91,20 +91,17 @@
             <StackPanel>
 
                 <!-- baf -->
-                <ctrls:LastChildWidthPanel>
-                    <TextBlock Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
-                               Text="BAF*" />
+                <ctrls:LastChildWidthPanel Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}">
+                    <TextBlock Text="BAF*" />
                     <TextBox ToolTip="Basal Area Factor"
-                             Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}"
                              Text="{Binding BasalAreaFactor}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
                 </ctrls:LastChildWidthPanel>
 
                 <!-- fps -->
-                <ctrls:LastChildWidthPanel>
-                    <TextBlock Text="FPS*"
-                               Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}" />
+                <ctrls:LastChildWidthPanel Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}">
+                    <TextBlock Text="FPS*"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -124,24 +121,20 @@
                 </ctrls:LastChildWidthPanel>
 
                 <!-- kz -->
-                <ctrls:LastChildWidthPanel>
-                    <TextBlock Text="KZ (3PPNT)*"
-                               Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}" />
+                <ctrls:LastChildWidthPanel Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}">
+                    <TextBlock Text="KZ (3PPNT)*"/>
                     <TextBox ToolTip="KZ (3PPNT)"
                              Text="{Binding KZ3PPNT}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             Visibility="{Binding Is3PPNT, Converter={StaticResource IsVisableConverter}}"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
                 </ctrls:LastChildWidthPanel>
 
                 <!-- fixcnt field -->
-                <ctrls:LastChildWidthPanel>
-                    <TextBlock Text="FIXCNT Field*"
-                               Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
+                <ctrls:LastChildWidthPanel Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}">
+                    <TextBlock Text="FIXCNT Field*"/>
                     <ComboBox ItemsSource="{Binding TreeFieldOptions}"
                               SelectedValue="{Binding FixCNTField}"
-                              SelectedValuePath="Field"
-                              Visibility="{Binding IsFixCNT, Converter={StaticResource IsVisableConverter}}" />
+                              SelectedValuePath="Field" />
                 </ctrls:LastChildWidthPanel>
             </StackPanel>
         </GroupBox>
