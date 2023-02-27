@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <local_ctrls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
                                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                                      xmlns:converters="clr-namespace:Backpack.XF.Converters;assembly=Backpack.XF.Converters"
+                                      xmlns:converters="clr-namespace:FScruiser.XF.Converters"
                                       xmlns:local_behaviors="clr-namespace:FScruiser.XF.Behaviors"
                                       xmlns:effects="clr-namespace:FScruiser.XF.Effects"
                                       xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
-                                      xmlns:local_vms="clr-namespace:FScruiser.XF.ViewModels"
+                                      xmlns:core_vms="clr-namespace:NatCruise.MVVM.ViewModels;assembly=NatCruise.Core"
                                       xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
                                       xmlns:effects1="http://xamarin.com/schemas/2020/toolkit"
+                                      xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
                                       x:Class="FScruiser.XF.Views.TallyView"
                                       x:Name="_page"
                                       BackgroundColor="White"
@@ -154,11 +155,7 @@
                                                                       Tapped="_treeCellTappedGesture_Tapped" />
                                             </Frame.GestureRecognizers>
                                             <Frame.Resources>
-                                                <converters:ComparisonConverter x:Key="greaterThanZeroConverter"
-                                                                                x:TypeArguments="x:Int32"
-                                                                                Default="True"
-                                                                                GreaterThan="True"
-                                                                                CompareToValue="0" />
+                                                <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
                                             </Frame.Resources>
 
                                             <Grid x:Name="_contentHost">
@@ -320,11 +317,7 @@
                                                                   Tapped="_treeCellTappedGesture_Tapped" />
                                         </Frame.GestureRecognizers>
                                         <Frame.Resources>
-                                            <converters:ComparisonConverter x:Key="greaterThanZeroConverter"
-                                                                            x:TypeArguments="x:Int32"
-                                                                            Default="True"
-                                                                            GreaterThan="True"
-                                                                            CompareToValue="0" />
+                                            <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
                                         </Frame.Resources>
 
                                         <Grid x:Name="_contentHost">
@@ -596,18 +589,53 @@
                                          Orientation="Horizontal">
 
                                 <StackLayout.Resources>
-                                    <Style TargetType="local_ctrls:LastChildHeightLayout">
-                                        <Setter Property="HeightRequest"
-                                                Value="100" />
-                                        <Setter Property="LastChildHeight"
-                                                Value="50" />
-                                        <Setter Property="WidthRequest"
-                                                Value="100" />
-                                    </Style>
+                                    <ResourceDictionary>
+                                        <Style TargetType="local_ctrls:LastChildHeightLayout"
+                                               x:Key="baseTreeFieldStyle">
+                                            <Setter Property="HeightRequest"
+                                                    Value="100" />
+                                            <Setter Property="LastChildHeight"
+                                                    Value="50" />
+                                            <Setter Property="WidthRequest"
+                                                    Value="100" />
+                                        </Style>
+
+                                        <Style TargetType="local_ctrls:LastChildHeightLayout"
+                                               x:Key="treeFieldValueStyle"
+                                               BasedOn="{StaticResource baseTreeFieldStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger TargetType="local_ctrls:LastChildHeightLayout"
+                                                             Binding="{Binding Error.Level}"
+                                                             Value="{Static models:ErrorBase.LEVEL_WARNING}">
+                                                    <Setter Property="BackgroundColor"
+                                                            Value="{StaticResource warning}" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="local_ctrls:LastChildHeightLayout"
+                                                             Binding="{Binding Error.Level}"
+                                                             Value="{Static models:ErrorBase.LEVEL_ERROR}">
+                                                    <Setter Property="BackgroundColor"
+                                                            Value="{StaticResource error}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+
+                                        <Style TargetType="local_ctrls:LastChildHeightLayout"
+                                               x:Key="treeSepeciesFieldStyle"
+                                               BasedOn="{StaticResource baseTreeFieldStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger TargetType="local_ctrls:LastChildHeightLayout"
+                                                             Binding="{Binding HasSpeciesError}"
+                                                             Value="True">
+                                                    <Setter Property="BackgroundColor"
+                                                            Value="{StaticResource error}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ResourceDictionary>
                                 </StackLayout.Resources>
 
                                 <!-- species -->
-                                <local_ctrls:LastChildHeightLayout>
+                                <local_ctrls:LastChildHeightLayout Style="{StaticResource treeSepeciesFieldStyle}">
                                     <Label Text="Species" />
                                     <local_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
                                                              ValueSource="{Binding SpeciesOptions}" />
@@ -618,6 +646,13 @@
                                              BindableLayout.ItemsSource="{Binding TreeFieldValues}"
                                              HeightRequest="75"
                                              local_ctrls:TreeFieldValueDataTemplateSelector.UseAltInitialsTemplate="{Binding Cruisers, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
+                                    <StackLayout.Resources>
+                                        <ResourceDictionary>
+                                            <Style TargetType="local_ctrls:LastChildHeightLayout"
+                                                   BasedOn="{StaticResource treeFieldValueStyle}">
+                                            </Style>
+                                        </ResourceDictionary>
+                                    </StackLayout.Resources>
 
                                     <BindableLayout.ItemTemplateSelector>
                                         <local_ctrls:TreeFieldValueDataTemplateSelector>
@@ -742,7 +777,7 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="Grade" />
                                                         <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                                                 ValueSource="{x:Static local_vms:TreeEditViewModel.GradeOptions}" />
+                                                                                 ValueSource="{Binding BindingContext.GradeOptions, Source={Reference _treeEditPanel}}" />
 
                                                     </local_ctrls:LastChildHeightLayout>
                                                 </DataTemplate>

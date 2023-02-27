@@ -12,6 +12,9 @@ namespace NatCruise.Models
         private int? _valueInt;
         private bool? _valueBool;
         private string _valueText;
+        private TreeError _error;
+
+        public event EventHandler ValueChanged;
 
         public string TreeID { get; set; }
 
@@ -38,25 +41,42 @@ namespace NatCruise.Models
         public double? ValueReal
         {
             get => _valueReal;
-            set => SetProperty(ref _valueReal, value);
+            set
+            {
+                SetProperty(ref _valueReal, value);
+                RaiseValueChanged();
+            }
         }
 
         public int? ValueInt
         {
             get => _valueInt;
-            set => SetProperty(ref _valueInt, value);
+            set
+            {
+                SetProperty(ref _valueInt, value);
+                RaiseValueChanged();
+            }
         }
 
         public bool? ValueBool
         {
             get => _valueBool;
-            set => SetProperty(ref _valueBool, value);
+            set
+            {
+                SetProperty(ref _valueBool, value);
+                RaiseValueChanged();
+            }
         }
 
         public string ValueText
         {
             get => _valueText;
-            set => SetProperty(ref _valueText, value);
+            set
+            {
+                SetProperty(ref _valueText, value);
+                RaiseValueChanged();
+            }
+
         }
 
         public bool IsHidden { get; set; }
@@ -139,6 +159,18 @@ namespace NatCruise.Models
         public string InputRegex { get; set; }
 
         [IgnoreField]
-        public string Error { get; set; }
+        public string DbError { get; set; }
+
+        [IgnoreField]
+        public TreeError Error
+        {
+            get => _error;
+            set => SetProperty(ref _error, value);
+        }
+
+        public void RaiseValueChanged()
+        {
+            ValueChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

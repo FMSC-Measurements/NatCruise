@@ -406,7 +406,7 @@
                                     <controls:LastChildWidthLayout>
                                         <Label Text="Grade" />
                                         <controls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                              ValueSource="{x:Static local_vms:TreeEditViewModel.GradeOptions}" />
+                                                              ValueSource="{Binding BindingContext.GradeOptions, Source={Reference _page}}" />
 
                                     </controls:LastChildWidthLayout>
                                 </Frame>

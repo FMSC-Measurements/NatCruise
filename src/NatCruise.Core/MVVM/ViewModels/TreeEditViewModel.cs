@@ -38,7 +38,7 @@ namespace NatCruise.MVVM.ViewModels
         private IEnumerable<string> _countOrMeasureOptions;
         private IEnumerable<string> _speciesOptions;
 
-        
+
 
         protected IStratumDataservice StratumDataservice { get; }
         protected ISampleGroupDataservice SampleGroupDataservice { get; }
@@ -78,7 +78,7 @@ namespace NatCruise.MVVM.ViewModels
                 {
                     foreach (var tfv in _treeFieldValues)
                     {
-                        tfv.PropertyChanged += treeFieldValue_PropertyChanged;
+                        tfv.ValueChanged += treeFieldValue_ValueChanged;
                     }
                 }
                 SetProperty(ref _treeFieldValues, value);
@@ -86,20 +86,21 @@ namespace NatCruise.MVVM.ViewModels
                 {
                     foreach (var tfv in value)
                     {
-                        tfv.PropertyChanged += treeFieldValue_PropertyChanged;
+                        tfv.ValueChanged += treeFieldValue_ValueChanged;
                     }
                 }
             }
         }
 
-        private void treeFieldValue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void treeFieldValue_ValueChanged(object sender, EventArgs e)
         {
+
             var treeFieldValue = (TreeFieldValue)sender;
 
             try
             {
                 TreeFieldValueDataservice.UpdateTreeFieldValue(treeFieldValue);
-                treeFieldValue.Error = null;
+                treeFieldValue.DbError = null;
                 RefreshErrorsAndWarnings();
 
                 // update value on Tree object to reflect change in Tree List View as well.
@@ -117,7 +118,7 @@ namespace NatCruise.MVVM.ViewModels
             }
             catch (FMSC.ORM.ConstraintException ex)
             {
-                treeFieldValue.Error = "Db Constraint Exception";
+                treeFieldValue.DbError = "Db Constraint Exception";
                 LoggingService.LogException(nameof(TreeEditViewModel), "treeFieldValue_PropertyChanged", ex,
                     new Dictionary<string, string>()
                     {
@@ -125,6 +126,7 @@ namespace NatCruise.MVVM.ViewModels
                                 { "Value", treeFieldValue.Value?.ToString() ?? "null"}
                     });
             }
+
         }
 
         public string TreeID => Tree?.TreeID;
@@ -680,14 +682,32 @@ namespace NatCruise.MVVM.ViewModels
         {
             if (tree == null) { return; }
 
-            var errorsAndWarnings = TreeErrorDataservice.GetTreeErrors(tree.TreeID);
-            var errorCount = errorsAndWarnings.Count(x => x.Level == "E");
-            var warningCount = errorsAndWarnings.Count(y => y.Level == "W" && !y.IsResolved);
+            var errorsAndWarnings = TreeErrorDataservice.GetTreeErrors(tree.TreeID).ToArray();
+            var warnings = errorsAndWarnings
+                .Where(x => x.Level == ErrorBase.LEVEL_WARNING && !x.IsResolved)
+                .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase);
+
+            var errors = errorsAndWarnings
+                .Where(x => x.Level == ErrorBase.LEVEL_ERROR)
+                .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var tf in TreeFieldValues)
+            {
+                var field = tf.Field;
+
+                tf.Error = errors.GetValueOrDefault(field) ?? warnings.GetValueOrDefault(field);
+            }
 
             ErrorsAndWarnings = errorsAndWarnings;
 
-            tree.ErrorCount = errorCount;
-            tree.WarningCount = warningCount;
+            HasSpeciesError = errors.ContainsKey(nameof(Tree.SpeciesCode));
+
+            //sample group is a required field in the data base, so we wont expect
+            // to get any SG errors from GetTreeErrors
+            //HasSampleGroupError = errors.ContainsKey(nameof(Tree.SampleGroupCode));
+
+            tree.ErrorCount = errors.Count;
+            tree.WarningCount = warnings.Count;
         }
 
         protected void RefreshCruisers(TreeEx tree)

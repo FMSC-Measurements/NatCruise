@@ -1,6 +1,7 @@
 ﻿using FScruiser.XF.Controls;
 using FScruiser.XF.Util;
 using FScruiser.XF.ViewModels;
+using NatCruise.MVVM.ViewModels;
 using System;
 using System.Linq;
 using Xamarin.Forms;
