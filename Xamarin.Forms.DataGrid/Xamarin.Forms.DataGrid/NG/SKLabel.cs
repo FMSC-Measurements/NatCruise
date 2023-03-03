@@ -442,7 +442,7 @@ namespace Xamarin.Forms.DataGrid
 		}
 
 
-		private static Line[] SplitLines(string text, SKPaint paint, double maxWidth)
+		public static Line[] SplitLines(string text, SKPaint paint, double maxWidth)
 		{
 			var spaceWidth = paint.MeasureText(" ");
 			var lines = text.Split('\n');
@@ -490,7 +490,7 @@ namespace Xamarin.Forms.DataGrid
 		}
 		
 		
-		private class Line
+		public class Line
 		{
 			public string Text { get; set; }
 
