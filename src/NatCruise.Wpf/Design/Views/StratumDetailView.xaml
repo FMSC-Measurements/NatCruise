@@ -96,7 +96,7 @@
                     <TextBox ToolTip="Basal Area Factor"
                              Text="{Binding BasalAreaFactor}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}" />
                 </ctrls:LastChildWidthPanel>
 
                 <!-- fps -->

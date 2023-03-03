@@ -8,7 +8,7 @@ namespace NatCruise.Models
     [Table("SampleGroup")]
     public class SampleGroup : BindableBase
     {
-        private int _bigBAF;
+        private double _bigBAF;
         private string _biomassProduct;
         private string _cutLeave;
         private string _defaultLiveDead;
@@ -41,7 +41,7 @@ namespace NatCruise.Models
 
         public string StratumCode { get; set; }
 
-        public int BigBAF
+        public double BigBAF
         {
             get => _bigBAF;
             set => SetProperty(ref _bigBAF, value);

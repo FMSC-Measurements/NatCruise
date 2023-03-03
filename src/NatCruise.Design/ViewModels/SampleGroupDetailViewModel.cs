@@ -200,7 +200,7 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
-        public int BigBAF
+        public double BigBAF
         {
             get => SampleGroup?.BigBAF ?? default(int);
             set
