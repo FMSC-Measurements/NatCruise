@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+	<PropertyGroup>
 
-    <RootNamespace>Xamarin.Forms.DataGrid.UnitTest</RootNamespace>
-    <AssemblyName>Xamarin.Forms.DataGrid.UnitTest</AssemblyName>
-    <TargetFramework>net48</TargetFramework>
-    
-  </PropertyGroup>
+		<RootNamespace>Xamarin.Forms.DataGrid.UnitTest</RootNamespace>
+		<AssemblyName>Xamarin.Forms.DataGrid.UnitTest</AssemblyName>
+		<TargetFramework>net60-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<OutputType>WinExe</OutputType>
+
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
@@ -14,16 +16,17 @@
 		<PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.2" />
+		<PackageReference Include="SkiaSharp.Views.WPF" Version="2.88.3" />
 		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2545" />
-		
+
 	</ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-	
-  <ItemGroup>
-    <ProjectReference Include="..\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid.csproj" />
-  </ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid.csproj" />
+	</ItemGroup>
 
 </Project>

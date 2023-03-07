@@ -343,7 +343,10 @@ namespace Xamarin.Forms.DataGrid
 				
 				_cachedLines = SplitLines(Text, _cachedPaint, widthConstraint * DisplayScale);
 
-				_cachedSize = new Size(_cachedLines.Max(l => l.WidthPixels) / DisplayScale, _cachedLines.Length * (float)(FontSize * DisplayScale));
+				var maxWidth = _cachedLines.Any() ? _cachedLines.Max(l => l.WidthPixels)
+					: 1.0f;
+
+                _cachedSize = new Size(maxWidth / DisplayScale, _cachedLines.Length * (float)(FontSize * DisplayScale));
 			}
 
 			

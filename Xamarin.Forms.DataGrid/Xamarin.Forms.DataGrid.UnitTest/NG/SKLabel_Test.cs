@@ -12,7 +12,11 @@ namespace Xamarin.Forms.DataGrid.UnitTest.NG
     public class SKLabel_Test
     {
         [TestMethod]
-        public void SplitLines_Test()
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow("\r\n")]
+        [DataRow("something")]
+        public void SplitLines_Test(string sValue)
         {
             var fontSize = 12;
             var maxWidth = 300.0d;
@@ -28,9 +32,10 @@ namespace Xamarin.Forms.DataGrid.UnitTest.NG
                 TextSize = (float)(fontSize * scalingFactor)
             };
 
-            var lines = SKLabel.SplitLines("someting", skPaint, maxWidth);
+            var lines = SKLabel.SplitLines(sValue, skPaint, maxWidth);
 
             Assert.IsNotNull(lines);
+            Assert.IsTrue(lines.Any());
         }
     }
 }
