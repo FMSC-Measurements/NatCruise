@@ -264,15 +264,23 @@ namespace NatCruise.Wpf.ViewModels
         protected async Task RunSync()
         {
             var syncQue = SyncQue;
+            var tableSyncOptions = Options;
 
             do
             {
                 var nextFile = syncQue.Peek();
                 CurrentSyncFile = nextFile;
 
-                CheckFile(nextFile);
+                CheckFile(nextFile, tableSyncOptions);
 
-                if (nextFile.Conflicts.HasConflicts || nextFile.DesignErrors.Any())
+                if (nextFile.DesignErrors.Any())
+                {
+                    DialogService.ShowNotification("File Has Errors");
+                    ConflictsDetected?.Invoke(this, EventArgs.Empty);
+                    return;
+                }
+
+                if (nextFile.Conflicts.HasConflicts)
                 {
                     DialogService.ShowNotification("File Has Conflicts");
                     ConflictsDetected?.Invoke(this, EventArgs.Empty);
@@ -281,7 +289,7 @@ namespace NatCruise.Wpf.ViewModels
 
                 try
                 {
-                    var syncResult = await SyncFile(nextFile);
+                    var syncResult = await SyncFile(nextFile, tableSyncOptions);
                     nextFile.SyncResult = syncResult;
                     nextFile.Status = CrewFileInfo.FileStatus.Combined;
                     nextFile.IsSynced = true;
@@ -312,7 +320,7 @@ namespace NatCruise.Wpf.ViewModels
             OutputFileName = null;
         }
 
-        protected async Task<SyncResult> SyncFile(CrewFileInfo file)
+        protected async Task<SyncResult> SyncFile(CrewFileInfo file, TableSyncOptions options)
         {
             var destDb = new CruiseDatastore_V3(OutputFileName);
 
@@ -325,7 +333,7 @@ namespace NatCruise.Wpf.ViewModels
             var destTransaction = destConn.BeginTransaction();
             try
             {
-                var syncResult = await Syncer.SyncAsync(CruiseID, srcCon, destConn, Options, progress: file.Progress);
+                var syncResult = await Syncer.SyncAsync(CruiseID, srcCon, destConn, options, progress: file.Progress);
                 destTransaction.Commit();
                 return syncResult;
             }
@@ -341,7 +349,7 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        protected void CheckFile(CrewFileInfo file)
+        protected void CheckFile(CrewFileInfo file, TableSyncOptions options)
         {
             var destDb = new CruiseDatastore_V3(OutputFileName);
 
@@ -353,11 +361,43 @@ namespace NatCruise.Wpf.ViewModels
 
             var cruiseID = CruiseID;
 
+            // check for design mismatch errors before
+            // doing pre-sync back to the destination.
+            // because if there are design mismatches
+            // it might sync them. 
+            var destConn = destDb.OpenConnection();
+            var sourceConn = sourceDb.OpenConnection();
+            try
+            {
+                var errorsList = new List<string>();
+                if (!options.AllowStratumDesignChanges
+                    && StratumSyncer.CheckHasDesignMismatchErrors(cruiseID, sourceConn, destConn, out var stratumErrors))
+                {
+                    errorsList.AddRange(stratumErrors);
+                }
+
+                if (!options.AllowSampleGroupSamplingChanges
+                    && SampleGroupSyncer.CheckHasDesignMismatchErrors(cruiseID, sourceConn, destConn, out var sgErrror))
+                {
+                    errorsList.AddRange(sgErrror);
+                }
+
+                file.DesignErrors = errorsList;
+                // quit checking because if there are errors
+                // we don't want to continue with pre-sync
+                if(errorsList.Any()) { return; }
+            }
+            finally
+            {
+                destDb.ReleaseConnection();
+                sourceDb.ReleaseConnection();
+            }
+
             // run the sync operation from the destination to the source
             // this allows records that have been modified in the destination
             // to be updated pre-conflict-check removing false positive conflicts
             // where the destination record has been moved out of conflict
-            var preCheckSyncOptions = new TableSyncOptions(SyncOption.Lock)
+            var preSyncOptions = new TableSyncOptions(SyncOption.Lock)
             {
                 CuttingUnit = SyncOption.Update,
                 CuttingUnitStratum = SyncOption.Update,
@@ -367,34 +407,16 @@ namespace NatCruise.Wpf.ViewModels
                 TreeAuditResolution = SyncOption.Update,
                 Log = SyncOption.Update,
                 Stem = SyncOption.Update,
+
+                AllowSampleGroupSamplingChanges = options.AllowSampleGroupSamplingChanges,
+                AllowStratumDesignChanges = options.AllowStratumDesignChanges,
             };
-            Syncer.Sync(cruiseID, destDb, workingSourceDb, preCheckSyncOptions);
+            Syncer.Sync(cruiseID, destDb, workingSourceDb, preSyncOptions);
 
             var conflicts = ConflictChecker.CheckConflicts(workingSourceDb, destDb, cruiseID);
             file.Conflicts = conflicts;
 
-            var destConn = destDb.OpenConnection();
-            var sourceConn = sourceDb.OpenConnection();
-            try
-            {
-                var errorsList = new List<string>();
-                if (StratumSyncer.CheckHasDesignMismatchErrors(cruiseID, sourceConn, destConn, out var stratumErrors))
-                {
-                    errorsList.AddRange(stratumErrors);
-                }
 
-                if (SampleGroupSyncer.CheckHasDesignMismatchErrors(cruiseID, sourceConn, destConn, out var sgErrror))
-                {
-                    errorsList.AddRange(sgErrror);
-                }
-
-                file.DesignErrors = errorsList;
-            }
-            finally
-            {
-                destDb.ReleaseConnection();
-                sourceDb.ReleaseConnection();
-            }
         }
 
         public class CrewFileInfo : INPC_Base
