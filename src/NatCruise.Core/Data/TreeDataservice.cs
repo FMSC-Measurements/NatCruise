@@ -64,8 +64,20 @@ treeWarningCount AS
 
 SELECT
     t.*,
-    CAST (ifnull(tl.KPI, 0) AS REAL) AS KPI,
-    (CASE ifnull(tl.STM, 0) WHEN 0 THEN 'N' WHEN 1 THEN 'Y' END) AS STM,
+    (
+        SELECT CAST (ifnull(KPI, 0) AS REAL)
+        FROM TallyLedger
+        WHERE TreeID = t.TreeID
+        ORDER BY Created_TS DESC
+        LIMIT 1
+    ) AS KPI,
+    (
+        SELECT (CASE ifnull(STM, 0) WHEN 0 THEN 'N' WHEN 1 THEN 'Y' END)
+        FROM TallyLedger
+        WHERE TreeID = t.TreeID
+        ORDER BY Created_TS DESC
+        LIMIT 1
+    ) AS STM,
     te.ErrorCount,
     tw.WarningCount,
 
@@ -108,7 +120,7 @@ SELECT
 
 FROM Tree AS t
 JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
-LEFT JOIN TallyLedger AS tl ON tl.TreeID = t.TreeID
+--LEFT JOIN TallyLedger AS tl ON tl.TreeID = t.TreeID
 LEFT JOIN TreeMeasurment_DefaultResolved AS tm USING (TreeID)
 LEFT JOIN treeErrorCount AS te USING (TreeID)
 LEFT JOIN treeWarningCount AS tw USING (TreeID)

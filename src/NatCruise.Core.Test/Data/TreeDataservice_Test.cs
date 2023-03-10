@@ -51,6 +51,127 @@ namespace NatCruise.Test.Data
         }
 
         [Fact]
+        public void GetTrees_MultipleTallyLedger()
+        {
+            var unit = "u1";
+            var stratum = "st1";
+            var sg = "sg1";
+            var sp = "sp1";
+
+            var init = new DatastoreInitializer();
+            using var db = init.CreateDatabase();
+
+            var treeID = Guid.NewGuid().ToString();
+            var tree = new Tree()
+            {
+                CruiseID = init.CruiseID,
+                TreeID = treeID,
+                TreeNumber = 1,
+                CuttingUnitCode = unit,
+                StratumCode = stratum,
+                SampleGroupCode = sg,
+                SpeciesCode = sp,
+            };
+            db.Insert(tree);
+
+            var tallyLedger = new TallyLedger()
+            {
+                TallyLedgerID = Guid.NewGuid().ToString(),
+                CruiseID = init.CruiseID,
+                TreeID = treeID,
+                CuttingUnitCode = unit,
+                StratumCode = stratum,
+                SampleGroupCode = sg,
+                SpeciesCode = sp,
+                TreeCount = 1,
+            };
+            db.Insert(tallyLedger);
+
+            var tallyLedger2 = new TallyLedger()
+            {
+                TallyLedgerID = Guid.NewGuid().ToString(),
+                CruiseID = init.CruiseID,
+                TreeID = treeID,
+                CuttingUnitCode = unit,
+                StratumCode = stratum,
+                SampleGroupCode = sg,
+                SpeciesCode = sp,
+                TreeCount = 1,
+            };
+            db.Insert(tallyLedger2);
+
+            var treeDs = new TreeDataservice(db, init.CruiseID, init.DeviceID);
+            var treesAgain = treeDs.GetTrees(unit, stratum, sg, sp);
+            treesAgain.Should().HaveCount(1);
+
+            var treeAgain = treesAgain.Single();
+            treeAgain.TreeID.Should().Be(treeID);
+        }
+
+        [Fact]
+        public void GetTrees_MultipleTallyLedger_3PTree()
+        {
+            var unit = "u1";
+            var stratum = "st1";
+            var sg = "sg1";
+            var sp = "sp1";
+
+            var init = new DatastoreInitializer();
+            using var db = init.CreateDatabase();
+
+            var treeID = Guid.NewGuid().ToString();
+            var tree = new Tree()
+            {
+                CruiseID = init.CruiseID,
+                TreeID = treeID,
+                TreeNumber = 1,
+                CuttingUnitCode = unit,
+                StratumCode = stratum,
+                SampleGroupCode = sg,
+                SpeciesCode = sp,
+            };
+            db.Insert(tree);
+
+            var tallyLedger = new TallyLedger()
+            {
+                TallyLedgerID = Guid.NewGuid().ToString(),
+                CruiseID = init.CruiseID,
+                TreeID = treeID,
+                CuttingUnitCode = unit,
+                StratumCode = stratum,
+                SampleGroupCode = sg,
+                SpeciesCode = sp,
+                TreeCount = 1,
+                STM = true,
+            };
+            db.Insert(tallyLedger);
+
+            //need to sleep for 1sec because time stamps resolution is only down to the second
+            System.Threading.Thread.Sleep(1000);
+
+            var tallyLedger2 = new TallyLedger()
+            {
+                TallyLedgerID = Guid.NewGuid().ToString(),
+                CruiseID = init.CruiseID,
+                TreeID = treeID,
+                CuttingUnitCode = unit,
+                StratumCode = stratum,
+                SampleGroupCode = sg,
+                SpeciesCode = sp,
+                KPI = 102,
+            };
+            db.Insert(tallyLedger2);
+
+            var treeDs = new TreeDataservice(db, init.CruiseID, init.DeviceID);
+            var treesAgain = treeDs.GetTrees(unit, stratum, sg, sp);
+            treesAgain.Should().HaveCount(1);
+
+            var treeAgain = treesAgain.Single();
+            treeAgain.TreeID.Should().Be(treeID);
+            treeAgain.KPI.Should().Be(102);
+        }
+
+        [Fact]
         public void IsTreeNumberAvalible_noPlot()
         {
             var init = new DatastoreInitializer();
