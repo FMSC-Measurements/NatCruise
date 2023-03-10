@@ -28,7 +28,7 @@ namespace NatCruise.Cruise.Test.Logic
         {
             int sigDec = 3;
 
-            var ld = LimitingDistanceCalculator.Calculate(baf, dbh, slopePCT, true, isFace);
+            var ld = LimitingDistanceCalculator.Calculate(baf, 0.0m, dbh, slopePCT, true, isFace);
             ld = Math.Round(ld, sigDec);
             expected = Math.Round(expected, 3);
             ld.Should().Be(expected);
