@@ -38,7 +38,7 @@ namespace NatCruise.MVVM.ViewModels
         private IEnumerable<string> _countOrMeasureOptions;
         private IEnumerable<string> _speciesOptions;
 
-
+        private bool IsTreeChanging { get; set; }
 
         protected IStratumDataservice StratumDataservice { get; }
         protected ISampleGroupDataservice SampleGroupDataservice { get; }
@@ -55,7 +55,7 @@ namespace NatCruise.MVVM.ViewModels
         public event EventHandler<TreeFieldValueChangedEventArgs> TreeFieldValueChanged;
 
         public bool UseSimplifiedTreeFields { get; set; } = false;
-        public bool IsLoading { get; set; }
+
 
         public IEnumerable<string> Cruisers
         {
@@ -136,57 +136,57 @@ namespace NatCruise.MVVM.ViewModels
             get { return _tree; }
             set
             {
-                OnTreeChanged(value);
-                SetProperty(ref _tree, value);
-                RaisePropertyChanged(nameof(CountOrMeasure));
-                RaisePropertyChanged(nameof(TreeNumber));
-                RaisePropertyChanged(nameof(StratumCode));
-                RaisePropertyChanged(nameof(SampleGroupCode));
-                //RaisePropertyChanged(nameof(SubPopulation));
-                RaisePropertyChanged(nameof(SpeciesCode));
-                RaisePropertyChanged(nameof(LiveDead));
-                RaisePropertyChanged(nameof(Remarks));
-                RaisePropertyChanged(nameof(Initials));
-                RaisePropertyChanged(nameof(TreeCount));
+                IsTreeChanging = true;
+                try
+                {
+                    OnTreeChanged(value);
+                    SetProperty(ref _tree, value);
+                    RaisePropertyChanged(nameof(CountOrMeasure));
+                    RaisePropertyChanged(nameof(TreeNumber));
+                    RaisePropertyChanged(nameof(StratumCode));
+                    RaisePropertyChanged(nameof(SampleGroupCode));
+                    //RaisePropertyChanged(nameof(SubPopulation));
+                    RaisePropertyChanged(nameof(SpeciesCode));
+                    RaisePropertyChanged(nameof(LiveDead));
+                    RaisePropertyChanged(nameof(Remarks));
+                    RaisePropertyChanged(nameof(Initials));
+                    RaisePropertyChanged(nameof(TreeCount));
+                }
+                finally
+                {
+                    IsTreeChanging = false;
+                }
             }
         }
 
         private void OnTreeChanged(TreeEx tree)
         {
-            try
+            if (tree != null)
             {
-                IsLoading = true;
-                if (tree != null)
+                var unitCode = tree.CuttingUnitCode;
+                var stratumCodes = StratumDataservice.GetStratumCodesByUnit(unitCode);
+                StratumCodes = stratumCodes;
+
+                RefreshCruiseMethod(tree);
+                RefreshSampleGroups(tree);
+                RefreshSubPopulations(tree);
+                RefreshTreeFieldValues(tree);
+                RefreshErrorsAndWarnings(tree);
+                RefreshCruisers(tree);
+
+                var cruiseMethod = StratumDataservice.GetCruiseMethod(tree.StratumCode);
+                if (CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod))
                 {
-                    var unitCode = tree.CuttingUnitCode;
-                    var stratumCodes = StratumDataservice.GetStratumCodesByUnit(unitCode);
-                    StratumCodes = stratumCodes;
-
-                    RefreshCruiseMethod(tree);
-                    RefreshSampleGroups(tree);
-                    RefreshSubPopulations(tree);
-                    RefreshTreeFieldValues(tree);
-                    RefreshErrorsAndWarnings(tree);
-                    RefreshCruisers(tree);
-
-                    var cruiseMethod = StratumDataservice.GetCruiseMethod(tree.StratumCode);
-                    if (CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod))
-                    {
-                        CountOrMeasureOptions = new[] { "C", "M", "I" };
-                    }
-                    else if (cruiseMethod == CruiseDAL.Schema.CruiseMethods.FIXCNT)
-                    {
-                        CountOrMeasureOptions = new[] { "C" };
-                    }
-                    else
-                    {
-                        CountOrMeasureOptions = new[] { "M", "I" };
-                    }
+                    CountOrMeasureOptions = new[] { "C", "M", "I" };
                 }
-            }
-            finally
-            {
-                IsLoading = false;
+                else if (cruiseMethod == CruiseDAL.Schema.CruiseMethods.FIXCNT)
+                {
+                    CountOrMeasureOptions = new[] { "C" };
+                }
+                else
+                {
+                    CountOrMeasureOptions = new[] { "M", "I" };
+                }
             }
         }
 
@@ -195,7 +195,7 @@ namespace NatCruise.MVVM.ViewModels
             get => Tree?.Initials;
             set
             {
-                if (IsLoading) { return; }
+                if (IsTreeChanging) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.Initials;
@@ -212,7 +212,7 @@ namespace NatCruise.MVVM.ViewModels
             get => Tree?.Remarks;
             set
             {
-                if (IsLoading) { return; }
+                if (IsTreeChanging) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.Remarks;
@@ -229,7 +229,7 @@ namespace NatCruise.MVVM.ViewModels
             get => (Tree != null) ? TreeDataservice.GetTreeCount(Tree.TreeID) : 0;
             set
             {
-                if (IsLoading) { return; }
+                if (IsTreeChanging) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 TreeDataservice.UpdateTreeCount(tree.TreeID, value);
@@ -247,7 +247,7 @@ namespace NatCruise.MVVM.ViewModels
             get => Tree?.CountOrMeasure;
             set
             {
-                if (IsLoading) { return; }
+                if (IsTreeChanging) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.CountOrMeasure;
@@ -292,7 +292,7 @@ namespace NatCruise.MVVM.ViewModels
             }
             set
             {
-                if (IsLoading) { return; }
+                if (IsTreeChanging) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.TreeNumber;
@@ -340,7 +340,7 @@ namespace NatCruise.MVVM.ViewModels
             get { return Tree?.StratumCode; }
             set
             {
-                if (IsLoading) { return; }
+                if (IsTreeChanging) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = Tree.StratumCode;
@@ -505,7 +505,7 @@ namespace NatCruise.MVVM.ViewModels
             get => Tree?.SpeciesCode;
             set
             {
-                if (IsLoading) { return; }
+                if (IsTreeChanging) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.SpeciesCode;
@@ -555,7 +555,7 @@ namespace NatCruise.MVVM.ViewModels
             get => Tree?.LiveDead;
             set
             {
-                if (IsLoading) { return; }
+                if (IsTreeChanging) { return; }
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.LiveDead;
@@ -584,6 +584,8 @@ namespace NatCruise.MVVM.ViewModels
         public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new DelegateCommand(ShowLogs));
 
         public ICommand ShowEditTreeErrorCommand => _showEditTreeErrorCommand ?? (_showEditTreeErrorCommand = new DelegateCommand<TreeError>(ShowEditTreeError));
+
+
 
         private void ShowEditTreeError(TreeError treeError)
         {
