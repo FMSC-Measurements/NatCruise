@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -136,14 +137,6 @@ namespace FScruiser.XF.ViewModels
 
             var cruiseID = cruise.CruiseID;
             var importPath = ImportPath ?? throw new NullReferenceException("ImportPath was null");
-            if (AnalizeCruise(importPath, cruiseID, out var errors) == false)
-            {
-                SelectedCruise = null;
-                var errorStr = String.Join(Environment.NewLine, errors);
-                Log.LogEvent("Import Error", new Dictionary<string, string> { {"Message", errorStr } });
-                DialogService.ShowNotification(errorStr, "Cruise Can Not Be Imported");
-                return;
-            }
 
             SelectedCruise = cruise;
         }
@@ -155,35 +148,116 @@ namespace FScruiser.XF.ViewModels
             var db = DataserviceProvider.Database;
             using (var importDb = new CruiseDatastore_V3(path))
             {
+                var designErrors = GetDesignMismatchErrors(importDb, db, cruiseID);
+                if (designErrors.Any())
+                {
+                    errors = designErrors;
+                    return false;
+                }
+
+                var conflictChecker = new ConflictChecker();
+
+                var conflicts = conflictChecker.CheckConflicts(importDb, db, cruiseID);
+
+                if (conflicts.HasConflicts)
+                {
+                    DialogService.ShowNotification(GenerateConflitReport(conflicts));
+                    return false;
+                }
+
                 var cruiseChecker = new CruiseChecker();
 
                 var cruiseConflicts = cruiseChecker.GetCruiseConflicts(importDb, db, cruiseID);
                 var isCruiseInConflict = cruiseConflicts.Any();
                 if (isCruiseInConflict)
-                { eList.Add("Cruise Number Conflict"); }
+                { eList.Add("Another Cruise With Same Cruise Number Already Exits"); }
 
                 //var saleConflicts = cruiseChecker.GetSaleConflicts(importDb, db, cruiseID);
                 //var isSaleInConflict = saleConflicts.Any();
-                //if(isSaleInConflict)
+                //if (isSaleInConflict)
                 //{ eList.Add("Sale Number Conflict"); }
 
-                var plotConflicts = cruiseChecker.GetPlotConflicts(importDb, db, cruiseID);
-                if (plotConflicts.Any())
-                { eList.Add($"{plotConflicts.Count()} Plot Conflict(s)"); }
+                //var plotConflicts = cruiseChecker.GetPlotConflicts(importDb, db, cruiseID);
+                //if (plotConflicts.Any())
+                //{ eList.Add($"{plotConflicts.Count()} Plot Conflict(s)"); }
 
-                var treeConflicts = cruiseChecker.GetTreeConflicts(importDb, db, cruiseID);
-                if (treeConflicts.Any())
-                { eList.Add($"{treeConflicts.Count()} Tree Conflict(s)"); }
+                //var treeConflicts = cruiseChecker.GetTreeConflicts(importDb, db, cruiseID);
+                //if (treeConflicts.Any())
+                //{ eList.Add($"{treeConflicts.Count()} Tree Conflict(s)"); }
 
-                var logConflicts = cruiseChecker.GetLogConflicts(importDb, db, cruiseID);
-                if (logConflicts.Any())
-                { eList.Add($"{logConflicts.Count()} Log Conflict(s)"); }
+                //var logConflicts = cruiseChecker.GetLogConflicts(importDb, db, cruiseID);
+                //if (logConflicts.Any())
+                //{ eList.Add($"{logConflicts.Count()} Log Conflict(s)"); }
 
-                var hasDesignKeyChanges = cruiseChecker.HasDesignKeyChanges(importDb, db, cruiseID);
-                if (hasDesignKeyChanges)
-                { eList.Add("Has changes in design key values"); }
+                //var hasDesignKeyChanges = cruiseChecker.HasDesignKeyChanges(importDb, db, cruiseID);
+                //if (hasDesignKeyChanges)
+                //{ eList.Add("Has changes in design key values"); }
 
                 return !errors.Any();
+            }
+        }
+
+        private string GenerateConflitReport(ConflictResolutionOptions conflicts)
+        {
+            var sb = new StringBuilder();
+            if(conflicts.CuttingUnit.Any())
+            {
+                sb.AppendLine("Cutting Unit Conflicts: " + conflicts.CuttingUnit.Count());
+            }
+            if(conflicts.Stratum.Any())
+            {
+                sb.AppendLine("Stratum Conflicts: " + conflicts.Stratum.Count());
+            }
+            if(conflicts.SampleGroup.Any())
+            {
+                sb.AppendLine("Sample Group Conflicts: " + conflicts.SampleGroup.Count());
+            }
+            if(conflicts.Plot.Any())
+            {
+                sb.AppendLine("Plot Conflicts: " + conflicts.Plot.Count());
+            }
+            if(conflicts.PlotTree.Any())
+            {
+                sb.AppendLine("Plot Tree Conflicts: " + conflicts.PlotTree.Count());
+            }
+            if(conflicts.Tree.Any())
+            {
+                sb.AppendLine("Tree Conflicts: " + conflicts.Tree.Count());
+            }
+            if(conflicts.Log.Any())
+            {
+                sb.AppendLine("Log Conflicts: " + conflicts.Log.Count());
+            }
+
+            sb.AppendLine("To Resolve Conflicts Export Data From Device");
+            sb.AppendLine("And Resolve Conflicts in NatCruise");
+
+            return sb.ToString();
+        }
+
+        private IEnumerable<string> GetDesignMismatchErrors(CruiseDatastore sourceDb, CruiseDatastore destDb, String cruiseID)
+        {
+            var destConn = destDb.OpenConnection();
+            var sourceConn = sourceDb.OpenConnection();
+            try
+            {
+                var errorsList = new List<string>();
+                if (CruiseDAL.V3.Sync.Syncers.StratumSyncer.CheckHasDesignMismatchErrors(cruiseID, sourceConn, destConn, out var stratumErrors))
+                {
+                    errorsList.AddRange(stratumErrors);
+                }
+
+                if (CruiseDAL.V3.Sync.Syncers.SampleGroupSyncer.CheckHasDesignMismatchErrors(cruiseID, sourceConn, destConn, out var sgErrror))
+                {
+                    errorsList.AddRange(sgErrror);
+                }
+
+                return errorsList;
+            }
+            finally
+            {
+                destDb.ReleaseConnection();
+                sourceDb.ReleaseConnection();
             }
         }
 
@@ -271,6 +345,15 @@ namespace FScruiser.XF.ViewModels
 
         public async Task<bool> ImportCruise(string cruiseID, string importPath, TableSyncOptions options = null)
         {
+            if (AnalizeCruise(importPath, cruiseID, out var errors) == false)
+            {
+                SelectedCruise = null;
+                var errorStr = String.Join(Environment.NewLine, errors);
+                Log.LogEvent("Import Error", new Dictionary<string, string> { { "Message", errorStr } });
+                DialogService.ShowNotification(errorStr, "Cruise Can Not Be Imported");
+                return false;
+            }
+
             options ??= new TableSyncOptions(SyncOption.InsertUpdate);
 
             var destDb = DataserviceProvider.Database;
