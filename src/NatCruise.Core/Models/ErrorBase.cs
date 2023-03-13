@@ -2,6 +2,9 @@
 {
     public abstract class ErrorBase
     {
+        public const string LEVEL_WARNING = "W";
+        public const string LEVEL_ERROR = "E";
+
         public string Field { get; set; }
 
         public string Level { get; set; }

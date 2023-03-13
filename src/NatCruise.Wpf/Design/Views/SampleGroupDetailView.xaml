@@ -269,7 +269,7 @@
                 <TextBox Text="{Binding BigBAF, Converter={StaticResource DefaultToEmptyStringConverter}}"
                          ToolTip="Big BAF"
                          Grid.Column="1"
-                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}" />
             </Grid>
         </GroupBox>
     </WrapPanel>

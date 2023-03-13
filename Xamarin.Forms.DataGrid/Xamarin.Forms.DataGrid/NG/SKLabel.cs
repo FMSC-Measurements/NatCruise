@@ -343,7 +343,10 @@ namespace Xamarin.Forms.DataGrid
 				
 				_cachedLines = SplitLines(Text, _cachedPaint, widthConstraint * DisplayScale);
 
-				_cachedSize = new Size(_cachedLines.Max(l => l.WidthPixels) / DisplayScale, _cachedLines.Length * (float)(FontSize * DisplayScale));
+				var maxWidth = _cachedLines.Any() ? _cachedLines.Max(l => l.WidthPixels)
+					: 1.0f;
+
+                _cachedSize = new Size(maxWidth / DisplayScale, _cachedLines.Length * (float)(FontSize * DisplayScale));
 			}
 
 			
@@ -442,7 +445,7 @@ namespace Xamarin.Forms.DataGrid
 		}
 
 
-		private static Line[] SplitLines(string text, SKPaint paint, double maxWidth)
+		public static Line[] SplitLines(string text, SKPaint paint, double maxWidth)
 		{
 			var spaceWidth = paint.MeasureText(" ");
 			var lines = text.Split('\n');
@@ -490,7 +493,7 @@ namespace Xamarin.Forms.DataGrid
 		}
 		
 		
-		private class Line
+		public class Line
 		{
 			public string Text { get; set; }
 

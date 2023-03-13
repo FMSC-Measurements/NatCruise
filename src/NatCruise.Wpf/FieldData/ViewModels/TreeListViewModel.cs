@@ -1,16 +1,19 @@
 ﻿using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
     public class TreeListViewModel : ViewModelBase
     {
+        private Dictionary<string, PropertyInfo> TreeProperties { get; }
         private IEnumerable<TreeEx> _trees;
         private string _cuttingUnitCode;
         private string _stratumCode;
@@ -19,6 +22,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private IEnumerable<int> _plotOptions;
         private int? _plotNumber;
         private TreeEx _selectedTree;
+        private TreeEditViewModel _treeEditViewModel;
         private readonly IEnumerable<TreeField> COMMON_TREEFIELDS = new[]
         {
             new TreeField{DbType = "TEXT", Heading = "Cutting Unit", Field = nameof(Tree.CuttingUnitCode)},
@@ -47,12 +51,40 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
             NatCruiseDialogService = natCruiseDialogService ?? throw new ArgumentNullException(nameof(natCruiseDialogService));
             TreeEditViewModel = treeEditViewModel ?? throw new ArgumentNullException(nameof(treeEditViewModel));
+
+            TreeProperties = typeof(TreeEx)
+                .GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)
+                .ToDictionary(x => x.Name.ToLower());
         }
 
         public ITreeDataservice TreeDataservice { get; }
         public ITreeFieldDataservice TreeFieldDataservice { get; }
         public INatCruiseDialogService NatCruiseDialogService { get; }
-        public TreeEditViewModel TreeEditViewModel { get; }
+        public TreeEditViewModel TreeEditViewModel
+        {
+            get => _treeEditViewModel;
+            private set
+            {
+                if(_treeEditViewModel != null) { _treeEditViewModel.TreeFieldValueChanged -= _treeEditViewModel_TreeValueChanged; }
+                _treeEditViewModel = value;
+                if(value != null) { _treeEditViewModel.TreeFieldValueChanged += _treeEditViewModel_TreeValueChanged; }
+            }
+        }
+
+        private void _treeEditViewModel_TreeValueChanged(object sender, TreeFieldValueChangedEventArgs e)
+        {
+            var selectedTree = SelectedTree;
+            if(selectedTree == null) { return; }
+
+            // when a field value is updated in the TreeEditViewModel
+            /// we want to reflect that change in the datagrid
+
+            var field = e.Field.ToLowerInvariant();
+            if (TreeProperties.TryGetValue(field, out var treeProp))
+            {
+                treeProp.SetValue(selectedTree, e.Value);
+            }
+        }
 
         public string CuttingUnitCode
         {

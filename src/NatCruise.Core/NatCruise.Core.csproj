@@ -21,9 +21,9 @@
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'false' OR $(UseCruiseDALProjRefs) == '' ">
-		<PackageReference Include="CruiseDAL.V3" Version="3.6.1.116" />
-		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.6.1.11600" />
-		<PackageReference Include="CruiseDAL.V3.Models" Version="3.6.1.116" />
+		<PackageReference Include="CruiseDAL.V3" Version="3.6.2.117" />
+		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.6.2.11700" />
+		<PackageReference Include="CruiseDAL.V3.Models" Version="3.6.2.117" />
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.2" />
 	</ItemGroup>
 

@@ -20,8 +20,6 @@ namespace FScruiser.XF.Services
 
         Task ShowLogEdit(string logID);
 
-        Task ShowLogsList(string treeID);
-
         Task ShowManageCruisers();
 
         Task ShowPlotEdit(string plotID);
@@ -47,8 +45,6 @@ namespace FScruiser.XF.Services
         Task ShowTreeCountEdit(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead);
 
         Task ShowTreeEdit(string treeID);
-
-        Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID);
 
         Task ShowTreeList(string unitCode);
 

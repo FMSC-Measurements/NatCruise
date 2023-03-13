@@ -40,7 +40,10 @@ namespace NatCruise.Cruise.Test.Logic
         {
             int sigDec = 3;
 
-            var ld = LimitingDistanceCalculator.Calculate(BAForFPS, dbh, slopePCT, isVar, isFace);
+            var baf = (isVar) ? BAForFPS : 0.0m;
+            var fps = (!isVar) ? BAForFPS : 0.0m;
+
+            var ld = LimitingDistanceCalculator.Calculate(baf, fps, dbh, slopePCT, isVar, isFace);
             ld = Math.Round(ld, sigDec);
             expected = Math.Round(expected, 3);
             ld.Should().Be(expected);

@@ -23,12 +23,12 @@ namespace NatCruise.Cruise.Test.Logic
 
         [Theory]
         [InlineData(20.0, 12.0, 0, false, 23.33)]
-        [InlineData(20.0, 12.0, 0, true, 23.82)] // discrepancy due to small difference in to-face correction
+        [InlineData(20.0, 12.0, 0, true, 23.82)] // fails, discrepancy due to small difference in to-face correction
         public void TestCalculateVariableRadious(decimal baf, decimal dbh, int slopePCT, bool isFace, decimal expected)
         {
             int sigDec = 3;
 
-            var ld = LimitingDistanceCalculator.Calculate(baf, dbh, slopePCT, true, isFace);
+            var ld = LimitingDistanceCalculator.Calculate(baf, 0.0m, dbh, slopePCT, true, isFace);
             ld = Math.Round(ld, sigDec);
             expected = Math.Round(expected, 3);
             ld.Should().Be(expected);

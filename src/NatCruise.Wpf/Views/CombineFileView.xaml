@@ -18,192 +18,197 @@
         <sys:Double x:Key="CurrentFilePanelWidth">800</sys:Double>
     </UserControl.Resources>
 
-    <Grid controls:GridHelper.ColumnDefinitions="*, Auto">
+    <Grid controls:GridHelper.ColumnDefinitions="*, Auto"
+          controls:GridHelper.RowDefinitions="*">
 
-        <Grid Grid.Column="0" Grid.ColumnSpan="1" controls:GridHelper.RowDefinitions="*, Auto, Auto">
-            <Grid controls:GridHelper.RowDefinitions="*, 100, Auto, Auto">
+            <Grid Grid.Column="0"
+                  Grid.ColumnSpan="1"
+                  controls:GridHelper.RowDefinitions="*, Auto, Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          >
+                <Grid controls:GridHelper.RowDefinitions="*, 100, Auto, Auto">
 
-                <!-- Crew Files-->
-                <GroupBox Grid.Row="0"
-                          Header="Crew Files"
-                          Margin="3">
-                    <StackPanel>
-                        <Button  Content="Add Crew Files"
-                                 Command="{Binding SelectFilesCommand}"
-                                 IsEnabled="{Binding IsSyncRunning, Converter={StaticResource NotConverter}}"/>
+                    <!-- Crew Files-->
+                    <GroupBox Grid.Row="0"
+                              Header="Crew Files"
+                              Margin="3">
+                        <StackPanel>
+                            <Button  Content="Add Crew Files"
+                                     Command="{Binding SelectFilesCommand}"
+                                     IsEnabled="{Binding IsSyncRunning, Converter={StaticResource NotConverter}}" />
 
-                        <Separator />
+                            <Separator />
 
-                        <ItemsControl Grid.Row="2"
-                                      ItemsSource="{Binding CrewFiles}"
-                                      d:ItemsSource="{d:SampleData ItemCount=5}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid ToolTip="{Binding OriginalFile.FullName}">
-                                        <TextBlock d:Text="something.crz3"
-                                                   Text="{Binding OriginalFile.Name}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </GroupBox>
+                            <ItemsControl Grid.Row="2"
+                                          ItemsSource="{Binding CrewFiles}"
+                                          d:ItemsSource="{d:SampleData ItemCount=5}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ToolTip="{Binding OriginalFile.FullName}">
+                                            <TextBlock d:Text="something.crz3"
+                                                       Text="{Binding OriginalFile.Name}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </GroupBox>
 
-                <GroupBox Grid.Row="1"
-                          Header="Cruise Info"
-                          Margin="3"
-                          DataContext="{Binding Cruise}">
-                    <WrapPanel mah:VisibilityHelper.IsVisible="{Binding ., Converter={StaticResource NotNullConverter}}"
-                               d:Visibility="Visible">
-                        <WrapPanel.Resources>
-                            <Style TargetType="controls:LastChildWidthPanel">
-                                <Setter Property="LastChildWidth"
-                                        Value="100" />
-                                <Setter Property="Width"
-                                        Value="200" />
-                            </Style>
-                        </WrapPanel.Resources>
-                        <controls:LastChildWidthPanel>
-                            <TextBlock Text="Sale Name:"
-                                       FontWeight="Bold" />
-                            <TextBlock Text="{Binding SaleName}"
-                                       d:Text="something" />
-                        </controls:LastChildWidthPanel>
+                    <GroupBox Grid.Row="1"
+                              Header="Cruise Info"
+                              Margin="3"
+                              DataContext="{Binding Cruise}">
+                        <WrapPanel mah:VisibilityHelper.IsVisible="{Binding ., Converter={StaticResource NotNullConverter}}"
+                                   d:Visibility="Visible">
+                            <WrapPanel.Resources>
+                                <Style TargetType="controls:LastChildWidthPanel">
+                                    <Setter Property="LastChildWidth"
+                                            Value="100" />
+                                    <Setter Property="Width"
+                                            Value="200" />
+                                </Style>
+                            </WrapPanel.Resources>
+                            <controls:LastChildWidthPanel>
+                                <TextBlock Text="Sale Name:"
+                                           FontWeight="Bold" />
+                                <TextBlock Text="{Binding SaleName}"
+                                           d:Text="something" />
+                            </controls:LastChildWidthPanel>
 
-                        <controls:LastChildWidthPanel>
-                            <TextBlock Text="Sale Number:"
-                                       FontWeight="Bold" />
-                            <TextBlock Text="{Binding SaleNumber}"
-                                       d:Text="something" />
-                        </controls:LastChildWidthPanel>
+                            <controls:LastChildWidthPanel>
+                                <TextBlock Text="Sale Number:"
+                                           FontWeight="Bold" />
+                                <TextBlock Text="{Binding SaleNumber}"
+                                           d:Text="something" />
+                            </controls:LastChildWidthPanel>
 
-                        <controls:LastChildWidthPanel>
-                            <TextBlock Text="Purpose:"
-                                       FontWeight="Bold" />
-                            <TextBlock Text="{Binding Purpose}"
-                                       d:Text="something" />
-                        </controls:LastChildWidthPanel>
-                    </WrapPanel>
-                </GroupBox>
+                            <controls:LastChildWidthPanel>
+                                <TextBlock Text="Purpose:"
+                                           FontWeight="Bold" />
+                                <TextBlock Text="{Binding Purpose}"
+                                           d:Text="something" />
+                            </controls:LastChildWidthPanel>
+                        </WrapPanel>
+                    </GroupBox>
 
-                <!-- Output File-->
-                <GroupBox Grid.Row="2"
-                          Header="Output File"
-                          Margin="3,3,3,20">
-                    <StackPanel>
+                    <!-- Output File-->
+                    <GroupBox Grid.Row="2"
+                              Header="Output File"
+                              Margin="3,3,3,20">
+                        <StackPanel>
 
-                        <TextBox Grid.Row="1"
-                                 Text="{Binding OutputFileName}"
-                                 IsReadOnly="True"
-                                 Margin="0,3" />
-                        <Button Content="Change Output File"
-                                Command="{Binding SelectOutputFileCommand}" 
-                                IsEnabled="{Binding CanStartSync}"/>
+                            <TextBox Grid.Row="1"
+                                     Text="{Binding OutputFileName}"
+                                     IsReadOnly="True"
+                                     Margin="0,3" />
+                            <Button Content="Change Output File"
+                                    Command="{Binding SelectOutputFileCommand}"
+                                    IsEnabled="{Binding CanStartSync}" />
 
-                    </StackPanel>
-                </GroupBox>
+                        </StackPanel>
+                    </GroupBox>
 
-                <Expander Grid.Row="3"
-                          Header="Advanced Options"
-                          d:IsExpanded="False">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Expander Grid.Row="3"
+                              Header="Advanced Options"
+                              d:IsExpanded="True">
                         <views:SyncOptionsView DataContext="{Binding Options}" />
-                    </ScrollViewer>
-                </Expander>
-
-            </Grid>
-            <Button Grid.Row="1"
-                    Command="{Binding StartCombineFilesCommand}"
-                    IsEnabled="{Binding CanStartSync}"
-                    Content="Start Combining Files" />
-
-            <ProgressBar Grid.Row="2"
-                         VerticalAlignment="Center"
-                         mah_ctrls:VisibilityHelper.IsVisible="{Binding CurrentSyncFile, Mode=OneWay, Converter={StaticResource NotNullConverter}}"
-                         Value="{Binding CurrentSyncFile.ProgressValue, Mode=OneWay}"
-                         Minimum="0.0"
-                         Maximum="1.0">
-            </ProgressBar>
-        </Grid>
-
-
-
-        <Expander x:Name="_currentFileDetailsPanel"
-                  Grid.Column="1"
-                  ExpandDirection="Left"
-                  MaxWidth="{StaticResource CurrentFilePanelWidth}"
-                  Background="{StaticResource MahApps.Brushes.Control.Background}"
-                  mah_ctrls:VisibilityHelper.IsVisible="{Binding CurrentSyncFile, Converter={StaticResource NotNullConverter}}"
-                  d:IsExpanded="False">
-            <Border Grid.Column="0"
-                    Width="{StaticResource CurrentFilePanelWidth}"
-                    Grid.ColumnSpan="2"
-                    BorderThickness="1"
-                    BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <Grid controls:GridHelper.RowDefinitions="Auto, Auto">
-
-
-                        <TextBlock Grid.Row="0"
-                                   Text="File:"
-                                   HorizontalAlignment="Left"
-                                   Margin="10,0"
-                                   VerticalAlignment="Center"
-                                   FontSize="16"
-                                   FontWeight="Bold"
-                                   Foreground="{DynamicResource MahApps.Brushes.AccentBase}" />
-
-                        <Label Grid.Row="1"
-                               Content="{Binding CurrentSyncFile.OriginalFile.Name}"
-                               d:Content="somethingveryveryverylong_TS_202208120134_GalaxyTabS3-15CRZ.crz3"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Center"
-                               Margin="0,0,10,0"
-                               FontWeight="Bold"
-                               FontSize="20"
-                               ToolTip="{Binding CurrentSyncFile.OriginalFile.FullName}" />
-                    </Grid>
-
-
-                    <TabControl Grid.Row="1">
-                        <TabItem Header="Conflicts">
-                            <Grid controls:GridHelper.RowDefinitions="*, Auto">
-                                <views:ConflictsView Grid.Row="0"
-                                                     DataContext="{Binding CurrentSyncFile.Conflicts}" />
-
-                                <Button Grid.Row="1"
-                                        Content="Resolve Conflicts And Continue"
-                                        Command="{Binding ResolveConflictsAndContinueCommand}"
-                                        d:IsEnabled="{Binding CurrentSyncFile.CanSync}"
-                                        HorizontalAlignment="Right"
-                                        Margin="10,0" />
-
-                                <Grid Grid.Row="0"
-                                      Grid.RowSpan="2"
-                                      controls:GridHelper.ColumnDefinitions="*,Auto,*"
-                                      controls:GridHelper.RowDefinitions="*,Auto,*"
-                                      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-                                      mah_ctrls:VisibilityHelper.IsHidden="{Binding CurrentSyncFile.Conflicts.HasConflicts}"
-                                      d:Visibility="Hidden">
-                                    <TextBlock Grid.Row="1"
-                                               Grid.Column="1"
-                                               Text="No Conflicts" />
-                                </Grid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Errors">
-                            <ItemsControl ItemsSource="{Binding CurrentSyncFile.DesignErrors}" />
-                        </TabItem>
-                    </TabControl>
+                    </Expander>
 
                 </Grid>
-            </Border>
-        </Expander>
+        </ScrollViewer>
+
+        <Button Grid.Row="1"
+                Command="{Binding StartCombineFilesCommand}"
+                IsEnabled="{Binding CanStartSync}"
+                Content="Start Combining Files" />
+
+        <ProgressBar Grid.Row="2"
+                     VerticalAlignment="Center"
+                     mah_ctrls:VisibilityHelper.IsVisible="{Binding CurrentSyncFile, Mode=OneWay, Converter={StaticResource NotNullConverter}}"
+                     Value="{Binding CurrentSyncFile.ProgressValue, Mode=OneWay}"
+                     Minimum="0.0"
+                     Maximum="1.0">
+        </ProgressBar>
+    </Grid>
+
+
+
+    <Expander x:Name="_currentFileDetailsPanel"
+              Grid.Column="1"
+              ExpandDirection="Left"
+              MaxWidth="{StaticResource CurrentFilePanelWidth}"
+              Background="{StaticResource MahApps.Brushes.Control.Background}"
+              mah_ctrls:VisibilityHelper.IsVisible="{Binding CurrentSyncFile, Converter={StaticResource NotNullConverter}}"
+              d:IsExpanded="False">
+        <Border Grid.Column="0"
+                Width="{StaticResource CurrentFilePanelWidth}"
+                Grid.ColumnSpan="2"
+                BorderThickness="1"
+                BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid controls:GridHelper.RowDefinitions="Auto, Auto">
+
+
+                    <TextBlock Grid.Row="0"
+                               Text="File:"
+                               HorizontalAlignment="Left"
+                               Margin="10,0"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource MahApps.Brushes.AccentBase}" />
+
+                    <Label Grid.Row="1"
+                           Content="{Binding CurrentSyncFile.OriginalFile.Name}"
+                           d:Content="somethingveryveryverylong_TS_202208120134_GalaxyTabS3-15CRZ.crz3"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"
+                           FontWeight="Bold"
+                           FontSize="20"
+                           ToolTip="{Binding CurrentSyncFile.OriginalFile.FullName}" />
+                </Grid>
+
+
+                <TabControl Grid.Row="1">
+                    <TabItem Header="Conflicts">
+                        <Grid controls:GridHelper.RowDefinitions="*, Auto">
+                            <views:ConflictsView Grid.Row="0"
+                                                 DataContext="{Binding CurrentSyncFile.Conflicts}" />
+
+                            <Button Grid.Row="1"
+                                    Content="Resolve Conflicts And Continue"
+                                    Command="{Binding ResolveConflictsAndContinueCommand}"
+                                    d:IsEnabled="{Binding CurrentSyncFile.CanSync}"
+                                    HorizontalAlignment="Right"
+                                    Margin="10,0" />
+
+                            <Grid Grid.Row="0"
+                                  Grid.RowSpan="2"
+                                  controls:GridHelper.ColumnDefinitions="*,Auto,*"
+                                  controls:GridHelper.RowDefinitions="*,Auto,*"
+                                  Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                                  mah_ctrls:VisibilityHelper.IsHidden="{Binding CurrentSyncFile.Conflicts.HasConflicts}"
+                                  d:Visibility="Hidden">
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="1"
+                                           Text="No Conflicts" />
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Errors">
+                        <ItemsControl ItemsSource="{Binding CurrentSyncFile.DesignErrors}" />
+                    </TabItem>
+                </TabControl>
+
+            </Grid>
+        </Border>
+    </Expander>
 
     </Grid>
 

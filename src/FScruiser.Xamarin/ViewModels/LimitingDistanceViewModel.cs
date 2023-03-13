@@ -86,7 +86,9 @@ namespace FScruiser.XF.ViewModels
                         BAF = (decimal)value.BasalAreaFactor;
                         FPS = 0.0m;
 
-                        BigBAFSampleGroupOptions = SampleGroupDataservice.GetSampleGroups(value.StratumCode).Where(x => x.BigBAF > 0);
+                        BigBAFSampleGroupOptions = SampleGroupDataservice.GetSampleGroups(value.StratumCode)
+                            .Where(x => x.BigBAF > 0)
+                            .ToArray();
                     }
                     else
                     {
