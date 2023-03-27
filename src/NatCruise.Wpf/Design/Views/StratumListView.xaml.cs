@@ -50,6 +50,8 @@ namespace NatCruise.Design.Views
         {
             _stratumCodeTextBox.Clear();
             _stratumTemplateCombobox.ClearValue(ComboBox.TextProperty);
+
+            _stratumDetailsRegion.SelectedIndex = 0;
         }
     }
 }
