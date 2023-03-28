@@ -200,5 +200,152 @@ namespace NatCruise.Design.Test.Data
             var result = results.First();
             Output.WriteLine(result.Message);
         }
+
+        [Fact]
+        public void GetTreeFieldSetupChecks()
+        {
+            var init = new DatastoreInitializer();
+
+            init.UnitStrata = null;
+            init.SampleGroups = null;
+            init.TreeDefaults = null;
+            init.Subpops = null;
+
+            var strata = init.Strata = new[]
+            {
+                new Stratum{ StratumCode = "st1", Method = "STR" },
+            };
+
+            using var db = init.CreateDatabase();
+
+            var ds = new DesignCheckDataservice(db, init.CruiseID, init.DeviceID);
+
+            var results = ds.GetTreeFieldSetupChecks();
+            results.Should().HaveCount(1);
+
+            var result = results.First();
+            Output.WriteLine(result.Message);
+
+            var tfs = new TreeFieldSetup
+            {
+                CruiseID = init.CruiseID,
+                StratumCode = "st1",
+                Field = nameof(TreeMeasurment.DBH),
+                FieldOrder = 0,
+            };
+            db.Insert(tfs);
+
+            var results2 = ds.GetTreeFieldSetupChecks();
+            results2.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void GetTreeFieldSetupHeightFieldChecks()
+        {
+            var init = new DatastoreInitializer();
+
+            init.UnitStrata = null;
+            init.SampleGroups = null;
+            init.TreeDefaults = null;
+            init.Subpops = null;
+
+            var strata = init.Strata = new[]
+            {
+                new Stratum{ StratumCode = "st1", Method = "STR" },
+            };
+
+            using var db = init.CreateDatabase();
+
+            var ds = new DesignCheckDataservice(db, init.CruiseID, init.DeviceID);
+
+            var results = ds.GetTreeFieldSetupChecks();
+            results.Should().HaveCount(1);
+
+            var result = results.First();
+            Output.WriteLine(result.Message);
+
+            var tfs = new TreeFieldSetup
+            {
+                CruiseID = init.CruiseID,
+                StratumCode = "st1",
+                Field = nameof(TreeMeasurment.TotalHeight),
+                FieldOrder = 0,
+            };
+            db.Insert(tfs);
+
+            var results2 = ds.GetTreeFieldSetupHeightFieldChecks();
+            results2.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void GetTreeFieldSetupDiameterFieldChecks()
+        {
+            var init = new DatastoreInitializer();
+
+            init.UnitStrata = null;
+            init.SampleGroups = null;
+            init.TreeDefaults = null;
+            init.Subpops = null;
+
+            var strata = init.Strata = new[]
+            {
+                new Stratum{ StratumCode = "st1", Method = "STR" },
+            };
+
+            using var db = init.CreateDatabase();
+
+            var ds = new DesignCheckDataservice(db, init.CruiseID, init.DeviceID);
+
+            var results = ds.GetTreeFieldSetupChecks();
+            results.Should().HaveCount(1);
+
+            var result = results.First();
+            Output.WriteLine(result.Message);
+
+            var tfs = new TreeFieldSetup
+            {
+                CruiseID = init.CruiseID,
+                StratumCode = "st1",
+                Field = nameof(TreeMeasurment.DBH),
+                FieldOrder = 0,
+            };
+            db.Insert(tfs);
+
+            var results2 = ds.GetTreeFieldSetupDiameterFieldChecks();
+            results2.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void GetFIACodeChecks()
+        {
+            var init = new DatastoreInitializer();
+
+            init.UnitStrata = null;
+            init.SampleGroups = null;
+            init.TreeDefaults = null;
+            init.Subpops = null;
+            init.Species = null;
+
+            
+            
+
+            using var db = init.CreateDatabase();
+
+            var species = new Species
+            {
+                CruiseID = init.CruiseID,
+                SpeciesCode = "sp1"
+            };
+            db.Insert(species);
+
+            var ds = new DesignCheckDataservice(db, init.CruiseID, init.DeviceID);
+
+            var results = ds.GetFIACodeChecks();
+            results.Should().HaveCount(1);
+
+            var result = results.First();
+            Output.WriteLine(result.Message);
+
+        }
     }
 }
