@@ -18,19 +18,19 @@ namespace NatCruise.Data
         {
         }
 
-        public IEnumerable<LogField> GetLogFieldsUsedInCruise()
-        {
-            return Database.Query<LogField>(
-@"SELECT
-    lf.Field,
-    lfh.Heading,
-    lf.DefaultHeading,
-    DbType
-FROM LogField AS lf
-LEFT JOIN LogFieldHeading AS lfh ON lf.Field = lfh.Field AND lfh.CruiseID = @p1
-WHERE lf.Field in (SELECT DISTINCT Field FROM LogFieldSetup WHERE CruiseID = @p1)
-ORDER BY ifnull(lfh.Heading, lf.DefaultHeading);", CruiseID).ToArray();
-        }
+//        public IEnumerable<LogField> GetLogFieldsUsedInCruise()
+//        {
+//            return Database.Query<LogField>(
+//@"SELECT
+//    lf.Field,
+//    lfh.Heading,
+//    lf.DefaultHeading,
+//    DbType
+//FROM LogField AS lf
+//LEFT JOIN LogFieldHeading AS lfh ON lf.Field = lfh.Field AND lfh.CruiseID = @p1
+//WHERE lf.Field in (SELECT DISTINCT Field FROM LogFieldSetup WHERE CruiseID = @p1)
+//ORDER BY ifnull(lfh.Heading, lf.DefaultHeading);", CruiseID).ToArray();
+//        }
 
 
         public IEnumerable<LogField> GetLogFields()

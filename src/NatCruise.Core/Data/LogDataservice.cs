@@ -16,17 +16,21 @@ namespace NatCruise.Data
         {
         }
 
+        const string SELECT_LOG_CORE =
+@"SELECT 
+    l.*, 
+    (SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, 
+    t.CuttingUnitCode, 
+    t.PlotNumber, 
+    t.TreeNumber,
+    t.StratumCode
+FROM Log AS l 
+JOIN Tree AS t USING (TreeID) ";
+
         public IEnumerable<Log> GetLogs(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null)
         {
             return Database.Query2<Log>(
-                "SELECT " +
-                "l.*, " +
-                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, " +
-                "t.CuttingUnitCode, " +
-                "t.PlotNumber, " +
-                "t.TreeNumber " +
-                "FROM Log AS l " +
-                "JOIN Tree AS t USING (TreeID) " +
+                SELECT_LOG_CORE +
                 "WHERE t.CruiseID = @CruiseID " +
                 "AND (@CuttingUnitCode IS NULL OR t.CuttingUnitCode = @CuttingUnitCode) " +
                 "AND (@StratumCode IS NULL OR t.StratumCode = @StratumCode) " +
@@ -43,42 +47,21 @@ namespace NatCruise.Data
         public IEnumerable<Log> GetLogs(string treeID)
         {
             return Database.Query<Log>(
-                "SELECT " +
-                "l.*, " +
-                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, " +
-                "t.CuttingUnitCode, " +
-                "t.PlotNumber, " +
-                "t.TreeNumber " +
-                "FROM Log AS l " +
-                "JOIN Tree AS t USING (TreeID) " +
+                SELECT_LOG_CORE +
                 "WHERE l.TreeID = @p1;", treeID).ToArray();
         }
 
         public Log GetLog(string logID)
         {
             return Database.Query<Log>(
-                "SELECT " +
-                "l.*, " +
-                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, " +
-                "t.CuttingUnitCode, " +
-                "t.PlotNumber, " +
-                "t.TreeNumber " +
-                "FROM Log AS l " +
-                "JOIN Tree AS t USING (TreeID) " +
+                SELECT_LOG_CORE +
                 "WHERE l.LogID = @p1;", logID).FirstOrDefault();
         }
 
         public Log GetLog(string treeID, int logNumber)
         {
             return Database.Query<Log>(
-                "SELECT " +
-                "l.*, " +
-                "(SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, " +
-                "t.CuttingUnitCode, " +
-                "t.PlotNumber, " +
-                "t.TreeNumber " +
-                "FROM Log AS l " +
-                "JOIN Tree AS t USING (TreeID) " +
+                SELECT_LOG_CORE +
                 "WHERE l.TreeID = @p1 AND LogNumber = @p2;", treeID, logNumber).FirstOrDefault();
         }
 

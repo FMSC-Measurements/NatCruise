@@ -23,6 +23,8 @@ namespace NatCruise.Models
 
         public int TreeNumber { get; set; }
 
+        public string StratumCode { get; set; }
+
         private string _grade;
         public string Grade
         {
