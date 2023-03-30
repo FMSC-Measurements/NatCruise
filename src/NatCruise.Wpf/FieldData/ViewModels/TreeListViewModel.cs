@@ -45,12 +45,14 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public TreeListViewModel(ITreeDataservice treeDataservice,
                                  ITreeFieldDataservice treeFieldDataservice,
                                  INatCruiseDialogService natCruiseDialogService,
-                                TreeEditViewModel treeEditViewModel)
+                                TreeEditViewModel treeEditViewModel,
+                                LogListViewModel treeLogListViewModel)
         {
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
             NatCruiseDialogService = natCruiseDialogService ?? throw new ArgumentNullException(nameof(natCruiseDialogService));
             TreeEditViewModel = treeEditViewModel ?? throw new ArgumentNullException(nameof(treeEditViewModel));
+            LogListViewModel = treeLogListViewModel ?? throw new ArgumentNullException(nameof(treeLogListViewModel));
 
             TreeProperties = typeof(TreeEx)
                 .GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)
@@ -60,6 +62,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public ITreeDataservice TreeDataservice { get; }
         public ITreeFieldDataservice TreeFieldDataservice { get; }
         public INatCruiseDialogService NatCruiseDialogService { get; }
+
+        public LogListViewModel LogListViewModel { get; }
         public TreeEditViewModel TreeEditViewModel
         {
             get => _treeEditViewModel;
@@ -186,6 +190,10 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             {
                 SetProperty(ref _selectedTree, value);
                 TreeEditViewModel.Tree = value;
+                if (value != null)
+                {
+                    LogListViewModel.TreeID = value.TreeID;
+                }
             }
         }
 
