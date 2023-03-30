@@ -17,6 +17,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="**\*~" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<None Remove="Resources\logs.jpg" />
 	</ItemGroup>
 
