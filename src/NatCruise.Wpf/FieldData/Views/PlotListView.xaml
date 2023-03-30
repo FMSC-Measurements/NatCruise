@@ -25,6 +25,7 @@
                       ItemsSource="{Binding Plots}"
                       SelectedItem="{Binding SelectedPlot}"
                       SelectionChanged="SelectedPlotChanged"
+                      AutoGenerateColumns="False"
                       IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Cutting Unit"
