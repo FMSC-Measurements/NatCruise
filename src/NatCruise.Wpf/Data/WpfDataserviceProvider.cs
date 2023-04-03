@@ -32,18 +32,13 @@ namespace NatCruise.Data
 
             try
             {
-                if (type == typeof(ISpeciesCodeDataservice))
-                {
-                    return new SpeciesCodeDataservice(database, cruiseID, deviceID);
-                }
-                else if (type == typeof(ITallySettingsDataservice))
+                if (type == typeof(ITallySettingsDataservice))
                 {
                 }
                 else if (type == typeof(ITemplateDataservice))
                 {
                     return new TemplateDataservice(database, cruiseID, deviceID);
                 }
-                
                 else if (type == typeof(IDesignCheckDataservice))
                 {
                     return new DesignCheckDataservice(database, cruiseID, deviceID);
@@ -67,7 +62,6 @@ namespace NatCruise.Data
         {
             DataserviceProviderBase.RegisterDataservices(containerRegistry);
 
-            containerRegistry.Register<ISpeciesCodeDataservice>(x => GetDataservice<ISpeciesCodeDataservice>(x));
             containerRegistry.Register<ITemplateDataservice>(x => GetDataservice<ITemplateDataservice>(x));
             containerRegistry.Register<IDesignCheckDataservice>(x => GetDataservice<IDesignCheckDataservice>(x));
             containerRegistry.Register<ICruisersDataservice>(x => GetDataservice<ICruisersDataservice>(x));
