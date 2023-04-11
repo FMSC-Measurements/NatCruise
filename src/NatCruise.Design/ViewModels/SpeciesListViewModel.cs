@@ -3,6 +3,7 @@ using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
 using Prism.Commands;
 using System;
@@ -18,7 +19,7 @@ namespace NatCruise.Design.ViewModels
     public class SpeciesListViewModel : ViewModelBase
     {
         private DelegateCommand<string> _addSpeciesCommand;
-        private DelegateCommand<Species> _updateSpeciesCommand;
+        //private DelegateCommand<Species> _updateSpeciesCommand;
         private DelegateCommand<Species> _deleteSpeciesCommand;
         private ObservableCollection<Species> _species;
         private IEnumerable<FIASpecies> _fiaOptions;
@@ -27,12 +28,14 @@ namespace NatCruise.Design.ViewModels
         public ITemplateDataservice TemplateDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
+        public SpeciesDetailViewModel SpeciesDetailViewModel { get; }
 
-        public SpeciesListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
+        public SpeciesListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService, SpeciesDetailViewModel speciesDetailViewModel)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            SpeciesDetailViewModel = speciesDetailViewModel ?? throw new ArgumentNullException(nameof(speciesDetailViewModel));
         }
 
         public event EventHandler SpeciesAdded;
@@ -49,22 +52,29 @@ namespace NatCruise.Design.ViewModels
 
         public Species SelectedSpecies
         {
-            get => _selectedSpecies;
+            get => SpeciesDetailViewModel.Species;
             set
             {
-                if (_selectedSpecies != null)
-                { _selectedSpecies.PropertyChanged -= SelectedSpecies_PropertyChanged; }
-                _selectedSpecies = value;
-                if (value != null)
-                { value.PropertyChanged += SelectedSpecies_PropertyChanged; }
+                SpeciesDetailViewModel.Species = value;
                 RaisePropertyChanged();
-
-                void SelectedSpecies_PropertyChanged(object sender, PropertyChangedEventArgs e)
-                {
-                    var species = (Species)sender;
-                    UpdateSpecies(species);
-                }
             }
+
+            //get => _selectedSpecies;
+            //set
+            //{
+            //    //if (_selectedSpecies != null)
+            //    //{ _selectedSpecies.PropertyChanged -= SelectedSpecies_PropertyChanged; }
+            //    _selectedSpecies = value;
+            //    //if (value != null)
+            //    //{ value.PropertyChanged += SelectedSpecies_PropertyChanged; }
+            //    RaisePropertyChanged();
+
+            //    //void SelectedSpecies_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            //    //{
+            //    //    var species = (Species)sender;
+            //    //    UpdateSpecies(species);
+            //    //}
+            //}
         }
 
         public IEnumerable<FIASpecies> FIAOptions
@@ -98,18 +108,19 @@ namespace NatCruise.Design.ViewModels
                 TemplateDataservice.UpsertSpecies(newSpecies);
                 Species.Add(newSpecies);
                 SpeciesAdded?.Invoke(this, EventArgs.Empty);
-                SelectedSpecies = newSpecies;
+                SpeciesDetailViewModel.Species = newSpecies;
+                //SelectedSpecies = newSpecies;
             }
             else
             { DialogService.ShowNotification("Species Code Already Exists"); }
         }
 
-        public void UpdateSpecies(Species species)
-        {
-            if (species is null) { throw new ArgumentNullException(nameof(species)); }
+        //public void UpdateSpecies(Species species)
+        //{
+        //    if (species is null) { throw new ArgumentNullException(nameof(species)); }
 
-            TemplateDataservice.UpsertSpecies(species);
-        }
+        //    TemplateDataservice.UpsertSpecies(species);
+        //}
 
         public void DeleteSpecies(Species species)
         {

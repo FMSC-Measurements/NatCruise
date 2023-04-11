@@ -1,7 +1,7 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 using Prism.Mvvm;
 
-namespace NatCruise.Design.Models
+namespace NatCruise.Models
 {
     [Table("Species")]
     public class Species : BindableBase

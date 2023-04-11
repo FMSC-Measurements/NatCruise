@@ -6,6 +6,8 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
+using Species = NatCruise.Models.Species;
+
 namespace NatCruise.Design.Test.Data
 {
     public class TemplateDataservice_Test : TestBase
