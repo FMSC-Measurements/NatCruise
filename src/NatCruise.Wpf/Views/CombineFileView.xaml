@@ -111,7 +111,7 @@
                     <Expander Grid.Row="3"
                               Header="Advanced Options"
                               d:IsExpanded="True">
-                        <views:SyncOptionsView DataContext="{Binding Options}" />
+                        <views:SyncOptionsView  />
                     </Expander>
 
                 </Grid>

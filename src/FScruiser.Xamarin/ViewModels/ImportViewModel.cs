@@ -148,6 +148,13 @@ namespace FScruiser.XF.ViewModels
             var db = DataserviceProvider.Database;
             using (var importDb = new CruiseDatastore_V3(path))
             {
+                var cruise = db.From<Cruise>().Where("CruiseID = @p1").Query(cruiseID).Single();
+
+                var conflictCheckOptions = new ConflictCheckOptions()
+                {
+                    AllowDuplicateTreeNumberForNestedStrata = !(cruise.UseCrossStrataPlotTreeNumbering ?? false),
+                };
+
                 var designErrors = GetDesignMismatchErrors(importDb, db, cruiseID);
                 if (designErrors.Any())
                 {
@@ -157,7 +164,7 @@ namespace FScruiser.XF.ViewModels
 
                 var conflictChecker = new ConflictChecker();
 
-                var conflicts = conflictChecker.CheckConflicts(importDb, db, cruiseID);
+                var conflicts = conflictChecker.CheckConflicts(importDb, db, cruiseID, conflictCheckOptions);
 
                 if (conflicts.HasConflicts)
                 {
