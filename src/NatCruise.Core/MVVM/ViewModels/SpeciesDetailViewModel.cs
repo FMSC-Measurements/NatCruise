@@ -17,6 +17,12 @@ namespace NatCruise.MVVM.ViewModels
 {
     public class SpeciesDetailViewModel : ViewModelBase
     {
+        public Product DefaultProductOption { get; } = new Product
+        {
+            FriendlyName = "default",
+            ProductCode = null,
+        };
+
         private Species _species;
         private IEnumerable<FIASpecies> _fiaOptions;
         private ObservableCollection<SpeciesProduct> _contractSpecies;
@@ -33,7 +39,7 @@ namespace NatCruise.MVVM.ViewModels
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
 
             FIAOptions = SetupDataservice.GetFIASpecies();
-            ProductOptions = SetupDataservice.GetProducts().Prepend(Product.AnyProductOption);
+            ProductOptions = SetupDataservice.GetProducts().Prepend(DefaultProductOption);
         }
 
         public event EventHandler ContractSpeciesAdded;

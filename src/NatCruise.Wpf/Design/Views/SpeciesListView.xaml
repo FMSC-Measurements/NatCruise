@@ -135,7 +135,7 @@
             </crls:LastChildWidthPanel>
 
 
-            <Border>
+            <GroupBox Header="Contract Species" MinHeight="250">
                 <Grid crls:GridHelper.RowDefinitions="Auto, 2*, *">
 
                     <Border Grid.Row="0">
@@ -192,7 +192,7 @@
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
                                 <GridViewColumn Header="Product"
-                                                DisplayMemberBinding="{Binding PrimaryProduct}" />
+                                                DisplayMemberBinding="{Binding PrimaryProduct, TargetNullValue='default'}" />
                                 <GridViewColumn Header="Contract Species"
                                                 DisplayMemberBinding="{Binding ContractSpecies}" />
 
@@ -201,7 +201,7 @@
                     </ListView>
 
                 </Grid>
-            </Border>
+            </GroupBox>
 
         </StackPanel>
 
