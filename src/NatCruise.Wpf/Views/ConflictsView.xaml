@@ -566,7 +566,7 @@
                             <Grid controls:GridHelper.RowDefinitions="Auto,*">
                                 <controls:LastChildWidthPanel LastChildWidth="100"
                                                               Grid.Row="0">
-                                    <TextBlock Text="Device Name:" />
+                                    <TextBlock Text="Device:" />
                                     <Label Content="{Binding DestDeviceName}" ToolTip="{Binding Content, RelativeSource={RelativeSource Mode=Self}}" />
                                 </controls:LastChildWidthPanel>
                                 <ScrollViewer VerticalScrollBarVisibility="Auto"
@@ -584,7 +584,7 @@
                                   Background="{DynamicResource MahApps.Brushes.Control.Background}">
                             <Grid controls:GridHelper.RowDefinitions="Auto,*">
                                 <controls:LastChildWidthPanel LastChildWidth="100" Grid.Row="0">
-                                    <TextBlock Text="Device Name:" />
+                                    <TextBlock Text="Device:" />
                                     <Label Content="{Binding SrcDeviceName}"
                                            ToolTip="{Binding Content, RelativeSource={RelativeSource Mode=Self}}" />
                                 </controls:LastChildWidthPanel>
