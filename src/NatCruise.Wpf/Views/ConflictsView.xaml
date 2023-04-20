@@ -563,24 +563,41 @@
                         <GroupBox Header="Output File Record"
                                   Grid.Column="0"
                                   Background="{DynamicResource MahApps.Brushes.Control.Background}">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <ContentControl Content="{Binding DestRec}"
-                                                d:Content="{d:SampleData}"
-                                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
-                                                IsEnabled="{Binding ConflictResolution, Converter={StaticResource isResolveModifyDest}}" />
-                            </ScrollViewer>
+                            <Grid controls:GridHelper.RowDefinitions="Auto,*">
+                                <controls:LastChildWidthPanel LastChildWidth="100"
+                                                              Grid.Row="0">
+                                    <TextBlock Text="Device Name:" />
+                                    <Label Content="{Binding DestDeviceName}" ToolTip="{Binding Content, RelativeSource={RelativeSource Mode=Self}}" />
+                                </controls:LastChildWidthPanel>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                              Grid.Row="1">
+                                    <ContentControl Content="{Binding DestRec}"
+                                                    d:Content="{d:SampleData}"
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                    ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                    IsEnabled="{Binding ConflictResolution, Converter={StaticResource isResolveModifyDest}}" />
+                                </ScrollViewer>
+                            </Grid>
                         </GroupBox>
                         <GroupBox Header="Crew File Record"
                                   Grid.Column="1"
                                   Background="{DynamicResource MahApps.Brushes.Control.Background}">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <ContentControl Content="{Binding SourceRec}"
-                                                d:Content="{d:SampleData}"
-                                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
-                                                IsEnabled="{Binding ConflictResolution, Converter={StaticResource isResolveModifySource}}" />
-                            </ScrollViewer>
+                            <Grid controls:GridHelper.RowDefinitions="Auto,*">
+                                <controls:LastChildWidthPanel LastChildWidth="100" Grid.Row="0">
+                                    <TextBlock Text="Device Name:" />
+                                    <Label Content="{Binding SrcDeviceName}"
+                                           ToolTip="{Binding Content, RelativeSource={RelativeSource Mode=Self}}" />
+                                </controls:LastChildWidthPanel>
+                                
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+
+                                    <ContentControl Content="{Binding SourceRec}"
+                                                    d:Content="{d:SampleData}"
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                    ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                    IsEnabled="{Binding ConflictResolution, Converter={StaticResource isResolveModifySource}}" />
+                                </ScrollViewer>
+                            </Grid>
                         </GroupBox>
                     </Grid>
                 </Border>
@@ -808,14 +825,14 @@
                                         Template="{StaticResource recordComparer}"
                                         ContentTemplate="{StaticResource stratumDataTemplate}" />
 
-                        
+
 
                         <!-- Downstream Conflicts -->
                         <DataGrid Grid.Row="2"
                                   Template="{StaticResource downstreamConflitList}"
                                   ItemsSource="{Binding DownstreamConflicts}"
                                   d:ItemsSource="{d:SampleData ItemCount=5}" />
-                        
+
 
                     </Grid>
                 </Grid>
