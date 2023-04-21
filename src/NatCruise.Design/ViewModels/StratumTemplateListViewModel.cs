@@ -25,6 +25,8 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<string> _methods;
         private IEnumerable<TreeField> _treefieldOptions;
 
+        public event EventHandler StratumTemplateAdded;
+
         protected ITemplateDataservice TemplateDataservice { get; }
 
         public StratumTemplateListViewModel(ITemplateDataservice templateDataservice, ISaleDataservice saleDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
@@ -123,6 +125,8 @@ namespace NatCruise.Design.ViewModels
 
                 TemplateDataservice.UpsertStratumTemplate(newStratumTemplate);
                 StratumTemplates.Add(newStratumTemplate);
+                SelectedStratumTemplate = newStratumTemplate;
+                StratumTemplateAdded?.Invoke(this, EventArgs.Empty);
             }
             else
             {
