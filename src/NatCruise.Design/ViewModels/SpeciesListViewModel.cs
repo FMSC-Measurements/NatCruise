@@ -1,6 +1,5 @@
 ﻿using NatCruise.Data;
 using NatCruise.Design.Data;
-using NatCruise.Design.Models;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
@@ -9,7 +8,6 @@ using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -19,8 +17,10 @@ namespace NatCruise.Design.ViewModels
     public class SpeciesListViewModel : ViewModelBase
     {
         private DelegateCommand<string> _addSpeciesCommand;
+
         //private DelegateCommand<Species> _updateSpeciesCommand;
         private DelegateCommand<Species> _deleteSpeciesCommand;
+
         private ObservableCollection<Species> _species;
         private IEnumerable<FIASpecies> _fiaOptions;
         private Species _selectedSpecies;
