@@ -7,21 +7,6 @@ namespace NatCruise.Design.Data
 {
     public interface ITemplateDataservice : IDataservice
     {
-        #region species
-
-        IEnumerable<Species> GetSpecies();
-
-        void AddSpecies(Species sp);
-
-        void UpsertSpecies(Species sp);
-
-        void DeleteSpecies(string speciesCode);
-
-        IEnumerable<string> GetSpeciesCodes();
-
-        void AddSpeciesCode(string speciesCode);
-
-        #endregion species
 
         #region TreeDefaultValues
 

@@ -24,9 +24,10 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand _addNewRuleSelectorCommand;
         private DelegateCommand<TreeAuditRuleSelector> _deleteRuleSelectorCommand;
 
-        public TreeAuditSelectorsViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
+        public TreeAuditSelectorsViewModel(ITemplateDataservice templateDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
@@ -35,6 +36,7 @@ namespace NatCruise.Design.ViewModels
         public ICommand DeleteRuleSelectorCommand => _deleteRuleSelectorCommand ??= new DelegateCommand<TreeAuditRuleSelector>(DeleteRuleSelector);
 
         public ITemplateDataservice TemplateDataservice { get; }
+        public ISpeciesDataservice SpeciesDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
 
@@ -93,7 +95,7 @@ namespace NatCruise.Design.ViewModels
         {
             base.Load();
 
-            SpeciesOptions = TemplateDataservice.GetSpeciesCodes();
+            SpeciesOptions = SpeciesDataservice.GetSpeciesCodes();
             ProductOptions = SetupDataservice.GetProducts();
         }
 

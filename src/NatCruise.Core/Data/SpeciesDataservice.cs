@@ -1,10 +1,7 @@
 ﻿using CruiseDAL;
 using NatCruise.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Data
 {
@@ -110,21 +107,6 @@ WHERE CruiseID = @CruiseID AND SpeciesCode = @SpeciesCode;",
         //        CruiseID, speciesCode, product);
         //}
 
-        public void DeleteSpeciesProduct(SpeciesProduct spProd)
-        {
-            Database.Execute2(
-@"DELETE FROM Species_Product
-WHERE CruiseID = @CruiseID
-    AND SpeciesCode = @SpeciesCode
-    AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '');",
-                new
-                {
-                    CruiseID,
-                    SpeciesCode = spProd.SpeciesCode,
-                    PrimaryProduct = spProd.PrimaryProduct,
-                });
-        }
-
         public void AddSpeciesProduct(SpeciesProduct spProd)
         {
             Database.Execute2(
@@ -165,7 +147,20 @@ WHERE CruiseID = @CuiseID
             });
         }
 
-
+        public void DeleteSpeciesProduct(SpeciesProduct spProd)
+        {
+            Database.Execute2(
+@"DELETE FROM Species_Product
+WHERE CruiseID = @CruiseID
+    AND SpeciesCode = @SpeciesCode
+    AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '');",
+                new
+                {
+                    CruiseID,
+                    SpeciesCode = spProd.SpeciesCode,
+                    PrimaryProduct = spProd.PrimaryProduct,
+                });
+        }
 
         public void AddSpeciesCode(string speciesCode)
         {
@@ -183,8 +178,5 @@ WHERE CruiseID = @CuiseID
         {
             return Database.QueryScalar<string>("SELECT SpeciesCode FROM Species WHERE CruiseID = @p1;", CruiseID).ToArray();
         }
-
     }
-
-
 }

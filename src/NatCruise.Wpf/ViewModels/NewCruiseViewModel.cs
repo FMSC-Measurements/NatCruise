@@ -53,6 +53,7 @@ namespace NatCruise.Wpf.ViewModels
         protected IFileDialogService FileDialogService { get; }
         protected IDeviceInfoService DeviceInfo { get; set; }
         protected ITemplateDataservice TemplateDataservice { get; set; }
+        protected IDataserviceProvider TemplateDataserviceProvider { get; set; }
 
         public string SaleName
         {
@@ -180,14 +181,16 @@ namespace NatCruise.Wpf.ViewModels
                     database.Insert(sale);
                     database.Insert(cruise);
 
-                    var srcTemplateDataservice = TemplateDataservice;
-                    if (srcTemplateDataservice != null)
+                    DataserviceProvider.Database = database;
+                    DataserviceProvider.CruiseID = cruiseID;
+
+                    var templateDataserviceProvider = TemplateDataserviceProvider;
+                    if (templateDataserviceProvider != null)
                     {
-                        var newCruiseTemplateDataservice = new TemplateDataservice(database, cruiseID, DeviceInfo.DeviceID);
                         database.BeginTransaction();
                         try
                         {
-                            CopyTemplateData(TemplateDataservice, newCruiseTemplateDataservice);
+                            CopyTemplateData(TemplateDataserviceProvider, DataserviceProvider);
                             database.CommitTransaction();
                         }
                         catch
@@ -197,86 +200,98 @@ namespace NatCruise.Wpf.ViewModels
                         }
                     }
 
-                    DataserviceProvider.Database = database;
-                    DataserviceProvider.CruiseID = cruiseID;
                     RaiseRequestClose(new DialogResult(ButtonResult.OK));
                 }
             }
         }
 
-        protected void CopyTemplateData(ITemplateDataservice src, ITemplateDataservice dest)
+        protected void CopyTemplateData(IDataserviceProvider src, IDataserviceProvider dest)
         {
-            var species = src.GetSpecies();
+            
+
+            var srcSpDS = src.GetDataservice<ISpeciesDataservice>();
+            var destSpDS = dest.GetDataservice<ISpeciesDataservice>();
+
+            var species = srcSpDS.GetSpecies();
             foreach (var sp in species)
             {
-                dest.AddSpecies(sp);
+                destSpDS.AddSpecies(sp);
+
+                var sp_prods = srcSpDS.GetSpeciesProducts(sp.SpeciesCode);
+                foreach (var sp_prod in sp_prods)
+                {
+                    destSpDS.AddSpeciesProduct(sp_prod);
+                }
             }
 
-            var tars = src.GetTreeAuditRules();
+            var srcTemplateDS = src.GetDataservice<ITemplateDataservice>();
+            var destTemplateDS = dest.GetDataservice<ITemplateDataservice>();
+
+            var tars = srcTemplateDS.GetTreeAuditRules();
             foreach (var tar in tars)
             {
-                dest.AddTreeAuditRule(tar);
+                destTemplateDS.AddTreeAuditRule(tar);
             }
 
-            var ruleSelectors = src.GetRuleSelectors();
+            var ruleSelectors = srcTemplateDS.GetRuleSelectors();
             foreach (var ruleSelector in ruleSelectors)
             {
-                dest.AddRuleSelector(ruleSelector);
+                destTemplateDS.AddRuleSelector(ruleSelector);
             }
 
-            var tdvs = src.GetTreeDefaultValues();
+            var tdvs = srcTemplateDS.GetTreeDefaultValues();
             foreach (var tdv in tdvs)
             {
-                dest.AddTreeDefaultValue(tdv);
+                destTemplateDS.AddTreeDefaultValue(tdv);
             }
 
-            var stratumTemplate = src.GetStratumTemplates();
+            var stratumTemplate = srcTemplateDS.GetStratumTemplates();
 
             foreach (var st in stratumTemplate)
             {
-                dest.UpsertStratumTemplate(st);
+                destTemplateDS.UpsertStratumTemplate(st);
 
-                var treeFieldSetupDefaults = src.GetStratumTemplateTreeFieldSetups(st.StratumTemplateName);
+                var treeFieldSetupDefaults = srcTemplateDS.GetStratumTemplateTreeFieldSetups(st.StratumTemplateName);
                 foreach (var tfsd in treeFieldSetupDefaults)
                 {
-                    dest.UpsertStratumTemplateTreeFieldSetup(tfsd);
+                    destTemplateDS.UpsertStratumTemplateTreeFieldSetup(tfsd);
                 }
 
-                var logFieldSetupDefaults = src.GetStratumTemplateLogFieldSetups(st.StratumTemplateName);
+                var logFieldSetupDefaults = srcTemplateDS.GetStratumTemplateLogFieldSetups(st.StratumTemplateName);
                 foreach (var lfsd in logFieldSetupDefaults)
                 {
-                    dest.UpsertStratumTemplateLogFieldSetup(lfsd);
+                    destTemplateDS.UpsertStratumTemplateLogFieldSetup(lfsd);
                 }
             }
 
-            var treeFields = src.GetTreeFields();
+            var treeFields = srcTemplateDS.GetTreeFields();
             foreach (var tf in treeFields)
             {
                 if (string.IsNullOrEmpty(tf.Heading) is false)
                 {
-                    dest.UpdateTreeField(tf);
+                    destTemplateDS.UpdateTreeField(tf);
                 }
             }
 
-            var logFields = src.GetLogFields();
+            var logFields = srcTemplateDS.GetLogFields();
             foreach (var lf in logFields)
             {
                 if (string.IsNullOrEmpty(lf.Heading) is false)
                 {
-                    dest.UpdateLogField(lf);
+                    destTemplateDS.UpdateLogField(lf);
                 }
             }
 
-            var reports = src.GetReports();
+            var reports = srcTemplateDS.GetReports();
             foreach (var rpt in reports)
             {
-                dest.AddReport(rpt);
+                destTemplateDS.AddReport(rpt);
             }
 
-            var volumeEquations = src.GetVolumeEquations();
+            var volumeEquations = srcTemplateDS.GetVolumeEquations();
             foreach (var ve in volumeEquations)
             {
-                dest.AddVolumeEquation(ve);
+                destTemplateDS.AddVolumeEquation(ve);
             }
         }
 
@@ -302,10 +317,15 @@ namespace NatCruise.Wpf.ViewModels
             else if (extention is ".crz3t")
             {
                 v3TemplateDb = new CruiseDatastore_V3(templatePath);
+
             }
             else return;
 
             var cruiseID = v3TemplateDb.ExecuteScalar<string>("SELECT CruiseID FROM Cruise LIMIT 1;");
+            TemplateDataserviceProvider = new WpfDataserviceProvider(v3TemplateDb, DeviceInfo)
+            {
+                CruiseID = cruiseID,
+            };
 
             var templateDataservice = new TemplateDataservice(v3TemplateDb, cruiseID, DeviceInfo.DeviceID);
             TemplateDataservice = templateDataservice;

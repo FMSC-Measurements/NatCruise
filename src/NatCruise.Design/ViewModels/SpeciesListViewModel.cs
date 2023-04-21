@@ -24,18 +24,17 @@ namespace NatCruise.Design.ViewModels
         private ObservableCollection<Species> _species;
         private IEnumerable<FIASpecies> _fiaOptions;
         private Species _selectedSpecies;
-
-        public ITemplateDataservice TemplateDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
         public SpeciesDetailViewModel SpeciesDetailViewModel { get; }
+        public ISpeciesDataservice SpeciesDataservice { get; }
 
-        public SpeciesListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService, SpeciesDetailViewModel speciesDetailViewModel)
+        public SpeciesListViewModel(ITemplateDataservice templateDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService, SpeciesDetailViewModel speciesDetailViewModel)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             SpeciesDetailViewModel = speciesDetailViewModel ?? throw new ArgumentNullException(nameof(speciesDetailViewModel));
+            SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
         }
 
         public event EventHandler SpeciesAdded;
@@ -87,7 +86,7 @@ namespace NatCruise.Design.ViewModels
         {
             base.Load();
 
-            Species = new ObservableCollection<Species>(TemplateDataservice.GetSpecies());
+            Species = new ObservableCollection<Species>(SpeciesDataservice.GetSpecies());
             FIAOptions = SetupDataservice.GetFIASpecies();
         }
 
@@ -105,7 +104,7 @@ namespace NatCruise.Design.ViewModels
                 {
                     SpeciesCode = speciesCode,
                 };
-                TemplateDataservice.UpsertSpecies(newSpecies);
+                SpeciesDataservice.UpsertSpecies(newSpecies);
                 Species.Add(newSpecies);
                 SpeciesAdded?.Invoke(this, EventArgs.Empty);
                 SpeciesDetailViewModel.Species = newSpecies;
@@ -126,7 +125,7 @@ namespace NatCruise.Design.ViewModels
         {
             if (species is null) { throw new ArgumentNullException(nameof(species)); }
 
-            TemplateDataservice.DeleteSpecies(species.SpeciesCode);
+            SpeciesDataservice.DeleteSpecies(species.SpeciesCode);
         }
     }
 }

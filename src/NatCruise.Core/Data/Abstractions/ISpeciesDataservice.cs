@@ -19,6 +19,8 @@ namespace NatCruise.Data
 
         SpeciesProduct AddSpeciesProduct(string species, string product, string contractSpecies);
 
+        void AddSpeciesProduct(SpeciesProduct spProd);
+
         //void DeleteSpeciesProduct(string speciesCode, string product);
         void DeleteSpeciesProduct(SpeciesProduct spProd);
 
