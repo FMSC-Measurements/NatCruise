@@ -22,6 +22,8 @@ namespace NatCruise.Wpf.Converters
         public bool PlotNumberField { get; set; } = true;
         public bool StratumField { get; set; } = true;
 
+        public bool LogNumberField { get; set; } = true;
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var logFields = value as IEnumerable<LogFieldSetup>;
@@ -60,6 +62,14 @@ namespace NatCruise.Wpf.Converters
             //        Binding = new Binding(nameof(Log.TreeNumber))
             //    });
             //}
+            if (LogNumberField)
+            {
+                columns.Add(new DataGridTextColumn
+                {
+                    Header = "Log",
+                    Binding = new Binding(nameof(Log.LogNumber))
+                });
+            }
 
             columns.AddRange(logFields.Select(x =>
             {
