@@ -6,6 +6,18 @@ namespace NatCruise.Models
     [Table("Log")]
     public class Log : BindableBase
     {
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public string CuttingUnitCode { get; set; }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public int? PlotNumber { get; set; }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public int TreeNumber { get; set; }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public string StratumCode { get; set; }
+
         public string LogID { get; set; }
 
         public string TreeID { get; set; }
@@ -17,13 +29,7 @@ namespace NatCruise.Models
             set => SetProperty(ref _logNumber, value); 
         }
 
-        public string CuttingUnitCode { get; set; }
-
-        public int? PlotNumber { get; set; }
-
-        public int TreeNumber { get; set; }
-
-        public string StratumCode { get; set; }
+        
 
         private string _grade;
         public string Grade
