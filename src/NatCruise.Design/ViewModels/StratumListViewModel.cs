@@ -113,7 +113,9 @@ namespace NatCruise.Design.ViewModels
             var cruise = SaleDataservice.GetCruise();
             if(cruise.Purpose.Equals("Recon", StringComparison.OrdinalIgnoreCase))
             {
-                stratumTemplates = stratumTemplates.Where(x => RECON_CRUISEMETHODS.Contains(x.Method)).ToArray();
+                stratumTemplates = stratumTemplates
+                    .Where(x => RECON_CRUISEMETHODS.Contains(x.Method)|| x.Method == null)
+                    .ToArray();
             }
 
             StratumTemplateOptions = stratumTemplates;
