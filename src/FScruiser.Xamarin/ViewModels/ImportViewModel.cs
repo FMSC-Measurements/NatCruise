@@ -148,7 +148,7 @@ namespace FScruiser.XF.ViewModels
             var db = DataserviceProvider.Database;
             using (var importDb = new CruiseDatastore_V3(path))
             {
-                var cruise = db.From<Cruise>().Where("CruiseID = @p1").Query(cruiseID).Single();
+                var cruise = db.From<CruiseDAL.V3.Models.Cruise>().Where("CruiseID = @p1").Query(cruiseID).Single();
 
                 var conflictCheckOptions = new ConflictCheckOptions()
                 {
