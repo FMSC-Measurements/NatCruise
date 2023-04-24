@@ -1,10 +1,5 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Models
 {
@@ -17,6 +12,10 @@ namespace NatCruise.Models
 
         public int? FieldOrder { get; set; }
 
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
         public string Heading { get; set; }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public string DbType { get; set; }
     }
 }

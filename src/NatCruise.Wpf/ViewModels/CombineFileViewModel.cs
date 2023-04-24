@@ -1,5 +1,4 @@
-﻿using ControlzEx.Standard;
-using CruiseDAL;
+﻿using CruiseDAL;
 using CruiseDAL.V3.Models;
 using CruiseDAL.V3.Sync;
 using CruiseDAL.V3.Sync.Syncers;
@@ -44,6 +43,7 @@ namespace NatCruise.Wpf.ViewModels
             ConflictChecker = new ConflictChecker();
             ConflictResolver = new ConflictResolver();
             Options = new TableSyncOptions(SyncOption.InsertUpdate);
+            ConflictCheckOptions = new ConflictCheckOptions();
 
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
@@ -60,6 +60,8 @@ namespace NatCruise.Wpf.ViewModels
 
         public TableSyncOptions Options { get; }
 
+        public ConflictCheckOptions ConflictCheckOptions { get; }
+
         public event EventHandler ConflictsDetected;
 
         public string CruiseID => Cruise?.CruiseID;
@@ -67,7 +69,15 @@ namespace NatCruise.Wpf.ViewModels
         public NatCruise.Models.Cruise Cruise
         {
             get => _cruise;
-            protected set => SetProperty(ref _cruise, value);
+            protected set
+            {
+                SetProperty(ref _cruise, value);
+                if(value != null)
+                {
+                    ConflictCheckOptions.AllowDuplicateTreeNumberForNestedStrata = !(value.UseCrossStrataPlotTreeNumbering ?? false);
+                    RaisePropertyChanged(nameof(ConflictCheckOptions));
+                }
+            }
         }
 
         public ObservableCollection<NatCruise.Models.Cruise> CruiseOptions { get; set; } = new ObservableCollection<NatCruise.Models.Cruise>();
@@ -413,7 +423,7 @@ namespace NatCruise.Wpf.ViewModels
             };
             Syncer.Sync(cruiseID, destDb, workingSourceDb, preSyncOptions);
 
-            var conflicts = ConflictChecker.CheckConflicts(workingSourceDb, destDb, cruiseID);
+            var conflicts = ConflictChecker.CheckConflicts(workingSourceDb, destDb, cruiseID, ConflictCheckOptions);
             file.Conflicts = conflicts;
 
 

@@ -24,20 +24,17 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<string> _speciesOptions;
         private bool _isFixCNT;
 
-        public SubpopulationListViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService)
+        public SubpopulationListViewModel(ISpeciesDataservice speciesDataservice, ISubpopulationDataservice subpopulationDataservice, INatCruiseDialogService dialogService)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
-
-            SubpopulationDataservice = dataserviceProvider.GetDataservice<ISubpopulationDataservice>() ?? throw new ArgumentNullException(nameof(SubpopulationDataservice));
-            TemplateDataservice = dataserviceProvider.GetDataservice<ITemplateDataservice>() ?? throw new ArgumentNullException(nameof(TemplateDataservice));
+            SubpopulationDataservice = subpopulationDataservice ?? throw new ArgumentNullException(nameof(subpopulationDataservice));
+            SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(subpopulationDataservice));
 
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         public event EventHandler SubpopulationAdded;
 
-        protected ITemplateDataservice TemplateDataservice { get; }
-
+        public ISpeciesDataservice SpeciesDataservice { get; }
         protected ISubpopulationDataservice SubpopulationDataservice { get; }
 
         protected INatCruiseDialogService DialogService { get; }
@@ -152,7 +149,7 @@ namespace NatCruise.Design.ViewModels
 
         protected void RefreshSpeciesOptions()
         {
-            var speciesCodes = TemplateDataservice.GetSpeciesCodes();
+            var speciesCodes = SpeciesDataservice.GetSpeciesCodes();
 
             SpeciesOptions = speciesCodes;
         }

@@ -1,4 +1,5 @@
-﻿using NatCruise.Data;
+﻿using CruiseDAL.Schema;
+using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Design.Validation;
@@ -7,6 +8,7 @@ using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Commands;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +21,8 @@ namespace NatCruise.Design.ViewModels
 {
     public class StratumListViewModel : ViewModelBase
     {
+        private static readonly string[] RECON_CRUISEMETHODS = new[] { CruiseMethods.FIX, CruiseMethods.PNT, CruiseMethods.FIXCNT };
+
         private ICommand _addStratumCommand;
         private ICommand _removeStratumCommand;
         private ObservableCollection<Stratum> _strata;
@@ -26,12 +30,13 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<StratumTemplate> _stratumTemplateOptions;
         private StratumTemplate _selectedStratumTemplate;
 
-        public StratumListViewModel(IStratumDataservice stratumDataservice, ITemplateDataservice templateDataservice, IFieldSetupDataservice fieldSetupDataservice, INatCruiseDialogService dialogService)
+        public StratumListViewModel(IStratumDataservice stratumDataservice, ITemplateDataservice templateDataservice, IFieldSetupDataservice fieldSetupDataservice, ISaleDataservice saleDataservice, INatCruiseDialogService dialogService)
         {
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
 
             StratumValidator = new StratumValidator();
         }
@@ -42,6 +47,7 @@ namespace NatCruise.Design.ViewModels
         public IFieldSetupDataservice FieldSetupDataservice { get; }
         public ITemplateDataservice TemplateDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
+        public ISaleDataservice SaleDataservice { get; }
         public StratumValidator StratumValidator { get; }
         public ObservableCollection<Stratum> Strata
         {
@@ -103,7 +109,16 @@ namespace NatCruise.Design.ViewModels
 
         public override void Load()
         {
-            StratumTemplateOptions = TemplateDataservice.GetStratumTemplates();
+            var stratumTemplates = TemplateDataservice.GetStratumTemplates();
+            var cruise = SaleDataservice.GetCruise();
+            if(cruise.Purpose.Equals("Recon", StringComparison.OrdinalIgnoreCase))
+            {
+                stratumTemplates = stratumTemplates
+                    .Where(x => RECON_CRUISEMETHODS.Contains(x.Method)|| x.Method == null)
+                    .ToArray();
+            }
+
+            StratumTemplateOptions = stratumTemplates;
             var strata = StratumDataservice.GetStrata().ToArray();
 
             foreach (var st in strata)

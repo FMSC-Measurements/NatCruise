@@ -33,6 +33,8 @@ namespace NatCruise.Data
 
         void SetLogFieldsFromStratumTemplate(string stratumCode, string stratumTemplateName);
 
+        IEnumerable<LogFieldSetup> GetLogFieldSetupsByCruise();
+
         #endregion LogFieldSetup
     }
 }

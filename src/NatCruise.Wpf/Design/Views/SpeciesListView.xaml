@@ -10,130 +10,201 @@
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:crls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:multi="clr-namespace:NatCruise.Wpf.Converters.Multi"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
              DataContextChanged="HandleDataContextChanged"
-             x:Name="_page">
+             x:Name="_page"
+             Background="{DynamicResource MahApps.Brushes.Control.Background}">
     <UserControl.Resources>
         <CollectionViewSource x:Key="fiaOptions"
                               Source="{Binding FIAOptions}" />
+        <multi:ToStringArrayConverter x:Key="toStringArrayConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0" />
             <ColumnDefinition Width="315*" />
             <ColumnDefinition Width="386*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="0" />
         </Grid.RowDefinitions>
-        <DataGrid Grid.Column="1"
-                  Grid.Row="2"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeRows="False"
-                  CanUserResizeColumns="False"
-                  x:Name="_speciesDatagrid"
-                  ItemsSource="{Binding Species}"
-                  SelectedItem="{Binding SelectedSpecies}">
-            <DataGrid.Resources>
 
-            </DataGrid.Resources>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Species"
-                                    Binding="{Binding SpeciesCode}"
-                                    IsReadOnly="True" />
-                <DataGridTextColumn Header="Contract Species"
-                                    Binding="{Binding ContractSpecies}" />
-                <DataGridComboBoxColumn Header="FIA Code"
-                                        SelectedValueBinding="{Binding FIACode}"
-                                        SelectedValuePath="FIACode"
-                                        ItemsSource="{Binding Source={StaticResource fiaOptions}}" />
-            </DataGrid.Columns>
-        </DataGrid>
-        <StackPanel Grid.Column="1"
-                    Grid.Row="1"
-                    Orientation="Horizontal"
-                    Margin="0,2">
-            <TextBox x:Name="_newSpeciesTextBox"
-                     mah:TextBoxHelper.Watermark="Species Code"
-                     Width="100"
-                     MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}">
-                <TextBox.InputBindings>
-                    <KeyBinding Key="Return"
-                                Command="{Binding AddSpeciesCommand}"
-                                CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
-                </TextBox.InputBindings>
-            </TextBox>
-            <Button Style="{StaticResource AddButton}"
-                    Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
-                    Width="32"
-                    IsEnabled="{Binding Text, Source={x:Reference _newSpeciesTextBox}, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
-                    Command="{Binding AddSpeciesCommand}"
-                    CommandParameter="{Binding Text, Source={x:Reference _newSpeciesTextBox}}">
-                <!--<i:Interaction.Triggers>
+
+        <Grid Grid.Column="0"
+              crls:GridHelper.RowDefinitions="Auto,*">
+
+            <StackPanel Grid.Column="0"
+                        Grid.Row="0"
+                        Orientation="Horizontal"
+                        Margin="0,2">
+                <TextBox x:Name="_newSpeciesTextBox"
+                         mah:TextBoxHelper.Watermark="Species Code"
+                         Width="100"
+                         MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Return"
+                                    Command="{Binding AddSpeciesCommand}"
+                                    CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                    </TextBox.InputBindings>
+                </TextBox>
+                <Button Style="{StaticResource AddButton}"
+                        Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                        Width="32"
+                        IsEnabled="{Binding Text, Source={x:Reference _newSpeciesTextBox}, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
+                        Command="{Binding AddSpeciesCommand}"
+                        CommandParameter="{Binding Text, Source={x:Reference _newSpeciesTextBox}}">
+                    <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding AddSpeciesCommand}"
                                                CommandParameter="{Binding Text, Source={x:Reference _newSpeciesTextBox}}" />
                         <triggers:ClearTextBoxAction TargetName="_newSpeciesTextBox" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>-->
-            </Button>
-        </StackPanel>
-        <Grid Grid.Column="2"
-              Grid.Row="2"
-              Background="White"
-              DataContext="{Binding SelectedSpecies}"
-              IsEnabled="{Binding  SelectedSpecies, Converter={StaticResource NotNullConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="35*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="30*" />
-                <RowDefinition Height="29*" />
-                <RowDefinition Height="228*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="126*" />
-                <ColumnDefinition Width="131*" />
-            </Grid.ColumnDefinitions>
-            <Label Content="Species Code"
-                   Grid.Column="1"
-                   Grid.Row="1" />
-            <TextBox Grid.Column="2"
-                     Grid.Row="1"
-                     Text="{Binding SpeciesCode}"
-                     MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}"
-                     Margin="0,2" />
-            <Label Content="Contract Species"
-                   Grid.Column="1"
-                   Grid.Row="2" />
-            <TextBox Grid.Column="2"
-                     Grid.Row="2"
-                     Text="{Binding ContractSpecies}"
-                     Margin="0,2" />
-            <Label Content="FIA Code"
-                   Grid.Column="1"
-                   Grid.Row="3" />
-            <ComboBox Grid.Column="2"
-                      Grid.Row="3"
-                      ItemsSource="{Binding DataContext.FIAOptions, ElementName=_page}"
-                      IsTextSearchEnabled="True"
-                      IsEditable="True"
-                      SelectedValue="{Binding FIACode}"
-                      SelectedValuePath="FIACode"
-                      Margin="0,2" />
+                </Button>
+            </StackPanel>
+            <DataGrid Grid.Column="0"
+                      Grid.Row="1"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserReorderColumns="False"
+                      CanUserResizeRows="False"
+                      CanUserResizeColumns="False"
+                      x:Name="_speciesDatagrid"
+                      ItemsSource="{Binding Species}"
+                      SelectedItem="{Binding SelectedSpecies}">
+                <DataGrid.Resources>
+
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Species"
+                                        Binding="{Binding SpeciesCode}"
+                                        IsReadOnly="True" />
+                    <!--<DataGridTextColumn Header="Contract Species"
+                                    Binding="{Binding ContractSpecies}" />-->
+                    <DataGridComboBoxColumn Header="FIA Code"
+                                            SelectedValueBinding="{Binding FIACode}"
+                                            SelectedValuePath="FIACode"
+                                            ItemsSource="{Binding Source={StaticResource fiaOptions}}" />
+                </DataGrid.Columns>
+            </DataGrid>
 
         </Grid>
+
+        <StackPanel x:Name="_speciesDetailsPanel"
+                    Width="300"
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Background="White"
+                    DataContext="{Binding SpeciesDetailViewModel}"
+                    DataContextChanged="_speciesDetailsPanel_DataContextChanged"
+                    IsEnabled="{Binding  Species, Converter={StaticResource NotNullConverter}}">
+            <StackPanel.Resources>
+                <Style TargetType="crls:LastChildWidthPanel">
+                    <Setter Property="LastChildWidth"
+                            Value="150" />
+                </Style>
+            </StackPanel.Resources>
+
+            <crls:LastChildWidthPanel>
+                <Label Content="Species Code" />
+                <TextBox Text="{Binding Species.SpeciesCode}"
+                         MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}"
+                         Margin="0,2" />
+            </crls:LastChildWidthPanel>
+
+            <!--<crls:LastChildWidthPanel>
+                <Label Content="Contract Species" />
+                <TextBox Text="{Binding Species.ContractSpecies}"
+                         Margin="0,2" />
+            </crls:LastChildWidthPanel>-->
+
+            <crls:LastChildWidthPanel>
+                <Label Content="FIA Code" />
+                <ComboBox ItemsSource="{Binding DataContext.FIAOptions, ElementName=_page}"
+                          IsTextSearchEnabled="True"
+                          IsEditable="True"
+                          SelectedValue="{Binding Species.FIACode}"
+                          SelectedValuePath="FIACode"
+                          Margin="0,2" />
+            </crls:LastChildWidthPanel>
+
+
+            <GroupBox Header="Contract Species" MinHeight="250">
+                <Grid crls:GridHelper.RowDefinitions="Auto, 2*, *">
+
+                    <Border Grid.Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"
+                                                  x:Name="_prodColDef" />
+                                <ColumnDefinition Width="*"
+                                                  x:Name="_ctrtSpColDef" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="_prodComboBox"
+                                      Grid.Column="0"
+                                      ItemsSource="{Binding AvalableProductOptions}"
+                                      SelectedValuePath="ProductCode"
+                                      mah:TextBoxHelper.Watermark="Prod"
+                                      mah:TextBoxHelper.UseFloatingWatermark="True" />
+                            <TextBox Grid.Column="1"
+                                     x:Name="_ctrSpTextBox"
+                                     mah:TextBoxHelper.Watermark="Contract Sp." />
+                            <Button Grid.Column="2"
+                                    Command="{Binding AddContractSpeciesCommand}"
+                                    Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                                    IsEnabled="{Binding Text, ElementName=_ctrSpTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
+                                    Style="{StaticResource AddButton}"
+                                    Width="32">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource toStringArrayConverter}">
+                                        <Binding Path="SelectedValue"
+                                                 ElementName="_prodComboBox" />
+                                        <Binding Path="Text"
+                                                 ElementName="_ctrSpTextBox" />
+
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Grid.Column="3"
+                                    Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
+                                    Style="{StaticResource RemoveButton}"
+                                    Command="{Binding RemoveContractSpeciesCommand}"
+                                    CommandParameter="{Binding SelectedItem, ElementName=_ctrSpListView}"
+                                    IsEnabled="{Binding SelectedItem, ElementName=_ctrSpListView, Converter={StaticResource NotNullConverter}}"
+                                    Width="32" />
+                        </Grid>
+
+
+
+                    </Border>
+
+                    <ListView Grid.Row="1"
+                              x:Name="_ctrSpListView"
+                              ItemsSource="{Binding ContractSpecies}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+                                <GridViewColumn Header="Product"
+                                                DisplayMemberBinding="{Binding PrimaryProduct, TargetNullValue='default'}" />
+                                <GridViewColumn Header="Contract Species"
+                                                DisplayMemberBinding="{Binding ContractSpecies}" />
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </Grid>
+            </GroupBox>
+
+        </StackPanel>
+
 
     </Grid>
 </UserControl>

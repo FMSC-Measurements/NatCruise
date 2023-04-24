@@ -18,7 +18,11 @@ namespace NatCruise.Design.Data
                 .Concat(GetStratumSampleGroupChecks())
                 .Concat(GetStratumUnitChecks())
                 .Concat(GetSampleGroupSubpopChecks())
-                .Concat(GetSubPopTDVChecks());
+                .Concat(GetSubPopTDVChecks())
+                .Concat(GetTreeFieldSetupChecks())
+                .Concat(GetTreeFieldSetupHeightFieldChecks())
+                .Concat(GetTreeFieldSetupDiameterFieldChecks())
+                .Concat(GetFIACodeChecks()).ToArray();
         }
 
         public IEnumerable<DesignCheck> GetCuttingUnitStratumChecks()
@@ -106,5 +110,68 @@ FROM (
 WHERE TreeDefaultValue_CN IS NULL;
     ", CruiseID);
         }
+
+        public IEnumerable<DesignCheck> GetTreeFieldSetupChecks()
+        {
+            return Database.Query<DesignCheck>(
+@"SELECT
+    'Tree Field Setup' AS Category,
+    'Error' AS Level,
+    'Stratum ' || StratumCode || ' Has No Tree Fields Selected' AS Message,
+    StratumID AS RecordID
+FROM Stratum
+WHERE CruiseID = @p1 AND NOT EXISTS (SELECT * FROM TreeFieldSetup AS tfs WHERE CruiseID = @p1 AND StratumCode = tfs.StratumCode);", CruiseID);
+        }
+
+        public IEnumerable<DesignCheck> GetTreeFieldSetupHeightFieldChecks()
+        {
+            return Database.Query<DesignCheck>(
+@"SELECT
+    'Tree Field Setup: Height Field' AS Category,
+    'Error' AS Level,
+    'Stratum ' || StratumCode || ' Has No Height Tree Field Selected' AS Message,
+    StratumID AS RecordID
+FROM Stratum
+WHERE CruiseID = @p1 
+    AND NOT EXISTS (
+        SELECT * FROM TreeFieldSetup AS tfs
+        WHERE CruiseID = @p1
+            AND StratumCode = tfs.StratumCode
+            AND tfs.Field IN ('TotalHeight', 'MerchHeightPrimary', 'MerchHeightSecondary', 'UpperStemHeight')
+    );", CruiseID);
+        }
+
+        public IEnumerable<DesignCheck> GetTreeFieldSetupDiameterFieldChecks()
+        {
+            return Database.Query<DesignCheck>(
+@"SELECT
+    'Tree Field Setup: Diameter Field' AS Category,
+    'Error' AS Level,
+    'Stratum ' || StratumCode || ' Has No Diameter Tree Field Selected' AS Message,
+    StratumID AS RecordID
+FROM Stratum
+WHERE CruiseID = @p1 
+    AND NOT EXISTS (
+        SELECT * FROM TreeFieldSetup AS tfs
+        WHERE CruiseID = @p1
+            AND StratumCode = tfs.StratumCode
+            AND tfs.Field IN ('DBH', 'DRC')
+    );", CruiseID);
+        }
+
+        public IEnumerable<DesignCheck> GetFIACodeChecks()
+        {
+            return Database.Query<DesignCheck>(
+@"SELECT
+    'Missing FIA Codes' AS Category,
+    'Warning' AS Level,
+    'Species ' || sp.SpeciesCode || ' Has No FIA Code' AS  Message,
+    '00000000-0000-0000-0000-000000000000' AS RecordID
+FROM Species AS sp
+WHERE sp.CruiseID = @p1 AND sp.FIACode IS NULL
+    AND NOT EXISTS (SELECT * FROM Species_Product AS spprod WHERE spprod.CruiseID = @p1 AND sp.SpeciesCode = spprod.SpeciesCode);", CruiseID);
+        }
+
+
     }
 }

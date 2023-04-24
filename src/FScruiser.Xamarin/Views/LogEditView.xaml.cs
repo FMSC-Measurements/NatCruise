@@ -8,6 +8,8 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+using LogEditViewModel = NatCruise.MVVM.ViewModels.LogEditViewModel;
+
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -60,7 +62,7 @@ namespace FScruiser.XF.Views
         {
             InitializeComponent();
 
-            this.SetBinding(LogFieldsProperty, nameof(ViewModels.LogEditViewModel.LogFields));
+            this.SetBinding(LogFieldsProperty, nameof(LogEditViewModel.LogFields));
 
             _altRowColor = (Color)App.Current.Resources["black_12"];
         }

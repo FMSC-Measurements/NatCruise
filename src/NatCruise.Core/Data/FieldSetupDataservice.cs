@@ -199,16 +199,23 @@ COMMIT;",
 
         #region LogFieldSetup
 
-        public IEnumerable<LogFieldSetup> GetLogFieldSetupsByTreeID(string treeID)
-        {
-            var fields = Database.Query<LogFieldSetup>(
+        const string SELECT_TFS_CORE =
 @"SELECT
     lfs.Field,
-    ifnull(lfh.Heading, lf.DefaultHeading) AS Heading
+    ifnull(lfh.Heading, lf.DefaultHeading) AS Heading,
+    lfs.FieldOrder,
+    lfs.StratumCode,
+    lf.DbType
 FROM LogFieldSetup AS lfs
 JOIN LogField AS lf USING (Field)
 LEFT JOIN LogFieldHeading AS lfh USING (Field, CruiseID)
-WHERE StratumCode = (SELECT StratumCode FROM Tree WHERE TreeID = @p1)
+";
+
+        public IEnumerable<LogFieldSetup> GetLogFieldSetupsByTreeID(string treeID)
+        {
+            var fields = Database.Query<LogFieldSetup>(
+                SELECT_TFS_CORE +
+@"WHERE StratumCode = (SELECT StratumCode FROM Tree WHERE TreeID = @p1)
     AND CruiseID = (SELECT CruiseID FROM Tree WHERE TreeID = @p1)
     AND Field != 'LogNumber' -- don't include LogNumber because its not really a log field
 ORDER BY lfs.FieldOrder;", treeID).ToArray();
@@ -225,11 +232,47 @@ ORDER BY lfs.FieldOrder;", treeID).ToArray();
 
         public IEnumerable<LogFieldSetup> GetLogFieldSetups(string stratumCode)
         {
-            return Database.From<LogFieldSetup>()
-                .Where("CruiseID = @p1 AND StratumCode = @p2")
-                .OrderBy("FieldOrder")
-                .Query(CruiseID, stratumCode)
-                .ToArray();
+            return Database.Query<LogFieldSetup>(
+                SELECT_TFS_CORE +
+@"WHERE StratumCode = @p2
+    AND CruiseID = @p1
+    AND Field != 'LogNumber' -- don't include LogNumber because its not really a log field
+ORDER BY lfs.FieldOrder;", CruiseID, stratumCode).ToArray();
+
+            //return Database.From<LogFieldSetup>()
+            //    .Where("CruiseID = @p1 AND StratumCode = @p2")
+            //    .OrderBy("FieldOrder")
+            //    .Query(CruiseID, stratumCode)
+            //    .ToArray();
+        }
+
+        public IEnumerable<LogFieldSetup> GetLogFieldSetupsByCruise()
+        {
+            var fields = Database.Query<LogFieldSetup>(
+@"SELECT
+    lfs.Field,
+    ifnull(lfh.Heading, lf.DefaultHeading) AS Heading,
+    lfs.FieldOrder,
+    '' AS StratumCode,
+    lf.DbType
+FROM (
+    SELECT Field, min(FieldOrder) AS FieldOrder FROM LogFieldSetup
+    WHERE CruiseID = @p1
+        AND Field != 'LogNumber' -- don't include LogNumber because its not really a log field
+    Group By Field
+) AS lfs
+JOIN LogField AS lf USING(Field)
+LEFT JOIN LogFieldHeading AS lfh ON lfh.Field = lfs.Field AND lfh.CruiseID = @p1
+ORDER BY lfs.FieldOrder;", CruiseID).ToArray();
+
+            if (fields.Length == 0)
+            {
+                return DEFAULT_LOG_FIELDS;
+            }
+            else
+            {
+                return fields;
+            }
         }
 
         public void UpsertLogFieldSetup(LogFieldSetup lfs)

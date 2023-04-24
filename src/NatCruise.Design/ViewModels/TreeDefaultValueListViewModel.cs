@@ -26,15 +26,17 @@ namespace NatCruise.Design.ViewModels
         private ICommand _addNewTreeDefaultValueCommand;
         private ICommand _deleteTreeDefaultValueCommand;
 
-        public TreeDefaultValueListViewModel(ITemplateDataservice templateDataservice, ISetupInfoDataservice setupInfoDataservice, INatCruiseDialogService dialogService)
+        public TreeDefaultValueListViewModel(ITemplateDataservice templateDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupInfoDataservice, INatCruiseDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
             SetupDataservice = setupInfoDataservice ?? throw new ArgumentNullException(nameof(setupInfoDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NewTreeDefaultValue = MakeNewTreeDefaultValue();
         }
 
         public ITemplateDataservice TemplateDataservice { get; }
+        public ISpeciesDataservice SpeciesDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
 
@@ -130,7 +132,7 @@ namespace NatCruise.Design.ViewModels
         {
             base.Load();
 
-            SpeciesCodeOptions = TemplateDataservice.GetSpeciesCodes();
+            SpeciesCodeOptions = SpeciesDataservice.GetSpeciesCodes();
             ProductOptions = SetupDataservice.GetProducts();
             var tdvs = TemplateDataservice.GetTreeDefaultValues();
             TreeDefaultValues = new ObservableCollection<TreeDefaultValue>(tdvs);

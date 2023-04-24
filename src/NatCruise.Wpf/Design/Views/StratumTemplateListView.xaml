@@ -9,6 +9,7 @@
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
+             DataContextChanged="OnDataContextChanged"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -51,6 +52,7 @@
                      SelectedItem="{Binding SelectedStratumTemplate}" />
         </Grid>
         <TabControl Grid.Column="1"
+                    x:Name="_stratumTemplateRegion"
                     prism:RegionManager.RegionName="{x:Static nav:Regions.StratumTemplateRegion}"
                     prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_stratumDefaultsListBox}">
             <TabControl.Resources>

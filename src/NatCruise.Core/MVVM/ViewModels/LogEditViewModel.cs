@@ -1,13 +1,16 @@
 ﻿using NatCruise.Data;
 using NatCruise.Models;
-using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace NatCruise.Wpf.FieldData.ViewModels
+namespace NatCruise.MVVM.ViewModels
 {
     public class LogEditViewModel : ViewModelBase
     {
@@ -16,7 +19,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private IEnumerable<LogError> _errors;
         private IEnumerable<string> _gradeOptions;
 
-        public Log Log
+    public Log Log
         {
             get => _log;
             set
@@ -53,7 +56,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public IEnumerable<LogError> Errors { get => _errors; set => SetProperty(ref _errors, value); }
         public ILogDataservice LogDataservice { get; }
-        public ITreeDataservice TreeDataservice { get; }
         public ILogErrorDataservice LogErrorDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
         public ILoggingService LoggingService { get; }
@@ -66,38 +68,33 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         }
 
         public LogEditViewModel(ILogDataservice logDataservice,
-            ITreeDataservice treeDataservice,
             ILogErrorDataservice logErrorDataservice,
             IFieldSetupDataservice fieldSetupDataservice,
             ILoggingService loggingService,
             INatCruiseDialogService dialogService)
         {
             LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
-            TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             LogErrorDataservice = logErrorDataservice ?? throw new ArgumentNullException(nameof(logErrorDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+
+            GradeOptions = new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
         }
 
-        //protected override void Load(IParameters parameters)
-        //{
-        //    if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
+        protected override void Load(IParameters parameters)
+        {
+            if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-        //    var log_guid = parameters.GetValue<string>(NavParams.LogID);
+            var logID = parameters.GetValue<string>(NavParams.LogID);
 
-        //    Log = LogDataservice.GetLog(log_guid);
-        //}
+            Load(logID);
+        }
 
-        //void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
-        //{
-        //    // do nothing
-        //}
-
-        //public void OnNavigatedFrom(INavigationParameters parameters)
-        //{
-        //    SaveLog();
-        //}
+        public void Load(string logID)
+        {
+            Log = LogDataservice.GetLog(logID);
+        }
 
         public void SaveLog()
         {

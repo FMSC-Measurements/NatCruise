@@ -41,6 +41,7 @@ namespace NatCruise.Design.ViewModels
                 {
                     new CruiseMethod { Method = "FIX", FriendlyName = "Fixed Plot", IsPlotMethod = true },
                     new CruiseMethod { Method = "PNT", FriendlyName = "Point (Variable Plot)", IsPlotMethod= true },
+                    new CruiseMethod { Method = "FIXCNT", FriendlyName = "Fixed Count", IsPlotMethod= true },
                 };
             }
             else

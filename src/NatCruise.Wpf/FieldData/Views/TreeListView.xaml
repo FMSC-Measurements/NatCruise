@@ -53,9 +53,18 @@
                   d:IsExpanded="True"
                   x:Name="_treeEditExpander">
             <Grid>
-                <local:TreeEditView DataContext="{Binding TreeEditViewModel}" />
+                <TabControl>
+                    <TabItem Header="Tree">
+                        <local:TreeEditView DataContext="{Binding TreeEditViewModel}" />
+                    </TabItem>
+                    <TabItem Header="Logs">
+                        <local:TreeLogListView DataContext="{Binding LogListViewModel}" />
+                    </TabItem>
+                </TabControl>
+                
                 <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-                      Visibility="{Binding SelectedTree, Converter={StaticResource IsNotVisableConverter}}">
+                      Visibility="{Binding SelectedTree, Converter={StaticResource IsNotVisableConverter}}"
+                      d:Visibility="Hidden">
                     <Label Content="No Tree Selected"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center" />

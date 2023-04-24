@@ -56,6 +56,8 @@ namespace NatCruise.Design.Views
         private void OnSampleGroupAdded(object sender, EventArgs e)
         {
             _sampleGroupCodeTextBox.Clear();
+
+            _sampleGroupDetailsRegion.SelectedIndex = 0;
         }
     }
 }

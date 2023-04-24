@@ -133,6 +133,7 @@
 
             <TabControl Grid.Column="1"
                         Margin="5,5,0,0"
+                        x:Name="_sampleGroupDetailsRegion"
                         prism:RegionManager.RegionName="{x:Static nav:Regions.SampleGroupDetailsRegion}"
                         prism:RegionManager.RegionContext="{Binding SelectedSampleGroup}">
                 <TabControl.Resources>
