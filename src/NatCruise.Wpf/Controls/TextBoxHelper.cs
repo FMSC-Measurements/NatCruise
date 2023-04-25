@@ -92,7 +92,7 @@ namespace NatCruise.Wpf.Controls
             }
 
             // test new text value against our Regex mask
-            var match = Regex.Match(text, mask);
+            var match = Regex.Match(text, mask, RegexOptions.None, TimeSpan.FromMilliseconds(100));
             // if there is a match and all the text is part of the match
             // it might be possible to have multiple matches but we aren't allowing that
             if (match != null && match.Length == text.Length)

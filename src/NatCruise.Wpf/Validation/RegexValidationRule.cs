@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
@@ -17,7 +18,7 @@ namespace NatCruise.Wpf.Validation
         {
             var sValue = (string)value;
 
-            if (Regex.IsMatch(sValue, Match))
+            if (Regex.IsMatch(sValue, Match, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
             {
                 return ValidationResult.ValidResult;
             }

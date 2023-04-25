@@ -23,7 +23,6 @@ namespace NatCruise.Design.ViewModels
 
         private ObservableCollection<Species> _species;
         private IEnumerable<FIASpecies> _fiaOptions;
-        private Species _selectedSpecies;
         public ISetupInfoDataservice SetupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
         public SpeciesDetailViewModel SpeciesDetailViewModel { get; }
