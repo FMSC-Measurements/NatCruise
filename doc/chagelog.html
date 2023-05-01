@@ -1,0 +1,1254 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>chagelog.md</title>
+    <style type="text/css">
+            
+/* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+.markdown-body {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  margin: 0;
+  color: #24292f;
+  background-color: #ffffff;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-size: 16px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.markdown-body .octicon {
+  display: inline-block;
+  fill: currentColor;
+  vertical-align: text-bottom;
+}
+
+.markdown-body h1:hover .anchor .octicon-link:before,
+.markdown-body h2:hover .anchor .octicon-link:before,
+.markdown-body h3:hover .anchor .octicon-link:before,
+.markdown-body h4:hover .anchor .octicon-link:before,
+.markdown-body h5:hover .anchor .octicon-link:before,
+.markdown-body h6:hover .anchor .octicon-link:before {
+  width: 16px;
+  height: 16px;
+  content: ' ';
+  display: inline-block;
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg>");
+}
+
+.markdown-body details,
+.markdown-body figcaption,
+.markdown-body figure {
+  display: block;
+}
+
+.markdown-body summary {
+  display: list-item;
+}
+
+.markdown-body [hidden] {
+  display: none !important;
+}
+
+.markdown-body a {
+  background-color: transparent;
+  color: #0969da;
+  text-decoration: none;
+}
+
+.markdown-body abbr[title] {
+  border-bottom: none;
+  text-decoration: underline dotted;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: 600;
+}
+
+.markdown-body dfn {
+  font-style: italic;
+}
+
+.markdown-body h1 {
+  margin: .67em 0;
+  font-weight: 600;
+  padding-bottom: .3em;
+  font-size: 2em;
+  border-bottom: 1px solid hsla(210,18%,87%,1);
+}
+
+.markdown-body mark {
+  background-color: #fff8c5;
+  color: #24292f;
+}
+
+.markdown-body small {
+  font-size: 90%;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body sup {
+  top: -0.5em;
+}
+
+.markdown-body img {
+  border-style: none;
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: #ffffff;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace;
+  font-size: 1em;
+}
+
+.markdown-body figure {
+  margin: 1em 40px;
+}
+
+.markdown-body hr {
+  box-sizing: content-box;
+  overflow: hidden;
+  background: transparent;
+  border-bottom: 1px solid hsla(210,18%,87%,1);
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #d0d7de;
+  border: 0;
+}
+
+.markdown-body input {
+  font: inherit;
+  margin: 0;
+  overflow: visible;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.markdown-body [type=button],
+.markdown-body [type=reset],
+.markdown-body [type=submit] {
+  -webkit-appearance: button;
+}
+
+.markdown-body [type=checkbox],
+.markdown-body [type=radio] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body [type=number]::-webkit-inner-spin-button,
+.markdown-body [type=number]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+.markdown-body [type=search]::-webkit-search-cancel-button,
+.markdown-body [type=search]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.markdown-body ::-webkit-input-placeholder {
+  color: inherit;
+  opacity: .54;
+}
+
+.markdown-body ::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+.markdown-body a:hover {
+  text-decoration: underline;
+}
+
+.markdown-body ::placeholder {
+  color: #6e7781;
+  opacity: 1;
+}
+
+.markdown-body hr::before {
+  display: table;
+  content: "";
+}
+
+.markdown-body hr::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body details summary {
+  cursor: pointer;
+}
+
+.markdown-body details:not([open])&gt;*:not(summary) {
+  display: none !important;
+}
+
+.markdown-body a:focus,
+.markdown-body [role=button]:focus,
+.markdown-body input[type=radio]:focus,
+.markdown-body input[type=checkbox]:focus {
+  outline: 2px solid #0969da;
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+.markdown-body a:focus:not(:focus-visible),
+.markdown-body [role=button]:focus:not(:focus-visible),
+.markdown-body input[type=radio]:focus:not(:focus-visible),
+.markdown-body input[type=checkbox]:focus:not(:focus-visible) {
+  outline: solid 1px transparent;
+}
+
+.markdown-body a:focus-visible,
+.markdown-body [role=button]:focus-visible,
+.markdown-body input[type=radio]:focus-visible,
+.markdown-body input[type=checkbox]:focus-visible {
+  outline: 2px solid #0969da;
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+.markdown-body a:not([class]):focus,
+.markdown-body a:not([class]):focus-visible,
+.markdown-body input[type=radio]:focus,
+.markdown-body input[type=radio]:focus-visible,
+.markdown-body input[type=checkbox]:focus,
+.markdown-body input[type=checkbox]:focus-visible {
+  outline-offset: 0;
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  line-height: 10px;
+  color: #24292f;
+  vertical-align: middle;
+  background-color: #f6f8fa;
+  border: solid 1px rgba(175,184,193,0.2);
+  border-bottom-color: rgba(175,184,193,0.2);
+  border-radius: 6px;
+  box-shadow: inset 0 -1px 0 rgba(175,184,193,0.2);
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body h2 {
+  font-weight: 600;
+  padding-bottom: .3em;
+  font-size: 1.5em;
+  border-bottom: 1px solid hsla(210,18%,87%,1);
+}
+
+.markdown-body h3 {
+  font-weight: 600;
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.markdown-body h5 {
+  font-weight: 600;
+  font-size: .875em;
+}
+
+.markdown-body h6 {
+  font-weight: 600;
+  font-size: .85em;
+  color: #57606a;
+}
+
+.markdown-body p {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+  padding: 0 1em;
+  color: #57606a;
+  border-left: .25em solid #d0d7de;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 2em;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body tt,
+.markdown-body code,
+.markdown-body samp {
+  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-size: 12px;
+  word-wrap: normal;
+}
+
+.markdown-body .octicon {
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-body input::-webkit-outer-spin-button,
+.markdown-body input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.markdown-body::before {
+  display: table;
+  content: "";
+}
+
+.markdown-body::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body&gt;*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body&gt;*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .absent {
+  color: #cf222e;
+}
+
+.markdown-body .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body details {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote&gt;:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote&gt;:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body h1 .octicon-link,
+.markdown-body h2 .octicon-link,
+.markdown-body h3 .octicon-link,
+.markdown-body h4 .octicon-link,
+.markdown-body h5 .octicon-link,
+.markdown-body h6 .octicon-link {
+  color: #24292f;
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor,
+.markdown-body h2:hover .anchor,
+.markdown-body h3:hover .anchor,
+.markdown-body h4:hover .anchor,
+.markdown-body h5:hover .anchor,
+.markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link,
+.markdown-body h2:hover .anchor .octicon-link,
+.markdown-body h3:hover .anchor .octicon-link,
+.markdown-body h4:hover .anchor .octicon-link,
+.markdown-body h5:hover .anchor .octicon-link,
+.markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 tt,
+.markdown-body h1 code,
+.markdown-body h2 tt,
+.markdown-body h2 code,
+.markdown-body h3 tt,
+.markdown-body h3 code,
+.markdown-body h4 tt,
+.markdown-body h4 code,
+.markdown-body h5 tt,
+.markdown-body h5 code,
+.markdown-body h6 tt,
+.markdown-body h6 code {
+  padding: 0 .2em;
+  font-size: inherit;
+}
+
+.markdown-body summary h1,
+.markdown-body summary h2,
+.markdown-body summary h3,
+.markdown-body summary h4,
+.markdown-body summary h5,
+.markdown-body summary h6 {
+  display: inline-block;
+}
+
+.markdown-body summary h1 .anchor,
+.markdown-body summary h2 .anchor,
+.markdown-body summary h3 .anchor,
+.markdown-body summary h4 .anchor,
+.markdown-body summary h5 .anchor,
+.markdown-body summary h6 .anchor {
+  margin-left: -40px;
+}
+
+.markdown-body summary h1,
+.markdown-body summary h2 {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.markdown-body ul.no-list,
+.markdown-body ol.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.markdown-body ol[type=a] {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body ol[type=A] {
+  list-style-type: upper-alpha;
+}
+
+.markdown-body ol[type=i] {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ol[type=I] {
+  list-style-type: upper-roman;
+}
+
+.markdown-body ol[type="1"] {
+  list-style-type: decimal;
+}
+
+.markdown-body div&gt;ol:not([type]) {
+  list-style-type: decimal;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li&gt;p {
+  margin-top: 16px;
+}
+
+.markdown-body li+li {
+  margin-top: .25em;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body table th {
+  font-weight: 600;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #d0d7de;
+}
+
+.markdown-body table tr {
+  background-color: #ffffff;
+  border-top: 1px solid hsla(210,18%,87%,1);
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+.markdown-body table img {
+  background-color: transparent;
+}
+
+.markdown-body img[align=right] {
+  padding-left: 20px;
+}
+
+.markdown-body img[align=left] {
+  padding-right: 20px;
+}
+
+.markdown-body .emoji {
+  max-width: none;
+  vertical-align: text-top;
+  background-color: transparent;
+}
+
+.markdown-body span.frame {
+  display: block;
+  overflow: hidden;
+}
+
+.markdown-body span.frame&gt;span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid #d0d7de;
+}
+
+.markdown-body span.frame span img {
+  display: block;
+  float: left;
+}
+
+.markdown-body span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: #24292f;
+}
+
+.markdown-body span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-center&gt;span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.markdown-body span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.markdown-body span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-right&gt;span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+
+.markdown-body span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-left span {
+  margin: 13px 0 0;
+}
+
+.markdown-body span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-right&gt;span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body code,
+.markdown-body tt {
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  white-space: break-spaces;
+  background-color: rgba(175,184,193,0.2);
+  border-radius: 6px;
+}
+
+.markdown-body code br,
+.markdown-body tt br {
+  display: none;
+}
+
+.markdown-body del code {
+  text-decoration: inherit;
+}
+
+.markdown-body samp {
+  font-size: 85%;
+}
+
+.markdown-body pre code {
+  font-size: 100%;
+}
+
+.markdown-body pre&gt;code {
+  padding: 0;
+  margin: 0;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body .highlight pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 6px;
+}
+
+.markdown-body pre code,
+.markdown-body pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body .csv-data td,
+.markdown-body .csv-data th {
+  padding: 5px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body .csv-data .blob-num {
+  padding: 10px 8px 9px;
+  text-align: right;
+  background: #ffffff;
+  border: 0;
+}
+
+.markdown-body .csv-data tr {
+  border-top: 0;
+}
+
+.markdown-body .csv-data th {
+  font-weight: 600;
+  background: #f6f8fa;
+  border-top: 0;
+}
+
+.markdown-body [data-footnote-ref]::before {
+  content: "[";
+}
+
+.markdown-body [data-footnote-ref]::after {
+  content: "]";
+}
+
+.markdown-body .footnotes {
+  font-size: 12px;
+  color: #57606a;
+  border-top: 1px solid #d0d7de;
+}
+
+.markdown-body .footnotes ol {
+  padding-left: 16px;
+}
+
+.markdown-body .footnotes ol ul {
+  display: inline-block;
+  padding-left: 16px;
+  margin-top: 16px;
+}
+
+.markdown-body .footnotes li {
+  position: relative;
+}
+
+.markdown-body .footnotes li:target::before {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -24px;
+  pointer-events: none;
+  content: "";
+  border: 2px solid #0969da;
+  border-radius: 6px;
+}
+
+.markdown-body .footnotes li:target {
+  color: #24292f;
+}
+
+.markdown-body .footnotes .data-footnote-backref g-emoji {
+  font-family: monospace;
+}
+
+.markdown-body .pl-c {
+  color: #6e7781;
+}
+
+.markdown-body .pl-c1,
+.markdown-body .pl-s .pl-v {
+  color: #0550ae;
+}
+
+.markdown-body .pl-e,
+.markdown-body .pl-en {
+  color: #8250df;
+}
+
+.markdown-body .pl-smi,
+.markdown-body .pl-s .pl-s1 {
+  color: #24292f;
+}
+
+.markdown-body .pl-ent {
+  color: #116329;
+}
+
+.markdown-body .pl-k {
+  color: #cf222e;
+}
+
+.markdown-body .pl-s,
+.markdown-body .pl-pds,
+.markdown-body .pl-s .pl-pse .pl-s1,
+.markdown-body .pl-sr,
+.markdown-body .pl-sr .pl-cce,
+.markdown-body .pl-sr .pl-sre,
+.markdown-body .pl-sr .pl-sra {
+  color: #0a3069;
+}
+
+.markdown-body .pl-v,
+.markdown-body .pl-smw {
+  color: #953800;
+}
+
+.markdown-body .pl-bu {
+  color: #82071e;
+}
+
+.markdown-body .pl-ii {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+
+.markdown-body .pl-c2 {
+  color: #f6f8fa;
+  background-color: #cf222e;
+}
+
+.markdown-body .pl-sr .pl-cce {
+  font-weight: bold;
+  color: #116329;
+}
+
+.markdown-body .pl-ml {
+  color: #3b2300;
+}
+
+.markdown-body .pl-mh,
+.markdown-body .pl-mh .pl-en,
+.markdown-body .pl-ms {
+  font-weight: bold;
+  color: #0550ae;
+}
+
+.markdown-body .pl-mi {
+  font-style: italic;
+  color: #24292f;
+}
+
+.markdown-body .pl-mb {
+  font-weight: bold;
+  color: #24292f;
+}
+
+.markdown-body .pl-md {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+
+.markdown-body .pl-mi1 {
+  color: #116329;
+  background-color: #dafbe1;
+}
+
+.markdown-body .pl-mc {
+  color: #953800;
+  background-color: #ffd8b5;
+}
+
+.markdown-body .pl-mi2 {
+  color: #eaeef2;
+  background-color: #0550ae;
+}
+
+.markdown-body .pl-mdr {
+  font-weight: bold;
+  color: #8250df;
+}
+
+.markdown-body .pl-ba {
+  color: #57606a;
+}
+
+.markdown-body .pl-sg {
+  color: #8c959f;
+}
+
+.markdown-body .pl-corl {
+  text-decoration: underline;
+  color: #0a3069;
+}
+
+.markdown-body g-emoji {
+  display: inline-block;
+  min-width: 1ch;
+  font-family: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 1em;
+  font-style: normal !important;
+  font-weight: 400;
+  line-height: 1;
+  vertical-align: -0.075em;
+}
+
+.markdown-body g-emoji img {
+  width: 1em;
+  height: 1em;
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item label {
+  font-weight: 400;
+}
+
+.markdown-body .task-list-item.enabled label {
+  cursor: pointer;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 4px;
+}
+
+.markdown-body .task-list-item .handle {
+  display: none;
+}
+
+.markdown-body .task-list-item-checkbox {
+  margin: 0 .2em .25em -1.4em;
+  vertical-align: middle;
+}
+
+.markdown-body .contains-task-list:dir(rtl) .task-list-item-checkbox {
+  margin: 0 -1.6em .25em .2em;
+}
+
+.markdown-body .contains-task-list {
+  position: relative;
+}
+
+.markdown-body .contains-task-list:hover .task-list-item-convert-container,
+.markdown-body .contains-task-list:focus-within .task-list-item-convert-container {
+  display: block;
+  width: auto;
+  height: 24px;
+  overflow: visible;
+  clip: auto;
+}
+
+.markdown-body ::-webkit-calendar-picker-indicator {
+  filter: invert(50%);
+}
+        </style>
+  </head>
+  <body>
+    <h1 id="version-3.1.5-april-24-2023">Version 3.1.5 - April 24, 2023</h1>
+    <h2 id="natcruise">NatCruise</h2>
+    <h3 id="fixes">Fixes</h3>
+    <ul>
+      <li>Fix plots page showing some duplicate columns</li>
+      <li>Strata templates now only shows templates with valid cruise method for cruise</li>
+    </ul>
+    <h3 id="enhancements">Enhancements</h3>
+    <ul>
+      <li>Add ability to setup multiple contract species per species code based on product</li>
+      <li>After adding a new item to a collection (Strata, Sample Groups, Strata Template) display switches back to edit view for that record</li>
+      <li>Show list of log associated with a given tree when tree is selected in Field Data trees tab.</li>
+      <li>In Combing Files, show device name that created record when comparing two conflicting records</li>
+    </ul>
+    <h3 id="changes">Changes</h3>
+    <ul>
+      <li>Add additional design checks</li>
+      <li>Allow FixCNT cruise method for recon cruises</li>
+    </ul>
+    <h2 id="fscruiser-natcruise">FScruiser &amp; NatCruise</h2>
+    <h3 id="fixes-1">Fixes</h3>
+    <ul>
+      <li>When combining or importing files with <code>number plot trees sequentially across strata</code> option disabled. Plot tree conflict checking will allow multiple trees with the same tree number per plot.</li>
+    </ul>
+    <h1 id="version-3.1.4-mar-13-2023">Version 3.1.4 - Mar 13, 2023</h1>
+    <h2 id="fscruiser">FScruiser</h2>
+    <h3 id="fixes-2">Fixes</h3>
+    <ul>
+      <li>Fix Tree and Plot Tree page crashing when field contains empty text</li>
+    </ul>
+    <h3 id="enhancments">Enhancments</h3>
+    <ul>
+      <li>Improve error messages when importing cruise files</li>
+      <li>Show which fields have warnings in the tree quick edit panel</li>
+    </ul>
+    <h3 id="changes-1">Changes</h3>
+    <ul>
+      <li>Update Limiting Distance page</li>
+    </ul>
+    <h2 id="natcruise-1">NatCruise</h2>
+    <h3 id="fixes-3">Fixes</h3>
+    <ul>
+      <li>Fix all species assigned same FIA code when using V2 template</li>
+      <li>Fix design mismatch errors not being shown when combining files</li>
+    </ul>
+    <h1 id="version-3.1.3-jan-27-2023">Version 3.1.3 - Jan 27, 2023</h1>
+    <h2 id="fscruiser-1">FScruiser</h2>
+    <h3 id="fixes-4">Fixes</h3>
+    <ul>
+      <li>Fixed tree count edits not appearing tally feed after being added</li>
+      <li>Fixed can't add 3PPNT plots</li>
+      <li>Fix new calculate limiting distance, when slope % is 10%</li>
+    </ul>
+    <h2 id="natcruise-2">NatCruise</h2>
+    <h3 id="fixes-5">Fixes</h3>
+    <ul>
+      <li>Fixed FIA codes not being read with using V2 (.cut) template files</li>
+    </ul>
+    <h3 id="enhancements-1">Enhancements</h3>
+    <ul>
+      <li>Added option to create V3 template file when opening V2 (.cut) template files</li>
+    </ul>
+    <h1 id="version-3.1.2-jan-4-2023">Version 3.1.2 - Jan 4, 2023</h1>
+    <h2 id="fscruiser-2">FScruiser</h2>
+    <h3 id="fixes-6">Fixes</h3>
+    <ul>
+      <li>Fixed numeric tree fields in plot tally page don't show numeric keyboard</li>
+      <li>Logs page in Field Data now shows tree number, unit and plot info</li>
+      <li>Fix in Tree Edit Page clicking done on last tree data field doesn't move cursor to Remarks field</li>
+      <li>Fix user can still click edit on tree after untallying it, causing app to crash.</li>
+      <li>Fix various issues with editing initials on tree</li>
+    </ul>
+    <h3 id="enhancments-1">Enhancments</h3>
+    <ul>
+      <li>Select all contents when entering tree data text boxes</li>
+    </ul>
+    <h3 id="changes-2">Changes</h3>
+    <ul>
+      <li>Option to add/remove stratum hidden when unit contains single plot stratum</li>
+    </ul>
+    <h2 id="natcruise-3">NatCruise</h2>
+    <h2 id="features">Features</h2>
+    <ul>
+      <li>Add Combine Files feature (located in the Tools menu)</li>
+    </ul>
+    <h3 id="fixes-7">Fixes</h3>
+    <ul>
+      <li>Logs page in Field Data now shows tree number, unit and plot info</li>
+      <li>Fix scrolling issue in Cutting Units page</li>
+      <li>Fix crash when editing species</li>
+    </ul>
+    <h3 id="changes-3">Changes</h3>
+    <ul>
+      <li>Option to add/remove stratum hidden when unit contains single plot stratum</li>
+      <li>Change default UOM on FixCNT sample groups to 04</li>
+    </ul>
+    <h1 id="version-3.1.1-oct-20-2022">Version 3.1.1 - Oct 20, 2022</h1>
+    <h2 id="natcruise-4">NatCruise</h2>
+    <h3 id="fixes-8">Fixes</h3>
+    <ul>
+      <li>Fixes creating cruise using V2 template file.</li>
+    </ul>
+    <h2 id="fscruiser-and-natcruise">FScruiser and NatCruise</h2>
+    <h3 id="fixes-9">Fixes</h3>
+    <ul>
+      <li>reduce possibility of issue with updating cruise file</li>
+    </ul>
+    <h1 id="version-3.1.0-sep-29-2022">Version 3.1.0 - Sep 29, 2022</h1>
+    <h2 id="fscruiser-3">FScruiser</h2>
+    <h3 id="enhancements-2">Enhancements</h3>
+    <ul>
+      <li>Various Improvements to the plot list page
+<ul><li>Number of plot errors show</li><li>Summery of tree data shown including tree count and tree errors</li><li>Null strata shown</li></ul></li>
+      <li>Added Previous and Next buttons to the quick tree edit panel to make jumping between measure trees quicker</li>
+      <li>Increased size of tree remarks field in the quick tree edit panel to support editing and viewing longer remarks</li>
+      <li>Added button to limiting distance calculator to copy report to the clipboard</li>
+    </ul>
+    <h3 id="changes-4">Changes</h3>
+    <ul>
+      <li>Added option in settings to use a alternant logic for calculating limiting distance. This option is to allow the new calculation logic to be tested. The new calculation logic uses rounding of intermediate values in a way that tries to be more consistent with hand calculated limiting distance. Precisions used:  Plot Radius Factor - 3 decimals; DBH - tenth of an inch;  Slope Correction Factor - 2 decimals;  Plot Radius for fixed size plot methods - tenth of a foot. To-Face Correction - hundredth of a foot; and for the final Limiting Distance - hundredth of a foot.
+There is one deviation from the handbook in the calculation when correcting for measuring to the face in variable radius plots. The handbook instructs you to calculate the corrected distance to the face of the tree and then use that to calculate a corrected PRF which you then use to recalculate the corrected limiting distance. This redundant step was omitted because it makes the accuracy of the to-face correction dependent on the LD, as well  adds  inconsistency in the accuracy of the corrected LD for Fixed vs Variable plots. The limiting distance report reflects the intermediate values used for Plot Radius Factor (PRF), Slope Correction Factor (SCF), and To Face Correction (TFC). When the option to use the new calculation logic is selected, there is a message shown at the top of the limiting distance page indicating the option is enabled.</li>
+    </ul>
+    <h2 id="crz3-file-format-changes">CRZ3 File Format Changes</h2>
+    <ul>
+      <li>Added additional value checks to fields the cruise file structure
+<ul><li>Enforce valid values for Log and Tree Grade ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')</li><li>Enforce ranges on percentage fields is between 0 and 100</li><li>Enforce positive values on various numeric fields</li><li>Enforce value between 0 and 360 on Azimuth</li><li>Enforce value between 0 and 200 on slope</li></ul></li>
+    </ul>
+    <h2 id="natcruise-5">NatCruise</h2>
+    <h3 id="enhancements-3">Enhancements</h3>
+    <ul>
+      <li>Users can now press enter key to add new Unit/Stratum/Sample Group/Subpopulation</li>
+      <li>Text Boxes reject inputting non numeric values into numeric fields</li>
+    </ul>
+    <h3 id="changes-5">Changes</h3>
+    <ul>
+      <li>Allow Min/Max KPI to be blank</li>
+      <li>Allow Sampling Frequency of 0 when BigBAF &gt; 0</li>
+      <li>Revert Change where tree default value fields start off with 0 for all numeric fields. Numeric tree fields will receive a default value of 0 if the tree has no value and the default has no value. This was done to be able to differentiate when a default is intentionally set to 0 vs when a field has no value and no default.</li>
+    </ul>
+    <h3 id="fixes-10">Fixes</h3>
+    <ul>
+      <li>Fixed Design Checks not catching missing Tree Defaults sometimes</li>
+    </ul>
+    <h1 id="version-3.0.4-jun-27-2022">Version 3.0.4 - Jun 27, 2022</h1>
+    <h2 id="natcruise-6">NatCruise</h2>
+    <h3 id="new-features">New Features</h3>
+    <ul>
+      <li>Added Field Data Page. Allows Editing Trees, Plots, Logs, and Counts</li>
+    </ul>
+    <h2 id="fixes-11">Fixes</h2>
+    <ul>
+      <li>Fixed field order not saving correctly when setting up fields</li>
+      <li>Fixed various spelling mistakes</li>
+    </ul>
+    <h2 id="changes-6">Changes</h2>
+    <ul>
+      <li>Allow Max KPI to be 0</li>
+      <li>Contents of text boxs when beginning editing</li>
+      <li>Allow editing cruise and sale number</li>
+      <li>Applicable Tree Default Values now initialized to 0. This change is primarily for aesthetic purposes. Existing Tree Defaults with no value displayed will default to 0 as well.</li>
+      <li>Sample Frequency of 0 allowed when Big BAF &gt; 0</li>
+      <li>Add ClickerSelecter as option when selecting sample selector type. This will allow for cruisers that are using clickers for tallying. This feature is not fully implemented in FScruiser.</li>
+    </ul>
+    <h1 id="version-3.0.3-jun-2-2022">Version 3.0.3 - Jun 2, 2022</h1>
+    <h2 id="fscruiser-4">FScruiser</h2>
+    <h3 id="fixes-12">Fixes</h3>
+    <ul>
+      <li>Fixed sometimes cruises wouldn't export if more than one cruise existed in a sale</li>
+    </ul>
+    <h3 id="enhancements-4">Enhancements</h3>
+    <ul>
+      <li>Display Insurance Frequency and KZ in the Tree Count Edit page</li>
+    </ul>
+    <h1 id="version-3.0.2-may-25-2022">Version 3.0.2 - May 25, 2022</h1>
+    <h2 id="natcruise-7">NatCruise</h2>
+    <h3 id="features-1">Features</h3>
+    <ul>
+      <li>Added Field Data page</li>
+      <li>Added Combine Files page</li>
+    </ul>
+    <h3 id="fixes-13">Fixes</h3>
+    <ul>
+      <li>Fixed field order not saving correctly when setting up fields</li>
+      <li>Fixed various spelling mistakes</li>
+    </ul>
+    <h3 id="changes-7">Changes</h3>
+    <ul>
+      <li>Allow Max KPI to be 0</li>
+      <li>Contents of text boxs when beginning editing</li>
+      <li>Allow editing cruise and sale number</li>
+      <li>Applicable Tree Default Values now initialized to 0. This change is primarily for aesthetic purposes. Existing Tree Defaults with no value displayed will default to 0 as well.</li>
+      <li>Sample Frequency of 0 allowed when Big BAF &gt; 0</li>
+      <li>Add ClickerSelecter as option when selecting sample selector type. This will allow for cruisers that are using clickers for tallying. This feature is not fully implemented in FScruiser.</li>
+    </ul>
+    <h1 id="version-3.0.1-may-6-2022">Version 3.0.1 - May 6, 2022</h1>
+    <h2 id="fscruiser-5">FScruiser</h2>
+    <h3 id="fixes-14">Fixes</h3>
+    <ul>
+      <li>Fixed issue where recon measurement data in production cruises wasn't being imported into FScruiser</li>
+      <li>Fixed displayed tree counts could in some situations include tree counts from other cruses with similar populations</li>
+      <li>Fixed height and diameter tree errors not showing on plot trees</li>
+      <li>Fixed displayed KPI total not updating on tally buttons</li>
+      <li>Fixed issue with reimporting cruise after being deleted</li>
+      <li>Fixed various spelling mistakes</li>
+    </ul>
+    <h1 id="version-3.0.0-mar-1-2022">Version 3.0.0 - Mar 1, 2022</h1>
+    <h2 id="fscruiser-6">FScruiser</h2>
+    <h3 id="enhancements-5">Enhancements</h3>
+    <ul>
+      <li>Added Tree error indicator to the Plot Tally page</li>
+      <li>Improved Tree error indicators updating on the Tally page</li>
+      <li>Added sound for tally button presses in FixCNT tally page</li>
+      <li>KPI and STM shown on entries in Tally and Plot Tally page</li>
+    </ul>
+    <h3 id="changes-8">Changes</h3>
+    <ul>
+      <li>Change tree count on STM trees to 0</li>
+      <li>Disabled ability to open <code>.cruise</code> files (just for FScruiser)</li>
+    </ul>
+    <h3 id="fixes-15">Fixes</h3>
+    <ul>
+      <li>Fixed various issues with configuring and entering cruisers initials</li>
+      <li>Fixed crash when untalling tally by sample group entries (since v0.41)</li>
+    </ul>
+    <h2 id="natcruise-8">NatCruise</h2>
+    <h3 id="fixes-16">Fixes</h3>
+    <ul>
+      <li>Fix various spelling errors and UI issues</li>
+      <li>Fixed crash when selecting or opening template, when last template location is no longer available e.g. removable storage or deleted folder</li>
+      <li>Fixed options for 3PPNT not shown in Stratum Details page</li>
+    </ul>
+  </body>
+</html>
