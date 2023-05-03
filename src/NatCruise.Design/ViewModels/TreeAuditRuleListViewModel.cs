@@ -1,5 +1,4 @@
-﻿using NatCruise.Design.Data;
-using NatCruise.Design.Models;
+﻿using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using Prism.Commands;
@@ -19,12 +18,14 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand _addNewTreeAuditRuleCommand;
         private DelegateCommand<TreeAuditRule> _deleteTreeAuditRuleCommand;
 
-        public TreeAuditRuleListViewModel(ITemplateDataservice templateDataservice)
+        public TreeAuditRuleListViewModel(ITreeAuditRuleDataservice treeAuditRuleDataservice, ITreeFieldDataservice treeFieldDataservice)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            TreeAuditRuleDataservice = treeAuditRuleDataservice ?? throw new ArgumentNullException(nameof(treeAuditRuleDataservice));
+            TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
         }
 
-        ITemplateDataservice TemplateDataservice { get; }
+        public ITreeAuditRuleDataservice TreeAuditRuleDataservice { get; }
+        public ITreeFieldDataservice TreeFieldDataservice { get; }
 
         public IEnumerable<TreeField> TreeFieldOptions
         {
@@ -58,7 +59,7 @@ namespace NatCruise.Design.ViewModels
         private void TreeAuditRule_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var tar = (TreeAuditRule)sender;
-            TemplateDataservice.UpsertTreeAuditRule(tar);
+            TreeAuditRuleDataservice.UpsertTreeAuditRule(tar);
         }
 
         public TreeAuditRule NewTreeAuditRule
@@ -77,14 +78,14 @@ namespace NatCruise.Design.ViewModels
             if (newTreeAuditRule == null) { return; }
 
             newTreeAuditRule.TreeAuditRuleID = Guid.NewGuid().ToString();
-            TemplateDataservice.AddTreeAuditRule(newTreeAuditRule);
+            TreeAuditRuleDataservice.AddTreeAuditRule(newTreeAuditRule);
             TreeAuditRules.Add(newTreeAuditRule);
             newTreeAuditRule.PropertyChanged += TreeAuditRule_PropertyChanged;
         }
 
         public void DeleteTreeAuditRule(TreeAuditRule tar)
         {
-            TemplateDataservice.DeleteTreeAuditRule(tar);
+            TreeAuditRuleDataservice.DeleteTreeAuditRule(tar);
             TreeAuditRules.Remove(tar);
             tar.PropertyChanged -= TreeAuditRule_PropertyChanged;
         }
@@ -93,10 +94,10 @@ namespace NatCruise.Design.ViewModels
         {
             base.Load();
 
-            var treeAuditRules = TemplateDataservice.GetTreeAuditRules();
+            var treeAuditRules = TreeAuditRuleDataservice.GetTreeAuditRules();
             TreeAuditRules = new ObservableCollection<TreeAuditRule>(treeAuditRules);
 
-            TreeFieldOptions = TemplateDataservice.GetTreeFields();
+            TreeFieldOptions = TreeFieldDataservice.GetTreeFields();
         }
     }
 }

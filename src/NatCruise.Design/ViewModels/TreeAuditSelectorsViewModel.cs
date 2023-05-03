@@ -1,6 +1,4 @@
 ﻿using NatCruise.Data;
-using NatCruise.Design.Data;
-using NatCruise.Design.Models;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
@@ -24,9 +22,9 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand _addNewRuleSelectorCommand;
         private DelegateCommand<TreeAuditRuleSelector> _deleteRuleSelectorCommand;
 
-        public TreeAuditSelectorsViewModel(ITemplateDataservice templateDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
+        public TreeAuditSelectorsViewModel(ITreeAuditRuleDataservice treeAuditRuleDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            TreeAuditRuleDataservice = treeAuditRuleDataservice ?? throw new ArgumentNullException(nameof(treeAuditRuleDataservice));
             SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -35,7 +33,7 @@ namespace NatCruise.Design.ViewModels
         public ICommand AddNewRuleSelectorCommand => _addNewRuleSelectorCommand ??= new DelegateCommand(AddNewRuleSelector);
         public ICommand DeleteRuleSelectorCommand => _deleteRuleSelectorCommand ??= new DelegateCommand<TreeAuditRuleSelector>(DeleteRuleSelector);
 
-        public ITemplateDataservice TemplateDataservice { get; }
+        public ITreeAuditRuleDataservice TreeAuditRuleDataservice { get; }
         public ISpeciesDataservice SpeciesDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
@@ -48,7 +46,7 @@ namespace NatCruise.Design.ViewModels
                 SetProperty(ref _treeAuditRule, value);
                 if (value != null)
                 {
-                    var selectors = TemplateDataservice.GetRuleSelectors(value.TreeAuditRuleID);
+                    var selectors = TreeAuditRuleDataservice.GetRuleSelectors(value.TreeAuditRuleID);
                     Selectors = new ObservableCollection<TreeAuditRuleSelector>(selectors);
                 }
                 else
@@ -99,6 +97,13 @@ namespace NatCruise.Design.ViewModels
             ProductOptions = SetupDataservice.GetProducts();
         }
 
+        public void Load(string treeAuditRuleID)
+        {
+            throw new NotImplementedException();
+
+            Load();
+        }
+
         public void AddNewRuleSelector()
         {
             var newRuleSelector = NewRuleSelector;
@@ -109,7 +114,7 @@ namespace NatCruise.Design.ViewModels
 
             try
             {
-                TemplateDataservice.AddRuleSelector(newRuleSelector);
+                TreeAuditRuleDataservice.AddRuleSelector(newRuleSelector);
                 Selectors.Add(newRuleSelector);
             }
             catch (FMSC.ORM.UniqueConstraintException)
@@ -123,7 +128,7 @@ namespace NatCruise.Design.ViewModels
         public void DeleteRuleSelector(TreeAuditRuleSelector tars)
         {
             if (tars == null) { return; }
-            TemplateDataservice.DeleteRuleSelector(tars);
+            TreeAuditRuleDataservice.DeleteRuleSelector(tars);
             Selectors.Remove(tars);
         }
     }

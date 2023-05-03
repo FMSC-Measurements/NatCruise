@@ -227,16 +227,19 @@ namespace NatCruise.Wpf.ViewModels
             var srcTemplateDS = src.GetDataservice<ITemplateDataservice>();
             var destTemplateDS = dest.GetDataservice<ITemplateDataservice>();
 
-            var tars = srcTemplateDS.GetTreeAuditRules();
+
+            var srcTarDs = src.GetDataservice<ITreeAuditRuleDataservice>();
+            var destTarDs = dest.GetDataservice<ITreeAuditRuleDataservice>();
+            var tars = srcTarDs.GetTreeAuditRules();
             foreach (var tar in tars)
             {
-                destTemplateDS.AddTreeAuditRule(tar);
+                destTarDs.AddTreeAuditRule(tar);
             }
 
-            var ruleSelectors = srcTemplateDS.GetRuleSelectors();
+            var ruleSelectors = srcTarDs.GetRuleSelectors();
             foreach (var ruleSelector in ruleSelectors)
             {
-                destTemplateDS.AddRuleSelector(ruleSelector);
+                destTarDs.AddRuleSelector(ruleSelector);
             }
 
             var tdvs = srcTemplateDS.GetTreeDefaultValues();
