@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace NatCruise.Design.ViewModels
+namespace NatCruise.MVVM.ViewModels
 {
     public class TreeAuditSelectorsViewModel : ViewModelBase
     {

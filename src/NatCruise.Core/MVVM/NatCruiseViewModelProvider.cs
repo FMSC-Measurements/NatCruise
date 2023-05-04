@@ -18,6 +18,8 @@ namespace NatCruise.MVVM
             Register("TreeCountEditView", typeof(TreeCountEditViewModel));
             Register("TreeEditView", typeof(TreeEditViewModel));
             Register("LogEditView", typeof(LogEditViewModel));
+            Register("TreeAuditRuleListView", typeof(TreeAuditRuleListViewModel));
+            Register("TreeAuditSelectorsView", typeof(TreeAuditSelectorsViewModel));
         }
 
         public Type GetViewModel(Type view)

@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 
-namespace NatCruise.Design.ViewModels
+namespace NatCruise.MVVM.ViewModels
 {
     public class TreeAuditRuleListViewModel : ViewModelBase
     {

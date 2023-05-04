@@ -1,5 +1,6 @@
 ﻿using NatCruise.Design.ViewModels;
 using NatCruise.Models;
+using NatCruise.MVVM.ViewModels;
 using Prism.Common;
 using Prism.Regions;
 using System.ComponentModel;
