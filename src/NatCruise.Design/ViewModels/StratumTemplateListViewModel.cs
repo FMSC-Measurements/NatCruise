@@ -29,14 +29,14 @@ namespace NatCruise.Design.ViewModels
 
         protected ITemplateDataservice TemplateDataservice { get; }
 
-        public StratumTemplateListViewModel(ITemplateDataservice templateDataservice, ISaleDataservice saleDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
+        public StratumTemplateListViewModel(ITemplateDataservice templateDataservice, ITreeFieldDataservice treeFieldDataservice, ISaleDataservice saleDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
 
-            TreeFieldOptions = TemplateDataservice.GetTreeFields();
+            TreeFieldOptions = treeFieldDataservice.GetTreeFields();
             Methods = SetupDataservice.GetCruiseMethods().Select(x => x.Method).ToArray();
         }
 

@@ -20,22 +20,6 @@ namespace NatCruise.Design.Data
 
         #endregion TreeDefaultValues
 
-        #region TreeFields
-
-        IEnumerable<TreeField> GetTreeFields();
-
-        void UpdateTreeField(TreeField treeField);
-
-        #endregion TreeFields
-
-        #region LogFields
-
-        IEnumerable<LogField> GetLogFields();
-
-        void UpdateLogField(LogField lf);
-
-        #endregion LogFields
-
         #region StratumTemplate
 
         IEnumerable<StratumTemplate> GetStratumTemplates();

@@ -19,11 +19,13 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<StratumTemplate> _stratumTemplates;
 
         protected IFieldSetupDataservice FieldSetupDataservice { get; }
+        public ILogFieldDataservice LogFieldDataservice { get; }
         public ITemplateDataservice TemplateDataservice { get; }
 
-        public StratumLogFieldSetupViewModel(IFieldSetupDataservice fieldSetupDataservice, ITemplateDataservice templateDataservice)
+        public StratumLogFieldSetupViewModel(IFieldSetupDataservice fieldSetupDataservice, ILogFieldDataservice logFieldDataservice, ITemplateDataservice templateDataservice)
         {
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
+            LogFieldDataservice = logFieldDataservice ?? throw new ArgumentNullException(nameof(logFieldDataservice));
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
         }
 
@@ -125,7 +127,7 @@ namespace NatCruise.Design.ViewModels
         public override void Load()
         {
             base.Load();
-            LogFields = TemplateDataservice.GetLogFields();
+            LogFields = LogFieldDataservice.GetLogFields();
             StratumTemplates = TemplateDataservice.GetStratumTemplates();
         }
 

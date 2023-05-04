@@ -10,6 +10,7 @@ using System.Windows.Input;
 using NatCruise.Util;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.Data;
 
 namespace NatCruise.Design.ViewModels
 {
@@ -24,11 +25,11 @@ namespace NatCruise.Design.ViewModels
         private ICommand _addCommand;
         private ICommand _removeCommand;
 
-        public StratumTemplateFieldsViewModel(ITemplateDataservice templateDataservice)
+        public StratumTemplateFieldsViewModel(ITemplateDataservice templateDataservice, ITreeFieldDataservice treeFieldDataservice)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
 
-            TreeFields = TemplateDataservice.GetTreeFields();
+            TreeFields = treeFieldDataservice.GetTreeFields();
         }
 
         public ICommand AddCommand => _addCommand ??= new DelegateCommand<TreeField>(AddTreeFieldSetup);

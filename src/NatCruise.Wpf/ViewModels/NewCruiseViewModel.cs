@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using System.Linq;
 
 namespace NatCruise.Wpf.ViewModels
 {
@@ -267,22 +268,23 @@ namespace NatCruise.Wpf.ViewModels
                 }
             }
 
-            var treeFields = srcTemplateDS.GetTreeFields();
-            foreach (var tf in treeFields)
+
+            var scrTreeFieldDS = src.GetDataservice<ITreeFieldDataservice>();
+            var destTreeFieldDS = dest.GetDataservice<ITreeFieldDataservice>();
+            var treeFields = scrTreeFieldDS.GetTreeFields();
+            foreach (var tf in treeFields
+                .Where(x => string.IsNullOrEmpty(x.Heading) is false))
             {
-                if (string.IsNullOrEmpty(tf.Heading) is false)
-                {
-                    destTemplateDS.UpdateTreeField(tf);
-                }
+                destTreeFieldDS.UpdateTreeField(tf);
             }
 
-            var logFields = srcTemplateDS.GetLogFields();
-            foreach (var lf in logFields)
+            var srcLogFieldDS = src.GetDataservice<ILogFieldDataservice>();
+            var destLogFieldDS = dest.GetDataservice<ILogFieldDataservice>();
+            var logFields = srcLogFieldDS.GetLogFields();
+            foreach (var lf in logFields
+                .Where(x => string.IsNullOrEmpty(x.Heading) is false))
             {
-                if (string.IsNullOrEmpty(lf.Heading) is false)
-                {
-                    destTemplateDS.UpdateLogField(lf);
-                }
+                destLogFieldDS.UpdateLogField(lf);
             }
 
             var reports = srcTemplateDS.GetReports();

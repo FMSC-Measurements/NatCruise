@@ -197,55 +197,6 @@ AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '');",
 
         #endregion tree default value
 
-        #region Tree Field
-
-        public IEnumerable<TreeField> GetTreeFields()
-        {
-            return Database.Query<TreeField>(
-@"SELECT
-    tf.Field,
-    tfh.Heading,
-    tf.DefaultHeading,
-    DbType,
-    IsTreeMeasurmentField
-FROM TreeField AS tf
-LEFT JOIN TreeFieldHeading AS tfh ON tf.Field = tfh.Field AND tfh.CruiseID = @p1
-ORDER BY ifnull(tfh.Heading, tf.DefaultHeading);", CruiseID).ToArray();
-        }
-
-        public void UpdateTreeField(TreeField treeField)
-        {
-            if (string.IsNullOrEmpty(treeField.Heading))
-            {
-                Database.Execute2("DELETE FROM TreeFieldHeading WHERE CruiseID = @CruiseID AND Field = @Field;",
-                    new { CruiseID, treeField.Field });
-            }
-            else
-            {
-                Database.Execute2(
-@"INSERT INTO TreeFieldHeading (
-    CruiseID,
-    Field,
-    Heading
-) VALUES (
-    @CruiseID,
-    @Field,
-    @Heading
-)
-ON CONFLICT (CruiseID, Field) DO
-UPDATE SET Heading = @Heading
-WHERE CruiseID = @CruiseID AND Field = @Field;",
-new
-{
-    CruiseID,
-    treeField.Field,
-    treeField.Heading,
-});
-            }
-        }
-
-        #endregion Tree Field
-
         #region LogFields
 
         public IEnumerable<LogField> GetLogFields()

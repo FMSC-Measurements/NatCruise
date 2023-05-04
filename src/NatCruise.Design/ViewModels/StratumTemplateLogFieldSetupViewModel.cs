@@ -1,4 +1,5 @@
-﻿using NatCruise.Design.Data;
+﻿using NatCruise.Data;
+using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Models;
 using NatCruise.MVVM;
@@ -21,10 +22,10 @@ namespace NatCruise.Design.ViewModels
 
         public ITemplateDataservice TemplateDataservice { get; }
 
-        public StratumTemplateLogFieldSetupViewModel(ITemplateDataservice templateDataservice)
+        public StratumTemplateLogFieldSetupViewModel(ITemplateDataservice templateDataservice, ILogFieldDataservice logFieldDataservice)
         {
             TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
-            LogFields = TemplateDataservice.GetLogFields();
+            LogFields = logFieldDataservice.GetLogFields();
         }
 
         public ICommand AddCommand => new DelegateCommand<LogField>(AddLogField);

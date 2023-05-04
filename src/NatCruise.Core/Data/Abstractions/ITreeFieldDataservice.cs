@@ -20,5 +20,7 @@ namespace NatCruise.Data
         IEnumerable<TreeField> GetPlotTreeFields(string unitCode);
 
         IEnumerable<TreeField> GetTreeFieldsUsedInCruise();
+
+        void UpdateTreeField(TreeField treeField);
     }
 }

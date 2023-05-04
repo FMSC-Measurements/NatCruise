@@ -22,17 +22,18 @@ namespace NatCruise.Design.ViewModels
         private TreeFieldSetup _selectedTreeFieldSetup;
         private IEnumerable<StratumTemplate> _stratumTemplates;
 
-        public StratumTreeFieldSetupViewModel(IDataserviceProvider dataserviceProvider, TreeFieldSetupValidator treeFieldSetupValidator)
+        public StratumTreeFieldSetupViewModel(ITemplateDataservice templateDataservice, IFieldSetupDataservice fieldSetupDataservice, ITreeFieldDataservice treeFieldDataservice, TreeFieldSetupValidator treeFieldSetupValidator)
             : base(treeFieldSetupValidator)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
-            TemplateDataservice = dataserviceProvider.GetDataservice<ITemplateDataservice>() ?? throw new ArgumentNullException(nameof(TemplateDataservice));
-            FieldSetupDataservice = dataserviceProvider.GetDataservice<IFieldSetupDataservice>() ?? throw new ArgumentNullException(nameof(FieldSetupDataservice));
+            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
+            TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
         }
 
         public event EventHandler TreeFieldAdded;
 
         protected IFieldSetupDataservice FieldSetupDataservice { get; }
+        public ITreeFieldDataservice TreeFieldDataservice { get; }
         protected ITemplateDataservice TemplateDataservice { get; }
 
         public Stratum Stratum
@@ -302,7 +303,7 @@ namespace NatCruise.Design.ViewModels
         public override void Load()
         {
             base.Load();
-            TreeFields = TemplateDataservice.GetTreeFields();
+            TreeFields = TreeFieldDataservice.GetTreeFields();
             StratumTemplates = TemplateDataservice.GetStratumTemplates();
         }
 
