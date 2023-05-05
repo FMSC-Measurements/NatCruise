@@ -19,9 +19,10 @@
              x:Name="_page">
     <Grid>
         <Grid.Resources>
-            <converters:TreeFieldNameToHeadingConverter x:Key="treeFieldNameConverter" TreeFields="{Binding DataContext.TreeFieldOptions, Source={x:Reference _page}}" />
+            <converters:TreeFieldNameToHeadingConverter x:Key="treeFieldNameConverter"
+                                                        TreeFields="{Binding DataContext.TreeFieldOptions, Source={x:Reference _page}}" />
         </Grid.Resources>
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
@@ -32,6 +33,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
 
                 </Grid.RowDefinitions>
@@ -41,7 +43,7 @@
                                           Source="{Binding TreeAuditRules}">
                         <CollectionViewSource.GroupDescriptions>
                             <PropertyGroupDescription PropertyName="Field"
-                                                      Converter="{StaticResource treeFieldNameConverter}"  />
+                                                      Converter="{StaticResource treeFieldNameConverter}" />
                         </CollectionViewSource.GroupDescriptions>
 
                     </CollectionViewSource>
@@ -111,11 +113,13 @@
                             CommandParameter="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid}"
                             IsEnabled="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid, Converter={StaticResource NotNullConverter}}"
                             VerticalAlignment="Center"
-                            Height="40"/>
+                            Height="40" />
 
                 </Grid>
+                
+                <Separator Grid.Row="1" />
 
-                <DataGrid Grid.Row="1"
+                <DataGrid Grid.Row="2"
                           x:Name="_treeAuditRuleDataGrid"
                           ItemsSource="{Binding Source={StaticResource tarGroupingSource}}"
                           AutoGenerateColumns="False"
@@ -133,7 +137,8 @@
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Tree Field"
-                                            Binding="{Binding Field}" IsReadOnly="True" />
+                                            Binding="{Binding Field}"
+                                            IsReadOnly="True" />
                         <DataGridTextColumn Header="Min"
                                             Binding="{Binding Min, StringFormat={}{0:F}}" />
                         <DataGridTextColumn Header="Max"

@@ -19,7 +19,7 @@ namespace NatCruise.MVVM.ViewModels
         private DelegateCommand _addNewRuleSelectorCommand;
         private DelegateCommand<TreeAuditRuleSelector> _deleteRuleSelectorCommand;
 
-        public TreeAuditRuleEditViewModel(ITreeAuditRuleDataservice treeAuditRuleDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
+        public TreeAuditRuleEditViewModel(ITreeAuditRuleDataservice treeAuditRuleDataservice, ITreeFieldDataservice treeFieldDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
         {
             TreeAuditRuleDataservice = treeAuditRuleDataservice ?? throw new ArgumentNullException(nameof(treeAuditRuleDataservice));
             SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
@@ -29,6 +29,7 @@ namespace NatCruise.MVVM.ViewModels
             SpeciesOptions = SpeciesDataservice.GetSpeciesCodes();
             var prodOptions = ProductOptions = SetupDataservice.GetProducts();
             ProductCodeOptions = prodOptions.Select(x => x.ProductCode).ToArray();
+            TreeFieldOptions = treeFieldDataservice.GetTreeFields();
         }
 
         public ITreeAuditRuleDataservice TreeAuditRuleDataservice { get; }
@@ -88,12 +89,10 @@ namespace NatCruise.MVVM.ViewModels
         }
 
         public IEnumerable<string> SpeciesOptions { get; }
-
         public IEnumerable<string> LiveDeadOptions { get; } = new[] { "L", "D" };
-
         public IEnumerable<Product> ProductOptions { get; }
-
         public IEnumerable<string> ProductCodeOptions { get; }
+        public IEnumerable<TreeField> TreeFieldOptions { get; }
 
         //public override void Load()
         //{
