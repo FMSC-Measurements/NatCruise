@@ -132,6 +132,18 @@ AND ifnull(LiveDead, '') = ifnull(@LiveDead, '');",
                 });
         }
 
+        public TreeAuditRule GetTreeAuditRule(string tarID)
+        {
+            if (tarID is null)
+            {
+                throw new ArgumentNullException(nameof(tarID));
+            }
+
+            return Database.From<TreeAuditRule>()
+                .Where("CruiseID = @p1 AND TreeAuditRuleID = @p2")
+                .Query(CruiseID, tarID).SingleOrDefault();
+        }
+
         public void DeleteTreeAuditRule(TreeAuditRule tar)
         {
             Database.Execute("DELETE FROM TreeAuditRule WHERE TreeAuditRuleID = @p1;", tar.TreeAuditRuleID);

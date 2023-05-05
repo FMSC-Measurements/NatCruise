@@ -11,6 +11,8 @@ namespace NatCruise.Data
 
         IEnumerable<TreeAuditRule> GetTreeAuditRules(string species, string prod, string livedead);
 
+        TreeAuditRule GetTreeAuditRule(string tarID);
+
         void AddTreeAuditRule(TreeAuditRule tar);
 
         void UpsertTreeAuditRule(TreeAuditRule tar);

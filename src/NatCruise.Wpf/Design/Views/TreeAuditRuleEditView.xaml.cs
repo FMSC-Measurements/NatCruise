@@ -11,9 +11,9 @@ namespace NatCruise.Design.Views
     /// <summary>
     /// Interaction logic for TreeAuditSelectorsView.xaml
     /// </summary>
-    public partial class TreeAuditSelectorsView : UserControl
+    public partial class TreeAuditRuleEditView : UserControl
     {
-        public TreeAuditSelectorsView()
+        public TreeAuditRuleEditView()
         {
             InitializeComponent();
             RegionContext.GetObservableContext(this).PropertyChanged += Context_PropertyChanged;
@@ -23,7 +23,7 @@ namespace NatCruise.Design.Views
         {
             var context = (ObservableObject<object>)sender;
             var treeAuditRule = (TreeAuditRule)context.Value;
-            (DataContext as TreeAuditSelectorsViewModel).TreeAuditRule = treeAuditRule;
+            (DataContext as TreeAuditRuleEditViewModel).TreeAuditRule = treeAuditRule;
         }
     }
 }
