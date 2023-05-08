@@ -1,6 +1,7 @@
 ﻿using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
+using NatCruise.Util;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,13 @@ namespace NatCruise.MVVM.ViewModels
         private DelegateCommand _addNewRuleSelectorCommand;
         private DelegateCommand<TreeAuditRuleSelector> _deleteRuleSelectorCommand;
 
-        public TreeAuditRuleEditViewModel(ITreeAuditRuleDataservice treeAuditRuleDataservice, ITreeFieldDataservice treeFieldDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
+        public TreeAuditRuleEditViewModel(
+            ITreeAuditRuleDataservice treeAuditRuleDataservice,
+                                          ITreeFieldDataservice treeFieldDataservice,
+                                          ISpeciesDataservice speciesDataservice,
+                                          ISetupInfoDataservice setupDataservice,
+                                          INatCruiseDialogService dialogService
+            )
         {
             TreeAuditRuleDataservice = treeAuditRuleDataservice ?? throw new ArgumentNullException(nameof(treeAuditRuleDataservice));
             SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
@@ -27,7 +34,7 @@ namespace NatCruise.MVVM.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             SpeciesOptions = SpeciesDataservice.GetSpeciesCodes();
-            var prodOptions = ProductOptions = SetupDataservice.GetProducts();
+            var prodOptions = ProductOptions = setupDataservice.GetProducts();
             ProductCodeOptions = prodOptions.Select(x => x.ProductCode).ToArray();
             TreeFieldOptions = treeFieldDataservice.GetTreeFields();
         }
@@ -94,10 +101,13 @@ namespace NatCruise.MVVM.ViewModels
         public IEnumerable<string> ProductCodeOptions { get; }
         public IEnumerable<TreeField> TreeFieldOptions { get; }
 
-        //public override void Load()
-        //{
-        //    base.Load();
-        //}
+        public override void Load()
+        {
+            base.Load();
+
+            var tarID = Parameters.GetValueOrDefault<string>(NavParams.TreeAuditRuleID);
+            Load(tarID);
+        }
 
         public void Load(string treeAuditRuleID)
         {
@@ -118,7 +128,7 @@ namespace NatCruise.MVVM.ViewModels
             }
             catch (FMSC.ORM.UniqueConstraintException)
             {
-                DialogService.ShowNotification("Audit Rule Selector Already Exists");
+                //DialogService.ShowNotification("Audit Rule Selector Already Exists");
             }
 
             NewRuleSelector = new TreeAuditRuleSelector();

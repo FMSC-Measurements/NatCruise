@@ -5,13 +5,13 @@
                                     x:Class="FScruiser.XF.Views.TreeAuditRuleListView"
                                     x:Name="_page"
                                     Title="Tree Audit Rules">
-    <ContentPage.Content>
+    <!--<ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Xamarin.Forms!"
                    VerticalOptions="CenterAndExpand"
                    HorizontalOptions="CenterAndExpand" />
         </StackLayout>
-    </ContentPage.Content>
+    </ContentPage.Content>-->
 
     <Grid>
         <Grid.RowDefinitions>
@@ -23,25 +23,29 @@
         <Grid Grid.Row="0">
             <Grid.Resources>
                 <Style TargetType="controls:LastChildHeightLayout">
+                    <Setter Property="HeightRequest"
+                            Value="40" />
                     <Setter Property="LastChildHeight"
                             Value="60" />
                 </Style>
-                <!--<Style TargetType="Entry">
-                    <Setter Property="BackgroundColor"
-                            Value="Red" />
-                </Style>-->
+                <Style TargetType="Button" BasedOn="{StaticResource button_base}">
+                    <Setter Property="WidthRequest"
+                            Value="50" />
+                    <Setter Property="Margin"
+                            Value="0,5" />
+                </Style>
             </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
 
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
-                <RowDefinition Height="50" />
+                <RowDefinition Height="80" />
+                <RowDefinition Height="80" />
             </Grid.RowDefinitions>
 
 
@@ -52,12 +56,12 @@
 
             <controls:LastChildHeightLayout Grid.Column="1">
                 <Label Text="Min" />
-                <Entry Text="{Binding NewTreeAuditRule.Min, StringFormat='{0:F}'}" />
+                <!--<Entry Text="{Binding NewTreeAuditRule.Min, StringFormat='{0:F}'}" />-->
             </controls:LastChildHeightLayout>
 
             <controls:LastChildHeightLayout Grid.Column="2">
                 <Label Text="Max" />
-                <Entry Text="{Binding NewTreeAuditRule.Max, StringFormat='{0:F}'}" />
+                <!--<Entry Text="{Binding NewTreeAuditRule.Max, StringFormat='{0:F}'}" />-->
             </controls:LastChildHeightLayout>
 
             <controls:LastChildHeightLayout Grid.Column="0"
@@ -70,11 +74,10 @@
             <Button Text="+"
                     Grid.Column="3"
                     Grid.Row="0"
-                    Grid.RowSpan="2" />
+                    Grid.RowSpan="2"/>
         </Grid>
 
         <CollectionView Grid.Row="1"
-                        BackgroundColor="Red"
                         ItemsSource="{Binding TreeAuditRules}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>

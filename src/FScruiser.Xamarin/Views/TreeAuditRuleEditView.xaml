@@ -2,7 +2,9 @@
 <controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
                                     xmlns="http://xamarin.com/schemas/2014/forms"
                                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                                    x:Class="FScruiser.XF.Views.TreeAuditRuleEditView">
+                                    x:Class="FScruiser.XF.Views.TreeAuditRuleEditView"
+                                    x:Name="_page"
+                                    Title="Edit Tree Audit Rule">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -12,54 +14,197 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            <Frame Grid.Row="0"
+                   BorderColor="DarkGray"
+                   Margin="3"
+                   Padding="3"
+                   HasShadow="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70" />
+                        <RowDefinition Height="70" />
+                    </Grid.RowDefinitions>
 
-                <controls:LastChildHeightLayout Grid.Column="0">
-                    <Label Text="Field" />
-                    <Label Text="{Binding TreeAuditRule.Field}" />
-                </controls:LastChildHeightLayout>
+                    <Grid.Resources>
+                        <Style TargetType="controls:LastChildHeightLayout">
+                            <Setter Property="HeightRequest"
+                                    Value="70" />
+                            <Setter  Property="LastChildHeight"
+                                     Value="50" />
+                        </Style>
+                    </Grid.Resources>
 
-                <controls:LastChildHeightLayout Grid.Column="1">
-                    <Label Text="Min" />
-                    <Entry Text="{Binding TreeAuditRule.Min, StringFormat='{}{0:F}'}" />
-                </controls:LastChildHeightLayout>
+                    <controls:LastChildHeightLayout Grid.Column="0">
+                        <Label Text="Field" />
+                        <Label Text="{Binding TreeAuditRule.Field}" />
+                    </controls:LastChildHeightLayout>
 
-                <controls:LastChildHeightLayout Grid.Column="2">
-                    <Label Text="Max" />
-                    <Entry Text="{Binding TreeAuditRule.Max, StringFormat='{}{0:F}'}" />
-                </controls:LastChildHeightLayout>
+                    <controls:LastChildHeightLayout Grid.Column="1">
+                        <Label Text="Min" />
+                        <Entry Text="{Binding TreeAuditRule.Min, StringFormat='{}{0:F}'}" />
+                    </controls:LastChildHeightLayout>
 
-                <controls:LastChildHeightLayout Grid.Column="0"
-                                                Grid.ColumnSpan="3"
-                                                Grid.Row="1">
-                    <Label Text="Max" />
-                    <Entry Text="{Binding TreeAuditRule.Description}" />
-                </controls:LastChildHeightLayout>
-            </Grid>
+                    <controls:LastChildHeightLayout Grid.Column="2">
+                        <Label Text="Max" />
+                        <Entry Text="{Binding TreeAuditRule.Max, StringFormat='{}{0:F}'}" />
+                    </controls:LastChildHeightLayout>
 
-            <Grid Grid.Row="1">
-                
-            </Grid>
+                    <controls:LastChildHeightLayout Grid.Column="0"
+                                                    Grid.ColumnSpan="3"
+                                                    Grid.Row="1">
+                        <Label Text="Description" />
+                        <Entry Text="{Binding TreeAuditRule.Description}" />
+                    </controls:LastChildHeightLayout>
+                </Grid>
+            </Frame>
 
-            <CollectionView>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
+            <Frame Grid.Row="1"
+                   BorderColor="DarkGray"
+                   Margin="3"
+                   Padding="3"
+                   HasShadow="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           Text="Audit Rule Populations" />
+
+                    <Frame  Grid.Row="1"
+                            BorderColor="DarkGray"
+                            Margin="3"
+                            Padding="3"
+                            HasShadow="True">
                         <Grid>
-                            
+
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.Resources>
+                                <Style TargetType="controls:LastChildHeightLayout">
+                                    <Setter Property="HeightRequest"
+                                            Value="70" />
+                                    <Setter  Property="LastChildHeight"
+                                             Value="40" />
+                                </Style>
+                                <Style TargetType="Button"
+                                       BasedOn="{StaticResource button_base}">
+                                    <Setter Property="WidthRequest"
+                                            Value="50" />
+                                    <Setter Property="Margin"
+                                            Value="0,5" />
+                                </Style>
+                            </Grid.Resources>
+
+                            <controls:LastChildHeightLayout Grid.Row="0"
+                                                            Grid.Column="0">
+                                <Label Text="Species" />
+                                <controls:ValuePicker ValueSource="{Binding SpeciesOptions}"
+                                                      SelectedValue="{Binding NewRuleSelector.Species}" />
+                            </controls:LastChildHeightLayout>
+
+                            <controls:LastChildHeightLayout Grid.Row="0"
+                                                            Grid.Column="1">
+                                <Label Text="Live/Dead" />
+                                <controls:ValuePicker ValueSource="{Binding LiveDeadOptions}"
+                                                      SelectedValue="{Binding NewRuleSelector.LiveDead}" />
+                            </controls:LastChildHeightLayout>
+
+                            <controls:LastChildHeightLayout Grid.Row="0"
+                                                            Grid.Column="2">
+                                <Label Text="Product" />
+                                <controls:ValuePicker ValueSource="{Binding ProductCodeOptions}"
+                                                      SelectedValue="{Binding NewRuleSelector.PrimaryProduct}" />
+                            </controls:LastChildHeightLayout>
+
+                            <Button Text="+"
+                                    Grid.Row="0"
+                                    Grid.Column="3"
+                                    Command="{Binding AddNewRuleSelectorCommand}" />
+                            <Button Text="-"
+                                    Grid.Row="0"
+                                    Grid.Column="4" />
                         </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    </Frame>
+
+                    <CollectionView Grid.Row="2"
+                                    ItemsSource="{Binding Selectors}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <SwipeView IsEnabled="False"
+                                           AutomationProperties.IsInAccessibleTree="True">
+                                    <SwipeView.LeftItems>
+                                        <SwipeItem Text="Delete"
+                                                   Command="{Binding BindingContext.DeleteRuleSelectorCommand, Source={Reference _page}}"
+                                                   CommandParameter="{Binding .}"
+                                                   BackgroundColor="Red" />
+                                    </SwipeView.LeftItems>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.Resources>
+                                            <Style TargetType="controls:LastChildHeightLayout">
+                                                <Setter Property="HeightRequest"
+                                                        Value="70" />
+                                                <Setter  Property="LastChildHeight"
+                                                         Value="40" />
+                                            </Style>
+                                        </Grid.Resources>
+
+                                        <controls:LastChildHeightLayout Grid.Row="0"
+                                                                        Grid.Column="0">
+                                            <Label Text="Species" />
+                                            <Label Text="{Binding Species}" />
+                                        </controls:LastChildHeightLayout>
+
+                                        <controls:LastChildHeightLayout Grid.Row="0"
+                                                                        Grid.Column="1">
+                                            <Label Text="Live/Dead" />
+                                            <Label Text="{Binding LiveDead}" />
+                                        </controls:LastChildHeightLayout>
+
+                                        <controls:LastChildHeightLayout Grid.Row="0"
+                                                                        Grid.Column="2">
+                                            <Label Text="Product" />
+                                            <Label Text="{Binding PrimaryProduct}" />
+                                        </controls:LastChildHeightLayout>
+
+                                        <Button Grid.Row="0"
+                                                Grid.Column="3"
+                                                BackgroundColor="Transparent"
+                                                Clicked="openTARSItemMenu"
+                                                ImageSource="ic_more_vert_black_24dp.png"
+                                                HeightRequest="{StaticResource minTouchableHeight}"
+                                                WidthRequest="{StaticResource minTouchableWidth}"
+                                                AutomationProperties.IsInAccessibleTree="True"
+                                                AutomationProperties.Name="Show Actions Item" />
+                                    </Grid>
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Frame>
         </Grid>
     </ContentPage.Content>
 </controls:InitializableContentPage>

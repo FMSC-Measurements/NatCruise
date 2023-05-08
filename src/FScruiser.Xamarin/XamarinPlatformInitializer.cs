@@ -7,6 +7,7 @@ using FScruiser.XF.ViewModels;
 using NatCruise.Services;
 using NatCruise.Navigation;
 using NatCruise.MVVM;
+using NatCruise.Data;
 
 namespace FScruiser.XF
 {
@@ -27,6 +28,8 @@ namespace FScruiser.XF
             containerRegistry.Register<IPlotTallyService, PlotTallyService>();
             containerRegistry.Register<ITreeBasedTallyService, TreeBasedTallyService>();
             containerRegistry.RegisterInstance<System.Random>(FMSC.Sampling.MersenneTwister.Instance);
+
+            containerRegistry.RegisterSingleton<ISetupInfoDataservice, SetupInfoDataservice>();
 
             RegisterViews(containerRegistry);
         }

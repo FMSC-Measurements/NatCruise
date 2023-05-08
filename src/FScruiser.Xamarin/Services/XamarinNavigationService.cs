@@ -269,8 +269,8 @@ namespace FScruiser.XF.Services
 
         public Task ShowTreeAuditRuleEdit(string tarID)
         {
-            return NavigationService.NavigateAsync("/TreeAuditRuleEdit",
-                new NavigationParameters($"{NavParams.TreeAuditRuleID}={tarID}"), useModalNavigation: true, animated: false);
+            return NavigationService.NavigateAsync("TreeAuditRuleEdit",
+                new NavigationParameters($"{NavParams.TreeAuditRuleID}={tarID}"));
         }
 
         public Task ShowThreePPNTPlot(string unitCode, string stratumCode, int plotNumber)
