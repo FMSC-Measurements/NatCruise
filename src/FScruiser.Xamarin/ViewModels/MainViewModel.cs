@@ -1,5 +1,4 @@
 ﻿using FScruiser.XF.Services;
-using NatCruise;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -17,33 +16,71 @@ namespace FScruiser.XF.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
+        public class NavOption
+        {
+            public string Heading { get; set; }
+            public ICommand Command { get; set; }
+        }
+
         private IEnumerable<CuttingUnit> _cuttingUnits;
         private CuttingUnit _selectedCuttingUnit;
         private CuttingUnitStrataSummary _selectedUnitStratumSummary;
+        private IEnumerable<NavOption> _navOptions;
+        private Command _showAuditRulesCommand;
+        private Command _showUtilitiesCommand;
+        private Command _showCruisersCommand;
+        private Command _showSampleStateManagmentCommand;
+        private Command _showFeedbackCommand;
 
         public ICommand ShowSelectSale => new Command(() => NavigationService.ShowSaleSelect().FireAndForget());
 
         public ICommand ShowSaleCommand => new Command(() => NavigationService.ShowSale(DatastoreProvider?.CruiseID).FireAndForget());
 
-        public ICommand ShowUnitsCommand => new Command(() => NavigationService.ShowCuttingUnitList().FireAndForget());
+        //public ICommand ShowUnitsCommand => new Command(() => NavigationService.ShowCuttingUnitList().FireAndForget());
 
-        public ICommand ShowUnitInfoCommand => new Command(() => NavigationService.ShowCuttingUnitInfo(SelectedCuttingUnit?.CuttingUnitCode).FireAndForget());
+        public ICommand ShowCuttingUnitCommand => new Command(() => NavigationService.ShowCuttingUnitInfo(SelectedCuttingUnit?.CuttingUnitCode).FireAndForget());
 
         public ICommand ShowTreesCommand => new Command(() => ShowTrees().FireAndForget());
 
+        private Task ShowTrees()
+        {
+            var selectedUnit = SelectedCuttingUnit;
+            if (selectedUnit == null) { return Task.CompletedTask; }
+
+            return NavigationService.ShowTreeList(selectedUnit.CuttingUnitCode);
+        }
+
         public ICommand ShowPlotsCommand => new Command(() => ShowPlots().FireAndForget());
+
+        private Task ShowPlots()
+        {
+            var selectedUnit = SelectedCuttingUnit;
+            if (selectedUnit == null) { return Task.CompletedTask; }
+
+            return NavigationService.ShowPlotList(selectedUnit.CuttingUnitCode);
+        }
 
         public ICommand ShowPlotTreesCommand => new Command(() => NavigationService.ShowPlotTreeList(SelectedCuttingUnit?.CuttingUnitCode).FireAndForget());
 
         public ICommand ShowTallyCommand => new Command(() => ShowTally().FireAndForget());
 
+        private Task ShowTally()
+        {
+            var selectedUnit = SelectedCuttingUnit;
+            if (selectedUnit == null) { return Task.CompletedTask; }
+
+            return NavigationService.ShowTally(selectedUnit.CuttingUnitCode);
+        }
+
         public ICommand ShowSettingsCommand => new Command(() => NavigationService.ShowSettings().FireAndForget());
 
-        public ICommand ShowFeedbackCommand => new Command(() => NavigationService.ShowFeedback().FireAndForget());
+        public ICommand ShowFeedbackCommand => _showFeedbackCommand ??= new Command(() => NavigationService.ShowFeedback().FireAndForget());
 
-        public ICommand ShowSampleStateManagmentCommand => new Command(() => NavigationService.ShowSampleStateManagment().FireAndForget());
+        public ICommand ShowSampleStateManagmentCommand => _showSampleStateManagmentCommand ??= new Command(() => NavigationService.ShowSampleStateManagment().FireAndForget());
 
-        public ICommand ShowCruisersCommand => new Command(() => NavigationService.ShowManageCruisers().FireAndForget());
+        public ICommand ShowCruisersCommand => _showCruisersCommand ??= new Command(() => NavigationService.ShowManageCruisers().FireAndForget());
+        public ICommand ShowAuditRulesCommand => _showAuditRulesCommand ??= new Command(() => NavigationService.ShowTreeAuditRules().FireAndForget());
+        public ICommand ShowUtilitiesCommand => _showUtilitiesCommand ??= new Command(() => NavigationService.ShowUtilities().FireAndForget());
 
         public CuttingUnit SelectedCuttingUnit
         {
@@ -59,6 +96,7 @@ namespace FScruiser.XF.ViewModels
                 else { SelectedUnitStrataSummary = null; }
 
                 RaisePropertyChanged(nameof(IsCuttingUnitSelected));
+                RefreshNavOptions();
                 NavigationService.ShowBlank();
             }
         }
@@ -108,6 +146,12 @@ namespace FScruiser.XF.ViewModels
 
         public bool HasTreeStrata => IsCuttingUnitSelected && SelectedUnitStrataSummary.HasTreeStrata;
 
+        public IEnumerable<NavOption> NavOptions
+        {
+            get => _navOptions;
+            set => SetProperty(ref _navOptions, value);
+        }
+
         public ICruiseNavigationService NavigationService { get; }
         public IDataserviceProvider DatastoreProvider { get; }
         public IAppInfoService AppInfo { get; }
@@ -138,30 +182,42 @@ namespace FScruiser.XF.ViewModels
                     CuttingUnits = cuttingUnitDataservice.GetCuttingUnits();
                 }
             }
+
+            RefreshNavOptions();
         }
 
-        private Task ShowTrees()
+        public void RefreshNavOptions()
         {
-            var selectedUnit = SelectedCuttingUnit;
-            if (selectedUnit == null) { return Task.CompletedTask; }
+            var navOptions = new List<NavOption>();
+            var isCruiseSelected = DatastoreProvider.CruiseID != null;
+            if (isCruiseSelected)
+            {
+                navOptions.Add(new NavOption { Heading = "Sale", Command = ShowSaleCommand });
 
-            return NavigationService.ShowTreeList(selectedUnit.CuttingUnitCode);
-        }
+                if (IsCuttingUnitSelected)
+                {
+                    navOptions.Add(new NavOption { Heading = "Cutting Unit", Command = ShowCuttingUnitCommand });
 
-        private Task ShowPlots()
-        {
-            var selectedUnit = SelectedCuttingUnit;
-            if (selectedUnit == null) { return Task.CompletedTask; }
+                    if (HasTreeStrata)
+                    {
+                        navOptions.Add(new NavOption { Heading = "Trees", Command = ShowTreesCommand });
+                        navOptions.Add(new NavOption { Heading = "Tally", Command = ShowTallyCommand });
+                    }
 
-            return NavigationService.ShowPlotList(selectedUnit.CuttingUnitCode);
-        }
+                    if (HasPlotStrata)
+                    {
+                        navOptions.Add(new NavOption { Heading = "Plot Trees", Command = ShowPlotTreesCommand });
+                        navOptions.Add(new NavOption { Heading = "Plots", Command = ShowPlotsCommand });
+                    }
+                }
 
-        private Task ShowTally()
-        {
-            var selectedUnit = SelectedCuttingUnit;
-            if (selectedUnit == null) { return Task.CompletedTask; }
+                navOptions.Add(new NavOption { Heading = "Audit Rules", Command = ShowAuditRulesCommand });
+            }
 
-            return NavigationService.ShowTally(selectedUnit.CuttingUnitCode);
+            navOptions.Add(new NavOption { Heading = "Cruisers", Command = ShowCruisersCommand });
+            navOptions.Add(new NavOption { Heading = "Utilities", Command = ShowUtilitiesCommand });
+
+            NavOptions = navOptions;
         }
     }
 }

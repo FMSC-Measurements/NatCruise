@@ -193,5 +193,15 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowTreeAuditRules()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowTreeAuditRuleEdit(string tarID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

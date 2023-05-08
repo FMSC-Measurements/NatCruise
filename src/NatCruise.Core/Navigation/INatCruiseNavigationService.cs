@@ -11,6 +11,10 @@ namespace NatCruise.Navigation
         #region design pages
         Task ShowCuttingUnitList();
 
+        Task ShowTreeAuditRules();
+
+        Task ShowTreeAuditRuleEdit(string tarID);
+
         #endregion
 
         #region Cruising

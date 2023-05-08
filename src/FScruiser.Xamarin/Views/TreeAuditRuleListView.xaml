@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    x:Class="FScruiser.XF.Views.TreeAuditRuleListView"
+                                    x:Name="_page"
+                                    Title="Tree Audit Rules">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Welcome to Xamarin.Forms!"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.Resources>
+                <Style TargetType="controls:LastChildHeightLayout">
+                    <Setter Property="LastChildHeight"
+                            Value="60" />
+                </Style>
+                <!--<Style TargetType="Entry">
+                    <Setter Property="BackgroundColor"
+                            Value="Red" />
+                </Style>-->
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+
+
+            <controls:LastChildHeightLayout Grid.Column="0">
+                <Label Text="Field" />
+                <Picker />
+            </controls:LastChildHeightLayout>
+
+            <controls:LastChildHeightLayout Grid.Column="1">
+                <Label Text="Min" />
+                <Entry Text="{Binding NewTreeAuditRule.Min, StringFormat='{0:F}'}" />
+            </controls:LastChildHeightLayout>
+
+            <controls:LastChildHeightLayout Grid.Column="2">
+                <Label Text="Max" />
+                <Entry Text="{Binding NewTreeAuditRule.Max, StringFormat='{0:F}'}" />
+            </controls:LastChildHeightLayout>
+
+            <controls:LastChildHeightLayout Grid.Column="0"
+                                            Grid.ColumnSpan="3"
+                                            Grid.Row="1">
+                <Label Text="Max" />
+                <Entry Text="{Binding NewTreeAuditRule.Description}" />
+            </controls:LastChildHeightLayout>
+
+            <Button Text="+"
+                    Grid.Column="3"
+                    Grid.Row="0"
+                    Grid.RowSpan="2" />
+        </Grid>
+
+        <CollectionView Grid.Row="1"
+                        BackgroundColor="Red"
+                        ItemsSource="{Binding TreeAuditRules}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="DarkGray"
+                           Margin="3"
+                           Padding="0"
+                           HasShadow="True">
+                        <Grid>
+                            <Grid.Resources>
+                                <Style TargetType="controls:LastChildHeightLayout">
+                                    <Setter Property="LastChildHeight"
+                                            Value="40" />
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.ShowEditTreeAuditRule, Source={Reference _page}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+
+                            <controls:LastChildHeightLayout Grid.Column="0">
+                                <Label Text="Field" />
+                                <Label Text="{Binding Field}" />
+                            </controls:LastChildHeightLayout>
+
+                            <controls:LastChildHeightLayout Grid.Column="1">
+                                <Label Text="Min" />
+                                <Label Text="{Binding Min, StringFormat='{0:F}'}" />
+                            </controls:LastChildHeightLayout>
+
+                            <controls:LastChildHeightLayout Grid.Column="2">
+                                <Label Text="Max" />
+                                <Label Text="{Binding Max, StringFormat='{0:F}'}" />
+                            </controls:LastChildHeightLayout>
+
+                            <controls:LastChildHeightLayout Grid.Column="0"
+                                                            Grid.ColumnSpan="3"
+                                                            Grid.Row="1">
+                                <Label Text="Description" />
+                                <Label Text="{Binding Description}" />
+                            </controls:LastChildHeightLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+
+
+    </Grid>
+</controls:InitializableContentPage>

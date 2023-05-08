@@ -11,10 +11,7 @@ namespace NatCruise.Design.Services
 
         Task ShowStrata();
 
-
         Task ShowTemplateLandingLayout();
-
-        Task ShowAuditRules();
 
         Task ShowTreeDefaultValues();
 

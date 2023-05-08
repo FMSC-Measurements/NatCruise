@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Constants;
+using FScruiser.XF.Util;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Navigation;
@@ -259,6 +260,17 @@ namespace FScruiser.XF.Services
 
             return NavigationService.NavigateAsync("Navigation/Tally",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
+        }
+
+        public Task ShowTreeAuditRules()
+        {
+            return NavigationService.NavigateAsync("Navigation/TreeAuditRuleList");
+        }
+
+        public Task ShowTreeAuditRuleEdit(string tarID)
+        {
+            return NavigationService.NavigateAsync("/TreeAuditRuleEdit",
+                new NavigationParameters($"{NavParams.TreeAuditRuleID}={tarID}"), useModalNavigation: true, animated: false);
         }
 
         public Task ShowThreePPNTPlot(string unitCode, string stratumCode, int plotNumber)

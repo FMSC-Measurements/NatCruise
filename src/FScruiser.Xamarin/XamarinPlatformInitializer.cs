@@ -69,6 +69,8 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<FeedbackView>("Feedback");
             containerRegistry.RegisterForNavigation<UtilitiesView>("Utilities");
             containerRegistry.RegisterForNavigation<DatabaseUtilitiesView>("DatabaseUtilities");
+            containerRegistry.RegisterForNavigation<TreeAuditRuleListView>("TreeAuditRuleList");
+            containerRegistry.RegisterForNavigation<TreeAuditRuleEditView>("TreeAuditRuleEdit");
         }
 
     }

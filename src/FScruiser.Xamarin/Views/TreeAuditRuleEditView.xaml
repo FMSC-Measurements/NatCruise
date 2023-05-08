@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    x:Class="FScruiser.XF.Views.TreeAuditRuleEditView">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <controls:LastChildHeightLayout Grid.Column="0">
+                    <Label Text="Field" />
+                    <Label Text="{Binding TreeAuditRule.Field}" />
+                </controls:LastChildHeightLayout>
+
+                <controls:LastChildHeightLayout Grid.Column="1">
+                    <Label Text="Min" />
+                    <Entry Text="{Binding TreeAuditRule.Min, StringFormat='{}{0:F}'}" />
+                </controls:LastChildHeightLayout>
+
+                <controls:LastChildHeightLayout Grid.Column="2">
+                    <Label Text="Max" />
+                    <Entry Text="{Binding TreeAuditRule.Max, StringFormat='{}{0:F}'}" />
+                </controls:LastChildHeightLayout>
+
+                <controls:LastChildHeightLayout Grid.Column="0"
+                                                Grid.ColumnSpan="3"
+                                                Grid.Row="1">
+                    <Label Text="Max" />
+                    <Entry Text="{Binding TreeAuditRule.Description}" />
+                </controls:LastChildHeightLayout>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                
+            </Grid>
+
+            <CollectionView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</controls:InitializableContentPage>

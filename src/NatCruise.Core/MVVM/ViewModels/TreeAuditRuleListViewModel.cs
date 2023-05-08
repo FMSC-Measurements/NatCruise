@@ -1,6 +1,7 @@
 ﻿using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.Navigation;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,18 @@ namespace NatCruise.MVVM.ViewModels
         private TreeAuditRule _newTreeAuditRule = new TreeAuditRule();
         private DelegateCommand _addNewTreeAuditRuleCommand;
         private DelegateCommand<TreeAuditRule> _deleteTreeAuditRuleCommand;
+        private ICommand _showEditTreeAuditRule;
 
-        public TreeAuditRuleListViewModel(ITreeAuditRuleDataservice treeAuditRuleDataservice, ITreeFieldDataservice treeFieldDataservice)
+        public TreeAuditRuleListViewModel(ITreeAuditRuleDataservice treeAuditRuleDataservice, ITreeFieldDataservice treeFieldDataservice, INatCruiseNavigationService navigationService)
         {
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             TreeAuditRuleDataservice = treeAuditRuleDataservice ?? throw new ArgumentNullException(nameof(treeAuditRuleDataservice));
             TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
 
             TreeFieldOptions = TreeFieldDataservice.GetTreeFields();
         }
 
+        public INatCruiseNavigationService NavigationService { get; }
         public ITreeAuditRuleDataservice TreeAuditRuleDataservice { get; }
         public ITreeFieldDataservice TreeFieldDataservice { get; }
 
@@ -44,6 +48,8 @@ namespace NatCruise.MVVM.ViewModels
 
         public ICommand AddNewTreeAuditRuleCommand => _addNewTreeAuditRuleCommand ??= new DelegateCommand(AddNewTreeAuditRule);
         public ICommand DeleteTreeAuditRuleCommand => _deleteTreeAuditRuleCommand ??= new DelegateCommand<TreeAuditRule>(DeleteTreeAuditRule);
+
+        public ICommand ShowEditTreeAuditRule => _showEditTreeAuditRule ??= new DelegateCommand<TreeAuditRule>(x => NavigationService.ShowTreeAuditRuleEdit(x.TreeAuditRuleID));
 
         public void AddNewTreeAuditRule()
         {
