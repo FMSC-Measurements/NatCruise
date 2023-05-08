@@ -24,12 +24,40 @@ namespace FScruiser.XF.ViewModels
         }
 
         [Fact]
-        public void AnalizeCruise()
+        public void AnalizeCruise_newCruiseIntoEmptyDb()
         {
             var init = new DatastoreInitializer();
 
-            var srcPath = GetTempFilePath(".crz3", "AnalizeCruise_Src");
-            var destPath = GetTempFilePath(".crz3", "AnalizeCruise_Dest");
+            var srcPath = GetTempFilePath(".crz3", "AnalizeCruise_newCruiseIntoEmptyDb_Src");
+            var destPath = GetTempFilePath(".crz3", "AnalizeCruise_newCruiseIntoEmptyDb_Dest");
+
+            using var destDb = new CruiseDatastore_V3(destPath, true);
+            using var srcDb = init.CreateDatabase(srcPath);
+
+            var mockFileDialogService = new Mock<IFileDialogService>();
+            var mockFileSystemService = new Mock<IFileSystemService>();
+            var mockNatCruiseDialogService = new Mock<INatCruiseDialogService>();
+            var mockLoggingService = new Mock<ILoggingService>();
+            var mockCruiseNavService = new Mock<ICruiseNavigationService>();
+            var deviceInfoService = new TestDeviceInfoService();
+
+            var dataServiceProvider = new FScruiserDataserviceProvider(destDb, deviceInfoService);
+
+            var importVm = new ImportViewModel(dataServiceProvider, mockFileDialogService.Object, mockFileSystemService.Object, mockNatCruiseDialogService.Object,
+                mockLoggingService.Object, mockCruiseNavService.Object, deviceInfoService);
+
+            var analizeResult = importVm.AnalizeCruise(srcPath, init.CruiseID, out var errors);
+            analizeResult.Should().BeTrue();
+
+        }
+
+        [Fact]
+        public void AnalizeCruise_with_clonedDb()
+        {
+            var init = new DatastoreInitializer();
+
+            var srcPath = GetTempFilePath(".crz3", "AnalizeCruise_with_clonedDb_Src");
+            var destPath = GetTempFilePath(".crz3", "AnalizeCruise_with_clonedDb_Dest");
 
             using var destDb = init.CreateDatabase(destPath);
             using var srcDb = new CruiseDatastore_V3(srcPath, true);
