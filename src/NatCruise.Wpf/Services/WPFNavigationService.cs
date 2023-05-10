@@ -168,5 +168,20 @@ namespace NatCruise.Wpf.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowTreeAuditRuleEdit(string tarID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowFieldSetup(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowStratumDetail(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

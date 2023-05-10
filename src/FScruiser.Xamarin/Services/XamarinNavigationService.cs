@@ -53,6 +53,11 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.SaleNumber}={saleNumber}"));
         }
 
+        public Task ShowStrata()
+        {
+            return NavigationService.NavigateAsync("Navigation/Strata");
+        }
+
         public Task ShowCuttingUnitInfo(string unitCode)
         {
             if (string.IsNullOrEmpty(unitCode))
@@ -67,6 +72,12 @@ namespace FScruiser.XF.Services
         public Task ShowCuttingUnitList()
         {
             return NavigationService.NavigateAsync("Navigation/CuttingUnitList");
+        }
+
+        public Task ShowStratumDetail(string stratumCode)
+        {
+            return NavigationService.NavigateAsync("StratumDetail",
+                new NavigationParameters($"{NavParams.STRATUM}={stratumCode}"));
         }
 
         public Task ShowFeedback()

@@ -111,6 +111,9 @@
 		<Compile Update="Views\SettingsView.xaml.cs">
 			<DependentUpon>SettingsView.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="Views\StratumDetailView.xaml.cs">
+		  <DependentUpon>StratumDetailView.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Views\ThreePPNTPlotView.xaml.cs">
 			<DependentUpon>ThreePPNTPlotView.xaml</DependentUpon>
 		</Compile>
@@ -180,6 +183,12 @@
 		</EmbeddedResource>
 		<EmbeddedResource Update="Views\SampleStateManagmentView.xaml">
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Views\StratumDetailView.xaml">
+		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Views\StratumListView.xaml">
+		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Views\TreeAuditRuleEditView.xaml">
 		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>

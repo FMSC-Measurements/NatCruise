@@ -28,7 +28,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Validation\" />
 		<Folder Include="ViewModels\" />
 	</ItemGroup>
 

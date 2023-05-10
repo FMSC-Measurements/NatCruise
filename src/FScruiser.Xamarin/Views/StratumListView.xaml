@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                                   xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                   x:Class="FScruiser.XF.Views.StratumListView"
+                                   x:Name="_page"
+                                   Title="Strata">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Cutting Unit"
+                   Margin="13,7" VerticalTextAlignment="Center" FontSize="Title" />
+            <Picker ItemsSource="{Binding CuttingUnitCodes}"
+                    SelectedItem="{Binding CuttingUnitFilter}"
+                    Margin="13,7"
+                    WidthRequest="100"/>
+        </StackLayout>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Strata}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <SwipeView IsEnabled="False"
+                               AutomationProperties.IsInAccessibleTree="True">
+                        <SwipeView.LeftItems>
+                            <SwipeItem Text="Fields"
+                                       Command="{Binding BindingContext.ShowFieldSetupCommand, Source={Reference _page}}"
+                                       BackgroundColor="Black"/>
+                        </SwipeView.LeftItems>
+
+                        <Frame BorderColor="DarkGray"
+                               Margin="3"
+                               Padding="0"
+                               HasShadow="True">
+
+                            
+
+                            <AbsoluteLayout>
+
+                                <AbsoluteLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.ShowStratumDetailsCommand, Source={x:Reference _page}}" CommandParameter="{Binding .}" />
+                                </AbsoluteLayout.GestureRecognizers>
+
+                                <StackLayout Orientation="Horizontal"
+                                             AbsoluteLayout.LayoutBounds="0,0"
+                                             Margin="13,7">
+                                    <Label Text="Stratum" FontSize="Title" />
+                                    <Label Text="{Binding StratumCode}"
+                                           FontSize="Title" />
+                                </StackLayout>
+
+                                <ImageButton AbsoluteLayout.LayoutBounds="1,0"
+                                             AbsoluteLayout.LayoutFlags="PositionProportional"
+                                             BackgroundColor="Transparent"
+                                             Clicked="openStratumMenu"
+                                             Source="ic_more_vert_black_24dp.png"
+                                             Margin="13,7"
+                                             HeightRequest="{StaticResource minTouchableHeight}"
+                                             AutomationProperties.IsInAccessibleTree="True"
+                                             AutomationProperties.Name="Show Actions Item" />
+                            </AbsoluteLayout>
+
+                        </Frame>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</controls:InitializableContentPage>

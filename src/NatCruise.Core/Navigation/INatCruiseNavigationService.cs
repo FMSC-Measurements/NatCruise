@@ -9,11 +9,19 @@ namespace NatCruise.Navigation
         Task ShowCruiseLandingLayout();
 
         #region design pages
+        Task ShowStrata();
+
         Task ShowCuttingUnitList();
 
         Task ShowTreeAuditRules();
 
         Task ShowTreeAuditRuleEdit(string tarID);
+
+        Task ShowStratumDetail(string stratumCode);
+
+        Task ShowFieldSetup(string stratumCode);
+
+        Task ShowSampleGroups(string stratumCode);
 
         #endregion
 

@@ -203,5 +203,21 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowFieldSetup(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowStratumDetail(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowStrata()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

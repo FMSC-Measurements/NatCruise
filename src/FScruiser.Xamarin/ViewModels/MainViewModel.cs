@@ -38,6 +38,8 @@ namespace FScruiser.XF.ViewModels
 
         //public ICommand ShowUnitsCommand => new Command(() => NavigationService.ShowCuttingUnitList().FireAndForget());
 
+        public ICommand ShowStrataCommand => new Command(() => NavigationService.ShowStrata().FireAndForget());
+
         public ICommand ShowCuttingUnitCommand => new Command(() => NavigationService.ShowCuttingUnitInfo(SelectedCuttingUnit?.CuttingUnitCode).FireAndForget());
 
         public ICommand ShowTreesCommand => new Command(() => ShowTrees().FireAndForget());
@@ -193,6 +195,8 @@ namespace FScruiser.XF.ViewModels
             if (isCruiseSelected)
             {
                 navOptions.Add(new NavOption { Heading = "Sale", Command = ShowSaleCommand });
+
+                navOptions.Add(new NavOption { Heading = "Strata", Command = ShowStrataCommand });
 
                 if (IsCuttingUnitSelected)
                 {

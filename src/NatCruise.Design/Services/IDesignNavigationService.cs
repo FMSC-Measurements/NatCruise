@@ -9,7 +9,7 @@ namespace NatCruise.Design.Services
 
         Task ShowSale();
 
-        Task ShowStrata();
+        
 
         Task ShowTemplateLandingLayout();
 
