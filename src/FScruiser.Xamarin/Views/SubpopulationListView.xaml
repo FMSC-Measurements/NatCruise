@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    x:Class="FScruiser.XF.Views.SubpopulationListView"
+                                    x:Name="_page"
+                                    BindingContextChanged="Page_BindingContextChanged">
+    <controls:InitializableContentPage.Title>
+        <MultiBinding StringFormat="Stratum {0} Sample Group {1}">
+            <Binding Path="SampleGroup.StratumCode" />
+            <Binding Path="SampleGroup.SampleGroupCode" />
+        </MultiBinding>
+    </controls:InitializableContentPage.Title>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Frame Grid.Row="0"
+               BorderColor="DarkGray"
+               Margin="3"
+               Padding="0"
+               HasShadow="True">
+            <StackLayout HorizontalOptions="End"
+                         AbsoluteLayout.LayoutBounds="0,0"
+                         Orientation="Horizontal">
+                <Label Text="Species"
+                       VerticalTextAlignment="Center" />
+                <Picker ItemsSource="{Binding SpeciesOptions}"
+                        x:Name="_addSubpopSpeciesPicker"
+                        WidthRequest="100" />
+                <Button Text="+"
+                        Command="{Binding AddSubpopulationCommand}"
+                        CommandParameter="{Binding SelectedItem, Source={Reference _addSubpopSpeciesPicker}}"
+                        AbsoluteLayout.LayoutBounds="1,0"
+                        AbsoluteLayout.LayoutFlags="PositionProportional" />
+            </StackLayout>
+        </Frame>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Subpopulations}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="2" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView IsEnabled="False"
+                               AutomationProperties.IsInAccessibleTree="True">
+                        <SwipeView.LeftItems>
+                            <SwipeItem Text="Delete"
+                                       Command="{Binding BindingContext.RemoveSubpopulationCommand, Source={Reference _page}}"
+                                       CommandParameter="{Binding .}"
+                                       BackgroundColor="Red"
+                                       IsEnabled="{Binding HasFieldData, Converter={StaticResource invertedBoolConverter}}" />
+                        </SwipeView.LeftItems>
+
+                        <Frame BorderColor="DarkGray"
+                               Margin="3"
+                               Padding="0"
+                               HasShadow="True">
+                            <AbsoluteLayout>
+                                <StackLayout Orientation="Vertical"
+                                             Margin="13,7,50,50"
+                                             AbsoluteLayout.LayoutBounds="0,0">
+                                    <Label Text="{Binding SpeciesCode, StringFormat='Species: {0}'}"
+                                           FontSize="Title" />
+                                    <Label Text="{Binding LiveDead, StringFormat='Live/Dead: {0}'}"
+                                           FontSize="Title" />
+                                </StackLayout>
+
+                                <Button AbsoluteLayout.LayoutBounds="1,1"
+                                        AbsoluteLayout.LayoutFlags="PositionProportional"
+                                        BackgroundColor="Transparent"
+                                        ImageSource="ic_more_vert_black_24dp.png"
+                                        Margin="13,7"
+                                        Clicked="subpopulationItemMenu_clicked"
+                                        HeightRequest="{StaticResource minTouchableHeight}"
+                                        WidthRequest="{StaticResource minTouchableWidth}"
+                                        AutomationProperties.IsInAccessibleTree="True"
+                                        AutomationProperties.Name="Show Actions Item" />
+                            </AbsoluteLayout>
+                        </Frame>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</controls:InitializableContentPage>

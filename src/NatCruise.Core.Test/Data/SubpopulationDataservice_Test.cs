@@ -66,5 +66,69 @@ namespace NatCruise.Test.Data
             var subPops = ds.GetSubpopulations(sg.StratumCode, sg.SampleGroupCode);
             subPops.Should().BeEmpty();
         }
+
+        [Fact]
+        public void GetSubpopulations()
+        {
+            var init = new DatastoreInitializer();
+            init.Subpops = new CruiseDAL.V3.Models.SubPopulation[0];
+            var db = init.CreateDatabase();
+
+            var ds = new SubpopulationDataservice(db, init.CruiseID, init.DeviceID);
+
+            var sg = init.SampleGroups[0];
+            var newSubpop = new Subpopulation
+            {
+                SubpopulationID = Guid.NewGuid().ToString(),
+                SampleGroupCode = sg.SampleGroupCode,
+                StratumCode = sg.StratumCode,
+                SpeciesCode = init.Species[0],
+                LiveDead = "L",
+            };
+
+            ds.AddSubpopulation(newSubpop);
+
+            var subpopsAgain = ds.GetSubpopulations(sg.StratumCode, sg.SampleGroupCode);
+            var subpopAgain = subpopsAgain.Single();
+
+            subpopAgain.Should().BeEquivalentTo(newSubpop);
+            subpopAgain.HasFieldData.Should().BeFalse();
+        }
+
+
+        [Fact]
+        public void GetSubpopulations_WithFieldData()
+        {
+            var init = new DatastoreInitializer();
+            init.Subpops = new CruiseDAL.V3.Models.SubPopulation[0];
+            var db = init.CreateDatabase();
+
+            var ds = new SubpopulationDataservice(db, init.CruiseID, init.DeviceID);
+            var treeds = new TreeDataservice(db, init.CruiseID, init.DeviceID);
+
+            var sg = init.SampleGroups[0];
+            var sp = init.Species[0];
+            var ld = "L";
+            var newSubpop = new Subpopulation
+            {
+                SubpopulationID = Guid.NewGuid().ToString(),
+                SampleGroupCode = sg.SampleGroupCode,
+                StratumCode = sg.StratumCode,
+                SpeciesCode = sp,
+                LiveDead = ld,
+            };
+
+            ds.AddSubpopulation(newSubpop);
+
+            treeds.InsertManualTree("u1", sg.StratumCode, sg.SampleGroupCode, species: sp, liveDead: ld);
+
+            var subpopsAgain = ds.GetSubpopulations(sg.StratumCode, sg.SampleGroupCode);
+            var subpopAgain = subpopsAgain.Single();
+
+            subpopAgain.Should().BeEquivalentTo(newSubpop,
+                config: opt => opt.Excluding(x => x.HasFieldData));
+
+            subpopAgain.HasFieldData.Should().BeTrue();
+        }
     }
 }
