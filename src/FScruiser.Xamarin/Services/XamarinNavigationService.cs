@@ -80,6 +80,12 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.STRATUM}={stratumCode}"));
         }
 
+        public Task ShowFieldSetup(string stratumCode)
+        {
+            return NavigationService.NavigateAsync("FieldSetup",
+                new NavigationParameters($"{NavParams.STRATUM}={stratumCode}"));
+        }
+
         public Task ShowFeedback()
         {
             return NavigationService.NavigateAsync("FeedBack");
@@ -385,6 +391,18 @@ namespace FScruiser.XF.Services
         public Task ShowUtilities()
         {
             return NavigationService.NavigateAsync("Navigation/Utilities");
+        }
+
+        public Task ShowSampleGroups(string stratumCode)
+        {
+            return NavigationService.NavigateAsync("SampleGroups",
+                new NavigationParameters($"{NavParams.STRATUM}={stratumCode}"));
+        }
+
+        public Task ShowSubpopulations(string stratumCode, string sampleGroupCode)
+        {
+            return NavigationService.NavigateAsync("Subpopulations",
+                new NavigationParameters($"{NavParams.STRATUM}={stratumCode}&{NavParams.SAMPLE_GROUP}={sampleGroupCode}"));
         }
     }
 }

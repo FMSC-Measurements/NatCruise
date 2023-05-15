@@ -76,6 +76,8 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<TreeAuditRuleEditView>("TreeAuditRuleEdit");
             containerRegistry.RegisterForNavigation<StratumListView>("Strata");
             containerRegistry.RegisterForNavigation<StratumDetailView>("StratumDetail");
+            containerRegistry.RegisterForNavigation<SampleGroupListView>("SampleGroups");
+            containerRegistry.RegisterForNavigation<SubpopulationListView>("Subpopulations");
         }
 
     }

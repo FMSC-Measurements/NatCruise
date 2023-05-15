@@ -2,6 +2,7 @@
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
+using NatCruise.Util;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace FScruiser.XF.ViewModels
         private ICommand _showFieldSetupCommand;
         private ICommand _showStratumDetailsCommand;
         private string _cuttingUnitFilter;
+        private ICommand _showSampleGroupsCommand;
 
         public StratumListViewModel(IStratumDataservice stratumDataservice, ICuttingUnitDataservice cuttingUnitDataservice, INatCruiseNavigationService natCruiseNavigationService)
         {
@@ -27,9 +29,9 @@ namespace FScruiser.XF.ViewModels
             CuttingUnitCodes = cuttingUnitDataservice.GetCuttingUnitCodes();
         }
 
-        public ICommand ShowFieldSetupCommand => _showFieldSetupCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowFieldSetup(st.StratumCode));
-
-        public ICommand ShowStratumDetailsCommand => _showStratumDetailsCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowStratumDetail(st.StratumCode));
+        public ICommand ShowFieldSetupCommand => _showFieldSetupCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowFieldSetup(st.StratumCode).FireAndForget());
+        public ICommand ShowStratumDetailsCommand => _showStratumDetailsCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowStratumDetail(st.StratumCode).FireAndForget());
+        public ICommand ShowSampleGroupsCommand => _showSampleGroupsCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowSampleGroups(st.StratumCode).FireAndForget());
 
         public IStratumDataservice StratumDataservice { get; }
         public INatCruiseNavigationService NavigationService { get; }

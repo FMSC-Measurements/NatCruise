@@ -219,5 +219,14 @@ namespace FScruiser.XF
             throw new NotImplementedException();
         }
 
+        public Task ShowSampleGroups(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowSubpopulations(string stratumCode, string sampleGroupCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

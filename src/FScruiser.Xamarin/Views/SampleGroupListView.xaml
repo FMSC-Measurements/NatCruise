@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:conv="clr-namespace:FScruiser.XF.Converters"
+                                    x:Class="FScruiser.XF.Views.SampleGroupListView"
+                                    x:Name="_page"
+                                    Title="{Binding Stratum.StratumCode, StringFormat='Stratum {0} Sample Groups'}">
+    <controls:InitializableContentPage.Resources>
+        <conv:CruiseMethodToBoolConverter MethodMap="ThreePMethods"
+                                          x:Key="isThreePConverter" />
+
+    </controls:InitializableContentPage.Resources>
+
+    <CollectionView ItemsSource="{Binding SampleGroups}">
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical"
+                             Span="2" />
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <SwipeView IsEnabled="False">
+                    <SwipeView.BottomItems>
+                        <SwipeItems>
+                            <SwipeItemView >
+                                <StackLayout Orientation="Horizontal">
+                                    <Button Text="Subpopulations"
+                                            Command="{Binding BindingContext.ShowSubpopulationsCommand, Source={x:Reference _page}}"
+                                            CommandParameter="{Binding .}"
+                                            HeightRequest="{StaticResource minTouchableHeight}"/>
+                                </StackLayout>
+                            </SwipeItemView>
+                        </SwipeItems>
+                    </SwipeView.BottomItems>
+                    <Frame BorderColor="DarkGray"
+                           Margin="3"
+                           Padding="0"
+                           HasShadow="True">
+                        
+                        <AbsoluteLayout>
+                            <!--<AbsoluteLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.ShowSampleGroupCommand, Source={Reference _page}}"
+                                                      CommandParameter="{Binding .}" />
+                            </AbsoluteLayout.GestureRecognizers>-->
+
+                            <StackLayout AbsoluteLayout.LayoutBounds="0,0"
+                                         Margin="13,7">
+
+                                <Label Text="{Binding SampleGroupCode, StringFormat='Sample Group {0}'}"
+                                       FontSize="Title" />
+                                <Label Grid.Row="1"
+                                       Text="{Binding Description}"
+                                       FontSize="Subtitle" />
+                                <Label Text="{Binding PrimaryProduct, StringFormat='Product: {0}'}" />
+                                <Label Text="{Binding SamplingFrequency, StringFormat='Frequency: {0}'}"
+                                       IsVisible="{Binding CruiseMethod, Converter={StaticResource isFrequencySampleConverter}}" />
+                                <Label Text="{Binding KZ, StringFormat='KZ: {0}'}"
+                                       IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter} }" />
+                                <Label Text="{Binding InsuranceFrequency, StringFormat='Sampling Frequency: {0}'}" />
+                                <Label Text="{Binding BigBAF, StringFormat='BigBAF:{0}'}"
+                                       IsVisible="{Binding CruiseMethod, Converter={StaticResource isVariableRadiousPlotConverter} }" />
+                                <Label Text="{Binding TallyBySubPop, StringFormat='Tally By Species: {0}'} "/>
+                                <Label Text="{Binding SampleSelectorType, StringFormat='Sample Selector Type: {0}'}"
+                                       IsVisible="{Binding CruiseMethod, Converter={StaticResource isStrConverter}}" />
+
+                            </StackLayout>
+
+                            <Button AbsoluteLayout.LayoutBounds="1,1"
+                                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                                    Margin="13,7"
+                                    HeightRequest="{StaticResource minTouchableHeight}"
+                                    WidthRequest="{StaticResource minTouchableWidth}"
+                                    BackgroundColor="Red"
+                                    ImageSource="ic_more_vert_black_24dp.png"
+                                    Clicked="sampleGroupItemMenuButton_clicked"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Show Actions Item" />
+                        </AbsoluteLayout>
+                    </Frame>
+                </SwipeView>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</controls:InitializableContentPage>

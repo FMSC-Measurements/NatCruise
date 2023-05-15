@@ -23,6 +23,8 @@ namespace NatCruise.Navigation
 
         Task ShowSampleGroups(string stratumCode);
 
+        Task ShowSubpopulations(string stratumCode, string sampleGroupCode);
+
         #endregion
 
         #region Cruising
@@ -48,5 +50,6 @@ namespace NatCruise.Navigation
         Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID);
 
         Task GoBackAsync();
+        
     }
 }
