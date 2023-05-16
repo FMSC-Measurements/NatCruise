@@ -105,8 +105,13 @@ namespace NatCruise.MVVM.ViewModels
         {
             base.Load();
 
-            var tarID = Parameters.GetValueOrDefault<string>(NavParams.TreeAuditRuleID);
-            Load(tarID);
+            // on WPF parameters are not set
+            var parameters = Parameters;
+            if (parameters != null)
+            {
+                var tarID = Parameters.GetValueOrDefault<string>(NavParams.TreeAuditRuleID);
+                Load(tarID);
+            }
         }
 
         public void Load(string treeAuditRuleID)
