@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using NatCruise.Models;
 
-namespace NatCruise.Design.Validation
+namespace NatCruise.Validation
 {
     public class TreeFieldSetupValidator : AbstractValidator<TreeFieldSetup>
     {

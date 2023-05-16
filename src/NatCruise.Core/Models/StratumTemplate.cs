@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 
-namespace NatCruise.Design.Models
+namespace NatCruise.Models
 {
     public class StratumTemplate : BindableBase
     {

@@ -84,7 +84,7 @@ namespace NatCruise.Wpf
 
             //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(StratumListView));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumDetailView));
-            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumFieldsView));
+            regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(StratumFieldSetupView));
             regionManager.RegisterViewWithRegion(Regions.StratumFieldsRegion, typeof(StratumTreeFieldSetupView));
             regionManager.RegisterViewWithRegion(Regions.StratumFieldsRegion, typeof(StratumLogFieldSetupView));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(CuttingUnitStrataView));

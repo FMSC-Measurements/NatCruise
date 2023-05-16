@@ -25,9 +25,9 @@ namespace NatCruise.Design.ViewModels
         private ICommand _addCommand;
         private ICommand _removeCommand;
 
-        public StratumTemplateFieldsViewModel(ITemplateDataservice templateDataservice, ITreeFieldDataservice treeFieldDataservice)
+        public StratumTemplateFieldsViewModel(IStratumTemplateDataservice stratumTemplateDataservice, ITreeFieldDataservice treeFieldDataservice)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            StratumTemplateDataservice = stratumTemplateDataservice ?? throw new ArgumentNullException(nameof(stratumTemplateDataservice));
 
             TreeFields = treeFieldDataservice.GetTreeFields();
         }
@@ -69,7 +69,7 @@ namespace NatCruise.Design.ViewModels
             set => SetProperty(ref _fieldSetups, value);
         }
 
-        public ITemplateDataservice TemplateDataservice { get; }
+        public IStratumTemplateDataservice StratumTemplateDataservice { get; }
 
         public StratumTemplateTreeFieldSetup SelectedTreeFieldSetup
         {
@@ -124,7 +124,7 @@ namespace NatCruise.Design.ViewModels
             var stratumTemplateName = StratumTemplate?.StratumTemplateName;
             if (stratumTemplateName != null)
             {
-                var fieldSetups = TemplateDataservice.GetStratumTemplateTreeFieldSetups(stratumTemplateName);
+                var fieldSetups = StratumTemplateDataservice.GetStratumTemplateTreeFieldSetups(stratumTemplateName);
                 TreeFieldSetups = new ObservableCollection<StratumTemplateTreeFieldSetup>(fieldSetups);
             }
             else
@@ -138,7 +138,7 @@ namespace NatCruise.Design.ViewModels
         {
             var sttfs = (StratumTemplateTreeFieldSetup)sender;
             if(sttfs is null) { return; }
-            TemplateDataservice.UpsertStratumTemplateTreeFieldSetup(sttfs);
+            StratumTemplateDataservice.UpsertStratumTemplateTreeFieldSetup(sttfs);
         }
 
         public void AddTreeFieldSetup(TreeField treeField)
@@ -152,7 +152,7 @@ namespace NatCruise.Design.ViewModels
                 StratumTemplateName = stratumTemplateName,
             };
 
-            TemplateDataservice.UpsertStratumTemplateTreeFieldSetup(newtfsd);
+            StratumTemplateDataservice.UpsertStratumTemplateTreeFieldSetup(newtfsd);
             TreeFieldSetups.Add(newtfsd);
             RaisePropertyChanged(nameof(AvalibleTreeFields));
         }
@@ -161,7 +161,7 @@ namespace NatCruise.Design.ViewModels
         {
             if (tfsd is null) { throw new ArgumentNullException(nameof(tfsd)); }
 
-            TemplateDataservice.DeleteStratumTemplateTreeFieldSetup(tfsd);
+            StratumTemplateDataservice.DeleteStratumTemplateTreeFieldSetup(tfsd);
             TreeFieldSetups.Remove(tfsd);
         }
 
@@ -191,7 +191,7 @@ namespace NatCruise.Design.ViewModels
             foreach (var (field, i) in fieldSetups.Select((x, i) => (x, i + 1)))
             {
                 field.FieldOrder = i;
-                TemplateDataservice.UpsertStratumTemplateTreeFieldSetup(field);
+                StratumTemplateDataservice.UpsertStratumTemplateTreeFieldSetup(field);
             }
         }
     }

@@ -1,8 +1,5 @@
 ﻿using NatCruise.Data;
-using NatCruise.Design.Data;
-using NatCruise.Design.Models;
 using NatCruise.Models;
-using NatCruise.MVVM;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -11,7 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace NatCruise.Design.ViewModels
+namespace NatCruise.MVVM.ViewModels
 {
     public class StratumLogFieldSetupViewModel : ViewModelBase
     {
@@ -20,13 +17,13 @@ namespace NatCruise.Design.ViewModels
 
         protected IFieldSetupDataservice FieldSetupDataservice { get; }
         public ILogFieldDataservice LogFieldDataservice { get; }
-        public ITemplateDataservice TemplateDataservice { get; }
+        public IStratumTemplateDataservice StratumTemplateDataservice { get; }
 
-        public StratumLogFieldSetupViewModel(IFieldSetupDataservice fieldSetupDataservice, ILogFieldDataservice logFieldDataservice, ITemplateDataservice templateDataservice)
+        public StratumLogFieldSetupViewModel(IFieldSetupDataservice fieldSetupDataservice, ILogFieldDataservice logFieldDataservice, IStratumTemplateDataservice stratumTemplateDataservice)
         {
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
             LogFieldDataservice = logFieldDataservice ?? throw new ArgumentNullException(nameof(logFieldDataservice));
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            StratumTemplateDataservice = stratumTemplateDataservice ?? throw new ArgumentNullException(nameof(stratumTemplateDataservice));
         }
 
         public Stratum Stratum
@@ -65,6 +62,7 @@ namespace NatCruise.Design.ViewModels
         private ObservableCollection<LogFieldSetup> _fieldSetup;
         private IEnumerable<LogField> _logFields;
         private LogFieldSetup _selectedLogFieldSetup;
+        private IEnumerable<LogField> _avalibleLogFields;
 
         public ObservableCollection<LogFieldSetup> FieldSetups
         {
@@ -72,7 +70,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _fieldSetup, value);
-                RaisePropertyChanged(nameof(AvalibleLogFields));
+                RefreshAvalableLogFields();
             }
         }
 
@@ -82,19 +80,14 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _logFields, value);
-                RaisePropertyChanged(nameof(AvalibleLogFields));
+                RefreshAvalableLogFields();
             }
         }
 
         public IEnumerable<LogField> AvalibleLogFields
         {
-            get
-            {
-                if(FieldSetups is null || LogFields is null) { return Enumerable.Empty<LogField>(); }
-
-                var usedFields = FieldSetups.Select(x => x.Field).ToArray();
-                return LogFields.Where(x => usedFields.Contains(x.Field) == false).ToArray();
-            }
+            get => _avalibleLogFields;
+            protected set => SetProperty(ref _avalibleLogFields, value);
         }
 
         public LogFieldSetup SelectedLogFieldSetup
@@ -128,7 +121,7 @@ namespace NatCruise.Design.ViewModels
         {
             base.Load();
             LogFields = LogFieldDataservice.GetLogFields();
-            StratumTemplates = TemplateDataservice.GetStratumTemplates();
+            StratumTemplates = StratumTemplateDataservice.GetStratumTemplates();
         }
 
         protected void ApplyStratumTemplate(StratumTemplate st)
@@ -151,7 +144,7 @@ namespace NatCruise.Design.ViewModels
             };
             FieldSetupDataservice.UpsertLogFieldSetup(newLfs);
             FieldSetups.Add(newLfs);
-            RaisePropertyChanged(nameof(AvalibleLogFields));
+            RefreshAvalableLogFields();
         }
 
         protected void RemoveLogField(LogFieldSetup lfs)
@@ -191,6 +184,19 @@ namespace NatCruise.Design.ViewModels
             {
                 field.FieldOrder = i;
                 FieldSetupDataservice.UpsertLogFieldSetup(field);
+            }
+        }
+
+        protected void RefreshAvalableLogFields()
+        {
+            if (FieldSetups is null || LogFields is null)
+            {
+                AvalibleLogFields = Enumerable.Empty<LogField>();
+            }
+            else
+            {
+                var usedFields = FieldSetups.Select(x => x.Field).ToArray();
+                AvalibleLogFields = LogFields.Where(x => usedFields.Contains(x.Field) == false).ToArray();
             }
         }
     }

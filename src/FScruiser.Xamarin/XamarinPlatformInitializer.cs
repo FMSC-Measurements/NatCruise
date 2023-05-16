@@ -78,6 +78,7 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<StratumDetailView>("StratumDetail");
             containerRegistry.RegisterForNavigation<SampleGroupListView>("SampleGroups");
             containerRegistry.RegisterForNavigation<SubpopulationListView>("Subpopulations");
+            containerRegistry.RegisterForNavigation<StratumFieldSetupView>("FieldSetup");
         }
 
     }

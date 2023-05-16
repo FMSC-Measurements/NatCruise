@@ -3,22 +3,19 @@ using CruiseDAL.UpConvert;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
-using NatCruise.Design.Models;
-using NatCruise.Util;
-using NatCruise.Design.Validation;
+using NatCruise.Models;
+using NatCruise.MVVM;
 using NatCruise.Services;
+using NatCruise.Util;
 using NatCruise.Wpf.Validation;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using NatCruise.Models;
-using NatCruise.MVVM;
-using System.Linq;
 
 namespace NatCruise.Wpf.ViewModels
 {
@@ -65,7 +62,7 @@ namespace NatCruise.Wpf.ViewModels
         public string SaleNumber
         {
             get => _saleNumber;
-            set => SetPropertyAndValidate(this, value, (m,v) => _saleNumber = v);
+            set => SetPropertyAndValidate(this, value, (m, v) => _saleNumber = v);
         }
 
         public string Region
@@ -208,8 +205,10 @@ namespace NatCruise.Wpf.ViewModels
 
         protected void CopyTemplateData(IDataserviceProvider src, IDataserviceProvider dest)
         {
-            
+            var srcTemplateDS = src.GetDataservice<ITemplateDataservice>();
+            var destTemplateDS = dest.GetDataservice<ITemplateDataservice>();
 
+            // Species
             var srcSpDS = src.GetDataservice<ISpeciesDataservice>();
             var destSpDS = dest.GetDataservice<ISpeciesDataservice>();
 
@@ -225,10 +224,7 @@ namespace NatCruise.Wpf.ViewModels
                 }
             }
 
-            var srcTemplateDS = src.GetDataservice<ITemplateDataservice>();
-            var destTemplateDS = dest.GetDataservice<ITemplateDataservice>();
-
-
+            // Tree Audit Rules
             var srcTarDs = src.GetDataservice<ITreeAuditRuleDataservice>();
             var destTarDs = dest.GetDataservice<ITreeAuditRuleDataservice>();
             var tars = srcTarDs.GetTreeAuditRules();
@@ -237,38 +233,44 @@ namespace NatCruise.Wpf.ViewModels
                 destTarDs.AddTreeAuditRule(tar);
             }
 
+            // Tree Audit Rule Selectors
             var ruleSelectors = srcTarDs.GetRuleSelectors();
             foreach (var ruleSelector in ruleSelectors)
             {
                 destTarDs.AddRuleSelector(ruleSelector);
             }
 
+            // Tree Default Values
             var tdvs = srcTemplateDS.GetTreeDefaultValues();
             foreach (var tdv in tdvs)
             {
                 destTemplateDS.AddTreeDefaultValue(tdv);
             }
 
-            var stratumTemplate = srcTemplateDS.GetStratumTemplates();
+            // Stratum Templates
+            var srcStTemplateDS = src.GetDataservice<IStratumTemplateDataservice>();
+            var destStTemplateDS = dest.GetDataservice<IStratumTemplateDataservice>();
 
-            foreach (var st in stratumTemplate)
+            var stratumTemplates = srcStTemplateDS.GetStratumTemplates();
+
+            foreach (var st in stratumTemplates)
             {
-                destTemplateDS.UpsertStratumTemplate(st);
+                destStTemplateDS.UpsertStratumTemplate(st);
 
-                var treeFieldSetupDefaults = srcTemplateDS.GetStratumTemplateTreeFieldSetups(st.StratumTemplateName);
+                var treeFieldSetupDefaults = srcStTemplateDS.GetStratumTemplateTreeFieldSetups(st.StratumTemplateName);
                 foreach (var tfsd in treeFieldSetupDefaults)
                 {
-                    destTemplateDS.UpsertStratumTemplateTreeFieldSetup(tfsd);
+                    destStTemplateDS.UpsertStratumTemplateTreeFieldSetup(tfsd);
                 }
 
-                var logFieldSetupDefaults = srcTemplateDS.GetStratumTemplateLogFieldSetups(st.StratumTemplateName);
+                var logFieldSetupDefaults = srcStTemplateDS.GetStratumTemplateLogFieldSetups(st.StratumTemplateName);
                 foreach (var lfsd in logFieldSetupDefaults)
                 {
-                    destTemplateDS.UpsertStratumTemplateLogFieldSetup(lfsd);
+                    destStTemplateDS.UpsertStratumTemplateLogFieldSetup(lfsd);
                 }
             }
 
-
+            // Tree Fields
             var scrTreeFieldDS = src.GetDataservice<ITreeFieldDataservice>();
             var destTreeFieldDS = dest.GetDataservice<ITreeFieldDataservice>();
             var treeFields = scrTreeFieldDS.GetTreeFields();
@@ -278,6 +280,7 @@ namespace NatCruise.Wpf.ViewModels
                 destTreeFieldDS.UpdateTreeField(tf);
             }
 
+            // Log Fields
             var srcLogFieldDS = src.GetDataservice<ILogFieldDataservice>();
             var destLogFieldDS = dest.GetDataservice<ILogFieldDataservice>();
             var logFields = srcLogFieldDS.GetLogFields();
@@ -287,12 +290,14 @@ namespace NatCruise.Wpf.ViewModels
                 destLogFieldDS.UpdateLogField(lf);
             }
 
+            // Reports
             var reports = srcTemplateDS.GetReports();
             foreach (var rpt in reports)
             {
                 destTemplateDS.AddReport(rpt);
             }
 
+            // Volume Equations
             var volumeEquations = srcTemplateDS.GetVolumeEquations();
             foreach (var ve in volumeEquations)
             {
@@ -322,7 +327,6 @@ namespace NatCruise.Wpf.ViewModels
             else if (extention is ".crz3t")
             {
                 v3TemplateDb = new CruiseDatastore_V3(templatePath);
-
             }
             else return;
 

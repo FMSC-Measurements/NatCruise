@@ -71,6 +71,7 @@ namespace NatCruise.Data
             containerRegistry.Register<ITallyLedgerDataservice>(x => GetDataservice<ITallyLedgerDataservice>(x));
             containerRegistry.Register<ISpeciesDataservice>(x => GetDataservice<ISpeciesDataservice>(x));
             containerRegistry.Register<ITreeAuditRuleDataservice>(x => GetDataservice<ITreeAuditRuleDataservice>(x));
+            containerRegistry.Register<IStratumTemplateDataservice>(x => GetDataservice<IStratumTemplateDataservice>(x));
         }
 
         public DataserviceProviderBase(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService)
@@ -198,6 +199,10 @@ namespace NatCruise.Data
             if (type == typeof(ITreeAuditRuleDataservice))
             {
                 return new TreeAuditRuleDataservice(database, cruiseID, deviceID);
+            }
+            if (type == typeof(IStratumTemplateDataservice))
+            {
+                return new StratumTemplateDataservice(database, cruiseID, deviceID);
             }
 
             else

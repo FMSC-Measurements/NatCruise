@@ -1,9 +1,8 @@
 ﻿using NatCruise.Data;
-using NatCruise.Design.Data;
-using NatCruise.Design.Models;
-using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.Navigation;
+using NatCruise.Validation;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace NatCruise.Design.ViewModels
+namespace NatCruise.MVVM.ViewModels
 {
     public class StratumTreeFieldSetupViewModel : ValidationViewModelBase
     {
@@ -21,11 +20,16 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<TreeField> _treeFields;
         private TreeFieldSetup _selectedTreeFieldSetup;
         private IEnumerable<StratumTemplate> _stratumTemplates;
+        private IEnumerable<TreeField> _avalibleTreeFields;
 
-        public StratumTreeFieldSetupViewModel(ITemplateDataservice templateDataservice, IFieldSetupDataservice fieldSetupDataservice, ITreeFieldDataservice treeFieldDataservice, TreeFieldSetupValidator treeFieldSetupValidator)
+        public StratumTreeFieldSetupViewModel(
+            IStratumTemplateDataservice templateDataservice,
+            IFieldSetupDataservice fieldSetupDataservice,
+            ITreeFieldDataservice treeFieldDataservice,
+            TreeFieldSetupValidator treeFieldSetupValidator)
             : base(treeFieldSetupValidator)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            StratumTemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
             TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
         }
@@ -34,7 +38,7 @@ namespace NatCruise.Design.ViewModels
 
         protected IFieldSetupDataservice FieldSetupDataservice { get; }
         public ITreeFieldDataservice TreeFieldDataservice { get; }
-        protected ITemplateDataservice TemplateDataservice { get; }
+        protected IStratumTemplateDataservice StratumTemplateDataservice { get; }
 
         public Stratum Stratum
         {
@@ -64,9 +68,13 @@ namespace NatCruise.Design.ViewModels
 
         public ICommand RemoveTreeFieldCommand => new DelegateCommand(RemoveTreeField);
 
-        public ICommand MoveUpCommand => new DelegateCommand(MoveUp);
+        public ICommand MoveUpCommand => new DelegateCommand<TreeFieldSetup>(MoveUp);
 
-        public ICommand MoveDownCommand => new DelegateCommand(MoveDown);
+        public ICommand MoveDownCommand => new DelegateCommand<TreeFieldSetup>(MoveDown);
+
+        public ICommand MoveSelectedUpCommand => new DelegateCommand(MoveUp);
+
+        public ICommand MoveSelectedDownCommand => new DelegateCommand(MoveDown);
 
         public ICommand ApplyStratumTemplateCommand => new DelegateCommand<StratumTemplate>(ApplyStratumTemplate);
 
@@ -76,7 +84,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _fieldSetups, value);
-                RaisePropertyChanged(nameof(AvalibleTreeFields));
+                RefreshAvalableTreeFields();
             }
         }
 
@@ -86,31 +94,16 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _treeFields, value);
-                RaisePropertyChanged(nameof(AvalibleTreeFields));
+                RefreshAvalableTreeFields();
             }
         }
 
-        private class TreeFieldComparer : IEqualityComparer<TreeField>
-        {
-            private static TreeFieldComparer _instance;
-            public static TreeFieldComparer Instance => _instance ??= new TreeFieldComparer();
 
-            public bool Equals(TreeField x, TreeField y)
-            {
-                return x.Field == y.Field;
-            }
 
-            public int GetHashCode(TreeField obj)
-            {
-                return obj.Field.GetHashCode();
-            }
-        }
-
-        // todo
         public IEnumerable<TreeField> AvalibleTreeFields
         {
-            get => (TreeFields != null && FieldSetups != null) ? TreeFields.Except(FieldSetups.Select(x => x.Field), TreeFieldComparer.Instance).ToArray()
-                : Enumerable.Empty<TreeField>();
+            get => _avalibleTreeFields;
+            protected set => SetProperty(ref _avalibleTreeFields, value);
         }
 
         public TreeFieldSetup SelectedTreeFieldSetup
@@ -245,10 +238,15 @@ namespace NatCruise.Design.ViewModels
         {
             var selectedTf = SelectedTreeFieldSetup;
             if (selectedTf == null) { return; }
-            var selectedIndex = FieldSetups.IndexOf(selectedTf);
-            if (selectedIndex == FieldSetups.Count - 1) { return; }
-            var newIndex = selectedIndex + 1;
-            FieldSetups.Move(selectedIndex, newIndex);
+            MoveDown(selectedTf);
+        }
+
+        public void MoveDown(TreeFieldSetup tfs)
+        {
+            var tfsIndex = FieldSetups.IndexOf(tfs);
+            if (tfsIndex == FieldSetups.Count - 1) { return; }
+            var newIndex = tfsIndex + 1;
+            FieldSetups.Move(tfsIndex, newIndex);
             SaveFieldOrder();
         }
 
@@ -256,10 +254,15 @@ namespace NatCruise.Design.ViewModels
         {
             var selectedTf = SelectedTreeFieldSetup;
             if (selectedTf == null) { return; }
-            var selectedIndex = FieldSetups.IndexOf(selectedTf);
-            if (selectedIndex < 1) { return; }
-            var newIndex = selectedIndex - 1;
-            FieldSetups.Move(selectedIndex, newIndex);
+            MoveUp(selectedTf);
+        }
+
+        public void MoveUp(TreeFieldSetup tfs)
+        {
+            var tfsIndex = FieldSetups.IndexOf(tfs);
+            if (tfsIndex < 1) { return; }
+            var newIndex = tfsIndex - 1;
+            FieldSetups.Move(tfsIndex, newIndex);
             SaveFieldOrder();
         }
 
@@ -297,14 +300,15 @@ namespace NatCruise.Design.ViewModels
             FieldSetupDataservice.UpsertTreeFieldSetup(newtfs);
             FieldSetups.Add(newtfs);
             TreeFieldAdded?.Invoke(this, EventArgs.Empty);
-            RaisePropertyChanged(nameof(AvalibleTreeFields));
+            RefreshAvalableTreeFields();
         }
 
         public override void Load()
         {
             base.Load();
+
             TreeFields = TreeFieldDataservice.GetTreeFields();
-            StratumTemplates = TemplateDataservice.GetStratumTemplates();
+            StratumTemplates = StratumTemplateDataservice.GetStratumTemplates();
         }
 
         protected void LoadFieldSetups()
@@ -312,6 +316,28 @@ namespace NatCruise.Design.ViewModels
             var stratumCode = Stratum.StratumCode;
             var fieldSetups = FieldSetupDataservice.GetTreeFieldSetups(stratumCode);
             FieldSetups = new ObservableCollection<TreeFieldSetup>(fieldSetups);
+        }
+
+        protected void RefreshAvalableTreeFields()
+        {
+            AvalibleTreeFields = (TreeFields != null && FieldSetups != null) ? TreeFields.Except(FieldSetups.Select(x => x.Field), TreeFieldComparer.Instance).ToArray()
+                : Enumerable.Empty<TreeField>();
+        }
+
+        private class TreeFieldComparer : IEqualityComparer<TreeField>
+        {
+            private static TreeFieldComparer _instance;
+            public static TreeFieldComparer Instance => _instance ??= new TreeFieldComparer();
+
+            public bool Equals(TreeField x, TreeField y)
+            {
+                return x.Field == y.Field;
+            }
+
+            public int GetHashCode(TreeField obj)
+            {
+                return obj.Field.GetHashCode();
+            }
         }
     }
 }

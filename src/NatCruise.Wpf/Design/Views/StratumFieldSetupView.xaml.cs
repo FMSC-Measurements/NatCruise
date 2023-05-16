@@ -10,9 +10,9 @@ namespace NatCruise.Design.Views
     /// <summary>
     /// Interaction logic for StratumFieldsView.xaml
     /// </summary>
-    public partial class StratumFieldsView : UserControl
+    public partial class StratumFieldSetupView : UserControl
     {
-        public StratumFieldsView()
+        public StratumFieldSetupView()
         {
             InitializeComponent();
             RegionContext.GetObservableContext(this).PropertyChanged += Context_PropertyChanged;
@@ -22,7 +22,7 @@ namespace NatCruise.Design.Views
         {
             var context = (ObservableObject<object>)sender;
             var selectedStratum = (Stratum)context.Value;
-            (DataContext as StratumFieldsViewModel).Stratum = selectedStratum;
+            (DataContext as StratumFieldSetupViewModel).Stratum = selectedStratum;
         }
     }
 }
