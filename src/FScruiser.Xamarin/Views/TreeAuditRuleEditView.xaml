@@ -2,6 +2,7 @@
 <controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
                                     xmlns="http://xamarin.com/schemas/2014/forms"
                                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:const="clr-namespace:FScruiser.XF.Constants"
                                     x:Class="FScruiser.XF.Views.TreeAuditRuleEditView"
                                     x:Name="_page"
                                     Title="Edit Tree Audit Rule">
@@ -16,6 +17,7 @@
 
             <Frame Grid.Row="0"
                    BorderColor="DarkGray"
+                   BackgroundColor="{StaticResource uswds_data_table_row_alt}"
                    Margin="3"
                    Padding="3"
                    HasShadow="True">
@@ -32,40 +34,41 @@
                     </Grid.RowDefinitions>
 
                     <Grid.Resources>
-                        <Style TargetType="controls:LastChildHeightLayout">
+                        <!--<Style TargetType="controls:LastChildHeightLayout">
                             <Setter Property="HeightRequest"
                                     Value="70" />
                             <Setter  Property="LastChildHeight"
                                      Value="50" />
-                        </Style>
+                        </Style>-->
                     </Grid.Resources>
 
-                    <controls:LastChildHeightLayout Grid.Column="0">
+                    <StackLayout Grid.Column="0">
                         <Label Text="Field" />
-                        <Label Text="{Binding TreeAuditRule.Field}" />
-                    </controls:LastChildHeightLayout>
+                        <Label Text="{Binding TreeAuditRule.Field}" FontSize="Title" />
+                    </StackLayout>
 
-                    <controls:LastChildHeightLayout Grid.Column="1">
+                    <StackLayout Grid.Column="1">
                         <Label Text="Min" />
                         <Entry Text="{Binding TreeAuditRule.Min, StringFormat='{}{0:F}'}" />
-                    </controls:LastChildHeightLayout>
+                    </StackLayout>
 
-                    <controls:LastChildHeightLayout Grid.Column="2">
+                    <StackLayout Grid.Column="2">
                         <Label Text="Max" />
                         <Entry Text="{Binding TreeAuditRule.Max, StringFormat='{}{0:F}'}" />
-                    </controls:LastChildHeightLayout>
+                    </StackLayout>
 
-                    <controls:LastChildHeightLayout Grid.Column="0"
+                    <StackLayout Grid.Column="0"
                                                     Grid.ColumnSpan="3"
                                                     Grid.Row="1">
                         <Label Text="Description" />
                         <Entry Text="{Binding TreeAuditRule.Description}" />
-                    </controls:LastChildHeightLayout>
+                    </StackLayout>
                 </Grid>
             </Frame>
 
             <Frame Grid.Row="1"
                    BorderColor="DarkGray"
+                   
                    Margin="3"
                    Padding="3"
                    HasShadow="True">
@@ -80,6 +83,7 @@
 
                     <Frame  Grid.Row="1"
                             BorderColor="DarkGray"
+                            BackgroundColor="{StaticResource uswds_lgt_tan}"
                             Margin="3"
                             Padding="3"
                             HasShadow="True">
@@ -132,11 +136,14 @@
                                                       SelectedValue="{Binding NewRuleSelector.PrimaryProduct}" />
                             </controls:LastChildHeightLayout>
 
-                            <Button Text="+"
+                            <Button Text="{Static const:FAIcons.CirclePlus}"
+                                    FontFamily="{Static const:Fonts.FAsolid}"
+                                    BackgroundColor="{StaticResource uswds_vivid_green}"
                                     Grid.Row="0"
                                     Grid.Column="3"
                                     Command="{Binding AddNewRuleSelectorCommand}" />
-                            <Button Text="-"
+                            <Button Text="{Static const:FAIcons.CircleMinus}"
+                                    FontFamily="{Static const:Fonts.FAsolid}"
                                     Grid.Row="0"
                                     Grid.Column="4" />
                         </Grid>

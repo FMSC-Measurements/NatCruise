@@ -3,6 +3,7 @@
                                     xmlns="http://xamarin.com/schemas/2014/forms"
                                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                                     xmlns:conv="clr-namespace:FScruiser.XF.Converters"
+                                    xmlns:const="clr-namespace:FScruiser.XF.Constants"
                                     x:Class="FScruiser.XF.Views.SampleGroupListView"
                                     x:Name="_page"
                                     Title="{Binding Stratum.StratumCode, StringFormat='Stratum {0} Sample Groups'}">
@@ -51,6 +52,10 @@
                                 <Label Grid.Row="1"
                                        Text="{Binding Description}"
                                        FontSize="Subtitle" />
+
+                                <BoxView Color="DarkGray"
+                                         HeightRequest="2" />
+
                                 <Label Text="{Binding PrimaryProduct, StringFormat='Product: {0}'}" />
                                 <Label Text="{Binding SamplingFrequency, StringFormat='Frequency: {0}'}"
                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isFrequencySampleConverter}}" />
@@ -70,9 +75,12 @@
                                     Margin="13,7"
                                     HeightRequest="{StaticResource minTouchableHeight}"
                                     WidthRequest="{StaticResource minTouchableWidth}"
-                                    BackgroundColor="Red"
-                                    ImageSource="ic_more_vert_black_24dp.png"
+                                    
+                                    Text="{Static const:FAIcons.EllipsisVertical}"
+                                    FontFamily="{Static const:Fonts.FAsolid}"
+                                    
                                     Clicked="sampleGroupItemMenuButton_clicked"
+                                    
                                     AutomationProperties.IsInAccessibleTree="True"
                                     AutomationProperties.Name="Show Actions Item" />
                         </AbsoluteLayout>

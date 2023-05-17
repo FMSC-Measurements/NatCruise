@@ -2,6 +2,7 @@
 <controls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
                                    xmlns:controls="clr-namespace:FScruiser.XF.Controls"
                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                   xmlns:const="clr-namespace:FScruiser.XF.Constants"
                                    x:Class="FScruiser.XF.Views.StratumListView"
                                    x:Name="_page"
                                    Title="Strata">
@@ -11,22 +12,27 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackLayout Grid.Row="0"
-                     Orientation="Horizontal"
-                     HorizontalOptions="End">
-            <Label Text="Cutting Unit"
-                   Margin="13,7"
-                   VerticalTextAlignment="Center"
-                   FontSize="Title" />
-            <Picker ItemsSource="{Binding CuttingUnitCodes}"
-                    SelectedItem="{Binding CuttingUnitFilter}"
-                    Margin="13,7"
-                    WidthRequest="100" />
-        </StackLayout>
+        <Frame Grid.Row="0"
+               BackgroundColor="{StaticResource uswds_lgt_tan}"
+               Padding="0">
+
+            <StackLayout Orientation="Horizontal"
+                         HorizontalOptions="End">
+                <Label Text="Cutting Unit"
+                       Margin="13,7"
+                       VerticalTextAlignment="Center"
+                       FontSize="Title" />
+                <Picker ItemsSource="{Binding CuttingUnitCodes}"
+                        SelectedItem="{Binding CuttingUnitFilter}"
+                        Margin="13,7"
+                        WidthRequest="100" />
+            </StackLayout>
+        </Frame>
 
         <ScrollView Grid.Row="1">
             <CollectionView ItemsSource="{Binding Strata}"
                             ItemsLayout="VerticalGrid, 2">
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
@@ -37,7 +43,7 @@
                                 <SwipeItems>
                                     <SwipeItemView>
                                         <Button Text="Fields"
-                                                Command="{Binding BindingContext.ShowFieldSetupCommand, Source={Reference _page}}"
+                                                Command="{Binding BindingContext.ShowFieldsCommand, Source={Reference _page}}"
                                                 CommandParameter="{Binding .}" />
                                     </SwipeItemView>
                                     <SwipeItemView>
@@ -91,9 +97,8 @@
                                             Margin="13,7"
                                             HeightRequest="{StaticResource minTouchableHeight}"
                                             WidthRequest="{StaticResource minTouchableWidth}"
-                                            
-                                            BackgroundColor="Red"
-                                            ImageSource="ic_more_vert_black_24dp.png"
+                                            Text="{Static const:FAIcons.EllipsisVertical}"
+                                            FontFamily="{Static const:Fonts.FAsolid}"
                                             Clicked="openStratumMenu"
                                             AutomationProperties.IsInAccessibleTree="True"
                                             AutomationProperties.Name="Show Actions Item" />

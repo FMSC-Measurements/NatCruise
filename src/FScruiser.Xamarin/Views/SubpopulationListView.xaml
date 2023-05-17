@@ -2,6 +2,7 @@
 <controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
                                     xmlns="http://xamarin.com/schemas/2014/forms"
                                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:const="clr-namespace:FScruiser.XF.Constants"
                                     x:Class="FScruiser.XF.Views.SubpopulationListView"
                                     x:Name="_page"
                                     BindingContextChanged="Page_BindingContextChanged">
@@ -19,7 +20,8 @@
         </Grid.RowDefinitions>
 
         <Frame Grid.Row="0"
-               BorderColor="DarkGray"
+               BorderColor="LightGray"
+               BackgroundColor="{StaticResource uswds_lgt_tan}"
                Margin="3"
                Padding="0"
                HasShadow="True">
@@ -31,7 +33,9 @@
                 <Picker ItemsSource="{Binding SpeciesOptions}"
                         x:Name="_addSubpopSpeciesPicker"
                         WidthRequest="100" />
-                <Button Text="+"
+                <Button Text="{Static const:FAIcons.CirclePlus}"
+                        FontFamily="{Static const:Fonts.FAsolid}"
+                        BackgroundColor="{StaticResource uswds_vivid_green}"
                         Command="{Binding AddSubpopulationCommand}"
                         CommandParameter="{Binding SelectedItem, Source={Reference _addSubpopSpeciesPicker}}"
                         AbsoluteLayout.LayoutBounds="1,0"
@@ -74,12 +78,16 @@
 
                                 <Button AbsoluteLayout.LayoutBounds="1,1"
                                         AbsoluteLayout.LayoutFlags="PositionProportional"
-                                        BackgroundColor="Transparent"
-                                        ImageSource="ic_more_vert_black_24dp.png"
                                         Margin="13,7"
-                                        Clicked="subpopulationItemMenu_clicked"
                                         HeightRequest="{StaticResource minTouchableHeight}"
                                         WidthRequest="{StaticResource minTouchableWidth}"
+                                        
+                                        BackgroundColor="Transparent"
+                                        Text="{Static const:FAIcons.EllipsisVertical}"
+                                        FontFamily="{Static const:Fonts.FAsolid}"
+                                        
+                                        Clicked="subpopulationItemMenu_clicked"
+                                        
                                         AutomationProperties.IsInAccessibleTree="True"
                                         AutomationProperties.Name="Show Actions Item" />
                             </AbsoluteLayout>

@@ -29,7 +29,7 @@ namespace FScruiser.XF.Views
         private void Page_BindingContextChanged(object sender, EventArgs e)
         {
             var vm = BindingContext as SubpopulationListViewModel;
-            if (vm != null) return;
+            if (vm == null) return;
 
             vm.SubpopulationAdded += HandleSubpopulationAdded;
         }
