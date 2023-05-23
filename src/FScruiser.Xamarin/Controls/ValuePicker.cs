@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -293,15 +292,6 @@ namespace FScruiser.XF.Controls
             {
                 _selectedValueDrivesSelection = false;
                 PendingSelectByValueItem = null;
-            }
-        }
-
-        protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            base.OnPropertyChanged(propertyName);
-
-            if (propertyName == nameof(SelectedValue))
-            {
             }
         }
 
