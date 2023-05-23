@@ -83,6 +83,8 @@
                                            BackgroundColor="{StaticResource usfs_footer_bottom}"
                                            HasShadow="False"
                                            HorizontalOptions="Fill"
+                                           CornerRadius="5"
+                                           Margin="5,0"
                                            Padding="0">
                                         <VisualStateManager.VisualStateGroups>
                                             <VisualStateGroupList>
@@ -140,7 +142,7 @@
                                                 <Label Text="Stratum" />
                                                 <StackLayout Orientation="Horizontal">
                                                     <controls:ValuePicker WidthRequest="150"
-                                                                          ValueSource="{Binding StratumOptions}"
+                                                                          ItemsSource="{Binding StratumOptions}"
                                                                           SelectedValue="{Binding Stratum}" />
                                                     <StackLayout Orientation="Horizontal"
                                                                  IsVisible="{Binding BigBAFSampleGroupOptions, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
@@ -162,6 +164,8 @@
                                            BackgroundColor="{StaticResource usfs_footer_bottom}"
                                            HasShadow="False"
                                            HorizontalOptions="Fill"
+                                           CornerRadius="5"
+                                           Margin="5,0"
                                            Padding="0">
                                         <VisualStateManager.VisualStateGroups>
                                             <VisualStateGroupList>
@@ -235,6 +239,8 @@
                                            BackgroundColor="{StaticResource usfs_footer_bottom}"
                                            HasShadow="False"
                                            HorizontalOptions="Fill"
+                                           CornerRadius="5"
+                                           Margin="5,0"
                                            Padding="0">
                                         <VisualStateManager.VisualStateGroups>
                                             <VisualStateGroupList>
@@ -310,7 +316,8 @@
                             </StackLayout.Resources>
                             <RadioButton Value="stratum"
                                          GroupName="mode"
-                                         ControlTemplate="{StaticResource StModeRadioButtonTemplate}">
+                                         ControlTemplate="{StaticResource StModeRadioButtonTemplate}"
+                                         IsVisible="{Binding StratumOptions, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
                             </RadioButton>
 
                             <RadioButton Value="{Static vm:LimitingDistanceViewModel.MODE_FPS}"
@@ -413,7 +420,7 @@
                             <controls:LastChildWidthLayout>
                                 <Label x:Name="_measuringToPickerHeading">Measuring To</Label>
                                 <controls:ValuePicker SelectedValue="{Binding MeasureToSelection}"
-                                                      ValueSource="{Binding MeasureToOptions}"
+                                                      ItemsSource="{Binding MeasureToOptions}"
                                                       HorizontalOptions="FillAndExpand"
                                                       AutomationProperties.LabeledBy="{x:Reference _measuringToPickerHeading}" />
                             </controls:LastChildWidthLayout>

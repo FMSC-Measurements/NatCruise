@@ -118,21 +118,21 @@
                             <controls:LastChildHeightLayout Grid.Row="0"
                                                             Grid.Column="0">
                                 <Label Text="Species" />
-                                <controls:ValuePicker ValueSource="{Binding SpeciesOptions}"
+                                <controls:ValuePicker ItemsSource="{Binding SpeciesOptions}"
                                                       SelectedValue="{Binding NewRuleSelector.Species}" />
                             </controls:LastChildHeightLayout>
 
                             <controls:LastChildHeightLayout Grid.Row="0"
                                                             Grid.Column="1">
                                 <Label Text="Live/Dead" />
-                                <controls:ValuePicker ValueSource="{Binding LiveDeadOptions}"
+                                <controls:ValuePicker ItemsSource="{Binding LiveDeadOptions}"
                                                       SelectedValue="{Binding NewRuleSelector.LiveDead}" />
                             </controls:LastChildHeightLayout>
 
                             <controls:LastChildHeightLayout Grid.Row="0"
                                                             Grid.Column="2">
                                 <Label Text="Product" />
-                                <controls:ValuePicker ValueSource="{Binding ProductCodeOptions}"
+                                <controls:ValuePicker ItemsSource="{Binding ProductCodeOptions}"
                                                       SelectedValue="{Binding NewRuleSelector.PrimaryProduct}" />
                             </controls:LastChildHeightLayout>
 

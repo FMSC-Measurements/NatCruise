@@ -21,7 +21,9 @@
 
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" BackgroundColor="{StaticResource uswds_lgt_tan}">
+        <!-- Add New TAR Panel-->
+        <Grid Grid.Row="0"
+              BackgroundColor="{StaticResource uswds_lgt_tan}">
             <Grid.Resources>
                 <!--<Style TargetType="controls:LastChildHeightLayout">
                     <Setter Property="HeightRequest"
@@ -52,22 +54,22 @@
 
             <StackLayout Grid.Column="0">
                 <Label Text="Field" />
-                <Picker />
+                <controls:ValuePicker ItemsSource="{Binding TreeFieldOptions}" />
             </StackLayout>
 
             <StackLayout Grid.Column="1">
                 <Label Text="Min" />
-                <Entry Text="Fix Binding" />
+                <Entry Text="{Binding NewTreeAuditRule.Min}" />
             </StackLayout>
 
             <StackLayout Grid.Column="2">
                 <Label Text="Max" />
-                <Entry Text="Fix Me" />
+                <Entry Text="{Binding NewTreeAuditRule.Max}" />
             </StackLayout>
 
             <StackLayout Grid.Column="0"
-                                            Grid.ColumnSpan="3"
-                                            Grid.Row="1">
+                         Grid.ColumnSpan="3"
+                         Grid.Row="1">
                 <Label Text="Description" />
                 <Entry Text="{Binding NewTreeAuditRule.Description}" />
             </StackLayout>
@@ -77,7 +79,7 @@
                     BackgroundColor="{StaticResource uswds_vivid_green}"
                     Grid.Column="3"
                     Grid.Row="0"
-                    Grid.RowSpan="2"/>
+                    Grid.RowSpan="2" />
         </Grid>
 
         <CollectionView Grid.Row="1"
@@ -100,13 +102,16 @@
                             
                         </StackLayout>-->
 
-                        <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, Auto">
+                        <Grid RowDefinitions="Auto, Auto"
+                              ColumnDefinitions="*, Auto">
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.ShowEditTreeAuditRule, Source={Reference _page}}"
                                                       CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
-                            
-                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Field, StringFormat='Field: {0}'}"
+
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="{Binding Field, StringFormat='Field: {0}'}"
                                    FontSize="Title" />
 
                             <Label Grid.Row="1"
@@ -121,15 +126,17 @@
                                 <Label Text="{Binding Max, StringFormat='Max: {0:F}'}" />
                             </StackLayout>
                         </Grid>
-                        
-                        
-                        
+
+
+
                         <!--<Grid>
                             <Grid.Resources>
-                                --><!--<Style TargetType="controls:LastChildHeightLayout">
+                                -->
+                        <!--<Style TargetType="controls:LastChildHeightLayout">
                                     <Setter Property="LastChildHeight"
                                             Value="40" />
-                                </Style>--><!--
+                                </Style>-->
+                        <!--
                             </Grid.Resources>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.ShowEditTreeAuditRule, Source={Reference _page}}"

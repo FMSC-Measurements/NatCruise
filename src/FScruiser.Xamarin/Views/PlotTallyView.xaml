@@ -142,7 +142,7 @@
                                 <local_ctrls:LastChildHeightLayout Style="{StaticResource treeSepeciesFieldStyle}">
                                     <Label Text="Species" />
                                     <local_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
-                                                             ValueSource="{Binding SpeciesOptions}" />
+                                                             ItemsSource="{Binding SpeciesOptions}" />
                                 </local_ctrls:LastChildHeightLayout>
 
                                 <!-- rest of the tree fields -->
@@ -242,7 +242,7 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="{Binding Heading}" />
                                                         <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                                                 ValueSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
+                                                                                 ItemsSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
                                                     </local_ctrls:LastChildHeightLayout>
                                                 </DataTemplate>
                                             </local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
@@ -270,7 +270,7 @@
                                                     <local_ctrls:LastChildHeightLayout>
                                                         <Label Text="L/D" />
                                                         <local_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference _treeFieldsLayout}}"
-                                                                                 ValueSource="{Binding BindingContext.LiveDeadOptions, Source={Reference _treeFieldsLayout}}" />
+                                                                                 ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference _treeFieldsLayout}}" />
 
                                                     </local_ctrls:LastChildHeightLayout>
                                                 </DataTemplate>

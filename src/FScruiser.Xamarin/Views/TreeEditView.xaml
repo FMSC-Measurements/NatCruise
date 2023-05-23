@@ -126,7 +126,7 @@
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_stratumCodeEntry"
                                       SelectedValue="{Binding StratumCode}"
-                                      ValueSource="{Binding StratumCodes}"
+                                      ItemsSource="{Binding StratumCodes}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Stratum">
                 </controls:ValuePicker>
@@ -143,7 +143,7 @@
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_sampleGroupEntry"
                                       SelectedValue="{Binding SampleGroupCode}"
-                                      ValueSource="{Binding SampleGroupCodes}"
+                                      ItemsSource="{Binding SampleGroupCodes}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Sample Group">
                 </controls:ValuePicker>
@@ -160,7 +160,7 @@
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_speciesEntry"
                                       SelectedValue="{Binding SpeciesCode}"
-                                      ValueSource="{Binding SpeciesOptions}"
+                                      ItemsSource="{Binding SpeciesOptions}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Species">
                 </controls:ValuePicker>
@@ -178,12 +178,12 @@
                                       SelectedValue="{Binding LiveDead}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Live Dead">
-                    <controls:ValuePicker.ValueSource>
+                    <controls:ValuePicker.ItemsSource>
                         <Array Type="{x:Type x:String}">
                             <x:String>L</x:String>
                             <x:String>D</x:String>
                         </Array>
-                    </controls:ValuePicker.ValueSource>
+                    </controls:ValuePicker.ItemsSource>
                 </controls:ValuePicker>
 
             </StackLayout>
@@ -210,7 +210,7 @@
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_initialsPicker"
                                       SelectedValue="{Binding Initials}"
-                                      ValueSource="{Binding Cruisers}"
+                                      ItemsSource="{Binding Cruisers}"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Initials" />
             </StackLayout>
@@ -406,7 +406,7 @@
                                     <controls:LastChildWidthLayout>
                                         <Label Text="Grade" />
                                         <controls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                              ValueSource="{Binding BindingContext.GradeOptions, Source={Reference _page}}" />
+                                                              ItemsSource="{Binding BindingContext.GradeOptions, Source={Reference _page}}" />
 
                                     </controls:LastChildWidthLayout>
                                 </Frame>
