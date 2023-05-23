@@ -1,26 +1,24 @@
-﻿using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using System.Linq;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace FScruiser.XF.Controls
 {
-
     // the standard picker works more off of object.ReferenceEquals
     // value picker equates selectedValue from ValueSource by their string value
-    // making it work better with value types 
+    // making it work better with value types
     public class ValuePicker : View, IFontElement
     {
-
         #region TextElement Properties
+
         public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
             nameof(TextColor),
             typeof(Color),
@@ -37,9 +35,11 @@ namespace FScruiser.XF.Controls
         private void OnTextColorPropertyChanged(Color oldValue, Color newValue)
         {
         }
-        #endregion
+
+        #endregion TextElement Properties
 
         #region FontElement Properties
+
         public static readonly BindableProperty FontProperty = BindableProperty.Create(
             "Font",
             typeof(Font),
@@ -216,9 +216,11 @@ namespace FScruiser.XF.Controls
         }
 
         void IFontElement.OnFontChanged(Font oldValue, Font newValue) => InvalidateMeasure();
+
         #endregion FontElement Properties
 
         #region Title Properties
+
         public static readonly BindableProperty TitleProperty = BindableProperty.Create(
             nameof(Title),
             typeof(string),
@@ -243,9 +245,11 @@ namespace FScruiser.XF.Controls
             get => (Color)((BindableObject)this).GetValue(ValuePicker.TitleColorProperty);
             set => ((BindableObject)this).SetValue(ValuePicker.TitleColorProperty, value);
         }
+
         #endregion Title Properties
 
         #region selected value property
+
         public static readonly BindableProperty SelectedValueProperty = BindableProperty.Create(
             nameof(SelectedValue),
             typeof(object),
@@ -296,9 +300,8 @@ namespace FScruiser.XF.Controls
         {
             base.OnPropertyChanged(propertyName);
 
-            if(propertyName == nameof(SelectedValue))
+            if (propertyName == nameof(SelectedValue))
             {
-
             }
         }
 
@@ -334,11 +337,11 @@ namespace FScruiser.XF.Controls
         }
 
         private MethodInfo _selectecValuePathGetter;
+
         #endregion SelectedValuePath Property
 
-
-
         #region SelectedIndex Property
+
         public static readonly BindableProperty SelectedIndexProperty = BindableProperty.Create(
             nameof(SelectedIndex),
             typeof(int),
@@ -374,7 +377,6 @@ namespace FScruiser.XF.Controls
             {
                 SelectItem(items[newValue]);
             }
-
         }
 
         public int SelectedIndex
@@ -382,8 +384,8 @@ namespace FScruiser.XF.Controls
             get => (int)GetValue(ValuePicker.SelectedIndexProperty);
             set => SetValue(ValuePicker.SelectedIndexProperty, value);
         }
-        #endregion SelectedIndex Property
 
+        #endregion SelectedIndex Property
 
         //public static readonly BindableProperty ValueSourceProperty = BindableProperty.Create(
         //    nameof(ValueSource),
@@ -401,8 +403,6 @@ namespace FScruiser.XF.Controls
         //protected virtual void OnValueSourceChanged(IList oldValue, IList newValue)
         //{
         //}
-
-
 
         #region SelectedItem property
 
@@ -447,14 +447,13 @@ namespace FScruiser.XF.Controls
             set => SetValue(SelectedItemProperty, value);
         }
 
-
-
         // can we simplify and just use _isSelectionChanging
-        bool _skipCoerceSelectedItem;
+        private bool _skipCoerceSelectedItem;
 
-        #endregion
+        #endregion SelectedItem property
 
         #region Text Property
+
         public static readonly BindableProperty TextProperty = BindableProperty.Create(
             nameof(Text),
             typeof(String),
@@ -477,9 +476,8 @@ namespace FScruiser.XF.Controls
         }
 
         //bool _isUpdatingText;
-        #endregion Text property
 
-
+        #endregion Text Property
 
         public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
             nameof(ItemsSource),
@@ -510,8 +508,6 @@ namespace FScruiser.XF.Controls
                 Items.Clear();
             }
 
-            
-
             void ItemSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
                 switch (e.Action)
@@ -519,9 +515,11 @@ namespace FScruiser.XF.Controls
                     case NotifyCollectionChangedAction.Add:
                         AddItems(e);
                         break;
+
                     case NotifyCollectionChangedAction.Remove:
                         RemoveItems(e);
                         break;
+
                     default: //Move, Replace, Reset
                         ResetItems();
                         break;
@@ -570,14 +568,11 @@ namespace FScruiser.XF.Controls
             }
         }
 
-
         public IList ItemsSource
         {
             get => (IList)GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
         }
-
-
 
         public IList Items { get; } = new List<object>();
 
@@ -600,7 +595,7 @@ namespace FScruiser.XF.Controls
                 return;
             string[] displayValues = new string[items.Count];
             for (int index = 0; index < count; ++index)
-                displayValues[index] = GetItemDisplayValue(items[index]);
+                displayValues[index] = GetItemDisplayValue(items[index]) ?? "";
             string cancel = "Cancel";
             string str = await this.DisplayActionSheet(this.Title ?? "", cancel, (string)null, displayValues);
             if (str == null || !(str != cancel))
@@ -608,8 +603,6 @@ namespace FScruiser.XF.Controls
             int index1 = EnumerableExtensions.IndexOf<string>(displayValues, str);
             SelectedIndex = index1;
         }
-
-
 
         private Task<string> DisplayActionSheet(
           string title,
@@ -624,7 +617,6 @@ namespace FScruiser.XF.Controls
             return actionSheetArguments.Result.Task;
         }
 
-
         protected void UpdateSelection()
         {
             Debug.Assert(_isSelectionChanging);
@@ -635,7 +627,10 @@ namespace FScruiser.XF.Controls
                 try
                 {
                     _skipCoerceSelectedItem = true;
-                    SelectedItem = desiredSelectedItem;
+                    if (desiredSelectedItem != BindableProperty.UnsetValue)
+                    { SelectedItem = desiredSelectedItem; }
+                    else
+                    { ClearValue(SelectedItemProperty); }
                 }
                 finally
                 {
@@ -653,7 +648,7 @@ namespace FScruiser.XF.Controls
                 SelectedIndex = CalculateSelectedIndex();
             }
 
-            if(desiredSelectedItem != null)
+            if (desiredSelectedItem != null)
             {
                 _selectedValueWaitsForItems = false;
             }
@@ -666,10 +661,9 @@ namespace FScruiser.XF.Controls
                     SelectedValue = desiredSelectedValue;
                 }
             }
-
         }
 
-        int CalculateSelectedIndex()
+        private int CalculateSelectedIndex()
         {
             var selectedItem = SelectedItem;
             if (selectedItem == null)
@@ -679,7 +673,6 @@ namespace FScruiser.XF.Controls
 
             return index;
         }
-
 
         protected void SelectItemAtIndex(int index)
         {
@@ -787,7 +780,7 @@ namespace FScruiser.XF.Controls
 
         protected string GetItemDisplayValue(object item)
         {
-            return item == null ? string.Empty : item.ToString();
+            return item?.ToString();
         }
 
         protected MethodInfo PrepareValueGetter(object item)
@@ -815,7 +808,6 @@ namespace FScruiser.XF.Controls
             }
 
             return _selectecValuePathGetter;
-
         }
     }
 }

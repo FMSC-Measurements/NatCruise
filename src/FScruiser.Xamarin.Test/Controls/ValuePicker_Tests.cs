@@ -194,7 +194,7 @@ namespace FScruiser.XF.Controls
         [Trait("Description", "")]
         public void Change_SelectedValue_WithStringData()
         {
-            
+            Output.WriteLine(BindableProperty.UnsetValue.ToString() + BindableProperty.UnsetValue.GetHashCode().ToString());
             var mockVM = new MockViewModel
             {
                 Data = Make_StringData(3),
@@ -244,6 +244,15 @@ namespace FScruiser.XF.Controls
             picker.SelectedValue.Should().BeSameAs(mockVM.SelectedValue);
             picker.Text.Should().Be(mockVM.SelectedValue.ToString());
 
+            mockVM.SelectedValue = null;
+            valueCounter.Should().Be(3);
+            itemCounter.Should().Be(3);
+
+            expectedItemIndex = -1;
+            picker.SelectedIndex.Should().Be(expectedItemIndex);
+            picker.SelectedItem.Should().BeNull();
+            picker.SelectedValue.Should().BeSameAs(mockVM.SelectedValue);
+            picker.Text.Should().BeNull();
         }
 
         [Fact]
@@ -300,6 +309,17 @@ namespace FScruiser.XF.Controls
             picker.SelectedItem.Should().BeSameAs(mockVM.Data[expectedItemIndex]);
             picker.SelectedValue.Should().BeSameAs(mockVM.SelectedValue);
             picker.Text.Should().Be(mockVM.SelectedValue.ToString());
+
+
+            mockVM.SelectedValue = null;
+            valueCounter.Should().Be(2);
+            itemCounter.Should().Be(3);
+
+            expectedItemIndex = -1;
+            picker.SelectedIndex.Should().Be(expectedItemIndex);
+            picker.SelectedItem.Should().BeNull();
+            picker.SelectedValue.Should().BeNull();
+            picker.Text.Should().BeNull();
 
         }
     }
