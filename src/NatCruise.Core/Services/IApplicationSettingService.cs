@@ -14,6 +14,8 @@ namespace NatCruise.Services
 
         bool UseNewLimitingDistanceCalculator { get; set; }
 
+        bool SelectPrevNextTreeSkipsCountTrees { get; set; }
+
         void Save();
     }
 }

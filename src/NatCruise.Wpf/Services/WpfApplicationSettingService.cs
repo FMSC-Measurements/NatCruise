@@ -63,6 +63,7 @@ namespace NatCruise.Wpf.Services
         }
 
         public bool UseNewLimitingDistanceCalculator { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool SelectPrevNextTreeSkipsCountTrees { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Save()
         {

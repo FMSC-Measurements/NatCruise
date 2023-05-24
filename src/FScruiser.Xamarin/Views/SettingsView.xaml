@@ -8,28 +8,34 @@
     <ContentPage.Content>
         <StackLayout Padding="5">
             <StackLayout>
-                <StackLayout Orientation="Horizontal">
+                <StackLayout Orientation="Horizontal"
+                             BackgroundColor="{StaticResource uswds_lgt_tan}">
 
-                    <Label Text="Analytics"
+                    <Label x:Name="_analyticsLabel"
+                           Text="Analytics"
                            VerticalTextAlignment="Center"
-                           AutomationProperties.IsInAccessibleTree="False"/>
+                           AutomationProperties.IsInAccessibleTree="False" />
 
                     <Switch IsToggled="{Binding AppSettings.EnableAnalitics}"
                             HeightRequest="{StaticResource minTouchableHeight}"
+                            HorizontalOptions="EndAndExpand"
                             AutomationProperties.IsInAccessibleTree="True"
-                            AutomationProperties.Name="Analitics Toggle"/>
+                            AutomationProperties.LabeledBy="{Reference _analyticsLabel}" />
 
                 </StackLayout>
-                <StackLayout Orientation="Horizontal">
+                <StackLayout Orientation="Horizontal"
+                             BackgroundColor="{StaticResource uswds_lgt_tan}">
 
-                    <Label Text="Crash/Error Reports"
+                    <Label x:Name="_crashErrorReportsLabel"
+                           Text="Crash/Error Reports"
                            VerticalTextAlignment="Center"
-                           AutomationProperties.IsInAccessibleTree="False"/>
+                           AutomationProperties.IsInAccessibleTree="False" />
 
                     <Switch IsToggled="{Binding AppSettings.EnableCrashReports}"
                             HeightRequest="{StaticResource minTouchableHeight}"
+                            HorizontalOptions="EndAndExpand"
                             AutomationProperties.IsInAccessibleTree="True"
-                            AutomationProperties.Name="Crash Reports Toggle" />
+                            AutomationProperties.LabeledBy="{Reference _crashErrorReportsLabel }" />
 
                 </StackLayout>
             </StackLayout>
@@ -41,30 +47,47 @@
             <BoxView HeightRequest="2"
                      BackgroundColor="DarkGray" />
 
-            <StackLayout Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal"
+                         BackgroundColor="{StaticResource uswds_lgt_tan}">
 
-                <Label Text="Use New Limiting Distance Calculator"
+                <Label x:Name="_useNewLimitingDistanceLabel"
+                       Text="Use New Limiting Distance Calculator"
                        VerticalTextAlignment="Center"
                        AutomationProperties.IsInAccessibleTree="False" />
 
                 <Switch IsToggled="{Binding AppSettings.UseNewLimitingDistanceCalculator}"
                         HeightRequest="{StaticResource minTouchableHeight}"
+                        HorizontalOptions="EndAndExpand"
                         AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.Name="Use New LimitingDistance Calculator Toggle" />
+                        AutomationProperties.LabeledBy="{Reference _useNewLimitingDistanceLabel}" />
 
             </StackLayout>
+
+            <StackLayout Orientation="Vertical"
+                         BackgroundColor="{StaticResource uswds_lgt_tan}">
+                <Label x:Name="_selectPrevNextSkipsCountTreesLabel"
+                       Text="Plot Tally: Select Prev/Next Tree Skips Count Trees"
+                       VerticalTextAlignment="Center"
+                       AutomationProperties.IsInAccessibleTree="False" />
+                <Switch IsToggled="{Binding AppSettings.SelectPrevNextTreeSkipsCountTrees}"
+                        HeightRequest="{StaticResource minTouchableHeight}"
+                        HorizontalOptions="EndAndExpand"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.LabeledBy="{Reference _selectPrevNextSkipsCountTreesLabel}" />
+            </StackLayout>
+
 
             <Button Text="Privacy Policy"
                     Command="{Binding ShowPrivacyPolicyCommand}"
                     VerticalOptions="EndAndExpand"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Privacy Policy"/>
+                    AutomationProperties.Name="Privacy Policy" />
             <Button Text="User Agreement"
                     Command="{Binding ShowUserAgreementCommand}"
                     IsVisible="False"
                     VerticalOptions="End"
                     AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="User Agreement"/>
+                    AutomationProperties.Name="User Agreement" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

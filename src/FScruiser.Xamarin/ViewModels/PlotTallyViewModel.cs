@@ -8,6 +8,7 @@ using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
+using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Commands;
 using Prism.Common;
@@ -24,6 +25,7 @@ namespace FScruiser.XF.ViewModels
 {
     public class PlotTallyViewModel : ViewModelBase
     {
+
         private const string STRATUM_FILTER_ALL = "All";
 
         private int _plotNumber;
@@ -58,6 +60,8 @@ namespace FScruiser.XF.ViewModels
         public IContainerProvider ContainerProvider { get; }
         public IPlotTallyService TallyService { get; }
         public IPlotTreeDataservice PlotTreeDataservice { get; }
+
+        public bool SelectPrevNextTreeSkipsCountTrees { get; set; }
 
         public PlotTreeEntry SelectedTree
         {
@@ -125,6 +129,7 @@ namespace FScruiser.XF.ViewModels
 
         public PlotTallyViewModel(ICruiseNavigationService navigationService,
             INatCruiseDialogService dialogService,
+            IApplicationSettingService applicationSettingService,
             ITreeDataservice treeDataservice,
             IPlotDataservice plotDataservice,
             ICuttingUnitDataservice cuttingUnitDataservice,
@@ -138,6 +143,8 @@ namespace FScruiser.XF.ViewModels
             IPlotTallyService tallyService,
             IPlotTreeDataservice plotTreeDataservice)
         {
+            SelectPrevNextTreeSkipsCountTrees = applicationSettingService.SelectPrevNextTreeSkipsCountTrees;
+
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
@@ -387,7 +394,9 @@ namespace FScruiser.XF.ViewModels
             if (i == -1) { return; }
             if (i < 1) { return; }
 
-            var prevTree = trees.ReverseSearch(x => x.TreeID != null && x.CountOrMeasure == "M", i - 1);
+            var prevTree = (SelectPrevNextTreeSkipsCountTrees) ?
+                trees.ReverseSearch(x => x.TreeID != null && x.CountOrMeasure != "C", i - 1)
+                : trees.ReverseSearch(x => x.TreeID != null, i - 1);
             if (prevTree != null)
             {
                 SelectTree(prevTree);
@@ -404,7 +413,9 @@ namespace FScruiser.XF.ViewModels
             if (i == -1) { return; }
             if (i == trees.Count - 1) { return; }
 
-            var nextTree = trees.Search(x => x.TreeID != null && x.CountOrMeasure == "M", i + 1);
+            var nextTree = (SelectPrevNextTreeSkipsCountTrees) ?
+                trees.Search(x => x.TreeID != null && x.CountOrMeasure != "C", i + 1)
+                : trees.Search(x => x.TreeID != null, i + 1);
             if (nextTree != null)
             {
                 SelectTree(nextTree);
