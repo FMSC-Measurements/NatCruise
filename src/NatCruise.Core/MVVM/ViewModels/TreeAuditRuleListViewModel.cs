@@ -14,7 +14,7 @@ namespace NatCruise.MVVM.ViewModels
     public class TreeAuditRuleListViewModel : ViewModelBase
     {
         private ObservableCollection<TreeAuditRule> _treeAuditRules;
-        private TreeAuditRule _newTreeAuditRule = new TreeAuditRule();
+        private TreeAuditRule _newTreeAuditRule;
         private DelegateCommand _addNewTreeAuditRuleCommand;
         private DelegateCommand<TreeAuditRule> _deleteTreeAuditRuleCommand;
         private ICommand _showEditTreeAuditRule;
@@ -25,6 +25,7 @@ namespace NatCruise.MVVM.ViewModels
             TreeAuditRuleDataservice = treeAuditRuleDataservice ?? throw new ArgumentNullException(nameof(treeAuditRuleDataservice));
             TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
 
+            NewTreeAuditRule = new TreeAuditRule();
             TreeFieldOptions = TreeFieldDataservice.GetTreeFields();
         }
 
@@ -54,11 +55,21 @@ namespace NatCruise.MVVM.ViewModels
         public void AddNewTreeAuditRule()
         {
             var newTreeAuditRule = NewTreeAuditRule;
-            NewTreeAuditRule = new TreeAuditRule();
-            if (newTreeAuditRule == null) { return; }
+            if (newTreeAuditRule == null) {
+                NewTreeAuditRule = new TreeAuditRule();
+                return;
+            }
+
+            if (newTreeAuditRule.Min == null || newTreeAuditRule.Max == null)
+            { return; }
+            if(newTreeAuditRule.Min.HasValue && newTreeAuditRule.Max.HasValue
+                && Math.Round(newTreeAuditRule.Min.Value, 2) >= Math.Round(newTreeAuditRule.Max.Value, 2))
+            { return; }
+                
 
             newTreeAuditRule.TreeAuditRuleID = Guid.NewGuid().ToString();
             TreeAuditRuleDataservice.AddTreeAuditRule(newTreeAuditRule);
+            NewTreeAuditRule = new TreeAuditRule();
             TreeAuditRules.Add(newTreeAuditRule);
         }
 

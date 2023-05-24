@@ -77,6 +77,12 @@ namespace NatCruise.MVVM.ViewModels
         {
             var tar = (TreeAuditRule)sender;
 
+            if (tar.Min == null || tar.Max == null)
+            { return; }
+            if (tar.Min.HasValue && tar.Max.HasValue
+                && Math.Round(tar.Min.Value, 2) >= Math.Round(tar.Max.Value, 2))
+            { return; }
+
             TreeAuditRuleDataservice.UpsertTreeAuditRule(tar);
         }
 

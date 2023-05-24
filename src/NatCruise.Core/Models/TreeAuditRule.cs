@@ -22,13 +22,21 @@ namespace NatCruise.Models
         public double? Min
         {
             get => _min;
-            set => SetProperty(ref _min, value);
+            set
+            {
+                if (value < 0) value = 0;
+                SetProperty(ref _min, value);
+            }
         }
 
         public double? Max
         {
             get => _max;
-            set => SetProperty(ref _max, value);
+            set
+            {
+                if (value < 0) value = 0;
+                SetProperty(ref _max, value);
+            }
         }
 
         public string Description
