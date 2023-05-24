@@ -54,17 +54,21 @@
 
             <StackLayout Grid.Column="0">
                 <Label Text="Field" />
-                <controls:ValuePicker ItemsSource="{Binding TreeFieldOptions}" />
+                <controls:ValuePicker ItemsSource="{Binding TreeFieldOptions}"
+                                      SelectedValue="{Binding NewTreeAuditRule.Field}"
+                                      SelectedValuePath="Field"/>
             </StackLayout>
 
             <StackLayout Grid.Column="1">
                 <Label Text="Min" />
-                <Entry Text="{Binding NewTreeAuditRule.Min}" />
+                <Entry Text="{Binding NewTreeAuditRule.Min}" 
+                       Keyboard="Numeric"/>
             </StackLayout>
 
             <StackLayout Grid.Column="2">
                 <Label Text="Max" />
-                <Entry Text="{Binding NewTreeAuditRule.Max}" />
+                <Entry Text="{Binding NewTreeAuditRule.Max}"
+                       Keyboard="Numeric"/>
             </StackLayout>
 
             <StackLayout Grid.Column="0"
@@ -76,6 +80,7 @@
 
             <Button Text="{Static const:FAIcons.CirclePlus}"
                     FontFamily="{Static const:Fonts.FAsolid}"
+                    Command="{Binding AddNewTreeAuditRuleCommand}"
                     BackgroundColor="{StaticResource uswds_vivid_green}"
                     Grid.Column="3"
                     Grid.Row="0"
