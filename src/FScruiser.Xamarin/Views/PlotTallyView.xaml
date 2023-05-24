@@ -135,14 +135,19 @@
                                     </ResourceDictionary>
                                 </StackLayout.Resources>
 
-
-
-
                                 <!-- species -->
                                 <local_ctrls:LastChildHeightLayout Style="{StaticResource treeSepeciesFieldStyle}">
                                     <Label Text="Species" />
                                     <local_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
                                                              ItemsSource="{Binding SpeciesOptions}" />
+                                </local_ctrls:LastChildHeightLayout>
+
+                                <!-- count measure -->
+                                <local_ctrls:LastChildHeightLayout Style="{StaticResource baseTreeFieldStyle}"
+                                                                   IsVisible="{Binding CruiseMethod, Converter={StaticResource isTwoStagePlotMethod} }">
+                                    <Label Text="Count/Measure" />
+                                    <local_ctrls:ValuePicker SelectedValue="{Binding CountOrMeasure}"
+                                                             ItemsSource="{Binding CountOrMeasureOptions}" />
                                 </local_ctrls:LastChildHeightLayout>
 
                                 <!-- rest of the tree fields -->

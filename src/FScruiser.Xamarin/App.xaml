@@ -106,6 +106,8 @@
                                                     x:Key="isVariableRadiousPlotConverter" />
             <converters:CruiseMethodToBoolConverter MethodMap="ThreePPNT"
                                                     x:Key="isThreePPNTConverter" />
+            <converters:CruiseMethodToBoolConverter MethodMap="TwoStagePlotMethods"
+                                                    x:Key="isTwoStagePlotMethod" />
 
             <!-- base styles -->
             <Style x:Key="button_base"

@@ -100,34 +100,26 @@ namespace FScruiser.XF.ViewModels
         {
             var vm = (TreeEditViewModel)sender;
             var tree = SelectedTree;
+            if (tree == null) return;
             if (e.PropertyName == nameof(TreeEditViewModel.ErrorsAndWarnings))
             {
-
-                if (tree != null)
-                {
-                    PlotTreeDataservice.RefreshErrorsAndWarnings(tree);
-                }
+                PlotTreeDataservice.RefreshErrorsAndWarnings(tree);
             }
             if (e.PropertyName == nameof(TreeEditViewModel.SpeciesCode))
             {
-                if (tree != null)
-                {
-                    tree.SpeciesCode = vm.SpeciesCode;
-                }
+                tree.SpeciesCode = vm.SpeciesCode;
             }
             if (e.PropertyName == nameof(TreeEditViewModel.LiveDead))
             {
-                if (tree != null)
-                {
-                    tree.LiveDead = vm.LiveDead;
-                }
+                tree.LiveDead = vm.LiveDead;
             }
             if (e.PropertyName == nameof(TreeEditViewModel.TreeCount))
             {
-                if (tree != null)
-                {
-                    tree.TreeCount = vm.TreeCount;
-                }
+                tree.TreeCount = vm.TreeCount;
+            }
+            if (e.PropertyName == nameof(TreeEditViewModel.CountOrMeasure))
+            {
+                tree.CountOrMeasure = vm.CountOrMeasure;
             }
         }
 

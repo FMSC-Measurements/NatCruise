@@ -12,5 +12,6 @@ namespace NatCruise
         FrequencySampleMethods = STR | FCM | PCM | S3P,
         VariableRadiousPlotMethods = PCM | PNT | P3P,
         FixedSizePlotMethods = FIX | F3P | FCM,
+        TwoStagePlotMethods = FCM | PCM | F3P | P3P,
     }
 }
