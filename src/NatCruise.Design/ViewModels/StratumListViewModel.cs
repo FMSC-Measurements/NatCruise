@@ -143,7 +143,6 @@ namespace NatCruise.Design.ViewModels
             var newStratum = new Stratum
             {
                 StratumCode = code,
-                YieldComponent = "CL",
             };
 
             var stratumTemplate = SelectedStratumTemplate;
@@ -160,6 +159,8 @@ namespace NatCruise.Design.ViewModels
                 newStratum.SamplingFrequency = stratumTemplate.SamplingFrequency;
                 newStratum.YieldComponent = stratumTemplate.YieldComponent;
             }
+
+            newStratum.YieldComponent ??= "CL";
 
             try
             {
