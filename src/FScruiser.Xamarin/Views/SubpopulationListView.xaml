@@ -58,8 +58,7 @@
                             <SwipeItem Text="Delete"
                                        Command="{Binding BindingContext.RemoveSubpopulationCommand, Source={Reference _page}}"
                                        CommandParameter="{Binding .}"
-                                       BackgroundColor="Red"
-                                       IsEnabled="{Binding HasFieldData, Converter={StaticResource invertedBoolConverter}}" />
+                                       BackgroundColor="Red"/>
                         </SwipeView.LeftItems>
 
                         <Frame BorderColor="DarkGray"
@@ -85,6 +84,7 @@
                                         BackgroundColor="Transparent"
                                         Text="{Static const:FAIcons.EllipsisVertical}"
                                         FontFamily="{Static const:Fonts.FAsolid}"
+                                        IsEnabled="{Binding HasFieldData, Converter={StaticResource invertedBoolConverter}}"
                                         
                                         Clicked="subpopulationItemMenu_clicked"
                                         

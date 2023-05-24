@@ -21,7 +21,7 @@
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <SwipeView IsEnabled="False">
-                    <SwipeView.BottomItems>
+                    <!--<SwipeView.BottomItems>
                         <SwipeItems>
                             <SwipeItemView >
                                 <StackLayout Orientation="Horizontal">
@@ -32,12 +32,12 @@
                                 </StackLayout>
                             </SwipeItemView>
                         </SwipeItems>
-                    </SwipeView.BottomItems>
+                    </SwipeView.BottomItems>-->
                     <Frame BorderColor="DarkGray"
                            Margin="3"
                            Padding="0"
                            HasShadow="True">
-                        
+
                         <AbsoluteLayout>
                             <!--<AbsoluteLayout.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.ShowSampleGroupCommand, Source={Reference _page}}"
@@ -61,26 +61,29 @@
                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isFrequencySampleConverter}}" />
                                 <Label Text="{Binding KZ, StringFormat='KZ: {0}'}"
                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter} }" />
-                                <Label Text="{Binding InsuranceFrequency, StringFormat='Sampling Frequency: {0}'}" />
+                                <Label Text="{Binding InsuranceFrequency, StringFormat='Insurance Frequency: {0}'}" />
                                 <Label Text="{Binding BigBAF, StringFormat='BigBAF:{0}'}"
                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isVariableRadiousPlotConverter} }" />
-                                <Label Text="{Binding TallyBySubPop, StringFormat='Tally By Species: {0}'} "/>
+                                
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Tally By Species: "/>
+                                    <Switch IsToggled="{Binding TallyBySubPop}" IsEnabled="False" />
+                                </StackLayout>
+
                                 <Label Text="{Binding SampleSelectorType, StringFormat='Sample Selector Type: {0}'}"
                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isStrConverter}}" />
 
                             </StackLayout>
 
-                            <Button AbsoluteLayout.LayoutBounds="1,1"
+                            <Button AbsoluteLayout.LayoutBounds="1,0"
                                     AbsoluteLayout.LayoutFlags="PositionProportional"
                                     Margin="13,7"
                                     HeightRequest="{StaticResource minTouchableHeight}"
                                     WidthRequest="{StaticResource minTouchableWidth}"
-                                    
                                     Text="{Static const:FAIcons.EllipsisVertical}"
                                     FontFamily="{Static const:Fonts.FAsolid}"
-                                    
-                                    Clicked="sampleGroupItemMenuButton_clicked"
-                                    
+                                    BackgroundColor="Transparent"
+                                    Clicked="openSampleGroupMenu"
                                     AutomationProperties.IsInAccessibleTree="True"
                                     AutomationProperties.Name="Show Actions Item" />
                         </AbsoluteLayout>

@@ -15,6 +15,7 @@ namespace FScruiser.XF.ViewModels
 {
     public class StratumListViewModel : ViewModelBase
     {
+        public const string ALL_UNITS_OPTION = "All Units";
         private IEnumerable<Stratum> _strata;
         private ICommand _showFieldSetupCommand;
         private ICommand _showStratumDetailsCommand;
@@ -26,7 +27,8 @@ namespace FScruiser.XF.ViewModels
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             NavigationService = natCruiseNavigationService ?? throw new ArgumentNullException(nameof(natCruiseNavigationService));
 
-            CuttingUnitCodes = cuttingUnitDataservice.GetCuttingUnitCodes();
+            CuttingUnitFilter = ALL_UNITS_OPTION;
+            CuttingUnitCodes = cuttingUnitDataservice.GetCuttingUnitCodes().Prepend(ALL_UNITS_OPTION).ToArray();
         }
 
         public ICommand ShowFieldSetupCommand => _showFieldSetupCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowFieldSetup(st.StratumCode).FireAndForget());
@@ -46,14 +48,20 @@ namespace FScruiser.XF.ViewModels
         public string CuttingUnitFilter
         {
             get => _cuttingUnitFilter;
-            set => SetProperty(ref _cuttingUnitFilter, value);
+            set
+            {
+                SetProperty(ref _cuttingUnitFilter, value);
+                Load();
+            }
         }
 
         public override void Load()
         {
             base.Load();
 
-            Strata = StratumDataservice.GetStrata(CuttingUnitFilter);
+            var unitFilter = CuttingUnitFilter;
+            if (unitFilter == ALL_UNITS_OPTION) unitFilter = null;
+            Strata = StratumDataservice.GetStrata(unitFilter);
         }
     }
 }

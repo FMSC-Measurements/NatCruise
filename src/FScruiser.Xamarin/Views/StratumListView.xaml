@@ -92,13 +92,14 @@
                                                IsVisible="{Binding Method, Converter={StaticResource isThreePPNTConverter}}" />
                                     </StackLayout>
 
-                                    <Button AbsoluteLayout.LayoutBounds="1,1"
+                                    <Button AbsoluteLayout.LayoutBounds="1,0"
                                             AbsoluteLayout.LayoutFlags="PositionProportional"
                                             Margin="13,7"
                                             HeightRequest="{StaticResource minTouchableHeight}"
                                             WidthRequest="{StaticResource minTouchableWidth}"
                                             Text="{Static const:FAIcons.EllipsisVertical}"
                                             FontFamily="{Static const:Fonts.FAsolid}"
+                                            BackgroundColor="Transparent"
                                             Clicked="openStratumMenu"
                                             AutomationProperties.IsInAccessibleTree="True"
                                             AutomationProperties.Name="Show Actions Item" />
