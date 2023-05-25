@@ -57,17 +57,15 @@
                         Width="32"
                         IsEnabled="{Binding Text, Source={x:Reference _newSpeciesTextBox}, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
                         Command="{Binding AddSpeciesCommand}"
-                        CommandParameter="{Binding Text, Source={x:Reference _newSpeciesTextBox}}">
-                    <!--<i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding AddSpeciesCommand}"
-                                               CommandParameter="{Binding Text, Source={x:Reference _newSpeciesTextBox}}" />
-                        <triggers:ClearTextBoxAction TargetName="_newSpeciesTextBox" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>-->
-                </Button>
+                        CommandParameter="{Binding Text, Source={x:Reference _newSpeciesTextBox}}" />
+                <Button Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
+                        Style="{StaticResource RemoveButton}"
+                        Command="{Binding DeleteSpeciesCommand}"
+                        CommandParameter="{Binding SelectedItem, ElementName=_speciesDatagrid}"
+                        IsEnabled="{Binding SelectedItem, ElementName=_speciesDatagrid, Converter={StaticResource NotNullConverter}}"
+                        Width="32" />
             </StackPanel>
-            <DataGrid Grid.Column="0"
+            <DataGrid  Grid.Column="0"
                       Grid.Row="1"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
@@ -88,6 +86,7 @@
                     <!--<DataGridTextColumn Header="Contract Species"
                                     Binding="{Binding ContractSpecies}" />-->
                     <DataGridComboBoxColumn Header="FIA Code"
+                                            IsReadOnly="True"
                                             SelectedValueBinding="{Binding FIACode}"
                                             SelectedValuePath="FIACode"
                                             ItemsSource="{Binding Source={StaticResource fiaOptions}}" />
@@ -126,7 +125,8 @@
 
             <crls:LastChildWidthPanel>
                 <Label Content="FIA Code" />
-                <ComboBox ItemsSource="{Binding DataContext.FIAOptions, ElementName=_page}"
+                <ComboBox x:Name="_fiaCombobox"
+                          ItemsSource="{Binding DataContext.FIAOptions, ElementName=_page}"
                           IsTextSearchEnabled="True"
                           IsEditable="True"
                           SelectedValue="{Binding Species.FIACode}"
@@ -135,7 +135,8 @@
             </crls:LastChildWidthPanel>
 
 
-            <GroupBox Header="Contract Species" MinHeight="250">
+            <GroupBox Header="Contract Species"
+                      MinHeight="250">
                 <Grid crls:GridHelper.RowDefinitions="Auto, 2*, *">
 
                     <Border Grid.Row="0">

@@ -1,5 +1,6 @@
 ﻿using NatCruise.Data;
 using NatCruise.Design.Data;
+using NatCruise.Design.Util;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
@@ -86,7 +87,20 @@ namespace NatCruise.Design.ViewModels
             base.Load();
 
             Species = new ObservableCollection<Species>(SpeciesDataservice.GetSpecies());
-            FIAOptions = SetupDataservice.GetFIASpecies();
+
+            var speciesFiaCodes = Species.Select(x => x.FIACode).Where(x => !string.IsNullOrEmpty(x)).ToHashSet();
+            var fiaOptions = SetupDataservice.GetFIASpecies().ToList();
+            var optionFiaCode = fiaOptions.Select(x => x.FIACode).Where(x => !string.IsNullOrEmpty(x)).ToHashSet();
+
+            var missingFiaCode = speciesFiaCodes.Except(optionFiaCode);
+
+            foreach (var fia in missingFiaCode)
+            {
+                fiaOptions.Add(new FIASpecies{ FIACode = fia });
+            }
+            fiaOptions = fiaOptions.OrderBy(x => int.TryParse(x.FIACode, out var i)? i : 0).ToList();
+
+            FIAOptions = fiaOptions;
         }
 
         public void AddSpecies(string speciesCode)
@@ -124,7 +138,16 @@ namespace NatCruise.Design.ViewModels
         {
             if (species is null) { throw new ArgumentNullException(nameof(species)); }
 
-            SpeciesDataservice.DeleteSpecies(species.SpeciesCode);
+            try
+            {
+                SpeciesDataservice.DeleteSpecies(species.SpeciesCode);
+            }
+            catch (FMSC.ORM.ConstraintException e)
+            {
+                DialogService.ShowNotification("Can Not Delete Species With Data");
+            }
+
+            
         }
     }
 }

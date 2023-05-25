@@ -61,7 +61,8 @@ namespace NatCruise.MVVM.ViewModels
 
                 void _species_PropertyChanged(object sender, PropertyChangedEventArgs e)
                 {
-                    throw new NotImplementedException();
+                    var sp = (Species)sender;
+                    SpeciesDataservice.UpsertSpecies(sp);
                 }
             }
         }
