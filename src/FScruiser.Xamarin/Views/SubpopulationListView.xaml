@@ -30,14 +30,16 @@
                          Orientation="Horizontal">
                 <Label Text="Species"
                        VerticalTextAlignment="Center" />
-                <Picker ItemsSource="{Binding SpeciesOptions}"
-                        x:Name="_addSubpopSpeciesPicker"
-                        WidthRequest="100" />
+                <controls:ValuePicker ItemsSource="{Binding SpeciesOptions}"
+                                      x:Name="_addSubpopSpeciesPicker"
+                                      AuxiliaryActionHeading="New Species"
+                                      AuxiliaryActionClicked="_addSubpopSpeciesPicker_AuxiliaryActionClicked"
+                                      WidthRequest="100" />
                 <Button Text="{Static const:FAIcons.CirclePlus}"
                         FontFamily="{Static const:Fonts.FAsolid}"
                         BackgroundColor="{StaticResource uswds_vivid_green}"
                         Command="{Binding AddSubpopulationCommand}"
-                        CommandParameter="{Binding SelectedItem, Source={Reference _addSubpopSpeciesPicker}}"
+                        CommandParameter="{Binding Text, Source={Reference _addSubpopSpeciesPicker}}"
                         AbsoluteLayout.LayoutBounds="1,0"
                         AbsoluteLayout.LayoutFlags="PositionProportional" />
             </StackLayout>
@@ -54,11 +56,12 @@
                 <DataTemplate>
                     <SwipeView IsEnabled="False"
                                AutomationProperties.IsInAccessibleTree="True">
+                        <!-- Binding for SwipeItem.IsEnabled is broken, so I had to put the IsEnabled on the button that opens the menu -->
                         <SwipeView.LeftItems>
                             <SwipeItem Text="Delete"
                                        Command="{Binding BindingContext.RemoveSubpopulationCommand, Source={Reference _page}}"
                                        CommandParameter="{Binding .}"
-                                       BackgroundColor="Red"/>
+                                       BackgroundColor="Red" />
                         </SwipeView.LeftItems>
 
                         <Frame BorderColor="DarkGray"
@@ -80,14 +83,11 @@
                                         Margin="13,7"
                                         HeightRequest="{StaticResource minTouchableHeight}"
                                         WidthRequest="{StaticResource minTouchableWidth}"
-                                        
                                         BackgroundColor="Transparent"
                                         Text="{Static const:FAIcons.EllipsisVertical}"
                                         FontFamily="{Static const:Fonts.FAsolid}"
                                         IsEnabled="{Binding HasFieldData, Converter={StaticResource invertedBoolConverter}}"
-                                        
                                         Clicked="subpopulationItemMenu_clicked"
-                                        
                                         AutomationProperties.IsInAccessibleTree="True"
                                         AutomationProperties.Name="Show Actions Item" />
                             </AbsoluteLayout>

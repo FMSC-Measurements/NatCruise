@@ -1,6 +1,7 @@
 ﻿using FScruiser.XF.Controls;
 using FScruiser.XF.Util;
 using NatCruise.MVVM.ViewModels;
+using NatCruise.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,15 @@ namespace FScruiser.XF.Views
         private void HandleSubpopulationAdded(object sender, EventArgs e)
         {
             _addSubpopSpeciesPicker.SelectedItem = null;
+        }
+
+        private async void _addSubpopSpeciesPicker_AuxiliaryActionClicked(object sender, EventArgs e)
+        {
+            var newSpecies = await DisplayPromptAsync("New Species Code", (string)null,
+                maxLength: SubpopulationListViewModel.SPECIES_CODE_MAX_LENGTH);
+            if (newSpecies.IsNullOrEmpty()) return;
+
+            _addSubpopSpeciesPicker.Text = newSpecies;
         }
     }
 }

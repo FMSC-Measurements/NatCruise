@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -6,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -469,6 +471,8 @@ namespace FScruiser.XF.Controls
 
         #endregion Text Property
 
+        #region ItemSource property
+
         public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
             nameof(ItemsSource),
             typeof(IList),
@@ -568,6 +572,38 @@ namespace FScruiser.XF.Controls
 
         public bool HasItems => Items.Count > 0;
 
+        #endregion ItemSource property
+
+        #region Auxiliary action property
+
+        public static readonly BindableProperty AuxiliaryActionHeadingProperty = BindableProperty.Create(
+            nameof(AuxiliaryActionHeading),
+            typeof(string),
+            typeof(ValuePicker),
+            default(string));
+
+        public string AuxiliaryActionHeading
+        {
+            get => (string)GetValue(AuxiliaryActionHeadingProperty);
+            set => SetValue(AuxiliaryActionHeadingProperty, value);
+        }
+
+        public static readonly BindableProperty AuxiliaryActionCommandProperty = BindableProperty.Create(
+            nameof(AuxiliaryActionCommand),
+            typeof(ICommand),
+            typeof(ValuePicker),
+            default(ICommand));
+
+        public ICommand AuxiliaryActionCommand
+        {
+            get => (ICommand)GetValue(AuxiliaryActionCommandProperty);
+            set => SetValue(AuxiliaryActionCommandProperty, value);
+        }
+
+        public event EventHandler AuxiliaryActionClicked;
+
+        #endregion
+
         private object PendingSelectByValueItem { get; set; } // used in OnSelectedValueChanged, otherwise PendingSelectedItem is used
         private object PendingSelectedItem { get; set; }
 
@@ -587,9 +623,16 @@ namespace FScruiser.XF.Controls
             for (int index = 0; index < count; ++index)
                 displayValues[index] = GetItemDisplayValue(items[index]) ?? "";
             string cancel = "Cancel";
-            string str = await this.DisplayActionSheet(this.Title ?? "", cancel, (string)null, displayValues);
+            string distruction = (AuxiliaryActionHeading.IsNullOrEmpty()) ? (string)null : AuxiliaryActionHeading;
+            string str = await this.DisplayActionSheet(this.Title ?? "", cancel, distruction, displayValues);
             if (str == null || !(str != cancel))
                 return;
+            if (str == distruction)
+            {
+                AuxiliaryActionCommand?.Execute(this);
+                AuxiliaryActionClicked?.Invoke(this, EventArgs.Empty);
+                return;
+            }
             int index1 = EnumerableExtensions.IndexOf<string>(displayValues, str);
             SelectedIndex = index1;
         }

@@ -4,6 +4,7 @@ using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Util;
 using Prism.Commands;
 using Prism.Common;
 using System;
@@ -16,6 +17,8 @@ namespace NatCruise.MVVM.ViewModels
 {
     public class SubpopulationListViewModel : ViewModelBase
     {
+        public const int SPECIES_CODE_MAX_LENGTH = 6;
+
         private DelegateCommand<string> _addSubpopulationCommand;
         private SampleGroup _sampleGroup;
         private DelegateCommand<Subpopulation> _removeSubpopulationCommand;
@@ -160,8 +163,9 @@ namespace NatCruise.MVVM.ViewModels
 
         public void AddSubpopulation(string species)
         {
+            if (species.IsNullOrEmpty()) { return; }
             species = species.Trim();
-            if (Regex.IsMatch(species, "^[a-zA-Z0-9]+$") is false) { return; }
+            if (Regex.IsMatch(species, "^[a-zA-Z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100)) is false) { return; }
 
             //var speciesList = SpeciesOptions;
             //var alreadyExists = speciesList.Any(x => x.Equals(species, StringComparison.OrdinalIgnoreCase));
