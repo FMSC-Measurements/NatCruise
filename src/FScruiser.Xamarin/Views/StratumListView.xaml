@@ -38,12 +38,12 @@
 
                         <SwipeView IsEnabled="False"
                                    AutomationProperties.IsInAccessibleTree="True">
-                            <SwipeView.BottomItems>
+                            <!--<SwipeView.BottomItems>
 
                                 <SwipeItems>
                                     <SwipeItemView>
                                         <Button Text="Fields"
-                                                Command="{Binding BindingContext.ShowFieldsCommand, Source={Reference _page}}"
+                                                Command="{Binding BindingContext.ShowFieldSetupCommand, Source={Reference _page}}"
                                                 CommandParameter="{Binding .}" />
                                     </SwipeItemView>
                                     <SwipeItemView>
@@ -53,7 +53,7 @@
                                     </SwipeItemView>
                                 </SwipeItems>
 
-                            </SwipeView.BottomItems>
+                            </SwipeView.BottomItems>-->
 
                             <Frame BorderColor="DarkGray"
                                    Margin="3"
@@ -80,13 +80,13 @@
 
                                         <Label Text="{Binding Method, StringFormat='Method: {0}'}" />
 
-                                        <Label Text="{Binding YieldComponent, StringFormat='Yield Component: {0}'}" />
+                                        <!--<Label Text="{Binding YieldComponent, StringFormat='Yield Component: {0}'}" />-->
 
                                         <Label Text="{Binding BasalAreaFactor, StringFormat='BAF: {0}'}"
                                                IsVisible="{Binding Method, Converter={StaticResource isVariableRadiousPlotConverter}}" />
 
                                         <Label Text="{Binding FixedPlotSize, StringFormat='FPS: {0}'}"
-                                               IsVisible="{Binding Method}" />
+                                               IsVisible="{Binding Method, Converter={StaticResource isFixedSizePlotConverter}}" />
 
                                         <Label Text="{Binding KZ3PPNT, StringFormat='KZ (3PPNT): {0}'}"
                                                IsVisible="{Binding Method, Converter={StaticResource isThreePPNTConverter}}" />
