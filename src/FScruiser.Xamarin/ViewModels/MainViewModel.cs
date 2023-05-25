@@ -194,14 +194,8 @@ namespace FScruiser.XF.ViewModels
             var isCruiseSelected = DatastoreProvider.CruiseID != null;
             if (isCruiseSelected)
             {
-                navOptions.Add(new NavOption { Heading = "Sale", Command = ShowSaleCommand });
-
-                navOptions.Add(new NavOption { Heading = "Strata", Command = ShowStrataCommand });
-
                 if (IsCuttingUnitSelected)
                 {
-                    navOptions.Add(new NavOption { Heading = "Cutting Unit", Command = ShowCuttingUnitCommand });
-
                     if (HasTreeStrata)
                     {
                         navOptions.Add(new NavOption { Heading = "Trees", Command = ShowTreesCommand });
@@ -213,7 +207,13 @@ namespace FScruiser.XF.ViewModels
                         navOptions.Add(new NavOption { Heading = "Plot Trees", Command = ShowPlotTreesCommand });
                         navOptions.Add(new NavOption { Heading = "Plots", Command = ShowPlotsCommand });
                     }
+
+                    navOptions.Add(new NavOption { Heading = "Cutting Unit", Command = ShowCuttingUnitCommand });
                 }
+
+                navOptions.Add(new NavOption { Heading = "Sale", Command = ShowSaleCommand });
+
+                navOptions.Add(new NavOption { Heading = "Strata", Command = ShowStrataCommand });
 
                 navOptions.Add(new NavOption { Heading = "Audit Rules", Command = ShowAuditRulesCommand });
             }
