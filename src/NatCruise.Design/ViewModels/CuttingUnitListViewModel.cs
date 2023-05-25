@@ -107,7 +107,7 @@ namespace NatCruise.Design.ViewModels
         public void AddCuttingUnit(string unitCode)
         {
             unitCode = unitCode.Trim();
-            if (Regex.IsMatch(unitCode, "^[a-zA-Z0-9]+$") is false) { return; }
+            if (Regex.IsMatch(unitCode, "^[a-zA-Z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100)) is false) { return; }
 
             var newUnit = new CuttingUnit()
             {

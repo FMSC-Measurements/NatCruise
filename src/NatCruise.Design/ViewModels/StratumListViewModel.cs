@@ -138,7 +138,7 @@ namespace NatCruise.Design.ViewModels
         public void AddStratum(string code)
         {
             code = code.Trim();
-            if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$") is false) { return; }
+            if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100)) is false) { return; }
 
             var newStratum = new Stratum
             {

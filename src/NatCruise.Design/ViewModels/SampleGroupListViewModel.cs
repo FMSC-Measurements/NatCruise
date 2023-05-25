@@ -117,7 +117,7 @@ namespace NatCruise.Design.ViewModels
         public void AddSampleGroup(string code)
         {
             code = code.Trim();
-            if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$") is false) { return; }
+            if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100)) is false) { return; }
 
             var stratum = Stratum;
             var newSampleGroup = new SampleGroup()

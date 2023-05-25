@@ -92,7 +92,7 @@ namespace NatCruise.Design.ViewModels
         public void AddSpecies(string speciesCode)
         {
             speciesCode = speciesCode.Trim();
-            if (Regex.IsMatch(speciesCode, "^[a-zA-Z0-9]+$") is false) { return; }
+            if (Regex.IsMatch(speciesCode, "^[a-zA-Z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100)) is false) { return; }
 
             var speciesList = Species;
             var alreadyExists = speciesList.Any(x => x.SpeciesCode.Equals(speciesCode, StringComparison.OrdinalIgnoreCase));
