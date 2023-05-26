@@ -8,8 +8,11 @@ namespace NatCruise.Wpf.Converters
 {
     public class CruiseMethodToVisableConverter : IValueConverter
     {
+        // depreciate TrueValue/FalseValue ? or change name so that it isn't confusing when using Invert
         public Visibility TrueValue { get; set; } = Visibility.Visible;
         public Visibility FalseValue { get; set; } = Visibility.Collapsed;
+
+        public bool Invert { get; set; }
 
         public CruiseMethodType MethodMap { get; set; }
 
@@ -39,6 +42,7 @@ namespace NatCruise.Wpf.Converters
             var methodType = StringToCruiseMethodType(method);
 
             var boolValue = (methodType & MethodMap) != 0;
+            boolValue = boolValue ^ Invert; // xor to invert value
             return (boolValue) ? TrueValue : FalseValue;
         }
 

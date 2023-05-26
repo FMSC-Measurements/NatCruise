@@ -32,6 +32,8 @@ namespace NatCruise.Wpf.FieldData.Views
             {
                 _treeCountEditExpander.IsExpanded = true;
             }
+
+            _sidePanelTabControl.SelectedIndex = 0;
         }
     }
 }

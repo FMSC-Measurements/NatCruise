@@ -59,12 +59,13 @@
                   x:Name="_treeCountEditExpander">
             <Grid>
 
-                <TabControl>
+                <TabControl x:Name="_sidePanelTabControl">
                     <TabItem Header="Tallies">
                         <local:TallyLedgerListView DataContext="{Binding TallyLedgerListViewModel}" />
                     </TabItem>
-                    <TabItem Header="Edit Tree Count">
-                        <local:TreeCountEditView DataContext="{Binding TreeCountEditViewModel}" />
+                    <TabItem Header="Edit Tree Count"
+                             Visibility="{Binding SelectedTallyPopulation.Method, Converter={StaticResource IsNotPlotMethodVisibilityConverter}}">
+                        <local:TreeCountEditView DataContext="{Binding TreeCountEditViewModel}"  />
                     </TabItem>
 
                 </TabControl>

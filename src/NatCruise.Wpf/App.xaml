@@ -12,7 +12,7 @@
             <sys:String x:Key="const_regex_real">^\s*([0-9]+\.?[0-9]*|\.[0-9]*)\s*$</sys:String>
             <sys:String x:Key="const_regex_slope_input">^\s*(200|[0-1]?[0-9]{0,2})\s*$</sys:String>
             <sys:String x:Key="const_regex_aspect_input">^\s*(360|3[0-5][0-9]|[0-2]?[0-9]{0,2})\s*$</sys:String>
-            <sys:String x:Key="const_regex_int_posNeg_input">^\s*[-]?[0-9]+\s*$</sys:String>
+            <sys:String x:Key="const_regex_int_posNeg_input">^\s*[-]?[0-9]*\s*$</sys:String>
 
             <!-- converters -->
             <converters:NotConverter x:Key="NotConverter" />
@@ -43,10 +43,14 @@
             <converters:ReplaceNullConverter x:Key="ReplaceAnyWithNullConverter"
                                              Value="Any" />
 
+			
             <converters:DefaultToEmptyStringConverter x:Key="DefaultToEmptyStringConverter" />
 
+			<!-- cruise method visability converters-->
             <converters:CruiseMethodToVisableConverter x:Key="IsPlotMethodVisibilityConverter"
                                                        MethodMap="PlotMethods" />
+			<converters:CruiseMethodToVisableConverter x:Key="IsNotPlotMethodVisibilityConverter"
+                                                       MethodMap="PlotMethods" Invert="true" />
             <converters:CruiseMethodToVisableConverter x:Key="IsFixedSizePlotMethodVisibilityConverter"
                                                        MethodMap="FixedSizePlotMethods" />
             <converters:CruiseMethodToVisableConverter x:Key="IsVariableRadiousPlotMethodVisibilityConverter"
@@ -61,6 +65,9 @@
                                                        MethodMap="STR" />
             <converters:CruiseMethodToVisableConverter x:Key="IsThreePMethodsVisibilityConverter"
                                                        MethodMap="ThreePMethods" />
+			<!-- cruise method converters -->
+			<converters:CruiseMethodToBoolConverter x:Key="IsNotPlotMethodConverter"
+													MethodMap="PlotMethods" Invert="true" />
 
             <!-- imported resource -->
 
