@@ -10,6 +10,7 @@
              xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              x:Class="NatCruise.Design.Views.StratumListView"
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
@@ -87,8 +88,18 @@
                             Style="{StaticResource RemoveButton}"
                             Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                             Command="{Binding RemoveStratumCommand}"
-                            CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}"
-                            IsEnabled="{Binding SelectedItem, ElementName=_stratumListView, Converter={StaticResource NotNullConverter}}" />
+                            CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource MultiBindingAllConverter}">
+                                <Binding Path="SelectedItem"
+                                         ElementName="_stratumListView"
+                                         Converter="{StaticResource NotNullConverter}" />
+                                <Binding Path="SelectedItem.HasFieldData"
+                                         ElementName="_stratumListView"
+                                         Converter="{StaticResource NotConverter}" /> 
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
 
 
                 </Grid>
@@ -109,16 +120,29 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
+
+                        <converters:BoolToObjectConverter x:Key="hasDataIconConverter" TrueObject="{iconPack:FontAwesome Kind=LockSolid}"
+                                                          FalseObject="" />
                     </ListView.Resources>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False"
                                   ColumnHeaderToolTip="Strata">
+                            <GridViewColumn>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{iconPack:FontAwesome Kind=LockSolid}"
+                                               Visibility="{Binding HasFieldData, Converter={StaticResource IsVisableConverter}}"
+                                               ToolTip="Has Field Data Lock"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="Code"
                                             DisplayMemberBinding="{Binding StratumCode}"
                                             Width="60" />
                             <GridViewColumn Header="Description"
                                             DisplayMemberBinding="{Binding Description}"
                                             Width="150" />
+                            
                         </GridView>
                     </ListView.View>
                 </ListView>

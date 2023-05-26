@@ -186,8 +186,10 @@ namespace NatCruise.Design.ViewModels
         public void RemoveStratum(Stratum stratum)
         {
             if (stratum is null) { throw new System.ArgumentNullException(nameof(stratum)); }
-            var strata = Strata;
+            if(stratum.HasFieldData) { return; }
 
+
+            var strata = Strata;
             StratumDataservice.DeleteStratum(stratum);
             var index = strata.IndexOf(stratum);
             if (index < 0) { return; }

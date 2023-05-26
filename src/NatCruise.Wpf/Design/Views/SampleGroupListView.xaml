@@ -81,8 +81,18 @@
                                  Style="{StaticResource RemoveButton}"
                                  Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                                  Command="{Binding RemoveSampleGroupCommand}"
-                                 CommandParameter="{Binding SelectedItem, ElementName=_sampleGroupListView}"
-                                 IsEnabled="{Binding SelectedItem, ElementName=_sampleGroupListView, Converter={StaticResource NotNullConverter}}" />
+                                 CommandParameter="{Binding SelectedItem, ElementName=_sampleGroupListView}">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource MultiBindingAllConverter}">
+                                    <Binding Path="SelectedItem"
+                                             ElementName="_sampleGroupListView"
+                                             Converter="{StaticResource NotNullConverter}" />
+                                    <Binding Path="SelectedItem.HasFieldData"
+                                             ElementName="_sampleGroupListView"
+                                             Converter="{StaticResource NotConverter}" />
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
                     </Grid>
 
                     <!--<DataGrid x:Name="_sampleGroupListView"
@@ -118,6 +128,15 @@
                         <ListView.View>
                             <GridView AllowsColumnReorder="False"
                                       ColumnHeaderToolTip="Sample Groups">
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{iconPack:FontAwesome Kind=LockSolid}"
+                                                   Visibility="{Binding HasFieldData, Converter={StaticResource IsVisableConverter}}"
+                                                   ToolTip="Has Field Data Lock" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Header="Code"
                                                 DisplayMemberBinding="{Binding SampleGroupCode}"
                                                 Width="60" />

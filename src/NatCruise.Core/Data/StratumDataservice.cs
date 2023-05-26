@@ -16,19 +16,36 @@ namespace NatCruise.Data
         {
         }
 
+        protected const string SELECT_STRATUM_CORE =
+@"SELECT
+    Stratum.*,
+    (
+        EXISTS ( SELECT * FROM Plot_Stratum WHERE CruiseID = Stratum.CruiseID AND StratumCode = Stratum.StratumCode)
+        OR EXISTS ( SELECT * FROM Tree WHERE CruiseID = Stratum.CruiseID AND StratumCode = Stratum.StratumCode)
+    ) AS HasFieldData
+FROM Stratum
+";
+
         public IEnumerable<Stratum> GetStrata(string cuttingUnitCode = null)
         {
             if (string.IsNullOrEmpty(cuttingUnitCode))
             {
-                return Database.From<Stratum>()
-                .Where("CruiseID = @p1").Query(CruiseID).ToArray();
+                return Database.Query<Stratum>(SELECT_STRATUM_CORE + "WHERE Stratum.CruiseID = @p1;", CruiseID)
+                    .ToArray();
+
+                //return Database.From<Stratum>(SELECT_STRATUM_CORE)
+                //.Where("CruiseID = @p1").Query(CruiseID).ToArray();
             }
             else
             {
-                return Database.From<Stratum>()
-                    .Where("Stratum.CruiseID = @p1 " +
-                        "AND Stratum.StratumCode IN (SELECT StratumCode FROM CuttingUnit_Stratum WHERE CruiseID = @p1)")
-                    .Query(CruiseID, cuttingUnitCode).ToArray();
+                return Database.Query<Stratum>(SELECT_STRATUM_CORE + "WHERE Stratum.CruiseID = @p1 " +
+                    "AND Stratum.StratumCode IN (SELECT StratumCode FROM CuttingUnit_Stratum WHERE CruiseID = @p1 AND CuttingUnitCode = @p2);",
+                    CruiseID, cuttingUnitCode).ToArray();
+
+                //return Database.From<Stratum>()
+                //    .Where("Stratum.CruiseID = @p1 " +
+                //        "AND Stratum.StratumCode IN (SELECT StratumCode FROM CuttingUnit_Stratum WHERE CruiseID = @p1)")
+                //    .Query(CruiseID, cuttingUnitCode).ToArray();
             }
         }
 
@@ -36,8 +53,11 @@ namespace NatCruise.Data
         {
             if (stratumCode is null) { throw new ArgumentNullException(nameof(stratumCode)); }
 
-            return Database.From<Stratum>()
-                .Where("CruiseID = @p1 AND StratumCode = @p2").Query(CruiseID, stratumCode).Single();
+            return Database.Query<Stratum>(SELECT_STRATUM_CORE + "WHERE CruiseID = @p1 AND StratumCode = @p2;", CruiseID, stratumCode)
+                .Single();
+
+            //return Database.From<Stratum>()
+            //    .Where("CruiseID = @p1 AND StratumCode = @p2").Query(CruiseID, stratumCode).Single();
         }
 
         public void AddStratum(Stratum stratum)

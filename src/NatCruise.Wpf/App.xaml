@@ -3,7 +3,9 @@
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:prism="http://prismlibrary.com/"
                         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-                        xmlns:converters="clr-namespace:NatCruise.Wpf.Converters">
+                        xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+						xmlns:multiConverters="clr-namespace:NatCruise.Wpf.Converters.Multi">
+	                    
     <Application.Resources>
         <ResourceDictionary>
 
@@ -68,7 +70,11 @@
 			<!-- cruise method converters -->
 			<converters:CruiseMethodToBoolConverter x:Key="IsNotPlotMethodConverter"
 													MethodMap="PlotMethods" Invert="true" />
-
+			
+			<!-- multibinding converters -->
+			<multiConverters:AllConverter x:Key="MultiBindingAllConverter"/>
+		    	
+			
             <!-- imported resource -->
 
             <ResourceDictionary.MergedDictionaries>
