@@ -5,6 +5,7 @@ using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
+using NatCruise.Services;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -28,13 +29,20 @@ namespace NatCruise.Design.ViewModels
         public INatCruiseDialogService DialogService { get; }
         public SpeciesDetailViewModel SpeciesDetailViewModel { get; }
         public ISpeciesDataservice SpeciesDataservice { get; }
+        public ILoggingService LoggingService { get; }
 
-        public SpeciesListViewModel(ITemplateDataservice templateDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService, SpeciesDetailViewModel speciesDetailViewModel)
+        public SpeciesListViewModel(ITemplateDataservice templateDataservice,
+                                    ISpeciesDataservice speciesDataservice,
+                                    ISetupInfoDataservice setupDataservice,
+                                    INatCruiseDialogService dialogService,
+                                    SpeciesDetailViewModel speciesDetailViewModel,
+                                    ILoggingService loggingService)
         {
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             SpeciesDetailViewModel = speciesDetailViewModel ?? throw new ArgumentNullException(nameof(speciesDetailViewModel));
             SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
         public event EventHandler SpeciesAdded;
@@ -97,6 +105,7 @@ namespace NatCruise.Design.ViewModels
             foreach (var fia in missingFiaCode)
             {
                 fiaOptions.Add(new FIASpecies{ FIACode = fia });
+                LoggingService.LogEvent(nameof(SpeciesListViewModel) + ":Unrecognized FIAcode:" + fia);
             }
             fiaOptions = fiaOptions.OrderBy(x => int.TryParse(x.FIACode, out var i)? i : 0).ToList();
 

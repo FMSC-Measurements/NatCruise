@@ -41,6 +41,15 @@ namespace NatCruise.Data
 
         public IEnumerable<FIASpecies> GetFIASpecies()
         {
+//            return Database.Query<FIASpecies>(
+//@"SELECT * FROM
+//(
+//    SELECT * FROM LK_FIA
+//    UNION
+//    SELECT DISTINCT FIACode, '' AS CommonName
+//)
+//ORDER BY FIACode;").ToArray();
+
             return Database.From<FIASpecies>().Query().ToArray();
         }
 

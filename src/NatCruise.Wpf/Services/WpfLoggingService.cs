@@ -27,9 +27,12 @@ namespace NatCruise.Wpf.Services
         {
             Debug.WriteLine($"Event:::{name}::::");
 
-            foreach (var item in data)
+            if (data != null)
             {
-                Debug.WriteLine($"Eventdata:::{item.Key}::::{item.Value.ToString()}::::");
+                foreach (var item in data)
+                {
+                    Debug.WriteLine($"Eventdata:::{item.Key}::::{item.Value.ToString()}::::");
+                }
             }
 
             Analytics.TrackEvent(name, data);

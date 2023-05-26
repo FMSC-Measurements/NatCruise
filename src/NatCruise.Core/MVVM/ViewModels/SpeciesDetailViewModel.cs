@@ -2,6 +2,7 @@
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Commands;
 using System;
@@ -32,13 +33,15 @@ namespace NatCruise.MVVM.ViewModels
 
         public ISpeciesDataservice SpeciesDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
+        public ILoggingService LoggingService { get; }
 
-        public SpeciesDetailViewModel(ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice)
+        public SpeciesDetailViewModel(ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, ILoggingService loggingService)
         {
             SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
 
-            FIAOptions = SetupDataservice.GetFIASpecies();
+            
             ProductOptions = SetupDataservice.GetProducts().Prepend(DefaultProductOption);
         }
 
@@ -53,7 +56,21 @@ namespace NatCruise.MVVM.ViewModels
                 { _species.PropertyChanged -= _species_PropertyChanged; }
                 _species = value;
                 if (value != null)
-                { value.PropertyChanged += _species_PropertyChanged; }
+                {
+                    value.PropertyChanged += _species_PropertyChanged;
+
+                    var fiaOptions = SetupDataservice.GetFIASpecies().ToList();
+                    var fiaCode = value.FIACode;
+                    if (!string.IsNullOrEmpty(fiaCode)
+                        && !fiaOptions.Select(x => x.FIACode).Contains(fiaCode))
+                    {
+                        fiaOptions.Add(new FIASpecies { FIACode = fiaCode });
+                        fiaOptions = fiaOptions.OrderBy(x => x.FIACode).ToList();
+                        LoggingService.LogEvent(nameof(SpeciesDetailViewModel) + ":Unrecognized FIAcode:" + fiaCode
+                            , new Dictionary<string, string> { { "Species Code", fiaCode } });
+                    }
+                    FIAOptions = fiaOptions;
+                }
 
                 RefreshContractSpecies();
                 RefreshAvalableProductOptions();
