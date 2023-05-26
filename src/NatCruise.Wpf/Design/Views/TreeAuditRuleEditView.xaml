@@ -33,11 +33,15 @@
                     </Style>
                 </WrapPanel.Resources>
 
-                <mah:MetroHeader Header="Tree Field">
-                    <ComboBox SelectedValue="{Binding TreeAuditRule.Field}"
+                <mah:MetroHeader Header="Tree Field"
+                                 Width="100">
+                    <Label Content="{Binding TreeAuditRule.Field}"
+                           d:Content="xxxx"
+                           VerticalAlignment="Bottom" />
+                    <!--<ComboBox SelectedValue="{Binding TreeAuditRule.Field}"
                               ItemsSource="{Binding TreeFieldOptions}"
                               SelectedValuePath="Field"
-                              Width="100" />
+                              Width="100" />-->
                 </mah:MetroHeader>
 
                 <mah:MetroHeader Header="Min">

@@ -137,22 +137,20 @@
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Tree Field"
-                                            Binding="{Binding Field}"
+                                            Binding="{Binding Field, Converter={StaticResource treeFieldNameConverter}}"
                                             IsReadOnly="True" />
                         <DataGridTextColumn Header="Min"
+                                            IsReadOnly="True"
                                             Binding="{Binding Min, StringFormat={}{0:F}}" />
                         <DataGridTextColumn Header="Max"
+                                            IsReadOnly="True"
                                             Binding="{Binding Max, StringFormat={}{0:F}}" />
                         <DataGridTextColumn Header="Description"
+                                            IsReadOnly="True"
                                             Binding="{Binding Description}"
                                             Width="400" />
                     </DataGrid.Columns>
                 </DataGrid >
-
-
-
-
-
 
             </Grid>
         </GroupBox>
