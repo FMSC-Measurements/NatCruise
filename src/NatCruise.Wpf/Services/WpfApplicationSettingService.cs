@@ -1,11 +1,12 @@
 ﻿using NatCruise.Services;
 using NatCruise.Wpf.Properties;
+using Prism.Mvvm;
 using System;
 using System.IO;
 
 namespace NatCruise.Wpf.Services
 {
-    public class WpfApplicationSettingService : IWpfApplicationSettingService
+    public class WpfApplicationSettingService : BindableBase, IWpfApplicationSettingService
     {
         public WpfApplicationSettingService()
         {

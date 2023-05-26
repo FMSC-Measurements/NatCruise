@@ -1,9 +1,10 @@
 ﻿using NatCruise.Services;
+using Prism.Mvvm;
 using System;
 
 namespace FScruiser.XF.Services
 {
-    public class XamarinApplicationSettingService : IApplicationSettingService
+    public class XamarinApplicationSettingService : BindableBase, IApplicationSettingService
     {
         const string PREF_USE_NEW_LIMITING_DISTANCE_CALCULATOR = "UseNewLimitingDistanceCalculator";
         const string PREF_SELECT_PREV_NEXT_TREE_SKIPS_COUNT_TREES = "SelectPrevNextTreeSkipsCountTrees";
@@ -12,13 +13,21 @@ namespace FScruiser.XF.Services
         public bool EnableCrashReports
         {
             get => Microsoft.AppCenter.Crashes.Crashes.IsEnabledAsync().Result;
-            set => Microsoft.AppCenter.Crashes.Crashes.SetEnabledAsync(value);
+            set
+            {
+                Microsoft.AppCenter.Crashes.Crashes.SetEnabledAsync(value);
+                RaisePropertyChanged();
+            }
         }
 
         public bool EnableAnalitics
         {
             get => Microsoft.AppCenter.Analytics.Analytics.IsEnabledAsync().Result;
-            set => Microsoft.AppCenter.Analytics.Analytics.SetEnabledAsync(value);
+            set
+            {
+                Microsoft.AppCenter.Analytics.Analytics.SetEnabledAsync(value);
+                RaisePropertyChanged();
+            }
         }
 
         public bool UseNewLimitingDistanceCalculator
@@ -32,7 +41,11 @@ namespace FScruiser.XF.Services
                 }
                 catch { return false; }
             }
-            set => Xamarin.Essentials.Preferences.Set(PREF_USE_NEW_LIMITING_DISTANCE_CALCULATOR, (value) ? bool.TrueString : bool.FalseString);
+            set
+            {
+                Xamarin.Essentials.Preferences.Set(PREF_USE_NEW_LIMITING_DISTANCE_CALCULATOR, (value) ? bool.TrueString : bool.FalseString);
+                RaisePropertyChanged();
+            }
         }
 
         public bool SelectPrevNextTreeSkipsCountTrees
@@ -46,7 +59,11 @@ namespace FScruiser.XF.Services
                 }
                 catch { return false; }
             }
-            set => Xamarin.Essentials.Preferences.Set(PREF_SELECT_PREV_NEXT_TREE_SKIPS_COUNT_TREES, (value) ? bool.TrueString : bool.FalseString);
+            set
+            {
+                Xamarin.Essentials.Preferences.Set(PREF_SELECT_PREV_NEXT_TREE_SKIPS_COUNT_TREES, (value) ? bool.TrueString : bool.FalseString);
+                RaisePropertyChanged();
+            }
         }
 
         public void Save()

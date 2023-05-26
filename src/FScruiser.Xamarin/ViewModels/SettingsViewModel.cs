@@ -33,8 +33,14 @@ namespace FScruiser.XF.ViewModels
 
         public IFileDialogService FileDialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
+        public ILoggingService LoggingService { get; }
 
-        public SettingsViewModel(INatCruiseDialogService dialogService, IFileSystemService fileSystemService, IFileDialogService fileDialogService, ICruiseNavigationService navigationService, IContainerProvider containerProvicer)
+        public SettingsViewModel(INatCruiseDialogService dialogService,
+                                 IFileSystemService fileSystemService,
+                                 IFileDialogService fileDialogService,
+                                 ICruiseNavigationService navigationService,
+                                 IContainerProvider containerProvicer,
+                                 ILoggingService loggingService)
         {
             AppSettings = new XamarinApplicationSettingService();
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -42,8 +48,27 @@ namespace FScruiser.XF.ViewModels
             //DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
 
+            AppSettings.PropertyChanged += AppSettings_PropertyChanged;
 
+        }
+
+        private void AppSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var propName = e.PropertyName;
+            if (propName == nameof(IApplicationSettingService.SelectPrevNextTreeSkipsCountTrees))
+            {
+                var value = AppSettings.SelectPrevNextTreeSkipsCountTrees.ToString();
+                LoggingService.LogEvent(nameof(SettingsViewModel) + ":" + nameof(AppSettings.SelectPrevNextTreeSkipsCountTrees) + " changed",
+                    new Dictionary<string, string> { { "value", value } });
+            }
+            else if (propName == nameof(IApplicationSettingService.UseNewLimitingDistanceCalculator))
+            {
+                var value = AppSettings.UseNewLimitingDistanceCalculator.ToString();
+                LoggingService.LogEvent(nameof(SettingsViewModel) + ":" + nameof(AppSettings.UseNewLimitingDistanceCalculator) + " changed",
+                    new Dictionary<string, string> { { "value", value } });
+            }
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
