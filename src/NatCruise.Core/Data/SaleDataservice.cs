@@ -110,7 +110,7 @@ namespace NatCruise.Data
             if (string.IsNullOrEmpty(cruiseID)) { throw new ArgumentException($"'{nameof(cruiseID)}' cannot be null or empty.", nameof(cruiseID)); }
 
             return Database.From<Sale>()
-                .Join("Cruise", "USING (SaleID)")
+                .Join("Cruise", "USING (SaleNumber)")
                 .Where("Cruise.CruiseID = @p1")
                 .Query(cruiseID)
                 .FirstOrDefault();
