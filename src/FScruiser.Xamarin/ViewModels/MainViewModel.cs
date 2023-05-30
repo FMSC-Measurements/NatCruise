@@ -31,6 +31,7 @@ namespace FScruiser.XF.ViewModels
         private Command _showCruisersCommand;
         private Command _showSampleStateManagmentCommand;
         private Command _showFeedbackCommand;
+        private List<NavOption> _moreNavOptions;
 
         public ICommand ShowSelectSale => new Command(() => NavigationService.ShowSaleSelect().FireAndForget());
 
@@ -151,9 +152,13 @@ namespace FScruiser.XF.ViewModels
         public IEnumerable<NavOption> NavOptions
         {
             get => _navOptions;
-            set => SetProperty(ref _navOptions, value);
+            protected set => SetProperty(ref _navOptions, value);
         }
-
+        public List<NavOption> MoreNavOptions
+        {
+            get => _moreNavOptions;
+            protected set => SetProperty(ref _moreNavOptions, value);
+        }
         public ICruiseNavigationService NavigationService { get; }
         public IDataserviceProvider DatastoreProvider { get; }
         public IAppInfoService AppInfo { get; }
@@ -191,6 +196,7 @@ namespace FScruiser.XF.ViewModels
         public void RefreshNavOptions()
         {
             var navOptions = new List<NavOption>();
+            //var moreNavOptions = new List<NavOption>();
             var isCruiseSelected = DatastoreProvider.CruiseID != null;
             if (isCruiseSelected)
             {
@@ -222,6 +228,8 @@ namespace FScruiser.XF.ViewModels
             navOptions.Add(new NavOption { Heading = "Utilities", Command = ShowUtilitiesCommand });
 
             NavOptions = navOptions;
+            //MoreNavOptions = moreNavOptions;
         }
+
     }
 }

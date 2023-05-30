@@ -7,6 +7,9 @@
                   xmlns:prism="http://prismlibrary.com"
                   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:tk="http://xamarin.com/schemas/2020/toolkit"
+                  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                  xmlns:const="clr-namespace:FScruiser.XF.Constants"
                   mc:Ignorable="d"
                   IsPresented="True">
     <MasterDetailPage.Master>
@@ -25,7 +28,8 @@
                        AutomationProperties.IsInAccessibleTree="True"
                        AutomationProperties.Name="Select Cruise">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowSelectSale}" Tapped="OnNavButtonClicked" />
+                        <TapGestureRecognizer Command="{Binding ShowSelectSale}"
+                                              Tapped="OnNavButtonClicked" />
                     </Frame.GestureRecognizers>
                     <StackLayout BackgroundColor="{StaticResource fs_brown}">
                         <StackLayout Orientation="Horizontal"
@@ -55,29 +59,77 @@
                                 IsVisible="{Binding IsCruiseSelected}"
                                 SelectedIndexChanged="_cuttingUnitPicker_SelectedIndexChanged"
                                 AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Select Cutting Unit"/>
+                                AutomationProperties.Name="Select Cutting Unit" />
                     </StackLayout>
                 </Frame>
 
                 <ScrollView>
-                    <CollectionView ItemsSource="{Binding NavOptions}">
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout BindableLayout.ItemsSource="{Binding NavOptions}"
+                                     BackgroundColor="Green">
 
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Button Text="{Binding Heading}" Command="{Binding Command}"
-                                        Clicked="OnNavButtonClicked"
-                                        AutomationProperties.IsInAccessibleTree="True"
-                                        AutomationProperties.Name="{Binding Heading, StringFormat='{0} Navigation'}"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource lightText}"/>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Text="{Binding Heading}"
+                                            Command="{Binding Command}"
+                                            Clicked="OnNavButtonClicked"
+                                            AutomationProperties.IsInAccessibleTree="True"
+                                            AutomationProperties.Name="{Binding Heading, StringFormat='{0} Navigation'}"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource lightText}" />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
 
-                    </CollectionView>
+                        </StackLayout>
+
+                        <!--<Frame BackgroundColor="Red">
+                            <tk:Expander x:Name="_expander">
+
+                                <tk:Expander.Header>
+                                    <StackLayout Orientation="Horizontal" MinimumHeightRequest="{StaticResource minTouchableHeight}">
+                                        <Label Text="More" />
+                                        <Label FontFamily="FA-solid"
+                                               Text="{Static const:FAIcons.ChevronDown}"
+                                               HorizontalOptions="EndAndExpand">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label"
+                                                             Binding="{Binding IsExpanded, Source={Reference _expander}}"
+                                                             Value="True">
+                                                    <Setter Property="Text"
+                                                            Value="{Static const:FAIcons.ChevronUp}" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </StackLayout>
+                                </tk:Expander.Header>
+
+                                <tk:Expander.ContentTemplate>
+                                    <DataTemplate>
+                                        <StackLayout BindableLayout.ItemsSource="{Binding MoreNavOptions}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Text="{Binding Heading}"
+                                                            Command="{Binding Command}"
+                                                            Clicked="OnNavButtonClicked"
+                                                            AutomationProperties.IsInAccessibleTree="True"
+                                                            AutomationProperties.Name="{Binding Heading, StringFormat='{0} Navigation'}"
+                                                            BackgroundColor="Transparent"
+                                                            TextColor="{StaticResource lightText}" />
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </tk:Expander.ContentTemplate>
+
+                                
+                            </tk:Expander>
+                        </Frame>-->
+                    </StackLayout>
+
                 </ScrollView>
 
                 <BoxView HeightRequest="3"
-                        Margin="50,0"
+                         Margin="50,0"
                          BackgroundColor="White"
                          HorizontalOptions="Fill" />
 

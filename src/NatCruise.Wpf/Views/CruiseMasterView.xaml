@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:local="clr-namespace:NatCruise.Wpf.Views"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              xmlns:prism="http://prismlibrary.com/"
@@ -18,62 +19,80 @@
     </UserControl.Resources>
 
     <DockPanel Background="{StaticResource brush_background}">
-        <StackPanel DockPanel.Dock="Left"
-                    Background="{StaticResource brush_fs_brown}"
-                    Width="150">
-            <StackPanel.Resources>
-                <ResourceDictionary>
-                    <!--<ResourceDictionary.MergedDictionaries>
+        <ScrollViewer>
+            <StackPanel DockPanel.Dock="Left"
+                        Background="{StaticResource brush_fs_brown}">
+                <StackPanel.Resources>
+                    <ResourceDictionary>
+                        <!--<ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
                     </ResourceDictionary.MergedDictionaries>-->
-                    <!--<Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}"  >-->
-                    <Style TargetType="Button"
-                           BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
-                        <Setter Property="Background"
-                                Value="{StaticResource brush_shade_white_12}" />
-                        <Setter Property="Foreground"
-                                Value="{StaticResource brush_text_light}" />
-                        <Setter Property="BorderBrush"
-                                Value="{StaticResource brush_shade_white_38}" />
-                        <Setter Property="Margin"
-                                Value="3,3,3,3" />
-                    </Style>
+                        <!--<Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}"  >-->
+                        <Style TargetType="Button"
+                               BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
+                            <Setter Property="Background"
+                                    Value="{StaticResource brush_shade_white_12}" />
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource brush_text_light}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource brush_shade_white_38}" />
+                            <Setter Property="Margin"
+                                    Value="3,3,3,3" />
+                        </Style>
 
-                </ResourceDictionary>
+                    </ResourceDictionary>
 
-            </StackPanel.Resources>
+                </StackPanel.Resources>
 
-            <Button x:Name="_saleButton"
-                    Click="_saleButton_Click">Sale</Button>
-            <Button x:Name="_cruiseButton"
-                    Content="Cruise"
-                    Click="_cruiseButton_Click" />
-            <Button x:Name="_unitsButton"
-                    Click="_unitsButton_Click">Units</Button>
-            <Button x:Name="_strataButton"
-                    Click="_strataButton_Click">Strata</Button>
-            <Button x:Name="_fieldDataButton"
-                    Click="_fieldDataButton_Click">Field Data</Button>
-            <Button x:Name="_speciesButton"
-                    Content="Species"
-                    Click="_speciesButton_Click" />
-            <Button x:Name="_auditRuleButton"
-                    Content="Audit Rules"
-                    Click="_auditRuleButton_Click" />
-            <Button Content="Tree Default Values"
-                    Click="_tdv_Click" />
-            <Button Content="Design Templates"
-                    Click="_designTemplatesButton_Click" />
-            <Button Content="Tree Fields"
-                    Click="_treeFieldsButton_Click" />
-            <Button Content="Log Fields"
-                    Click="_logFieldsButton_Click" />
-            <Button Content="Design Checks"
-                    Click="_designChecks_Click" />
-            <!--<Button Content="Combine File"
-                    Click="_combineFile_Click" />-->
+                <Button x:Name="_saleButton"
+                        Click="_saleButton_Click">Sale</Button>
+                <Button x:Name="_cruiseButton"
+                        Content="Cruise"
+                        Click="_cruiseButton_Click" />
+                <Button x:Name="_unitsButton"
+                        Click="_unitsButton_Click">Units</Button>
+                <Button x:Name="_strataButton"
+                        Click="_strataButton_Click">Strata</Button>
 
-        </StackPanel>
+                <Button Content="Design Checks"
+                        Click="_designChecks_Click" />
+
+                <!--<Separator />-->
+
+                <Button x:Name="_fieldDataButton"
+                        Click="_fieldDataButton_Click">Field Data</Button>
+                
+
+                <Button x:Name="_speciesButton"
+                        Content="Species"
+                        Click="_speciesButton_Click" />
+                <Button x:Name="_auditRuleButton"
+                        Content="Audit Rules"
+                        Click="_auditRuleButton_Click" />
+                <Button Content="Tree Default Values"
+                        Click="_tdv_Click" />
+                <Button Content="Design Templates"
+                        Click="_designTemplatesButton_Click" />
+                <Button Content="Tree Fields"
+                        Click="_treeFieldsButton_Click" />
+                <Button Content="Log Fields"
+                        Click="_logFieldsButton_Click" />
+
+                <!--<Expander Header="More"
+                          ExpandDirection="Down"
+                          mah_ctrls:HeaderedControlHelper.HeaderBackground="{StaticResource brush_shade_white_12}"
+                          mah_ctrls:HeaderedControlHelper.HeaderForeground="{StaticResource brush_text_light}"
+                          mah_ctrls:HeaderedControlHelper.HeaderMargin="10,0"
+                          Background="{StaticResource brush_fs_brown}"
+                          BorderBrush="{StaticResource brush_fs_brown}">
+                    <StackPanel>
+
+                    </StackPanel>
+                </Expander>-->
+
+
+            </StackPanel>
+        </ScrollViewer>
 
         <ContentControl x:Name="_cruiseContentPanel"
                         prism:RegionManager.RegionName="{x:Static nav:Regions.CruiseContentRegion}"
