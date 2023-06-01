@@ -83,6 +83,7 @@
 
             <tc_conv:VariableMultiValueConverter ConditionType="Any"
                                                  x:Key="AnyTrueConverter" />
+            <tc_conv:InvertedBoolConverter x:Key="invertedBoolConverter" />
 
 
             <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
@@ -99,6 +100,16 @@
 
             <converters:Is3PConverter x:Key="is3pConverter" />
             <converters:IsSTRConverter x:Key="isStrConverter" />
+            <converters:CruiseMethodToBoolConverter MethodMap="FrequencySampleMethods"
+                                              x:Key="isFrequencySampleConverter" />
+            <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods"
+                                                    x:Key="isVariableRadiousPlotConverter" />
+            <converters:CruiseMethodToBoolConverter MethodMap="FixedSizePlotMethods"
+                                                    x:Key="isFixedSizePlotConverter" />
+            <converters:CruiseMethodToBoolConverter MethodMap="ThreePPNT"
+                                                    x:Key="isThreePPNTConverter" />
+            <converters:CruiseMethodToBoolConverter MethodMap="TwoStagePlotMethods"
+                                                    x:Key="isTwoStagePlotMethod" />
 
             <!-- base styles -->
             <Style x:Key="button_base"

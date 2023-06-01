@@ -27,9 +27,4 @@
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.2" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Validation\" />
-		<Folder Include="ViewModels\" />
-	</ItemGroup>
-
 </Project>

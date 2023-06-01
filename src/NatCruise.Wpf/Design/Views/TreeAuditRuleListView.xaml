@@ -5,10 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:local="clr-namespace:NatCruise.Design.Views"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -16,103 +18,146 @@
              Background="White"
              x:Name="_page">
     <Grid>
+        <Grid.Resources>
+            <converters:TreeFieldNameToHeadingConverter x:Key="treeFieldNameConverter"
+                                                        TreeFields="{Binding DataContext.TreeFieldOptions, Source={x:Reference _page}}" />
+        </Grid.Resources>
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="263*" />
-            <ColumnDefinition Width="3" />
-            <ColumnDefinition Width="137*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
 
-        <Expander Header="Add Audit Rule"
-                  IsExpanded="True">
-            <StackPanel Grid.Row="0"
-                        Orientation="Vertical">
+        <GroupBox Grid.Column="0"
+                  Header="Tree Audit Rules">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
 
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel.Resources>
-                        <Style TargetType="StackPanel">
+                </Grid.RowDefinitions>
+
+                <Grid.Resources>
+                    <CollectionViewSource x:Key="tarGroupingSource"
+                                          Source="{Binding TreeAuditRules}">
+                        <CollectionViewSource.GroupDescriptions>
+                            <PropertyGroupDescription PropertyName="Field"
+                                                      Converter="{StaticResource treeFieldNameConverter}" />
+                        </CollectionViewSource.GroupDescriptions>
+
+                    </CollectionViewSource>
+                </Grid.Resources>
+
+
+
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="30" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.Resources>
+                        <Style TargetType="mah_ctrls:MetroHeader"
+                               BasedOn="{StaticResource MahApps.Styles.MetroHeader}">
                             <Setter Property="Margin"
                                     Value="3,0" />
                         </Style>
-                    </StackPanel.Resources>
-                    <StackPanel>
-                        <Label Content="Tree Field"
-                               FontSize="9" />
-                        <ComboBox SelectedValue="{Binding NewTreeAuditRule.Field}"
-                                  ItemsSource="{Binding TreeFieldOptions}"
-                                  SelectedValuePath="Field"
-                                  Width="100" />
-                    </StackPanel>
-                    <StackPanel>
-                        <Label Content="Min"
-                               FontSize="9" />
-                        <TextBox Text="{Binding NewTreeAuditRule.Min, StringFormat={}{0:F}}"
-                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
-                                 Width="100" />
-                    </StackPanel>
-                    <StackPanel>
-                        <Label Content="Max"
-                               FontSize="9" />
-                        <TextBox Text="{Binding NewTreeAuditRule.Max, StringFormat={}{0:F}}"
-                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
-                                 Width="100" />
-                    </StackPanel>
+                    </Grid.Resources>
 
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel>
-                        <Label Content="Description"
-                               FontSize="9" />
-                        <TextBox Text="{Binding NewTreeAuditRule.Description}"
-                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                                 Width="250" />
-                    </StackPanel>
-                    <Button Content="Add"
+                    <WrapPanel Grid.Column="0">
+                        <mah_ctrls:MetroHeader Header="Tree Field">
+                            <ComboBox SelectedValue="{Binding NewTreeAuditRule.Field}"
+                                      ItemsSource="{Binding TreeFieldOptions}"
+                                      SelectedValuePath="Field"
+                                      Width="100" />
+                        </mah_ctrls:MetroHeader>
+
+                        <mah_ctrls:MetroHeader Header="Min">
+                            <TextBox Text="{Binding NewTreeAuditRule.Min, StringFormat={}{0:F}}"
+                                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                     ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
+                                     Width="100" />
+                        </mah_ctrls:MetroHeader>
+
+                        <mah_ctrls:MetroHeader Header="Max">
+                            <TextBox Text="{Binding NewTreeAuditRule.Max, StringFormat={}{0:F}}"
+                                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                     ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
+                                     Width="100" />
+                        </mah_ctrls:MetroHeader>
+
+                        <mah_ctrls:MetroHeader Header="Description">
+                            <TextBox Text="{Binding NewTreeAuditRule.Description}"
+                                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                     Width="250" />
+                        </mah_ctrls:MetroHeader>
+                    </WrapPanel>
+
+
+                    <Button Grid.Column="1"
+                            Content="{iconPack:FontAwesome Kind=PlusCircleSolid}"
+                            Style="{StaticResource AddButton}"
                             VerticalAlignment="Center"
-                            HorizontalAlignment="Right"
+                            Height="40"
                             Command="{Binding AddNewTreeAuditRuleCommand}" />
 
-                </StackPanel>
-            </StackPanel>
-        </Expander>
+                    <Button Grid.Column="2"
+                            Content="{iconPack:FontAwesome Kind=MinusCircleSolid}"
+                            Style="{StaticResource RemoveButton}"
+                            Command="{Binding DeleteTreeAuditRuleCommand}"
+                            CommandParameter="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid}"
+                            IsEnabled="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid, Converter={StaticResource NotNullConverter}}"
+                            VerticalAlignment="Center"
+                            Height="40" />
 
-        <DataGrid Grid.Row="1"
-                  x:Name="_treeAuditRuleDataGrid"
-                  ItemsSource="{Binding TreeAuditRules}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Tree Field"
-                                    Binding="{Binding Field}" />
-                <DataGridTextColumn Header="Min"
-                                    Binding="{Binding Min, StringFormat={}{0:F}}" />
-                <DataGridTextColumn Header="Max"
-                                    Binding="{Binding Max, StringFormat={}{0:F}}" />
-                <DataGridTextColumn Header="Description"
-                                    Binding="{Binding Description}"
-                                    Width="400" />
-            </DataGrid.Columns>
-        </DataGrid>
+                </Grid>
+                
+                <Separator Grid.Row="1" />
 
-        <Button Grid.Row="2"
-                Grid.Column="0"
-                Content="Delete"
-                VerticalAlignment="Center"
-                Command="{Binding DeleteTreeAuditRuleCommand}"
-                CommandParameter="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid}"
-                HorizontalAlignment="Right"
-                IsEnabled="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid, Converter={StaticResource NotNullConverter}}" />
+                <DataGrid Grid.Row="2"
+                          x:Name="_treeAuditRuleDataGrid"
+                          ItemsSource="{Binding Source={StaticResource tarGroupingSource}}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False">
+                    <DataGrid.GroupStyle>
+                        <GroupStyle ContainerStyle="{StaticResource MahApps.Styles.GroupItem.DataGrid}">
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </DataGrid.GroupStyle>
+
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Tree Field"
+                                            Binding="{Binding Field, Converter={StaticResource treeFieldNameConverter}}"
+                                            IsReadOnly="True" />
+                        <DataGridTextColumn Header="Min"
+                                            IsReadOnly="True"
+                                            Binding="{Binding Min, StringFormat={}{0:F}}" />
+                        <DataGridTextColumn Header="Max"
+                                            IsReadOnly="True"
+                                            Binding="{Binding Max, StringFormat={}{0:F}}" />
+                        <DataGridTextColumn Header="Description"
+                                            IsReadOnly="True"
+                                            Binding="{Binding Description}"
+                                            Width="400" />
+                    </DataGrid.Columns>
+                </DataGrid >
+
+            </Grid>
+        </GroupBox>
 
         <ContentControl Grid.Row="0"
-                        Grid.Column="2"
-                        Grid.RowSpan="3"
-                        prism:RegionManager.RegionName="{x:Static nav:Regions.TreeAuditSelectors}"
+                        Grid.Column="1"
+                        prism:RegionManager.RegionName="{x:Static nav:Regions.TreeAuditRuleEdit}"
                         prism:RegionManager.RegionContext="{Binding SelectedItem, ElementName=_treeAuditRuleDataGrid}"
                         Background="LightGray" />
     </Grid>

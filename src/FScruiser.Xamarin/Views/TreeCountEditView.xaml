@@ -368,7 +368,7 @@
                                           WidthRequest="50"
                                           HeightRequest="{StaticResource minTouchableHeight}"
                                           SelectedValue="{Binding Initials}"
-                                          ValueSource="{Binding Cruisers}"
+                                          ItemsSource="{Binding Cruisers}"
                                           IsVisible="{Binding Cruisers, Converter={StaticResource listIsNotNullOrEmptyConverter}}"
                                           AutomationProperties.IsInAccessibleTree="True"
                                           AutomationProperties.Name="Initials" />

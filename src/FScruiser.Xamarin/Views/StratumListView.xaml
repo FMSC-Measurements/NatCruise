@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                                   xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                   xmlns:const="clr-namespace:FScruiser.XF.Constants"
+                                   x:Class="FScruiser.XF.Views.StratumListView"
+                                   x:Name="_page"
+                                   Title="Strata">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Frame Grid.Row="0"
+               BackgroundColor="{StaticResource uswds_lgt_tan}"
+               Padding="0">
+
+            <StackLayout Orientation="Horizontal"
+                         HorizontalOptions="End">
+                <Label Text="Cutting Unit"
+                       Margin="13,7"
+                       VerticalTextAlignment="Center"
+                       FontSize="Title" />
+                <Picker ItemsSource="{Binding CuttingUnitCodes}"
+                        SelectedItem="{Binding CuttingUnitFilter}"
+                        Margin="13,7"
+                        WidthRequest="100" />
+            </StackLayout>
+        </Frame>
+
+        <ScrollView Grid.Row="1">
+            <CollectionView ItemsSource="{Binding Strata}"
+                            ItemsLayout="VerticalGrid, 2">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <SwipeView IsEnabled="False"
+                                   AutomationProperties.IsInAccessibleTree="True">
+                            <!--<SwipeView.BottomItems>
+
+                                <SwipeItems>
+                                    <SwipeItemView>
+                                        <Button Text="Fields"
+                                                Command="{Binding BindingContext.ShowFieldSetupCommand, Source={Reference _page}}"
+                                                CommandParameter="{Binding .}" />
+                                    </SwipeItemView>
+                                    <SwipeItemView>
+                                        <Button Text="Sample Groups"
+                                                Command="{Binding BindingContext.ShowSampleGroupsCommand, Source={Reference _page}}"
+                                                CommandParameter="{Binding .}" />
+                                    </SwipeItemView>
+                                </SwipeItems>
+
+                            </SwipeView.BottomItems>-->
+
+                            <Frame BorderColor="DarkGray"
+                                   Margin="3"
+                                   Padding="0"
+                                   HasShadow="True">
+
+                                <AbsoluteLayout>
+
+                                    <!--<AbsoluteLayout.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ShowStratumDetailsCommand, Source={x:Reference _page}}"
+                                                              CommandParameter="{Binding .}" />
+                                    </AbsoluteLayout.GestureRecognizers>-->
+
+                                    <StackLayout Margin="13,7,50,50"
+                                                 AbsoluteLayout.LayoutBounds="0,0"
+                                                 HorizontalOptions="FillAndExpand">
+                                        <Label Text="{Binding StratumCode, StringFormat='Stratum {0}'}"
+                                               FontSize="Title" />
+                                        <Label Text="{Binding Description}"
+                                               FontSize="Subtitle" />
+
+                                        <BoxView Color="DarkGray"
+                                                 HeightRequest="2" />
+
+                                        <Label Text="{Binding Method, StringFormat='Method: {0}'}" />
+
+                                        <!--<Label Text="{Binding YieldComponent, StringFormat='Yield Component: {0}'}" />-->
+
+                                        <Label Text="{Binding BasalAreaFactor, StringFormat='BAF: {0}'}"
+                                               IsVisible="{Binding Method, Converter={StaticResource isVariableRadiousPlotConverter}}" />
+
+                                        <Label Text="{Binding FixedPlotSize, StringFormat='FPS: {0}'}"
+                                               IsVisible="{Binding Method, Converter={StaticResource isFixedSizePlotConverter}}" />
+
+                                        <Label Text="{Binding KZ3PPNT, StringFormat='KZ (3PPNT): {0}'}"
+                                               IsVisible="{Binding Method, Converter={StaticResource isThreePPNTConverter}}" />
+                                    </StackLayout>
+
+                                    <Button AbsoluteLayout.LayoutBounds="1,0"
+                                            AbsoluteLayout.LayoutFlags="PositionProportional"
+                                            Margin="13,7"
+                                            HeightRequest="{StaticResource minTouchableHeight}"
+                                            WidthRequest="{StaticResource minTouchableWidth}"
+                                            Text="{Static const:FAIcons.EllipsisVertical}"
+                                            FontFamily="{Static const:Fonts.FAsolid}"
+                                            BackgroundColor="Transparent"
+                                            Clicked="openStratumMenu"
+                                            AutomationProperties.IsInAccessibleTree="True"
+                                            AutomationProperties.Name="Show Actions Item" />
+                                </AbsoluteLayout>
+
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </Grid>
+</controls:InitializableContentPage>

@@ -11,6 +11,7 @@ namespace NatCruise.Models
         private int _errorCount;
         private int _warningCount;
         private int _treeCount;
+        private string _countOrMeasure;
 
         public string TreeID { get; set; }
 
@@ -42,7 +43,11 @@ namespace NatCruise.Models
 
         public int PlotNumber { get; set; }
 
-        public string CountOrMeasure { get; set; }
+        public string CountOrMeasure
+        {
+            get => _countOrMeasure;
+            set => SetProperty(ref _countOrMeasure, value);
+        }
 
         // used because we want to display TreeCount for just FixCNT trees
         public string Method { get; set; }

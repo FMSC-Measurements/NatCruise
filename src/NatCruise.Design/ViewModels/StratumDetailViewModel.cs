@@ -20,14 +20,16 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<CruiseMethod> _methods;
         private IEnumerable<TreeField> _treefieldOptions;
 
-        public StratumDetailViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupDataservice, ISaleDataservice saleDataservice, ICuttingUnitDataservice cuttingUnitDataservice, StratumValidator validator)
+        public StratumDetailViewModel(IStratumDataservice stratumDataservice,
+            ITreeFieldDataservice treeFieldDataservice,
+            ISetupInfoDataservice setupDataservice,
+            ISaleDataservice saleDataservice,
+            ICuttingUnitDataservice cuttingUnitDataservice,
+            StratumValidator validator)
             : base(validator)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
-
-            var stratumDataservice = dataserviceProvider.GetDataservice<IStratumDataservice>();
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
-            TemplateDataservice = dataserviceProvider.GetDataservice<ITemplateDataservice>() ?? throw new ArgumentNullException(nameof(TemplateDataservice));
+            TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
             SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
 
@@ -49,7 +51,7 @@ namespace NatCruise.Design.ViewModels
                 Methods = SetupDataservice.GetCruiseMethods();
             }
             
-            TreeFieldOptions = TemplateDataservice.GetTreeFields();
+            TreeFieldOptions = TreeFieldDataservice.GetTreeFields();
 
             //HotKeyOptions = new string[]
             //{
@@ -60,7 +62,7 @@ namespace NatCruise.Design.ViewModels
             //};
         }
 
-        public ITemplateDataservice TemplateDataservice { get; }
+        public ITreeFieldDataservice TreeFieldDataservice { get; }
         public ISaleDataservice SaleDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
@@ -141,8 +143,14 @@ namespace NatCruise.Design.ViewModels
             get => Stratum?.Method;
             set
             {
-                SetPropertyAndValidate(Stratum, value, (st, x) => st.Method = x);
-                StratumDataservice.UpdateStratum(Stratum);
+                var stratum = Stratum;
+                if(stratum.HasFieldData)
+                {
+                    return;
+                }
+
+                SetPropertyAndValidate(stratum, value, (st, x) => st.Method = x);
+                StratumDataservice.UpdateStratum(stratum);
                 NotifyCruiseMethodChanged();
             }
         }
@@ -152,8 +160,14 @@ namespace NatCruise.Design.ViewModels
             get => Stratum?.BasalAreaFactor ?? default(double);
             set
             {
-                SetPropertyAndValidate(Stratum, value, (st, x) => st.BasalAreaFactor = x);
-                StratumDataservice.UpdateStratum(Stratum);
+                var stratum = Stratum;
+                if (stratum.HasFieldData)
+                {
+                    return;
+                }
+
+                SetPropertyAndValidate(stratum, value, (st, x) => st.BasalAreaFactor = x);
+                StratumDataservice.UpdateStratum(stratum);
             }
         }
 
@@ -162,8 +176,14 @@ namespace NatCruise.Design.ViewModels
             get => Stratum?.FixedPlotSize ?? default(double);
             set
             {
-                SetPropertyAndValidate(Stratum, value, (st, x) => st.FixedPlotSize = x);
-                StratumDataservice.UpdateStratum(Stratum);
+                var stratum = Stratum;
+                if (stratum.HasFieldData)
+                {
+                    return;
+                }
+
+                SetPropertyAndValidate(stratum, value, (st, x) => st.FixedPlotSize = x);
+                StratumDataservice.UpdateStratum(stratum);
             }
         }
 
@@ -172,8 +192,14 @@ namespace NatCruise.Design.ViewModels
             get => Stratum?.KZ3PPNT ?? default(int);
             set
             {
-                SetPropertyAndValidate(Stratum, value, (st, x) => st.KZ3PPNT = x);
-                StratumDataservice.UpdateStratum(Stratum);
+                var stratum = Stratum;
+                if (stratum.HasFieldData)
+                {
+                    return;
+                }
+
+                SetPropertyAndValidate(stratum, value, (st, x) => st.KZ3PPNT = x);
+                StratumDataservice.UpdateStratum(stratum);
             }
         }
 
@@ -182,6 +208,12 @@ namespace NatCruise.Design.ViewModels
             get => Stratum?.SamplingFrequency ?? default(int);
             set
             {
+                var stratum = Stratum;
+                if (stratum.HasFieldData)
+                {
+                    return;
+                }
+
                 SetPropertyAndValidate(Stratum, value, (st, x) => st.SamplingFrequency = x);
                 StratumDataservice.UpdateStratum(Stratum);
             }

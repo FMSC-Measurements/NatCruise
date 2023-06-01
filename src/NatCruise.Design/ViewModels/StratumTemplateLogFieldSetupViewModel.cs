@@ -1,4 +1,5 @@
-﻿using NatCruise.Design.Data;
+﻿using NatCruise.Data;
+using NatCruise.Design.Data;
 using NatCruise.Design.Models;
 using NatCruise.Models;
 using NatCruise.MVVM;
@@ -19,12 +20,12 @@ namespace NatCruise.Design.ViewModels
         private StratumTemplateLogFieldSetup _selectedLogFieldSetup;
         private StratumTemplate _stratumTemplate;
 
-        public ITemplateDataservice TemplateDataservice { get; }
+        public IStratumTemplateDataservice StratumTemplateDataservice { get; }
 
-        public StratumTemplateLogFieldSetupViewModel(ITemplateDataservice templateDataservice)
+        public StratumTemplateLogFieldSetupViewModel(IStratumTemplateDataservice stratumTemplateDataservice, ILogFieldDataservice logFieldDataservice)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
-            LogFields = TemplateDataservice.GetLogFields();
+            StratumTemplateDataservice = stratumTemplateDataservice ?? throw new ArgumentNullException(nameof(stratumTemplateDataservice));
+            LogFields = logFieldDataservice.GetLogFields();
         }
 
         public ICommand AddCommand => new DelegateCommand<LogField>(AddLogField);
@@ -91,7 +92,7 @@ namespace NatCruise.Design.ViewModels
         {
             var stlfs = (StratumTemplateLogFieldSetup)sender;
             if(stlfs is null) { return; }
-            TemplateDataservice.UpsertStratumTemplateLogFieldSetup(stlfs);
+            StratumTemplateDataservice.UpsertStratumTemplateLogFieldSetup(stlfs);
         }
 
         
@@ -107,7 +108,7 @@ namespace NatCruise.Design.ViewModels
                 StratumTemplateName = stratumTemplateName,
             };
 
-            TemplateDataservice.UpsertStratumTemplateLogFieldSetup(newstlfs);
+            StratumTemplateDataservice.UpsertStratumTemplateLogFieldSetup(newstlfs);
             FieldSetups.Add(newstlfs);
             RaisePropertyChanged(nameof(AvalibleLogFields));
 
@@ -139,7 +140,7 @@ namespace NatCruise.Design.ViewModels
             foreach (var (field, i) in fieldSetups.Select((x, i) => (x, i + 1)))
             {
                 field.FieldOrder = i;
-                TemplateDataservice.UpsertStratumTemplateLogFieldSetup(field);
+                StratumTemplateDataservice.UpsertStratumTemplateLogFieldSetup(field);
             }
         }
 
@@ -147,7 +148,7 @@ namespace NatCruise.Design.ViewModels
         {
             if(lfs is null) { return; }
 
-            TemplateDataservice.DeleteStratumTemplateLogFieldSetup(lfs);
+            StratumTemplateDataservice.DeleteStratumTemplateLogFieldSetup(lfs);
             LoadFieldSetups();
         }
 
@@ -156,7 +157,7 @@ namespace NatCruise.Design.ViewModels
             var stratumTemplateName = StratumTemplate?.StratumTemplateName;
             if (stratumTemplateName != null)
             {
-                var fieldSetups = TemplateDataservice.GetStratumTemplateLogFieldSetups(stratumTemplateName);
+                var fieldSetups = StratumTemplateDataservice.GetStratumTemplateLogFieldSetups(stratumTemplateName);
                 FieldSetups = new ObservableCollection<StratumTemplateLogFieldSetup>(fieldSetups);
             }
             else

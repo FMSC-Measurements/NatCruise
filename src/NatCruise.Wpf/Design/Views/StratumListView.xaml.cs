@@ -1,5 +1,5 @@
-﻿using NatCruise.Design.Models;
-using NatCruise.Design.ViewModels;
+﻿using NatCruise.Design.ViewModels;
+using NatCruise.Models;
 using System.Windows.Controls;
 
 namespace NatCruise.Design.Views

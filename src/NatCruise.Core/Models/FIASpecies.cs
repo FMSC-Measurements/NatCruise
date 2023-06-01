@@ -11,7 +11,7 @@ namespace NatCruise.Models
 
         public override string ToString()
         {
-            return $"{FIACode} - {CommonName}";
+            return $"{FIACode}" + (!string.IsNullOrEmpty(CommonName) ? $" - {CommonName}" : "");
         }
     }
 }

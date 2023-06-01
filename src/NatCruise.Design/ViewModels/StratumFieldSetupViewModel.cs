@@ -1,6 +1,7 @@
 ﻿using NatCruise.Design.Models;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.MVVM.ViewModels;
 using Prism.Common;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Design.ViewModels
 {
-    public class StratumFieldsViewModel : ViewModelBase
+    public class StratumFieldSetupViewModel : ViewModelBase
     {
         private Stratum _stratum;
 
-        public StratumFieldsViewModel(StratumTreeFieldSetupViewModel treeFieldsViewModel, StratumLogFieldSetupViewModel logFieldsViewModel)
+        public StratumFieldSetupViewModel(StratumTreeFieldSetupViewModel treeFieldsViewModel, StratumLogFieldSetupViewModel logFieldsViewModel)
         {
             TreeFieldsViewModel = treeFieldsViewModel ?? throw new ArgumentNullException(nameof(treeFieldsViewModel));
             LogFieldsViewModel = logFieldsViewModel ?? throw new ArgumentNullException(nameof(logFieldsViewModel));

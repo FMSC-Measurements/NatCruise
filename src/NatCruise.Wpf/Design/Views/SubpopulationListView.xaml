@@ -8,7 +8,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:vms="clr-namespace:NatCruise.MVVM.ViewModels;assembly=NatCruise.Core"
              xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -49,7 +49,7 @@
                       ItemsSource="{Binding SpeciesOptions}"
                       IsEditable="True"
                       IsTextSearchCaseSensitive="False"
-                      controls:ComboBoxHelper.MaxLength="{x:Static dsgn:Constants.SPECIESCODE_MAXLENGTH}">
+                      controls:ComboBoxHelper.MaxLength="{x:Static vms:SubpopulationListViewModel.SPECIES_CODE_MAX_LENGTH}">
                 <ComboBox.InputBindings>
                     <KeyBinding Key="Return"
                                 Command="{Binding AddSubpopulationCommand}"

@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Constants;
+using FScruiser.XF.Util;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Navigation;
@@ -52,6 +53,11 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.SaleNumber}={saleNumber}"));
         }
 
+        public Task ShowStrata()
+        {
+            return NavigationService.NavigateAsync("Navigation/Strata");
+        }
+
         public Task ShowCuttingUnitInfo(string unitCode)
         {
             if (string.IsNullOrEmpty(unitCode))
@@ -66,6 +72,18 @@ namespace FScruiser.XF.Services
         public Task ShowCuttingUnitList()
         {
             return NavigationService.NavigateAsync("Navigation/CuttingUnitList");
+        }
+
+        public Task ShowStratumDetail(string stratumCode)
+        {
+            return NavigationService.NavigateAsync("StratumDetail",
+                new NavigationParameters($"{NavParams.STRATUM}={stratumCode}"));
+        }
+
+        public Task ShowFieldSetup(string stratumCode)
+        {
+            return NavigationService.NavigateAsync("FieldSetup",
+                new NavigationParameters($"{NavParams.STRATUM}={stratumCode}"));
         }
 
         public Task ShowFeedback()
@@ -261,6 +279,17 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
 
+        public Task ShowTreeAuditRules()
+        {
+            return NavigationService.NavigateAsync("Navigation/TreeAuditRuleList");
+        }
+
+        public Task ShowTreeAuditRuleEdit(string tarID)
+        {
+            return NavigationService.NavigateAsync("TreeAuditRuleEdit",
+                new NavigationParameters($"{NavParams.TreeAuditRuleID}={tarID}"));
+        }
+
         public Task ShowThreePPNTPlot(string unitCode, string stratumCode, int plotNumber)
         {
             if (string.IsNullOrEmpty(unitCode))
@@ -362,6 +391,18 @@ namespace FScruiser.XF.Services
         public Task ShowUtilities()
         {
             return NavigationService.NavigateAsync("Navigation/Utilities");
+        }
+
+        public Task ShowSampleGroups(string stratumCode)
+        {
+            return NavigationService.NavigateAsync("SampleGroups",
+                new NavigationParameters($"{NavParams.STRATUM}={stratumCode}"));
+        }
+
+        public Task ShowSubpopulations(string stratumCode, string sampleGroupCode)
+        {
+            return NavigationService.NavigateAsync("Subpopulations",
+                new NavigationParameters($"{NavParams.STRATUM}={stratumCode}&{NavParams.SAMPLE_GROUP}={sampleGroupCode}"));
         }
     }
 }

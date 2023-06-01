@@ -18,6 +18,17 @@ namespace NatCruise.Data
         {
         }
 
+        public const string SELECT_SAMPLEGROUP_CORE =
+@"SELECT
+    sg.*,
+    st.Method AS CruiseMethod,
+    (
+        EXISTS ( SELECT * FROM Tree WHERE CruiseID = sg.CruiseID AND StratumCode = sg.StratumCode AND SampleGroupCode = sg.SampleGroupCode)
+    ) AS HasFieldData
+FROM SampleGroup AS sg
+JOIN Stratum AS st USING (StratumCode, CruiseID)
+";
+
         public void AddSampleGroup(SampleGroup sg)
         {
             sg.SampleGroupID ??= Guid.NewGuid().ToString();
@@ -103,24 +114,14 @@ namespace NatCruise.Data
 
         public SampleGroup GetSampleGroup(string stratumCode, string sampleGroupCode)
         {
-            return Database.Query<SampleGroup>(
-@"SELECT
-    sg.*,
-    st.Method AS CruiseMethod
-FROM SampleGroup AS sg
-JOIN Stratum AS st USING (StratumCode, CruiseID)
-WHERE sg.StratumCode = @p1 AND sg.SampleGroupCode = @p2 AND sg.CruiseID = @p3;", stratumCode, sampleGroupCode, CruiseID).FirstOrDefault();
+            return Database.Query<SampleGroup>(SELECT_SAMPLEGROUP_CORE +
+                "WHERE sg.StratumCode = @p1 AND sg.SampleGroupCode = @p2 AND sg.CruiseID = @p3;", stratumCode, sampleGroupCode, CruiseID).FirstOrDefault();
         }
 
         public IEnumerable<SampleGroup> GetSampleGroups(string stratumCode = null)
         {
-            return Database.Query<SampleGroup>(
-@"SELECT
-    sg.*,
-    st.Method AS CruiseMethod
-FROM SampleGroup AS sg
-JOIN Stratum AS st USING (StratumCode, CruiseID)
-WHERE (@p1 IS NULL OR sg.StratumCode = @p1) AND sg.CruiseID = @p2;", stratumCode, CruiseID);
+            return Database.Query<SampleGroup>(SELECT_SAMPLEGROUP_CORE +
+                "WHERE (@p1 IS NULL OR sg.StratumCode = @p1) AND sg.CruiseID = @p2;", stratumCode, CruiseID);
         }
 
         public IEnumerable<string> GetSampleGroupCodes(string stratumCode = null)

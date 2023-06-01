@@ -233,6 +233,7 @@ namespace NatCruise.MVVM.ViewModels
                 var tree = Tree;
                 if (tree == null) { return; }
                 TreeDataservice.UpdateTreeCount(tree.TreeID, value);
+                RaisePropertyChanged();
             }
         }
 
@@ -253,6 +254,7 @@ namespace NatCruise.MVVM.ViewModels
                 var oldValue = tree.CountOrMeasure;
                 tree.CountOrMeasure = value;
                 OnCountOrMeasureChanged(oldValue, value);
+                RaisePropertyChanged();
             }
         }
 
@@ -348,6 +350,7 @@ namespace NatCruise.MVVM.ViewModels
                 {
                     tree.StratumCode = value;
                     OnStratumChanged(tree, oldValue, value);
+                    RaisePropertyChanged();
                 }
             }
         }
@@ -514,6 +517,7 @@ namespace NatCruise.MVVM.ViewModels
                     tree.SpeciesCode = value;
 
                     OnSpeciesChanged(tree, value);
+                    RaisePropertyChanged();
                 }
             }
         }
@@ -561,6 +565,7 @@ namespace NatCruise.MVVM.ViewModels
                 var oldValue = tree.LiveDead;
                 tree.LiveDead = value;
                 OnLiveDeadChanged(tree, oldValue);
+                RaisePropertyChanged();
             }
         }
 

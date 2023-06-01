@@ -8,7 +8,7 @@
         public const string StratumFieldsRegion = "StratumFields";
         public const string SampleGroupDetailsRegion = "SampleGroupDetailsRegion";
         public const string CruiseContentRegion = "CruiseContentRegion";
-        public const string TreeAuditSelectors = "TreeAuditSelectors";
+        public const string TreeAuditRuleEdit = "TreeAuditRuleEdit";
         public const string StratumTemplateRegion = "StratumTemplateRegion";
     }
 }

@@ -1,31 +1,33 @@
 ﻿using CruiseDAL.Schema;
 using NatCruise.Data;
-using NatCruise.Design.Data;
-using NatCruise.Design.Models;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Util;
 using Prism.Commands;
+using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace NatCruise.Design.ViewModels
+namespace NatCruise.MVVM.ViewModels
 {
     public class SubpopulationListViewModel : ViewModelBase
     {
+        public const int SPECIES_CODE_MAX_LENGTH = 6;
+
         private DelegateCommand<string> _addSubpopulationCommand;
         private SampleGroup _sampleGroup;
         private DelegateCommand<Subpopulation> _removeSubpopulationCommand;
         private ObservableCollection<Subpopulation> _subPopulations;
         private IEnumerable<string> _speciesOptions;
-        private bool _isFixCNT;
 
-        public SubpopulationListViewModel(ISpeciesDataservice speciesDataservice, ISubpopulationDataservice subpopulationDataservice, INatCruiseDialogService dialogService)
+        public SubpopulationListViewModel(ISpeciesDataservice speciesDataservice, ISampleGroupDataservice sampleGroupDataservice, ISubpopulationDataservice subpopulationDataservice, INatCruiseDialogService dialogService)
         {
+            SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
             SubpopulationDataservice = subpopulationDataservice ?? throw new ArgumentNullException(nameof(subpopulationDataservice));
             SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(subpopulationDataservice));
 
@@ -35,11 +37,10 @@ namespace NatCruise.Design.ViewModels
         public event EventHandler SubpopulationAdded;
 
         public ISpeciesDataservice SpeciesDataservice { get; }
+        public ISampleGroupDataservice SampleGroupDataservice { get; }
         protected ISubpopulationDataservice SubpopulationDataservice { get; }
 
         protected INatCruiseDialogService DialogService { get; }
-
-        //public InteractionRequest<INotification> NotificationRequest { get; set; }
 
         public IEnumerable<string> LiveDeadOptions { get; } = new[] { "Default", "L", "D" };
 
@@ -93,6 +94,11 @@ namespace NatCruise.Design.ViewModels
         {
             var subpopulation = (Subpopulation)sender;
 
+            if(subpopulation.HasFieldData)
+            {
+                throw new InvalidOperationException("Can Not Edit Subpopulation That Has Field Data");
+            }
+
             var propertyName = e.PropertyName;
             if (propertyName == nameof(Subpopulation.LiveDead))
             {
@@ -121,16 +127,17 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
-        //protected override void Load()
-        //{
-        //    //if (navParams != null)
-        //    //{
-        //    //    var stratumCode = navParams.StratumCode;
-        //    //    var sampleGroupCode = navParams.SampleGroupCode;
+        public override void Load()
+        {
+            var parameters = Parameters;
+            if (parameters != null)
+            {
+                var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
+                var sampleGroupCode = parameters.GetValue<string>(NavParams.SAMPLE_GROUP);
 
-        //    //    SampleGroup = SampleGroupDataservice.GetSampleGroup(stratumCode, sampleGroupCode);
-        //    //}
-        //}
+                SampleGroup = SampleGroupDataservice.GetSampleGroup(stratumCode, sampleGroupCode);
+            }
+        }
 
         private void OnSampleGroupChanged(SampleGroup value)
         {
@@ -156,8 +163,9 @@ namespace NatCruise.Design.ViewModels
 
         public void AddSubpopulation(string species)
         {
+            if (species.IsNullOrEmpty()) { return; }
             species = species.Trim();
-            if (Regex.IsMatch(species, "^[a-zA-Z0-9]+$") is false) { return; }
+            if (Regex.IsMatch(species, "^[a-zA-Z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100)) is false) { return; }
 
             //var speciesList = SpeciesOptions;
             //var alreadyExists = speciesList.Any(x => x.Equals(species, StringComparison.OrdinalIgnoreCase));
@@ -203,9 +211,9 @@ namespace NatCruise.Design.ViewModels
 
         public void RemoveSubpopulation(Subpopulation subpopulation)
         {
-            if (SubpopulationDataservice.HasTreeCounts(subpopulation.StratumCode, subpopulation.SampleGroupCode, subpopulation.SpeciesCode, subpopulation.LiveDead))
+            if (subpopulation.HasFieldData || SubpopulationDataservice.HasTreeCounts(subpopulation.StratumCode, subpopulation.SampleGroupCode, subpopulation.SpeciesCode, subpopulation.LiveDead))
             {
-                DialogService.ShowNotification($"Subpopulation: {subpopulation.SpeciesCode}|{subpopulation.LiveDead} has tally data can can't be removed");
+                DialogService.ShowNotification($"Subpopulation: {subpopulation.SpeciesCode}|{subpopulation.LiveDead} has field data can can't be removed");
                 //NotificationRequest.Raise(new Notification { Content = $"Subpopulation: {subpopulation.Species}|{subpopulation.LiveDead} has tally data can can't be removed", Title = "!" });
                 return;
             }
@@ -215,9 +223,9 @@ namespace NatCruise.Design.ViewModels
             SubpopulationDataservice.DeleteSubpopulation(subpopulation);
         }
 
-        public void UpdateSubpopulation(Subpopulation subpopulation)
-        {
-            SubpopulationDataservice.UpdateSubpopulation(subpopulation);
-        }
+        //public void UpdateSubpopulation(Subpopulation subpopulation)
+        //{
+        //    SubpopulationDataservice.UpdateSubpopulation(subpopulation);
+        //}
     }
 }

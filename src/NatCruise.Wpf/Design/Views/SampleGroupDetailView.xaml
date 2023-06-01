@@ -77,8 +77,7 @@
 
             <ctrls:LastChildWidthPanel>
                 <TextBlock Text="Code*" />
-                <TextBox 
-                         ToolTip="Sample Group Code"
+                <TextBox ToolTip="Sample Group Code"
                          Text="{Binding SampleGroupCode}"
                          mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          MaxLength="{x:Static dsgn:Constants.SGCODE_MAXLENGTH}" />
@@ -94,9 +93,8 @@
             </ctrls:LastChildWidthPanel>
 
             <ctrls:LastChildWidthPanel>
-                <TextBlock Text="Primary Product*"/>
-                <ComboBox 
-                          ToolTip="Primary Product"
+                <TextBlock Text="Primary Product*" />
+                <ComboBox ToolTip="Primary Product"
                           ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
                           SelectedValuePath="ProductCode"
                           SelectedValue="{Binding PrimaryProduct}" />
@@ -104,8 +102,7 @@
 
             <ctrls:LastChildWidthPanel>
                 <TextBlock Text="Secondary Product" />
-                <ComboBox 
-                          ToolTip="Secondary Product"
+                <ComboBox ToolTip="Secondary Product"
                           ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
                           SelectedValuePath="ProductCode"
                           SelectedValue="{Binding SecondaryProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
@@ -113,8 +110,7 @@
 
             <ctrls:LastChildWidthPanel>
                 <TextBlock Text="Biomass Product" />
-                <ComboBox 
-                          ToolTip="Biomass Product"
+                <ComboBox ToolTip="Biomass Product"
                           ItemsSource="{Binding ProductOptions, Converter={StaticResource PrependNoneConverter}}"
                           SelectedValuePath="ProductCode"
                           SelectedValue="{Binding BiomassProduct, Converter={StaticResource ReplaceNoneWithNullConverter}}" />
@@ -122,8 +118,7 @@
 
             <ctrls:LastChildWidthPanel>
                 <TextBlock Text="Live/Dead Default" />
-                <ComboBox 
-                          ToolTip="Default Live Dead Value"
+                <ComboBox ToolTip="Default Live Dead Value"
                           SelectedValue="{Binding DefaultLiveDead}">
                     <ComboBox.ItemsSource>
                         <x:Array Type="sys:String">
@@ -159,7 +154,7 @@
                 </ComboBox>
             </ctrls:LastChildWidthPanel>
 
-            <ctrls:LastChildWidthPanel>
+            <ctrls:LastChildWidthPanel IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}">
                 <CheckBox Content="Tally By Species"
                           ToolTip="Tally By Species"
                           IsChecked="{Binding TallyBySubPop}"
@@ -184,7 +179,9 @@
                     <Label Content="Sampling Frequency*" />
                     <TextBox Text="{Binding SamplingFrequency}"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
-                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True" />
+                             mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             IsReadOnly="{Binding SampleGroup.HasFieldData}"
+                             IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -192,14 +189,18 @@
                     <Label Content="Insurance Frequency" />
                     <TextBox Text="{Binding InsuranceFrequency}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
+                             IsReadOnly="{Binding SampleGroup.HasFieldData}"
+                             IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
                             Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsSTRVisibilityConverter}, FallbackValue=Visible}">
                     <Label Content="Sample Selector Type" />
                     <ComboBox ItemsSource="{Binding SampleSelectorTypeOptions}"
-                              SelectedItem="{Binding SampleSelectorType}" />
+                              SelectedItem="{Binding SampleSelectorType}"
+                              IsReadOnly="{Binding SampleGroup.HasFieldData}"
+                              IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -221,7 +222,9 @@
                     <TextBox Text="{Binding KZ, Converter={StaticResource DefaultToEmptyStringConverter}}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              ToolTip="KZ"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
+                             IsReadOnly="{Binding SampleGroup.HasFieldData}"
+                             IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -230,7 +233,9 @@
                     <TextBox ToolTip="Insurance Frequency"
                              Text="{Binding InsuranceFrequency}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
+                             IsReadOnly="{Binding SampleGroup.HasFieldData}"
+                             IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
@@ -269,7 +274,9 @@
                 <TextBox Text="{Binding BigBAF, Converter={StaticResource DefaultToEmptyStringConverter}}"
                          ToolTip="Big BAF"
                          Grid.Column="1"
-                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}" />
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
+                         IsReadOnly="{Binding SampleGroup.HasFieldData}"
+                         IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
             </Grid>
         </GroupBox>
     </WrapPanel>

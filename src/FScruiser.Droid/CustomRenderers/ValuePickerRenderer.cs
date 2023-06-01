@@ -13,19 +13,19 @@ using Xamarin.Forms.Platform.Android;
 [assembly: ExportRenderer(typeof(ValuePicker), typeof(FScruiser.Droid.CustomRenderers.ValuePickerRenderer))]
 namespace FScruiser.Droid.CustomRenderers
 {
-    
+
     public class ValuePickerRenderer : ViewRenderer<ValuePicker, EditText>
     {
         private int _originalHintTextColor;
         private static readonly HashSet<Keycode> availableKeys = new HashSet<Keycode>((IEnumerable<Keycode>)new Keycode[7]
         {
-      Keycode.Tab,
-      Keycode.Forward,
-      Keycode.Back,
-      Keycode.DpadDown,
-      Keycode.DpadLeft,
-      Keycode.DpadRight,
-      Keycode.DpadUp
+            Keycode.Tab,
+            Keycode.Forward,
+            Keycode.Back,
+            Keycode.DpadDown,
+            Keycode.DpadLeft,
+            Keycode.DpadRight,
+            Keycode.DpadUp
         });
 
         public ValuePickerRenderer(Context context)
@@ -82,7 +82,7 @@ namespace FScruiser.Droid.CustomRenderers
             string propertyName = e.PropertyName;
             if (propertyName == ValuePicker.TitleProperty.PropertyName || propertyName == ValuePicker.TitleColorProperty.PropertyName)
                 this.UpdateValuePicker();
-            else if (propertyName == ValuePicker.SelectedValueProperty.PropertyName)
+            else if (propertyName == ValuePicker.TextProperty.PropertyName)
                 this.UpdateValuePicker();
             else if (propertyName == ValuePicker.TextColorProperty.PropertyName)
             {
@@ -107,14 +107,11 @@ namespace FScruiser.Droid.CustomRenderers
                 this.Control.SetHintTextColor(ColorExtensions.ToAndroid(element.TitleColor));
             else
                 this.Control.SetHintTextColor(new Android.Graphics.Color(this._originalHintTextColor));
-            string text1 = control.Text;
-            object selectedValue = element.SelectedValue;
-            if (selectedValue == null)
-                control.Text = (string)null;
-            else
-                control.Text = selectedValue.ToString();
+            string oldText = control.Text;
+            string newText = element.Text;
+            control.Text = newText;
             string text2 = control.Text;
-            if (text1 == text2)
+            if (oldText == text2)
                 return;
             ((IVisualElementController)element).NativeSizeChanged();
         }

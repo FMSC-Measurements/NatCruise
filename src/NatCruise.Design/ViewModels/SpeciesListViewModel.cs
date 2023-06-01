@@ -1,9 +1,11 @@
 ﻿using NatCruise.Data;
 using NatCruise.Design.Data;
+using NatCruise.Design.Util;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
+using NatCruise.Services;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -27,13 +29,20 @@ namespace NatCruise.Design.ViewModels
         public INatCruiseDialogService DialogService { get; }
         public SpeciesDetailViewModel SpeciesDetailViewModel { get; }
         public ISpeciesDataservice SpeciesDataservice { get; }
+        public ILoggingService LoggingService { get; }
 
-        public SpeciesListViewModel(ITemplateDataservice templateDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService, SpeciesDetailViewModel speciesDetailViewModel)
+        public SpeciesListViewModel(ITemplateDataservice templateDataservice,
+                                    ISpeciesDataservice speciesDataservice,
+                                    ISetupInfoDataservice setupDataservice,
+                                    INatCruiseDialogService dialogService,
+                                    SpeciesDetailViewModel speciesDetailViewModel,
+                                    ILoggingService loggingService)
         {
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             SpeciesDetailViewModel = speciesDetailViewModel ?? throw new ArgumentNullException(nameof(speciesDetailViewModel));
             SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
         public event EventHandler SpeciesAdded;
@@ -86,13 +95,27 @@ namespace NatCruise.Design.ViewModels
             base.Load();
 
             Species = new ObservableCollection<Species>(SpeciesDataservice.GetSpecies());
-            FIAOptions = SetupDataservice.GetFIASpecies();
+
+            var speciesFiaCodes = Species.Select(x => x.FIACode).Where(x => !string.IsNullOrEmpty(x)).ToHashSet();
+            var fiaOptions = SetupDataservice.GetFIASpecies().ToList();
+            var optionFiaCode = fiaOptions.Select(x => x.FIACode).Where(x => !string.IsNullOrEmpty(x)).ToHashSet();
+
+            var missingFiaCode = speciesFiaCodes.Except(optionFiaCode);
+
+            foreach (var fia in missingFiaCode)
+            {
+                fiaOptions.Add(new FIASpecies{ FIACode = fia });
+                LoggingService.LogEvent(nameof(SpeciesListViewModel) + ":Unrecognized FIAcode:" + fia);
+            }
+            fiaOptions = fiaOptions.OrderBy(x => int.TryParse(x.FIACode, out var i)? i : 0).ToList();
+
+            FIAOptions = fiaOptions;
         }
 
         public void AddSpecies(string speciesCode)
         {
             speciesCode = speciesCode.Trim();
-            if (Regex.IsMatch(speciesCode, "^[a-zA-Z0-9]+$") is false) { return; }
+            if (Regex.IsMatch(speciesCode, "^[a-zA-Z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100)) is false) { return; }
 
             var speciesList = Species;
             var alreadyExists = speciesList.Any(x => x.SpeciesCode.Equals(speciesCode, StringComparison.OrdinalIgnoreCase));
@@ -124,7 +147,16 @@ namespace NatCruise.Design.ViewModels
         {
             if (species is null) { throw new ArgumentNullException(nameof(species)); }
 
-            SpeciesDataservice.DeleteSpecies(species.SpeciesCode);
+            try
+            {
+                SpeciesDataservice.DeleteSpecies(species.SpeciesCode);
+            }
+            catch (FMSC.ORM.ConstraintException e)
+            {
+                DialogService.ShowNotification("Can Not Delete Species With Data");
+            }
+
+            
         }
     }
 }

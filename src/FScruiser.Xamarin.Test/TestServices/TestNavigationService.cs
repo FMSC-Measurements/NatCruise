@@ -193,5 +193,40 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowTreeAuditRules()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowTreeAuditRuleEdit(string tarID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowFieldSetup(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowStratumDetail(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowStrata()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowSampleGroups(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowSubpopulations(string stratumCode, string sampleGroupCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -53,7 +53,8 @@
                 <TextBlock>Code*</TextBlock>
                 <TextBox Text="{Binding StratumCode}"
                          mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                         MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}" />
+                         MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}"
+                         IsEnabled="{Binding HasFieldData, Converter={StaticResource NotConverter}}"/>
             </ctrls:LastChildWidthPanel>
 
             <!-- description -->
@@ -69,7 +70,9 @@
 
                 <ComboBox SelectedValue="{Binding Method}"
                           SelectedValuePath="Method"
-                          ItemsSource="{Binding Methods}" />
+                          ItemsSource="{Binding Methods}"
+                          IsReadOnly="{Binding Stratum.HasFieldData}"
+                          IsEnabled="{Binding Stratum.HasFieldData, Converter={StaticResource NotConverter}}"/>
             </ctrls:LastChildWidthPanel>
 
             <!-- yield component -->
@@ -86,7 +89,8 @@
                   Visibility="{Binding IsPlot, Converter={StaticResource IsVisableConverter}}"
                   d:Visibility="Visible"
                   Margin="5"
-                  VerticalAlignment="Top">
+                  VerticalAlignment="Top"
+                  IsEnabled="{Binding Stratum.HasFieldData, Converter={StaticResource NotConverter}}">
 
             <StackPanel>
 
@@ -96,7 +100,8 @@
                     <TextBox ToolTip="Basal Area Factor"
                              Text="{Binding BasalAreaFactor}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}" />
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
+                             IsReadOnly="{Binding HasFieldData}"/>
                 </ctrls:LastChildWidthPanel>
 
                 <!-- fps -->
@@ -113,7 +118,8 @@
                                  HorizontalAlignment="Stretch"
                                  mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                                  Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"
-                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
+                                 IsReadOnly="{Binding HasFieldData}"/>
                         <TextBlock Grid.Column="1"
                                    Text="1/x Acre"
                                    Margin="5,5" />
@@ -126,7 +132,8 @@
                     <TextBox ToolTip="KZ (3PPNT)"
                              Text="{Binding KZ3PPNT}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}" />
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
+                             IsReadOnly="{Binding HasFieldData}"/>
                 </ctrls:LastChildWidthPanel>
 
                 <!-- fixcnt field -->
@@ -134,7 +141,8 @@
                     <TextBlock Text="FIXCNT Field*"/>
                     <ComboBox ItemsSource="{Binding TreeFieldOptions}"
                               SelectedValue="{Binding FixCNTField}"
-                              SelectedValuePath="Field" />
+                              SelectedValuePath="Field"
+                              IsReadOnly="{Binding HasFieldData}"/>
                 </ctrls:LastChildWidthPanel>
             </StackPanel>
         </GroupBox>

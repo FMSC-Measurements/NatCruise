@@ -117,7 +117,8 @@
 
         </WrapPanel>
 
-        <ScrollViewer Grid.Row="2">
+        <ScrollViewer Grid.Row="2"
+                      IsEnabled="{Binding CanEditTreeCount}">
             <StackPanel HorizontalAlignment="Left">
 
                 <StackPanel.Resources>
@@ -238,17 +239,18 @@
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom">
+                    VerticalAlignment="Bottom"
+                    IsEnabled="{Binding CanEditTreeCount}">
 
             <Button Content="Submit"
                     Background="{DynamicResource MahApps.Brushes.Accent}"
                     Command="{Binding SaveTreeCountEditCommand}"
                     AutomationProperties.Name="Save Button" />
 
-            <Button x:Name="_cancelButton"
+            <!--<Button x:Name="_cancelButton"
                     Content="Cancel"
                     Command="{Binding CancelCommand}"
-                    AutomationProperties.Name="Cancel Button" />
+                    AutomationProperties.Name="Cancel Button" />-->
         </StackPanel>
     </Grid>
 </UserControl>

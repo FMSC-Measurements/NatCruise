@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                    xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    x:Class="FScruiser.XF.Views.StratumDetailView"
+                                    Title="{Binding Stratum.StratumCode, StringFormat='Stratum {0}'}">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout.Resources>
+                <Style TargetType="controls:LastChildWidthLayout">
+                    <Setter Property="WidthRequest"
+                            Value="300" />
+                    <Setter Property="LastChildWidth"
+                            Value="100" />
+                </Style>
+                
+            </StackLayout.Resources>
+            
+            <controls:LastChildWidthLayout>
+                <Label Text="Stratum Code" />
+                <Label Text="{Binding Stratum.StratumCode}" />
+            </controls:LastChildWidthLayout>
+
+            <controls:LastChildWidthLayout>
+                <Label Text="Description" />
+                <Label Text="{Binding Stratum.Description}" />
+            </controls:LastChildWidthLayout>
+
+            <controls:LastChildWidthLayout>
+                <Label Text="Method" />
+                <Label Text="{Binding Stratum.Method}" />
+            </controls:LastChildWidthLayout>
+
+            <controls:LastChildWidthLayout>
+                <Label Text="Yield Component" />
+                <Label Text="{Binding Stratum.YieldComponent}" />
+            </controls:LastChildWidthLayout>
+
+            <controls:LastChildWidthLayout IsVisible="{Binding IsVariableRariousePlot}">
+                <Label Text="BAF" />
+                <Label Text="{Binding Stratum.BasalAreaFactor}" />
+            </controls:LastChildWidthLayout>
+
+            <controls:LastChildWidthLayout IsVisible="{Binding IsFixedSizePlot}">
+                <Label Text="FPS" />
+                <Label Text="{Binding Stratum.FixedPlotSize}" />
+            </controls:LastChildWidthLayout>
+
+            <controls:LastChildWidthLayout IsVisible="{Binding Is3PPNT}">
+                <Label Text="KZ (3PPNT)" />
+                <Label Text="{Binding Stratum.KZ3PPNT}" />
+            </controls:LastChildWidthLayout>
+        </StackLayout>
+
+    </ContentPage.Content>
+</controls:InitializableContentPage>

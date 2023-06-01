@@ -33,6 +33,12 @@ namespace NatCruise.Navigation
             set => SetValue(value);
         }
 
+        public string TreeAuditRuleID
+        {
+            get => GetValueInternal<string>();
+            set => SetValue(value);
+        }
+
 
         protected TResult GetValueInternal<TResult>([CallerMemberName] string name = null) where TResult : class
         {

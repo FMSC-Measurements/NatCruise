@@ -30,11 +30,11 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<StratumTemplate> _stratumTemplateOptions;
         private StratumTemplate _selectedStratumTemplate;
 
-        public StratumListViewModel(IStratumDataservice stratumDataservice, ITemplateDataservice templateDataservice, IFieldSetupDataservice fieldSetupDataservice, ISaleDataservice saleDataservice, INatCruiseDialogService dialogService)
+        public StratumListViewModel(IStratumDataservice stratumDataservice, IStratumTemplateDataservice stratumTemplateDataservice, IFieldSetupDataservice fieldSetupDataservice, ISaleDataservice saleDataservice, INatCruiseDialogService dialogService)
         {
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            StratumTemplateDataservice = stratumTemplateDataservice ?? throw new ArgumentNullException(nameof(stratumTemplateDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
 
@@ -45,7 +45,7 @@ namespace NatCruise.Design.ViewModels
 
         protected IStratumDataservice StratumDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
-        public ITemplateDataservice TemplateDataservice { get; }
+        public IStratumTemplateDataservice StratumTemplateDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
         public ISaleDataservice SaleDataservice { get; }
         public StratumValidator StratumValidator { get; }
@@ -109,7 +109,7 @@ namespace NatCruise.Design.ViewModels
 
         public override void Load()
         {
-            var stratumTemplates = TemplateDataservice.GetStratumTemplates();
+            var stratumTemplates = StratumTemplateDataservice.GetStratumTemplates();
             var cruise = SaleDataservice.GetCruise();
             if(cruise.Purpose.Equals("Recon", StringComparison.OrdinalIgnoreCase))
             {
@@ -138,12 +138,11 @@ namespace NatCruise.Design.ViewModels
         public void AddStratum(string code)
         {
             code = code.Trim();
-            if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$") is false) { return; }
+            if (Regex.IsMatch(code, "^[a-zA-Z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100)) is false) { return; }
 
             var newStratum = new Stratum
             {
                 StratumCode = code,
-                YieldComponent = "CL",
             };
 
             var stratumTemplate = SelectedStratumTemplate;
@@ -160,6 +159,8 @@ namespace NatCruise.Design.ViewModels
                 newStratum.SamplingFrequency = stratumTemplate.SamplingFrequency;
                 newStratum.YieldComponent = stratumTemplate.YieldComponent;
             }
+
+            newStratum.YieldComponent ??= "CL";
 
             try
             {
@@ -185,8 +186,10 @@ namespace NatCruise.Design.ViewModels
         public void RemoveStratum(Stratum stratum)
         {
             if (stratum is null) { throw new System.ArgumentNullException(nameof(stratum)); }
-            var strata = Strata;
+            if(stratum.HasFieldData) { return; }
 
+
+            var strata = Strata;
             StratumDataservice.DeleteStratum(stratum);
             var index = strata.IndexOf(stratum);
             if (index < 0) { return; }

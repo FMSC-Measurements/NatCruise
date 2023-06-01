@@ -66,7 +66,7 @@ namespace FScruiser.XF.Util
         public static View MakeGradePicker(LogFieldSetup field)
         {
             var editView = new ValuePicker();
-            editView.ValueSource = new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+            editView.ItemsSource = new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
             Xamarin.Forms.PlatformConfiguration.AndroidSpecific.Entry.SetImeOptions(editView, Xamarin.Forms.PlatformConfiguration.AndroidSpecific.ImeFlags.Next);
             editView.SetBinding(ValuePicker.SelectedValueProperty, $"Log.{field.Field}");
 

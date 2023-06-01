@@ -1,12 +1,9 @@
-﻿using NatCruise.Design.Data;
+﻿using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Design.ViewModels
 {
@@ -20,36 +17,37 @@ namespace NatCruise.Design.ViewModels
             get => _logFields;
             set => SetProperty(ref _logFields, value);
         }
-        public ITemplateDataservice TemplateDataservice { get; }
+
+        public ILogFieldDataservice LogFieldDataservice { get; }
 
         public LogField SelectedLogField
         {
             get => _selectedLogField;
             set
             {
-                if(_selectedLogField != null) { _selectedLogField.PropertyChanged -= SelectedLogField_PropertyChanged; }
+                if (_selectedLogField != null) { _selectedLogField.PropertyChanged -= SelectedLogField_PropertyChanged; }
                 SetProperty(ref _selectedLogField, value);
-                if(value != null) { value.PropertyChanged += SelectedLogField_PropertyChanged; }
+                if (value != null) { value.PropertyChanged += SelectedLogField_PropertyChanged; }
             }
         }
 
         private void SelectedLogField_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(sender is LogField lf && lf != null)
+            if (sender is LogField lf && lf != null)
             {
-                TemplateDataservice.UpdateLogField(lf);
+                LogFieldDataservice.UpdateLogField(lf);
             }
         }
 
-        public LogFieldsViewModel(ITemplateDataservice templateDataservice)
+        public LogFieldsViewModel(ILogFieldDataservice logFieldDataservice)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            LogFieldDataservice = logFieldDataservice ?? throw new ArgumentNullException(nameof(logFieldDataservice));
         }
 
         public override void Load()
         {
             base.Load();
-            LogFields = TemplateDataservice.GetLogFields();
+            LogFields = LogFieldDataservice.GetLogFields();
         }
     }
 }

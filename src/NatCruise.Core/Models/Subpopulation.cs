@@ -60,6 +60,14 @@ namespace NatCruise.Models
             }
         }
 
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public bool HasFieldData
+        {
+            get;
+            set;
+        }
+
+
         public override string ToString()
         {
             var liveDead = LiveDead;

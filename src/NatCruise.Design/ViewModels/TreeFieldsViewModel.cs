@@ -1,4 +1,5 @@
-﻿using NatCruise.Design.Data;
+﻿using NatCruise.Data;
+using NatCruise.Design.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using System;
@@ -12,12 +13,12 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<TreeField> _treeFields;
         private TreeField _selectedTreeField;
 
-        public TreeFieldsViewModel(ITemplateDataservice templateDataservice)
+        public TreeFieldsViewModel(ITreeFieldDataservice treeFieldDataservice)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
         }
 
-        public ITemplateDataservice TemplateDataservice { get; }
+        public ITreeFieldDataservice TreeFieldDataservice { get; }
 
         public IEnumerable<TreeField> TreeFields
         {
@@ -39,14 +40,14 @@ namespace NatCruise.Design.ViewModels
         {
             if(sender is TreeField tf && tf != null)
             {
-                TemplateDataservice.UpdateTreeField(tf);
+                TreeFieldDataservice.UpdateTreeField(tf);
             }
         }
 
         public override void Load()
         {
             base.Load();
-            TreeFields = TemplateDataservice.GetTreeFields();
+            TreeFields = TreeFieldDataservice.GetTreeFields();
         }
     }
 }

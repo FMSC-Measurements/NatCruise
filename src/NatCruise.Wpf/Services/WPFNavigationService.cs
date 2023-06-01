@@ -101,7 +101,7 @@ namespace NatCruise.Wpf.Services
             return Task.CompletedTask;
         }
 
-        public Task ShowAuditRules()
+        public Task ShowTreeAuditRules()
         {
             RegionManager.RequestNavigate(Regions.CruiseContentRegion, nameof(TreeAuditRuleListView));
             return Task.CompletedTask;
@@ -165,6 +165,31 @@ namespace NatCruise.Wpf.Services
         }
 
         public Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowTreeAuditRuleEdit(string tarID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowFieldSetup(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowStratumDetail(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowSampleGroups(string stratumCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowSubpopulations(string stratumCode, string sampleGroupCode)
         {
             throw new NotImplementedException();
         }

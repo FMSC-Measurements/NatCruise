@@ -145,8 +145,11 @@ namespace NatCruise.MVVM.ViewModels
                 SetProperty(ref _cruiseMethod, value);
                 RaisePropertyChanged(nameof(IsSTR));
                 RaisePropertyChanged(nameof(Is3P));
+                RaisePropertyChanged(nameof(CanEditTreeCount));
             }
         }
+
+        public bool CanEditTreeCount => !CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(CruiseMethod);
 
         public bool IsSTR => CruiseMethod == CruiseDAL.Schema.CruiseMethods.STR;
 

@@ -20,16 +20,16 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<TreeField> _treefieldOptions;
         private IEnumerable<CruiseMethod> _methods;
 
-        public StratumTemplateDetailsViewModel(ISetupInfoDataservice setupDataservice, ITemplateDataservice templateDataservice)
+        public StratumTemplateDetailsViewModel(ISetupInfoDataservice setupDataservice, IStratumTemplateDataservice stratumTemplateDataservice)
         {
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            StratumTemplateDataservice = stratumTemplateDataservice ?? throw new ArgumentNullException(nameof(stratumTemplateDataservice));
 
             Methods = SetupDataservice.GetCruiseMethods().ToArray();
         }
 
         public ISetupInfoDataservice SetupDataservice { get; }
-        public ITemplateDataservice TemplateDataservice { get; }
+        public IStratumTemplateDataservice StratumTemplateDataservice { get; }
 
         public IEnumerable<string> YieldComponentOptions => YealdComponent_Options;
 
@@ -67,7 +67,7 @@ namespace NatCruise.Design.ViewModels
             var st = sender as StratumTemplate;
             if (st != null)
             {
-                TemplateDataservice.UpsertStratumTemplate(st);
+                StratumTemplateDataservice.UpsertStratumTemplate(st);
             }
         }
     }

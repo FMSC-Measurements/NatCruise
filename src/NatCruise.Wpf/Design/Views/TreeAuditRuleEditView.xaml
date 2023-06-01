@@ -1,0 +1,160 @@
+﻿<UserControl x:Class="NatCruise.Design.Views.TreeAuditRuleEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
+             xmlns:local="clr-namespace:NatCruise.Design.Views"
+             xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="300"
+             Background="White">
+    <GroupBox Header="Edit Selected Audit Rule">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+
+            <WrapPanel>
+                <WrapPanel.Resources>
+                    <Style TargetType="mah:MetroHeader"
+                           BasedOn="{StaticResource MahApps.Styles.MetroHeader}">
+                        <Setter Property="Margin"
+                                Value="1" />
+                    </Style>
+                </WrapPanel.Resources>
+
+                <mah:MetroHeader Header="Tree Field"
+                                 Width="100">
+                    <Label Content="{Binding TreeAuditRule.Field}"
+                           d:Content="xxxx"
+                           VerticalAlignment="Bottom" />
+                    <!--<ComboBox SelectedValue="{Binding TreeAuditRule.Field}"
+                              ItemsSource="{Binding TreeFieldOptions}"
+                              SelectedValuePath="Field"
+                              Width="100" />-->
+                </mah:MetroHeader>
+
+                <mah:MetroHeader Header="Min">
+                    <TextBox Text="{Binding TreeAuditRule.Min, StringFormat={}{0:F}}"
+                             mah:TextBoxHelper.SelectAllOnFocus="True"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}" />
+                </mah:MetroHeader>
+
+                <mah:MetroHeader Header="Max">
+                    <TextBox Text="{Binding TreeAuditRule.Max, StringFormat={}{0:F}}"
+                             mah:TextBoxHelper.SelectAllOnFocus="True"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}" />
+                </mah:MetroHeader>
+
+                <mah:MetroHeader Header="Description">
+                    <TextBox Text="{Binding TreeAuditRule.Description}"
+                             mah:TextBoxHelper.SelectAllOnFocus="True"
+                             Width="250" />
+                </mah:MetroHeader>
+            </WrapPanel>
+
+            <Separator Grid.Row="1" />
+
+            <mah:MetroHeader Header="Audit Rule Populations"
+                             Grid.Row="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="30" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+
+                        <WrapPanel Grid.Row="0"
+                                   Grid.Column="0">
+                            <WrapPanel.Resources>
+                                <Style TargetType="mah:MetroHeader"
+                                       BasedOn="{StaticResource MahApps.Styles.MetroHeader}">
+                                    <Setter Property="Margin"
+                                            Value="1" />
+                                </Style>
+                            </WrapPanel.Resources>
+                            <mah:MetroHeader Header="Species"
+                                             Grid.Row="0"
+                                             Grid.Column="0">
+                                <ComboBox ItemsSource="{Binding SpeciesOptions, Converter={StaticResource PrependAnyConverter}}"
+                                          SelectedItem="{Binding NewRuleSelector.SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                            </mah:MetroHeader>
+
+                            <mah:MetroHeader Header="Live/Dead"
+                                             Grid.Row="0"
+                                             Grid.Column="1">
+                                <ComboBox ItemsSource="{Binding LiveDeadOptions, Converter={StaticResource PrependAnyConverter}}"
+                                          SelectedValue="{Binding NewRuleSelector.LiveDead, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                            </mah:MetroHeader>
+
+                            <mah:MetroHeader Header="Product"
+                                             Grid.Row="1"
+                                             Grid.Column="0">
+                                <ComboBox ItemsSource="{Binding ProductCodeOptions, Converter={StaticResource PrependAnyConverter}}"
+                                          SelectedValue="{Binding NewRuleSelector.PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                            </mah:MetroHeader>
+                        </WrapPanel>
+
+
+                        <Button  Content="{iconPack:FontAwesome Kind=PlusCircleSolid}"
+                                 Style="{StaticResource AddButton}"
+                                 Command="{Binding AddNewRuleSelectorCommand}"
+                                 Grid.Row="0"
+                                 Grid.Column="1"
+                                 Margin="1,10" />
+
+                        <Button Grid.Row="0"
+                                Grid.Column="2"
+                                Content="{iconPack:FontAwesome Kind=MinusCircleSolid}"
+                                Command="{Binding DeleteRuleSelectorCommand}"
+                                CommandParameter="{Binding SelectedItem, ElementName=_selectorDataGrid}"
+                                IsEnabled="{Binding SelectedItem, ElementName=_selectorDataGrid, Converter={StaticResource NotNullConverter}}"
+                                Style="{StaticResource RemoveButton}"
+                                Margin="1,10" />
+                    </Grid>
+
+
+                    <DataGrid x:Name="_selectorDataGrid"
+                              Grid.Row="1"
+                              SelectionMode="Single"
+                              ItemsSource="{Binding Selectors}"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Species"
+                                                Binding="{Binding SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}"
+                                                IsReadOnly="True" />
+                            <DataGridTextColumn Header="Live/Dead"
+                                                Binding="{Binding LiveDead, Converter={StaticResource ReplaceAnyWithNullConverter}}"
+                                                IsReadOnly="True" />
+                            <DataGridTextColumn Header="Product"
+                                                Binding="{Binding PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}"
+                                                IsReadOnly="True" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+
+            </mah:MetroHeader>
+
+        </Grid>
+    </GroupBox>
+</UserControl>

@@ -27,16 +27,16 @@ namespace NatCruise.Design.ViewModels
 
         public event EventHandler StratumTemplateAdded;
 
-        protected ITemplateDataservice TemplateDataservice { get; }
+        protected IStratumTemplateDataservice StratumTemplateDataservice { get; }
 
-        public StratumTemplateListViewModel(ITemplateDataservice templateDataservice, ISaleDataservice saleDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
+        public StratumTemplateListViewModel(IStratumTemplateDataservice stratumTemplateDataservice, ITreeFieldDataservice treeFieldDataservice, ISaleDataservice saleDataservice, ISetupInfoDataservice setupDataservice, INatCruiseDialogService dialogService)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            StratumTemplateDataservice = stratumTemplateDataservice ?? throw new ArgumentNullException(nameof(stratumTemplateDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
 
-            TreeFieldOptions = TemplateDataservice.GetTreeFields();
+            TreeFieldOptions = treeFieldDataservice.GetTreeFields();
             Methods = SetupDataservice.GetCruiseMethods().Select(x => x.Method).ToArray();
         }
 
@@ -74,7 +74,7 @@ namespace NatCruise.Design.ViewModels
             var st = sender as StratumTemplate;
             if (st != null)
             {
-                TemplateDataservice.UpsertStratumTemplate(st);
+                StratumTemplateDataservice.UpsertStratumTemplate(st);
             }
         }
 
@@ -110,7 +110,7 @@ namespace NatCruise.Design.ViewModels
             Region = sale.Region;
             Forest = sale.Forest;
 
-            var stratumTemplate = TemplateDataservice.GetStratumTemplates();
+            var stratumTemplate = StratumTemplateDataservice.GetStratumTemplates();
             StratumTemplates = new ObservableCollection<StratumTemplate>(stratumTemplate);
         }
 
@@ -123,7 +123,7 @@ namespace NatCruise.Design.ViewModels
                     StratumTemplateName = name
                 };
 
-                TemplateDataservice.UpsertStratumTemplate(newStratumTemplate);
+                StratumTemplateDataservice.UpsertStratumTemplate(newStratumTemplate);
                 StratumTemplates.Add(newStratumTemplate);
                 SelectedStratumTemplate = newStratumTemplate;
                 StratumTemplateAdded?.Invoke(this, EventArgs.Empty);
