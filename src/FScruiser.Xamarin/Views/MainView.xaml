@@ -65,8 +65,7 @@
 
                 <ScrollView>
                     <StackLayout Orientation="Vertical">
-                        <StackLayout BindableLayout.ItemsSource="{Binding NavOptions}"
-                                     BackgroundColor="Green">
+                        <StackLayout BindableLayout.ItemsSource="{Binding NavOptions}">
 
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
