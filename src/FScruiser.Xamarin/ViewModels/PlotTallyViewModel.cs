@@ -68,6 +68,8 @@ namespace FScruiser.XF.ViewModels
             get => _selectedTree;
             set
             {
+                if(object.ReferenceEquals(_selectedTree, value)) return;
+
                 var treeID = value?.TreeID;
                 if (treeID != null)
                 {
@@ -258,7 +260,16 @@ namespace FScruiser.XF.ViewModels
         public IList<PlotTreeEntry> Trees
         {
             get { return _trees; }
-            set { SetProperty(ref _trees, value); }
+            set
+            {
+                SetProperty(ref _trees, value);
+                // if we have a selected tree refresh it with a matching tree in the new trees collection
+                var selectedTree = SelectedTree;
+                if(selectedTree != null)
+                {
+                    SelectedTree = Trees.FirstOrDefault(x => x.TreeID == selectedTree.TreeID);
+                }
+            }
         }
 
         protected void OnTreeAdded()
@@ -309,9 +320,6 @@ namespace FScruiser.XF.ViewModels
 
             Plot = plot;
             PlotNumber = plot.PlotNumber;
-
-            // refresh selected tree in case coming back from TreeEdit page
-            RaisePropertyChanged(nameof(SelectedTreeViewModel));
 
             RaisePropertyChanged(nameof(Title));
         }
