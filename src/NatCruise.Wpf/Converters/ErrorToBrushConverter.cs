@@ -23,12 +23,27 @@ namespace NatCruise.Wpf.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var error = (ErrorBase)value;
-            if (error == null) { return Default; }
+            string errorLevel;
 
-            if (error.IsResolved) { return SuppressedColor; }
+            if (value == null)
+            {
+                return Default;
+            }
+            if (value is ErrorBase error)
+            {
+                if (error.IsResolved) { return SuppressedColor; }
+                errorLevel = error.Level;
+            }
+            else if(value is string str)
+            {
+                 errorLevel = str;
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
 
-            switch (error.Level.ToUpper())
+            switch (errorLevel.ToUpper())
             {
                 case "E": return Error;
                 case "W": return Warning;
