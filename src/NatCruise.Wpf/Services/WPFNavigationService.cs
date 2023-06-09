@@ -196,8 +196,10 @@ namespace NatCruise.Wpf.Services
                 Title = viewModel.Message,
                 Content = view,
             };
-            
-            viewModel.Saved = (sender, ea) =>  MainWindow.HideMetroDialogAsync(dialog);
+
+            EventHandler hideDialogAction = (sender, ea) => MainWindow.HideMetroDialogAsync(dialog);
+            viewModel.Saved = hideDialogAction;
+            view.OnCancelButtonClicked = hideDialogAction;
 
             viewModel.Load(treeID, treeAuditRuleID);
             return MainWindow.ShowMetroDialogAsync(dialog) ;

@@ -29,10 +29,24 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="1"
-                    Content="Save"
-                    Command="{Binding SaveCommand}"/>
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
+                    Margin="3,2"
+                    Padding="5,0">
+                <Button.Content>
+                    <Binding Path="IsResolved" FallbackValue="Suppress Error">
+                        <Binding.Converter>
+                            <converters:BoolToObjectConverter TrueObject="Unsupress Error"
+                                                              FalseObject="Suppress Error" />
+                        </Binding.Converter>
+                    </Binding>
+                </Button.Content>
+            </Button>
             <Button Grid.Column="2"
-                    Content="Close" />
+                    Content="Cancel"
+                    Style="{StaticResource MahApps.Styles.Button.Dialogs}"
+                        Margin="3,2"
+                    Click="CancelButton_Clicked" />
 
         </Grid>
 
@@ -52,26 +66,27 @@
                            VerticalAlignment="Center"
                            d:Text="some error message" />
 
-                <mah:ToggleSwitch Grid.Column="1"
+                <!--<mah:ToggleSwitch Grid.Column="1"
                                   IsOn="{Binding IsResolved}"
                                   d:IsOn="true"
                                   OnContent="Suppressed"
                                   OffContent=""
-                                  HorizontalAlignment="Right" />
+                                  HorizontalAlignment="Right" />-->
             </Grid>
 
 
-            <mah:MetroHeader Header="Remarks *">
+            <mah:MetroHeader Header="Remarks">
                 <TextBox Text="{Binding Resolution}"
                          AcceptsReturn="True"
-                         IsEnabled="{Binding IsResolved}"
+                         IsEnabled="{Binding IsResolved, Converter={StaticResource NotConverter}}"
                          Height="100"
                          VerticalScrollBarVisibility="Auto"
                          TextWrapping="Wrap" />
             </mah:MetroHeader>
 
-            <mah:MetroHeader Header="Initials">
+            <mah:MetroHeader Header="Initials*">
                 <TextBox Text="{Binding Initials}"
+                         IsEnabled="{Binding IsResolved, Converter={StaticResource NotConverter}}"
                          d:Text="BC" />
             </mah:MetroHeader>
         </StackPanel>

@@ -24,5 +24,12 @@ namespace NatCruise.Wpf.FieldData.Views
         {
             InitializeComponent();
         }
+
+        public EventHandler OnCancelButtonClicked;
+
+        private void CancelButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            OnCancelButtonClicked?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

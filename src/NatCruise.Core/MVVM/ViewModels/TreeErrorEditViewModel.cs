@@ -132,6 +132,20 @@ namespace NatCruise.MVVM.ViewModels
         public void Save()
         {
             var isResolved = IsResolved;
+
+            if (isResolved == false)
+            {
+                SuppressError();
+            }
+            else
+            {
+                UnSupressError();
+            }
+            Saved?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void SuppressError()
+        {
             var treeError = TreeError;
             if (treeError == null) { return; }
             var treeID = treeError.TreeID;
@@ -139,24 +153,25 @@ namespace NatCruise.MVVM.ViewModels
             var remarks = Resolution;
             var sig = Initials;
 
-            if (isResolved == true)
+            if (sig == null)
             {
-                if (remarks == null)
-                {
-                    DialogService.ShowMessageAsync("Remarks required");
-                    return;
-                }
-                if (sig == null)
-                {
-                    DialogService.ShowMessageAsync("Initials required");
-                    return;
-                }
-                TreeErrorDataservice.SetTreeAuditResolution(treeID, treeAuditRuleID, remarks, sig);
+                DialogService.ShowMessageAsync("Initials required");
+                return;
             }
-            else
-            {
-                TreeErrorDataservice.ClearTreeAuditResolution(treeID, treeAuditRuleID);
-            }
+            TreeErrorDataservice.SetTreeAuditResolution(treeID, treeAuditRuleID, remarks, sig);
+
+            Saved?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void UnSupressError()
+        {
+            var treeError = TreeError;
+            if (treeError == null) { return; }
+            var treeID = treeError.TreeID;
+            var treeAuditRuleID = treeError.TreeAuditRuleID;
+
+            TreeErrorDataservice.ClearTreeAuditResolution(treeID, treeAuditRuleID);
+
             Saved?.Invoke(this, EventArgs.Empty);
         }
     }
