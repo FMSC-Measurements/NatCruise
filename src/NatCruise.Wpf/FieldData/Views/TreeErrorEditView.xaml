@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="NatCruise.Wpf.FieldData.Views.TreeErrorEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             Background="{StaticResource MahApps.Brushes.Control.Background}"
+             Width="379">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:ErrorToBrushConverter x:Key="errorToColorConverter"
+                                              Default="Gold"
+                                              Error="Red"
+                                              Warning="Gold"
+                                              SuppressedColor="LightGray" />
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+    <DockPanel>
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1"
+                    Content="Save"
+                    Command="{Binding SaveCommand}"/>
+            <Button Grid.Column="2"
+                    Content="Close" />
+
+        </Grid>
+
+        <StackPanel>
+
+            <Grid Background="{Binding Level, Converter={StaticResource errorToColorConverter}}"
+                  d:Background="Gold">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Message}"
+                           FontSize="20"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           d:Text="some error message" />
+
+                <mah:ToggleSwitch Grid.Column="1"
+                                  IsOn="{Binding IsResolved}"
+                                  d:IsOn="true"
+                                  OnContent="Suppressed"
+                                  OffContent=""
+                                  HorizontalAlignment="Right" />
+            </Grid>
+
+
+            <mah:MetroHeader Header="Remarks *">
+                <TextBox Text="{Binding Resolution}"
+                         AcceptsReturn="True"
+                         IsEnabled="{Binding IsResolved}"
+                         Height="100"
+                         VerticalScrollBarVisibility="Auto"
+                         TextWrapping="Wrap" />
+            </mah:MetroHeader>
+
+            <mah:MetroHeader Header="Initials">
+                <TextBox Text="{Binding Initials}"
+                         d:Text="BC" />
+            </mah:MetroHeader>
+        </StackPanel>
+
+
+    </DockPanel>
+</UserControl>

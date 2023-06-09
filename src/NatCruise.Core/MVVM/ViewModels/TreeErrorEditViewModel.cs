@@ -1,7 +1,4 @@
-﻿using FScruiser.XF.Services;
-using NatCruise;
-using NatCruise.Cruise.Services;
-using NatCruise.Data;
+﻿using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
@@ -10,7 +7,7 @@ using Prism.Common;
 using System;
 using System.Windows.Input;
 
-namespace FScruiser.XF.ViewModels
+namespace NatCruise.MVVM.ViewModels
 {
     public class TreeErrorEditViewModel : ViewModelBase
     {
@@ -22,7 +19,7 @@ namespace FScruiser.XF.ViewModels
         public TreeErrorEditViewModel(ITreeDataservice treeDataservice,
             ITreeErrorDataservice treeErrorDataservice,
             INatCruiseDialogService dialogService,
-            ICruiseNavigationService navigationService)
+            INatCruiseNavigationService navigationService)
         {
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             TreeErrorDataservice = treeErrorDataservice ?? throw new ArgumentNullException(nameof(treeErrorDataservice));
@@ -30,12 +27,15 @@ namespace FScruiser.XF.ViewModels
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 
+        public EventHandler Saved;
+
+
         public ICommand SaveCommand => _saveCommand ??= new DelegateCommand(Save);
 
         protected ITreeDataservice TreeDataservice { get; }
         public ITreeErrorDataservice TreeErrorDataservice { get; }
         protected INatCruiseDialogService DialogService { get; }
-        public ICruiseNavigationService NavigationService { get; }
+        public INatCruiseNavigationService NavigationService { get; }
         public int TreeNumber { get => _treeNumber; set => SetProperty(ref _treeNumber, value); }
 
         protected TreeError TreeError
@@ -117,6 +117,11 @@ namespace FScruiser.XF.ViewModels
             var treeID = parameters.GetValue<string>(NavParams.TreeID);
             var treeAuditRuleID = parameters.GetValue<string>(NavParams.TreeAuditRuleID);
 
+            Load(treeID, treeAuditRuleID);
+        }
+
+        public void Load(string treeID, string treeAuditRuleID)
+        {
             var treeNumber = TreeDataservice.GetTreeNumber(treeID);
             var treeError = TreeErrorDataservice.GetTreeError(treeID, treeAuditRuleID);
 
@@ -147,13 +152,12 @@ namespace FScruiser.XF.ViewModels
                     return;
                 }
                 TreeErrorDataservice.SetTreeAuditResolution(treeID, treeAuditRuleID, remarks, sig);
-                NavigationService.GoBackAsync();
             }
             else
             {
                 TreeErrorDataservice.ClearTreeAuditResolution(treeID, treeAuditRuleID);
-                NavigationService.GoBackAsync();
             }
+            Saved?.Invoke(this, EventArgs.Empty);
         }
     }
 }

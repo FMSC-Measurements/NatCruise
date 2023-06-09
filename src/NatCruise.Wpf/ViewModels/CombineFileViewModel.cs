@@ -322,7 +322,7 @@ namespace NatCruise.Wpf.ViewModels
         protected void OnSyncDone()
         {
             IsSyncRunning = false;
-            DialogService.ShowNotification("Done Combining Files");
+            DialogService.ShowMessageAsync("Done Combining Files");
 
             Cruise = null;
             CurrentSyncFile = null;

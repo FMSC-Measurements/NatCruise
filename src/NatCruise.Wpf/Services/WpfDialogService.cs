@@ -2,13 +2,20 @@
 using NatCruise.Services;
 using System.Threading.Tasks;
 using System.Windows;
+using MahApps.Metro.Controls.Dialogs;
+using NatCruise.Wpf.Views;
 
 namespace NatCruise.Wpf.Services
 {
     public class WpfDialogService : INatCruiseDialogService
     {
-        public WpfDialogService()
+        public IAppService AppService { get; }
+
+        public MainWindow MainWindow => (MainWindow)AppService.MainWindow;
+
+        public WpfDialogService(IAppService appService)
         {
+            AppService = appService;
         }
 
         public Task<bool> AskCancelAsync(string message, string caption, bool defaultCancel)
@@ -48,7 +55,7 @@ namespace NatCruise.Wpf.Services
 
         public Task ShowMessageAsync(string message, string caption = null)
         {
-            throw new System.NotImplementedException();
+            return MainWindow.ShowMessageAsync(message, caption);
         }
 
         public void ShowNotification(string message, string title = null)
