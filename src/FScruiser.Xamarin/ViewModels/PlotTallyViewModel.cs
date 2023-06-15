@@ -68,7 +68,7 @@ namespace FScruiser.XF.ViewModels
             get => _selectedTree;
             set
             {
-                if(object.ReferenceEquals(_selectedTree, value)) return;
+                if (object.ReferenceEquals(_selectedTree, value)) return;
 
                 var treeID = value?.TreeID;
                 if (treeID != null)
@@ -172,10 +172,13 @@ namespace FScruiser.XF.ViewModels
         private ICommand _selectPreviouseTreeCommand;
         private ICommand _selectNextTreeCommand;
         private IEnumerable<string> _stratumFilterOptions;
+        private ICommand _showTallyPopulationDetailsCommand;
 
         public ICommand SelectTreeCommand => new Command<object>(SelectTree);
 
         public ICommand EditTreeCommand => _editTreeCommand ??= new Command<string>(x => ShowEditTree(x).FireAndForget());
+
+        public ICommand ShowTallyPopulationDetailsCommand => _showTallyPopulationDetailsCommand ??= new Command<TallyPopulation>(x => ShowTallyPopulationDetails(x).FireAndForget());
 
         public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new Command<string>(DeleteTree);
 
@@ -265,7 +268,7 @@ namespace FScruiser.XF.ViewModels
                 SetProperty(ref _trees, value);
                 // if we have a selected tree refresh it with a matching tree in the new trees collection
                 var selectedTree = SelectedTree;
-                if(selectedTree != null)
+                if (selectedTree != null)
                 {
                     SelectedTree = Trees.FirstOrDefault(x => x.TreeID == selectedTree.TreeID);
                 }
@@ -362,6 +365,8 @@ namespace FScruiser.XF.ViewModels
             {
                 soundService.SignalInsuranceTreeAsync().FireAndForget();
             }
+            pop.PlotTreeCount++;
+            pop.TreeCount++;
         }
 
         public Task ShowEditTree(string treeID)
@@ -372,6 +377,13 @@ namespace FScruiser.XF.ViewModels
         public Task ShowEditPlot()
         {
             return NavigationService.ShowPlotEdit(Plot.PlotID);
+        }
+
+        private Task ShowTallyPopulationDetails(TallyPopulation tallyPop)
+        {
+            if (tallyPop is null) { throw new ArgumentNullException(nameof(tallyPop)); }
+
+            return NavigationService.ShowTallyPopulationInfo(UnitCode, PlotNumber, tallyPop.StratumCode, tallyPop.SampleGroupCode, tallyPop.SpeciesCode, tallyPop.LiveDead);
         }
 
         public void DeleteTree(string tree_guid)
@@ -385,6 +397,17 @@ namespace FScruiser.XF.ViewModels
             var treeID = tree.TreeID;
             TreeDataservice.DeleteTree(treeID);
             Trees.Remove(tree);
+
+            var pop = TallyPopulations.FirstOrDefault(x => x.StratumCode == tree.StratumCode
+                                                            && x.SampleGroupCode == tree.SampleGroupCode
+                                                            && (String.IsNullOrEmpty(x.SpeciesCode) || x.SpeciesCode == tree.SpeciesCode)
+                                                            && (String.IsNullOrEmpty(x.LiveDead) || x.LiveDead == tree.LiveDead));
+
+            if (pop != null)
+            {
+                pop.PlotTreeCount = Math.Max(0, pop.PlotTreeCount--);
+                pop.TreeCount = Math.Max(0, pop.TreeCount--);
+            }
 
             if (SelectedTree != null && SelectedTree.TreeID == treeID)
             {

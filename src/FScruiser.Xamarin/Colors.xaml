@@ -5,8 +5,9 @@
 	<!-- colors -->
 	<Color x:Key="fs_brown">#312418</Color>
 	<Color x:Key="fs_green">#345E36</Color>
+    
 
-	<!-- FS digital playbook colors -->
+    <!-- FS digital playbook colors -->
 	<Color x:Key="usfs_green">#345E36</Color>
 	<Color x:Key="usfs_gold">#ffc425</Color>
 	<Color x:Key="usfs_text">#333333</Color>
@@ -40,13 +41,16 @@
 	<Color x:Key="white_60">#99ffffff</Color>
 	<Color x:Key="white_50">#7FFFFFFF</Color>
 	<Color x:Key="white_38">#60FFFFFF</Color>
+    <Color x:Key="white_20">#33ffffff</Color>
 	<Color x:Key="white_12">#1EFFFFFF</Color>
 	<Color x:Key="black_90">#E5000000</Color>
 	<Color x:Key="black_70">#B2000000</Color>
 	<Color x:Key="black_30">#4C000000</Color>
 	<Color x:Key="black_12">#1E000000</Color>
 
-	<Color x:Key="error">Red</Color>
+    <Color x:Key="tallyButtonBgColor">#345E36</Color>
+
+    <Color x:Key="error">Red</Color>
 	<Color x:Key="warning">Gold</Color>
 	<Color x:Key="error_suppressed">LightGray</Color>
 

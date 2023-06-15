@@ -9,6 +9,7 @@ using CruiseDAL;
 using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using NatCruise;
+using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
@@ -23,6 +24,7 @@ namespace FScruiser.XF.ViewModels
     public class SettingsViewModel : ViewModelBase, INavigatedAware
     {
         public IApplicationSettingService AppSettings { get; }
+        public ITallySettingsDataService TallySettings { get; }
         public INatCruiseDialogService DialogService { get; }
         public IFileSystemService FileSystemService { get; }
         public IDataserviceProvider DataserviceProvider { get; }
@@ -40,9 +42,11 @@ namespace FScruiser.XF.ViewModels
                                  IFileDialogService fileDialogService,
                                  ICruiseNavigationService navigationService,
                                  IContainerProvider containerProvicer,
+                                 ITallySettingsDataService tallySettingsDataService,
                                  ILoggingService loggingService)
         {
             AppSettings = new XamarinApplicationSettingService();
+            TallySettings = tallySettingsDataService ?? throw new ArgumentNullException();
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             //DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));

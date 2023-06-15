@@ -76,6 +76,30 @@
                         AutomationProperties.LabeledBy="{Reference _selectPrevNextSkipsCountTreesLabel}" />
             </StackLayout>
 
+            <StackLayout Orientation="Vertical"
+                         BackgroundColor="{StaticResource uswds_lgt_tan}">
+                <Label x:Name="_tallyTraySizeLabel"
+                       Text="Tally Button Area Size" />
+                <Slider Minimum="0.0"
+                        Maximum="1.0"
+                        Value="{Binding TallySettings.TallyButtonTrayVerticalSize}"
+                        ValueChanged="Slider_ValueChanged"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.LabeledBy="{Reference _tallyTraySizeLabel}"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Vertical"
+                         BackgroundColor="{StaticResource uswds_lgt_tan}">
+                <Label x:Name="_plotTallyTraySizeLabel"
+                       Text="Plot Tally Button Area Size" />
+                <Slider Minimum="0.0"
+                        Maximum="1.0"
+                        Value="{Binding TallySettings.PlotTallyButtonTrayVerticalSize}"
+                        ValueChanged="Slider_ValueChanged"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.LabeledBy="{Reference _plotTallyTraySizeLabel}"/>
+            </StackLayout>
+
 
             <Button Text="Privacy Policy"
                     Command="{Binding ShowPrivacyPolicyCommand}"

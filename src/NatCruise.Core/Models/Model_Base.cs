@@ -7,9 +7,9 @@ namespace NatCruise.Models
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void RaisePropertyChanged(string propName)
+        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
-            RaisePropertyChanged(new PropertyChangedEventArgs(propName));
+            RaisePropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         protected void RaisePropertyChanged(PropertyChangedEventArgs e)

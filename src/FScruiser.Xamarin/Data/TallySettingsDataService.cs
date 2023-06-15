@@ -17,6 +17,9 @@ namespace FScruiser.XF.Services
 
     public class TallySettingsDataService : Model_Base, ITallySettingsDataService
     {
+        const string PERF_TallyButtonTrayVerticalSize = "TallyButtonTrayVerticalSize";
+        const string PERF_PlotTallyButtonTrayVerticalSize = "PlotTallyButtonTrayVerticalSize";
+
         protected TallySettings Data { get; set; }
         protected object DataSyncLock { get; } = new object();
 
@@ -46,6 +49,41 @@ namespace FScruiser.XF.Services
             {
                 EnsureLoaded();
                 return Data.Cruisers.ToArray();
+            }
+        }
+
+        public double TallyButtonTrayVerticalSize
+        {
+            get
+            {
+                try
+                {
+                    var perf = Xamarin.Essentials.Preferences.Get(PERF_TallyButtonTrayVerticalSize, 0.6);
+                    return perf;
+                }
+                catch { return 0.6; }
+            }
+            set
+            {
+                Xamarin.Essentials.Preferences.Set(PERF_TallyButtonTrayVerticalSize, value);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double PlotTallyButtonTrayVerticalSize
+        {
+            get
+            {
+                try
+                {
+                    return Xamarin.Essentials.Preferences.Get(PERF_PlotTallyButtonTrayVerticalSize, 0.6);
+                }
+                catch { return 0.6; }
+            }
+            set
+            {
+                Xamarin.Essentials.Preferences.Set(PERF_PlotTallyButtonTrayVerticalSize, value);
+                RaisePropertyChanged();
             }
         }
 
@@ -123,6 +161,8 @@ namespace FScruiser.XF.Services
             RaisePropertyChanged(nameof(EnableAskEnterTreeData));
             RaisePropertyChanged(nameof(EnableCruiserPopup));
             RaisePropertyChanged(nameof(Cruisers));
+            RaisePropertyChanged(nameof(PlotTallyButtonTrayVerticalSize));
+            RaisePropertyChanged(nameof(TallyButtonTrayVerticalSize));
         }
     }
 }

@@ -9,6 +9,7 @@
                                       xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
                                       xmlns:effects1="http://xamarin.com/schemas/2020/toolkit"
                                       xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
+                                      xmlns:services="clr-namespace:FScruiser.XF.Services"
                                       x:Class="FScruiser.XF.Views.TallyView"
                                       x:Name="_page"
                                       BackgroundColor="White"
@@ -17,7 +18,12 @@
                                       AutomationProperties.Name="Tally Page">
     <local_ctrls:InitializableContentPage.Resources>
         <ResourceDictionary>
-            <Color x:Key="tallyButtonBgColor">Green</Color>
+            
+
+            <services:TallySettingsDataService x:Key="tallySettings" />
+
+            <converters:PercentageToGridLengthConverter x:Key="percentageToGridLengthConverrter" />
+            <converters:PercentageToGridLengthConverter Invert="True" x:Key="invertedPercentageToGridLengthConverrter" />
         </ResourceDictionary>
     </local_ctrls:InitializableContentPage.Resources>
 
@@ -25,8 +31,8 @@
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="7*" />
-                <RowDefinition Height="3*" />
+                <RowDefinition Height="{Binding TallyButtonTrayVerticalSize, Source={StaticResource tallySettings}, Converter={StaticResource invertedPercentageToGridLengthConverrter}}" />
+                <RowDefinition Height="{Binding TallyButtonTrayVerticalSize, Source={StaticResource tallySettings}, Converter={StaticResource percentageToGridLengthConverrter}}" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
@@ -856,7 +862,7 @@
                             <DataTemplate>
 
                                 <Frame CornerRadius="5"
-                                       BackgroundColor="{StaticResource fs_green}"
+                                       BackgroundColor="{StaticResource tallyButtonBgColor}"
                                        Margin="3"
                                        Padding="0"
                                        AutomationProperties.IsInAccessibleTree="True"

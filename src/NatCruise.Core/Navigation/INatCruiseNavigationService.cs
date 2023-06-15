@@ -27,6 +27,13 @@ namespace NatCruise.Navigation
 
         #endregion
 
+
+        #region tally
+
+        Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead);
+
+        #endregion
+
         #region Cruising
 
         Task ShowThreePPNTPlot(string unitCode, string stratumCode, int plotNumber);
