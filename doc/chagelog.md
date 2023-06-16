@@ -1,3 +1,33 @@
+# Version 3.1.6 - June 1, 2023
+# NatCruise
+
+## Fixes
+- Fixed Edit Tree Counts accessible for plot tally populations. (For plot cruise methods all counts must be associated with a tree, as required by Cruise Processing)
+- Fix unrecognized FIA codes not displaying in species page
+- Fix some species field changes not saving
+
+## Enhancements
+ - Add ability to delete species 
+ - Add ability to search FIA codes in species page
+
+## Changes
+ - Update look of the Tree Audit Rule page
+
+# FScruiser
+## Fixes
+
+
+## Enhancements
+ - Add Stratum, Sample Group, and Subpopulation Pages
+ - Allow adding Subpopulations
+ - Add Tree and Log Field pages
+ - Allow editing Tree and Log field setup
+ - Add Tree Audit Rule pages and allow editing audit rules
+ - Add Count Measure field in Plot Tally Page for two stage plot cruise methods
+
+## Changes
+ - Change default behavior of Prev/Next tree buttons in Plot Tally Page. Buttons now go between all tree, old behavior only went between measure trees. Added option in settings page to use old behavior
+
 # Version 3.1.5 - April 24, 2023
 
 ## NatCruise
