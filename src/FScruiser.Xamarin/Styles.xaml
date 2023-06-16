@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <?xaml-comp compile="true" ?>
     <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
     <!-- base styles -->
     <Style x:Key="button_base"
            TargetType="Button">
@@ -13,5 +14,14 @@
            TargetType="Editor">
         <Setter Property="BackgroundColor"
                 Value="{StaticResource black_30}" />
+    </Style>
+
+    <Style x:Key="TabViewBase" TargetType="xct:TabView">
+        <Setter Property="TabStripPlacement"
+                Value="Bottom" />
+        <Setter Property="TabStripBackgroundColor"
+                Value="{StaticResource usda_brgt_blue}" />
+        <Setter Property="TabStripHeight"
+                Value="60" />
     </Style>
 </ResourceDictionary>

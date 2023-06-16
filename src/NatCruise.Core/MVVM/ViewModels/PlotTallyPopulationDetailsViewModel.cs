@@ -15,15 +15,20 @@ namespace NatCruise.MVVM.ViewModels
     {
         private TallyPopulation _tallyPopulation;
         private SampleGroup _sampleGroup;
+        private Stratum _stratum;
 
-        public PlotTallyPopulationDetailsViewModel(ITallyPopulationDataservice tallyPopulationDataservice, ISampleGroupDataservice sampleGroupDataservice)
+        public PlotTallyPopulationDetailsViewModel(ITallyPopulationDataservice tallyPopulationDataservice,
+            ISampleGroupDataservice sampleGroupDataservice,
+            IStratumDataservice stratumDataservice)
         {
             TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException( nameof(sampleGroupDataservice));
+            StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
         }
 
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
         public ISampleGroupDataservice SampleGroupDataservice { get; }
+        public IStratumDataservice StratumDataservice { get; }
 
         public TallyPopulation TallyPopulation
         {
@@ -40,6 +45,12 @@ namespace NatCruise.MVVM.ViewModels
             private set => SetProperty(ref _sampleGroup, value);
         }
 
+        public Stratum Stratum
+        {
+            get => _stratum;
+            set => SetProperty(ref _stratum, value);
+        }
+
         public override void Initialize(IParameters parameters)
         {
             base.Initialize(parameters);
@@ -53,6 +64,7 @@ namespace NatCruise.MVVM.ViewModels
 
             TallyPopulation = TallyPopulationDataservice.GetPlotTallyPopulation(unitCode, plotNumber, stratumCode, sampleGroupCode, species, liveDead);
             SampleGroup = SampleGroupDataservice.GetSampleGroup(stratumCode, sampleGroupCode);
+            Stratum = StratumDataservice.GetStratum(stratumCode);
         }
     }
 }

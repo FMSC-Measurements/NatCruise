@@ -20,6 +20,9 @@ namespace FScruiser.XF.Services
         const string PERF_TallyButtonTrayVerticalSize = "TallyButtonTrayVerticalSize";
         const string PERF_PlotTallyButtonTrayVerticalSize = "PlotTallyButtonTrayVerticalSize";
 
+        private const double DEFAULT_TALLY_BUTTON_TRAY_VERTICAL_SIZE = 0.4;
+        private const double DEFAULT_PLOT_TALLY_BUTTON_TRAY_VERTICAL_SIZE = 0.4;
+
         protected TallySettings Data { get; set; }
         protected object DataSyncLock { get; } = new object();
 
@@ -58,7 +61,7 @@ namespace FScruiser.XF.Services
             {
                 try
                 {
-                    var perf = Xamarin.Essentials.Preferences.Get(PERF_TallyButtonTrayVerticalSize, 0.6);
+                    var perf = Xamarin.Essentials.Preferences.Get(PERF_TallyButtonTrayVerticalSize, DEFAULT_TALLY_BUTTON_TRAY_VERTICAL_SIZE);
                     return perf;
                 }
                 catch { return 0.6; }
@@ -76,7 +79,7 @@ namespace FScruiser.XF.Services
             {
                 try
                 {
-                    return Xamarin.Essentials.Preferences.Get(PERF_PlotTallyButtonTrayVerticalSize, 0.6);
+                    return Xamarin.Essentials.Preferences.Get(PERF_PlotTallyButtonTrayVerticalSize, DEFAULT_PLOT_TALLY_BUTTON_TRAY_VERTICAL_SIZE);
                 }
                 catch { return 0.6; }
             }

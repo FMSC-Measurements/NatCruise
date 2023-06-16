@@ -445,7 +445,7 @@
                                         </StackLayout>
 
                                         <!-- KPI -->
-                                        <StackLayout Grid.Column="4"
+                                        <StackLayout Grid.Column="5"
                                                      Grid.Row="0"
                                                      Orientation="Vertical"
                                                      IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
@@ -456,7 +456,7 @@
                                         </StackLayout>
 
                                         <!-- STM -->
-                                        <Label Grid.Column="5"
+                                        <Label Grid.Column="6"
                                                WidthRequest="50"
                                                Text="STM"
                                                FontAttributes="Bold"
@@ -465,7 +465,7 @@
 
                                         <!--Error and warnings -->
                                         <StackLayout Grid.Row="0"
-                                                     Grid.Column="6">
+                                                     Grid.Column="7">
 
                                             <Frame Padding="0"
                                                    CornerRadius="5"
@@ -501,7 +501,7 @@
                                         </StackLayout>
 
                                         <!-- show delete button-->
-                                        <ImageButton Grid.Column="7"
+                                        <ImageButton Grid.Column="8"
                                                      BackgroundColor="Transparent"
                                                      Clicked="openDeleteButton_Clicked"
                                                      Source="ic_more_vert_black_24dp.png"
