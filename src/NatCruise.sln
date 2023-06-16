@@ -37,21 +37,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Core.Test", "NatC
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NatCruise.Test.Common", "NatCruise.Test.Common\NatCruise.Test.Common.shproj", "{C27D43F1-B37F-4488-A829-B0C2C499102D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FMSC.ORM", "..\..\CruiseDAL\src\FMSC.ORM\FMSC.ORM.csproj", "{34740369-389B-4059-B5DE-F991F66F27E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FMSC.ORM", "C:\Users\BenCamps\Documents\FMSC_GitHub\CruiseDAL\src\FMSC.ORM\FMSC.ORM.csproj", "{34740369-389B-4059-B5DE-F991F66F27E7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.Core", "..\..\CruiseDAL\src\CruiseDAL.Core\CruiseDAL.Core.csproj", "{28EE9387-9866-4ED0-B470-26AF295A0A57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.Core", "C:\Users\BenCamps\Documents\FMSC_GitHub\CruiseDAL\src\CruiseDAL.Core\CruiseDAL.Core.csproj", "{28EE9387-9866-4ED0-B470-26AF295A0A57}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3", "..\..\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj", "{ED6BA0E1-BC43-43E2-8EDB-85654B649A2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3", "C:\Users\BenCamps\Documents\FMSC_GitHub\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj", "{ED6BA0E1-BC43-43E2-8EDB-85654B649A2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3.Models", "..\..\CruiseDAL\src\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj", "{0758E16E-5217-4627-B1F6-8E6EF9621BBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3.Models", "C:\Users\BenCamps\Documents\FMSC_GitHub\CruiseDAL\src\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj", "{0758E16E-5217-4627-B1F6-8E6EF9621BBC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3.Sync", "..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj", "{755588EE-2966-40B9-9B11-E273B9BDB828}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3.Sync", "C:\Users\BenCamps\Documents\FMSC_GitHub\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj", "{755588EE-2966-40B9-9B11-E273B9BDB828}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CruiseDAL", "CruiseDAL", "{355C4190-4178-41FA-89AE-EF202205545C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Design.Test", "NatCruise.Design.Test\NatCruise.Design.Test.csproj", "{B0192A57-3AF7-4127-A328-F2107C3DA18D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3.UpConvert", "..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj", "{E7707D6E-760C-4934-91E2-DD1D0C6D8E9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3.UpConvert", "C:\Users\BenCamps\Documents\FMSC_GitHub\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj", "{E7707D6E-760C-4934-91E2-DD1D0C6D8E9C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test Projects", "Test Projects", "{FEA7B92B-98BA-46EA-8968-CBDE76CF24D7}"
 EndProject
@@ -63,7 +63,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FScruiser.Droid.Test", "FSc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Wpf.Test", "NatCruise.Wpf.Test\NatCruise.Wpf.Test.csproj", "{E6AFA8AC-1FAE-475C-B680-A996975A29B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V2.Updater", "..\..\CruiseDAL\src\CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj", "{310C36E9-2545-466E-B6F9-F09EC4F101A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V2.Updater", "C:\Users\BenCamps\Documents\FMSC_GitHub\CruiseDAL\src\CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj", "{310C36E9-2545-466E-B6F9-F09EC4F101A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
