@@ -32,6 +32,7 @@ namespace FScruiser.XF.ViewModels
         private Command _showSampleStateManagmentCommand;
         private Command _showFeedbackCommand;
         private List<NavOption> _moreNavOptions;
+        private ICommand _showAbout;
 
         public ICommand ShowSelectSale => new Command(() => NavigationService.ShowSaleSelect().FireAndForget());
 
@@ -84,6 +85,8 @@ namespace FScruiser.XF.ViewModels
         public ICommand ShowCruisersCommand => _showCruisersCommand ??= new Command(() => NavigationService.ShowManageCruisers().FireAndForget());
         public ICommand ShowAuditRulesCommand => _showAuditRulesCommand ??= new Command(() => NavigationService.ShowTreeAuditRules().FireAndForget());
         public ICommand ShowUtilitiesCommand => _showUtilitiesCommand ??= new Command(() => NavigationService.ShowUtilities().FireAndForget());
+
+        public ICommand ShowAboutCommand => _showAbout ??= new Command(() => NavigationService.ShowAbout().FireAndForget());
 
         public CuttingUnit SelectedCuttingUnit
         {

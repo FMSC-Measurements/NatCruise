@@ -4,6 +4,12 @@ namespace NatCruise.Navigation
 {
     public interface INatCruiseNavigationService
     {
+        Task ShowAbout();
+
+        Task ShowPrivacyPolicy();
+
+        Task ShowUserAgreement();
+
         Task ShowFieldData(string cuttingUnit = null);
 
         Task ShowCruiseLandingLayout();

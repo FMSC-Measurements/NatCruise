@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrls="clr-namespace:FScruiser.XF.Controls"
+             x:Class="FScruiser.XF.Views.AboutView"
+             Title="About">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         BackgroundColor="{StaticResource fs_brown}"
+                         HeightRequest="60">
+                <StackLayout.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Image">
+                            <Setter Property="Margin"
+                                    Value="7" />
+                        </Style>
+                    </ResourceDictionary>
+                </StackLayout.Resources>
+                <Image Source="USDA_White.png" />
+                <Label Text="FScruiser"
+                       HorizontalOptions="CenterAndExpand"
+                       TextColor="White"
+                       FontSize="Title"
+                       VerticalOptions="Center"/>
+                <Image Source="FS_White.png"
+                       HorizontalOptions="End"/>
+            </StackLayout>
+            <ctrls:HeaderControl Header="Version"
+                                 Orientation="Horizontal">
+                <Label Text="{Binding Version}" />
+            </ctrls:HeaderControl>
+            <ctrls:HeaderControl Header="Device Name"
+                                 Orientation="Horizontal">
+                <Label Text="{Binding DeviceName}" />
+            </ctrls:HeaderControl>
+            <Button Text="Privacy Policy"
+                    Command="{Binding ShowPrivacyPolicyCommand}"
+                    VerticalOptions="EndAndExpand"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Privacy Policy" />
+            <Button Text="User Agreement"
+                    Command="{Binding ShowUserAgreementCommand}"
+                    IsVisible="False"
+                    VerticalOptions="End"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="User Agreement" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

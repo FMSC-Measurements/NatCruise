@@ -34,7 +34,7 @@ namespace FScruiser.XF.Services
 
         //Task ShowPlotTally(string unitCode, int plotNumber);
 
-        Task ShowPrivacyPolicy();
+        
 
         Task ShowSale(string cruiseID);
 
@@ -48,7 +48,7 @@ namespace FScruiser.XF.Services
 
         Task ShowTreeList(string unitCode);
 
-        Task ShowUserAgreement();
+        
 
         Task ShowUtilities();
     }

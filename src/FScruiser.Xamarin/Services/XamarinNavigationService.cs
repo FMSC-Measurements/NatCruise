@@ -32,6 +32,11 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync(path, navparams);
         }
 
+        public Task ShowAbout()
+        {
+            return NavigationService.NavigateAsyncEx("Navigation/About");
+        }
+
         public Task ShowBlank()
         {
             return NavigationService.NavigateAsync("Blank");

@@ -30,8 +30,6 @@ namespace FScruiser.XF.ViewModels
         public IDataserviceProvider DataserviceProvider { get; }
 
         public ICommand ShowDatabaseUtilitiesCommand => new Command(() => NavigationService.ShowDatabaseUtilities().FireAndForget());
-        public ICommand ShowUserAgreementCommand => new Command(() => NavigationService.ShowUserAgreement().FireAndForget());
-        public ICommand ShowPrivacyPolicyCommand => new Command(() => NavigationService.ShowPrivacyPolicy().FireAndForget());
 
         public IFileDialogService FileDialogService { get; }
         public ICruiseNavigationService NavigationService { get; }

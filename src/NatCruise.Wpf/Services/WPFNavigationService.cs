@@ -235,5 +235,25 @@ namespace NatCruise.Wpf.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowAbout()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowPrivacyPolicy()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowUserAgreement()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

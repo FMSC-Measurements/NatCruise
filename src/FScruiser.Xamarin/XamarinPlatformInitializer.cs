@@ -80,6 +80,8 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<SubpopulationListView>("Subpopulations");
             containerRegistry.RegisterForNavigation<StratumFieldSetupView>("FieldSetup");
             containerRegistry.RegisterForNavigation<PlotTallyPopulationDetailsView>("PlotTallyPopulationDetails");
+            containerRegistry.RegisterForNavigation<AboutView>("About");
+
         }
 
     }

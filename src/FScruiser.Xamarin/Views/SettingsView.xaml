@@ -101,17 +101,7 @@
             </StackLayout>
 
 
-            <Button Text="Privacy Policy"
-                    Command="{Binding ShowPrivacyPolicyCommand}"
-                    VerticalOptions="EndAndExpand"
-                    AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Privacy Policy" />
-            <Button Text="User Agreement"
-                    Command="{Binding ShowUserAgreementCommand}"
-                    IsVisible="False"
-                    VerticalOptions="End"
-                    AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="User Agreement" />
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

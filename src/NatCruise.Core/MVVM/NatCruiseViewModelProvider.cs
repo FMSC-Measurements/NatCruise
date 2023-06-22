@@ -25,6 +25,7 @@ namespace NatCruise.MVVM
             Register("StratumLogFieldSetupView", typeof(StratumLogFieldSetupViewModel));
             Register("TreeErrorEditView", typeof(TreeErrorEditViewModel));
             Register("PlotTallyPopulationDetailsView", typeof(PlotTallyPopulationDetailsViewModel));
+            Register("AboutView", typeof(AboutViewModel));
         }
 
         public Type GetViewModel(Type view)
