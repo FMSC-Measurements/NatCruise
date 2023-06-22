@@ -18,12 +18,16 @@
 
     <Style x:Key="TabViewBase"
            TargetType="xct:TabView">
-        <Setter Property="TabStripPlacement"
-                Value="Bottom" />
-        <Setter Property="TabStripBackgroundColor"
-                Value="{StaticResource usda_brgt_blue}" />
+        <!--<Setter Property="TabStripPlacement"
+                Value="Bottom" />-->
+        <!--<Setter Property="TabStripBackgroundColor"
+                Value="{StaticResource usda_brgt_blue}" />-->
         <Setter Property="TabStripHeight"
                 Value="60" />
+        <Setter Property="TabStripBorderColor"
+                Value="LightGray" />
+        <Setter Property="TabStripBackgroundColor"
+                Value="{StaticResource black_12}" />
     </Style>
 
     <Style x:Key="SwitchBase"
