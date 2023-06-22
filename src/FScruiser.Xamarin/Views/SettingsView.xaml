@@ -22,11 +22,12 @@
             <BoxView HeightRequest="2"
                      BackgroundColor="DarkGray" />
 
-            <ctrls:HeaderControl Header="Tree Based Tally Settings"
+            <ctrls:HeaderControl Header="Tree Based Tally Page Settings"
+                                 HeaderFontSize="Subtitle"
                                  Orientation="Vertical"
                                  BackgroundColor="{StaticResource uswds_lgt_tan}">
                 <StackLayout BackgroundColor="{StaticResource white_20}">
-                    <ctrls:HeaderControl Header="Tally Button Panel Size"
+                    <ctrls:HeaderControl Header="Tally Panel Size"
                                          Orientation="Vertical">
                         <Slider Minimum="0.0"
                                 Maximum="1.0"
@@ -43,7 +44,8 @@
             <BoxView HeightRequest="2"
                      BackgroundColor="DarkGray" />
 
-            <ctrls:HeaderControl Header="Plot Based Tally Settings"
+            <ctrls:HeaderControl Header="Plot Tally Page Settings"
+                                 HeaderFontSize="Subtitle"
                                  Orientation="Vertical"
                                  BackgroundColor="{StaticResource uswds_lgt_tan}">
                 <StackLayout BackgroundColor="{StaticResource white_20}">
@@ -54,7 +56,7 @@
                                 Style="{StaticResource SwitchBase}" />
                     </ctrls:HeaderControl>
 
-                    <ctrls:HeaderControl Header="Plot Tally Button Area Size"
+                    <ctrls:HeaderControl Header="Tally Panel Size"
                                          Orientation="Vertical">
                         <Slider Minimum="0.0"
                                 Maximum="1.0"
@@ -72,6 +74,7 @@
                      BackgroundColor="DarkGray" />
 
             <ctrls:HeaderControl Header="App Analytics"
+                                 HeaderFontSize="Subtitle"
                                  Orientation="Vertical"
                                  BackgroundColor="{StaticResource uswds_lgt_tan}">
                 <StackLayout BackgroundColor="{StaticResource white_20}">

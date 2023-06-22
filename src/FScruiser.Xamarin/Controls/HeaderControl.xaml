@@ -64,6 +64,7 @@
                                            HorizontalOptions="{TemplateBinding  HeaderHorizontalOptions}"
                                            VerticalOptions="{TemplateBinding  HeaderVerrticalOptions}"
                                            BackgroundColor="{TemplateBinding  HeaderBackgroundColor}"
+                                           VerticalTextAlignment="Center"
                                            IsTabStop="False"
                                            AutomationProperties.IsInAccessibleTree="False"/>
                                 </Grid>
