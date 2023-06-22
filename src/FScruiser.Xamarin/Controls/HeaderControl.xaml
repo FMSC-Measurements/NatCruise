@@ -64,7 +64,8 @@
                                            HorizontalOptions="{TemplateBinding  HeaderHorizontalOptions}"
                                            VerticalOptions="{TemplateBinding  HeaderVerrticalOptions}"
                                            BackgroundColor="{TemplateBinding  HeaderBackgroundColor}"
-                                           IsTabStop="False" />
+                                           IsTabStop="False"
+                                           AutomationProperties.IsInAccessibleTree="False"/>
                                 </Grid>
 
                                 <Grid x:Name="PART_Content"
@@ -72,7 +73,8 @@
                                       Grid.Column="0"
                                       Grid.ColumnSpan="2"
                                       Background="{TemplateBinding  Background}">
-                                    <ContentPresenter Margin="{TemplateBinding Padding}" />
+                                    <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                      AutomationProperties.LabeledBy="{Reference PART_Header}"/>
                                 </Grid>
                             </Grid>
 

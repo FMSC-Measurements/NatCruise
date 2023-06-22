@@ -1,107 +1,104 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:bhvrs="clr-namespace:FScruiser.XF.Behaviors"
+             xmlns:ctrls="clr-namespace:FScruiser.XF.Controls"
              x:Class="FScruiser.XF.Views.SettingsView"
              Title="Settings"
              AutomationProperties.IsInAccessibleTree="True"
              AutomationProperties.Name="Settings Page">
     <ContentPage.Content>
         <StackLayout Padding="5">
-            <StackLayout>
-                <StackLayout Orientation="Horizontal"
-                             BackgroundColor="{StaticResource uswds_lgt_tan}">
 
-                    <Label x:Name="_analyticsLabel"
-                           Text="Analytics"
-                           VerticalTextAlignment="Center"
-                           AutomationProperties.IsInAccessibleTree="False" />
+            <ctrls:HeaderControl Header="Use New Limiting Distance Calculator"
+                                 Orientation="Horizontal"
+                                 BackgroundColor="{StaticResource uswds_lgt_tan}">
 
-                    <Switch IsToggled="{Binding AppSettings.EnableAnalitics}"
-                            HeightRequest="{StaticResource minTouchableHeight}"
-                            HorizontalOptions="EndAndExpand"
-                            AutomationProperties.IsInAccessibleTree="True"
-                            AutomationProperties.LabeledBy="{Reference _analyticsLabel}" />
-
-                </StackLayout>
-                <StackLayout Orientation="Horizontal"
-                             BackgroundColor="{StaticResource uswds_lgt_tan}">
-
-                    <Label x:Name="_crashErrorReportsLabel"
-                           Text="Crash/Error Reports"
-                           VerticalTextAlignment="Center"
-                           AutomationProperties.IsInAccessibleTree="False" />
-
-                    <Switch IsToggled="{Binding AppSettings.EnableCrashReports}"
-                            HeightRequest="{StaticResource minTouchableHeight}"
-                            HorizontalOptions="EndAndExpand"
-                            AutomationProperties.IsInAccessibleTree="True"
-                            AutomationProperties.LabeledBy="{Reference _crashErrorReportsLabel }" />
-
-                </StackLayout>
-            </StackLayout>
-            <Button Text="Database Utilities"
-                    Command="{Binding ShowDatabaseUtilitiesCommand}"
-                    AutomationProperties.IsInAccessibleTree="True"
-                    AutomationProperties.Name="Database Utilities" />
+                <Switch IsToggled="{Binding AppSettings.UseNewLimitingDistanceCalculator}"
+                        HorizontalOptions="EndAndExpand"
+                        Style="{StaticResource SwitchBase}" />
+            </ctrls:HeaderControl>
 
             <BoxView HeightRequest="2"
                      BackgroundColor="DarkGray" />
 
-            <StackLayout Orientation="Horizontal"
-                         BackgroundColor="{StaticResource uswds_lgt_tan}">
+            <ctrls:HeaderControl Header="Tree Based Tally Settings"
+                                 Orientation="Vertical"
+                                 BackgroundColor="{StaticResource uswds_lgt_tan}">
+                <StackLayout BackgroundColor="{StaticResource white_20}">
+                    <ctrls:HeaderControl Header="Tally Button Panel Size"
+                                         Orientation="Vertical">
+                        <Slider Minimum="0.0"
+                                Maximum="1.0"
+                                Value="{Binding TallySettings.TallyButtonTrayVerticalSize}"
+                                Style="{StaticResource SliderBase}">
+                            <Slider.Behaviors>
+                                <bhvrs:SliderStepBehavior />
+                            </Slider.Behaviors>
+                        </Slider>
+                    </ctrls:HeaderControl>
+                </StackLayout>
+            </ctrls:HeaderControl>
 
-                <Label x:Name="_useNewLimitingDistanceLabel"
-                       Text="Use New Limiting Distance Calculator"
-                       VerticalTextAlignment="Center"
-                       AutomationProperties.IsInAccessibleTree="False" />
+            <BoxView HeightRequest="2"
+                     BackgroundColor="DarkGray" />
 
-                <Switch IsToggled="{Binding AppSettings.UseNewLimitingDistanceCalculator}"
-                        HeightRequest="{StaticResource minTouchableHeight}"
-                        HorizontalOptions="EndAndExpand"
-                        AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.LabeledBy="{Reference _useNewLimitingDistanceLabel}" />
+            <ctrls:HeaderControl Header="Plot Based Tally Settings"
+                                 Orientation="Vertical"
+                                 BackgroundColor="{StaticResource uswds_lgt_tan}">
+                <StackLayout BackgroundColor="{StaticResource white_20}">
+                    <ctrls:HeaderControl Header="Select Prev/Next Tree Skips Count Trees"
+                                         Orientation="Horizontal">
+                        <Switch IsToggled="{Binding AppSettings.SelectPrevNextTreeSkipsCountTrees}"
+                                HorizontalOptions="EndAndExpand"
+                                Style="{StaticResource SwitchBase}" />
+                    </ctrls:HeaderControl>
 
-            </StackLayout>
+                    <ctrls:HeaderControl Header="Plot Tally Button Area Size"
+                                         Orientation="Vertical">
+                        <Slider Minimum="0.0"
+                                Maximum="1.0"
+                                Value="{Binding TallySettings.PlotTallyButtonTrayVerticalSize}"
+                                Style="{StaticResource SliderBase}">
+                            <Slider.Behaviors>
+                                <bhvrs:SliderStepBehavior />
+                            </Slider.Behaviors>
+                        </Slider>
+                    </ctrls:HeaderControl>
+                </StackLayout>
+            </ctrls:HeaderControl>
 
-            <StackLayout Orientation="Vertical"
-                         BackgroundColor="{StaticResource uswds_lgt_tan}">
-                <Label x:Name="_selectPrevNextSkipsCountTreesLabel"
-                       Text="Plot Tally: Select Prev/Next Tree Skips Count Trees"
-                       VerticalTextAlignment="Center"
-                       AutomationProperties.IsInAccessibleTree="False" />
-                <Switch IsToggled="{Binding AppSettings.SelectPrevNextTreeSkipsCountTrees}"
-                        HeightRequest="{StaticResource minTouchableHeight}"
-                        HorizontalOptions="EndAndExpand"
-                        AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.LabeledBy="{Reference _selectPrevNextSkipsCountTreesLabel}" />
-            </StackLayout>
+            <BoxView HeightRequest="2"
+                     BackgroundColor="DarkGray" />
 
-            <StackLayout Orientation="Vertical"
-                         BackgroundColor="{StaticResource uswds_lgt_tan}">
-                <Label x:Name="_tallyTraySizeLabel"
-                       Text="Tally Button Area Size" />
-                <Slider Minimum="0.0"
-                        Maximum="1.0"
-                        Value="{Binding TallySettings.TallyButtonTrayVerticalSize}"
-                        ValueChanged="Slider_ValueChanged"
-                        AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.LabeledBy="{Reference _tallyTraySizeLabel}"/>
-            </StackLayout>
+            <ctrls:HeaderControl Header="App Analytics"
+                                 Orientation="Vertical"
+                                 BackgroundColor="{StaticResource uswds_lgt_tan}">
+                <StackLayout BackgroundColor="{StaticResource white_20}">
+                    <ctrls:HeaderControl Header="Analytics"
+                                         Orientation="Horizontal">
 
-            <StackLayout Orientation="Vertical"
-                         BackgroundColor="{StaticResource uswds_lgt_tan}">
-                <Label x:Name="_plotTallyTraySizeLabel"
-                       Text="Plot Tally Button Area Size" />
-                <Slider Minimum="0.0"
-                        Maximum="1.0"
-                        Value="{Binding TallySettings.PlotTallyButtonTrayVerticalSize}"
-                        ValueChanged="Slider_ValueChanged"
-                        AutomationProperties.IsInAccessibleTree="True"
-                        AutomationProperties.LabeledBy="{Reference _plotTallyTraySizeLabel}"/>
-            </StackLayout>
+                        <Switch IsToggled="{Binding AppSettings.EnableAnalitics}"
+                                HorizontalOptions="EndAndExpand"
+                                Style="{StaticResource SwitchBase}" />
+                    </ctrls:HeaderControl>
+                    <ctrls:HeaderControl Header="Crash/Error Reports"
+                                         Orientation="Horizontal">
 
+                        <Switch IsToggled="{Binding AppSettings.EnableCrashReports}"
+                                HorizontalOptions="EndAndExpand"
+                                Style="{StaticResource SwitchBase}" />
+                    </ctrls:HeaderControl>
+                </StackLayout>
+            </ctrls:HeaderControl>
 
-            
+            <BoxView HeightRequest="2"
+                     BackgroundColor="DarkGray" />
+
+            <Button Text="Database Utilities"
+                    Command="{Binding ShowDatabaseUtilitiesCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Database Utilities" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

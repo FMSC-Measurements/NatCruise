@@ -7,15 +7,16 @@
                         x:Class="FScruiser.XF.App">
     <Application.Resources>
         <ResourceDictionary>
-            <!-- Sizes -->
-            <x:Static x:Key="minTouchableHeight"
-                      Member="const:UI.MinTouchableHeight"></x:Static>
-            <x:Static x:Key="minTouchableWidth"
-                      Member="const:UI.MinTouchableWidth"></x:Static>
-
-            
 
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <!-- Sizes -->
+                    <x:Static x:Key="minTouchableHeight"
+                              Member="const:UI.MinTouchableHeight"></x:Static>
+                    <x:Static x:Key="minTouchableWidth"
+                              Member="const:UI.MinTouchableWidth"></x:Static>
+                </ResourceDictionary>
+                
                 <ResourceDictionary Source="Colors.xaml" />
                 <ResourceDictionary Source="Converters.xaml" />
                 <ResourceDictionary Source="Styles.xaml" />

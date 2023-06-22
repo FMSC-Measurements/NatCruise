@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <?xaml-comp compile="true" ?>
-    <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
     <!-- base styles -->
@@ -16,12 +16,37 @@
                 Value="{StaticResource black_30}" />
     </Style>
 
-    <Style x:Key="TabViewBase" TargetType="xct:TabView">
+    <Style x:Key="TabViewBase"
+           TargetType="xct:TabView">
         <Setter Property="TabStripPlacement"
                 Value="Bottom" />
         <Setter Property="TabStripBackgroundColor"
                 Value="{StaticResource usda_brgt_blue}" />
         <Setter Property="TabStripHeight"
                 Value="60" />
+    </Style>
+
+    <Style x:Key="SwitchBase"
+           TargetType="Switch">
+        <Setter Property="HeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="AutomationProperties.IsInAccessibleTree"
+                Value="True" />
+        <Setter Property="OnColor"
+                Value="{StaticResource fs_green}"/>
+        <Setter Property="ThumbColor"
+                Value="{StaticResource fs_green}" />
+    </Style>
+
+    <Style x:Key="SliderBase"
+           TargetType="Slider">
+        <Setter Property="HeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="ThumbColor"
+                Value="{StaticResource fs_green}" />
+        <Setter Property="MinimumTrackColor"
+                Value="{StaticResource fs_green}" />
+        <Setter Property="AutomationProperties.IsInAccessibleTree"
+                Value="True" />
     </Style>
 </ResourceDictionary>
