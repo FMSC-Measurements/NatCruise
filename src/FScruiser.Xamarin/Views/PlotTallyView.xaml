@@ -620,7 +620,7 @@
                                         Command="{Binding BindingContext.ShowTallyPopulationDetailsCommand, Source={Reference _page} }"
                                         CommandParameter="{Binding .}"
                                         FontFamily="{Static const:Fonts.FAsolid}"
-                                        BackgroundColor="{StaticResource white_20}"
+                                        BackgroundColor="Transparent"
                                         AutomationProperties.IsInAccessibleTree="True"
                                         AutomationProperties.Name="Show Tally Info"/>
 
