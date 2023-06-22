@@ -29,8 +29,8 @@
                 <StackLayout BackgroundColor="{StaticResource white_20}">
                     <ctrls:HeaderControl Header="Tally Panel Size"
                                          Orientation="Vertical">
-                        <Slider Minimum="0.0"
-                                Maximum="1.0"
+                        <Slider Minimum="0.3"
+                                Maximum="0.7"
                                 Value="{Binding TallySettings.TallyButtonTrayVerticalSize}"
                                 Style="{StaticResource SliderBase}">
                             <Slider.Behaviors>
@@ -58,8 +58,8 @@
 
                     <ctrls:HeaderControl Header="Tally Panel Size"
                                          Orientation="Vertical">
-                        <Slider Minimum="0.0"
-                                Maximum="1.0"
+                        <Slider Minimum="0.3"
+                                Maximum="0.7"
                                 Value="{Binding TallySettings.PlotTallyButtonTrayVerticalSize}"
                                 Style="{StaticResource SliderBase}">
                             <Slider.Behaviors>
