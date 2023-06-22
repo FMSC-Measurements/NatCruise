@@ -54,11 +54,11 @@
 	<Color x:Key="warning">Gold</Color>
 	<Color x:Key="error_suppressed">LightGray</Color>
 
-	<Color x:Key="measureTreeColor">#3CB371</Color>
+	<Color x:Key="measureTreeColor">#008817</Color>
 	<!--MediumSeaGreen-->
-	<Color x:Key="insuranceTreeColor">#BA55D3</Color>
+	<Color x:Key="insuranceTreeColor">#d85bef</Color>
 	<!--MediumOrchid-->
-	<Color x:Key="tallyCountEntryColor">#00BFFF</Color>
-	<Color x:Key="manualTreeColor">#FFBF00</Color>
+	<Color x:Key="tallyCountEntryColor">#4866ff</Color>
+	<Color x:Key="manualTreeColor">#70e17b</Color>
 	<!--SandyBrown-->
 </ResourceDictionary>
