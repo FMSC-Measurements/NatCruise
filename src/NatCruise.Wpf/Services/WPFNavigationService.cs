@@ -202,13 +202,12 @@ namespace NatCruise.Wpf.Services
             view.OnCancelButtonClicked = hideDialogAction;
 
             viewModel.Load(treeID, treeAuditRuleID);
-            return MainWindow.ShowMetroDialogAsync(dialog) ;
+            return MainWindow.ShowMetroDialogAsync(dialog);
 
+            //await MainWindow.ShowMetroDialogAsync(dialog);
+            //await dialog.WaitUntilUnloadedAsync();
 
-            //void HandleTreeErrorSaved(object sender, EventArgs e)
-            //{
-            //    MainWindow.HideMetroDialogAsync(dialog);
-            //}
+            //return;
         }
 
         public Task ShowTreeAuditRuleEdit(string tarID)
