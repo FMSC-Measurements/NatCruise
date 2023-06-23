@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NatCruise.Wpf.Services
 {
     public interface IAppService
     {
+        Window MainWindow { get; }
+
         void Shutdown();
     }
 }

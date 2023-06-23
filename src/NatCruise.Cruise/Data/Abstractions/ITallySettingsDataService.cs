@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
 {
@@ -14,8 +10,8 @@ namespace NatCruise.Cruise.Services
         bool EnableAskEnterTreeData { get; set; }
         IEnumerable<string> Cruisers { get; }
 
-        void AddCruiser(string cruiser);
+        double TallyButtonTrayVerticalSize { get; set; }
 
-        void RemoveCruiser(string cruiser);
+        double PlotTallyButtonTrayVerticalSize { get; set; }
     }
 }

@@ -20,6 +20,12 @@ namespace NatCruise.Models
         public string LiveDead { get; set; }
         public string DefaultLiveDead { get; set; }
 
+        public int Frequency { get; set; }
+
+        public int InsuranceFrequency { get; set; }
+
+        public int KZ { get; set; }
+
         [Field("Description")]
         public string TallyDescription { get; set; }
 
@@ -36,6 +42,21 @@ namespace NatCruise.Models
 
         [Field("sgMaxKPI")]
         public int MaxKPI { get; set; }
+
+        private int _treeCount;
+        private int _sumKPI;
+
+        public int TreeCount
+        {
+            get { return _treeCount; }
+            set { SetProperty(ref _treeCount, value); }
+        }
+
+        public int SumKPI
+        {
+            get { return _sumKPI; }
+            set { SetProperty(ref _sumKPI, value); }
+        }
 
         public override string ToString()
         {

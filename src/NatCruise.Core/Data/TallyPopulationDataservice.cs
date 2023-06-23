@@ -85,7 +85,23 @@ $@"SELECT
                     "AND tp.SampleGroupCode = @p4 " +
                     "AND ifNull(tp.SpeciesCode, '') = ifNull(@p5,'') " +
                     "AND ifNull(tp.LiveDead, '') = ifNull(@p6,'')"
-                , new object[] { unitCode, CruiseID, stratumCode, sampleGroupCode, species, liveDead }).FirstOrDefault();
+                , unitCode, CruiseID, stratumCode, sampleGroupCode, species, liveDead).FirstOrDefault();
+        }
+
+        public TallyPopulation_Plot GetPlotTallyPopulation(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        {
+            var tallyPop = Database.Query<TallyPopulation_Plot>(
+                SELECT_TALLYPOPULATION_CORE +
+                "WHERE cust.CuttingUnitCode = @p1 " +
+                    "AND tp.CruiseID = @p2 " +
+                    "AND tp.StratumCode = @p3 " +
+                    "AND tp.SampleGroupCode = @p4 " +
+                    "AND ifNull(tp.SpeciesCode, '') = ifNull(@p5,'') " +
+                    "AND ifNull(tp.LiveDead, '') = ifNull(@p6,'')"
+                , unitCode, CruiseID, stratumCode, sampleGroupCode, species, liveDead).Single();
+
+            tallyPop.PlotTreeCount = GetTreeCount(tallyPop, plotNumber);
+            return tallyPop;
         }
 
         public IEnumerable<TallyPopulation_Plot> GetPlotTallyPopulationsByUnitCode(string unitCode, int plotNumber)
@@ -93,7 +109,7 @@ $@"SELECT
             var tallyPops = Database.Query<TallyPopulation_Plot>(
                 SELECT_TALLYPOPULATION_CORE +
                 "WHERE tp.CruiseID = @p2 AND cust.CuttingUnitCode = @p1 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)"
-                , new object[] { unitCode, CruiseID }).ToArray();
+                , unitCode, CruiseID).ToArray();
 
             foreach (var pop in tallyPops)
             {
@@ -101,9 +117,20 @@ $@"SELECT
                 pop.IsEmpty = Database.ExecuteScalar<int>("SELECT ifnull(IsEmpty, 0) FROM Plot_Stratum " +
                     "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2 AND PlotNumber = @p3 AND StratumCode = @p4;",
                     unitCode, CruiseID, plotNumber, pop.StratumCode) == 1;
+                pop.PlotTreeCount = GetTreeCount(pop, plotNumber);
             }
 
             return tallyPops;
+        }
+
+        public int GetTreeCount(TallyPopulation pop, int plotNumber)
+        {
+            return Database.ExecuteScalar2<int>("SELECT TreeCount FROM TallyLedger_Plot_Totals " +
+                    "WHERE CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND PlotNumber = @PlotNumber AND StratumCode = @StratumCode " +
+                    "AND SampleGroupCode = @SampleGroupCode " +
+                    "AND (@SpeciesCode IS NULL OR  ifnull(SpeciesCode, '') = ifnull(SpeciesCode, '')) " +
+                    "AND (@LiveDead IS NULL OR ifnull(LiveDead, '') = ifnull(@LiveDead, ''));",
+                    new { CruiseID, pop.CuttingUnitCode, PlotNumber = plotNumber, pop.StratumCode, pop.SampleGroupCode, pop.SpeciesCode, pop.LiveDead });
         }
 
         private bool GetIsTallyPopInCruise(string unitCode, int plotNumber, string stratumCode)

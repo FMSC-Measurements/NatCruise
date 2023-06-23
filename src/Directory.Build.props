@@ -1,11 +1,12 @@
 <Project>
 	<PropertyGroup Label="Build Config">
 		<LangVersion>8.0</LangVersion>
-		<Version>3.1.6.0</Version>
+		<Version>3.1.7.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Custom Properties">
 		<UseCruiseDALProjRefs Condition="$(UseCruiseDALProjRefs) == ''">false</UseCruiseDALProjRefs>
+		<CruiseDALRepoDir>C:\Users\BenCamps\Documents\FMSC_GitHub\</CruiseDALRepoDir>
 	</PropertyGroup>
 
 	<!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 because of xunit's shadow copy feature

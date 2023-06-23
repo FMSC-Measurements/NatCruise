@@ -309,7 +309,9 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button Style="{StaticResource errorWarningButton}"
-                            AutomationProperties.Name="Error Item" />
+                            AutomationProperties.Name="Error Item"
+                            Command="{Binding  DataContext.ShowEditTreeErrorCommand, Source={x:Reference _page}}"
+                            CommandParameter="{Binding .}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

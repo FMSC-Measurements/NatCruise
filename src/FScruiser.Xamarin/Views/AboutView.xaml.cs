@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace FScruiser.XF.ViewCells
+namespace FScruiser.XF.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class TallyEditViewCell : ContentView
+	public partial class AboutView : ContentPage
 	{
-		public TallyEditViewCell ()
+		public AboutView ()
 		{
 			InitializeComponent ();
 		}

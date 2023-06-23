@@ -1,5 +1,7 @@
-﻿using NatCruise.Design.Services;
+﻿using MahApps.Metro.Controls.Dialogs;
+using NatCruise.Design.Services;
 using NatCruise.Design.Views;
+using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
 using NatCruise.Wpf.FieldData.Views;
 using NatCruise.Wpf.Navigation;
@@ -18,12 +20,22 @@ namespace NatCruise.Wpf.Services
         public Prism.Services.Dialogs.IDialogService PrismDialogService { get; }
         public INatCruiseDialogService DialogService { get; }
 
-        public WPFNavigationService(IRegionManager regionManager, IRegionNavigationService currentRegion, Prism.Services.Dialogs.IDialogService prismDialogService, INatCruiseDialogService dialogService)
+        public IAppService AppService { get; }
+
+        public MainWindow MainWindow => (MainWindow)AppService.MainWindow;
+
+        public WPFNavigationService(IRegionManager regionManager,
+                                    IRegionNavigationService currentRegion,
+                                    Prism.Services.Dialogs.IDialogService prismDialogService,
+                                    INatCruiseDialogService dialogService,
+                                    
+                                    IAppService appService)
         {
             RegionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
             CurrentRegion = currentRegion ?? throw new ArgumentNullException(nameof(currentRegion));
             PrismDialogService = prismDialogService ?? throw new ArgumentNullException(nameof(prismDialogService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            AppService = appService ?? throw new ArgumentNullException(nameof(appService));
         }
 
         public Task ShowFieldData(string cuttingUnit = null)
@@ -166,7 +178,36 @@ namespace NatCruise.Wpf.Services
 
         public Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(treeID))
+            {
+                throw new ArgumentException($"'{nameof(treeID)}' cannot be null or empty.", nameof(treeID));
+            }
+
+            if (string.IsNullOrEmpty(treeAuditRuleID))
+            {
+                throw new ArgumentException($"'{nameof(treeAuditRuleID)}' cannot be null or empty.", nameof(treeAuditRuleID));
+            }
+
+            var view = new TreeErrorEditView();
+            Prism.Mvvm.ViewModelLocator.SetAutoWireViewModel(view, true);
+            var viewModel = (TreeErrorEditViewModel)view.DataContext;
+            var dialog = new CustomDialog()
+            {
+                Title = viewModel.Message,
+                Content = view,
+            };
+
+            EventHandler hideDialogAction = (sender, ea) => MainWindow.HideMetroDialogAsync(dialog);
+            viewModel.Saved = hideDialogAction;
+            view.OnCancelButtonClicked = hideDialogAction;
+
+            viewModel.Load(treeID, treeAuditRuleID);
+            return MainWindow.ShowMetroDialogAsync(dialog);
+
+            //await MainWindow.ShowMetroDialogAsync(dialog);
+            //await dialog.WaitUntilUnloadedAsync();
+
+            //return;
         }
 
         public Task ShowTreeAuditRuleEdit(string tarID)
@@ -190,6 +231,26 @@ namespace NatCruise.Wpf.Services
         }
 
         public Task ShowSubpopulations(string stratumCode, string sampleGroupCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowAbout()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowPrivacyPolicy()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowUserAgreement()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead)
         {
             throw new NotImplementedException();
         }

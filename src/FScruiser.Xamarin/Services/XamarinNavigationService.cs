@@ -32,6 +32,11 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync(path, navparams);
         }
 
+        public Task ShowAbout()
+        {
+            return NavigationService.NavigateAsyncEx("Navigation/About");
+        }
+
         public Task ShowBlank()
         {
             return NavigationService.NavigateAsync("Blank");
@@ -277,6 +282,26 @@ namespace FScruiser.XF.Services
 
             return NavigationService.NavigateAsync("Navigation/Tally",
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
+        }
+
+        public Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        {
+            if (unitCode is null) { throw new ArgumentNullException(nameof(unitCode)); }
+
+            if (plotNumber < 1) { throw new ArgumentOutOfRangeException(nameof(plotNumber), plotNumber, ""); }
+
+            if (string.IsNullOrEmpty(stratumCode)) { throw new ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty.", nameof(stratumCode)); }
+
+            if (string.IsNullOrEmpty(sampleGroupCode)) { throw new ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or empty.", nameof(sampleGroupCode)); }
+
+            var parameters = new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}" +
+                $"&{NavParams.PLOT_NUMBER}={plotNumber}" +
+                $"&{NavParams.SAMPLE_GROUP}={sampleGroupCode}" +
+                $"&{NavParams.SPECIES}={species}" +
+                $"&{NavParams.LIVE_DEAD}={liveDead}");
+
+            return NavigationService.NavigateAsync("PlotTallyPopulationDetails",
+                parameters);
         }
 
         public Task ShowTreeAuditRules()

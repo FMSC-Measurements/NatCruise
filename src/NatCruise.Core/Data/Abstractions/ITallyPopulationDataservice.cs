@@ -9,6 +9,8 @@ namespace NatCruise.Data
 
         TallyPopulationEx GetTallyPopulation(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead);
 
+        TallyPopulation_Plot GetPlotTallyPopulation(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead);
+
         IEnumerable<TallyPopulation_Plot> GetPlotTallyPopulationsByUnitCode(string unitCode, int plotNumber);
 
         IEnumerable<TallyPopulationEx> GetTallyPopulations(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null);

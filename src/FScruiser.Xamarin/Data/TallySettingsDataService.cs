@@ -17,6 +17,12 @@ namespace FScruiser.XF.Services
 
     public class TallySettingsDataService : Model_Base, ITallySettingsDataService
     {
+        const string PERF_TallyButtonTrayVerticalSize = "TallyButtonTrayVerticalSize";
+        const string PERF_PlotTallyButtonTrayVerticalSize = "PlotTallyButtonTrayVerticalSize";
+
+        private const double DEFAULT_TALLY_BUTTON_TRAY_VERTICAL_SIZE = 0.4;
+        private const double DEFAULT_PLOT_TALLY_BUTTON_TRAY_VERTICAL_SIZE = 0.4;
+
         protected TallySettings Data { get; set; }
         protected object DataSyncLock { get; } = new object();
 
@@ -46,6 +52,41 @@ namespace FScruiser.XF.Services
             {
                 EnsureLoaded();
                 return Data.Cruisers.ToArray();
+            }
+        }
+
+        public double TallyButtonTrayVerticalSize
+        {
+            get
+            {
+                try
+                {
+                    var perf = Xamarin.Essentials.Preferences.Get(PERF_TallyButtonTrayVerticalSize, DEFAULT_TALLY_BUTTON_TRAY_VERTICAL_SIZE);
+                    return perf;
+                }
+                catch { return 0.6; }
+            }
+            set
+            {
+                Xamarin.Essentials.Preferences.Set(PERF_TallyButtonTrayVerticalSize, value);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double PlotTallyButtonTrayVerticalSize
+        {
+            get
+            {
+                try
+                {
+                    return Xamarin.Essentials.Preferences.Get(PERF_PlotTallyButtonTrayVerticalSize, DEFAULT_PLOT_TALLY_BUTTON_TRAY_VERTICAL_SIZE);
+                }
+                catch { return 0.6; }
+            }
+            set
+            {
+                Xamarin.Essentials.Preferences.Set(PERF_PlotTallyButtonTrayVerticalSize, value);
+                RaisePropertyChanged();
             }
         }
 
@@ -123,6 +164,8 @@ namespace FScruiser.XF.Services
             RaisePropertyChanged(nameof(EnableAskEnterTreeData));
             RaisePropertyChanged(nameof(EnableCruiserPopup));
             RaisePropertyChanged(nameof(Cruisers));
+            RaisePropertyChanged(nameof(PlotTallyButtonTrayVerticalSize));
+            RaisePropertyChanged(nameof(TallyButtonTrayVerticalSize));
         }
     }
 }

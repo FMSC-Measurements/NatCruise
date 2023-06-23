@@ -4,6 +4,12 @@ namespace NatCruise.Navigation
 {
     public interface INatCruiseNavigationService
     {
+        Task ShowAbout();
+
+        Task ShowPrivacyPolicy();
+
+        Task ShowUserAgreement();
+
         Task ShowFieldData(string cuttingUnit = null);
 
         Task ShowCruiseLandingLayout();
@@ -24,6 +30,13 @@ namespace NatCruise.Navigation
         Task ShowSampleGroups(string stratumCode);
 
         Task ShowSubpopulations(string stratumCode, string sampleGroupCode);
+
+        #endregion
+
+
+        #region tally
+
+        Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead);
 
         #endregion
 

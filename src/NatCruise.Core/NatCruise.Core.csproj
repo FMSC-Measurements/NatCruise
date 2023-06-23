@@ -4,6 +4,8 @@
 		<RootNamespace>NatCruise</RootNamespace>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>9.0</LangVersion>
+
+		
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -15,14 +17,14 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'True'">
-		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
-		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />
-		<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
+		<ProjectReference Include="$(CruiseDALRepoDir)\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
+		<ProjectReference Include="$(CruiseDALRepoDir)\CruiseDAL\src\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />
+		<ProjectReference Include="$(CruiseDALRepoDir)\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'false' OR $(UseCruiseDALProjRefs) == '' ">
 		<PackageReference Include="CruiseDAL.V3" Version="3.6.3.118" />
-		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.6.3.11800" />
+		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.6.3.11801" />
 		<PackageReference Include="CruiseDAL.V3.Models" Version="3.6.3.118" />
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.2" />
 	</ItemGroup>

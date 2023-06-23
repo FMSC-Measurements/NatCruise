@@ -13,6 +13,8 @@
 		<None Remove="**\*~" />
 	</ItemGroup>
 
+
+
 	<ItemGroup>
 		<None Include="..\..\doc\PrivacyPolicy.md" Link="PrivacyPolicy.md" />
 	</ItemGroup>
@@ -123,9 +125,6 @@
 		<Compile Update="Views\MainView.xaml.cs">
 			<DependentUpon>MainView.xaml</DependentUpon>
 		</Compile>
-		<Compile Update="ViewCells\TallyEntryTreeViewCell.xaml.cs">
-			<DependentUpon>TallyEntryTreeViewCell.xaml</DependentUpon>
-		</Compile>
 		<Compile Update="Views\TreeEditView.xaml.cs">
 			<DependentUpon>TreeEditView.xaml</DependentUpon>
 		</Compile>
@@ -141,9 +140,21 @@
 		<EmbeddedResource Update="App.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</EmbeddedResource>
+		<EmbeddedResource Update="Controls\HeaderControl.xaml">
+		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Converters.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</EmbeddedResource>
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Styles.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Views\AboutView.xaml">
+		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Views\AskKpiView.xaml">
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -165,6 +176,9 @@
 		</EmbeddedResource>
 		<EmbeddedResource Update="Views\ImportView.xaml">
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Views\PlotTallyPopulationDetailsView.xaml">
+		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Views\PlotTreeListView.xaml">
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -256,18 +270,6 @@
 		<EmbeddedResource Update="Views\TallyView.xaml">
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</EmbeddedResource>
-		<EmbeddedResource Update="ViewCells\PlotTreeViewCell.xaml">
-			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</EmbeddedResource>
-		<EmbeddedResource Update="ViewCells\TallyEditViewCell.xaml">
-			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</EmbeddedResource>
-		<EmbeddedResource Update="ViewCells\TallyEntryTreeViewCell.xaml">
-			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</EmbeddedResource>
-		<EmbeddedResource Update="ViewCells\TallyEntryViewCell.xaml">
-			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</EmbeddedResource>
 		<EmbeddedResource Update="Controls\PopulationIndicator.xaml">
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</EmbeddedResource>
@@ -305,6 +307,10 @@
 		<None Update="Views\UserAgreementView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="ViewCells\" />
 	</ItemGroup>
 
 	<Target Name="GenerateSecrets" BeforeTargets="CoreBuild">

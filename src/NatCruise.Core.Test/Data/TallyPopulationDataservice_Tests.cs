@@ -2,7 +2,6 @@
 using CruiseDAL.Schema;
 using CruiseDAL.V3.Models;
 using FluentAssertions;
-using NatCruise.Cruise.Data;
 using NatCruise.Data;
 using System;
 using System.Linq;
@@ -123,6 +122,122 @@ namespace NatCruise.Test.Data
                         tp.InCruise.Should().BeFalse();
                     }
                 }
+            }
+        }
+
+        [Theory]
+        [InlineData("u1", "st1", "sg1", "sp1", "L", true)]
+        [InlineData("u1", "st1", "sg1", null, null, false)]
+        public void GetPlotTallyPopulations_WithTreeCounts(string unitCode, string stratum, string sampleGroup, string species, string liveDead, bool tallyBySubpop)
+        {
+            var init = new DatastoreInitializer();
+            //var tallyDescription = $"{stratum} {sampleGroup} {species} {liveDead}";
+            //var hotKey = "A";
+            var method = CruiseDAL.Schema.CruiseMethods.PNT;
+            var cruiseID = init.CruiseID;
+
+            var units = new[] { unitCode };
+            var strata = new[]
+            {
+                new Stratum()
+                {
+                    StratumCode = stratum,
+                    Method = method,
+                }
+            };
+            var unit_strata = new[]
+            {
+                new CuttingUnit_Stratum()
+                {
+                    CuttingUnitCode = unitCode,
+                    StratumCode = stratum,
+                }
+            };
+
+            var sampleGroups = new[]
+            {
+                new SampleGroup()
+                {
+                    StratumCode = stratum,
+                    SampleGroupCode = sampleGroup,
+                    SamplingFrequency = 101,
+                    TallyBySubPop = tallyBySubpop,
+                }
+            };
+
+            var subPop = new[]
+            {
+                new SubPopulation()
+                {
+                    StratumCode = stratum,
+                    SampleGroupCode = sampleGroup,
+                    SpeciesCode = species ?? "dummy",
+                    LiveDead = liveDead ?? "L",
+                }
+            };
+
+            
+
+            using (var db = new CruiseDatastore_V3())
+            {
+                DatastoreInitializer.InitializeDatabase(db, init.DeviceID, cruiseID, init.SaleID, units, strata, unit_strata, sampleGroups, new[] { species ?? "dummy" }, null, subPop);
+
+                var plotDs = new PlotDataservice(db, init.CruiseID, init.DeviceID);
+                var plotStDs = new PlotStratumDataservice(db, init.CruiseID, init.DeviceID);
+                plotDs.AddNewPlot(unitCode);
+
+                var plots = plotDs.GetPlotsByUnitCode(unitCode);
+                plots.Should().HaveCount(1);
+                var plot = plots.Single();
+
+                var plotStrata = plotStDs.GetPlot_Strata(unitCode, plot.PlotNumber, insertIfNotExists: false);
+                plotStrata.Should().HaveCount(1);
+
+                db.Insert(new TallyLedger {
+                    TallyLedgerID = Guid.NewGuid().ToString(),
+                    PlotNumber = plot.PlotNumber,
+                    CruiseID = cruiseID,
+                    CuttingUnitCode = unitCode,
+                    StratumCode = stratum,
+                    SampleGroupCode = sampleGroup,
+                    SpeciesCode = species,
+                    LiveDead = liveDead ?? "L",
+                    TreeCount = 101,
+                    KPI = 201 });
+                db.Insert(new TallyLedger {
+                    TallyLedgerID = Guid.NewGuid().ToString(),
+                    PlotNumber = plot.PlotNumber,
+                    CruiseID = cruiseID,
+                    CuttingUnitCode = unitCode,
+                    StratumCode = stratum,
+                    SampleGroupCode = sampleGroup,
+                    SpeciesCode = species,
+                    LiveDead = liveDead ?? "L",
+                    TreeCount = 103,
+                    KPI = 203 });
+
+
+                //db.Execute("INSERT INTO TallyDescription (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead, Description) VALUES " +
+                //"(@p1, @p2, @p3, @p4, @p5, @p6);", new object[] { cruiseID, stratum, sampleGroup, species, liveDead, tallyDescription });
+                //db.Execute("INSERT INTO TallyHotKey (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead, HotKey) VALUES " +
+                //"(@p1, @p2, @p3, @p4, @p5, @p6);", new object[] { cruiseID, stratum, sampleGroup, species, liveDead, hotKey });
+                var datastore = new TallyPopulationDataservice(db, cruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+                var gpops = db.QueryGeneric("SELECT * FROM TallyLedger_Plot_Totals;").ToArray();
+
+
+                var pops = datastore.GetPlotTallyPopulationsByUnitCode(unitCode, plot.PlotNumber);
+
+                var pop = pops.Single();
+                pop.Should().NotBeNull();
+                //VerifyTallyPopulation(pop);
+
+                //pop.TallyDescription.Should().NotBeNullOrWhiteSpace();
+                //pop.TallyHotKey.Should().NotBeNullOrWhiteSpace();
+                pop.Method.Should().NotBeNullOrWhiteSpace();
+                pop.TreeCount.Should().Be(204);
+                pop.SumKPI.Should().Be(404);
+                pop.PlotTreeCount.Should().Be(204);
             }
         }
 
