@@ -228,5 +228,15 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowAbout()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
