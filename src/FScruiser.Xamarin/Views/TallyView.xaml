@@ -55,12 +55,11 @@
                     </CollectionView.Effects>
 
                     <CollectionView.ItemTemplate>
-                        <cells:TreeDataTemplateSelector>
+                        <local_ctrls:TallyEntryTemplateSelector>
 
                             <!-- Counts Tally Entry Item Template-->
-                            <cells:TreeDataTemplateSelector.TallyEditTemplate>
+                            <local_ctrls:TallyEntryTemplateSelector.TallyEditTemplate>
                                 <DataTemplate>
-                                    <!--<cells:TallyEditViewCell />-->
 
                                     <Frame BackgroundColor="{DynamicResource tallyCountEntryColor}"
                                            CornerRadius="5"
@@ -133,10 +132,10 @@
                                         </Grid>
                                     </Frame>
                                 </DataTemplate>
-                            </cells:TreeDataTemplateSelector.TallyEditTemplate>
+                            </local_ctrls:TallyEntryTemplateSelector.TallyEditTemplate>
 
                             <!-- Tree Tally Entry Item Template-->
-                            <cells:TreeDataTemplateSelector.TreeItemTemplate>
+                            <local_ctrls:TallyEntryTemplateSelector.TreeItemTemplate>
                                 <DataTemplate>
                                     <SwipeView IsEnabled="False">
                                         <SwipeView.LeftItems>
@@ -305,10 +304,10 @@
 
                                     </SwipeView>
                                 </DataTemplate>
-                            </cells:TreeDataTemplateSelector.TreeItemTemplate>
+                            </local_ctrls:TallyEntryTemplateSelector.TreeItemTemplate>
 
                             <!-- Manual Tree Template -->
-                            <cells:TreeDataTemplateSelector.ManualTreeTemplate>
+                            <local_ctrls:TallyEntryTemplateSelector.ManualTreeTemplate>
                                 <DataTemplate>
                                     <Frame BackgroundColor="{StaticResource manualTreeColor}"
                                            CornerRadius="5"
@@ -451,10 +450,10 @@
                                         </Grid>
                                     </Frame>
                                 </DataTemplate>
-                            </cells:TreeDataTemplateSelector.ManualTreeTemplate>
+                            </local_ctrls:TallyEntryTemplateSelector.ManualTreeTemplate>
 
                             <!-- Basic Tally Entry Item Template-->
-                            <cells:TreeDataTemplateSelector.BasicTemplate>
+                            <local_ctrls:TallyEntryTemplateSelector.BasicTemplate>
                                 <DataTemplate>
                                     <SwipeView IsEnabled="False">
                                         <SwipeView.LeftItems>
@@ -540,8 +539,8 @@
 
                                     </SwipeView>
                                 </DataTemplate>
-                            </cells:TreeDataTemplateSelector.BasicTemplate>
-                        </cells:TreeDataTemplateSelector>
+                            </local_ctrls:TallyEntryTemplateSelector.BasicTemplate>
+                        </local_ctrls:TallyEntryTemplateSelector>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
@@ -857,8 +856,8 @@
                                      VerticalItemSpacing="3" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <cells:TallyDataTemplateSelector>
-                        <cells:TallyDataTemplateSelector.TallyTemplate>
+                    <local_ctrls:TallyPopulationTemplateSelector>
+                        <local_ctrls:TallyPopulationTemplateSelector.TallyTemplate>
                             <DataTemplate>
 
                                 <Frame CornerRadius="5"
@@ -943,8 +942,8 @@
                                     </Grid>
                                 </Frame>
                             </DataTemplate>
-                        </cells:TallyDataTemplateSelector.TallyTemplate>
-                    </cells:TallyDataTemplateSelector>
+                        </local_ctrls:TallyPopulationTemplateSelector.TallyTemplate>
+                    </local_ctrls:TallyPopulationTemplateSelector>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 

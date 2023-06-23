@@ -2,9 +2,9 @@
 using NatCruise.Models;
 using Xamarin.Forms;
 
-namespace FScruiser.XF.ViewCells
+namespace FScruiser.XF.Controls
 {
-    public class TreeDataTemplateSelector : DataTemplateSelector
+    public class TallyEntryTemplateSelector : DataTemplateSelector
     {
         public DataTemplate TallyEditTemplate { get; set; }
         public DataTemplate TreeItemTemplate { get; set; }

@@ -1,14 +1,8 @@
-﻿using NatCruise.Cruise.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
-namespace FScruiser.XF.ViewCells
+namespace FScruiser.XF.Controls
 {
-    public class TallyDataTemplateSelector : DataTemplateSelector
+    public class TallyPopulationTemplateSelector : DataTemplateSelector
     {
         public DataTemplate ClickerTallyTemplate { get; set; }
 
