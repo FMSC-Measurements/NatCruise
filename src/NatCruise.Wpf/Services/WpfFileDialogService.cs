@@ -77,7 +77,7 @@ namespace NatCruise.Wpf.Services
                 Filter = "All V3 file types|*.crz3;*.crz3t;|" +
                          "cruise files V3 (*.crz3)|*.crz3|" +
                          "template file V3 (*.crz3t)|*.crz3t|" +
-                         "cruise file V2 (*.cruise)|*.cruise|" +
+                         //"cruise file V2 (*.cruise)|*.cruise|" +
                          "template file V2 (*.cut)|*.cut",
             };
 
@@ -110,8 +110,8 @@ namespace NatCruise.Wpf.Services
             var dialog = new SaveFileDialog()
             {
                 DefaultExt = "*.crz3",
-                Filter = "cruise files V3 (*.crz3)|*.crz3|" +
-                            "cruise file V2 (*.cruise)|*.cruise",
+                Filter = "cruise files V3 (*.crz3)|*.crz3", // +
+                            //"|cruise file V2 (*.cruise)|*.cruise",
                 AddExtension = true,
                 FileName = defaultFileName,
                 InitialDirectory = defaultDir,
