@@ -40,7 +40,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'false' OR $(UseCruiseDALProjRefs) == '' ">
-		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.6.3.11801" />
+		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.6.4.11901" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -116,6 +116,10 @@
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Behaviors\" />
 	</ItemGroup>
 
 	<Target Name="GenerateSecrets" BeforeTargets="CoreBuild">
