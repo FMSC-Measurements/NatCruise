@@ -74,7 +74,7 @@
             </Controls:LastChildWidthPanel>
 
         </StackPanel>
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="1" x:Name="_tabControl">
             <TabItem Header="Trees">
                 <local:TreeListView DataContext="{Binding TreeListViewModel}" />
             </TabItem>
