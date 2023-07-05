@@ -30,7 +30,7 @@ namespace NatCruise.Wpf.FieldData.Views
             InitializeComponent();
         }
 
-        private HandelExportButtonClicked(object sender, RoutedEventArgs e)
+        private void HandelExportButtonClicked(object sender, RoutedEventArgs e)
         {
             var selectedTab = _tabControl.SelectedContent as Control;
             var selectedDg = selectedTab.FindChild<DataGrid>();
@@ -46,8 +46,6 @@ namespace NatCruise.Wpf.FieldData.Views
             if(result == true)
             {
                 var filePath = fileDialog.FileName;
-
-                var writer = File.OpenWrite(filePath);
 
                 var data = SerializeDataGridAsCSV(selectedDg);
                 File.WriteAllText(filePath, data);
@@ -135,6 +133,8 @@ namespace NatCruise.Wpf.FieldData.Views
             {
                 if (ch == '"')
                 { sw.Write("\"\""); }
+                if (ch == '\r' || ch == '\n')
+                { continue; }
                 else
                 { sw.Write(ch); }
             }
