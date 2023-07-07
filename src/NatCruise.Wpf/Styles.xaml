@@ -9,6 +9,18 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <Style x:Key="UserControlBase"
+           TargetType="UserControl">
+        <Setter Property="Background"
+                Value="{StaticResource MahApps.Brushes.Control.Background}" />
+    </Style>
+
+    <Style x:Key="WindowBase"
+           TargetType="Window">
+        <Setter Property="Background"
+                Value="{StaticResource MahApps.Brushes.Window.Background}" />
+    </Style>
+
     <Style x:Key="AddButton"
            TargetType="Button"
            BasedOn="{StaticResource MahApps.Styles.Button.Flat}">

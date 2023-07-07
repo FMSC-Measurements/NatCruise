@@ -1,5 +1,9 @@
-﻿using Microsoft.Win32;
+﻿using MahApps.Metro.Controls;
+using Microsoft.Win32;
+using NatCruise.Models;
 using NatCruise.Services;
+using NatCruise.Wpf.ViewModels;
+using NatCruise.Wpf.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -98,39 +102,59 @@ namespace NatCruise.Wpf.Services
             { return null; }
         }
 
-        public Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        public Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null, string defaultSaleFolder = null)
         {
-            return Task.Run(() => SelectCruiseFileDestination(defaultDir, defaultFileName));
+            //return Task.Run(() => SelectCruiseFileDestination(defaultDir, defaultFileName));
+
+            var initialDir = AppSettings.LastOpenCruiseDir;
+            if (!System.IO.Directory.Exists(initialDir))
+            {
+                initialDir = AppSettings.DefaultOpenCruiseDir;
+            }
+
+            var tcs = new TaskCompletionSource<string>();
+            var newCruiseSaveDialog = new NewCruiseSaveDialogView()
+            {
+                TCS = tcs,
+                CruiseFolder = initialDir,
+                CruiseFileName = defaultFileName,
+                SaleFolderName = defaultSaleFolder,
+            };
+
+            newCruiseSaveDialog.Show();
+            return tcs.Task;
         }
 
         public string SelectCruiseFileDestination(string defaultDir = null, string defaultFileName = null)
         {
-            defaultDir ??= AppSettings.LastOpenCruiseDir;
+            throw new NotSupportedException();
 
-            var dialog = new SaveFileDialog()
-            {
-                DefaultExt = "*.crz3",
-                Filter = "cruise files V3 (*.crz3)|*.crz3", // +
-                            //"|cruise file V2 (*.cruise)|*.cruise",
-                AddExtension = true,
-                FileName = defaultFileName,
-                InitialDirectory = defaultDir,
-                OverwritePrompt = true,
-            };
+            //defaultDir ??= AppSettings.LastOpenCruiseDir;
 
-            var result = dialog.ShowDialog();
-            if (result == true)
-            {
-                var filePath = dialog.FileName;
-                var fileDir = Path.GetDirectoryName(filePath);
-                AppSettings.LastOpenCruiseDir = fileDir;
+            //var dialog = new SaveFileDialog()
+            //{
+            //    DefaultExt = "*.crz3",
+            //    Filter = "cruise files V3 (*.crz3)|*.crz3", // +
+            //                                                //"|cruise file V2 (*.cruise)|*.cruise",
+            //    AddExtension = true,
+            //    FileName = defaultFileName,
+            //    InitialDirectory = defaultDir,
+            //    OverwritePrompt = true,
+            //};
 
-                return filePath;
-            }
-            else
-            {
-                return null;
-            }
+            //var result = dialog.ShowDialog();
+            //if (result == true)
+            //{
+            //    var filePath = dialog.FileName;
+            //    var fileDir = Path.GetDirectoryName(filePath);
+            //    AppSettings.LastOpenCruiseDir = fileDir;
+
+            //    return filePath;
+            //}
+            //else
+            //{
+            //    return null;
+            //}
         }
 
         public Task<string> SelectTemplateFileAsync()

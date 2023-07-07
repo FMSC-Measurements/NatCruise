@@ -1,5 +1,6 @@
 ﻿using CruiseDAL;
 using CruiseDAL.UpConvert;
+using CruiseDAL.V3.Models;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
@@ -140,8 +141,9 @@ namespace NatCruise.Wpf.ViewModels
             if (HasErrors == true) { return; }
 
             var defaultFileName = $"{SaleNumber} {SaleName} {Purpose}.crz3";
+            var defaultSaleFolder = $"{SaleNumber} {SaleName}";
+            var filePath = await FileDialogService.SelectCruiseFileDestinationAsync(defaultFileName: defaultFileName, defaultSaleFolder: defaultSaleFolder);
 
-            var filePath = await FileDialogService.SelectCruiseFileDestinationAsync(defaultFileName: defaultFileName);
             if (filePath != null)
             {
                 var fileInfo = new FileInfo(filePath);
@@ -149,8 +151,11 @@ namespace NatCruise.Wpf.ViewModels
                 var extension = fileInfo.Extension.ToLower();
                 if (extension == ".crz3")
                 {
+                    var purpose = Purpose;
                     var saleID = Guid.NewGuid().ToString();
                     var saleNumber = SaleNumber;
+                    var cruiseNumber = (purpose.ShortCode.Equals("TS")) ? saleNumber : saleNumber + purpose.ShortCode;
+                    var cruiseID = Guid.NewGuid().ToString();
                     var sale = new CruiseDAL.V3.Models.Sale()
                     {
                         SaleID = saleID,
@@ -160,16 +165,12 @@ namespace NatCruise.Wpf.ViewModels
                         Forest = Forest,
                         District = District,
                     };
-
-                    var purpose = Purpose;
-                    var cruiseNumber = (purpose.ShortCode.Equals("TS")) ? SaleNumber : SaleNumber + purpose.ShortCode;
-                    var cruiseID = Guid.NewGuid().ToString();
                     var cruise = new CruiseDAL.V3.Models.Cruise()
                     {
                         CruiseID = cruiseID,
                         SaleID = saleID,
                         CruiseNumber = cruiseNumber,
-                        SaleNumber = saleNumber,
+                        SaleNumber = SaleNumber,
                         Purpose = purpose.PurposeCode,
                         UseCrossStrataPlotTreeNumbering = UseCrossStrataPlotTreeNumbering,
                         DefaultUOM = UOM,
