@@ -12,6 +12,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net472</TargetFramework>
 		<UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
 		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<ApplicationIcon>Resources\cruisetree_setup.ico</ApplicationIcon>
 	</PropertyGroup>
@@ -46,7 +47,7 @@
 	<ItemGroup>
 		<PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.0.77" />
 		<PackageReference Include="MahApps.Metro">
-			<Version>2.4.9</Version>
+			<Version>3.0.0-alpha0457</Version>
 		</PackageReference>
 		<PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="4.11.0" />
 		<PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" Version="4.11.0" />
