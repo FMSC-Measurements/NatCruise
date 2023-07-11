@@ -32,7 +32,7 @@ namespace FScruiser.XF.Services
             return result?.FullPath;
         }
 
-        public virtual Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        public virtual Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null, string defaultSaleFolder = null)
         {
             throw new NotImplementedException();
         }
