@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -143,9 +144,16 @@ namespace NatCruise.Wpf.ViewModels
             var defaultFileName = $"{SaleNumber} {SaleName} {Purpose}.crz3";
             var defaultSaleFolder = $"{SaleNumber} {SaleName}";
             var filePath = await FileDialogService.SelectCruiseFileDestinationAsync(defaultFileName: defaultFileName, defaultSaleFolder: defaultSaleFolder);
+            
 
-            if (filePath != null)
+            if (!string.IsNullOrEmpty(filePath))
             {
+                var fileDirectory = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(fileDirectory))
+                {
+                    Directory.CreateDirectory(fileDirectory);
+                }
+
                 var fileInfo = new FileInfo(filePath);
 
                 var extension = fileInfo.Extension.ToLower();

@@ -16,7 +16,6 @@ namespace NatCruise.Wpf.Views
     /// </summary>
     public partial class NewCruiseSaveDialogView : MetroWindow, INotifyPropertyChanged
     {
-        private TaskCompletionSource<string> _tcs;
         private bool _useSaleFolder;
         private string _saleFolderName;
         private string _cruiseFileName;
@@ -28,22 +27,12 @@ namespace NatCruise.Wpf.Views
             InitializeComponent();
         }
 
-        public TaskCompletionSource<string> TCS
-        {
-            get => _tcs;
-            set => _tcs = value;
-        }
-
         public string CruiseFolder
         {
             get => _cruiseFolder;
             set
             {
                 SetProperty(ref _cruiseFolder, value);
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _cruiseFolderTextBox.Select(_cruiseFolderTextBox.Text.Length, 0);
-                }
                 RefreshCruiseFilePath();
             }
         }
@@ -90,8 +79,8 @@ namespace NatCruise.Wpf.Views
 
         public void RefreshCruiseFilePath()
         {
-            var cruiseFolder = CruiseFolder;
-            var cruiseFileName = CruiseFileName;
+            var cruiseFolder = CruiseFolder?.Trim();
+            var cruiseFileName = CruiseFileName?.Trim();
             if (!string.IsNullOrEmpty(cruiseFolder)
                 && !string.IsNullOrEmpty(cruiseFileName))
             {
@@ -100,16 +89,28 @@ namespace NatCruise.Wpf.Views
                 {
                     cruiseFileName += ".crz3";
                 }
-                var saleFolder = SaleFolderName;
-                if(UseSaleFolder && !string.IsNullOrEmpty(saleFolder))
+                var saleFolder = SaleFolderName?.Trim();
+                if (UseSaleFolder && !string.IsNullOrEmpty(saleFolder))
                 {
                     cruiseFolder = Path.Combine(cruiseFolder, saleFolder);
                 }
-                CruiseFilePath = Path.Combine(cruiseFolder, cruiseFileName);
+                try
+                {
+                    var cruiseFileInfo = new FileInfo(Path.Combine(cruiseFolder, cruiseFileName));
+
+                    CruiseFilePath = cruiseFileInfo.FullName;
+                    _okButton.IsEnabled = true;
+                }
+                catch
+                {
+                    _okButton.IsEnabled = false;
+                }
+
             }
             else
             {
-                CruiseFilePath= null;
+                CruiseFilePath = null;
+                _okButton.IsEnabled = false;
             }
         }
 
@@ -122,10 +123,15 @@ namespace NatCruise.Wpf.Views
             };
 
             var currentFolder = _cruiseFolderTextBox.Text;
-            if (!string.IsNullOrEmpty(currentFolder) && Uri.IsWellFormedUriString(currentFolder, UriKind.Absolute))
+            try
             {
-                folderBrowserDialog.SelectedPath = currentFolder;
+                var di = new DirectoryInfo(currentFolder);
+                if (!string.IsNullOrEmpty(currentFolder))
+                {
+                    folderBrowserDialog.SelectedPath = di.FullName;
+                }
             }
+            catch { }
 
             var result = folderBrowserDialog.ShowDialog();
 
@@ -135,29 +141,15 @@ namespace NatCruise.Wpf.Views
             }
         }
 
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            if (_tcs != null)
-            {
-                _tcs.SetResult("");
-                TCS = null;
-            }
-        }
-
         private void _okButton_Click(object sender, RoutedEventArgs e)
         {
-            TCS.SetResult("C:\\Users\\benjaminjcampbell\\Documents\\CruiseFiles\\temp\\something.crz3");
-            //TCS.SetResult(_cruiseFilePathLabel.Content.ToString());
-            TCS = null;
+            DialogResult = true;
             Close();
         }
 
         private void _caneclButton_Click(object sender, RoutedEventArgs e)
         {
-            TCS.SetResult("");
-            TCS = null;
+            DialogResult = false;
             Close();
         }
 

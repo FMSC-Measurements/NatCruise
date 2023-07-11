@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace NatCruise.Wpf.Services
 {
@@ -115,13 +116,25 @@ namespace NatCruise.Wpf.Services
             var tcs = new TaskCompletionSource<string>();
             var newCruiseSaveDialog = new NewCruiseSaveDialogView()
             {
-                TCS = tcs,
                 CruiseFolder = initialDir,
                 CruiseFileName = defaultFileName,
                 SaleFolderName = defaultSaleFolder,
             };
 
-            newCruiseSaveDialog.Show();
+            newCruiseSaveDialog.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() =>
+            {
+                var result = newCruiseSaveDialog.ShowDialog();
+                if(result.HasValue && result.Value)
+                {
+                    tcs.SetResult(newCruiseSaveDialog.CruiseFilePath);
+                }
+                else
+                {
+                    tcs.SetResult("");
+                }
+                tcs = null;
+            }));
+
             return tcs.Task;
         }
 

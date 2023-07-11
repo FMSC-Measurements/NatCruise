@@ -10,7 +10,7 @@
                  Style="{StaticResource WindowBase}"
                  x:Name="_page"
                  DataContext="{Binding RelativeSource={RelativeSource Self}}"
-                 Height="372"
+                 Height="390"
                  Width="579">
     <Grid ctrls:GridHelper.RowDefinitions="*,Auto">
         <StackPanel Grid.Row="0">
@@ -23,11 +23,10 @@
                 </ResourceDictionary>
             </StackPanel.Resources>
 
-            <mah:MetroHeader Header="Cruise Folder">
+            <mah:MetroHeader Header="Destination Folder">
                 <Grid ctrls:GridHelper.ColumnDefinitions="*,Auto">
                     <TextBox x:Name="_cruiseFolderTextBox"
                              Grid.Column="0"
-                             TextAlignment="Right"
                              Text="{Binding CruiseFolder, UpdateSourceTrigger=PropertyChanged}"
                              d:Text="C:\Users\benjaminjcampbell\Documents\CruiseFilesl\kjljtfyfytfytfytfytfytfytftyftyftyfytfytftlkjlkjlkjlkjlkjljlkjljlaaaaaaaaa\" />
                     <Button x:Name="_browseCruiseFolderButton"
@@ -38,7 +37,7 @@
                             HorizontalAlignment="Right" />
                 </Grid>
             </mah:MetroHeader>
-            <mah:MetroHeader Header="Sale Folder">
+            <mah:MetroHeader Header="Create Sale Folder">
                 <mah:MetroHeader.HeaderTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -48,11 +47,15 @@
                         </StackPanel>
                     </DataTemplate>
                 </mah:MetroHeader.HeaderTemplate>
-                <TextBox Text="{Binding SaleFolderName, UpdateSourceTrigger=PropertyChanged}"
-                         IsEnabled="{Binding UseSaleFolder}" />
+                <mah:MetroHeader Header="Sale Folder Name">
+                    <TextBox Text="{Binding SaleFolderName, UpdateSourceTrigger=PropertyChanged}"
+                             ctrls:TextBoxHelper.RegexMask="{StaticResource const_reges_path_part_input}"
+                             IsEnabled="{Binding UseSaleFolder}" />
+                </mah:MetroHeader>
             </mah:MetroHeader>
             <mah:MetroHeader Header="Cruise File Name">
-                <TextBox Text="{Binding CruiseFileName, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Text="{Binding CruiseFileName, UpdateSourceTrigger=PropertyChanged}"
+                         ctrls:TextBoxHelper.RegexMask="{StaticResource const_reges_path_part_input}" />
             </mah:MetroHeader>
             <mah:MetroHeader Header="Cruise File Path">
                 <ScrollViewer x:Name="_cruiseFilePathScrollViewer"
@@ -60,7 +63,6 @@
                               HorizontalScrollBarVisibility="Auto">
                     <Label x:Name="_cruiseFilePathLabel"
                            Content="{Binding CruiseFilePath}"
-                           HorizontalContentAlignment="Right"
                            d:Content="C:\Users\benjaminjcampbell\Documents\CruiseFiles\1234 name Timber Sale - TS.crz3" />
                 </ScrollViewer>
             </mah:MetroHeader>
@@ -70,6 +72,7 @@
             <Button x:Name="_okButton"
                     Grid.Column="2"
                     Content="Ok"
+                    IsEnabled="{Binding CruiseFileName, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
                     Margin="3,2"
                     Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
                     Click="_okButton_Click" />
