@@ -56,19 +56,19 @@
                 <Label Text="Field" />
                 <controls:ValuePicker ItemsSource="{Binding TreeFieldOptions}"
                                       SelectedValue="{Binding NewTreeAuditRule.Field}"
-                                      SelectedValuePath="Field"/>
+                                      SelectedValuePath="Field" />
             </StackLayout>
 
             <StackLayout Grid.Column="1">
                 <Label Text="Min" />
-                <Entry Text="{Binding NewTreeAuditRule.Min}" 
-                       Keyboard="Numeric"/>
+                <Entry Text="{Binding NewTreeAuditRule.Min}"
+                       Keyboard="Numeric" />
             </StackLayout>
 
             <StackLayout Grid.Column="2">
                 <Label Text="Max" />
                 <Entry Text="{Binding NewTreeAuditRule.Max}"
-                       Keyboard="Numeric"/>
+                       Keyboard="Numeric" />
             </StackLayout>
 
             <StackLayout Grid.Column="0"
@@ -91,12 +91,20 @@
                         ItemsSource="{Binding TreeAuditRules}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame BorderColor="DarkGray"
-                           Margin="5,3"
-                           Padding="7"
-                           HasShadow="True">
+                    <SwipeView IsEnabled="False"
+                               AutomationProperties.IsInAccessibleTree="True">
+                        <SwipeView.LeftItems>
+                            <SwipeItem Text="Delete"
+                                       Command="{Binding BindingContext.DeleteTreeAuditRuleCommand, Source={Reference _page}}"
+                                       CommandParameter="{Binding .}"
+                                       BackgroundColor="Red" />
+                        </SwipeView.LeftItems>
+                        <Frame BorderColor="DarkGray"
+                               Margin="5,3"
+                               Padding="7"
+                               HasShadow="True">
 
-                        <!--<StackLayout Orientation="Vertical">
+                            <!--<StackLayout Orientation="Vertical">
                             <Label Text="{Binding Field, StringFormat='Field: {0}'}" FontSize="Title" />
                             
                             <Label Text="{Binding Description, StringFormat='Description: {0}'}" />
@@ -107,41 +115,51 @@
                             
                         </StackLayout>-->
 
-                        <Grid RowDefinitions="Auto, Auto"
-                              ColumnDefinitions="*, Auto">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.ShowEditTreeAuditRule, Source={Reference _page}}"
-                                                      CommandParameter="{Binding .}" />
-                            </Grid.GestureRecognizers>
+                            <Grid RowDefinitions="Auto, Auto"
+                                  ColumnDefinitions="*, Auto, Auto">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.ShowEditTreeAuditRule, Source={Reference _page}}"
+                                                          CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
 
-                            <Label Grid.Row="0"
-                                   Grid.Column="0"
-                                   Text="{Binding Field, StringFormat='Field: {0}'}"
-                                   FontSize="Title" />
+                                <Label Grid.Row="0"
+                                       Grid.Column="0"
+                                       Text="{Binding Field, StringFormat='Field: {0}'}"
+                                       FontSize="Title" />
 
-                            <Label Grid.Row="1"
-                                   Grid.Column="0"
-                                   Text="{Binding Description, StringFormat='Description: {0}'}" />
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       Text="{Binding Description, StringFormat='Description: {0}'}" />
 
-                            <StackLayout Grid.Row="1"
-                                         Grid.Column="1"
-                                         Orientation="Horizontal"
-                                         Margin="0,0,7,0">
-                                <Label Text="{Binding Min, StringFormat='Min: {0:F}'}" />
-                                <Label Text="{Binding Max, StringFormat='Max: {0:F}'}" />
-                            </StackLayout>
-                        </Grid>
+                                <StackLayout Grid.Row="1"
+                                             Grid.Column="1"
+                                             Orientation="Horizontal"
+                                             Margin="0,0,7,0">
+                                    <Label Text="{Binding Min, StringFormat='Min: {0:F}'}" />
+                                    <Label Text="{Binding Max, StringFormat='Max: {0:F}'}" />
+                                </StackLayout>
+
+                                <Button Grid.Row="0"
+                                        Grid.Column="2"
+                                        BackgroundColor="Transparent"
+                                        Clicked="openTARItemMenu"
+                                        ImageSource="ic_more_vert_black_24dp.png"
+                                        HeightRequest="{StaticResource minTouchableHeight}"
+                                        WidthRequest="{StaticResource minTouchableWidth}"
+                                        AutomationProperties.IsInAccessibleTree="True"
+                                        AutomationProperties.Name="Show Actions Item" />
+                            </Grid>
 
 
 
-                        <!--<Grid>
+                            <!--<Grid>
                             <Grid.Resources>
                                 -->
-                        <!--<Style TargetType="controls:LastChildHeightLayout">
+                            <!--<Style TargetType="controls:LastChildHeightLayout">
                                     <Setter Property="LastChildHeight"
                                             Value="40" />
                                 </Style>-->
-                        <!--
+                            <!--
                             </Grid.Resources>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.ShowEditTreeAuditRule, Source={Reference _page}}"
@@ -182,7 +200,8 @@
                                 <Label Text="{Binding Description}" />
                             </StackLayout>
                         </Grid>-->
-                    </Frame>
+                        </Frame>
+                    </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
