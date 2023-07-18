@@ -124,7 +124,9 @@ namespace FScruiser.XF.ViewModels
             var unitCode = parameters.GetValue<string>(NavParams.UNIT);
             var cuttingUnit = CuttingUnit = CuttingUnitDeataservice.GetCuttingUnit(unitCode);
 
-            var plotNumbers = PlotDataservice.GetPlotsByUnitCode(unitCode).Select(x => x.PlotNumber.ToString());
+            var plotNumbers = PlotDataservice.GetPlotsByUnitCode(unitCode)
+                .OrderBy(x => x.PlotNumber)
+                .Select(x => x.PlotNumber.ToString());
             PlotFilterOptions = new[] { ALL_PLOTS_FILTEROPTION }.Concat(plotNumbers).ToArray();
 
             if (IsLoaded is false)
