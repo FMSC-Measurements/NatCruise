@@ -692,11 +692,17 @@ namespace NatCruise.MVVM.ViewModels
             var errorsAndWarnings = TreeErrorDataservice.GetTreeErrors(tree.TreeID).ToArray();
             var warnings = errorsAndWarnings
                 .Where(x => x.Level == ErrorBase.LEVEL_WARNING && !x.IsResolved)
-                .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase);
+                .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase, ToDictionaryConflictOption.Ignore);
+            //var warnings = errorsAndWarnings
+            //    .Where(x => x.Level == ErrorBase.LEVEL_WARNING && !x.IsResolved)
+            //    .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase);
 
             var errors = errorsAndWarnings
                 .Where(x => x.Level == ErrorBase.LEVEL_ERROR)
-                .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase);
+                .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase, ToDictionaryConflictOption.Ignore);
+            //var errors = errorsAndWarnings
+            //    .Where(x => x.Level == ErrorBase.LEVEL_ERROR)
+            //    .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase);
 
             foreach (var tf in TreeFieldValues)
             {
