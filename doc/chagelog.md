@@ -1,3 +1,25 @@
+# Version 3.1.7 - June 23
+# FScruiser
+## Fixes
+ - Fix prev/next buttons not working after returning to plot tally page
+
+## Enhancments
+ - Add tally population page for plot tally populations
+ - Add plot level tree counts indicator for plot tally populations
+ - Add ability to adjust size of tally button panels
+ - Add about page 
+
+## Changes
+ - Change colors use to indicate measure tree, insurance tree, tree counts, and manually added tree in the tally feeds
+
+# NatCruise
+## Fixes
+ - Fix issue with false positives on plot tree conflict check when combining files
+ - Fix issue with Sale Info not loading sometimes
+
+## Enhancements
+ - Add dialog for suppressing warnings on tree records
+
 # Version 3.1.6 - June 1, 2023
 # NatCruise
 
