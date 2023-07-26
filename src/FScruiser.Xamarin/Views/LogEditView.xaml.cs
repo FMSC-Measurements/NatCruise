@@ -28,8 +28,6 @@ namespace FScruiser.XF.Views
               defaultBindingMode: BindingMode.Default,
               propertyChanged: (bindable, oldValue, newValue) => ((LogEditView)bindable).OnLogFieldsChanged((IEnumerable<LogFieldSetup>)oldValue, (IEnumerable<LogFieldSetup>)newValue));
 
-        private Color _altRowColor;
-
         /// <summary>
         /// Invoked after changes have been applied to the <see cref="LogFields"/> property.
         /// </summary>
@@ -63,8 +61,6 @@ namespace FScruiser.XF.Views
             InitializeComponent();
 
             this.SetBinding(LogFieldsProperty, nameof(LogEditViewModel.LogFields));
-
-            _altRowColor = (Color)App.Current.Resources["black_12"];
         }
 
         protected View MakeLogFields(IEnumerable<LogFieldSetup> logFields)
@@ -89,7 +85,10 @@ namespace FScruiser.XF.Views
 
                 if (index % 2 == 0) //alternate row color
                 {
-                    grid.Children.Add(new BoxView { Color = _altRowColor }, 0, 2, index, index + 1);
+                    grid.Children.Add(new BoxView
+                    {
+                        Color = Color.FromHex("1E000000") // black_12
+                    }, 0, 2, index, index + 1);
                 }
 
                 var header = new Label() { Text = field.Heading };
