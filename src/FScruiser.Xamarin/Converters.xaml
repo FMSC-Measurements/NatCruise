@@ -19,6 +19,10 @@
                                          x:Key="AnyTrueConverter" />
     <tc_conv:InvertedBoolConverter x:Key="invertedBoolConverter" />
 
+    <tc_conv:BoolToObjectConverter x:Key="BoolToYesNoConverter"
+                                   TrueObject="YES"
+                                   FalseObject="NO" />
+
 
     <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
 

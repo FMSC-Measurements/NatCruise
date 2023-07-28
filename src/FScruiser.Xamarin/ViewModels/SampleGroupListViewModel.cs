@@ -36,7 +36,7 @@ namespace FScruiser.XF.ViewModels
                 SetProperty(ref _stratum, value);
                 if(value != null)
                 {
-                    SampleGroups = SampleGroupDataservice.GetSampleGroups(value.StratumCode);
+                    SampleGroups = SampleGroupDataservice.GetSampleGroups(value.StratumCode).ToArray();
                 }
                 else
                 {

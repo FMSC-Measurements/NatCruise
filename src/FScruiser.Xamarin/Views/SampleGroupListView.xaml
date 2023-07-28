@@ -67,11 +67,11 @@
                                 
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="Tally By Species: "/>
-                                    <Switch IsToggled="{Binding TallyBySubPop}" IsEnabled="False" />
+                                    <Label Text="{Binding TallyBySubPop, Converter={StaticResource BoolToYesNoConverter}}"/>
                                 </StackLayout>
 
-                                <Label Text="{Binding SampleSelectorType, StringFormat='Sample Selector Type: {0}'}"
-                                       IsVisible="{Binding CruiseMethod, Converter={StaticResource isStrConverter}}" />
+                                <!--<Label Text="{Binding SampleSelectorType, StringFormat='Sample Selector Type: {0}'}"
+                                       IsVisible="{Binding CruiseMethod, Converter={StaticResource isStrConverter}}" />-->
 
                             </StackLayout>
 
