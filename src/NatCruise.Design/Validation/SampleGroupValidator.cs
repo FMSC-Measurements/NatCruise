@@ -28,6 +28,12 @@ namespace NatCruise.Design.Validation
                 .WithMessage("Sampling Frequency Should Not Be Zero")
                 .WithSeverity(Severity.Error);
 
+            RuleFor(x => x.InsuranceFrequency)
+                .Must(x => x == 0 || x > 1)
+                .When(x => CruiseMethods.FREQUENCY_SAMPLED_METHODS.Contains(x.CruiseMethod))
+                .WithMessage("When supplied Insurance Frequency should be greater than 1")
+                .WithSeverity(Severity.Error);
+
             RuleFor(x => x.KZ)
                 .GreaterThan(0)
                 .When(x => CruiseMethods.THREE_P_METHODS.Contains(x.CruiseMethod))
