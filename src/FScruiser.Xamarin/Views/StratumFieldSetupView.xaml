@@ -3,7 +3,8 @@
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:FScruiser.XF.Views"
-             x:Class="FScruiser.XF.Views.StratumFieldSetupView">
+             x:Class="FScruiser.XF.Views.StratumFieldSetupView"
+                                  Title="{Binding Stratum.StratumCode, StringFormat='Stratum {0} Fields'}">
     <views:StratumTreeFieldSetupView BindingContext="{Binding TreeFieldSetupViewModel}" />
     <views:StratumLogFieldSetupView BindingContext="{Binding LogFieldSetupViewModel}" />
 </controls:InitializableTabbedPag>
