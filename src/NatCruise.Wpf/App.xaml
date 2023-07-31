@@ -16,6 +16,9 @@
             <sys:String x:Key="const_regex_aspect_input">^\s*(360|3[0-5][0-9]|[0-2]?[0-9]{0,2})\s*$</sys:String>
             <sys:String x:Key="const_regex_int_posNeg_input">^\s*[-]?[0-9]*\s*$</sys:String>
 
+            <sys:String x:Key="const_reges_path_input">^(?:[a-zA-Z]:)(?:[\\\/][a-zA-Z0-9\.][a-zA-Z0-9-_\. ]*)+(?:[\\\/])?$</sys:String>
+            <sys:String x:Key="const_reges_path_part_input">^(?:[a-zA-Z0-9\.][a-zA-Z0-9-_\. ]*)+$</sys:String>
+
             <!-- converters -->
             <converters:NotConverter x:Key="NotConverter" />
 

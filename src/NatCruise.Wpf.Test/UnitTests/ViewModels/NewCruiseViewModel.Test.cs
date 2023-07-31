@@ -53,7 +53,7 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
             deviceInfo_moq.Setup(x => x.DeviceID).Returns(Guid.Empty.ToString());
 
             var fileDialogService_moq = new Mock<IFileDialogService>();
-            fileDialogService_moq.Setup(x => x.SelectCruiseFileDestinationAsync(It.IsAny<string>(), It.IsAny<string>()))
+            fileDialogService_moq.Setup(x => x.SelectCruiseFileDestinationAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task<string>.FromResult(cruisePath));
 
 

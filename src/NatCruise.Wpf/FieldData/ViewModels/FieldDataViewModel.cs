@@ -147,7 +147,9 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public void RefreshCuttingUnitOptions()
         {
-            CuttingUnitOptions = CuttingUnitDataservice.GetCuttingUnits();
+            CuttingUnitOptions = CuttingUnitDataservice.GetCuttingUnits()
+                .OrderBy(x => x.CuttingUnitCode)
+                .ToArray();
         }
 
         public void RefreshPlotOptions()
@@ -156,6 +158,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             if (selectedUnitCode != null)
             {
                 PlotOptions = PlotDataservice.GetPlotsByUnitCode(selectedUnitCode)
+                    .OrderBy(X => X.PlotNumber)
                     .ToArray();
             }
             else

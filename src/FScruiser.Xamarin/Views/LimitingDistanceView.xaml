@@ -295,7 +295,7 @@
                                                          BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
                                                          IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}"
                                                          Grid.Column="1">
-                                                <Label>Fixed Size Plot - FPS</Label>
+                                                <Label>Fixed Size Plot - FPS (1/x acre)</Label>
                                                 <Entry Text="{Binding FPS}"
                                                        Keyboard="Numeric"
                                                        AutomationProperties.IsInAccessibleTree="True"

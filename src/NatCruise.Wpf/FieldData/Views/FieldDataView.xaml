@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
              xmlns:Controls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
@@ -72,6 +73,11 @@
                           SelectedValue="{Binding SelectedSampleGroup, Converter={StaticResource ReplaceAnyWithNullConverter}}"
                           IsEnabled="{Binding SampleGroupOptions, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
             </Controls:LastChildWidthPanel>
+
+            <Button x:Name="_exportButton"
+                    Click="HandelExportButtonClicked"
+                    Content="{iconPack:FontAwesome Kind=FileExportSolid}"
+                    ToolTip="Export Current Tab To CSV"/>
 
         </StackPanel>
         <TabControl Grid.Row="1" x:Name="_tabControl">
