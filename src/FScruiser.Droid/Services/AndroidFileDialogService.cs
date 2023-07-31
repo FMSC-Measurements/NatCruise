@@ -18,7 +18,7 @@ namespace FScruiser.Droid.Services
             Activity = activity ?? throw new ArgumentNullException(nameof(activity));
         }
 
-        public async override Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        public async override Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null, string defaultSaleFolder = null)
         {
             var action = Intent.ActionCreateDocument;
             var intent = new Intent(action);

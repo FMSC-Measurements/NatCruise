@@ -1,4 +1,4 @@
 ﻿<resources>
-  <string name="btnMDPAutomationID_open">Open Navigation Menu Button</string>
-  <string name="btnMDPAutomationID_close">Close Navigation Menu Button</string>
+  <string name="btnMDPAutomationID_open">Open Navigation Menu</string>
+  <string name="btnMDPAutomationID_close">Close Navigation Menu</string>
 </resources>

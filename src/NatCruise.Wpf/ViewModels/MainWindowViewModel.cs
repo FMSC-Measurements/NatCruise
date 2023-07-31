@@ -40,7 +40,8 @@ namespace NatCruise.Wpf.ViewModels
             IRecentFilesDataservice recentFilesDataservice,
             Prism.Services.Dialogs.IDialogService prismDialogService,
             INatCruiseDialogService dialogService,
-            IDeviceInfoService deviceInfo)
+            IDeviceInfoService deviceInfo,
+            ILoggingService loggingService)
         {
             AppService = appService ?? throw new ArgumentNullException(nameof(appService));
             DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
@@ -51,9 +52,11 @@ namespace NatCruise.Wpf.ViewModels
             DeviceInfoService = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            Log = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
         public Version AppVersion { get; }
+        public ILoggingService Log { get; }
         protected IAppService AppService { get; }
         protected IDataserviceProvider DataserviceProvider { get; }
         protected IDesignNavigationService NavigationService { get; }
@@ -156,7 +159,22 @@ namespace NatCruise.Wpf.ViewModels
             var path = await FileDialogService.SelectCruiseFileAsync();
             if (path != null)
             {
-                await OpenFile(path);
+                try
+                {
+                    await OpenFile(path);
+                }
+                catch (FMSC.ORM.UpdateException ex)
+                {
+                    var message = "Error Updating Cruise File";
+                    Log.LogException(nameof(MainWindowViewModel), message, ex);
+                    DialogService.ShowMessageAsync(message).FireAndForget();
+                }
+                catch (Microsoft.Data.Sqlite.SqliteException ex) when (ex.Message == "SQLite Error 8: 'attempt to write a readonly database'.")
+                {
+                    var message = "Error File is Read Only";
+                    Log.LogException(nameof (MainWindowViewModel), message, ex);
+                    DialogService.ShowMessageAsync(message + "\r\nIf file opening file that located on device, copy to your computer and then try opening agian").FireAndForget();
+                }
             }
         }
 
@@ -172,6 +190,7 @@ namespace NatCruise.Wpf.ViewModels
 
             if (extention is ".crz3")
             {
+
                 var database = new CruiseDatastore_V3(filePath);
 
                 var cruiseIDs = database.QueryScalar<string>("SELECT CruiseID FROM Cruise;").ToArray();
@@ -189,6 +208,7 @@ namespace NatCruise.Wpf.ViewModels
                 RecentFilesDataservice.AddRecentFile(filePath);
                 CurrentFileName = Path.GetFileName(filePath);
                 RaisePropertyChanged(nameof(RecentFiles));
+
             }
             else if (extention is ".crz3t")
             {
@@ -209,13 +229,14 @@ namespace NatCruise.Wpf.ViewModels
                 RecentFilesDataservice.AddRecentFile(filePath);
                 CurrentFileName = Path.GetFileName(filePath);
                 RaisePropertyChanged(nameof(RecentFiles));
+
             }
             else if (extention is ".cut")
             {
                 var dir = file.DirectoryName;
                 var fName = Path.GetFileNameWithoutExtension(file.Name);
                 var convertPath = Path.Combine(dir, fName + ".crz3t");
-                if(File.Exists(convertPath))
+                if (File.Exists(convertPath))
                 {
                     if (await DialogService.AskYesNoAsync("Existing V3 template found (...\\" + file.Name + ") Would you like to overwrite and reconvert?",
                     "Convert Template File"))

@@ -15,60 +15,64 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <!-- Tree Audit Rule Edit Panel -->
             <Frame Grid.Row="0"
                    BorderColor="DarkGray"
                    BackgroundColor="{StaticResource uswds_data_table_row_alt}"
                    Margin="3"
                    Padding="3"
                    HasShadow="True">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+                <StackLayout>
+                    <Label Text="Tree Audit Rule" FontSize="Title"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70" />
-                        <RowDefinition Height="70" />
-                    </Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70" />
+                            <RowDefinition Height="70" />
+                        </Grid.RowDefinitions>
 
-                    <Grid.Resources>
-                        <!--<Style TargetType="controls:LastChildHeightLayout">
+                        <Grid.Resources>
+                            <!--<Style TargetType="controls:LastChildHeightLayout">
                             <Setter Property="HeightRequest"
                                     Value="70" />
                             <Setter  Property="LastChildHeight"
                                      Value="50" />
                         </Style>-->
-                    </Grid.Resources>
+                        </Grid.Resources>
 
-                    <StackLayout Grid.Column="0">
-                        <Label Text="Field" />
-                        <Label Text="{Binding TreeAuditRule.Field}" FontSize="Title" />
-                    </StackLayout>
+                        <StackLayout Grid.Column="0">
+                            <Label Text="Field" />
+                            <Label Text="{Binding TreeAuditRule.Field}"
+                                   FontSize="Title" />
+                        </StackLayout>
 
-                    <StackLayout Grid.Column="1">
-                        <Label Text="Min" />
-                        <Entry Text="{Binding TreeAuditRule.Min, StringFormat='{}{0:F}'}" />
-                    </StackLayout>
+                        <StackLayout Grid.Column="1">
+                            <Label Text="Min" />
+                            <Entry Text="{Binding TreeAuditRule.Min, StringFormat='{}{0:F}'}" />
+                        </StackLayout>
 
-                    <StackLayout Grid.Column="2">
-                        <Label Text="Max" />
-                        <Entry Text="{Binding TreeAuditRule.Max, StringFormat='{}{0:F}'}" />
-                    </StackLayout>
+                        <StackLayout Grid.Column="2">
+                            <Label Text="Max" />
+                            <Entry Text="{Binding TreeAuditRule.Max, StringFormat='{}{0:F}'}" />
+                        </StackLayout>
 
-                    <StackLayout Grid.Column="0"
-                                                    Grid.ColumnSpan="3"
-                                                    Grid.Row="1">
-                        <Label Text="Description" />
-                        <Entry Text="{Binding TreeAuditRule.Description}" />
-                    </StackLayout>
-                </Grid>
+                        <StackLayout Grid.Column="0"
+                                     Grid.ColumnSpan="3"
+                                     Grid.Row="1">
+                            <Label Text="Description" />
+                            <Entry Text="{Binding TreeAuditRule.Description}" />
+                        </StackLayout>
+                    </Grid>
+                </StackLayout>
             </Frame>
 
             <Frame Grid.Row="1"
                    BorderColor="DarkGray"
-                   
                    Margin="3"
                    Padding="3"
                    HasShadow="True">
@@ -81,6 +85,7 @@
                     <Label Grid.Row="0"
                            Text="Audit Rule Populations" />
 
+                    <!-- Add TARS panel -->
                     <Frame  Grid.Row="1"
                             BorderColor="DarkGray"
                             BackgroundColor="{StaticResource uswds_lgt_tan}"
@@ -96,7 +101,7 @@
                                 <ColumnDefinition />
 
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
+                                <!--<ColumnDefinition Width="Auto" />-->
                             </Grid.ColumnDefinitions>
 
                             <Grid.Resources>
@@ -118,22 +123,22 @@
                             <controls:LastChildHeightLayout Grid.Row="0"
                                                             Grid.Column="0">
                                 <Label Text="Species" />
-                                <controls:ValuePicker ItemsSource="{Binding SpeciesOptions}"
-                                                      SelectedValue="{Binding NewRuleSelector.Species}" />
+                                <controls:ValuePicker ItemsSource="{Binding SpeciesOptions, Converter={StaticResource PrependAnyConverter}}"
+                                                      SelectedValue="{Binding NewRuleSelector.SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
                             </controls:LastChildHeightLayout>
 
                             <controls:LastChildHeightLayout Grid.Row="0"
                                                             Grid.Column="1">
                                 <Label Text="Live/Dead" />
-                                <controls:ValuePicker ItemsSource="{Binding LiveDeadOptions}"
-                                                      SelectedValue="{Binding NewRuleSelector.LiveDead}" />
+                                <controls:ValuePicker ItemsSource="{Binding LiveDeadOptions, Converter={StaticResource PrependAnyConverter}}"
+                                                      SelectedValue="{Binding NewRuleSelector.LiveDead, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
                             </controls:LastChildHeightLayout>
 
                             <controls:LastChildHeightLayout Grid.Row="0"
                                                             Grid.Column="2">
                                 <Label Text="Product" />
-                                <controls:ValuePicker ItemsSource="{Binding ProductCodeOptions}"
-                                                      SelectedValue="{Binding NewRuleSelector.PrimaryProduct}" />
+                                <controls:ValuePicker ItemsSource="{Binding ProductCodeOptions, Converter={StaticResource PrependAnyConverter}}"
+                                                      SelectedValue="{Binding NewRuleSelector.PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
                             </controls:LastChildHeightLayout>
 
                             <Button Text="{Static const:FAIcons.CirclePlus}"
@@ -142,13 +147,15 @@
                                     Grid.Row="0"
                                     Grid.Column="3"
                                     Command="{Binding AddNewRuleSelectorCommand}" />
-                            <Button Text="{Static const:FAIcons.CircleMinus}"
+                            <!--<Button Text="{Static const:FAIcons.CircleMinus}"
                                     FontFamily="{Static const:Fonts.FAsolid}"
                                     Grid.Row="0"
-                                    Grid.Column="4" />
+                                    Grid.Column="4" />-->
                         </Grid>
                     </Frame>
 
+
+                    <!-- TARs list view -->
                     <CollectionView Grid.Row="2"
                                     ItemsSource="{Binding Selectors}">
                         <CollectionView.ItemTemplate>
@@ -181,19 +188,19 @@
                                         <controls:LastChildHeightLayout Grid.Row="0"
                                                                         Grid.Column="0">
                                             <Label Text="Species" />
-                                            <Label Text="{Binding Species}" />
+                                            <Label Text="{Binding SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
                                         </controls:LastChildHeightLayout>
 
                                         <controls:LastChildHeightLayout Grid.Row="0"
                                                                         Grid.Column="1">
                                             <Label Text="Live/Dead" />
-                                            <Label Text="{Binding LiveDead}" />
+                                            <Label Text="{Binding LiveDead, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
                                         </controls:LastChildHeightLayout>
 
                                         <controls:LastChildHeightLayout Grid.Row="0"
                                                                         Grid.Column="2">
                                             <Label Text="Product" />
-                                            <Label Text="{Binding PrimaryProduct}" />
+                                            <Label Text="{Binding PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
                                         </controls:LastChildHeightLayout>
 
                                         <Button Grid.Row="0"

@@ -290,12 +290,11 @@
 
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Tally By Species: " />
-                        <Switch IsToggled="{Binding SampleGroup.TallyBySubPop}"
-                                IsEnabled="False" />
+                        <Label Text="{Binding SampleGroup.TallyBySubPop, Converter={StaticResource BoolToYesNoConverter}}" />
                     </StackLayout>
 
-                    <Label Text="{Binding SampleGroup.SampleSelectorType, StringFormat='Sample Selector Type: {0}'}"
-                           IsVisible="{Binding SampleGroup.CruiseMethod, Converter={StaticResource isStrConverter}}" />
+                    <!--<Label Text="{Binding SampleGroup.SampleSelectorType, StringFormat='Sample Selector Type: {0}'}"
+                           IsVisible="{Binding SampleGroup.CruiseMethod, Converter={StaticResource isStrConverter}}" />-->
 
                 </StackLayout>
             </xct:TabViewItem>

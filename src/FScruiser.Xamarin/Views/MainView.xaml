@@ -14,40 +14,43 @@
                   IsPresented="True">
     <MasterDetailPage.Master>
         <ContentPage x:Name="MasterPage"
-                     Title="Master"
-                     Icon="ic_menu_white_18dp.png"
+                     Title="Navigation Panel"
+                     IconImageSource="{FontImage Glyph={Static const:FAIcons.Bars}, FontFamily={Static const:Fonts.FAsolid}}"
                      BackgroundColor="{StaticResource fs_brown}"
-                     AutomationProperties.Name="Navigation Panel">
+                     AutomationProperties.Name="Navigation Panel"
+                     >
             <!-- see MainView constructor for additional AutomationProperty configuration -->
             <StackLayout>
                 <!--select cruise button-->
                 <Frame BackgroundColor="White"
                        Padding="2"
                        Margin="10"
-                       CornerRadius="0"
-                       AutomationProperties.IsInAccessibleTree="True"
-                       AutomationProperties.Name="Select Cruise">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowSelectSale}"
-                                              Tapped="OnNavButtonClicked" />
-                    </Frame.GestureRecognizers>
+                       CornerRadius="5">
+                    
                     <StackLayout BackgroundColor="{StaticResource fs_brown}">
                         <StackLayout Orientation="Horizontal"
                                      VerticalOptions="FillAndExpand"
                                      HorizontalOptions="FillAndExpand"
                                      Padding="3"
-                                     BackgroundColor="{StaticResource fs_brown}">
-                            <ContentView  BackgroundColor="Orange"
-                                          HeightRequest="40">
-                                <Image Source="ic_folder_open_black_36dp.png" />
-                            </ContentView>
+                                     BackgroundColor="{StaticResource fs_brown}"
+                                     AutomationProperties.IsInAccessibleTree="True"
+                                     AutomationProperties.Name="Select Cruise">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ShowSelectSale}"
+                                                      Tapped="OnNavButtonClicked" />
+                            </StackLayout.GestureRecognizers>
+                            <Frame  BackgroundColor="Orange"
+                                          HeightRequest="40" Padding="5"
+                                    CornerRadius="5">
+                                <Image Source="{FontImage Glyph={Static const:FAIcons.FolderOpen}, FontFamily={Static const:Fonts.FAsolid}}" />
+                            </Frame>
                             <Label x:Name="_currentCruiseLable"
                                    Text="{Binding CurrentCruiseName}"
                                    d:Text="Select Cruise"
                                    TextColor="{StaticResource lightText}"
                                    VerticalOptions="Fill"
                                    HorizontalOptions="Fill"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                         </StackLayout>
                         <Picker x:Name="_cuttingUnitPicker"
                                 Title="Select Cutting Unit"
@@ -59,7 +62,7 @@
                                 IsVisible="{Binding IsCruiseSelected}"
                                 SelectedIndexChanged="_cuttingUnitPicker_SelectedIndexChanged"
                                 AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Select Cutting Unit" />
+                                AutomationProperties.Name="Select Cutting Unit"/>
                     </StackLayout>
                 </Frame>
 
@@ -75,7 +78,7 @@
                                             AutomationProperties.IsInAccessibleTree="True"
                                             AutomationProperties.Name="{Binding Heading, StringFormat='{0} Navigation'}"
                                             BackgroundColor="Transparent"
-                                            TextColor="{StaticResource lightText}" />
+                                            TextColor="{StaticResource lightText}"/>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
 
@@ -127,11 +130,13 @@
 
                 </ScrollView>
 
+                <!-- Sperator -->
                 <BoxView HeightRequest="3"
                          Margin="50,0"
                          BackgroundColor="White"
                          HorizontalOptions="Fill" />
 
+                <!-- Device Name and Version info -->
                 <StackLayout Orientation="Vertical">
                     <StackLayout.Resources>
                         <ResourceDictionary>
@@ -152,6 +157,7 @@
                            d:Text="v0.00" />
                 </StackLayout>
 
+                <!-- Settings and About buttons-->
                 <StackLayout Orientation="Horizontal"
                              VerticalOptions="End"
                              HorizontalOptions="Center">

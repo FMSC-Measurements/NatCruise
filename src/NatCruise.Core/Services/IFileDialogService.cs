@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NatCruise.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NatCruise.Services
@@ -11,7 +12,7 @@ namespace NatCruise.Services
 
         Task<string> SelectCruiseDatabaseAsync();
 
-        Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null);
+        Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null, string defaultSaleFolder = null);
 
         Task<string> SelectBackupFileDestinationAsync(string defaultDir = null, string defaultFileName = null);
 
