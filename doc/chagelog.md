@@ -1,3 +1,14 @@
+# Version 3.1.8 - July 28
+# FScruiser and NatCruise 
+## Fixes
+ - Fix issue when multiple audit rules are applyed to the same field on a given tree
+ - Fix potential issue when updating older cruise file from 3.5.4
+
+# NatCruise
+## Enhancments
+ - Add ability to export Field Data to CSV
+ - Add option to create sale folder when creating new cruise
+
 # Version 3.1.7 - June 23
 # FScruiser
 ## Fixes
