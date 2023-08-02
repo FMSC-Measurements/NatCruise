@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Xamarin.UITest;
 using Xamarin.UITest.Queries;
 
@@ -8,6 +9,8 @@ namespace FScruiser.Droid.Test
     {
         public static IApp StartApp(Platform platform)
         {
+            AppExtentions.ScreenShotFolder = Path.Combine(Path.GetTempPath(), "TestTemp", Assembly.GetExecutingAssembly().GetName().Name, "ScreenShots");
+
             if (platform == Platform.Android)
             {
                 //Environment.SetEnvironmentVariable("ANDROID_HOME", "%ProgramFiles(x86)%\\Android\\android-sdk", EnvironmentVariableTarget.Process);

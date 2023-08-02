@@ -57,7 +57,7 @@ namespace NatCruise.Test
             }
         }
 
-        public string TestTempPath => _testTempPath ??= Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName);
+        public string TestTempPath => _testTempPath ??= Path.Combine(Path.GetTempPath(), "TestTemp", Assembly.GetExecutingAssembly().GetName().Name, this.GetType().FullName);
 
         protected string GetTestTempPath()
         {

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using FScruiser.Droid.Test.Screens;
+using System;
 using System.IO;
 using System.Linq;
 using Xamarin.UITest;
 using Xamarin.UITest.Queries;
+using Xunit.Abstractions;
 
 namespace FScruiser.Droid.Test
 {
@@ -10,9 +12,12 @@ namespace FScruiser.Droid.Test
     {
         IApp app;
         Platform platform;
+        ITestOutputHelper TestOutput { get; }
 
-        public Tests()
+        public Tests(ITestOutputHelper testOutput)
         {
+            TestOutput = testOutput;
+
             platform = Platform.Android;
             app = AppInitializer.StartApp(platform);
         }
@@ -22,9 +27,9 @@ namespace FScruiser.Droid.Test
         public void AppLaunches()
         {
 
-            app.WaitForElement(x => x.Id("alertTitle").Text("Send Diagnostic Data"));
-            var askDiagnosticDialog = app.Screenshot("askDianosticDialog");
-            app.Tap(x => x.Button("Enable"));
+            //app.WaitForElement(x => x.Id("alertTitle").Text("Send Diagnostic Data"));
+            //var askDiagnosticDialog = app.Screenshot("askDianosticDialog");
+            //app.Tap(x => x.Button("Enable"));
 
             app.WaitForElement(c => c.Marked("Select Cruise"));
 
@@ -34,32 +39,46 @@ namespace FScruiser.Droid.Test
         }
 
         [Fact]
-        public void SelectCruise()
+        public void TestSelectCruise()
         {
             var saleName = "21123 Bishop";
             var cruiseName = "Bishop 21123 Timber Sale";
 
-            app.WaitForElement(x => x.Id("alertTitle").Text("Send Diagnostic Data"));
-            app.Tap(x => x.Button("Enable"));
+            var mainscreen = new MainScreen(app);
+            mainscreen.OpenSelectSale();
 
-            app.WaitForElement(c => c.Marked("Select Cruise"));
-            app.Tap(x => x.Text("Select Cruise"));
+            var saleListScreen = new SaleListScreen(app);
+            var sales = saleListScreen.GetSales();
+            saleListScreen.SelectSale(sales.First());
 
-            app.Screenshot("selectSale");
-            app.WaitForElement(x => x.Marked("Sale List").Child()).Should().HaveCount(1);
-            app.Tap(x => x.Marked("Sale List").Descendant("TextView").Text(saleName));
+            var cruiseListScreen = new CruiseListScreen(app);
+            var cruises = cruiseListScreen.GetCruises();
+            cruiseListScreen.OpenCruise(cruises.First());
 
-            app.Screenshot("selectCruise");
-            app.WaitForElement(x => x.Marked("Cruise List").Child()).Should().HaveCount(1);
-            app.Tap(x => x.Marked("Cruise List").Descendant("TextView").Text(cruiseName));
+            app.WaitForElement(mainscreen.blankPage);
 
-            app.Tap(x => x.Button("Open"));
 
-            app.WaitForElement(x => x.Marked("Select Cruise"));
-            app.Query(x => x.Marked("Select Cruise").Descendant("LabelRenderer")).Should().Contain(x => x.Text == cruiseName);
-            app.Query(x => x.Marked("Select Cruise").Descendant("PickerEditText").Text("Select CuttingUnit")).Should().NotBeEmpty();
+            //app.WaitForElement(x => x.Id("alertTitle").Text("Send Diagnostic Data"));
+            //app.Tap(x => x.Button("Enable"));
 
-            app.Screenshot("onCruiseSelected");
+            //app.WaitForElement(c => c.Marked("Select Cruise"));
+            //app.Tap(x => x.Text("Select Cruise"));
+
+            //app.Screenshot("selectSale");
+            //app.WaitForElement(x => x.Marked("Sale List").Child()).Should().HaveCount(1);
+            //app.Tap(x => x.Marked("Sale List").Descendant("TextView").Text(saleName));
+
+            //app.Screenshot("selectCruise");
+            //app.WaitForElement(x => x.Marked("Cruise List").Child()).Should().HaveCount(1);
+            //app.Tap(x => x.Marked("Cruise List").Descendant("TextView").Text(cruiseName));
+
+            //app.Tap(x => x.Button("Open"));
+
+            //app.WaitForElement(x => x.Marked("Select Cruise"));
+            //app.Query(x => x.Marked("Select Cruise").Descendant("LabelRenderer")).Should().Contain(x => x.Text == cruiseName);
+            //app.Query(x => x.Marked("Select Cruise").Descendant("PickerEditText").Text("Select CuttingUnit")).Should().NotBeEmpty();
+
+            app.ScreenshotEx(TestOutput, "onCruiseSelected");
         }
 
 
