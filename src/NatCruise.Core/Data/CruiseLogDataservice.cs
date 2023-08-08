@@ -6,7 +6,7 @@ namespace NatCruise.Data
     public enum CruiseLogLevel
     { Debug, Info, Error }
 
-    public class CruiseLogDataservice : CruiseDataserviceBase
+    public class CruiseLogDataservice : CruiseDataserviceBase, ICruiseLogDataservice
     {
         public CruiseLogDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
