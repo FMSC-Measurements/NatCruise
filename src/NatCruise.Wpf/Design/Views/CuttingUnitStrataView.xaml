@@ -35,7 +35,8 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -48,6 +49,9 @@
                         <Label Grid.Row="0"
                                Grid.Column="1"
                                Content="{Binding Unit.CuttingUnitCode}" />
+                        <Label Grid.Row="0"
+                               Grid.Column="2"
+                               Content="{Binding Unit.Description}" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
