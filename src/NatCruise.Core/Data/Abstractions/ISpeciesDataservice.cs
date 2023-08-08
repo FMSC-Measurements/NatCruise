@@ -26,6 +26,8 @@ namespace NatCruise.Data
 
         IEnumerable<string> GetSpeciesCodes();
 
+        IEnumerable<string> GetSpeciesCodes(string stratumCode, string sampleGroupCode);
+
         void AddSpeciesCode(string speciesCode);
     }
 }

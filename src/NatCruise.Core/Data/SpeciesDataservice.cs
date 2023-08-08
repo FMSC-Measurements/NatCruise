@@ -1,5 +1,6 @@
 ﻿using CruiseDAL;
 using NatCruise.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -177,6 +178,14 @@ WHERE CruiseID = @CruiseID
         public IEnumerable<string> GetSpeciesCodes()
         {
             return Database.QueryScalar<string>("SELECT SpeciesCode FROM Species WHERE CruiseID = @p1;", CruiseID).ToArray();
+        }
+
+        public IEnumerable<string> GetSpeciesCodes(string stratumCode, string sampleGroupCode)
+        {
+            if (stratumCode is null) { throw new ArgumentNullException(nameof(stratumCode)); }
+
+            return Database.QueryScalar<string>("SELECT SpeciesCode FROM Subpopulation WHERE CruiseID = @p1 AND StratumCode = @p2 AND (@p2 IS NULL OR SampleGroupCode = @p3);",
+                CruiseID, stratumCode, sampleGroupCode).ToArray();
         }
     }
 }

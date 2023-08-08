@@ -127,6 +127,7 @@
                 <controls:ValuePicker x:Name="_stratumCodeEntry"
                                       SelectedValue="{Binding StratumCode}"
                                       ItemsSource="{Binding StratumCodes}"
+                                      Title="Stratum"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Stratum">
                 </controls:ValuePicker>
@@ -144,6 +145,7 @@
                 <controls:ValuePicker x:Name="_sampleGroupEntry"
                                       SelectedValue="{Binding SampleGroupCode}"
                                       ItemsSource="{Binding SampleGroupCodes}"
+                                      Title="Sample Group"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Sample Group">
                 </controls:ValuePicker>
@@ -161,6 +163,7 @@
                 <controls:ValuePicker x:Name="_speciesEntry"
                                       SelectedValue="{Binding SpeciesCode}"
                                       ItemsSource="{Binding SpeciesOptions}"
+                                      Title="Species"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Species">
                 </controls:ValuePicker>
@@ -176,6 +179,7 @@
                        AutomationProperties.IsInAccessibleTree="False" />
                 <controls:ValuePicker x:Name="_liveDeadPicker"
                                       SelectedValue="{Binding LiveDead}"
+                                      Title="Live Dead"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Live Dead">
                     <controls:ValuePicker.ItemsSource>
@@ -211,6 +215,7 @@
                 <controls:ValuePicker x:Name="_initialsPicker"
                                       SelectedValue="{Binding Initials}"
                                       ItemsSource="{Binding Cruisers}"
+                                      Title="Initials"
                                       AutomationProperties.IsInAccessibleTree="True"
                                       AutomationProperties.Name="Initials" />
             </StackLayout>
@@ -227,6 +232,7 @@
                         HeightRequest="{StaticResource minTouchableHeight}"
                         SelectedItem="{Binding CountOrMeasure}"
                         ItemsSource="{Binding CountOrMeasureOptions}"
+                        Title="Count or Measure"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Count or Measure">
 
