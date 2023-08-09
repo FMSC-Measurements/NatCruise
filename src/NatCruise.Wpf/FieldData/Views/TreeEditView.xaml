@@ -248,7 +248,7 @@
                                             <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
                                                      mah:TextBoxHelper.SelectAllOnFocus="True"
                                                      ctrls:TextBoxHelper.RegexMask="{Binding InputRegex}"
-                                                     Text="{Binding ValueReal, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
+                                                     Text="{Binding ValueReal}" />
                                         </ctrls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
@@ -261,7 +261,7 @@
                                             <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
                                                      mah:TextBoxHelper.SelectAllOnFocus="True"
                                                      ctrls:TextBoxHelper.RegexMask="{Binding InputRegex}"
-                                                     Text="{Binding ValueInt, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
+                                                     Text="{Binding ValueInt}" />
                                         </ctrls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
@@ -274,7 +274,7 @@
                                             <TextBox mah:TextBoxHelper.Watermark="{Binding StrDefaultValue, Mode=OneTime}"
                                                      mah:TextBoxHelper.SelectAllOnFocus="True"
                                                      ctrls:TextBoxHelper.RegexMask="{Binding InputRegex}"
-                                                     Text="{Binding ValueText, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
+                                                     Text="{Binding ValueText}" />
                                         </ctrls:LastChildWidthPanel>
                                     </Border>
                                 </DataTemplate>
