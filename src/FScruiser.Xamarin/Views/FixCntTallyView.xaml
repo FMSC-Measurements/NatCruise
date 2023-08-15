@@ -79,7 +79,8 @@
                                                 <StackLayout.GestureRecognizers>
 
                                                     <TapGestureRecognizer Command="{Binding BindingContext.ProcessTallyCommand, Source={Reference Page}}"
-                                                                          CommandParameter="{Binding .}" />
+                                                                          CommandParameter="{Binding .}"
+                                                                          controls:TapGestureRecognizerHelper.EnableClickSound="True"/>
 
                                                 </StackLayout.GestureRecognizers>
 

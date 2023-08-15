@@ -37,10 +37,12 @@
                                      AutomationProperties.Name="Select Cruise">
                             <StackLayout.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ShowSelectSale}"
-                                                      Tapped="OnNavButtonClicked" />
+                                                      Tapped="OnNavButtonClicked" 
+                                                      controls:TapGestureRecognizerHelper.EnableClickSound="True"/>
                             </StackLayout.GestureRecognizers>
                             <Frame  BackgroundColor="Orange"
-                                          HeightRequest="40" Padding="5"
+                                    HeightRequest="40"
+                                    Padding="5"
                                     CornerRadius="5">
                                 <Image Source="{FontImage Glyph={Static const:FAIcons.FolderOpen}, FontFamily={Static const:Fonts.FAsolid}}" />
                             </Frame>
@@ -50,7 +52,7 @@
                                    TextColor="{StaticResource lightText}"
                                    VerticalOptions="Fill"
                                    HorizontalOptions="Fill"
-                                   VerticalTextAlignment="Center"/>
+                                   VerticalTextAlignment="Center" />
                         </StackLayout>
                         <Picker x:Name="_cuttingUnitPicker"
                                 Title="Select Cutting Unit"

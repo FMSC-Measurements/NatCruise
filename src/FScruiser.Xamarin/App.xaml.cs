@@ -1,4 +1,5 @@
 ﻿using CruiseDAL;
+using FScruiser.XF.Controls;
 using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using FScruiser.XF.Util;
@@ -64,6 +65,8 @@ namespace FScruiser.XF
             // 'Fire and Forget' async actions
             var loggingService = Container.Resolve<ILoggingService>();
             NatCruise.Util.TaskExtentions.LoggingService = loggingService;
+
+            TapGestureRecognizerHelper.SoundService = Container.Resolve<ISoundService>();
 
             this.InitializeComponent();
 

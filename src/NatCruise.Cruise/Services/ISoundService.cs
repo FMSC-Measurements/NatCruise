@@ -15,5 +15,6 @@ namespace NatCruise.Cruise.Services
         Task SignalTallyAsync(bool force = false);
 
         Task SignalInvalidActionAsync();
+        void PlayClickSound();
     }
 }

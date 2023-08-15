@@ -398,7 +398,8 @@
                                             <TapGestureRecognizer x:Name="_treeCellTappedGesture"
                                                                   Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
                                                                   CommandParameter="{Binding .}"
-                                                                  Tapped="_treeCellTappedGesture_Tapped" />
+                                                                  Tapped="_treeCellTappedGesture_Tapped"
+                                                                  local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True"/>
                                         </Grid.GestureRecognizers>
 
                                         <Label Grid.Column="0"
@@ -548,7 +549,7 @@
 
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
-                                                      CommandParameter="{Binding .}" />
+                                                      CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
 
 

@@ -157,7 +157,8 @@
                                                 <TapGestureRecognizer x:Name="_treeCellTappedGesture"
                                                                       Command="{Binding BindingContext.SelectTallyEntryCommand, Source={Reference _page}}"
                                                                       CommandParameter="{Binding .}"
-                                                                      Tapped="_treeCellTappedGesture_Tapped" />
+                                                                      Tapped="_treeCellTappedGesture_Tapped"
+                                                                      local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True"/>
                                             </Frame.GestureRecognizers>
                                             <Frame.Resources>
                                                 <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
@@ -319,7 +320,8 @@
                                             <TapGestureRecognizer x:Name="_treeCellTappedGesture"
                                                                   Command="{Binding BindingContext.SelectTallyEntryCommand, Source={Reference _page}}"
                                                                   CommandParameter="{Binding .}"
-                                                                  Tapped="_treeCellTappedGesture_Tapped" />
+                                                                  Tapped="_treeCellTappedGesture_Tapped"
+                                                                  local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True"/>
                                         </Frame.GestureRecognizers>
                                         <Frame.Resources>
                                             <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
@@ -868,7 +870,7 @@
                                        AutomationProperties.Name="Tally Population Item">
                                     <Frame.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
-                                                              CommandParameter="{Binding .}" />
+                                                              CommandParameter="{Binding .}"/>
                                     </Frame.GestureRecognizers>
 
                                     <Grid Padding="0">

@@ -119,7 +119,8 @@
                                   ColumnDefinitions="*, Auto, Auto">
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.ShowEditTreeAuditRule, Source={Reference _page}}"
-                                                          CommandParameter="{Binding .}" />
+                                                          CommandParameter="{Binding .}"
+                                                          controls:TapGestureRecognizerHelper.EnableClickSound="True"/>
                                 </Grid.GestureRecognizers>
 
                                 <Label Grid.Row="0"
