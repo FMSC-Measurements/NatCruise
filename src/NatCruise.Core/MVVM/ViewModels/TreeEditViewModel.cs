@@ -242,6 +242,7 @@ namespace NatCruise.MVVM.ViewModels
                 if (tree == null) { return; }
                 var oldValue = tree.CountOrMeasure;
                 tree.CountOrMeasure = value;
+                if (oldValue == value) { return; }
                 SaveTree();
 
                 CruiseLogDataservice.Log($"Tree.CountOrMeasure Changed |oldCM:{oldValue}|newCM:{value}|", treeID: tree.TreeID, fieldName:"CountOrMeasure", tableName:"Tree");
