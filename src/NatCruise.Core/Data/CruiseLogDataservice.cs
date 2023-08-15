@@ -76,22 +76,22 @@ namespace NatCruise.Data
     TableName,
     CreatedBy
 ) VALUES (
-    CruiseID = @CruiseID,
-    Message = @Message,
-    Level = @Level,
-    Program = @Program,
+    @CruiseID,
+    @Message,
+    @Level,
+    @Program,
 
-    CuttingUnitID = @CuttingUnitID,
-    StratumID = @StratumID,
-    SampleGroupID = @SampleGroupID,
-    PlotID = @PlotID,
-    TreeID = @TreeID,
-    LogID = @LogID,
-    TallyLedgerID = @TallyLedgerID,
+    @CuttingUnitID,
+    @StratumID,
+    @SampleGroupID,
+    @PlotID,
+    @TreeID,
+    @LogID,
+    @TallyLedgerID,
 
-    Field = @Field,
-    TableName = @TableName,
-    CreatedBy = @CreatedBy
+    @Field,
+    @TableName,
+    @CreatedBy
 );", data);
         }
     }
