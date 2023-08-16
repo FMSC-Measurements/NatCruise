@@ -39,8 +39,15 @@
 
     <local_ctrls:InitializableContentPage.ToolbarItems>
         <ToolbarItem Text="Edit"
-                     Icon="ic_edit_white_24dp.png"
-                     Command="{Binding EditPlotCommand}" />
+                     Command="{Binding EditPlotCommand}"
+                     AutomationProperties.Name="Edit Plot"
+                     AutomationProperties.IsInAccessibleTree="True">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="{Static const:Fonts.FAsolid}"
+                                 Glyph="{Static const:FAIcons.PenToSquare}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
     </local_ctrls:InitializableContentPage.ToolbarItems>
 
     <local_ctrls:InitializableContentPage.Content>
@@ -399,7 +406,7 @@
                                                                   Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
                                                                   CommandParameter="{Binding .}"
                                                                   Tapped="_treeCellTappedGesture_Tapped"
-                                                                  local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True"/>
+                                                                  local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
                                         </Grid.GestureRecognizers>
 
                                         <Label Grid.Column="0"
@@ -545,11 +552,12 @@
                         <Frame Padding="0"
                                BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}"
                                AutomationProperties.IsInAccessibleTree="True"
-                               AutomationProperties.Name="Tally Population Item">
+                               AutomationProperties.Name="Tally Population Item"
+                               CornerRadius="{StaticResource cornerRadius}">
 
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
-                                                      CommandParameter="{Binding .}"/>
+                                                      CommandParameter="{Binding .}" />
                             </Frame.GestureRecognizers>
 
 
@@ -611,7 +619,8 @@
                                            Text="{Binding LiveDead}" />
                                 </StackLayout>-->
 
-                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*, Auto">
+                            <Grid RowDefinitions="Auto,Auto,Auto"
+                                  ColumnDefinitions="*, Auto">
 
                                 <Button Grid.Row="0"
                                         Grid.Column="1"
@@ -623,7 +632,7 @@
                                         FontFamily="{Static const:Fonts.FAsolid}"
                                         BackgroundColor="Transparent"
                                         AutomationProperties.IsInAccessibleTree="True"
-                                        AutomationProperties.Name="Show Tally Info"/>
+                                        AutomationProperties.Name="Show Tally Info" />
 
                                 <local_ctrls:PopulationIndicator Grid.Row="1"
                                                                  Grid.Column="0"
@@ -648,7 +657,11 @@
                                        CornerRadius="5">
 
                                     <StackLayout Orientation="Horizontal">
-                                        <Image Source="ic_pine_tree_box_black_18dp.png"
+                                        <!--<Image Source="{Static const:FAIcons.Tree}"
+                                               AutomationProperties.IsInAccessibleTree="False" />-->
+                                        <Label Text="{Static const:FAIcons.Tree}"
+                                               FontFamily="{Static const:Fonts.FAsolid}"
+                                               VerticalTextAlignment="Center"
                                                AutomationProperties.IsInAccessibleTree="False" />
                                         <Label Text="{Binding PlotTreeCount}"
                                                HorizontalTextAlignment="Center"
@@ -673,7 +686,123 @@
             </CollectionView>
 
             <!-- stratum selection -->
-            <CollectionView Grid.Row="2"
+            <Grid Grid.Row="2"
+                  Margin="2,1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <!--<Style TargetType="Frame">
+                            <Setter Property="Padding"
+                                    Value="7.0" />
+                            <Setter Property="HeightRequest"
+                                    Value="{Static const:UI.MinTouchableHeight}" />
+                            <Setter Property="WidthRequest"
+                                    Value="70" />
+                            <Setter Property="BackgroundColor"
+                                    Value="{StaticResource primary_500}" />
+                            <Setter Property="CornerRadius"
+                                    Value="{StaticResource cornerRadius}" />
+                        </Style>
+                        <Style TargetType="StackLayout">
+                            <Setter Property="VerticalOptions"
+                                    Value="Center" />
+                        </Style>-->
+
+                        <ControlTemplate x:Key="thing">
+                            <Frame Padding="7,0"
+                                   HeightRequest="{Static const:UI.MinTouchableHeight}"
+                                   WidthRequest="70"
+                                   BackgroundColor="{StaticResource primary_500}"
+                                   CornerRadius="{StaticResource cornerRadius}">
+                                <ContentPresenter VerticalOptions="Center" />
+                            </Frame>
+                        </ControlTemplate>
+                    </ResourceDictionary>
+                </Grid.Resources>
+
+                <ScrollView Grid.Column="0"
+                            Orientation="Horizontal">
+                    <StackLayout BindableLayout.ItemsSource="{Binding PlotStrata}"
+                                 Orientation="Horizontal">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <ContentView ControlTemplate="{StaticResource thing}">
+                                    <ContentView.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.SetStratumFilterCommand, Source={Reference _page}}"
+                                                              CommandParameter="{Binding .}"
+                                                              local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                                    </ContentView.GestureRecognizers>
+                                    <StackLayout Orientation="Horizontal">
+
+                                        <Label Grid.Column="0"
+                                               Text="{Binding StratumCode}"
+                                               TextColor="{StaticResource white_90}"
+                                               HorizontalOptions="CenterAndExpand" />
+                                        <Frame Grid.Column="1"
+                                               Padding="0"
+                                               BackgroundColor="{StaticResource black_70}"
+                                               IsVisible="{Binding IsEmpty}">
+                                            <Label Text="NULL"
+                                                   TextColor="{StaticResource lightText}" />
+                                        </Frame>
+
+                                    </StackLayout>
+                                </ContentView>
+                                <!--<Frame>
+                                
+                                <Grid ColumnDefinitions="Auto, Auto">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.SetStratumFilterCommand, Source={Reference _page}}"
+                                                              CommandParameter="{Binding .}"
+                                                              local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                                    </Grid.GestureRecognizers>
+                                    <Label Grid.Column="0"
+                                           Text="{Binding StratumCode}"
+                                           TextColor="{StaticResource white_90}" />
+                                    <Label Grid.Column="1"
+                                           Text="NULL"
+                                           TextColor="{StaticResource accentText}"
+                                           IsVisible="{Binding IsEmpty}" />
+                                    </Grid>
+                            </Frame>-->
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </ScrollView>
+
+
+                <ContentView Grid.Column="1"
+                             ControlTemplate="{StaticResource thing}">
+                    <ContentView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SetStratumFilterCommand}"
+                                              CommandParameter="{x:Null}"
+                                              local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                    </ContentView.GestureRecognizers>
+                    <Label Text="All"
+                           HorizontalTextAlignment="Center"
+                           TextColor="{StaticResource white_90}" />
+                </ContentView>
+                <!--<Frame Grid.Column="1">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SetStratumFilterCommand}"
+                                              CommandParameter="{x:Null}"
+                                              local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                    </Frame.GestureRecognizers>
+                    <Label Text="All"
+                           HorizontalTextAlignment="Center"
+                           TextColor="{StaticResource white_90}"
+                           VerticalOptions="Center" />
+                </Frame>-->
+            </Grid>
+
+            <!--<CollectionView Grid.Row="2"
                             x:Name="StratumFilterListView"
                             VerticalOptions="End"
                             HeightRequest="{StaticResource minTouchableHeight}"
@@ -681,7 +810,6 @@
                             SelectedItem="{Binding StratumFilter}"
                             SelectionMode="Single"
                             ItemsSource="{Binding StrataFilterOptions}"
-                            IsVisible="{Binding StrataFilterOptions, Converter={StaticResource listIsNotNullOrEmptyConverter}}"
                             AutomationProperties.IsInAccessibleTree="True"
                             AutomationProperties.Name="Stratum Filter List">
                 <CollectionView.ItemsLayout>
@@ -705,7 +833,7 @@
                     </DataTemplate>
 
                 </CollectionView.ItemTemplate>
-            </CollectionView>
+            </CollectionView>-->
 
         </Grid>
 
