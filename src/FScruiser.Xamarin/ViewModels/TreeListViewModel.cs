@@ -1,6 +1,7 @@
 ﻿using CruiseDAL.Schema;
 using FScruiser.XF.Services;
 using NatCruise;
+using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;

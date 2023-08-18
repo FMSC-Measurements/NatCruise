@@ -1,7 +1,7 @@
-﻿using NatCruise.Data;
+﻿using NatCruise.Async;
+using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
-using NatCruise.Util;
 using Prism.Commands;
 using Prism.Common;
 using System;

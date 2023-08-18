@@ -2,6 +2,7 @@
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using NatCruise.Async;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
@@ -157,7 +158,7 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterInstance<ILoggingService>(loggingService);
             // wire logging service up to our task extensions. this will pride logging
             // for our FireAndForget async tasks.
-            NatCruise.Util.TaskExtentions.LoggingService = loggingService;
+            TaskExtentions.LoggingService = loggingService;
 
             InitializeFileAssocationService(containerRegistry, loggingService);
 

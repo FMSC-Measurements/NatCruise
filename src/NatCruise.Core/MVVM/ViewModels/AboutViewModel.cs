@@ -1,6 +1,6 @@
-﻿using NatCruise.Core.Services;
+﻿using NatCruise.Async;
+using NatCruise.Core.Services;
 using NatCruise.Navigation;
-using NatCruise.Util;
 using Prism.Commands;
 using System;
 using System.Reflection;

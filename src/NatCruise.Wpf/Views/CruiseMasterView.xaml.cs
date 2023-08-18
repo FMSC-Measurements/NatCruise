@@ -5,7 +5,7 @@ using Prism.Regions;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using NatCruise.Util;
+using NatCruise.Async;
 
 namespace NatCruise.Wpf.Views
 {

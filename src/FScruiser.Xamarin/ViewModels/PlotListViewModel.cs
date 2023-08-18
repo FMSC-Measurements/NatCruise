@@ -1,12 +1,12 @@
 ﻿using FScruiser.XF.Services;
 using NatCruise;
+using NatCruise.Async;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
-using NatCruise.Util;
 using Prism.Common;
 using Prism.Services;
 using System;

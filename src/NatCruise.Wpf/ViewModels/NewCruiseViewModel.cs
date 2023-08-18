@@ -1,13 +1,13 @@
 ﻿using CruiseDAL;
 using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Models;
+using NatCruise.Async;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Services;
-using NatCruise.Util;
 using NatCruise.Wpf.Validation;
 using Prism.Commands;
 using Prism.Services.Dialogs;

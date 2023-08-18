@@ -1,11 +1,11 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise.Async;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
-using NatCruise.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
