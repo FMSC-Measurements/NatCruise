@@ -135,16 +135,16 @@ namespace NatCruise.MVVM.ViewModels
                 {
                     OnTreeChanged(value);
                     SetProperty(ref _tree, value);
-                    RaisePropertyChanged(nameof(CountOrMeasure));
-                    RaisePropertyChanged(nameof(TreeNumber));
-                    RaisePropertyChanged(nameof(StratumCode));
-                    RaisePropertyChanged(nameof(SampleGroupCode));
+                    OnPropertyChanged(nameof(CountOrMeasure));
+                    OnPropertyChanged(nameof(TreeNumber));
+                    OnPropertyChanged(nameof(StratumCode));
+                    OnPropertyChanged(nameof(SampleGroupCode));
                     //RaisePropertyChanged(nameof(SubPopulation));
-                    RaisePropertyChanged(nameof(SpeciesCode));
-                    RaisePropertyChanged(nameof(LiveDead));
-                    RaisePropertyChanged(nameof(Remarks));
-                    RaisePropertyChanged(nameof(Initials));
-                    RaisePropertyChanged(nameof(TreeCount));
+                    OnPropertyChanged(nameof(SpeciesCode));
+                    OnPropertyChanged(nameof(LiveDead));
+                    OnPropertyChanged(nameof(Remarks));
+                    OnPropertyChanged(nameof(Initials));
+                    OnPropertyChanged(nameof(TreeCount));
                 }
                 finally
                 {
@@ -227,7 +227,7 @@ namespace NatCruise.MVVM.ViewModels
                 var tree = Tree;
                 if (tree == null) { return; }
                 TreeDataservice.UpdateTreeCount(tree.TreeID, value);
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -248,7 +248,7 @@ namespace NatCruise.MVVM.ViewModels
 
                 CruiseLogDataservice.Log($"Tree.CountOrMeasure Changed |oldCM:{oldValue}|newCM:{value}|", treeID: tree.TreeID, fieldName:"CountOrMeasure", tableName:"Tree");
                 RefreshErrorsAndWarnings();
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -279,7 +279,7 @@ namespace NatCruise.MVVM.ViewModels
                     Tree.TreeNumber = value;
                     OnTreeNumberChanged(oldValue, value);
                 }
-                RaisePropertyChanged(nameof(TreeNumber));
+                OnPropertyChanged(nameof(TreeNumber));
             }
         }
 
@@ -337,17 +337,17 @@ namespace NatCruise.MVVM.ViewModels
                 if (String.IsNullOrEmpty(newSg))
                 {
                     // cancel stratum change if no valid SG selected
-                    RaisePropertyChanged(nameof(StratumCode));
+                    OnPropertyChanged(nameof(StratumCode));
                     return;
                 }
                 tree.SampleGroupCode = newSg;
-                RaisePropertyChanged(nameof(SampleGroupCode));
+                OnPropertyChanged(nameof(SampleGroupCode));
 
                 var newSp = await CoerceSpeciesAsyn(newValue, newSg);
                 if (!String.IsNullOrEmpty(newSp))
                 {
                     tree.SpeciesCode = newSp;
-                    RaisePropertyChanged(nameof(SpeciesCode));
+                    OnPropertyChanged(nameof(SpeciesCode));
                 }
                 
                 tree.StratumCode = newValue;
@@ -365,7 +365,7 @@ namespace NatCruise.MVVM.ViewModels
                     tableName: "Tree");
             }
 
-            RaisePropertyChanged(nameof(StratumCode));
+            OnPropertyChanged(nameof(StratumCode));
         }
 
         #endregion Stratum
@@ -408,7 +408,7 @@ namespace NatCruise.MVVM.ViewModels
                 if (!String.IsNullOrEmpty(newSp))
                 {
                     tree.SpeciesCode = newSp;
-                    RaisePropertyChanged(nameof(SpeciesCode));
+                    OnPropertyChanged(nameof(SpeciesCode));
                 }
                 
                 tree.SampleGroupCode = newValue;
@@ -422,7 +422,7 @@ namespace NatCruise.MVVM.ViewModels
                     fieldName: "SampleGroupCode",
                     tableName: "Tree");
             }
-            RaisePropertyChanged(nameof(StratumCode));
+            OnPropertyChanged(nameof(StratumCode));
         }
 
         public async Task<string> CoerceSampleGroupAsync(string stratumCode)
@@ -461,7 +461,7 @@ namespace NatCruise.MVVM.ViewModels
 
                 SaveTree(tree);
                 RefreshErrorsAndWarnings(tree);
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -497,7 +497,7 @@ namespace NatCruise.MVVM.ViewModels
 
                 SaveTree(tree);
                 RefreshErrorsAndWarnings(tree);
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

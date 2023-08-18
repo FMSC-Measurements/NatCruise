@@ -80,18 +80,18 @@ namespace NatCruise.Design.ViewModels
                     CuttingUnits = CuttingUnitDataservice.GetCuttingUnitCodesByStratum(stratumCode);
                 }
                 ValidateAll(value);
-                RaisePropertyChanged();
-                RaisePropertyChanged(nameof(StratumCode));
-                RaisePropertyChanged(nameof(Description));
-                RaisePropertyChanged(nameof(Method));
-                RaisePropertyChanged(nameof(BasalAreaFactor));
-                RaisePropertyChanged(nameof(FixedPlotSize));
-                RaisePropertyChanged(nameof(KZ3PPNT));
-                RaisePropertyChanged(nameof(SamplingFrequency));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(StratumCode));
+                OnPropertyChanged(nameof(Description));
+                OnPropertyChanged(nameof(Method));
+                OnPropertyChanged(nameof(BasalAreaFactor));
+                OnPropertyChanged(nameof(FixedPlotSize));
+                OnPropertyChanged(nameof(KZ3PPNT));
+                OnPropertyChanged(nameof(SamplingFrequency));
                 //RaisePropertyChanged(nameof(HotKey));
                 //RaisePropertyChanged(nameof(FBSCode));
-                RaisePropertyChanged(nameof(YieldComponent));
-                RaisePropertyChanged(nameof(FixCNTField));
+                OnPropertyChanged(nameof(YieldComponent));
+                OnPropertyChanged(nameof(FixCNTField));
 
                 NotifyCruiseMethodChanged();
             }
@@ -99,11 +99,11 @@ namespace NatCruise.Design.ViewModels
 
         protected void NotifyCruiseMethodChanged()
         {
-            RaisePropertyChanged(nameof(IsPlot));
-            RaisePropertyChanged(nameof(IsFixedSizePlot));
-            RaisePropertyChanged(nameof(IsVariableRariousePlot));
-            RaisePropertyChanged(nameof(Is3PPNT));
-            RaisePropertyChanged(nameof(IsFixCNT));
+            OnPropertyChanged(nameof(IsPlot));
+            OnPropertyChanged(nameof(IsFixedSizePlot));
+            OnPropertyChanged(nameof(IsVariableRariousePlot));
+            OnPropertyChanged(nameof(Is3PPNT));
+            OnPropertyChanged(nameof(IsFixCNT));
         }
 
         public string StratumCode
@@ -122,7 +122,7 @@ namespace NatCruise.Design.ViewModels
                 catch (FMSC.ORM.UniqueConstraintException)
                 {
                     Stratum.StratumCode = origValue;
-                    RaisePropertyChanged(nameof(StratumCode));
+                    OnPropertyChanged(nameof(StratumCode));
                     //DialogService.ShowNotification("Stratum Code Already Exists");
                 }
             }

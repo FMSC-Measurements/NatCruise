@@ -38,13 +38,13 @@ namespace FScruiser.XF.ViewModels
         public void AddCruiser(string cruiser)
         {
             CruisersDataservice.AddCruiser(cruiser);
-            RaisePropertyChanged(nameof(Cruisers));
+            OnPropertyChanged(nameof(Cruisers));
         }
 
         public void RemoveCruiser(string cruiser)
         {
             CruisersDataservice.RemoveCruiser(cruiser);
-            RaisePropertyChanged(nameof(Cruisers));
+            OnPropertyChanged(nameof(Cruisers));
         }
     }
 }

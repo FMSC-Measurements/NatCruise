@@ -43,7 +43,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _treeFields, value);
-                RaisePropertyChanged(nameof(AvalibleTreeFields));
+                OnPropertyChanged(nameof(AvalibleTreeFields));
             }
         }
 
@@ -96,10 +96,10 @@ namespace NatCruise.Design.ViewModels
                     IsDefaultBoolean = false;
                     IsDefaultText = false;
                 }
-                RaisePropertyChanged(nameof(IsDefaultBoolean));
-                RaisePropertyChanged(nameof(IsDefaultInt));
-                RaisePropertyChanged(nameof(IsDefaultReal));
-                RaisePropertyChanged(nameof(IsDefaultText));
+                OnPropertyChanged(nameof(IsDefaultBoolean));
+                OnPropertyChanged(nameof(IsDefaultInt));
+                OnPropertyChanged(nameof(IsDefaultReal));
+                OnPropertyChanged(nameof(IsDefaultText));
 
             }
         }
@@ -131,7 +131,7 @@ namespace NatCruise.Design.ViewModels
             {
                 TreeFieldSetups = new ObservableCollection<StratumTemplateTreeFieldSetup>();
             }
-            RaisePropertyChanged(nameof(AvalibleTreeFields));
+            OnPropertyChanged(nameof(AvalibleTreeFields));
         }
 
         private void SelectedTreeFieldSetup_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -154,7 +154,7 @@ namespace NatCruise.Design.ViewModels
 
             StratumTemplateDataservice.UpsertStratumTemplateTreeFieldSetup(newtfsd);
             TreeFieldSetups.Add(newtfsd);
-            RaisePropertyChanged(nameof(AvalibleTreeFields));
+            OnPropertyChanged(nameof(AvalibleTreeFields));
         }
 
         public void RemoveTreeFieldSetup(StratumTemplateTreeFieldSetup tfsd)

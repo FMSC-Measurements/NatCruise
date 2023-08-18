@@ -33,7 +33,7 @@ namespace NatCruise.MVVM.ViewModels
             {
                 _stratum = value;
                 OnStratumChanged(value);
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

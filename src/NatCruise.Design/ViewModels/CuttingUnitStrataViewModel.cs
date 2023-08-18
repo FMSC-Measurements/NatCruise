@@ -110,7 +110,7 @@ namespace NatCruise.Design.ViewModels
                 .Select(x => new CuttingUnitItem(x, this))
                 .ToObservableCollection();
 
-            RaisePropertyChanged(nameof(AllUnits));
+            OnPropertyChanged(nameof(AllUnits));
         }
 
         public void AddUnit(string unitCode)

@@ -46,7 +46,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
                 OnPlotChanged(value);
                 SetProperty(ref _plot, value);
-                RaisePropertyChanged(nameof(PlotNumber));
+                OnPropertyChanged(nameof(PlotNumber));
 
                 if (value != null)
                 {
@@ -106,7 +106,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
             PlotDataservice.UpdatePlotNumber(Plot.PlotID, plotNumber);
 
-            RaisePropertyChanged(nameof(PlotNumber));
+            OnPropertyChanged(nameof(PlotNumber));
         }
 
         private bool OnPlotNumberChanging(int oldValue, int newValue)
@@ -131,7 +131,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             else
             {
                 // refresh displayed value
-                RaisePropertyChanged(nameof(PlotNumber));
+                OnPropertyChanged(nameof(PlotNumber));
             }
         }
 
@@ -155,7 +155,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
 
             // refresh displayed value
-            RaisePropertyChanged(nameof(PlotNumber));
+            OnPropertyChanged(nameof(PlotNumber));
         }
 
         #endregion PlotNumber

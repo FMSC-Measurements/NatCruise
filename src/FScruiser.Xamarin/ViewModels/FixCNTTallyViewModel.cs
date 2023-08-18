@@ -146,7 +146,7 @@ namespace FScruiser.XF.ViewModels
             var unit = Unit = parameters.GetValue<string>(NavParams.UNIT);
             var plotNumber = PlotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
-            RaisePropertyChanged(nameof(Title));
+            OnPropertyChanged(nameof(Title));
 
             //read fixcount tally populations
             var tallyPopulations = FixCNTDataservice.GetFixCNTTallyPopulations(stratumCode).ToArray();
@@ -171,7 +171,7 @@ namespace FScruiser.XF.ViewModels
             }
 
             TallyPopulations = tallyPopulations;
-            RaisePropertyChanged(nameof(TallyPopulations));
+            OnPropertyChanged(nameof(TallyPopulations));
         }
     }
 }

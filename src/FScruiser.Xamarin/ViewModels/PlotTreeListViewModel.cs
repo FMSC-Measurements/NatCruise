@@ -54,7 +54,7 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _cuttingUnit, value);
-                RaisePropertyChanged(nameof(Title));
+                OnPropertyChanged(nameof(Title));
             }
         }
 
@@ -84,7 +84,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _plotFilter, value);
-                RaisePropertyChanged(nameof(Trees));
+                OnPropertyChanged(nameof(Trees));
             }
         }
 
@@ -94,7 +94,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _onlyShowTreesWithErrorsOrWarnings, value);
-                RaisePropertyChanged(nameof(Trees));
+                OnPropertyChanged(nameof(Trees));
             }
         }
 

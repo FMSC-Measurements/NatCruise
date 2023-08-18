@@ -216,8 +216,8 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _cuttingUnit, value);
-                RaisePropertyChanged(nameof(UnitCode));
-                RaisePropertyChanged(nameof(Title));
+                OnPropertyChanged(nameof(UnitCode));
+                OnPropertyChanged(nameof(Title));
             }
         }
 
@@ -231,7 +231,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _tallyPopulations, value);
-                RaisePropertyChanged(nameof(TalliesFiltered));
+                OnPropertyChanged(nameof(TalliesFiltered));
             }
         }
 
@@ -265,7 +265,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _stratumFilter, value);
-                RaisePropertyChanged(nameof(TalliesFiltered));
+                OnPropertyChanged(nameof(TalliesFiltered));
             }
         }
 
@@ -370,10 +370,8 @@ namespace FScruiser.XF.ViewModels
                 Plot = plot;
                 PlotNumber = plot.PlotNumber;
 
-                RaisePropertyChanged(nameof(Title));
-            }
-
-            );
+                OnPropertyChanged(nameof(Title));
+            });
         }
 
 

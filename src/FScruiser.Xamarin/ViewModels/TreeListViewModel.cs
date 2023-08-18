@@ -42,7 +42,7 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _allTrees, value);
-                RaisePropertyChanged(nameof(Trees));
+                OnPropertyChanged(nameof(Trees));
             }
         }
 
@@ -52,7 +52,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _onlyShowTreesWithErrorsOrWarnings, value);
-                RaisePropertyChanged(nameof(Trees));
+                OnPropertyChanged(nameof(Trees));
             }
         }
 
@@ -82,8 +82,8 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _cuttingUnit, value);
-                RaisePropertyChanged(nameof(UnitCode));
-                RaisePropertyChanged(nameof(Title));
+                OnPropertyChanged(nameof(UnitCode));
+                OnPropertyChanged(nameof(Title));
             }
         }
 
@@ -211,7 +211,7 @@ namespace FScruiser.XF.ViewModels
         {
             //reset OnlyShowTreesWithErrorsOrWarnings value to ensure new tree is shown
             OnlyShowTreesWithErrorsOrWarnings = false;
-            RaisePropertyChanged(nameof(Trees));
+            OnPropertyChanged(nameof(Trees));
 
             TreeAdded?.Invoke(this, e);
         }
@@ -231,7 +231,7 @@ namespace FScruiser.XF.ViewModels
             {
                 TreeDataservice.DeleteTree(tree.TreeID);
                 AllTrees.Remove(tree);
-                RaisePropertyChanged(nameof(Trees));
+                OnPropertyChanged(nameof(Trees));
             }
         }
 

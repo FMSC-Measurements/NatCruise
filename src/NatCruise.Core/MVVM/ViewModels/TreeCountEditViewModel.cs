@@ -78,9 +78,9 @@ namespace NatCruise.MVVM.ViewModels
             {
                 SetProperty(ref _tallyPopulation, value);
                 OnTallyPopulationChanged(value);
-                RaisePropertyChanged(nameof(StratumCode));
-                RaisePropertyChanged(nameof(TallyPopulationDescription));
-                RaisePropertyChanged(nameof(TreeCount));
+                OnPropertyChanged(nameof(StratumCode));
+                OnPropertyChanged(nameof(TallyPopulationDescription));
+                OnPropertyChanged(nameof(TreeCount));
             }
         }
 
@@ -112,7 +112,7 @@ namespace NatCruise.MVVM.ViewModels
             set
             {
                 SetProperty(ref _treeCountDelta, value);
-                RaisePropertyChanged(nameof(AdjustedTreeCount));
+                OnPropertyChanged(nameof(AdjustedTreeCount));
             }
         }
 
@@ -122,7 +122,7 @@ namespace NatCruise.MVVM.ViewModels
             set
             {
                 SetProperty(ref _kPIDelta, value);
-                RaisePropertyChanged(nameof(AdjustedSumKPI));
+                OnPropertyChanged(nameof(AdjustedSumKPI));
             }
         }
 
@@ -143,9 +143,9 @@ namespace NatCruise.MVVM.ViewModels
             set
             {
                 SetProperty(ref _cruiseMethod, value);
-                RaisePropertyChanged(nameof(IsSTR));
-                RaisePropertyChanged(nameof(Is3P));
-                RaisePropertyChanged(nameof(CanEditTreeCount));
+                OnPropertyChanged(nameof(IsSTR));
+                OnPropertyChanged(nameof(Is3P));
+                OnPropertyChanged(nameof(CanEditTreeCount));
             }
         }
 

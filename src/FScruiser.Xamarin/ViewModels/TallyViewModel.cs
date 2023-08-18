@@ -53,8 +53,8 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _tallies, value);
-                RaisePropertyChanged(nameof(TalliesFiltered));
-                RaisePropertyChanged(nameof(StrataFilterOptions));
+                OnPropertyChanged(nameof(TalliesFiltered));
+                OnPropertyChanged(nameof(StrataFilterOptions));
             }
         }
 
@@ -70,7 +70,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _selectedStratumCode, value);
-                RaisePropertyChanged(nameof(TalliesFiltered));
+                OnPropertyChanged(nameof(TalliesFiltered));
             }
         }
 
@@ -102,7 +102,7 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _cuttingUnit, value);
-                RaisePropertyChanged(nameof(UnitCode));
+                OnPropertyChanged(nameof(UnitCode));
             }
         }
 
@@ -357,7 +357,7 @@ namespace FScruiser.XF.ViewModels
 
             // refresh selected tree in case coming back from TreeEdit page
 
-            RaisePropertyChanged(nameof(SelectedTreeViewModel));
+            OnPropertyChanged(nameof(SelectedTreeViewModel));
         }
 
         private Task ShowTallyMenu(TallyPopulationEx tp)

@@ -34,8 +34,8 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _cuttingUnit, value);
-                RaisePropertyChanged(nameof(UnitCode));
-                RaisePropertyChanged(nameof(Title));
+                OnPropertyChanged(nameof(UnitCode));
+                OnPropertyChanged(nameof(Title));
             }
         }
 
@@ -98,7 +98,7 @@ namespace FScruiser.XF.ViewModels
             var unitCode = UnitCode;
 
             Plots = PlotDataservice.GetPlotsByUnitCode(UnitCode).ToArray();
-            RaisePropertyChanged(nameof(Plots));
+            OnPropertyChanged(nameof(Plots));
 
             HasFixCNTStrata = CuttingUnitDataservice.GetCuttingUnitStrataSummary(UnitCode)
                 .Methods

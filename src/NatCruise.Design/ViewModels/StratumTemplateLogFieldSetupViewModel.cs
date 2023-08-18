@@ -51,7 +51,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _fieldSetup, value);
-                RaisePropertyChanged(nameof(AvalibleLogFields));
+                OnPropertyChanged(nameof(AvalibleLogFields));
             }
         }
 
@@ -61,7 +61,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _logFields, value);
-                RaisePropertyChanged(nameof(AvalibleLogFields));
+                OnPropertyChanged(nameof(AvalibleLogFields));
             }
         }
 
@@ -110,7 +110,7 @@ namespace NatCruise.Design.ViewModels
 
             StratumTemplateDataservice.UpsertStratumTemplateLogFieldSetup(newstlfs);
             FieldSetups.Add(newstlfs);
-            RaisePropertyChanged(nameof(AvalibleLogFields));
+            OnPropertyChanged(nameof(AvalibleLogFields));
 
         }
 
@@ -164,7 +164,7 @@ namespace NatCruise.Design.ViewModels
             {
                 FieldSetups = new ObservableCollection<StratumTemplateLogFieldSetup>();
             }
-            RaisePropertyChanged(nameof(AvalibleLogFields));
+            OnPropertyChanged(nameof(AvalibleLogFields));
         }
     }
 }

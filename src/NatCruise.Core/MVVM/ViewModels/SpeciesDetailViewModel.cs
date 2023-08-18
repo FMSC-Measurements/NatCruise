@@ -74,7 +74,7 @@ namespace NatCruise.MVVM.ViewModels
 
                 RefreshContractSpecies();
                 RefreshAvalableProductOptions();
-                RaisePropertyChanged();
+                OnPropertyChanged();
 
                 void _species_PropertyChanged(object sender, PropertyChangedEventArgs e)
                 {

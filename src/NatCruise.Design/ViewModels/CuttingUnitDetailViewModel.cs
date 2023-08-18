@@ -38,13 +38,13 @@ namespace NatCruise.Design.ViewModels
                 SetProperty(ref _cuttingUnit, value);
                 ValidateAll(value);
 
-                RaisePropertyChanged(nameof(CuttingUnitCode));
-                RaisePropertyChanged(nameof(Area));
-                RaisePropertyChanged(nameof(Description));
-                RaisePropertyChanged(nameof(LoggingMethod));
-                RaisePropertyChanged(nameof(PaymentUnit));
-                RaisePropertyChanged(nameof(Remarks));
-                RaisePropertyChanged(nameof(Rx));
+                OnPropertyChanged(nameof(CuttingUnitCode));
+                OnPropertyChanged(nameof(Area));
+                OnPropertyChanged(nameof(Description));
+                OnPropertyChanged(nameof(LoggingMethod));
+                OnPropertyChanged(nameof(PaymentUnit));
+                OnPropertyChanged(nameof(Remarks));
+                OnPropertyChanged(nameof(Rx));
             }
         }
 
@@ -76,7 +76,7 @@ namespace NatCruise.Design.ViewModels
                 catch (FMSC.ORM.UniqueConstraintException)
                 {
                     CuttingUnit.CuttingUnitCode = origValue;
-                    RaisePropertyChanged(nameof(CuttingUnitCode));
+                    OnPropertyChanged(nameof(CuttingUnitCode));
                     //DialogService.ShowNotification("Unit Code Already Exists");
                 }
             }

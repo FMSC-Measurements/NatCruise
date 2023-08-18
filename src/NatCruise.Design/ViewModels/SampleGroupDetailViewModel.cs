@@ -47,27 +47,27 @@ namespace NatCruise.Design.ViewModels
                 //OnSampleGroupChanged(value);
                 ValidateAll(value);
 
-                RaisePropertyChanged(nameof(SampleGroupCode));
-                RaisePropertyChanged(nameof(Description));
-                RaisePropertyChanged(nameof(CutLeave));
-                RaisePropertyChanged(nameof(UOM));
-                RaisePropertyChanged(nameof(PrimaryProduct));
-                RaisePropertyChanged(nameof(SecondaryProduct));
-                RaisePropertyChanged(nameof(BiomassProduct));
-                RaisePropertyChanged(nameof(DefaultLiveDead));
-                RaisePropertyChanged(nameof(SamplingFrequency));
-                RaisePropertyChanged(nameof(InsuranceFrequency));
-                RaisePropertyChanged(nameof(KZ));
-                RaisePropertyChanged(nameof(BigBAF));
-                RaisePropertyChanged(nameof(TallyBySubPop));
-                RaisePropertyChanged(nameof(UseExternalSampler));
-                RaisePropertyChanged(nameof(MinKPI));
-                RaisePropertyChanged(nameof(MaxKPI));
-                RaisePropertyChanged(nameof(SmallFPS));
-                RaisePropertyChanged(nameof(SampleSelectorType));
+                OnPropertyChanged(nameof(SampleGroupCode));
+                OnPropertyChanged(nameof(Description));
+                OnPropertyChanged(nameof(CutLeave));
+                OnPropertyChanged(nameof(UOM));
+                OnPropertyChanged(nameof(PrimaryProduct));
+                OnPropertyChanged(nameof(SecondaryProduct));
+                OnPropertyChanged(nameof(BiomassProduct));
+                OnPropertyChanged(nameof(DefaultLiveDead));
+                OnPropertyChanged(nameof(SamplingFrequency));
+                OnPropertyChanged(nameof(InsuranceFrequency));
+                OnPropertyChanged(nameof(KZ));
+                OnPropertyChanged(nameof(BigBAF));
+                OnPropertyChanged(nameof(TallyBySubPop));
+                OnPropertyChanged(nameof(UseExternalSampler));
+                OnPropertyChanged(nameof(MinKPI));
+                OnPropertyChanged(nameof(MaxKPI));
+                OnPropertyChanged(nameof(SmallFPS));
+                OnPropertyChanged(nameof(SampleSelectorType));
 
-                RaisePropertyChanged(nameof(CruiseMethod));
-                RaisePropertyChanged(nameof(DefaultSampleSelectorType));
+                OnPropertyChanged(nameof(CruiseMethod));
+                OnPropertyChanged(nameof(DefaultSampleSelectorType));
             }
         }
 
@@ -93,7 +93,7 @@ namespace NatCruise.Design.ViewModels
                 catch (FMSC.ORM.UniqueConstraintException)
                 {
                     SampleGroup.SampleGroupCode = origValue;
-                    RaisePropertyChanged(nameof(SampleGroupCode));
+                    OnPropertyChanged(nameof(SampleGroupCode));
                     //DialogService.ShowNotification("Unit Code Already Exists");
                 }
             }

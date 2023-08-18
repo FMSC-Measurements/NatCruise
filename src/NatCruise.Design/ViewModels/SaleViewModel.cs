@@ -31,14 +31,14 @@ namespace NatCruise.Design.ViewModels
                 _sale = value;
 
                 ValidateAll(value);
-                RaisePropertyChanged(nameof(Sale));
-                RaisePropertyChanged(nameof(SaleNumber));
-                RaisePropertyChanged(nameof(Name));
-                RaisePropertyChanged(nameof(Region));
-                RaisePropertyChanged(nameof(Forest));
-                RaisePropertyChanged(nameof(District));
-                RaisePropertyChanged(nameof(CalendarYear));
-                RaisePropertyChanged(nameof(Remarks));
+                OnPropertyChanged(nameof(Sale));
+                OnPropertyChanged(nameof(SaleNumber));
+                OnPropertyChanged(nameof(Name));
+                OnPropertyChanged(nameof(Region));
+                OnPropertyChanged(nameof(Forest));
+                OnPropertyChanged(nameof(District));
+                OnPropertyChanged(nameof(CalendarYear));
+                OnPropertyChanged(nameof(Remarks));
             }
         }
 

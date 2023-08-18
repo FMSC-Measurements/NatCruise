@@ -101,7 +101,7 @@ namespace FScruiser.XF.ViewModels
                 }
                 else { SelectedUnitStrataSummary = null; }
 
-                RaisePropertyChanged(nameof(IsCuttingUnitSelected));
+                OnPropertyChanged(nameof(IsCuttingUnitSelected));
                 RefreshNavOptions();
                 NavigationService.ShowBlank();
             }
@@ -113,8 +113,8 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _selectedUnitStratumSummary, value);
-                RaisePropertyChanged(nameof(HasPlotStrata));
-                RaisePropertyChanged(nameof(HasTreeStrata));
+                OnPropertyChanged(nameof(HasPlotStrata));
+                OnPropertyChanged(nameof(HasTreeStrata));
             }
         }
 

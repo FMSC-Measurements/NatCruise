@@ -73,7 +73,7 @@ namespace NatCruise.Wpf.ViewModels
             set
             {
                 SetPropertyAndValidate(this, value, (m, v) => _region = v);
-                RaisePropertyChanged(nameof(ForestOptions));
+                OnPropertyChanged(nameof(ForestOptions));
             }
         }
 
@@ -83,7 +83,7 @@ namespace NatCruise.Wpf.ViewModels
             set
             {
                 SetPropertyAndValidate(this, value, (m, v) => _forest = v);
-                RaisePropertyChanged(nameof(DistrictOptions));
+                OnPropertyChanged(nameof(DistrictOptions));
             }
         }
 
