@@ -346,187 +346,193 @@
                 </Frame>
 
                 <!--Trees List-->
-                <CollectionView x:Name="_tallyFeedListView"
-                                ItemsSource="{Binding Trees}"
-                                SelectionMode="None"
-                                ItemsUpdatingScrollMode="KeepLastItemInView"
-                                AutomationProperties.IsInAccessibleTree="True"
-                                AutomationProperties.Name="Tree List">
+                <AbsoluteLayout>
+                    <ActivityIndicator AbsoluteLayout.LayoutBounds=".5,.5"
+                                       AbsoluteLayout.LayoutFlags="PositionProportional"
+                                       IsRunning="{Binding Trees.IsNotCompleted}"
+                                       IsVisible="{Binding Trees.IsNotCompleted}" />
+                    <CollectionView x:Name="_tallyFeedListView"
+                                    ItemsSource="{Binding Trees.Result}"
+                                    SelectionMode="None"
+                                    ItemsUpdatingScrollMode="KeepLastItemInView"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Tree List">
 
-                    <CollectionView.Behaviors>
-                        <my_behv:ScrollOnLoadBehavior />
-                    </CollectionView.Behaviors>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <SwipeView IsEnabled="False">
-                                <SwipeView.LeftItems>
-                                    <SwipeItem Text="Delete"
-                                               BackgroundColor="Red"
-                                               Command="{Binding BindingContext.DeleteTreeCommand, Source={Reference _page}}"
-                                               CommandParameter="{Binding TreeID}"
-                                               AutomationProperties.IsInAccessibleTree="True"
-                                               AutomationProperties.Name="Delete Tree" />
-                                </SwipeView.LeftItems>
-
-                                <Frame CornerRadius="5"
-                                       Margin="2,5,2,0"
-                                       Padding="0"
-                                       BackgroundColor="{Binding CountOrMeasure, Converter={StaticResource countMeasureToColorConverter}}">
-
-                                    <Grid AutomationProperties.IsInAccessibleTree="True"
-                                          AutomationProperties.Name="Tree Item"
-                                          AutomationProperties.HelpText="{Binding TreeNumber, StringFormat='{}Tree Number {0}'} ">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="50" />
-                                        </Grid.RowDefinitions>
-
-                                        <Grid.ColumnDefinitions>
-                                            <!-- Count or Measure -->
-                                            <ColumnDefinition Width="20" />
-                                            <!-- pop indicator -->
-                                            <ColumnDefinition Width="150" />
-                                            <!-- tree number -->
-                                            <ColumnDefinition Width="Auto" />
-                                            <!-- tree count (FixCNT only) -->
-                                            <ColumnDefinition Width="Auto" />
-                                            <!-- spacer -->
-                                            <ColumnDefinition Width="*" />
-                                            <!-- KPI -->
-                                            <ColumnDefinition Width="50" />
-                                            <!-- STM -->
-                                            <ColumnDefinition Width="Auto" />
-                                            <!-- errors and warnings -->
-                                            <ColumnDefinition Width="50" />
-                                            <!-- button -->
-                                            <ColumnDefinition Width="50" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer x:Name="_treeCellTappedGesture"
-                                                                  Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
-                                                                  CommandParameter="{Binding .}"
-                                                                  Tapped="_treeCellTappedGesture_Tapped"
-                                                                  local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
-                                        </Grid.GestureRecognizers>
-
-                                        <Label Grid.Column="0"
-                                               Text="{Binding CountOrMeasure}"
-                                               TextColor="{StaticResource darkText}"
-                                               FontSize="16"
-                                               VerticalTextAlignment="Center"
-                                               AutomationProperties.IsInAccessibleTree="False" />
-
-                                        <local_ctrls:PopulationIndicator Grid.Row="0"
-                                                                         Grid.Column="1"
-                                                                         StratumCode="{Binding StratumCode}"
-                                                                         SampleGroupCode="{Binding SampleGroupCode}"
-                                                                         Species="{Binding SpeciesCode}"
-                                                                         LiveDead="{Binding LiveDead}"
-                                                                         Margin="5"
-                                                                         HeightRequest="30"
-                                                                         VerticalOptions="Center"
-                                                                         HorizontalOptions="Start"
-                                                                         FontSize="Small" />
-
-
-
-                                        <Label Grid.Row="0"
-                                               Grid.Column="2"
-                                               Text="{Binding TreeNumber, StringFormat='{}Tree {0}'}"
-                                               TextColor="{StaticResource darkText}"
-                                               FontSize="30"
-                                               VerticalTextAlignment="Center"
-                                               HorizontalOptions="Start"
-                                               AutomationProperties.IsInAccessibleTree="False" />
-
-
-                                        <StackLayout Grid.Row="0"
-                                                     Grid.Column="3"
-                                                     Margin="5,0"
-                                                     IsVisible="{Binding ., Converter={StaticResource isFixCNTorCountGreaterThanOne} }">
-                                            <Label Text="Count"
-                                                   HorizontalTextAlignment="Center" />
-                                            <Label Text="{Binding TreeCount}"
-                                                   HorizontalTextAlignment="Center"
-                                                   FontAttributes="Bold"
-                                                   FontSize="Medium" />
-                                        </StackLayout>
-
-                                        <!-- KPI -->
-                                        <StackLayout Grid.Column="5"
-                                                     Grid.Row="0"
-                                                     Orientation="Vertical"
-                                                     IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
-                                            <Label Text="KPI"
-                                                   FontSize="Small" />
-                                            <Label Text="{Binding KPI}"
-                                                   FontAttributes="Bold" />
-                                        </StackLayout>
-
-                                        <!-- STM -->
-                                        <Label Grid.Column="6"
-                                               WidthRequest="50"
-                                               Text="STM"
-                                               FontAttributes="Bold"
-                                               HorizontalTextAlignment="Center"
-                                               IsVisible="{Binding STM}" />
-
-                                        <!--Error and warnings -->
-                                        <StackLayout Grid.Row="0"
-                                                     Grid.Column="7">
-
-                                            <Frame Padding="0"
-                                                   CornerRadius="5"
+                        <CollectionView.Behaviors>
+                            <my_behv:ScrollOnLoadBehavior />
+                        </CollectionView.Behaviors>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <SwipeView IsEnabled="False">
+                                    <SwipeView.LeftItems>
+                                        <SwipeItem Text="Delete"
                                                    BackgroundColor="Red"
-                                                   VerticalOptions="Center"
-                                                   IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
-                                                <StackLayout Orientation="Horizontal"
-                                                             Padding="0">
-                                                    <Image Source="ic_error_outline_black_24dp.png"
-                                                           AutomationProperties.IsInAccessibleTree="False" />
-                                                    <Label Text="{Binding ErrorCount}"
-                                                           TextColor="Black"
-                                                           VerticalTextAlignment="Center"
-                                                           AutomationProperties.IsInAccessibleTree="False" />
-                                                </StackLayout>
-                                            </Frame>
+                                                   Command="{Binding BindingContext.DeleteTreeCommand, Source={Reference _page}}"
+                                                   CommandParameter="{Binding .}"
+                                                   AutomationProperties.IsInAccessibleTree="True"
+                                                   AutomationProperties.Name="Delete Tree" />
+                                    </SwipeView.LeftItems>
 
-                                            <Frame Padding="0"
-                                                   CornerRadius="5"
-                                                   BackgroundColor="Gold"
-                                                   VerticalOptions="Center"
-                                                   IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}">
-                                                <StackLayout Orientation="Horizontal"
-                                                             Padding="0">
-                                                    <Image Source="ic_warning_black_24dp.png"
-                                                           AutomationProperties.IsInAccessibleTree="False" />
-                                                    <Label Text="{Binding WarningCount}"
-                                                           TextColor="Black"
-                                                           VerticalTextAlignment="Center"
-                                                           AutomationProperties.IsInAccessibleTree="False" />
-                                                </StackLayout>
-                                            </Frame>
-                                        </StackLayout>
+                                    <Frame CornerRadius="5"
+                                           Margin="2,5,2,0"
+                                           Padding="0"
+                                           BackgroundColor="{Binding CountOrMeasure, Converter={StaticResource countMeasureToColorConverter}}">
 
-                                        <!-- show delete button-->
-                                        <ImageButton Grid.Column="8"
-                                                     BackgroundColor="Transparent"
-                                                     Clicked="openDeleteButton_Clicked"
-                                                     Source="ic_more_vert_black_24dp.png"
-                                                     Padding="0,7"
-                                                     HeightRequest="{StaticResource minTouchableHeight}"
-                                                     VerticalOptions="Center"
-                                                     AutomationProperties.IsInAccessibleTree="True"
-                                                     AutomationProperties.Name="Show Item Actions" />
+                                        <Grid AutomationProperties.IsInAccessibleTree="True"
+                                              AutomationProperties.Name="Tree Item"
+                                              AutomationProperties.HelpText="{Binding TreeNumber, StringFormat='{}Tree Number {0}'} ">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="50" />
+                                            </Grid.RowDefinitions>
 
-                                    </Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <!-- Count or Measure -->
+                                                <ColumnDefinition Width="20" />
+                                                <!-- pop indicator -->
+                                                <ColumnDefinition Width="150" />
+                                                <!-- tree number -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- tree count (FixCNT only) -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- spacer -->
+                                                <ColumnDefinition Width="*" />
+                                                <!-- KPI -->
+                                                <ColumnDefinition Width="50" />
+                                                <!-- STM -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- errors and warnings -->
+                                                <ColumnDefinition Width="50" />
+                                                <!-- button -->
+                                                <ColumnDefinition Width="50" />
+                                            </Grid.ColumnDefinitions>
 
-                                </Frame>
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer x:Name="_treeCellTappedGesture"
+                                                                      Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
+                                                                      CommandParameter="{Binding .}"
+                                                                      Tapped="_treeCellTappedGesture_Tapped"
+                                                                      local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                                            </Grid.GestureRecognizers>
 
-                            </SwipeView>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding CountOrMeasure}"
+                                                   TextColor="{StaticResource darkText}"
+                                                   FontSize="16"
+                                                   VerticalTextAlignment="Center"
+                                                   AutomationProperties.IsInAccessibleTree="False" />
+
+                                            <local_ctrls:PopulationIndicator Grid.Row="0"
+                                                                             Grid.Column="1"
+                                                                             StratumCode="{Binding StratumCode}"
+                                                                             SampleGroupCode="{Binding SampleGroupCode}"
+                                                                             Species="{Binding SpeciesCode}"
+                                                                             LiveDead="{Binding LiveDead}"
+                                                                             Margin="5"
+                                                                             HeightRequest="30"
+                                                                             VerticalOptions="Center"
+                                                                             HorizontalOptions="Start"
+                                                                             FontSize="Small" />
+
+
+
+                                            <Label Grid.Row="0"
+                                                   Grid.Column="2"
+                                                   Text="{Binding TreeNumber, StringFormat='{}Tree {0}'}"
+                                                   TextColor="{StaticResource darkText}"
+                                                   FontSize="30"
+                                                   VerticalTextAlignment="Center"
+                                                   HorizontalOptions="Start"
+                                                   AutomationProperties.IsInAccessibleTree="False" />
+
+
+                                            <StackLayout Grid.Row="0"
+                                                         Grid.Column="3"
+                                                         Margin="5,0"
+                                                         IsVisible="{Binding ., Converter={StaticResource isFixCNTorCountGreaterThanOne} }">
+                                                <Label Text="Count"
+                                                       HorizontalTextAlignment="Center" />
+                                                <Label Text="{Binding TreeCount}"
+                                                       HorizontalTextAlignment="Center"
+                                                       FontAttributes="Bold"
+                                                       FontSize="Medium" />
+                                            </StackLayout>
+
+                                            <!-- KPI -->
+                                            <StackLayout Grid.Column="5"
+                                                         Grid.Row="0"
+                                                         Orientation="Vertical"
+                                                         IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
+                                                <Label Text="KPI"
+                                                       FontSize="Small" />
+                                                <Label Text="{Binding KPI}"
+                                                       FontAttributes="Bold" />
+                                            </StackLayout>
+
+                                            <!-- STM -->
+                                            <Label Grid.Column="6"
+                                                   WidthRequest="50"
+                                                   Text="STM"
+                                                   FontAttributes="Bold"
+                                                   HorizontalTextAlignment="Center"
+                                                   IsVisible="{Binding STM}" />
+
+                                            <!--Error and warnings -->
+                                            <StackLayout Grid.Row="0"
+                                                         Grid.Column="7">
+
+                                                <Frame Padding="0"
+                                                       CornerRadius="5"
+                                                       BackgroundColor="Red"
+                                                       VerticalOptions="Center"
+                                                       IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
+                                                    <StackLayout Orientation="Horizontal"
+                                                                 Padding="0">
+                                                        <Image Source="ic_error_outline_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Text="{Binding ErrorCount}"
+                                                               TextColor="Black"
+                                                               VerticalTextAlignment="Center"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </StackLayout>
+                                                </Frame>
+
+                                                <Frame Padding="0"
+                                                       CornerRadius="5"
+                                                       BackgroundColor="Gold"
+                                                       VerticalOptions="Center"
+                                                       IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}">
+                                                    <StackLayout Orientation="Horizontal"
+                                                                 Padding="0">
+                                                        <Image Source="ic_warning_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Text="{Binding WarningCount}"
+                                                               TextColor="Black"
+                                                               VerticalTextAlignment="Center"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </StackLayout>
+                                                </Frame>
+                                            </StackLayout>
+
+                                            <!-- show delete button-->
+                                            <ImageButton Grid.Column="8"
+                                                         BackgroundColor="Transparent"
+                                                         Clicked="openDeleteButton_Clicked"
+                                                         Source="ic_more_vert_black_24dp.png"
+                                                         Padding="0,7"
+                                                         HeightRequest="{StaticResource minTouchableHeight}"
+                                                         VerticalOptions="Center"
+                                                         AutomationProperties.IsInAccessibleTree="True"
+                                                         AutomationProperties.Name="Show Item Actions" />
+
+                                        </Grid>
+
+                                    </Frame>
+
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </AbsoluteLayout>
 
 
             </StackLayout>

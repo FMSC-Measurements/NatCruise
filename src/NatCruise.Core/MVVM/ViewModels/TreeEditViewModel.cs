@@ -135,6 +135,7 @@ namespace NatCruise.MVVM.ViewModels
                 {
                     OnTreeChanged(value);
                     SetProperty(ref _tree, value);
+                    OnPropertyChanged(nameof(TreeID));
                     OnPropertyChanged(nameof(CountOrMeasure));
                     OnPropertyChanged(nameof(TreeNumber));
                     OnPropertyChanged(nameof(StratumCode));
