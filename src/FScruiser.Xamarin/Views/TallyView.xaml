@@ -985,7 +985,7 @@
                                 Margin="2"
                                 Padding="1"
                                 HeightRequest="40"
-                                Command="{Binding BindingContext.StratumSelectedCommand, Source={x:Reference StratumFilterListView}}"
+                                Command="{Binding BindingContext.SetStratumFilterCommand, Source={x:Reference StratumFilterListView}}"
                                 CommandParameter="{Binding .}" />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

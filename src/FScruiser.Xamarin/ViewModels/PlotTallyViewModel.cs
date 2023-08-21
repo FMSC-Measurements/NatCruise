@@ -173,7 +173,10 @@ namespace FScruiser.XF.ViewModels
             Debug.Assert(tree.TreeID == vm.Tree.TreeID);
             if (e.PropertyName == nameof(TreeEditViewModel.ErrorsAndWarnings))
             {
-                PlotTreeDataservice.RefreshErrorsAndWarnings(tree);
+                tree.ErrorCount = vm.ErrorCount;
+                tree.WarningCount = vm.WarningCount;
+
+                //PlotTreeDataservice.RefreshErrorsAndWarnings(tree);
             }
             if (e.PropertyName == nameof(TreeEditViewModel.SpeciesCode))
             {

@@ -1,4 +1,5 @@
-﻿using NatCruise.Async;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
@@ -33,6 +34,8 @@ namespace NatCruise.MVVM.ViewModels
         private string _cruiseMethod;
         private IEnumerable<string> _countOrMeasureOptions;
         private IEnumerable<string> _speciesOptions;
+        private int _errorCount;
+        private int _warningCount;
 
         private bool IsTreeChanging { get; set; }
 
@@ -231,6 +234,19 @@ namespace NatCruise.MVVM.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public int ErrorCount
+        {
+            get => _errorCount;
+            protected set => SetProperty(ref _errorCount, value);
+        }
+
+        public int WarningCount
+        {
+            get => _warningCount;
+            protected set => SetProperty(ref _warningCount, value);
+        }
+
 
         #region CountOrMeasure
 
@@ -636,6 +652,8 @@ namespace NatCruise.MVVM.ViewModels
 
             tree.ErrorCount = errors.Count;
             tree.WarningCount = warnings.Count;
+            OnPropertyChanged(nameof(ErrorCount));
+            OnPropertyChanged(nameof(WarningCount));
         }
 
         protected void RefreshCruisers(TreeEx tree)
