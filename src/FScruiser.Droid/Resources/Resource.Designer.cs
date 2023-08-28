@@ -8207,6 +8207,7 @@ namespace FScruiser.Droid
 			global::Xamarin.Essentials.Resource.Id.text2 = global::FScruiser.Droid.Resource.Id.text2;
 			global::Xamarin.Essentials.Resource.Id.time = global::FScruiser.Droid.Resource.Id.time;
 			global::Xamarin.Essentials.Resource.Id.title = global::FScruiser.Droid.Resource.Id.title;
+			global::Xamarin.Essentials.Resource.Id.view_tree_lifecycle_owner = global::FScruiser.Droid.Resource.Id.view_tree_lifecycle_owner;
 			global::Xamarin.Essentials.Resource.Integer.status_bar_notification_info_maxnum = global::FScruiser.Droid.Resource.Integer.status_bar_notification_info_maxnum;
 			global::Xamarin.Essentials.Resource.Layout.browser_actions_context_menu_page = global::FScruiser.Droid.Resource.Layout.browser_actions_context_menu_page;
 			global::Xamarin.Essentials.Resource.Layout.browser_actions_context_menu_row = global::FScruiser.Droid.Resource.Layout.browser_actions_context_menu_row;

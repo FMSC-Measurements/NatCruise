@@ -379,23 +379,6 @@ namespace FScruiser.XF.Controls
 
         #endregion SelectedIndex Property
 
-        //public static readonly BindableProperty ValueSourceProperty = BindableProperty.Create(
-        //    nameof(ValueSource),
-        //    typeof(IList),
-        //    typeof(ValuePicker),
-        //    (object)null,
-        //    propertyChanged: (target, oldValue, newValue) => ((ValuePicker)target).OnValueSourceChanged((IList)oldValue, (IList)newValue));
-
-        //public IList ValueSource
-        //{
-        //    get => (IList)((BindableObject)this).GetValue(ValuePicker.ValueSourceProperty);
-        //    set => ((BindableObject)this).SetValue(ValuePicker.ValueSourceProperty, (object)value);
-        //}
-
-        //protected virtual void OnValueSourceChanged(IList oldValue, IList newValue)
-        //{
-        //}
-
         #region SelectedItem property
 
         public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(
@@ -623,11 +606,11 @@ namespace FScruiser.XF.Controls
             for (int index = 0; index < count; ++index)
                 displayValues[index] = GetItemDisplayValue(items[index]) ?? "";
             string cancel = "Cancel";
-            string distruction = (AuxiliaryActionHeading.IsNullOrEmpty()) ? (string)null : AuxiliaryActionHeading;
-            string str = await this.DisplayActionSheet(this.Title ?? "", cancel, distruction, displayValues);
-            if (str == null || !(str != cancel))
+            string auxAction = (AuxiliaryActionHeading.IsNullOrEmpty()) ? (string)null : AuxiliaryActionHeading;
+            string str = await this.DisplayActionSheet(this.Title ?? "", cancel, auxAction, displayValues);
+            if (str == null || str == cancel)
                 return;
-            if (str == distruction)
+            if (str == auxAction)
             {
                 AuxiliaryActionCommand?.Execute(this);
                 AuxiliaryActionClicked?.Invoke(this, EventArgs.Empty);
@@ -710,7 +693,7 @@ namespace FScruiser.XF.Controls
         protected void SelectItemAtIndex(int index)
         {
             var items = Items;
-            if (index < 0 || index > items.Count - 1) { throw new IndexOutOfRangeException(); }
+            if (index < 0 || index > items.Count - 1) { throw new ArgumentOutOfRangeException(); }
 
             var item = items[index];
             SelectItem(item);
