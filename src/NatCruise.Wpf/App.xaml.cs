@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using CruiseDAL;
+﻿using CruiseDAL;
 using NatCruise.Async;
 using NatCruise.Core.Services;
 using NatCruise.Data;
@@ -71,8 +70,8 @@ namespace NatCruise.Wpf
         protected override void OnInitialized()
         {
 #if !DEBUG
-            AppCenter.Start(Secrets.APPCENTER_KEY_WINDOWS,
-                               typeof(Analytics), typeof(Crashes));
+            Microsoft.AppCenter.AppCenter.Start(Secrets.APPCENTER_KEY_WINDOWS,
+                               typeof(Microsoft.AppCenter.Analytics.Analytics), typeof(Microsoft.AppCenter.Crashes.Crashes));
 #endif
 
             var container = Container;
