@@ -11,9 +11,8 @@ namespace FScruiser.Droid.Test.Screens
     {
         public CruiseListScreen(IApp app) : base(app)
         {
+            page = x => x.Marked("Cruise Selection Page");
         }
-
-        public readonly Query page = x => x.Marked("Cruise Selection Page");
 
         public readonly Query cruiseList = x => x.Marked("Cruise List");
 
@@ -34,5 +33,7 @@ namespace FScruiser.Droid.Test.Screens
             App.Tap(x => cruiseList(x).Descendant("AppCompatTextView").Text(cruiseTitle));
             App.Tap(openButton);
         }
+
+
     }
 }

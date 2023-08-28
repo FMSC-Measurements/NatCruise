@@ -11,7 +11,9 @@
                   xmlns:controls="clr-namespace:FScruiser.XF.Controls"
                   xmlns:const="clr-namespace:FScruiser.XF.Constants"
                   mc:Ignorable="d"
-                  IsPresented="True">
+                  IsPresented="True"
+                  AutomationProperties.IsInAccessibleTree="True"
+                  AutomationProperties.Name="Main Page">
     <MasterDetailPage.Master>
         <ContentPage x:Name="MasterPage"
                      Title="Navigation Panel"

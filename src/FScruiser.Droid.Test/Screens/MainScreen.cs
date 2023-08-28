@@ -10,6 +10,10 @@ namespace FScruiser.Droid.Test.Screens
 {
     public class MainScreen : ScreenBase
     {
+        public readonly Query openNavMenuButton = x => x.Marked("Open Navigation Menu");
+        public readonly Query navMenu = x => x.Marked("Navigation Panel");
+
+        // nav menu items
         public readonly Query selectSaleButton = x => x.Marked("Select Cruise");
         public readonly Query selectCuttingUnitButton = x => x.Marked("Select Cutting Unit");
         public readonly Query treesNavButton = x => x.Marked("Trees Navigation");
@@ -24,6 +28,7 @@ namespace FScruiser.Droid.Test.Screens
         public readonly Query settingNavButton = x => x.Marked("Settings Page Navigation");
         public readonly Query aboutNavButton = x => x.Marked("About Page Navigation");
 
+
         public readonly Query blankPage = x => x.Marked("Blank Page. A Blank Page");
 
         public readonly Query selectUnitDialogPanel = x => x.Class("AlertDialogLayout")
@@ -32,6 +37,7 @@ namespace FScruiser.Droid.Test.Screens
 
         public MainScreen(IApp app) : base(app)
         {
+            page = x => x.Marked("Main Page");
         }
 
         public void OpenSelectSale()
@@ -54,7 +60,7 @@ namespace FScruiser.Droid.Test.Screens
             App.WaitForElement(selectUnitDialogPanel);
 
             var unitButtons = App.Query(x => selectUnitDialogPanel(x).Descendant("AppCompatTextView"));
-            var unitButton = unitButtons.Where(x => x.Text.StartsWith(unit)).Single();
+            var unitButton = unitButtons.Where(x => x.Text.StartsWith(unit + ":")).Single();
 
             App.TapCoordinates(unitButton.Rect.CenterX, unitButton.Rect.CenterY);
             

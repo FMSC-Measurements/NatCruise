@@ -9,12 +9,12 @@ namespace FScruiser.Droid.Test.Screens
 {
     public class SaleListScreen : ScreenBase
     {
-        public readonly Query page = x => x.Marked("Select Sale Page");
 
         public readonly Query saleList = x => x.Marked("Sale List");
 
         public SaleListScreen(IApp app) : base(app)
         {
+            page = x => x.Marked("Select Sale Page");
         }
 
         public IEnumerable<string> GetSales()
@@ -27,5 +27,6 @@ namespace FScruiser.Droid.Test.Screens
             var saleItem = App.Query();
             App.Tap(x => saleList(x).Descendant("AppCompatTextView").Text(saleTitle));
         }
+
     }
 }

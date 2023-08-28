@@ -808,39 +808,6 @@
                 </Frame>-->
             </Grid>
 
-            <!--<CollectionView Grid.Row="2"
-                            x:Name="StratumFilterListView"
-                            VerticalOptions="End"
-                            HeightRequest="{StaticResource minTouchableHeight}"
-                            Margin="2,1"
-                            SelectedItem="{Binding StratumFilter}"
-                            SelectionMode="Single"
-                            ItemsSource="{Binding StrataFilterOptions}"
-                            AutomationProperties.IsInAccessibleTree="True"
-                            AutomationProperties.Name="Stratum Filter List">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal"
-                                       ItemSpacing="2" />
-                </CollectionView.ItemsLayout>
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Label Text="{Binding .}"
-                               TextColor="{StaticResource white_90}"
-                               BackgroundColor="{StaticResource primary_500}"
-                               Margin="2"
-                               Padding="1"
-                               WidthRequest="70"
-                               VerticalTextAlignment="Center"
-                               HorizontalTextAlignment="Center"
-                               AutomationProperties.IsInAccessibleTree="True"
-                               AutomationProperties.Name="Stratum Filter Item"
-                               AutomationProperties.HelpText="{Binding .}" />
-                    </DataTemplate>
-
-                </CollectionView.ItemTemplate>
-            </CollectionView>-->
-
         </Grid>
 
     </local_ctrls:InitializableContentPage.Content>

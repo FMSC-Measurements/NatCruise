@@ -31,8 +31,16 @@ namespace FScruiser.Droid.Test
         {
             var temp = @this.Screenshot(title);
             var scheenShotPath = Path.Combine(ScreenShotFolder, title + ".png");
-            temp.CopyTo(scheenShotPath);
+            temp.CopyTo(scheenShotPath, true);
             testLog.WriteLine(scheenShotPath);
+        }
+
+        public static void TapCenter(this IApp @this, AppResult item)
+        {
+            var itemCenterx = item.Rect.CenterX;
+            var itemCentery = item.Rect.CenterY;
+
+            @this.TapCoordinates(itemCenterx, itemCentery);
         }
     }
 }
