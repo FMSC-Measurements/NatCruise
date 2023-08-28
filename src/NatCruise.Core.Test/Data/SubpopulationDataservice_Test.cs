@@ -68,6 +68,34 @@ namespace NatCruise.Test.Data
         }
 
         [Fact]
+        public void Exists()
+        {
+            var init = new DatastoreInitializer();
+            init.Subpops = new CruiseDAL.V3.Models.SubPopulation[0];
+            var db = init.CreateDatabase();
+
+            var ds = new SubpopulationDataservice(db, init.CruiseID, init.DeviceID);
+
+            var sg = init.SampleGroups[0];
+            var newSubpop = new Subpopulation
+            {
+                SubpopulationID = Guid.NewGuid().ToString(),
+                SampleGroupCode = sg.SampleGroupCode,
+                StratumCode = sg.StratumCode,
+                SpeciesCode = init.Species[0],
+                LiveDead = "L",
+            };
+
+            ds.Exists(newSubpop.StratumCode, newSubpop.SampleGroupCode, newSubpop.SpeciesCode)
+                .Should().BeFalse();
+
+            ds.AddSubpopulation(newSubpop);
+
+            ds.Exists(newSubpop.StratumCode, newSubpop.SampleGroupCode, newSubpop.SpeciesCode)
+                .Should().BeTrue();
+        }
+
+        [Fact]
         public void GetSubpopulations()
         {
             var init = new DatastoreInitializer();

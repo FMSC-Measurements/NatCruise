@@ -55,20 +55,22 @@ INSERT INTO Subpopulation (
             Database.Execute("DELETE FROM Subpopulation WHERE SubpopulationID = @p1;", subpopulation.SubpopulationID);
         }
 
-        public bool Exists(string stratumCode, string sampleGroupCode, string species, string livedead)
+        public bool Exists(string stratumCode, string sampleGroupCode, string species, string livedead = null)
         {
             return Database.ExecuteScalar<int>(
 @"SELECT count(*) FROM Subpopulation
 WHERE StratumCode = @p1
 AND SampleGroupCode = @p2
-AND ifNull(SpeciesCode, '') = ifNull(@p3, '')
-AND ifNull(LiveDead, '') = ifNull(@p4, '')
+AND SpeciesCode = @p3
+AND @p4 IS NULL OR LiveDead = @p4
 AND CruiseID = @p5;",
                 stratumCode, sampleGroupCode, species, livedead, CruiseID) > 0;
         }
 
         public IEnumerable<Subpopulation> GetSubpopulations(string stratumCode, string sampleGroupCode)
         {
+            if (stratumCode is null) { throw new ArgumentNullException(nameof(stratumCode)); }
+
             return Database.Query<Subpopulation>(
 @"SELECT
 
@@ -97,7 +99,7 @@ AND CruiseID = @p5;",
     ) AS HasFieldData
 FROM SubPopulation AS sp
 LEFT JOIN FixCNTTallyPopulation AS fctp USING (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
-WHERE StratumCode = @p1 AND SampleGroupCode = @p2 AND CruiseID = @p3;",
+WHERE StratumCode = @p1 AND (@p2 IS NULL OR SampleGroupCode = @p2) AND CruiseID = @p3;",
                 stratumCode, sampleGroupCode, CruiseID);
         }
 

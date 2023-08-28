@@ -339,6 +339,7 @@ namespace NatCruise.MVVM.ViewModels
                 var oldValue = StratumCode;
                 if (oldValue == value || string.IsNullOrEmpty(value)) { return; }
                 HandleStratumChanged(oldValue, value).FireAndForget();
+                OnPropertyChanged(nameof(StratumCode));
             }
         }
 
@@ -354,17 +355,20 @@ namespace NatCruise.MVVM.ViewModels
                 if (String.IsNullOrEmpty(newSg))
                 {
                     // cancel stratum change if no valid SG selected
-                    OnPropertyChanged(nameof(StratumCode));
                     return;
                 }
-                tree.SampleGroupCode = newSg;
-                OnPropertyChanged(nameof(SampleGroupCode));
 
-                var newSp = await CoerceSpeciesAsyn(newValue, newSg);
-                if (!String.IsNullOrEmpty(newSp))
+                if (!ValidateSpecies(newValue, newSg))
                 {
-                    tree.SpeciesCode = newSp;
-                    OnPropertyChanged(nameof(SpeciesCode));
+                    DialogService.ShowMessageAsync($"Sample Group {newValue} has no Species {tree.SpeciesCode}. Add sub-population first.")
+                        .FireAndForget();
+                    return;
+                }
+
+                if (curSG != newSg)
+                {
+                    tree.SampleGroupCode = newSg;
+                    OnPropertyChanged(nameof(SampleGroupCode));
                 }
                 
                 tree.StratumCode = newValue;
@@ -380,9 +384,14 @@ namespace NatCruise.MVVM.ViewModels
                     treeID: tree.TreeID,
                     fieldName: "StratumCode",
                     tableName: "Tree");
+
+                if (curSG != newSg)
+                {
+                    OnPropertyChanged(nameof(SampleGroupCode));
+                }
             }
 
-            OnPropertyChanged(nameof(StratumCode));
+            
         }
 
         #endregion Stratum
@@ -409,23 +418,24 @@ namespace NatCruise.MVVM.ViewModels
                 if (IsTreeChanging) { return; }
                 var oldValue = SampleGroupCode;
                 if (oldValue == value || String.IsNullOrEmpty(value)) { return; }
-                HandleSampleGroupChanged(oldValue, value).FireAndForget();
+                HandleSampleGroupChanged(oldValue, value);
+                OnPropertyChanged(nameof(SampleGroupCode));
             }
         }
 
-        protected async Task HandleSampleGroupChanged(string oldValue, string newValue)
+        protected void HandleSampleGroupChanged(string oldValue, string newValue)
         {
             var tree = Tree;
             if (tree != null)
             {
                 var curSt = tree.StratumCode;
-                var curSp = tree.SpeciesCode;
 
-                var newSp = await CoerceSpeciesAsyn(curSt, newValue);
-                if (!String.IsNullOrEmpty(newSp))
+                if(!ValidateSpecies(curSt, newValue))
                 {
-                    tree.SpeciesCode = newSp;
-                    OnPropertyChanged(nameof(SpeciesCode));
+
+                    DialogService.ShowMessageAsync($"Sample Group {newValue} has no Species {tree.SpeciesCode}. Add sub-population first.")
+                        .FireAndForget();
+                    return;
                 }
                 
                 tree.SampleGroupCode = newValue;
@@ -434,12 +444,17 @@ namespace NatCruise.MVVM.ViewModels
                 RefreshErrorsAndWarnings(tree);
 
                 SaveTree(tree);
-                CruiseLogDataservice.Log($"Update Tree.SampleGroup |oldSG:{oldValue}|newSG:{newValue}|oldSp:{curSp}|newSp:{tree.SpeciesCode}|",
+                CruiseLogDataservice.Log($"Update Tree.SampleGroup |oldSG:{oldValue}|newSG:{newValue}|",
                     treeID: tree.TreeID,
                     fieldName: "SampleGroupCode",
                     tableName: "Tree");
             }
-            OnPropertyChanged(nameof(StratumCode));
+        }
+
+        protected bool ValidateSpecies(string stratumCode, string sgCode)
+        {
+            var curSpecies = Tree.SpeciesCode;
+            return SubpopulationDataservice.Exists(stratumCode, sgCode, curSpecies);
         }
 
         public async Task<string> CoerceSampleGroupAsync(string stratumCode)
@@ -482,17 +497,17 @@ namespace NatCruise.MVVM.ViewModels
             }
         }
 
-        protected async Task<string> CoerceSpeciesAsyn(string stratum, string sg)
-        {
-            var speciesCodes = SpeciesDataservice.GetSpeciesCodes(stratum, sg).ToArray();
-            var curSpecies = Tree.SpeciesCode;
-            if (!speciesCodes.Contains(curSpecies))
-            {
-                var selectedSpecies = await DialogService.AskValueAsync("Select Species", speciesCodes);
-                return selectedSpecies;
-            }
-            return curSpecies;
-        }
+        //protected async Task<string> CoerceSpeciesAsyn(string stratum, string sg)
+        //{
+        //    var speciesCodes = SpeciesDataservice.GetSpeciesCodes(stratum, sg).ToArray();
+        //    var curSpecies = Tree.SpeciesCode;
+        //    if (!speciesCodes.Contains(curSpecies))
+        //    {
+        //        var selectedSpecies = await DialogService.AskValueAsync("Select Species", speciesCodes);
+        //        return selectedSpecies;
+        //    }
+        //    return curSpecies;
+        //}
 
         #endregion Species
 

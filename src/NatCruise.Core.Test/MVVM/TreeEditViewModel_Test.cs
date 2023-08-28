@@ -92,7 +92,7 @@ namespace NatCruise.Test.MVVM
         }
 
         [Theory]    //st          //sg          //sp                            //ld                            //expect sg dialog  //expect sp dialog
-        [InlineData("st1", "st2", "sg1", "sg1", (string)null,   (string)null,   (string)null,   (string)null,   false,              true)]
+        [InlineData("st1", "st2", "sg1", "sg1", (string)null,   (string)null,   (string)null,   (string)null,   false,              false)]
         [InlineData("st1", "st2", "sg1", "sg1", "sp1",          "sp1",          "L",            "L",            false,              false)] //just change st
         [InlineData("st1", "st2", "sg1", "sg2", "sp1",          "sp1",          "L",            "L",            false,              false)] //
 
@@ -106,7 +106,7 @@ namespace NatCruise.Test.MVVM
             string ldBefore,
             string ldAfter,
             bool expectSgDialog,
-            bool expectSpDialog)
+            bool expectSpErrorMsg)
         {
             var spDialogTitle = "Select Species";
             var sgDialogTitle = "Select Sample Group";
@@ -147,7 +147,7 @@ namespace NatCruise.Test.MVVM
             // set up mock dialog service
             var mockDialogService = new Mock<INatCruiseDialogService>();
             if (expectSgDialog)
-            { mockDialogService.Setup(x => x.AskValueAsync(It.Is<string>(x => x == spDialogTitle), It.IsAny<string[]>())).ReturnsAsync(speciesAfter); }
+            { mockDialogService.Setup(x => x.ShowMessageAsync(It.Is<string>(x => x.EndsWith("Add sub-population first.")), It.IsAny<string>())); }
             if (expectSgDialog)
             { mockDialogService.Setup(x => x.AskValueAsync(It.Is<string>(x => x == sgDialogTitle), It.IsAny<string[]>())).ReturnsAsync(sgAfter); }
 
@@ -159,24 +159,22 @@ namespace NatCruise.Test.MVVM
             //var treeID = treeDataService.InsertManualTree("u1", "st1", "sg1");
 
             treeEditVM.Load(treeID);
-
-            var newSt = "st2";
-            treeEditVM.StratumCode = newSt;
+            treeEditVM.StratumCode = straumAfter;
 
             var tree = db.From<CruiseDAL.V3.Models.Tree>().Query().Single();
             var treeMeasurment = db.From<CruiseDAL.V3.Models.TreeMeasurment>().Query().Single();
             var tallyLedger = db.From<CruiseDAL.V3.Models.TallyLedger>().Query().Single();
-            tree.StratumCode.Should().Be(newSt);
+            tree.StratumCode.Should().Be(straumAfter);
 
             // verify AskValueAsync calls
             if (expectSgDialog)
             { mockDialogService.Verify(x => x.AskValueAsync(It.Is<string>(x => x == sgDialogTitle), It.IsAny<string[]>()), Times.Once); }
             else
             { mockDialogService.Verify(x => x.AskValueAsync(It.Is<string>(x => x == sgDialogTitle), It.IsAny<string[]>()), Times.Never); }
-            if (expectSpDialog)
-            { mockDialogService.Verify(x => x.AskValueAsync(It.Is<string>(x => x == spDialogTitle), It.IsAny<string[]>()), Times.Once); }
+            if (expectSpErrorMsg)
+            { mockDialogService.Verify(x => x.ShowMessageAsync(It.Is<string>(x => x.EndsWith("Add sub-population first.")), It.IsAny<string>()), Times.Once); }
             else
-            { mockDialogService.Verify(x => x.AskValueAsync(It.Is<string>(x => x == spDialogTitle), It.IsAny<string[]>()), Times.Never); }
+            { mockDialogService.Verify(x => x.ShowMessageAsync(It.Is<string>(x => x.EndsWith("Add sub-population first.")), It.IsAny<string>()), Times.Never); }
         }
 
         [Fact]
