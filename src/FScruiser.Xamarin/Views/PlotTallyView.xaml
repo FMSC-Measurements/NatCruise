@@ -66,7 +66,6 @@
                 <Frame  x:Name="_treeEditPanel"
                         IsVisible="false"
                         Padding="0"
-                        BindingContext="{Binding SelectedTreeViewModel}"
                         BindingContextChanged="_treeEditPanel_BindingContextChanged"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Tree Edit Panel">
@@ -86,224 +85,225 @@
                                     AbsoluteLayout.LayoutFlags="PositionProportional"
                                     Text="Prev"
                                     Margin="5,0"
-                                    Command="{Binding BindingContext.SelectPreviousTreeCommand, Source={Reference _page}}" />
+                                    Command="{Binding SelectPreviousTreeCommand}" />
                             <Label AbsoluteLayout.LayoutBounds=".5,0"
                                    AbsoluteLayout.LayoutFlags="PositionProportional"
-                                   Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
+                                   Text="{Binding SelectedTreeViewModel.TreeNumber, StringFormat='{}Tree Number {0}'}"
                                    TextColor="{StaticResource darkText}"
                                    FontSize="Large" />
                             <Button AbsoluteLayout.LayoutBounds="1,0"
                                     AbsoluteLayout.LayoutFlags="PositionProportional"
                                     Margin="5,0"
                                     Text="Next"
-                                    Command="{Binding BindingContext.SelectNextTreeCommand, Source={Reference _page}}" />
+                                    Command="{Binding SelectNextTreeCommand}" />
                         </AbsoluteLayout>
 
-                        <ScrollView Grid.Row="1"
-                                    Orientation="Horizontal">
+                        <CollectionView Grid.Row="1"
+                                        BindingContext="{Binding SelectedTreeViewModel}"
+                                        ItemsSource="{Binding TreeFieldValues}"
+                                        SelectionMode="None"
+                                        HeightRequest="75"
+                                        local_ctrls:TreeFieldValueDataTemplateSelector.UseAltInitialsTemplate="{Binding Cruisers, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.Resources>
+                                <ResourceDictionary>
+                                    <Style TargetType="local_ctrls:LastChildHeightLayout"
+                                           x:Key="baseTreeFieldStyle">
+                                        <Setter Property="HeightRequest"
+                                                Value="100" />
+                                        <Setter Property="LastChildHeight"
+                                                Value="50" />
+                                        <Setter Property="WidthRequest"
+                                                Value="100" />
+                                    </Style>
 
-                            <StackLayout x:Name="_treeFieldsLayout"
-                                         Orientation="Horizontal">
-                                <StackLayout.Resources>
-                                    <ResourceDictionary>
-                                        <Style TargetType="local_ctrls:LastChildHeightLayout"
-                                               x:Key="baseTreeFieldStyle">
-                                            <Setter Property="HeightRequest"
-                                                    Value="100" />
-                                            <Setter Property="LastChildHeight"
-                                                    Value="50" />
-                                            <Setter Property="WidthRequest"
-                                                    Value="100" />
-                                        </Style>
+                                    <Style TargetType="local_ctrls:LastChildHeightLayout"
+                                           x:Key="treeFieldValueStyle"
+                                           BasedOn="{StaticResource baseTreeFieldStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="local_ctrls:LastChildHeightLayout"
+                                                         Binding="{Binding Error.Level}"
+                                                         Value="{Static models:ErrorBase.LEVEL_WARNING}">
+                                                <Setter Property="BackgroundColor"
+                                                        Value="{StaticResource warning}" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="local_ctrls:LastChildHeightLayout"
+                                                         Binding="{Binding Error.Level}"
+                                                         Value="{Static models:ErrorBase.LEVEL_ERROR}">
+                                                <Setter Property="BackgroundColor"
+                                                        Value="{StaticResource error}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
 
-                                        <Style TargetType="local_ctrls:LastChildHeightLayout"
-                                               x:Key="treeFieldValueStyle"
-                                               BasedOn="{StaticResource baseTreeFieldStyle}">
-                                            <Style.Triggers>
-                                                <DataTrigger TargetType="local_ctrls:LastChildHeightLayout"
-                                                             Binding="{Binding Error.Level}"
-                                                             Value="{Static models:ErrorBase.LEVEL_WARNING}">
-                                                    <Setter Property="BackgroundColor"
-                                                            Value="{StaticResource warning}" />
-                                                </DataTrigger>
-                                                <DataTrigger TargetType="local_ctrls:LastChildHeightLayout"
-                                                             Binding="{Binding Error.Level}"
-                                                             Value="{Static models:ErrorBase.LEVEL_ERROR}">
-                                                    <Setter Property="BackgroundColor"
-                                                            Value="{StaticResource error}" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
+                                    <Style TargetType="local_ctrls:LastChildHeightLayout"
+                                           BasedOn="{StaticResource treeFieldValueStyle}">
+                                    </Style>
 
-                                        <Style TargetType="local_ctrls:LastChildHeightLayout"
-                                               x:Key="treeSepeciesFieldStyle"
-                                               BasedOn="{StaticResource baseTreeFieldStyle}">
-                                            <Style.Triggers>
-                                                <DataTrigger TargetType="local_ctrls:LastChildHeightLayout"
-                                                             Binding="{Binding HasSpeciesError}"
-                                                             Value="True">
-                                                    <Setter Property="BackgroundColor"
-                                                            Value="{StaticResource error}" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </ResourceDictionary>
-                                </StackLayout.Resources>
+                                    <Style TargetType="local_ctrls:LastChildHeightLayout"
+                                           x:Key="treeSepeciesFieldStyle"
+                                           BasedOn="{StaticResource baseTreeFieldStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="local_ctrls:LastChildHeightLayout"
+                                                         Binding="{Binding HasSpeciesError}"
+                                                         Value="True">
+                                                <Setter Property="BackgroundColor"
+                                                        Value="{StaticResource error}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
 
-                                <!-- species -->
-                                <local_ctrls:LastChildHeightLayout Style="{StaticResource treeSepeciesFieldStyle}">
-                                    <Label Text="Species" />
-                                    <local_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
-                                                             ItemsSource="{Binding SpeciesOptions}" />
-                                </local_ctrls:LastChildHeightLayout>
+                                </ResourceDictionary>
+                            </CollectionView.Resources>
 
-                                <!-- count measure -->
-                                <local_ctrls:LastChildHeightLayout Style="{StaticResource baseTreeFieldStyle}"
-                                                                   IsVisible="{Binding CruiseMethod, Converter={StaticResource isTwoStagePlotMethod} }">
-                                    <Label Text="Count/Measure" />
-                                    <local_ctrls:ValuePicker SelectedValue="{Binding CountOrMeasure}"
-                                                             ItemsSource="{Binding CountOrMeasureOptions}" />
-                                </local_ctrls:LastChildHeightLayout>
+                            <CollectionView.Header>
 
-                                <!-- rest of the tree fields -->
-                                <StackLayout Orientation="Horizontal"
-                                             BindableLayout.ItemsSource="{Binding TreeFieldValues}"
-                                             HeightRequest="75"
-                                             local_ctrls:TreeFieldValueDataTemplateSelector.UseAltInitialsTemplate="{Binding Cruisers, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
-                                    <StackLayout.Resources>
-                                        <ResourceDictionary>
-                                            <Style TargetType="local_ctrls:LastChildHeightLayout"
-                                                   BasedOn="{StaticResource treeFieldValueStyle}">
-                                            </Style>
-                                        </ResourceDictionary>
-                                    </StackLayout.Resources>
+                                <StackLayout x:Name="_treeFieldsLayout"
+                                             Orientation="Horizontal">
 
-                                    <BindableLayout.ItemTemplateSelector>
-                                        <local_ctrls:TreeFieldValueDataTemplateSelector>
+                                    <!-- species -->
+                                    <local_ctrls:LastChildHeightLayout Style="{StaticResource treeSepeciesFieldStyle}">
+                                        <Label Text="Species" />
+                                        <local_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
+                                                                 ItemsSource="{Binding SpeciesOptions}" />
+                                    </local_ctrls:LastChildHeightLayout>
 
-                                            <!-- int template -->
-                                            <local_ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
-                                                <DataTemplate>
-                                                    <local_ctrls:LastChildHeightLayout>
-                                                        <Label Text="{Binding Heading}" />
-                                                        <Entry Text="{Binding ValueInt}"
-                                                               Placeholder="{Binding StrDefaultValue}"
-                                                               Keyboard="Numeric">
-                                                            <Entry.Behaviors>
-                                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                            </Entry.Behaviors>
-                                                            <Entry.Effects>
-                                                                <effects:SelectAllTextEffect />
-                                                            </Entry.Effects>
-                                                            <Entry.IsReadOnly>
-                                                                <MultiBinding Converter="{StaticResource AnyTrueConverter}">
-                                                                    <Binding Path="IsLocked" />
-                                                                    <Binding Path="IsHidden" />
-                                                                </MultiBinding>
-                                                            </Entry.IsReadOnly>
-                                                        </Entry>
-                                                    </local_ctrls:LastChildHeightLayout>
-                                                </DataTemplate>
-                                            </local_ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                                    <!-- count measure -->
+                                    <local_ctrls:LastChildHeightLayout Style="{StaticResource baseTreeFieldStyle}"
+                                                                       IsVisible="{Binding CruiseMethod, Converter={StaticResource isTwoStagePlotMethod} }">
+                                        <Label Text="Count/Measure" />
+                                        <local_ctrls:ValuePicker SelectedValue="{Binding CountOrMeasure}"
+                                                                 ItemsSource="{Binding CountOrMeasureOptions}" />
+                                    </local_ctrls:LastChildHeightLayout>
 
-                                            <!-- real template -->
-                                            <local_ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
-                                                <DataTemplate>
-                                                    <local_ctrls:LastChildHeightLayout>
-                                                        <Label Text="{Binding Heading}" />
-                                                        <Entry Text="{Binding ValueReal}"
-                                                               Placeholder="{Binding StrDefaultValue}"
-                                                               Keyboard="Numeric">
-                                                            <Entry.Behaviors>
-                                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                            </Entry.Behaviors>
-                                                            <Entry.Effects>
-                                                                <effects:SelectAllTextEffect />
-                                                            </Entry.Effects>
-                                                            <Entry.IsReadOnly>
-                                                                <MultiBinding Converter="{StaticResource AnyTrueConverter}">
-                                                                    <Binding Path="IsLocked" />
-                                                                    <Binding Path="IsHidden" />
-                                                                </MultiBinding>
-                                                            </Entry.IsReadOnly>
-                                                        </Entry>
-                                                    </local_ctrls:LastChildHeightLayout>
-                                                </DataTemplate>
-                                            </local_ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
-
-                                            <!-- text template -->
-                                            <local_ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
-                                                <DataTemplate>
-                                                    <local_ctrls:LastChildHeightLayout>
-                                                        <Label Text="{Binding Heading}" />
-                                                        <Entry Text="{Binding ValueText}"
-                                                               Placeholder="{Binding StrDefaultValue}">
-                                                            <Entry.Behaviors>
-                                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                            </Entry.Behaviors>
-                                                            <Entry.Effects>
-                                                                <effects:SelectAllTextEffect />
-                                                            </Entry.Effects>
-                                                            <Entry.IsReadOnly>
-                                                                <MultiBinding Converter="{StaticResource AnyTrueConverter}">
-                                                                    <Binding Path="IsLocked" />
-                                                                    <Binding Path="IsHidden" />
-                                                                </MultiBinding>
-                                                            </Entry.IsReadOnly>
-                                                        </Entry>
-                                                    </local_ctrls:LastChildHeightLayout>
-                                                </DataTemplate>
-                                            </local_ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
-
-                                            <!-- Alt initial template. When cruisers initials are defined and we want to use a picker this template will be used
-                                                otherwise the basic text template will be used for initials -->
-                                            <local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
-                                                <DataTemplate>
-                                                    <local_ctrls:LastChildHeightLayout>
-                                                        <Label Text="{Binding Heading}" />
-                                                        <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                                                 ItemsSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
-                                                    </local_ctrls:LastChildHeightLayout>
-                                                </DataTemplate>
-                                            </local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
-
-                                            <!-- remarks template -->
-                                            <local_ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
-                                                <DataTemplate>
-                                                    <local_ctrls:LastChildHeightLayout WidthRequest="200"
-                                                                                       LastChildHeight="70">
-                                                        <Label Text="{Binding Heading}" />
-                                                        <ScrollView Orientation="Vertical">
-                                                            <Editor Text="{Binding ValueText}"
-                                                                    AutoSize="TextChanges">
-                                                                <!--<Editor.Behaviors>
-                                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                            </Editor.Behaviors>-->
-                                                            </Editor>
-                                                        </ScrollView>
-                                                    </local_ctrls:LastChildHeightLayout>
-                                                </DataTemplate>
-                                            </local_ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
-
-                                            <local_ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
-                                                <DataTemplate>
-                                                    <local_ctrls:LastChildHeightLayout>
-                                                        <Label Text="L/D" />
-                                                        <local_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference _treeFieldsLayout}}"
-                                                                                 ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference _treeFieldsLayout}}" />
-
-                                                    </local_ctrls:LastChildHeightLayout>
-                                                </DataTemplate>
-                                            </local_ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
-                                        </local_ctrls:TreeFieldValueDataTemplateSelector>
-
-                                    </BindableLayout.ItemTemplateSelector>
+                                    <!-- rest of the tree fields -->
 
                                 </StackLayout>
-                            </StackLayout>
+                            </CollectionView.Header>
 
+                            <CollectionView.ItemTemplate>
+                                <local_ctrls:TreeFieldValueDataTemplateSelector>
 
-                        </ScrollView>
+                                    <!-- int template -->
+                                    <local_ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                                        <DataTemplate>
+                                            <local_ctrls:LastChildHeightLayout>
+                                                <Label Text="{Binding Heading}" />
+                                                <Entry Text="{Binding ValueInt}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       Keyboard="Numeric">
+                                                    <Entry.Behaviors>
+                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                                    </Entry.Behaviors>
+                                                    <Entry.Effects>
+                                                        <effects:SelectAllTextEffect />
+                                                    </Entry.Effects>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </local_ctrls:LastChildHeightLayout>
+                                        </DataTemplate>
+                                    </local_ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+
+                                    <!-- real template -->
+                                    <local_ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                                        <DataTemplate>
+                                            <local_ctrls:LastChildHeightLayout>
+                                                <Label Text="{Binding Heading}" />
+                                                <Entry Text="{Binding ValueReal}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       Keyboard="Numeric">
+                                                    <Entry.Behaviors>
+                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                                    </Entry.Behaviors>
+                                                    <Entry.Effects>
+                                                        <effects:SelectAllTextEffect />
+                                                    </Entry.Effects>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </local_ctrls:LastChildHeightLayout>
+                                        </DataTemplate>
+                                    </local_ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
+
+                                    <!-- text template -->
+                                    <local_ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                                        <DataTemplate>
+                                            <local_ctrls:LastChildHeightLayout>
+                                                <Label Text="{Binding Heading}" />
+                                                <Entry Text="{Binding ValueText}"
+                                                       Placeholder="{Binding StrDefaultValue}">
+                                                    <Entry.Behaviors>
+                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                                    </Entry.Behaviors>
+                                                    <Entry.Effects>
+                                                        <effects:SelectAllTextEffect />
+                                                    </Entry.Effects>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </local_ctrls:LastChildHeightLayout>
+                                        </DataTemplate>
+                                    </local_ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
+
+                                    <!-- Alt initial template. When cruisers initials are defined and we want to use a picker this template will be used
+                                                otherwise the basic text template will be used for initials -->
+                                    <local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
+                                        <DataTemplate>
+                                            <local_ctrls:LastChildHeightLayout>
+                                                <Label Text="{Binding Heading}" />
+                                                <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
+                                                                         ItemsSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
+                                            </local_ctrls:LastChildHeightLayout>
+                                        </DataTemplate>
+                                    </local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
+
+                                    <!-- remarks template -->
+                                    <local_ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+                                        <DataTemplate>
+                                            <local_ctrls:LastChildHeightLayout WidthRequest="200"
+                                                                               LastChildHeight="70">
+                                                <Label Text="{Binding Heading}" />
+                                                <ScrollView Orientation="Vertical">
+                                                    <Editor Text="{Binding ValueText}"
+                                                            AutoSize="TextChanges">
+                                                        <!--<Editor.Behaviors>
+                                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
+                                                            </Editor.Behaviors>-->
+                                                    </Editor>
+                                                </ScrollView>
+                                            </local_ctrls:LastChildHeightLayout>
+                                        </DataTemplate>
+                                    </local_ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+
+                                    <local_ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
+                                        <DataTemplate>
+                                            <local_ctrls:LastChildHeightLayout>
+                                                <Label Text="L/D" />
+                                                <local_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference _treeFieldsLayout}}"
+                                                                         ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference _treeFieldsLayout}}" />
+
+                                            </local_ctrls:LastChildHeightLayout>
+                                        </DataTemplate>
+                                    </local_ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
+                                </local_ctrls:TreeFieldValueDataTemplateSelector>
+                            </CollectionView.ItemTemplate>
+
+                        </CollectionView>
 
                         <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
@@ -327,15 +327,15 @@
                             <Button Grid.Column="1"
                                     x:Name="_logsButton"
                                     Text="Logs"
-                                    Command="{Binding ShowLogsCommand}"
+                                    Command="{Binding SelectedTreeViewModel.ShowLogsCommand}"
                                     AutomationProperties.IsInAccessibleTree="True"
                                     AutomationProperties.Name="Logs Button" />
 
                             <Button Grid.Column="2"
                                     x:Name="_editButton"
                                     Text="Edit"
-                                    Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
-                                    CommandParameter="{Binding TreeID}"
+                                    Command="{Binding EditTreeCommand}"
+                                    CommandParameter="{Binding SelectedTreeViewModel.TreeID}"
                                     AutomationProperties.IsInAccessibleTree="True"
                                     AutomationProperties.Name="Edit Tree Button" />
                         </Grid>
