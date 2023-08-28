@@ -1,11 +1,8 @@
-﻿using CruiseDAL;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
+﻿using CommunityToolkit.Mvvm.Input;
+using CruiseDAL;
 using NatCruise.Async;
 using NatCruise.Core.Services;
 using NatCruise.Data;
-using NatCruise.Design.Data;
 using NatCruise.Design.Services;
 using NatCruise.Design.Validation;
 using NatCruise.Design.Views;
@@ -23,11 +20,9 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace NatCruise.Wpf
@@ -37,7 +32,6 @@ namespace NatCruise.Wpf
     /// </summary>
     public partial class App : PrismApplication, IAppService
     {
-
         private string[] StartupArgs { get; set; }
         protected ILoggingService LoggingService { get; private set; }
 
@@ -100,7 +94,6 @@ namespace NatCruise.Wpf
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(CuttingUnitStrataView));
             regionManager.RegisterViewWithRegion(Regions.StratumDetailsRegion, typeof(SampleGroupListView));
 
-
             regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SampleGroupDetailView));
             regionManager.RegisterViewWithRegion(Regions.SampleGroupDetailsRegion, typeof(SubpopulationListView));
 
@@ -119,7 +112,6 @@ namespace NatCruise.Wpf
             //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(TreeFieldsView));
             //regionManager.RegisterViewWithRegion(Regions.CruiseContentRegion, typeof(LogFieldsView));
 
-
             // template
 
             //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(TreeAuditRuleListView));
@@ -130,6 +122,10 @@ namespace NatCruise.Wpf
             //regionManager.RegisterViewWithRegion(Regions.TemplateContentRegion, typeof(LogFieldsView));
 
             base.OnInitialized();
+
+#if !DEBUG
+            CheckAndRegisterFileAssociations().FireAndForget();
+#endif
 
             ProcessStartupArgs();
         }
@@ -160,7 +156,12 @@ namespace NatCruise.Wpf
             // for our FireAndForget async tasks.
             TaskExtentions.LoggingService = loggingService;
 
-            InitializeFileAssocationService(containerRegistry, loggingService);
+            var fileAssociationService = new FileAssociationService("NCS.V3.NatCruise",
+             new[] {
+                new AssociatedFileTypeInfo{ Extension = ".crz3", Label = "NCS.V3.Cruise"},
+                new AssociatedFileTypeInfo{ Extension = ".crz3t", Label = "NCS.V3.Template"},
+            }, loggingService);
+            containerRegistry.RegisterInstance<FileAssociationService>(fileAssociationService);
 
             // register other services
             containerRegistry.RegisterInstance<IAppService>(this);
@@ -179,7 +180,6 @@ namespace NatCruise.Wpf
             var dataserviceProvider = new WpfDataserviceProvider((CruiseDatastore_V3)null, deviceInfo);
             WpfDataserviceProvider.RegisterDataservices(containerRegistry);
             containerRegistry.RegisterInstance<IDataserviceProvider>(dataserviceProvider);
-
 
             // register views for navigation
             containerRegistry.RegisterDialog<NewCruiseView, NewCruiseViewModel>("NewCruise");
@@ -200,7 +200,6 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterForNavigation<CombineFileView>();
             containerRegistry.RegisterForNavigation<FieldDataView>();
 
-
             // register validators
             containerRegistry.Register<CruiseValidator>();
             containerRegistry.Register<CuttingUnitValidator>();
@@ -209,36 +208,36 @@ namespace NatCruise.Wpf
             containerRegistry.Register<StratumValidator>();
         }
 
-        private static void InitializeFileAssocationService(IContainerRegistry containerRegistry, ILoggingService loggingService)
+        //[RelayCommand]
+        // called in onIninitialized but only for Release builds
+        public async Task CheckAndRegisterFileAssociations()
         {
-            var fileAssociationService = new FileAssociationService("NCS.V3.NatCruise",
-             new[] {
-                new AssociatedFileTypeInfo{ Extension = ".crz3", Label = "NCS.V3.Cruise"},
-                new AssociatedFileTypeInfo{ Extension = ".crz3t", Label = "NCS.V3.Template"},
-            });
-            containerRegistry.RegisterInstance<FileAssociationService>(fileAssociationService);
+            var fileAssociationService = Container.Resolve<FileAssociationService>();
+            var dialogService = Container.Resolve<INatCruiseDialogService>();
 
-#if true
             try
             {
-                if (fileAssociationService.IsAppRegistered is false)
-                { fileAssociationService.RegisterApp(); }
+                var isAppRegistered = fileAssociationService.IsAppRegistered;
                 var unregisteredTypes = fileAssociationService.CheckUnRegisteredFileTypes().ToArray();
-                if (unregisteredTypes.Any())
-                {
-                    foreach (var unregisteredType in unregisteredTypes)
-                    {
-                        loggingService.LogEvent("Registering File Type", new Dictionary<string, string>() { { "Extension", unregisteredType.Extension } });
 
-                        fileAssociationService.RegisterFileType(unregisteredType);
+                if (!isAppRegistered || unregisteredTypes.Any())
+                {
+                    if (await dialogService.AskYesNoAsync("Would You Like to Register V3 file types with NatCruise Desktop", "Register Cruise File Types"))
+                    {
+                        if (!isAppRegistered)
+                        { fileAssociationService.RegisterApp(); }
+
+                        foreach (var unregisteredType in unregisteredTypes)
+                        {
+                            fileAssociationService.RegisterFileType(unregisteredType);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                loggingService.LogException($"{nameof(App)}.{nameof(RegisterTypes)}", "Error Registering File Types", ex);
+                LoggingService.LogException($"{nameof(App)}.{nameof(RegisterTypes)}", "Error Registering File Types", ex);
             }
-#endif
         }
 
         protected override void ConfigureViewModelLocator()

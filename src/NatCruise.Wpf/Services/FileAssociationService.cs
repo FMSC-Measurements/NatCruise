@@ -1,11 +1,10 @@
 ﻿using Microsoft.Win32;
+using NatCruise.Services;
 using NatCruise.Wpf.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NatCruise.Wpf.Services
@@ -23,14 +22,14 @@ namespace NatCruise.Wpf.Services
         public string ProgramID { get; }
 
         public IEnumerable<AssociatedFileTypeInfo> FileTypes { get; }
-
+        public ILoggingService Log { get; }
         public string ExecutalbleName { get; }
 
         public string OpenCommand => _openCommand ??= $"{ExecutalbleName} %1";
 
         public bool IsAppRegistered { get; }
 
-        public FileAssociationService(string progID, IEnumerable<AssociatedFileTypeInfo> fileTypes)
+        public FileAssociationService(string progID, IEnumerable<AssociatedFileTypeInfo> fileTypes, ILoggingService log)
         {
             ApplicationFullPath = Assembly.GetEntryAssembly().Location;
             ExecutalbleName = Path.GetFileName(ApplicationFullPath);
@@ -38,6 +37,8 @@ namespace NatCruise.Wpf.Services
 
             ProgramID = progID ?? throw new ArgumentNullException(nameof(progID));
             FileTypes = fileTypes ?? throw new ArgumentNullException(nameof(fileTypes));
+
+            Log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
         public bool CheckIsAppRegistered()
@@ -70,8 +71,11 @@ namespace NatCruise.Wpf.Services
             return Task.Factory.StartNew(() => RegisterApp(ApplicationFullPath));
         }
 
-        public static void RegisterApp(string fullAppExePath)
+        public void RegisterApp(string fullAppExePath)
         {
+            Log.LogEvent(nameof(FileAssociationService) + ": Registering app",
+                new Dictionary<string, string>() { { "Path", fullAppExePath } });
+
             var exeName = Path.GetFileName(fullAppExePath);
             if (!exeName.EndsWith(".exe")) throw new ArgumentException("Expected fullExePath to point to file with extension .exe");
 
@@ -79,11 +83,12 @@ namespace NatCruise.Wpf.Services
 
             using var appKey = hkcu_appPaths.CreateSubKey(exeName, true);
             appKey.SetValue((string)null, fullAppExePath);
+            Log.LogEvent(nameof(FileAssociationService) + ": App Registered");
         }
 
         public bool CheckIsFileTypeRegistered(AssociatedFileTypeInfo filetype)
         {
-            if(!CheckIsExtentionRegistered(filetype)) return false;
+            if (!CheckIsExtentionRegistered(filetype)) return false;
 
             return CheckIsFileTypeLabelRegistered(filetype);
         }
@@ -93,11 +98,10 @@ namespace NatCruise.Wpf.Services
             var extention = filetype.Extension;
             if (!extention.StartsWith(".")) throw new InvalidOperationException("expected AssociatedFileTypeInfo.Extension to start with '.'");
 
+            using var hkcr_ext = Registry.ClassesRoot.OpenSubKey(extention, false);
+            if (hkcr_ext is null) return false;
 
-            using var hkcr_exe = Registry.ClassesRoot.OpenSubKey(extention, false);
-            if (hkcr_exe is null) return false;
-
-            using var openwithProgIDs = hkcr_exe.OpenSubKey("OpenWithProgieds");
+            using var openwithProgIDs = hkcr_ext.OpenSubKey("OpenWithProgids");
             if (openwithProgIDs is null) return false;
 
             return openwithProgIDs.GetValue(filetype.Label) != null;
@@ -109,7 +113,7 @@ namespace NatCruise.Wpf.Services
             if (classFileTypeLabel is null) return false;
 
             using var command = classFileTypeLabel.OpenSubKey("shell\\open\\command");
-            if(command is null) return false;
+            if (command is null) return false;
             if (command.GetValue(null) is null) return false;
             return command.GetValue(null).Equals(OpenCommand);
         }
@@ -118,7 +122,7 @@ namespace NatCruise.Wpf.Services
         {
             RegisterApp(ApplicationFullPath);
 
-            foreach(var filetype in FileTypes)
+            foreach (var filetype in FileTypes)
             {
                 RegisterFileType(filetype);
             }
@@ -136,13 +140,16 @@ namespace NatCruise.Wpf.Services
             }
         }
 
-
-
         public void RegisterFileType(AssociatedFileTypeInfo filetype)
         {
+            Log.LogEvent(nameof(FileAssociationService) + ": Registering File Type",
+                new Dictionary<string, string>() { { "Extension", filetype.Extension }, { "Label", filetype.Label } });
+
             RegisterFileTypeLabel(filetype);
 
             RegisterExtension(filetype);
+
+            Log.LogEvent(nameof(FileAssociationService) + ": File Type Registered");
         }
 
         internal void RegisterFileTypeLabel(AssociatedFileTypeInfo filetype)
