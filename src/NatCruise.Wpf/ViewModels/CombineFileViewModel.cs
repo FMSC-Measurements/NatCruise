@@ -4,11 +4,11 @@ using CruiseDAL.V3.Sync;
 using CruiseDAL.V3.Sync.Syncers;
 using CruiseDAL.V3.Sync.Util;
 using FMSC.ORM.SQLite;
+using NatCruise.Async;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
-using NatCruise.Util;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ namespace NatCruise.Wpf.ViewModels
                 if(value != null)
                 {
                     ConflictCheckOptions.AllowDuplicateTreeNumberForNestedStrata = !(value.UseCrossStrataPlotTreeNumbering ?? false);
-                    RaisePropertyChanged(nameof(ConflictCheckOptions));
+                    OnPropertyChanged(nameof(ConflictCheckOptions));
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace NatCruise.Wpf.ViewModels
             protected set
             {
                 SetProperty(ref _isSyncRunning, value);
-                RaisePropertyChanged(nameof(CanStartSync));
+                OnPropertyChanged(nameof(CanStartSync));
             }
         }
 
@@ -164,7 +164,7 @@ namespace NatCruise.Wpf.ViewModels
                 }
             }
 
-            RaisePropertyChanged(nameof(CanStartSync));
+            OnPropertyChanged(nameof(CanStartSync));
         }
 
         protected void AddCruiseOptions(IEnumerable<NatCruise.Models.Cruise> cruises)

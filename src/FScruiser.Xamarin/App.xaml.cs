@@ -1,8 +1,10 @@
 ﻿using CruiseDAL;
+using FScruiser.XF.Controls;
 using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using FScruiser.XF.Util;
 using Microsoft.AppCenter.Crashes;
+using NatCruise.Async;
 using NatCruise.Core.Services;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Services;
@@ -63,7 +65,9 @@ namespace FScruiser.XF
             // this helper extention class is used to get exceptions from
             // 'Fire and Forget' async actions
             var loggingService = Container.Resolve<ILoggingService>();
-            NatCruise.Util.TaskExtentions.LoggingService = loggingService;
+            TaskExtentions.LoggingService = loggingService;
+
+            TapGestureRecognizerHelper.SoundService = Container.Resolve<ISoundService>();
 
             this.InitializeComponent();
 

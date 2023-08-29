@@ -47,7 +47,7 @@ namespace NatCruise.MVVM.ViewModels
             {
                 _stratum = value;
                 OnStratumChanged(value);
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -115,16 +115,16 @@ namespace NatCruise.MVVM.ViewModels
                 SetProperty(ref _selectedTreeFieldSetup, value);
                 //if (value != null) { value.PropertyChanged += SelectedTreeFieldSetup_PropertyChanged; }
                 ValidateAll(value);
-                RaisePropertyChanged(nameof(IsDefaultBoolean));
-                RaisePropertyChanged(nameof(IsDefaultInt));
-                RaisePropertyChanged(nameof(IsDefaultReal));
-                RaisePropertyChanged(nameof(IsDefaultText));
-                RaisePropertyChanged(nameof(DefaultValueBool));
-                RaisePropertyChanged(nameof(DefaultValueInt));
-                RaisePropertyChanged(nameof(DefaultValueReal));
-                RaisePropertyChanged(nameof(DefaultValueText));
-                RaisePropertyChanged(nameof(IsLocked));
-                RaisePropertyChanged(nameof(IsHidden));
+                OnPropertyChanged(nameof(IsDefaultBoolean));
+                OnPropertyChanged(nameof(IsDefaultInt));
+                OnPropertyChanged(nameof(IsDefaultReal));
+                OnPropertyChanged(nameof(IsDefaultText));
+                OnPropertyChanged(nameof(DefaultValueBool));
+                OnPropertyChanged(nameof(DefaultValueInt));
+                OnPropertyChanged(nameof(DefaultValueReal));
+                OnPropertyChanged(nameof(DefaultValueText));
+                OnPropertyChanged(nameof(IsLocked));
+                OnPropertyChanged(nameof(IsHidden));
                 
             }
         }

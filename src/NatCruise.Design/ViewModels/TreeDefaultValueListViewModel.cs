@@ -90,7 +90,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _productOptions, value);
-                RaisePropertyChanged(nameof(ProductCodeOptions));
+                OnPropertyChanged(nameof(ProductCodeOptions));
             }
         }
 

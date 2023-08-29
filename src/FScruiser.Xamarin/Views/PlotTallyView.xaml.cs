@@ -18,17 +18,6 @@ namespace FScruiser.XF.Views
             InitializeComponent();
         }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-            var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
-            if (vm != null)
-            {
-                vm.Load();
-            }
-        }
-
         private void _stratumFilterButton_Clicked(object sender, EventArgs e)
         {
             if (sender != null && sender is View view

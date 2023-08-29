@@ -38,11 +38,11 @@ namespace FScruiser.XF.ViewModels
 
         protected void NotifyCruiseMethodChanged()
         {
-            RaisePropertyChanged(nameof(IsPlot));
-            RaisePropertyChanged(nameof(IsFixedSizePlot));
-            RaisePropertyChanged(nameof(IsVariableRariousePlot));
-            RaisePropertyChanged(nameof(Is3PPNT));
-            RaisePropertyChanged(nameof(IsFixCNT));
+            OnPropertyChanged(nameof(IsPlot));
+            OnPropertyChanged(nameof(IsFixedSizePlot));
+            OnPropertyChanged(nameof(IsVariableRariousePlot));
+            OnPropertyChanged(nameof(Is3PPNT));
+            OnPropertyChanged(nameof(IsFixCNT));
         }
 
         public override void Load()

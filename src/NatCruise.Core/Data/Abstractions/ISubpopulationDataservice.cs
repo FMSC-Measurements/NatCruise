@@ -7,7 +7,7 @@ namespace NatCruise.Data
     {
         IEnumerable<Subpopulation> GetSubpopulations(string stratumCode, string sampleGroupCode);
 
-        bool Exists(string stratumCode, string sampleGroupCode, string species, string livedead);
+        bool Exists(string stratumCode, string sampleGroupCode, string species, string livedead = null);
 
         bool HasTreeCounts(string stratumCode, string sampleGroupCode, string species, string livedead);
 

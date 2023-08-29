@@ -36,11 +36,11 @@ namespace NatCruise.Design.ViewModels
                 SetProperty(ref _cruise, value);
                 ValidateAll(value);
 
-                RaisePropertyChanged(nameof(CruiseNumber));
-                RaisePropertyChanged(nameof(Purpose));
-                RaisePropertyChanged(nameof(Remarks));
-                RaisePropertyChanged(nameof(UseCrossStrataPlotTreeNumbering));
-                RaisePropertyChanged(nameof(DefaultUOM));
+                OnPropertyChanged(nameof(CruiseNumber));
+                OnPropertyChanged(nameof(Purpose));
+                OnPropertyChanged(nameof(Remarks));
+                OnPropertyChanged(nameof(UseCrossStrataPlotTreeNumbering));
+                OnPropertyChanged(nameof(DefaultUOM));
             }
         }
 

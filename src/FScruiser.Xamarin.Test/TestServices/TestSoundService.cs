@@ -14,6 +14,11 @@ namespace FScruiser.XF.TestServices
             throw new NotImplementedException();
         }
 
+        public void PlayClickSound()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task SignalInsuranceTreeAsync()
         {
             throw new NotImplementedException();

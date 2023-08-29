@@ -1,13 +1,13 @@
 ﻿using CruiseDAL;
 using CruiseDAL.UpConvert;
 using DryIoc;
+using NatCruise.Async;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Services;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
-using NatCruise.Util;
 using NatCruise.Wpf.Services;
 using NatCruise.Wpf.Util;
 using Prism.Commands;
@@ -74,7 +74,7 @@ namespace NatCruise.Wpf.ViewModels
             set
             {
                 SetProperty(ref _currentFileName, value);
-                RaisePropertyChanged(nameof(Title));
+                OnPropertyChanged(nameof(Title));
             }
         }
 
@@ -108,7 +108,7 @@ namespace NatCruise.Wpf.ViewModels
                     }
 
                     CurrentFileName = Path.GetFileName(filePath);
-                    RaisePropertyChanged(nameof(RecentFiles));
+                    OnPropertyChanged(nameof(RecentFiles));
                 }
             });
         }
@@ -147,7 +147,7 @@ namespace NatCruise.Wpf.ViewModels
                     DataserviceProvider.CruiseID = cruiseID;
 
                     RecentFilesDataservice.AddRecentFile(filePath);
-                    RaisePropertyChanged(nameof(RecentFiles));
+                    OnPropertyChanged(nameof(RecentFiles));
 
                     NavigationService.ShowTemplateLandingLayout().FireAndForget();
                 }
@@ -207,7 +207,7 @@ namespace NatCruise.Wpf.ViewModels
                 await NavigationService.ShowCruiseLandingLayout();
                 RecentFilesDataservice.AddRecentFile(filePath);
                 CurrentFileName = Path.GetFileName(filePath);
-                RaisePropertyChanged(nameof(RecentFiles));
+                OnPropertyChanged(nameof(RecentFiles));
 
             }
             else if (extention is ".crz3t")
@@ -228,7 +228,7 @@ namespace NatCruise.Wpf.ViewModels
                 await NavigationService.ShowTemplateLandingLayout();
                 RecentFilesDataservice.AddRecentFile(filePath);
                 CurrentFileName = Path.GetFileName(filePath);
-                RaisePropertyChanged(nameof(RecentFiles));
+                OnPropertyChanged(nameof(RecentFiles));
 
             }
             else if (extention is ".cut")

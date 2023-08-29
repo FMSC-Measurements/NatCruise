@@ -23,9 +23,9 @@ namespace FScruiser.XF.Views
             base.OnAppearing();
 
             var vm = _treeEditPanel.BindingContext as TreeEditViewModel;
-            if (vm != null)
+            if (vm != null && vm.TreeID != null)
             {
-                vm.Load();
+                vm.Load(vm.TreeID);
             }
         }
 

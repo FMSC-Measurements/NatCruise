@@ -1,7 +1,6 @@
-﻿using FScruiser.XF.Services;
-using NatCruise;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using FScruiser.XF.Services;
+using NatCruise.Async;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -15,7 +14,9 @@ using Prism.Common;
 using Prism.Ioc;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -23,17 +24,14 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class PlotTallyViewModel : ViewModelBase
+    public partial class PlotTallyViewModel : ViewModelBase
     {
-
         private const string STRATUM_FILTER_ALL = "All";
 
-        private int _plotNumber;
         private ICollection<TallyPopulation_Plot> _tallyPopulations;
         private ICollection<Stratum> _strata;
         private string _stratumFilter = STRATUM_FILTER_ALL;
-        private IList<PlotTreeEntry> _trees;
-
+        private NotifyTaskCompletion<ObservableCollection<PlotTreeEntry>> _trees;
 
         private Plot _plot;
 
@@ -41,14 +39,14 @@ namespace FScruiser.XF.ViewModels
         private CuttingUnit _cuttingUnit;
         private PlotTreeEntry _selectedTree;
 
-        public event EventHandler TreeAdded;
-
         public string Title => $"Unit {CuttingUnit?.CuttingUnitCode} - {CuttingUnit?.Description} Plot {Plot?.PlotNumber}";
+
+        #region services
 
         public ITreeDataservice TreeDataservice { get; }
         public IPlotDataservice PlotDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
-        public IStratumDataservice StratumDataservice { get; }
+        public IPlotStratumDataservice PlotStratumDataservice { get; }
         public ITallyPopulationDataservice TallyPopulationDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
@@ -60,6 +58,67 @@ namespace FScruiser.XF.ViewModels
         public IContainerProvider ContainerProvider { get; }
         public IPlotTallyService TallyService { get; }
         public IPlotTreeDataservice PlotTreeDataservice { get; }
+
+        #endregion services
+
+        public PlotTallyViewModel(ICruiseNavigationService navigationService,
+            INatCruiseDialogService dialogService,
+            IApplicationSettingService applicationSettingService,
+            ITreeDataservice treeDataservice,
+            IPlotDataservice plotDataservice,
+            ICuttingUnitDataservice cuttingUnitDataservice,
+            IPlotStratumDataservice plotStratumDataservice,
+            ITallyPopulationDataservice tallyPopulationDataservice,
+            ISampleSelectorDataService sampleSelectorDataservice,
+            ISoundService soundService,
+            ICruisersDataservice cruisersDataservice,
+            ITallySettingsDataService tallySettings,
+            IContainerProvider containerProvider,
+            IPlotTallyService tallyService,
+            IPlotTreeDataservice plotTreeDataservice)
+        {
+            SelectPrevNextTreeSkipsCountTrees = applicationSettingService.SelectPrevNextTreeSkipsCountTrees;
+
+            TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
+            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
+            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
+            PlotStratumDataservice = plotStratumDataservice ?? throw new ArgumentNullException(nameof(plotStratumDataservice));
+            TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
+            SampleSelectorDataService = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            TallySettings = tallySettings ?? throw new ArgumentNullException(nameof(tallySettings));
+            CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
+            SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
+            ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
+            TallyService = tallyService ?? throw new ArgumentNullException(nameof(tallyService));
+            PlotTreeDataservice = plotTreeDataservice ?? throw new ArgumentNullException(nameof(plotTreeDataservice));
+
+            var treeVM = SelectedTreeViewModel = ContainerProvider.Resolve<TreeEditViewModel>((typeof(ICruiseNavigationService), NavigationService));
+            treeVM.UseSimplifiedTreeFields = true;
+        }
+
+        #region commands
+
+        private ICommand _editPlotCommand;
+        private ICommand _tallyCommand;
+        private ICommand _editTreeCommand;
+        private ICommand _showTallyPopulationDetailsCommand;
+        private Plot_Stratum[] _plotStrata;
+        private ICollection<TallyPopulation_Plot> _talliesFiltered;
+        private bool _selectedTreeChanging;
+
+        public ICommand EditTreeCommand => _editTreeCommand ??= new RelayCommand<string>(x => ShowEditTree(x).FireAndForget());
+
+        public ICommand ShowTallyPopulationDetailsCommand => _showTallyPopulationDetailsCommand ??= new RelayCommand<TallyPopulation>(x => ShowTallyPopulationDetails(x).FireAndForget());
+
+        public ICommand TallyCommand => _tallyCommand ??= new RelayCommand<TallyPopulation_Plot>(x => TallyAsync(x).FireAndForget());
+
+        public ICommand EditPlotCommand => _editPlotCommand ??= new RelayCommand(() => ShowEditPlot().FireAndForget());
+
+        #endregion commands
+
+        public bool IsRecon { get; private set; } // set in constructor since it is a sale level value
 
         public bool SelectPrevNextTreeSkipsCountTrees { get; set; }
 
@@ -73,18 +132,18 @@ namespace FScruiser.XF.ViewModels
                 var treeID = value?.TreeID;
                 if (treeID != null)
                 {
-                    var treeVM = ContainerProvider.Resolve<TreeEditViewModel>((typeof(ICruiseNavigationService), NavigationService));
-                    treeVM.UseSimplifiedTreeFields = true;
-                    treeVM.Initialize(new Prism.Navigation.NavigationParameters() { { NavParams.TreeID, treeID } });
-                    treeVM.Load();
+                    try
+                    {
+                        _selectedTreeChanging = true;
+                        SelectedTreeViewModel.Load(treeID);
 
-                    SetProperty(ref _selectedTree, value);
-                    SelectedTreeViewModel = treeVM;
+                        SetProperty(ref _selectedTree, value);
+                    }
+                    finally { _selectedTreeChanging = false; }
                 }
                 else
                 {
                     SetProperty(ref _selectedTree, null);
-                    SelectedTreeViewModel = null;
                 }
             }
         }
@@ -102,14 +161,22 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
+        // propagate changes in the tree edit view model back to the tree in the tree list
         private void SelectedTreeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var vm = (TreeEditViewModel)sender;
+            if (_selectedTreeChanging) { return; }
+
             var tree = SelectedTree;
             if (tree == null) return;
+
+            var vm = (TreeEditViewModel)sender;
+            Debug.Assert(tree.TreeID == vm.Tree.TreeID);
             if (e.PropertyName == nameof(TreeEditViewModel.ErrorsAndWarnings))
             {
-                PlotTreeDataservice.RefreshErrorsAndWarnings(tree);
+                tree.ErrorCount = vm.ErrorCount;
+                tree.WarningCount = vm.WarningCount;
+
+                //PlotTreeDataservice.RefreshErrorsAndWarnings(tree);
             }
             if (e.PropertyName == nameof(TreeEditViewModel.SpeciesCode))
             {
@@ -129,80 +196,42 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public PlotTallyViewModel(ICruiseNavigationService navigationService,
-            INatCruiseDialogService dialogService,
-            IApplicationSettingService applicationSettingService,
-            ITreeDataservice treeDataservice,
-            IPlotDataservice plotDataservice,
-            ICuttingUnitDataservice cuttingUnitDataservice,
-            IStratumDataservice stratumDataservice,
-            ITallyPopulationDataservice tallyPopulationDataservice,
-            ISampleSelectorDataService sampleSelectorDataservice,
-            ISoundService soundService,
-            ICruisersDataservice cruisersDataservice,
-            ITallySettingsDataService tallySettings,
-            IContainerProvider containerProvider,
-            IPlotTallyService tallyService,
-            IPlotTreeDataservice plotTreeDataservice)
-        {
-            SelectPrevNextTreeSkipsCountTrees = applicationSettingService.SelectPrevNextTreeSkipsCountTrees;
-
-            TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
-            PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
-            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
-            StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
-            TallyPopulationDataservice = tallyPopulationDataservice ?? throw new ArgumentNullException(nameof(tallyPopulationDataservice));
-            SampleSelectorDataService = sampleSelectorDataservice ?? throw new ArgumentNullException(nameof(sampleSelectorDataservice));
-            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            TallySettings = tallySettings ?? throw new ArgumentNullException(nameof(tallySettings));
-            CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
-            SoundService = soundService ?? throw new ArgumentNullException(nameof(soundService));
-            ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
-            TallyService = tallyService ?? throw new ArgumentNullException(nameof(tallyService));
-            PlotTreeDataservice = plotTreeDataservice ?? throw new ArgumentNullException(nameof(plotTreeDataservice));
-        }
-
-        #region commands
-
-        private ICommand _editPlotCommand;
-        private ICommand _tallyCommand;
-        private ICommand _editTreeCommand;
-        private ICommand _deleteTreeCommand;
-        private ICommand _selectPreviouseTreeCommand;
-        private ICommand _selectNextTreeCommand;
-        private IEnumerable<string> _stratumFilterOptions;
-        private ICommand _showTallyPopulationDetailsCommand;
-
-        public ICommand SelectTreeCommand => new Command<object>(SelectTree);
-
-        public ICommand EditTreeCommand => _editTreeCommand ??= new Command<string>(x => ShowEditTree(x).FireAndForget());
-
-        public ICommand ShowTallyPopulationDetailsCommand => _showTallyPopulationDetailsCommand ??= new Command<TallyPopulation>(x => ShowTallyPopulationDetails(x).FireAndForget());
-
-        public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new Command<string>(DeleteTree);
-
-        public ICommand TallyCommand => _tallyCommand ??= new Command<TallyPopulation_Plot>(x => TallyAsync(x).FireAndForget());
-
-        public ICommand EditPlotCommand => _editPlotCommand ??= new Command(() => ShowEditPlot());
-
-        public ICommand SelectPreviousTreeCommand => _selectPreviouseTreeCommand ??= new DelegateCommand(SelectPreviousTree);
-
-        public ICommand SelectNextTreeCommand => _selectNextTreeCommand ??= new DelegateCommand(SelectNextTree);
-
-        #endregion commands
-
         public Plot Plot
         {
             get => _plot;
-            set => SetProperty(ref _plot, value);
+            set
+            {
+                if (_plot == value) return;
+
+                var plotNumber = value.PlotNumber;
+                var unitCode = value.CuttingUnitCode;
+                CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
+
+                TallyPopulations = TallyPopulationDataservice.GetPlotTallyPopulationsByUnitCode(unitCode, plotNumber).ToArray();
+                SetStratumFilter(null);
+                PlotStrata = PlotStratumDataservice.GetPlot_Strata(unitCode, plotNumber, false).ToArray();
+
+                Trees = NotifyTaskCompletion.Create<ObservableCollection<PlotTreeEntry>>(
+                    Task.Run(() => PlotTreeDataservice.GetPlotTrees(unitCode, plotNumber).ToObservableCollection()),
+                    success: (src, ea) =>
+                    {
+                        var selectedTree = SelectedTree;
+                        if (selectedTree != null)
+                        {
+                            SelectedTree = Trees.Result.FirstOrDefault(y => y.TreeID == selectedTree.TreeID);
+                        }
+                    });
+
+
+                SetProperty(ref _plot, value);
+                OnPropertyChanged(nameof(PlotNumber));
+                OnPropertyChanged(nameof(Title));
+            }
         }
 
-        public int PlotNumber
-        {
-            get { return _plotNumber; }
-            set { SetProperty(ref _plotNumber, value); }
-        }
+        public int PlotNumber => Plot?.PlotNumber ?? 0;
+
+        public string UnitCode => CuttingUnit?.CuttingUnitCode;
 
         public CuttingUnit CuttingUnit
         {
@@ -210,14 +239,9 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _cuttingUnit, value);
-                RaisePropertyChanged(nameof(UnitCode));
-                RaisePropertyChanged(nameof(Title));
+                OnPropertyChanged(nameof(UnitCode));
             }
         }
-
-        public string UnitCode => CuttingUnit?.CuttingUnitCode;
-
-        public bool IsRecon { get; private set; }
 
         public ICollection<TallyPopulation_Plot> TallyPopulations
         {
@@ -225,12 +249,21 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _tallyPopulations, value);
-                RaisePropertyChanged(nameof(TalliesFiltered));
+                OnPropertyChanged(nameof(TalliesFiltered));
             }
         }
 
-        public ICollection<TallyPopulation_Plot> TalliesFiltered => TallyPopulations.OrEmpty()
-            .Where(x => StratumFilter == STRATUM_FILTER_ALL || x.StratumCode == StratumFilter).ToArray();
+        public NotifyTaskCompletion<ObservableCollection<PlotTreeEntry>> Trees
+        {
+            get => _trees;
+            set => SetProperty(ref _trees, value);
+        }
+
+        public ICollection<TallyPopulation_Plot> TalliesFiltered
+        {
+            get => _talliesFiltered;
+            private set => SetProperty(ref _talliesFiltered, value);
+        }
 
         public ICollection<Stratum> Strata
         {
@@ -242,11 +275,11 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public IEnumerable<string> StrataFilterOptions
-        {
-            get => _stratumFilterOptions;
-            protected set => SetProperty(ref _stratumFilterOptions, value);
-        }
+        //public IEnumerable<string> StrataFilterOptions
+        //{
+        //    get => _stratumFilterOptions;
+        //    protected set => SetProperty(ref _stratumFilterOptions, value);
+        //}
 
         //public ICollection<string> StrataFilterOptions => Strata.OrEmpty().Select(x => x.StratumCode).Append(STRATUM_FILTER_ALL).ToArray();
 
@@ -256,35 +289,38 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _stratumFilter, value);
-                RaisePropertyChanged(nameof(TalliesFiltered));
+                OnPropertyChanged(nameof(TalliesFiltered));
             }
         }
 
-        public IList<PlotTreeEntry> Trees
+        //public IList<PlotTreeEntry> Trees
+        //{
+        //    get { return _trees; }
+        //    set
+        //    {
+        //        SetProperty(ref _trees, value);
+        //        // if we have a selected tree refresh it with a matching tree in the new trees collection
+        //        var selectedTree = SelectedTree;
+        //        if (selectedTree != null)
+        //        {
+        //            SelectedTree = Trees.FirstOrDefault(x => x.TreeID == selectedTree.TreeID);
+        //        }
+        //    }
+        //}
+
+        public Plot_Stratum[] PlotStrata
         {
-            get { return _trees; }
-            set
-            {
-                SetProperty(ref _trees, value);
-                // if we have a selected tree refresh it with a matching tree in the new trees collection
-                var selectedTree = SelectedTree;
-                if (selectedTree != null)
-                {
-                    SelectedTree = Trees.FirstOrDefault(x => x.TreeID == selectedTree.TreeID);
-                }
-            }
+            get => _plotStrata;
+            private set => SetProperty(ref _plotStrata, value);
         }
 
-        protected void OnTreeAdded()
-        {
-            TreeAdded?.Invoke(this, null);
-        }
-
+        [RelayCommand]
         public void SelectTree(object obj)
         {
             var tree = obj as PlotTreeEntry;
             SelectedTree = tree;
         }
+
 
         protected override void Load(IParameters parameters)
         {
@@ -297,45 +333,20 @@ namespace FScruiser.XF.ViewModels
             Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)
             {
-                plot = PlotDataservice.GetPlot(plotID);
-                unitCode = plot.CuttingUnitCode;
+                Plot = PlotDataservice.GetPlot(plotID);
             }
             else
             {
-                plot = PlotDataservice.GetPlot(unitCode, plotNumber);
+                Plot = PlotDataservice.GetPlot(unitCode, plotNumber);
             }
-
-            var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
-
-            TallyPopulations = TallyPopulationDataservice.GetPlotTallyPopulationsByUnitCode(plot.CuttingUnitCode, plot.PlotNumber).ToArray();
-            var strata = Strata = StratumDataservice.GetPlotStrata(plot.CuttingUnitCode).ToArray();
-            if (strata.Count() > 1)
-            {
-                StrataFilterOptions = strata
-                    .Select(x => x.StratumCode)
-                    .Append(STRATUM_FILTER_ALL)
-                    .ToArray();
-            }
-            else
-            { StrataFilterOptions = new string[0]; }
-
-            Trees = PlotTreeDataservice.GetPlotTrees(plot.CuttingUnitCode, plot.PlotNumber).ToObservableCollection();
-
-            Plot = plot;
-            PlotNumber = plot.PlotNumber;
-
-            RaisePropertyChanged(nameof(Title));
         }
 
         public async Task TallyAsync(TallyPopulation_Plot pop)
         {
             if (pop.InCruise == false) { return; }
-
-            var dialogService = DialogService;
-
             if (pop.IsEmpty)
             {
-                await dialogService.ShowMessageAsync("To tally trees, goto plot edit page and uncheck stratum as empty", "Stratum Is Marked As Empty");
+                await DialogService.ShowMessageAsync("To tally trees, goto plot edit page and uncheck stratum as NULL", "Stratum Is Marked As NULL");
                 return;
             }
 
@@ -344,29 +355,31 @@ namespace FScruiser.XF.ViewModels
             ISoundService soundService = SoundService;
 
             soundService.SignalTallyAsync().FireAndForget();
-
-            _trees.Add(tree);
-            OnTreeAdded();
-
             if (tree.CountOrMeasure == "M")
             {
                 soundService.SignalMeasureTreeAsync().FireAndForget();
-
-                if (CruisersDataservice.PromptCruiserOnSample)
-                {
-                    var cruiser = await DialogService.AskCruiserAsync();
-                    if (cruiser != null)
-                    {
-                        TreeDataservice.UpdateTreeInitials(tree.TreeID, cruiser);
-                    }
-                }
             }
             else if (tree.CountOrMeasure == "I")
             {
                 soundService.SignalInsuranceTreeAsync().FireAndForget();
             }
+
+            if (Trees.IsSuccessfullyCompleted)
+            {
+                Trees.Result.Add(tree);
+            }
+            
             pop.PlotTreeCount++;
             pop.TreeCount++;
+
+            if (tree.CountOrMeasure == "M" && CruisersDataservice.PromptCruiserOnSample)
+            {
+                var cruiser = await DialogService.AskCruiserAsync();
+                if (cruiser != null)
+                {
+                    TreeDataservice.UpdateTreeInitials(tree.TreeID, cruiser);
+                }
+            }
         }
 
         public Task ShowEditTree(string treeID)
@@ -386,17 +399,16 @@ namespace FScruiser.XF.ViewModels
             return NavigationService.ShowTallyPopulationInfo(UnitCode, PlotNumber, tallyPop.StratumCode, tallyPop.SampleGroupCode, tallyPop.SpeciesCode, tallyPop.LiveDead);
         }
 
-        public void DeleteTree(string tree_guid)
-        {
-            var tree = Trees.Single(x => x.TreeID == tree_guid);
-            DeleteTree(tree);
-        }
-
+        [RelayCommand]
         public void DeleteTree(PlotTreeEntry tree)
         {
             var treeID = tree.TreeID;
             TreeDataservice.DeleteTree(treeID);
-            Trees.Remove(tree);
+
+            if (Trees.IsSuccessfullyCompleted)
+            {
+                Trees.Result?.Remove(tree);
+            }
 
             var pop = TallyPopulations.FirstOrDefault(x => x.StratumCode == tree.StratumCode
                                                             && x.SampleGroupCode == tree.SampleGroupCode
@@ -415,41 +427,60 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
+        [RelayCommand]
         public void SelectPreviousTree()
         {
             var selectedTree = SelectedTree;
             if (selectedTree == null) { return; }
 
-            var trees = Trees;
-            var i = trees.IndexOf(selectedTree);
+            if (!Trees.IsSuccessfullyCompleted) { return; }
+            var treesCollection = Trees.Result;
+
+            var i = treesCollection.IndexOf(selectedTree);
             if (i == -1) { return; }
             if (i < 1) { return; }
 
             var prevTree = (SelectPrevNextTreeSkipsCountTrees) ?
-                trees.ReverseSearch(x => x.TreeID != null && x.CountOrMeasure != "C", i - 1)
-                : trees.ReverseSearch(x => x.TreeID != null, i - 1);
+                treesCollection.ReverseSearch(x => x.TreeID != null && x.CountOrMeasure != "C", i - 1)
+                : treesCollection.ReverseSearch(x => x.TreeID != null, i - 1);
             if (prevTree != null)
             {
                 SelectTree(prevTree);
             }
         }
 
+        [RelayCommand]
         public void SelectNextTree()
         {
             var selectedTree = SelectedTree;
             if (selectedTree == null) { return; }
 
-            var trees = Trees;
-            var i = trees.IndexOf(selectedTree);
+            if (!Trees.IsSuccessfullyCompleted) { return; }
+            var treesCollection = Trees.Result;
+
+            var i = treesCollection.IndexOf(selectedTree);
             if (i == -1) { return; }
-            if (i == trees.Count - 1) { return; }
+            if (i == treesCollection.Count - 1) { return; }
 
             var nextTree = (SelectPrevNextTreeSkipsCountTrees) ?
-                trees.Search(x => x.TreeID != null && x.CountOrMeasure != "C", i + 1)
-                : trees.Search(x => x.TreeID != null, i + 1);
+                treesCollection.Search(x => x.TreeID != null && x.CountOrMeasure != "C", i + 1)
+                : treesCollection.Search(x => x.TreeID != null, i + 1);
             if (nextTree != null)
             {
                 SelectTree(nextTree);
+            }
+        }
+
+        [RelayCommand]
+        public void SetStratumFilter(Plot_Stratum stratum)
+        {
+            if (stratum == null)
+            {
+                TalliesFiltered = TallyPopulations.ToArray();
+            }
+            else
+            {
+                TalliesFiltered = TallyPopulations.Where(x => x.StratumCode == stratum.StratumCode).ToArray();
             }
         }
     }

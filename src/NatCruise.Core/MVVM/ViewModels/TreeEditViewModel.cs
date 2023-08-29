@@ -1,4 +1,6 @@
-﻿using NatCruise.Data;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using NatCruise.Async;
+using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Services;
@@ -8,13 +10,11 @@ using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace NatCruise.MVVM.ViewModels
 {
-
     public class TreeFieldValueChangedEventArgs
     {
         public string Field { get; set; }
@@ -26,36 +26,35 @@ namespace NatCruise.MVVM.ViewModels
         private ICommand _showLogsCommand;
         private IEnumerable<string> _stratumCodes;
         private IEnumerable<string> _sampleGroupCodes;
-        private IEnumerable<Subpopulation> _subPopulations;
         private IEnumerable<TreeError> _errorsAndWarnings;
         private IEnumerable<TreeFieldValue> _treeFieldValues;
         private TreeEx _tree;
-        private bool _hasSampleGroupError;
-        private bool _hasSpeciesError;
         private DelegateCommand<TreeError> _showEditTreeErrorCommand;
         private IEnumerable<string> _cruisers;
         private string _cruiseMethod;
         private IEnumerable<string> _countOrMeasureOptions;
         private IEnumerable<string> _speciesOptions;
+        private int _errorCount;
+        private int _warningCount;
 
         private bool IsTreeChanging { get; set; }
 
-        protected IStratumDataservice StratumDataservice { get; }
-        protected ISampleGroupDataservice SampleGroupDataservice { get; }
-        protected ISubpopulationDataservice SubpopulationDataservice { get; }
-        protected ITreeDataservice TreeDataservice { get; }
-        protected ITreeErrorDataservice TreeErrorDataservice { get; }
-        protected ITreeFieldValueDataservice TreeFieldValueDataservice { get; }
-        protected ICruisersDataservice CruisersDataservice { get; }
-        protected INatCruiseDialogService DialogService { get; }
-        protected INatCruiseNavigationService NavigationService { get; }
-        protected ILoggingService LoggingService { get; }
-
+        public IStratumDataservice StratumDataservice { get; }
+        public ISampleGroupDataservice SampleGroupDataservice { get; }
+        public ISpeciesDataservice SpeciesDataservice { get; }
+        public ISubpopulationDataservice SubpopulationDataservice { get; }
+        public ITreeDataservice TreeDataservice { get; }
+        public ITreeErrorDataservice TreeErrorDataservice { get; }
+        public ITreeFieldValueDataservice TreeFieldValueDataservice { get; }
+        public ICruisersDataservice CruisersDataservice { get; }
+        public INatCruiseDialogService DialogService { get; }
+        public INatCruiseNavigationService NavigationService { get; }
+        public ICruiseLogDataservice CruiseLogDataservice { get; }
+        public ILoggingService LoggingService { get; }
 
         public event EventHandler<TreeFieldValueChangedEventArgs> TreeFieldValueChanged;
 
         public bool UseSimplifiedTreeFields { get; set; } = false;
-
 
         public IEnumerable<string> Cruisers
         {
@@ -94,7 +93,6 @@ namespace NatCruise.MVVM.ViewModels
 
         private void treeFieldValue_ValueChanged(object sender, EventArgs e)
         {
-
             var treeFieldValue = (TreeFieldValue)sender;
 
             try
@@ -126,7 +124,6 @@ namespace NatCruise.MVVM.ViewModels
                                 { "Value", treeFieldValue.Value?.ToString() ?? "null"}
                     });
             }
-
         }
 
         public string TreeID => Tree?.TreeID;
@@ -141,16 +138,17 @@ namespace NatCruise.MVVM.ViewModels
                 {
                     OnTreeChanged(value);
                     SetProperty(ref _tree, value);
-                    RaisePropertyChanged(nameof(CountOrMeasure));
-                    RaisePropertyChanged(nameof(TreeNumber));
-                    RaisePropertyChanged(nameof(StratumCode));
-                    RaisePropertyChanged(nameof(SampleGroupCode));
+                    OnPropertyChanged(nameof(TreeID));
+                    OnPropertyChanged(nameof(CountOrMeasure));
+                    OnPropertyChanged(nameof(TreeNumber));
+                    OnPropertyChanged(nameof(StratumCode));
+                    OnPropertyChanged(nameof(SampleGroupCode));
                     //RaisePropertyChanged(nameof(SubPopulation));
-                    RaisePropertyChanged(nameof(SpeciesCode));
-                    RaisePropertyChanged(nameof(LiveDead));
-                    RaisePropertyChanged(nameof(Remarks));
-                    RaisePropertyChanged(nameof(Initials));
-                    RaisePropertyChanged(nameof(TreeCount));
+                    OnPropertyChanged(nameof(SpeciesCode));
+                    OnPropertyChanged(nameof(LiveDead));
+                    OnPropertyChanged(nameof(Remarks));
+                    OnPropertyChanged(nameof(Initials));
+                    OnPropertyChanged(nameof(TreeCount));
                 }
                 finally
                 {
@@ -169,7 +167,7 @@ namespace NatCruise.MVVM.ViewModels
 
                 RefreshCruiseMethod(tree);
                 RefreshSampleGroups(tree);
-                RefreshSubPopulations(tree);
+                RefreshSpeciesOptions(tree);
                 RefreshTreeFieldValues(tree);
                 RefreshErrorsAndWarnings(tree);
                 RefreshCruisers(tree);
@@ -233,13 +231,22 @@ namespace NatCruise.MVVM.ViewModels
                 var tree = Tree;
                 if (tree == null) { return; }
                 TreeDataservice.UpdateTreeCount(tree.TreeID, value);
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
-        public bool HasSampleGroupError { get => _hasSampleGroupError; set => SetProperty(ref _hasSampleGroupError, value); }
+        public int ErrorCount
+        {
+            get => _errorCount;
+            protected set => SetProperty(ref _errorCount, value);
+        }
 
-        public bool HasSpeciesError { get => _hasSpeciesError; set => SetProperty(ref _hasSpeciesError, value); }
+        public int WarningCount
+        {
+            get => _warningCount;
+            protected set => SetProperty(ref _warningCount, value);
+        }
+
 
         #region CountOrMeasure
 
@@ -253,28 +260,14 @@ namespace NatCruise.MVVM.ViewModels
                 if (tree == null) { return; }
                 var oldValue = tree.CountOrMeasure;
                 tree.CountOrMeasure = value;
-                OnCountOrMeasureChanged(oldValue, value);
-                RaisePropertyChanged();
+                if (oldValue == value) { return; }
+                SaveTree();
+
+                CruiseLogDataservice.Log($"Tree.CountOrMeasure Changed |oldCM:{oldValue}|newCM:{value}|", treeID: tree.TreeID, fieldName:"CountOrMeasure", tableName:"Tree");
+                RefreshErrorsAndWarnings();
+                OnPropertyChanged();
             }
         }
-
-        private void OnCountOrMeasureChanged(string oldValue, string value)
-        {
-            SaveTree();
-            RefreshErrorsAndWarnings();
-        }
-
-        //private bool OnCountOrMeasureChangeing(Tree_Ex tree, string oldValue, string newValue)
-        //{
-        //    var stratum = tree.StratumCode;
-        //    var cruiseMethod = CuttingUnitDatastore.GetCruiseMethod(stratum);
-        //    var isPlotMethod = CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Contains(cruiseMethod);
-        //    if (isPlotMethod == false)
-        //    {
-        //        //DialogService.ShowMessageAsync($"Cruise Method {cruiseMethod} does not allow changing Count or Measure value");
-        //    }
-        //    return isPlotMethod;
-        //}
 
         #endregion CountOrMeasure
 
@@ -303,7 +296,7 @@ namespace NatCruise.MVVM.ViewModels
                     Tree.TreeNumber = value;
                     OnTreeNumberChanged(oldValue, value);
                 }
-                RaisePropertyChanged(nameof(TreeNumber));
+                OnPropertyChanged(nameof(TreeNumber));
             }
         }
 
@@ -343,62 +336,62 @@ namespace NatCruise.MVVM.ViewModels
             set
             {
                 if (IsTreeChanging) { return; }
-                var tree = Tree;
-                if (tree == null) { return; }
-                var oldValue = Tree.StratumCode;
-                if (OnStratumChanging(oldValue, value))
-                {
-                    tree.StratumCode = value;
-                    OnStratumChanged(tree, oldValue, value);
-                    RaisePropertyChanged();
-                }
+                var oldValue = StratumCode;
+                if (oldValue == value || string.IsNullOrEmpty(value)) { return; }
+                HandleStratumChanged(oldValue, value).FireAndForget();
+                OnPropertyChanged(nameof(StratumCode));
             }
         }
 
-        private void OnStratumChanged(TreeEx tree, string oldValue, string newValue)
+        protected async Task HandleStratumChanged(string oldValue, string newValue)
         {
-            //Dataservice.LogMessage($"Tree Stratum Tree_GUID:{tree.Tree_GUID} OldStratumCode:{oldValue} NewStratumCode:{newValue}", "I");
+            var tree = Tree;
+            if (tree != null)
+            {
+                var curSG = tree.SampleGroupCode;
+                var curSp = tree.SpeciesCode;
 
-            //if (SampleGroups.Any(x => x.Code == newValue) == false)
-            //{
-            //    Tree.SampleGroupCode = "";
-            //}
+                var newSg = await CoerceSampleGroupAsync(newValue);
+                if (String.IsNullOrEmpty(newSg))
+                {
+                    // cancel stratum change if no valid SG selected
+                    return;
+                }
 
-            RefreshCruiseMethod(tree);
-            RefreshSampleGroups(tree);
-            RefreshSubPopulations(tree);
-            RefreshTreeFieldValues(tree);
-            RefreshErrorsAndWarnings(tree);
+                if (!ValidateSpecies(newValue, newSg))
+                {
+                    DialogService.ShowMessageAsync($"Sample Group {newValue} has no Species {tree.SpeciesCode}. Add sub-population first.")
+                        .FireAndForget();
+                    return;
+                }
 
-            SaveTree(tree);
-        }
+                if (curSG != newSg)
+                {
+                    tree.SampleGroupCode = newSg;
+                    OnPropertyChanged(nameof(SampleGroupCode));
+                }
+                
+                tree.StratumCode = newValue;
 
-        private bool OnStratumChanging(string oldValue, string newStratum)
-        {
-            if (oldValue == newStratum) { return false; }
-            if (string.IsNullOrWhiteSpace(newStratum)) { return false; }
-            var curStratumCode = StratumCode;
-            if (string.IsNullOrWhiteSpace(curStratumCode) == false
-                && curStratumCode == newStratum)
-            { return false; }
-            return true;
+                RefreshCruiseMethod(tree);
+                RefreshSampleGroups(tree);
+                RefreshSpeciesOptions(tree);
+                RefreshTreeFieldValues(tree);
+                RefreshErrorsAndWarnings(tree);
 
-            //if (curStratumCode != null)
-            //{
-            //    if (!DialogService.AskYesNoAsync("You are changing the stratum of a tree" +
-            //        ", are you sure you want to do this?", "!").Result)
-            //    {
-            //        return false;//do not change stratum
-            //    }
-            //    else
-            //    {
-            //        return true;
-            //    }
-            //}
-            //else
-            //{
-            //    return true;
-            //}
+                SaveTree(tree);
+                CruiseLogDataservice.Log($"Update Tree.StratumCode |oldSt:{oldValue}|newSt:{newValue}|oldSg:{curSG}|newSg:{tree.SampleGroupCode}|oldSp:{curSp}|newSp:{tree.SpeciesCode}|",
+                    treeID: tree.TreeID,
+                    fieldName: "StratumCode",
+                    tableName: "Tree");
+
+                if (curSG != newSg)
+                {
+                    OnPropertyChanged(nameof(SampleGroupCode));
+                }
+            }
+
+            
         }
 
         #endregion Stratum
@@ -422,78 +415,61 @@ namespace NatCruise.MVVM.ViewModels
             get { return Tree?.SampleGroupCode; }
             set
             {
-                var tree = Tree;
-                if (tree == null) { return; }
-                var oldValue = tree.SampleGroupCode;
-                if (OnSampleGroupChanging(oldValue, value))
+                if (IsTreeChanging) { return; }
+                var oldValue = SampleGroupCode;
+                if (oldValue == value || String.IsNullOrEmpty(value)) { return; }
+                HandleSampleGroupChanged(oldValue, value);
+                OnPropertyChanged(nameof(SampleGroupCode));
+            }
+        }
+
+        protected void HandleSampleGroupChanged(string oldValue, string newValue)
+        {
+            var tree = Tree;
+            if (tree != null)
+            {
+                var curSt = tree.StratumCode;
+
+                if(!ValidateSpecies(curSt, newValue))
                 {
-                    tree.SampleGroupCode = value;
-                    OnSampleGroupChanged(tree, oldValue, value);
+
+                    DialogService.ShowMessageAsync($"Sample Group {newValue} has no Species {tree.SpeciesCode}. Add sub-population first.")
+                        .FireAndForget();
+                    return;
                 }
+                
+                tree.SampleGroupCode = newValue;
+
+                RefreshSpeciesOptions(tree);
+                RefreshErrorsAndWarnings(tree);
+
+                SaveTree(tree);
+                CruiseLogDataservice.Log($"Update Tree.SampleGroup |oldSG:{oldValue}|newSG:{newValue}|",
+                    treeID: tree.TreeID,
+                    fieldName: "SampleGroupCode",
+                    tableName: "Tree");
             }
         }
 
-        protected bool ValidateSampleGroupCode(string sgCode)
+        protected bool ValidateSpecies(string stratumCode, string sgCode)
         {
-            if (SampleGroupCodes == null || SampleGroupCodes.Contains(sgCode))
+            var curSpecies = Tree.SpeciesCode;
+            return SubpopulationDataservice.Exists(stratumCode, sgCode, curSpecies);
+        }
+
+        public async Task<string> CoerceSampleGroupAsync(string stratumCode)
+        {
+            var sgCodes = SampleGroupDataservice.GetSampleGroupCodes(stratumCode).ToArray();
+            var curSgCode = Tree.SampleGroupCode;
+            if (!sgCodes.Contains(curSgCode))
             {
-                HasSampleGroupError = false;
-                return true;
+                var selectedSgCode = await DialogService.AskValueAsync("Select Sample Group", sgCodes);
+                return selectedSgCode;
             }
-            else
-            {
-                HasSampleGroupError = true;
-                return false;
-            }
-        }
-
-        private void OnSampleGroupChanged(TreeEx tree, string oldValue, string newValue)
-        {
-            //Dataservice.LogMessage($"Tree SampleGroupCanged, Tree_GUID:{Tree.Tree_GUID}, OldSG:{oldValue}, NewSG:{newValue}", "high");
-
-            RefreshErrorsAndWarnings(tree);
-            RefreshSubPopulations(tree);
-
-            SaveTree(tree);
-        }
-
-        private bool OnSampleGroupChanging(string oldValue, string newSG)
-        {
-            if (string.IsNullOrWhiteSpace(newSG)) { return false; }
-            if (oldValue == newSG) { return false; }
-            return true;
-            //if (string.IsNullOrWhiteSpace(oldValue)) { return true; }
-            //else
-            //{
-            //    //TODO find a way to confirm sampleGroup changes
-            //    if (!DialogService.AskYesNoAsync("You are changing the Sample Group of a tree, are you sure you want to do this?"
-            //        , "!"
-            //        , true).Result)
-            //    {
-            //        return false;
-            //    }
-            //    else
-            //    {
-            //        return true;
-            //    }
-            //}
+            return curSgCode;
         }
 
         #endregion SampleGroup
-
-        // TODO remove SubPopulations?
-        protected IEnumerable<Subpopulation> SubPopulations
-        {
-            get => _subPopulations;
-            set
-            {
-                SetProperty(ref _subPopulations, value);
-
-                SpeciesOptions = SubPopulations.OrEmpty()
-                        .Select(x => x.SpeciesCode)
-                        .ToArray();
-            }
-        }
 
         #region Species
 
@@ -512,41 +488,26 @@ namespace NatCruise.MVVM.ViewModels
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.SpeciesCode;
-                if (OnSpeciesChanging(oldValue, value))
-                {
-                    tree.SpeciesCode = value;
+                if (oldValue == value) { return; }
+                tree.SpeciesCode = value;
 
-                    OnSpeciesChanged(tree, value);
-                    RaisePropertyChanged();
-                }
+                SaveTree(tree);
+                RefreshErrorsAndWarnings(tree);
+                OnPropertyChanged();
             }
         }
 
-        protected bool ValidateSpecies(string value)
-        {
-            if (SpeciesOptions == null || SpeciesOptions.Contains(value))
-            {
-                HasSpeciesError = false;
-                return true;
-            }
-            else
-            {
-                HasSpeciesError = true;
-                return false;
-            }
-        }
-
-        private void OnSpeciesChanged(TreeEx tree, string value)
-        {
-            SaveTree(tree);
-
-            RefreshErrorsAndWarnings(tree);
-        }
-
-        private bool OnSpeciesChanging(string oldValue, string value)
-        {
-            return true;
-        }
+        //protected async Task<string> CoerceSpeciesAsyn(string stratum, string sg)
+        //{
+        //    var speciesCodes = SpeciesDataservice.GetSpeciesCodes(stratum, sg).ToArray();
+        //    var curSpecies = Tree.SpeciesCode;
+        //    if (!speciesCodes.Contains(curSpecies))
+        //    {
+        //        var selectedSpecies = await DialogService.AskValueAsync("Select Species", speciesCodes);
+        //        return selectedSpecies;
+        //    }
+        //    return curSpecies;
+        //}
 
         #endregion Species
 
@@ -563,16 +524,13 @@ namespace NatCruise.MVVM.ViewModels
                 var tree = Tree;
                 if (tree == null) { return; }
                 var oldValue = tree.LiveDead;
+                if (oldValue == value) { return; }
                 tree.LiveDead = value;
-                OnLiveDeadChanged(tree, oldValue);
-                RaisePropertyChanged();
-            }
-        }
 
-        private void OnLiveDeadChanged(TreeEx tree, object oldValue)
-        {
-            SaveTree(tree);
-            RefreshErrorsAndWarnings(tree);
+                SaveTree(tree);
+                RefreshErrorsAndWarnings(tree);
+                OnPropertyChanged();
+            }
         }
 
         #endregion LiveDead
@@ -585,12 +543,9 @@ namespace NatCruise.MVVM.ViewModels
 
         public readonly string[] GradeOptions = new[] { "0", "1", "2", "3", "4", "5", "6", "6", "8", "9" };
 
-
         public ICommand ShowLogsCommand => _showLogsCommand ?? (_showLogsCommand = new DelegateCommand(ShowLogs));
 
         public ICommand ShowEditTreeErrorCommand => _showEditTreeErrorCommand ?? (_showEditTreeErrorCommand = new DelegateCommand<TreeError>(ShowEditTreeError));
-
-
 
         private void ShowEditTreeError(TreeError treeError)
         {
@@ -614,22 +569,27 @@ namespace NatCruise.MVVM.ViewModels
         public TreeEditViewModel(
             IStratumDataservice stratumDataservice,
             ISampleGroupDataservice sampleGroupDataservice,
+            ISpeciesDataservice speciesDataservice,
             ISubpopulationDataservice subpopulationDataservice,
             ITreeDataservice treeDataservice,
             ITreeErrorDataservice treeErrorDataservice,
             ITreeFieldValueDataservice treeFieldValueDataservice,
+            ICruiseLogDataservice cruiseLogDataservice,
+            ICruisersDataservice cruisersDataservice,
             INatCruiseDialogService dialogService,
             INatCruiseNavigationService navigationService,
-            ICruisersDataservice cruisersDataservice,
             ILoggingService loggingService)
         {
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
+            SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
             SubpopulationDataservice = subpopulationDataservice ?? throw new ArgumentNullException(nameof(subpopulationDataservice));
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             TreeErrorDataservice = treeErrorDataservice ?? throw new ArgumentNullException(nameof(treeErrorDataservice));
             TreeFieldValueDataservice = treeFieldValueDataservice ?? throw new ArgumentNullException(nameof(treeFieldValueDataservice));
+            CruiseLogDataservice = cruiseLogDataservice ?? throw new ArgumentNullException(nameof(cruiseLogDataservice));
             CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
+
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
@@ -665,13 +625,11 @@ namespace NatCruise.MVVM.ViewModels
             SampleGroupCodes = sampleGroups;
         }
 
-        private void RefreshSubPopulations(Tree tree)
+        private void RefreshSpeciesOptions(TreeEx tree)
         {
-            var stratumCode = tree.StratumCode;
-            var sampleGroupCode = tree.SampleGroupCode;
-
-            var subPopulations = SubpopulationDataservice.GetSubpopulations(stratumCode, sampleGroupCode);
-            SubPopulations = subPopulations;
+            var stratum = tree.StratumCode;
+            var sampleGroup = tree.SampleGroupCode;
+            SpeciesOptions = SpeciesDataservice.GetSpeciesCodes(stratum, sampleGroup);
         }
 
         private void RefreshTreeFieldValues(Tree tree)
@@ -693,16 +651,10 @@ namespace NatCruise.MVVM.ViewModels
             var warnings = errorsAndWarnings
                 .Where(x => x.Level == ErrorBase.LEVEL_WARNING && !x.IsResolved)
                 .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase, ToDictionaryConflictOption.Ignore);
-            //var warnings = errorsAndWarnings
-            //    .Where(x => x.Level == ErrorBase.LEVEL_WARNING && !x.IsResolved)
-            //    .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase);
 
             var errors = errorsAndWarnings
                 .Where(x => x.Level == ErrorBase.LEVEL_ERROR)
                 .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase, ToDictionaryConflictOption.Ignore);
-            //var errors = errorsAndWarnings
-            //    .Where(x => x.Level == ErrorBase.LEVEL_ERROR)
-            //    .ToDictionary(x => x.Field, StringComparer.OrdinalIgnoreCase);
 
             foreach (var tf in TreeFieldValues)
             {
@@ -713,14 +665,10 @@ namespace NatCruise.MVVM.ViewModels
 
             ErrorsAndWarnings = errorsAndWarnings;
 
-            HasSpeciesError = errors.ContainsKey(nameof(Tree.SpeciesCode));
-
-            //sample group is a required field in the data base, so we wont expect
-            // to get any SG errors from GetTreeErrors
-            //HasSampleGroupError = errors.ContainsKey(nameof(Tree.SampleGroupCode));
-
             tree.ErrorCount = errors.Count;
             tree.WarningCount = warnings.Count;
+            OnPropertyChanged(nameof(ErrorCount));
+            OnPropertyChanged(nameof(WarningCount));
         }
 
         protected void RefreshCruisers(TreeEx tree)
@@ -746,22 +694,16 @@ namespace NatCruise.MVVM.ViewModels
 
         protected void SaveTree(Tree tree)
         {
-            HasSampleGroupError = false;
-            HasSpeciesError = false;
-
             if (tree != null)
             {
-                if (ValidateSampleGroupCode(tree.SampleGroupCode))
+                try
                 {
-                    try
-                    {
-                        TreeDataservice.UpdateTree(tree);
-                    }
-                    catch (Exception e)
-                    {
-                        LoggingService.LogException(nameof(TreeEditViewModel), "SaveTree", e);
-                        DialogService.ShowMessageAsync("Save Tree Error - Invalid Field Value");
-                    }
+                    TreeDataservice.UpdateTree(tree);
+                }
+                catch (Exception e)
+                {
+                    LoggingService.LogException(nameof(TreeEditViewModel), "SaveTree", e);
+                    DialogService.ShowMessageAsync("Save Tree Error - Invalid Field Value");
                 }
             }
         }

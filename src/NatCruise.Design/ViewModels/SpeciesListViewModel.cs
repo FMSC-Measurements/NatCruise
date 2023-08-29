@@ -63,7 +63,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SpeciesDetailViewModel.Species = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
 
             //get => _selectedSpecies;

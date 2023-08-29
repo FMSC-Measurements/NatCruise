@@ -34,7 +34,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 _stratum = value;
-                RaisePropertyChanged(nameof(Stratum));
+                OnPropertyChanged(nameof(Stratum));
                 TreeFieldSetupViewModel.Stratum = value;
                 LogFieldSetupViewModel.Stratum = value;
             }

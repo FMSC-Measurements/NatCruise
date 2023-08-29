@@ -1,4 +1,5 @@
-﻿using Microsoft.AppCenter.Analytics;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using NatCruise.Navigation;
 using Prism;
@@ -6,9 +7,10 @@ using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace NatCruise.MVVM
-{ 
+{
 
     //TODO consolidate behavior between IActiveAware and Initialize
     // ActiveAware was used because IInitialize didn't support WPF and was needed to create a common
@@ -26,7 +28,7 @@ namespace NatCruise.MVVM
     // the question is what should be initialized during Initialize and what should be initialized during Load
     // see NatCruise.WPF.PlotEditViewModel for example on implementing cross platform loading
 
-    public abstract class ViewModelBase : Prism.Mvvm.BindableBase, IActiveAware, ITheRealInitialize
+    public abstract class ViewModelBase : ObservableObject, IActiveAware, ITheRealInitialize
     {
         public bool IsLoaded { get; private set; }
         private bool _isActive;

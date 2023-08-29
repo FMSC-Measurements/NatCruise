@@ -14,8 +14,12 @@ namespace FScruiser.Droid.Services
         private readonly int _measure;
         private readonly int _insurance;
 
+        public AudioManager AudioManager { get; private set; }
+
         public AndroidSoundService(Context context)
         {
+            AudioManager = (AudioManager)context.GetSystemService(Context.AudioService);
+
             var assetManager = context.Resources.Assets;
 
             var values = assetManager.List("sounds");
@@ -55,6 +59,11 @@ namespace FScruiser.Droid.Services
         public Task SignalTallyAsync(bool force)
         {
             return Task.Run(() => _soundPool.Play(_tally, 1.0f, 1.0f, 0, 0, 1.0f));
+        }
+
+        public void PlayClickSound()
+        {
+            AudioManager.PlaySoundEffect(SoundEffect.KeyClick);
         }
 
         #region IDisposable Support

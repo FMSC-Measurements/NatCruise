@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace NatCruise.Util
+namespace NatCruise.Async
 {
     public static class TaskExtentions
     {
@@ -14,7 +14,7 @@ namespace NatCruise.Util
 
         public static void FireAndForget(this Task @this, string failMessage = null)
         {
-            @this.ContinueWith(HandelTaskException, (object)failMessage, TaskContinuationOptions.OnlyOnFaulted);
+            @this.ContinueWith(HandelTaskException, failMessage, TaskContinuationOptions.OnlyOnFaulted);
         }
 
         private static void HandelTaskException(Task t, object state)
@@ -29,7 +29,7 @@ namespace NatCruise.Util
                 LoggingService.LogException("TaskException", message, ex);
             }
 
-            if(RethrowExceptions)
+            if (RethrowExceptions)
             { throw exception; }
         }
     }

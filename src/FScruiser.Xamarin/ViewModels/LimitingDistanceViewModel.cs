@@ -1,11 +1,11 @@
 ﻿//using CruiseDAL.V3.Models;
+using NatCruise.Async;
 using NatCruise.Cruise.Logic;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
-using NatCruise.Util;
 using Prism.Common;
 using System;
 using System.Collections.Generic;
@@ -95,8 +95,8 @@ namespace FScruiser.XF.ViewModels
                         FPS = (decimal)value.FixedPlotSize;
                         BAF = 0.0m;
                     }
-                    RaisePropertyChanged(nameof(IsVariableRadius));
-                    RaisePropertyChanged(nameof(StratumSettingsSummary));
+                    OnPropertyChanged(nameof(IsVariableRadius));
+                    OnPropertyChanged(nameof(StratumSettingsSummary));
                     Calculate();
                 }
                 else
@@ -118,7 +118,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _bigBAFSampleGroup, value);
-                RaisePropertyChanged(nameof(StratumSettingsSummary));
+                OnPropertyChanged(nameof(StratumSettingsSummary));
                 Calculate();
             }
         }
@@ -129,7 +129,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _useBigBAF, value);
-                RaisePropertyChanged(nameof(StratumSettingsSummary));
+                OnPropertyChanged(nameof(StratumSettingsSummary));
                 Calculate();
             }
         }
@@ -156,7 +156,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _baf, value);
-                RaisePropertyChanged(nameof(StratumSettingsSummary));
+                OnPropertyChanged(nameof(StratumSettingsSummary));
                 Calculate();
             }
         }
@@ -167,7 +167,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _fps, value);
-                RaisePropertyChanged(nameof(StratumSettingsSummary));
+                OnPropertyChanged(nameof(StratumSettingsSummary));
                 Calculate();
             }
         }
@@ -178,8 +178,8 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _stratumMode, value);
-                RaisePropertyChanged(nameof(IsVariableRadius));
-                RaisePropertyChanged(nameof(StratumSettingsSummary));
+                OnPropertyChanged(nameof(IsVariableRadius));
+                OnPropertyChanged(nameof(StratumSettingsSummary));
                 Calculate();
             }
         }
@@ -277,7 +277,7 @@ namespace FScruiser.XF.ViewModels
             {
                 SetProperty(ref _isToFace, value);
                 Calculate();
-                RaisePropertyChanged(nameof(MeasureToSelection));
+                OnPropertyChanged(nameof(MeasureToSelection));
             }
         }
 
@@ -311,7 +311,7 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _isTreeIn, value);
-                RaisePropertyChanged(nameof(TreeStatus));
+                OnPropertyChanged(nameof(TreeStatus));
             }
         }
 

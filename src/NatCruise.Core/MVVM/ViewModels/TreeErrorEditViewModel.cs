@@ -44,11 +44,11 @@ namespace NatCruise.MVVM.ViewModels
             set
             {
                 SetProperty(ref _treeError, value);
-                RaisePropertyChanged(nameof(IsResolved));
-                RaisePropertyChanged(nameof(Message));
-                RaisePropertyChanged(nameof(Level));
-                RaisePropertyChanged(nameof(Resolution));
-                RaisePropertyChanged(nameof(Initials));
+                OnPropertyChanged(nameof(IsResolved));
+                OnPropertyChanged(nameof(Message));
+                OnPropertyChanged(nameof(Level));
+                OnPropertyChanged(nameof(Resolution));
+                OnPropertyChanged(nameof(Initials));
             }
         }
 
@@ -68,7 +68,7 @@ namespace NatCruise.MVVM.ViewModels
                 if (treeError != null)
                 {
                     treeError.IsResolved = value;
-                    RaisePropertyChanged(nameof(IsResolved));
+                    OnPropertyChanged(nameof(IsResolved));
                 }
             }
         }

@@ -1,8 +1,8 @@
 ﻿using FScruiser.XF.Views;
+using NatCruise.Async;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Navigation;
-using NatCruise.Util;
 using Prism.Common;
 using Prism.Services;
 using System;

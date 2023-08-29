@@ -23,7 +23,6 @@ namespace FScruiser.XF.ViewModels
         private ICommand _editLogCommand;
         private ObservableCollection<Log> _logs;
         private IEnumerable<LogFieldSetup> _logFields;
-        private int? _treeNumber;
         private ICommand _deleteLogCommand;
         private Tree _tree;
 

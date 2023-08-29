@@ -43,8 +43,8 @@ namespace NatCruise.Models
             get => _valueReal;
             set
             {
-                SetProperty(ref _valueReal, value);
-                RaiseValueChanged();
+                if (SetProperty(ref _valueReal, value))
+                { RaiseValueChanged(); }
             }
         }
 
@@ -53,8 +53,8 @@ namespace NatCruise.Models
             get => _valueInt;
             set
             {
-                SetProperty(ref _valueInt, value);
-                RaiseValueChanged();
+                if (SetProperty(ref _valueInt, value))
+                { RaiseValueChanged(); }
             }
         }
 
@@ -63,8 +63,8 @@ namespace NatCruise.Models
             get => _valueBool;
             set
             {
-                SetProperty(ref _valueBool, value);
-                RaiseValueChanged();
+                if (SetProperty(ref _valueBool, value))
+                { RaiseValueChanged(); }
             }
         }
 
@@ -73,8 +73,8 @@ namespace NatCruise.Models
             get => _valueText;
             set
             {
-                SetProperty(ref _valueText, value);
-                RaiseValueChanged();
+                if (SetProperty(ref _valueText, value))
+                { RaiseValueChanged(); }
             }
 
         }

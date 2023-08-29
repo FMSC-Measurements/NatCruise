@@ -1,11 +1,11 @@
 ﻿using FScruiser.XF.Services;
 using NatCruise;
+using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
-using NatCruise.Util;
 using Prism.Commands;
 using Prism.Common;
 using System;
@@ -47,7 +47,7 @@ namespace FScruiser.XF.ViewModels
 
                 OnPlotChanged(value);
                 SetProperty(ref _plot, value);
-                RaisePropertyChanged(nameof(PlotNumber));
+                OnPropertyChanged(nameof(PlotNumber));
 
                 if (value != null)
                 {
@@ -107,7 +107,7 @@ namespace FScruiser.XF.ViewModels
 
             PlotDataservice.UpdatePlotNumber(Plot.PlotID, plotNumber);
 
-            RaisePropertyChanged(nameof(PlotNumber));
+            OnPropertyChanged(nameof(PlotNumber));
         }
 
         private bool OnPlotNumberChanging(int oldValue, int newValue)
@@ -132,7 +132,7 @@ namespace FScruiser.XF.ViewModels
             else
             {
                 // refresh displayed value
-                RaisePropertyChanged(nameof(PlotNumber));
+                OnPropertyChanged(nameof(PlotNumber));
             }
         }
 
@@ -156,7 +156,7 @@ namespace FScruiser.XF.ViewModels
             }
 
             // refresh displayed value
-            RaisePropertyChanged(nameof(PlotNumber));
+            OnPropertyChanged(nameof(PlotNumber));
         }
 
         #endregion PlotNumber

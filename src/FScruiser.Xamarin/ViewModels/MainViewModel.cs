@@ -1,11 +1,11 @@
 ﻿using FScruiser.XF.Services;
+using NatCruise.Async;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
-using NatCruise.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -101,7 +101,7 @@ namespace FScruiser.XF.ViewModels
                 }
                 else { SelectedUnitStrataSummary = null; }
 
-                RaisePropertyChanged(nameof(IsCuttingUnitSelected));
+                OnPropertyChanged(nameof(IsCuttingUnitSelected));
                 RefreshNavOptions();
                 NavigationService.ShowBlank();
             }
@@ -113,8 +113,8 @@ namespace FScruiser.XF.ViewModels
             set
             {
                 SetProperty(ref _selectedUnitStratumSummary, value);
-                RaisePropertyChanged(nameof(HasPlotStrata));
-                RaisePropertyChanged(nameof(HasTreeStrata));
+                OnPropertyChanged(nameof(HasPlotStrata));
+                OnPropertyChanged(nameof(HasTreeStrata));
             }
         }
 

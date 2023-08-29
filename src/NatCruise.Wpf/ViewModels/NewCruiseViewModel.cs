@@ -1,13 +1,13 @@
 ﻿using CruiseDAL;
 using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Models;
+using NatCruise.Async;
 using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Services;
-using NatCruise.Util;
 using NatCruise.Wpf.Validation;
 using Prism.Commands;
 using Prism.Services.Dialogs;
@@ -73,7 +73,7 @@ namespace NatCruise.Wpf.ViewModels
             set
             {
                 SetPropertyAndValidate(this, value, (m, v) => _region = v);
-                RaisePropertyChanged(nameof(ForestOptions));
+                OnPropertyChanged(nameof(ForestOptions));
             }
         }
 
@@ -83,7 +83,7 @@ namespace NatCruise.Wpf.ViewModels
             set
             {
                 SetPropertyAndValidate(this, value, (m, v) => _forest = v);
-                RaisePropertyChanged(nameof(DistrictOptions));
+                OnPropertyChanged(nameof(DistrictOptions));
             }
         }
 

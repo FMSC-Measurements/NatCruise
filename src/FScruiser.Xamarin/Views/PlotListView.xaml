@@ -36,7 +36,8 @@
 
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding BindingContext.ShowTallyPlotCommand, Source={x:Reference _page} }"
-                                                              CommandParameter="{Binding .}" />
+                                                              CommandParameter="{Binding .}"
+                                                              controls:TapGestureRecognizerHelper.EnableClickSound="True" />
                                     </Grid.GestureRecognizers>
 
 

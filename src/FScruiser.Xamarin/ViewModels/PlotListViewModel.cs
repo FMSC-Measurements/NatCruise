@@ -1,12 +1,12 @@
 ﻿using FScruiser.XF.Services;
 using NatCruise;
+using NatCruise.Async;
 using NatCruise.Cruise.Data;
 using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
-using NatCruise.Util;
 using Prism.Common;
 using Prism.Services;
 using System;
@@ -34,8 +34,8 @@ namespace FScruiser.XF.ViewModels
             protected set
             {
                 SetProperty(ref _cuttingUnit, value);
-                RaisePropertyChanged(nameof(UnitCode));
-                RaisePropertyChanged(nameof(Title));
+                OnPropertyChanged(nameof(UnitCode));
+                OnPropertyChanged(nameof(Title));
             }
         }
 
@@ -98,7 +98,7 @@ namespace FScruiser.XF.ViewModels
             var unitCode = UnitCode;
 
             Plots = PlotDataservice.GetPlotsByUnitCode(UnitCode).ToArray();
-            RaisePropertyChanged(nameof(Plots));
+            OnPropertyChanged(nameof(Plots));
 
             HasFixCNTStrata = CuttingUnitDataservice.GetCuttingUnitStrataSummary(UnitCode)
                 .Methods
