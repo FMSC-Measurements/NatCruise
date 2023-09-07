@@ -7,6 +7,6 @@ namespace NatCruise.Cruise.Services
     public interface ITreeBasedTallyService
     {
         Task<TallyEntry> TallyAsync(string unitCode,
-            TallyPopulationEx pop);
+            TallyPopulation pop);
     }
 }

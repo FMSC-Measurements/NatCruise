@@ -44,7 +44,7 @@ namespace NatCruise.Cruise.Services
                 var sampleSelectorRepo = SampleSelectorDataservice;
                 var sampler = sampleSelectorRepo.GetSamplerBySampleGroupCode(pop.StratumCode, pop.SampleGroupCode);
 
-                if (pop.Is3P)//threeP sampling
+                if (CruiseMethods.THREE_P_METHODS.Contains(pop.Method))//threeP sampling
                 {
                     int? nkpi = await dialogService.AskKPIAsync(pop.MaxKPI, pop.MinKPI);
                     if (nkpi != null)

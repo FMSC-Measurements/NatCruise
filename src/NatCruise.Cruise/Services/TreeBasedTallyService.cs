@@ -10,6 +10,7 @@ using NatCruise.Navigation;
 using NatCruise.Sampling;
 using NatCruise.Util;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NatCruise.Cruise.Services
@@ -30,7 +31,7 @@ namespace NatCruise.Cruise.Services
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
-        public async Task<TallyEntry> TallyAsync(string unitCode, TallyPopulationEx pop)
+        public async Task<TallyEntry> TallyAsync(string unitCode, TallyPopulation pop)
         {
             if (pop is null) { throw new ArgumentNullException(nameof(pop)); }
             var samplerService = SampleSelectorDataservice;
@@ -74,7 +75,7 @@ namespace NatCruise.Cruise.Services
             {
                 var sampler = samplerService.GetSamplerBySampleGroupCode(pop.StratumCode, pop.SampleGroupCode);
 
-                if (pop.Is3P)//threeP sampling
+                if (CruiseMethods.THREE_P_METHODS.Contains(pop.Method))//threeP sampling
                 {
                     int? kpi = await dialogService.AskKPIAsync(pop.MaxKPI, pop.MinKPI);
                     if (kpi != null)
