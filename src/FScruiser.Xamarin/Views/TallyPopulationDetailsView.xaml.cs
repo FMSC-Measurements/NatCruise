@@ -11,11 +11,11 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class PlotTallyPopulationDetailsView : InitializableContentPage
+	public partial class TallyPopulationDetailsView : InitializableContentPage
     {
-		public PlotTallyPopulationDetailsView ()
+		public TallyPopulationDetailsView ()
 		{
 			InitializeComponent ();
 		}
-	}
+    }
 }

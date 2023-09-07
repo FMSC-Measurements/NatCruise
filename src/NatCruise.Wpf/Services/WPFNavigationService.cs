@@ -254,5 +254,10 @@ namespace NatCruise.Wpf.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowTallyPopulationInfo(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

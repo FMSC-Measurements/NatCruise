@@ -17,6 +17,7 @@
 
     <tc_conv:VariableMultiValueConverter ConditionType="Any"
                                          x:Key="AnyTrueConverter" />
+    
     <tc_conv:InvertedBoolConverter x:Key="invertedBoolConverter" />
 
     <tc_conv:BoolToObjectConverter x:Key="BoolToYesNoConverter"
@@ -53,4 +54,6 @@
                                  Value="Any" />
     <converters:ReplaceNullConverter x:Key="ReplaceAnyWithNullConverter"
                                      Value="Any" />
+
+    <converters:NotConverter x:Key="NotConverter" />
 </ResourceDictionary>

@@ -9,6 +9,8 @@
             <Style TargetType="{x:Type ctrls:HeaderControl}">
                 <Setter Property="HorizontalOptions"
                         Value="Fill" />
+                <Setter Property="VerticalOptions"
+                        Value="Fill" />
                 <Setter Property="IsTabStop"
                         Value="False" />
                 <Setter Property="HeaderFontSize"
@@ -22,7 +24,7 @@
                 </Setter>-->
                 <Setter Property="ControlTemplate">
                     <Setter.Value>
-                        <ControlTemplate>
+                        <ControlTemplate >
                             <Grid>
                                 <Grid.Triggers>
                                     <DataTrigger TargetType="VisualElement"
@@ -32,20 +34,20 @@
                                                 Property="Grid.Column"
                                                 Value="1" />
                                         <Setter TargetName="PART_Content"
-                                                Property="Grid.ColumnSpan"
-                                                Value="1" />
-                                        <Setter TargetName="PART_Header"
+                                                Property="Grid.Row"
+                                                Value="0" />
+                                        <!--<Setter TargetName="PART_Header"
                                                 Property="Grid.ColumnSpan"
                                                 Value="1" />
                                         <Setter TargetName="PART_Header"
                                                 Property="Grid.Row"
-                                                Value="1" />
+                                                Value="1" />-->
                                     </DataTrigger>
                                 </Grid.Triggers>
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -54,8 +56,7 @@
 
                                 <Grid x:Name="PART_Header"
                                       Grid.Row="0"
-                                      Grid.Column="0"
-                                      Grid.ColumnSpan="2">
+                                      Grid.Column="0">
                                     <Label x:Name="HeaderContent"
                                            Margin="{TemplateBinding  HeaderMargin}"
                                            Text="{TemplateBinding  Header}"
@@ -66,16 +67,15 @@
                                            BackgroundColor="{TemplateBinding  HeaderBackgroundColor}"
                                            VerticalTextAlignment="Center"
                                            IsTabStop="False"
-                                           AutomationProperties.IsInAccessibleTree="False"/>
+                                           AutomationProperties.IsInAccessibleTree="False" />
                                 </Grid>
 
                                 <Grid x:Name="PART_Content"
                                       Grid.Row="1"
                                       Grid.Column="0"
-                                      Grid.ColumnSpan="2"
                                       Background="{TemplateBinding  Background}">
                                     <ContentPresenter Margin="{TemplateBinding Padding}"
-                                                      AutomationProperties.LabeledBy="{Reference PART_Header}"/>
+                                                      AutomationProperties.LabeledBy="{Reference PART_Header}" />
                                 </Grid>
                             </Grid>
 
