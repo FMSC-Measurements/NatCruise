@@ -15,6 +15,8 @@ namespace NatCruise.Models
         private int _sumKPIPlot;
         private int _treeCountCruise;
         private int _sumKPICruise;
+        private int _treeSumKPI;
+        private int _treeSumKPICruise;
 
         public string CuttingUnitCode { get; set; }
 
@@ -72,8 +74,22 @@ namespace NatCruise.Models
         [Field(PersistanceFlags = PersistanceFlags.Never)]
         public int SumKPI
         {
-            get { return _sumKPI; }
-            set { SetProperty(ref _sumKPI, value); }
+            get => _sumKPI;
+            set => SetProperty(ref _sumKPI, value); 
+        }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public int TreeSumKPI
+        {
+            get => _treeSumKPI;
+            set => SetProperty(ref _treeSumKPI, value);
+        }
+
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public int TreeSumKPICruise
+        {
+            get => _treeSumKPICruise;
+            set => SetProperty(ref _treeSumKPICruise, value);
         }
 
         [Field(PersistanceFlags = PersistanceFlags.Never)]

@@ -285,54 +285,72 @@
                             </Frame.Resources>
 
                             <StackLayout Orientation="Vertical">
-                                <ctrls:UniformGrid>
-                                    <Frame IsVisible="{Binding IsPlot}">
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="Tree Count (plot)" />
-                                            <Label Text="{Binding TallyPopulation.TreeCountPlot, FallbackValue='_____'}" />
-                                        </StackLayout>
-                                    </Frame>
+                                <Frame>
+                                    <StackLayout Orientation="Vertical">
+                                        <Label Text="Tree Count" />
+                                        <ctrls:UniformGrid>
+                                            <StackLayout Orientation="Horizontal"
+                                                         IsVisible="{Binding IsPlot}">
+                                                <Label Text="{Binding PlotNumber, StringFormat='Plot {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.TreeCountPlot}" />
+                                            </StackLayout>
 
-                                    <Frame>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{Binding TallyPopulation.CuttingUnitCode, StringFormat='Unit {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.TreeCount}" />
+                                            </StackLayout>
 
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="Tree Count (unit)" />
-                                            <Label Text="{Binding TallyPopulation.TreeCount, FallbackValue='_____'}" />
-                                        </StackLayout>
-                                    </Frame>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Cruise:" />
+                                                <Label Text="{Binding TallyPopulation.TreeCountCruise}" />
+                                            </StackLayout>
+                                        </ctrls:UniformGrid>
+                                    </StackLayout>
+                                </Frame>
 
-                                    <Frame>
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="Tree Count (cruise)" />
-                                            <Label Text="{Binding TallyPopulation.TreeCountCruise, FallbackValue='_____'}" />
-                                        </StackLayout>
-                                    </Frame>
-                                </ctrls:UniformGrid>
+                                <Frame  IsVisible="{Binding Is3P}">
+                                    <StackLayout Orientation="Vertical">
+                                        <Label Text="SumKPI" />
+                                        <ctrls:UniformGrid>
 
-                                <ctrls:UniformGrid IsVisible="{Binding Is3P}">
+                                            <StackLayout Orientation="Horizontal"
+                                                         IsVisible="{Binding IsPlot}">
+                                                <Label Text="{Binding PlotNumber, StringFormat='Plot {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.SumKPIPlot, FallbackValue='_____'}" />
+                                            </StackLayout>
 
-                                    <Frame IsVisible="{Binding IsPlot}">
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="KPI (plot)" />
-                                            <Label Text="{Binding TallyPopulation.SumKPIPlot, FallbackValue='_____'}" />
-                                        </StackLayout>
-                                    </Frame>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{Binding TallyPopulation.CuttingUnitCode, StringFormat='Unit {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.SumKPI, FallbackValue='_____'}" />
+                                            </StackLayout>
 
-                                    <Frame>
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="KPI (unit)" />
-                                            <Label Text="{Binding TallyPopulation.SumKPI, FallbackValue='_____'}" />
-                                        </StackLayout>
-                                    </Frame>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Cruise" />
+                                                <Label Text="{Binding TallyPopulation.SumKPICruise, FallbackValue='_____'}" />
+                                            </StackLayout>
 
-                                    <Frame>
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="KPI (cruise)" />
-                                            <Label Text="{Binding TallyPopulation.SumKPICruise, FallbackValue='_____'}" />
-                                        </StackLayout>
-                                    </Frame>
+                                        </ctrls:UniformGrid>
+                                    </StackLayout>
+                                </Frame>
 
-                                </ctrls:UniformGrid>
+                                <Frame  IsVisible="{Binding Is3P}">
+                                    <StackLayout Orientation="Vertical">
+                                        <Label Text="SumKPI From Trees" />
+                                        <ctrls:UniformGrid>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{Binding TallyPopulation.CuttingUnitCode, StringFormat='Unit {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.TreeSumKPI, FallbackValue='_____'}" />
+                                            </StackLayout>
+
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Cruise:" />
+                                                <Label Text="{Binding TallyPopulation.TreeSumKPICruise, FallbackValue='_____'}" />
+                                            </StackLayout>
+
+                                        </ctrls:UniformGrid>
+                                    </StackLayout>
+                                </Frame>
+
                             </StackLayout>
 
                         </Frame>
@@ -348,7 +366,8 @@
                         <Frame Grid.Row="1"
                                IsVisible="{Binding CanEditTreeCount}">
                             <Grid RowDefinitions="*,Auto">
-                                <ScrollView Grid.Row="0" HorizontalScrollBarVisibility="Never"
+                                <ScrollView Grid.Row="0"
+                                            HorizontalScrollBarVisibility="Never"
                                             VerticalScrollBarVisibility="Default">
                                     <!--Tree Count-->
                                     <StackLayout Orientation="Vertical">
@@ -444,16 +463,17 @@
                                     </StackLayout>
 
                                 </ScrollView>
-                                
-                                <StackLayout Grid.Row="1" Orientation="Horizontal">
+
+                                <StackLayout Grid.Row="1"
+                                             Orientation="Horizontal">
                                     <Button Text="{x:Static const:FAIcons.CirclePlus}"
                                             FontFamily="{Static const:Fonts.FAsolid}"
                                             Command="{Binding AddTallyLedgerEntryCommand}"
-                                            BackgroundColor="{StaticResource addItemColor}"/>
+                                            BackgroundColor="{StaticResource addItemColor}" />
                                     <Button Text="Clear"
                                             Command="{Binding ResetInputsCommand}" />
                                 </StackLayout>
-                                
+
                             </Grid>
                         </Frame>
 

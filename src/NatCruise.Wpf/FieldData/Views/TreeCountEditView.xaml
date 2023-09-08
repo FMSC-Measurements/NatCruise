@@ -116,26 +116,57 @@
 
             </WrapPanel>
 
-            <UniformGrid Rows="1">
-                <mah_ctrls:MetroHeader Header="Tree Count (Unit)">
-                    <TextBlock Text="{Binding TallyPopulation.TreeCount}" />
-                </mah_ctrls:MetroHeader>
+            <Border Margin="1"
+                    Padding="3"
+                    BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}">
+                <mah_ctrls:MetroHeader Header="Tree Count" Orientation="Vertical">
+                    <UniformGrid Rows="1">
+                        <mah_ctrls:MetroHeader Header="Unit:">
+                            <TextBlock Text="{Binding TallyPopulation.TreeCount}" />
+                        </mah_ctrls:MetroHeader>
 
-                <mah_ctrls:MetroHeader Header="Tree Count (Cruise)">
-                    <TextBlock Text="{Binding TallyPopulation.TreeCountCruise}" />
+                        <mah_ctrls:MetroHeader Header="Cruise:">
+                            <TextBlock Text="{Binding TallyPopulation.TreeCountCruise}" />
+                        </mah_ctrls:MetroHeader>
+                    </UniformGrid>
                 </mah_ctrls:MetroHeader>
-            </UniformGrid>
+            </Border>
 
-            <UniformGrid Visibility="{Binding Is3P, Converter={StaticResource IsVisableConverter}}"
-                         Rows="1">
-                <mah_ctrls:MetroHeader Header="SumKPI (Unit)">
-                    <TextBlock Text="{Binding TallyPopulation.TreeCount}" />
-                </mah_ctrls:MetroHeader>
+            <Border Visibility="{Binding Is3P, Converter={StaticResource IsVisableConverter}}"
+                    Margin="1"
+                    Padding="3"
+                    BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}">
+                <mah_ctrls:MetroHeader Header="SumKPI's"
+                                       Orientation="Vertical">
+                    <UniformGrid Rows="1">
+                        <mah_ctrls:MetroHeader Header="Unit:">
+                            <TextBlock Text="{Binding TallyPopulation.SumKPI}" />
+                        </mah_ctrls:MetroHeader>
 
-                <mah_ctrls:MetroHeader Header="SumKPI (Cruise)">
-                    <TextBlock Text="{Binding TallyPopulation.TreeCountCruise}" />
+                        <mah_ctrls:MetroHeader Header="Cruise:">
+                            <TextBlock Text="{Binding TallyPopulation.SumKPICruise}" />
+                        </mah_ctrls:MetroHeader>
+                    </UniformGrid>
                 </mah_ctrls:MetroHeader>
-            </UniformGrid>
+            </Border>
+
+            <Border Visibility="{Binding Is3P, Converter={StaticResource IsVisableConverter}}"
+                    Margin="1"
+                    Padding="3"
+                    BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}">
+                <mah_ctrls:MetroHeader Header="SumKPI From Trees"
+                                       Orientation="Vertical">
+                    <UniformGrid Rows="1">
+                        <mah_ctrls:MetroHeader Header="Unit:">
+                            <TextBlock Text="{Binding TallyPopulation.TreeSumKPI}" />
+                        </mah_ctrls:MetroHeader>
+
+                        <mah_ctrls:MetroHeader Header="Cruise:">
+                            <TextBlock Text="{Binding TallyPopulation.TreeSumKPICruise}" />
+                        </mah_ctrls:MetroHeader>
+                    </UniformGrid>
+                </mah_ctrls:MetroHeader>
+            </Border>
 
         </StackPanel>
 
@@ -145,7 +176,7 @@
                 Margin="1,10,1,1"
                 Padding="3"
                 IsEnabled="{Binding CanEditTreeCount}">
-            <ScrollViewer >
+            <ScrollViewer>
 
                 <StackPanel HorizontalAlignment="Left">
 

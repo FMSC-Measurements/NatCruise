@@ -65,6 +65,8 @@ $@"SELECT
                 AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
             ) AS SumKPI,
 
+            
+
             (SELECT ifnull(sum(KPI), 0) FROM
                 TallyLedger AS tl
             WHERE
@@ -74,6 +76,30 @@ $@"SELECT
                 AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
                 AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
             ) AS SumKPICruise,
+
+            (SELECT ifnull(sum(KPI), 0) FROM
+                TallyLedger AS tl
+            WHERE
+                tl.CruiseID = tp.CruiseID
+                AND tl.CuttingUnitCode = cust.CuttingUnitCode
+                AND tl.StratumCode = tp.StratumCode
+                AND tl.SampleGroupCode = tp.SampleGroupCode
+                AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
+                AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
+                AND tl.TreeID IS NOT NULL
+            ) AS TreeSumKPI,
+
+            (SELECT ifnull(sum(KPI), 0) FROM
+                TallyLedger AS tl
+            WHERE
+                tl.CruiseID = tp.CruiseID
+                AND tl.CuttingUnitCode = cust.CuttingUnitCode
+                AND tl.StratumCode = tp.StratumCode
+                AND tl.SampleGroupCode = tp.SampleGroupCode
+                AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
+                AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
+                AND tl.TreeID IS NOT NULL
+            ) AS TreeSumKPICruise,
 
         sg.SamplingFrequency AS Frequency,
         sg.InsuranceFrequency,

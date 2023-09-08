@@ -63,6 +63,9 @@ namespace NatCruise.MVVM.ViewModels
         private bool _isPlot;
 
         [ObservableProperty]
+        private int? _plotNumber;
+
+        [ObservableProperty]
         private bool _canEditTreeCount;
 
         [ObservableProperty]
@@ -181,6 +184,7 @@ namespace NatCruise.MVVM.ViewModels
 
         public void Load(string unit, string stratum, string sampleGroup, string species, string liveDead, int? plotNumber = null)
         {
+            
             if (plotNumber == null)
             {
                 TallyPopulation = TallyPopulationDataservice.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead);
@@ -190,6 +194,7 @@ namespace NatCruise.MVVM.ViewModels
                 TallyPopulation = TallyPopulationDataservice.GetPlotTallyPopulation(unit, plotNumber.Value, stratum, sampleGroup, species, liveDead);
                 IsPlot = true;
             }
+            PlotNumber = plotNumber;
         }
 
         [RelayCommand]
