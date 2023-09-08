@@ -23,7 +23,7 @@ namespace NatCruise.Navigation
 
         Task ShowTreeAuditRuleEdit(string tarID);
 
-        Task ShowStratumDetail(string stratumCode);
+        Task ShowStratumInfo(string stratumCode);
 
         Task ShowFieldSetup(string stratumCode);
 

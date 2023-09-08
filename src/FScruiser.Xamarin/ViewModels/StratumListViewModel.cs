@@ -32,7 +32,7 @@ namespace FScruiser.XF.ViewModels
         }
 
         public ICommand ShowFieldSetupCommand => _showFieldSetupCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowFieldSetup(st.StratumCode).FireAndForget());
-        public ICommand ShowStratumDetailsCommand => _showStratumDetailsCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowStratumDetail(st.StratumCode).FireAndForget());
+        public ICommand ShowStratumInfoCommand => _showStratumDetailsCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowStratumInfo(st.StratumCode).FireAndForget());
         public ICommand ShowSampleGroupsCommand => _showSampleGroupsCommand ??= new DelegateCommand<Stratum>(st => NavigationService.ShowSampleGroups(st.StratumCode).FireAndForget());
 
         public IStratumDataservice StratumDataservice { get; }

@@ -2,7 +2,7 @@
 <controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
                                     xmlns="http://xamarin.com/schemas/2014/forms"
                                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                                    x:Class="FScruiser.XF.Views.StratumDetailView"
+                                    x:Class="FScruiser.XF.Views.StratumInfoView"
                                     Title="{Binding Stratum.StratumCode, StringFormat='Stratum {0}'}">
     <ContentPage.Content>
         <StackLayout>

@@ -209,7 +209,7 @@ namespace FScruiser.XF
             throw new NotImplementedException();
         }
 
-        public Task ShowStratumDetail(string stratumCode)
+        public Task ShowStratumInfo(string stratumCode)
         {
             throw new NotImplementedException();
         }

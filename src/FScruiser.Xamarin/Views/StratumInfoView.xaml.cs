@@ -11,9 +11,9 @@ using Xamarin.Forms.Xaml;
 namespace FScruiser.XF.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class StratumDetailView : InitializableContentPage
+    public partial class StratumInfoView : InitializableContentPage
     {
-        public StratumDetailView()
+        public StratumInfoView()
         {
             InitializeComponent();
         }

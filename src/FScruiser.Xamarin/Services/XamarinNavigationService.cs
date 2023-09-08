@@ -79,9 +79,9 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync("Navigation/CuttingUnitList");
         }
 
-        public Task ShowStratumDetail(string stratumCode)
+        public Task ShowStratumInfo(string stratumCode)
         {
-            return NavigationService.NavigateAsync("StratumDetail",
+            return NavigationService.NavigateAsync("StratumInfo",
                 new NavigationParameters($"{NavParams.STRATUM}={stratumCode}"));
         }
 
