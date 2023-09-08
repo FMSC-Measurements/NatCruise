@@ -78,7 +78,7 @@ namespace NatCruise.MVVM.ViewModels
         {
             get => _tallyPopulation;
 
-            set
+            protected set
             {
                 SetProperty(ref _tallyPopulation, value);
                 OnTallyPopulationChanged(value);
@@ -182,7 +182,9 @@ namespace NatCruise.MVVM.ViewModels
         public void Load(string unit, string stratum, string sampleGroup, string species, string liveDead, int? plotNumber = null)
         {
             if (plotNumber == null)
-            { TallyPopulation = TallyPopulationDataservice.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead); }
+            {
+                TallyPopulation = TallyPopulationDataservice.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead);
+            }
             else
             {
                 TallyPopulation = TallyPopulationDataservice.GetPlotTallyPopulation(unit, plotNumber.Value, stratum, sampleGroup, species, liveDead);

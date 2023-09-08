@@ -65,7 +65,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             set
             {
                 SetProperty(ref _selectedTallyPopulation, value);
-                TreeCountEditViewModel.TallyPopulation = value;
+                TreeCountEditViewModel.Load(value?.CuttingUnitCode, value?.StratumCode, value?.SampleGroupCode, value?.SpeciesCode, value?.LiveDead);
                 TallyLedgerListViewModel.Load(value?.CuttingUnitCode, value?.StratumCode, value?.SampleGroupCode, value?.SpeciesCode, value?.LiveDead);
             }
         }
