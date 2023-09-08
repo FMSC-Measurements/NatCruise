@@ -36,7 +36,7 @@
                 <Label Text="{Binding Stratum.YieldComponent}" />
             </controls:LastChildWidthLayout>
 
-            <controls:LastChildWidthLayout IsVisible="{Binding IsVariableRariousePlot}">
+            <controls:LastChildWidthLayout IsVisible="{Binding IsVariableRadiousPlot}">
                 <Label Text="BAF" />
                 <Label Text="{Binding Stratum.BasalAreaFactor}" />
             </controls:LastChildWidthLayout>
