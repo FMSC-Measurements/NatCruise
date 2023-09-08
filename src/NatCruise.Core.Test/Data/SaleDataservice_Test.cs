@@ -5,7 +5,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace NatCruise.Core.Test.Data
+namespace NatCruise.Test.Data
 {
     public class SaleDataservice_Test : TestBase
     {
