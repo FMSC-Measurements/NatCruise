@@ -1,6 +1,6 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Models;
-using NatCruise.Core.Services;
+using NatCruise.Services;
 using Prism.Ioc;
 using System;
 using System.IO;

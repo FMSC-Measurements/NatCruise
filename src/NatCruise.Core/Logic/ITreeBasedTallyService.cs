@@ -1,7 +1,7 @@
 ﻿using NatCruise.Models;
 using System.Threading.Tasks;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Logic
 {
     public interface ITreeBasedTallyService
     {

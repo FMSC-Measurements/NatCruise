@@ -1,5 +1,4 @@
-﻿using NatCruise.Cruise.Services;
-using FScruiser.XF.Services;
+﻿using FScruiser.XF.Services;
 using Prism;
 using Prism.Ioc;
 using FScruiser.XF.Views;
@@ -9,6 +8,7 @@ using NatCruise.Navigation;
 using NatCruise.MVVM;
 using NatCruise.Data;
 using FScruiser.XF.Data;
+using NatCruise.Logic;
 
 namespace FScruiser.XF
 {

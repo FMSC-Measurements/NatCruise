@@ -4,7 +4,6 @@ using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using Microsoft.AppCenter.Crashes;
 using NatCruise.Async;
-using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.MVVM;
 using NatCruise.Services;

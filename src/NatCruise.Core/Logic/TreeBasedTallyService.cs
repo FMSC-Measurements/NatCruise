@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NatCruise.Cruise.Services
+namespace NatCruise.Logic
 {
     public class TreeBasedTallyService : ITreeBasedTallyService
     {

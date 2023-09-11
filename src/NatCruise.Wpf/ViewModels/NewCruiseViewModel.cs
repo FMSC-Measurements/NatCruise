@@ -1,8 +1,6 @@
 ﻿using CruiseDAL;
 using CruiseDAL.UpConvert;
-using CruiseDAL.V3.Models;
 using NatCruise.Async;
-using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Design.Data;
 using NatCruise.Models;
@@ -15,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -144,7 +141,6 @@ namespace NatCruise.Wpf.ViewModels
             var defaultFileName = $"{SaleNumber} {SaleName} {Purpose}.crz3";
             var defaultSaleFolder = $"{SaleNumber} {SaleName}";
             var filePath = await FileDialogService.SelectCruiseFileDestinationAsync(defaultFileName: defaultFileName, defaultSaleFolder: defaultSaleFolder);
-            
 
             if (!string.IsNullOrEmpty(filePath))
             {

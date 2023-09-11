@@ -3,7 +3,6 @@ using FluentAssertions;
 using FMSC.Sampling;
 using NatCruise.Logic;
 using NatCruise.Models;
-using NatCruise.Cruise.Services;
 using Moq;
 using System;
 using System.Collections.Generic;

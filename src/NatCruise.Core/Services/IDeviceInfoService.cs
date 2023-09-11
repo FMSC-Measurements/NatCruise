@@ -1,4 +1,4 @@
-﻿namespace NatCruise.Core.Services
+﻿namespace NatCruise.Services
 {
     public interface IDeviceInfoService
     {

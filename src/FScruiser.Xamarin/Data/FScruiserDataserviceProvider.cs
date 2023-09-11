@@ -1,8 +1,7 @@
 ﻿using CruiseDAL;
-using NatCruise.Core.Services;
 using NatCruise.Data;
+using NatCruise.Services;
 using Prism.Ioc;
-using System;
 
 namespace FScruiser.XF.Data
 {
