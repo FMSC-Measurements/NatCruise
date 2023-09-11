@@ -1,4 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using CruiseDAL.Schema;
+using FMSC.Sampling;
+using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using NatCruise.Async;
 using NatCruise.Cruise.Services;
@@ -7,6 +10,7 @@ using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
+using NatCruise.Sampling;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Commands;

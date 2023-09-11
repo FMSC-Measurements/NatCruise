@@ -39,7 +39,7 @@
 	<ItemGroup>
 		<!--<ProjectReference Include="..\..\..\CruiseDAL\src\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />-->
 		<ProjectReference Include="..\..\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid\Xamarin.Forms.DataGrid.csproj" />
-		<ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj" />
+		<ProjectReference Include="..\NatCruise.Core\NatCruise.Core.csproj" />
 	</ItemGroup>
 
 
@@ -113,8 +113,8 @@
 		<Compile Update="Views\SettingsView.xaml.cs">
 			<DependentUpon>SettingsView.xaml</DependentUpon>
 		</Compile>
-		<Compile Update="Views\StratumDetailView.xaml.cs">
-		  <DependentUpon>StratumDetailView.xaml</DependentUpon>
+		<Compile Update="Views\StratumInfoView.xaml.cs">
+		  <DependentUpon>StratumInfoView.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Views\ThreePPNTPlotView.xaml.cs">
 			<DependentUpon>ThreePPNTPlotView.xaml</DependentUpon>
@@ -198,7 +198,7 @@
 		<EmbeddedResource Update="Views\SampleStateManagmentView.xaml">
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</EmbeddedResource>
-		<EmbeddedResource Update="Views\StratumDetailView.xaml">
+		<EmbeddedResource Update="Views\StratumInfoView.xaml">
 		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Views\StratumFieldSetupView.xaml">

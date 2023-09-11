@@ -8,6 +8,7 @@ using NatCruise.Services;
 using NatCruise.Navigation;
 using NatCruise.MVVM;
 using NatCruise.Data;
+using FScruiser.XF.Data;
 
 namespace FScruiser.XF
 {

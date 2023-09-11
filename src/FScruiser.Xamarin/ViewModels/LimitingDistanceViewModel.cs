@@ -1,7 +1,6 @@
-﻿//using CruiseDAL.V3.Models;
-using NatCruise.Async;
-using NatCruise.Cruise.Logic;
+﻿using NatCruise.Async;
 using NatCruise.Data;
+using NatCruise.Logic;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
@@ -70,7 +69,7 @@ namespace FScruiser.XF.ViewModels
             get => _stratum;
             set
             {
-                if(_stratum == value) { return; }
+                if (_stratum == value) { return; }
                 SetProperty(ref _stratum, value);
                 BigBAFSampleGroup = null;
                 UseBigBAF = false;
@@ -328,6 +327,7 @@ namespace FScruiser.XF.ViewModels
         #endregion result properties
 
         #region report properties
+
         /// <summary>
         /// Azimuth is recorded for the purpose of helping check cruisers
         /// identify which tree was LDed
@@ -346,7 +346,8 @@ namespace FScruiser.XF.ViewModels
             get => _treeNumber;
             set => SetProperty(ref _treeNumber, value);
         }
-        #endregion
+
+        #endregion report properties
 
         #region commands
 

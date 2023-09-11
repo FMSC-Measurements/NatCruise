@@ -8,7 +8,7 @@
                                       xmlns:converters="clr-namespace:FScruiser.XF.Converters"
                                       xmlns:effects="http://xamarin.com/schemas/2020/toolkit"
                                       xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
-                                      xmlns:services="clr-namespace:FScruiser.XF.Services"
+                                      xmlns:data="clr-namespace:FScruiser.XF.Data"
                                       xmlns:const="clr-namespace:FScruiser.XF.Constants"
                                       x:Class="FScruiser.XF.Views.PlotTallyView"
                                       BackgroundColor="White"
@@ -28,7 +28,7 @@
 
             <converters:IsFixCNTorCountGreaterThanOneConverter x:Key="isFixCNTorCountGreaterThanOne" />
 
-            <services:TallySettingsDataService x:Key="tallySettings" />
+            <data:TallySettingsDataService x:Key="tallySettings" />
 
             <converters:PercentageToGridLengthConverter x:Key="percentageToGridLengthConverrter" />
             <converters:PercentageToGridLengthConverter Invert="True"

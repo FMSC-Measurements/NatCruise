@@ -1,7 +1,4 @@
 ﻿using FScruiser.XF.Services;
-using NatCruise;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
@@ -59,7 +56,6 @@ namespace FScruiser.XF.ViewModels
         public ICommand AddLogCommand => _addLogCommand ?? (_addLogCommand = new DelegateCommand(ShowAddLogPage));
 
         public ICommand DeleteLogCommand => _deleteLogCommand ??= new DelegateCommand<Log>(DeleteLog);
-        
 
         public ICommand EditLogCommand => _editLogCommand ?? (_editLogCommand = new DelegateCommand<Log>(ShowEditLogPage));
 
@@ -96,7 +92,7 @@ namespace FScruiser.XF.ViewModels
 
         public void DeleteLog(Log log)
         {
-            if(log is null) { return; }
+            if (log is null) { return; }
             LogDataservice.DeleteLog(log.LogID);
             Logs.Remove(log);
         }

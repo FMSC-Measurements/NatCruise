@@ -9,7 +9,7 @@
                                       xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
                                       xmlns:effects1="http://xamarin.com/schemas/2020/toolkit"
                                       xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
-                                      xmlns:services="clr-namespace:FScruiser.XF.Services"
+                                      xmlns:data="clr-namespace:FScruiser.XF.Data"
                                       x:Class="FScruiser.XF.Views.TallyView"
                                       x:Name="_page"
                                       BackgroundColor="White"
@@ -20,7 +20,7 @@
         <ResourceDictionary>
 
 
-            <services:TallySettingsDataService x:Key="tallySettings" />
+            <data:TallySettingsDataService x:Key="tallySettings" />
 
             <converters:PercentageToGridLengthConverter x:Key="percentageToGridLengthConverrter" />
             <converters:PercentageToGridLengthConverter Invert="True"

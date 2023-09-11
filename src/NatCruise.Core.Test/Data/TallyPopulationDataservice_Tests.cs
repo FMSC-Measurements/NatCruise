@@ -849,7 +849,7 @@ namespace NatCruise.Test.Data
 
 
 
-        private static void VerifyTallyPopulation(Models.TallyPopulationEx result, string species = null)
+        private static void VerifyTallyPopulation(Models.TallyPopulation result, string species = null)
         {
             if (species != null)
             {

@@ -1,9 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CruiseDAL.Schema;
+using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using NatCruise.Async;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
 using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Models;

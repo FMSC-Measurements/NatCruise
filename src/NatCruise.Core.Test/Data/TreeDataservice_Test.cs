@@ -1,10 +1,7 @@
 ﻿using CruiseDAL.V3.Models;
 using FluentAssertions;
-using NatCruise.Cruise.Data;
 using NatCruise.Data;
-using NatCruise.Test;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -47,7 +44,6 @@ namespace NatCruise.Test.Data
 
             var treeAgain = treesAgain.Single();
             treeAgain.TreeID.Should().Be(treeID);
-
         }
 
         [Fact]
@@ -468,8 +464,6 @@ namespace NatCruise.Test.Data
                 tree.DBH.Should().Be(103.0);
             }
         }
-
-        
 
         [Fact]
         public void UpdateTreeInitials()

@@ -29,10 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FScruiser.Xamarin", "FScrui
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FScruiser.Xamarin.Test", "FScruiser.Xamarin.Test\FScruiser.Xamarin.Test.csproj", "{F2CE2051-A22B-46D0-86BB-B243A08854D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Cruise", "NatCruise.Cruise\NatCruise.Cruise.csproj", "{8952022F-DFB0-4A55-B588-6D34CD12C0AF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Cruise.Test", "NatCruise.Cruise.Test\NatCruise.Cruise.Test.csproj", "{7E28EBD8-47B9-4909-B748-AAFFC085D35D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Core.Test", "NatCruise.Core.Test\NatCruise.Core.Test.csproj", "{A8F4A493-8361-4128-83B7-ABD2DC7207F3}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NatCruise.Test.Common", "NatCruise.Test.Common\NatCruise.Test.Common.shproj", "{C27D43F1-B37F-4488-A829-B0C2C499102D}"
@@ -153,30 +149,6 @@ Global
 		{F2CE2051-A22B-46D0-86BB-B243A08854D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F2CE2051-A22B-46D0-86BB-B243A08854D0}.Release|x86.ActiveCfg = Release|Any CPU
 		{F2CE2051-A22B-46D0-86BB-B243A08854D0}.Release|x86.Build.0 = Release|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Debug|x86.Build.0 = Debug|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Profile|Any CPU.ActiveCfg = Debug|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Profile|Any CPU.Build.0 = Debug|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Profile|x86.ActiveCfg = Debug|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Profile|x86.Build.0 = Debug|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Release|x86.ActiveCfg = Release|Any CPU
-		{8952022F-DFB0-4A55-B588-6D34CD12C0AF}.Release|x86.Build.0 = Release|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Debug|x86.Build.0 = Debug|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Profile|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Profile|Any CPU.Build.0 = Debug|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Profile|x86.ActiveCfg = Debug|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Profile|x86.Build.0 = Debug|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Release|x86.ActiveCfg = Release|Any CPU
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D}.Release|x86.Build.0 = Release|Any CPU
 		{A8F4A493-8361-4128-83B7-ABD2DC7207F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A8F4A493-8361-4128-83B7-ABD2DC7207F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8F4A493-8361-4128-83B7-ABD2DC7207F3}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -327,7 +299,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F2CE2051-A22B-46D0-86BB-B243A08854D0} = {FEA7B92B-98BA-46EA-8968-CBDE76CF24D7}
-		{7E28EBD8-47B9-4909-B748-AAFFC085D35D} = {FEA7B92B-98BA-46EA-8968-CBDE76CF24D7}
 		{A8F4A493-8361-4128-83B7-ABD2DC7207F3} = {FEA7B92B-98BA-46EA-8968-CBDE76CF24D7}
 		{C27D43F1-B37F-4488-A829-B0C2C499102D} = {FEA7B92B-98BA-46EA-8968-CBDE76CF24D7}
 		{34740369-389B-4059-B5DE-F991F66F27E7} = {355C4190-4178-41FA-89AE-EF202205545C}
@@ -346,7 +317,6 @@ Global
 		SolutionGuid = {9C152AC2-B1C8-47CC-98C6-B566DD992425}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{7e28ebd8-47b9-4909-b748-aaffc085d35d}*SharedItemsImports = 5
 		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{a8f4a493-8361-4128-83b7-abd2dc7207f3}*SharedItemsImports = 5
 		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{b0192a57-3af7-4127-a328-f2107c3da18d}*SharedItemsImports = 5
 		NatCruise.Test.Common\NatCruise.Test.Common.projitems*{c27d43f1-b37f-4488-a829-b0c2c499102d}*SharedItemsImports = 13

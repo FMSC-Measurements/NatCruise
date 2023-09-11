@@ -1,10 +1,9 @@
-﻿using NatCruise.Cruise.Services;
-using NatCruise.Models;
+﻿using NatCruise.Models;
 using NatCruise.Util;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace FScruiser.XF.Services
+namespace FScruiser.XF.Data
 {
     public class TallySettings
     {
