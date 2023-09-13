@@ -37,6 +37,12 @@
                                              Measure="{StaticResource measureTreeColor}"
                                              Insurance="{StaticResource insuranceTreeColor}" />
 
+    <converters:TallyEntryColorConverter x:Key="tallyEntryToColorConverter"
+                                         Default="White"
+                                         Measure="{StaticResource measureTreeColor}"
+                                         Insurance="{StaticResource insuranceTreeColor}"
+                                         Untallied="{StaticResource black_12}"/>
+
     <converters:Is3PConverter x:Key="is3pConverter" />
     <converters:IsSTRConverter x:Key="isStrConverter" />
     <converters:CruiseMethodToBoolConverter MethodMap="FrequencySampleMethods"

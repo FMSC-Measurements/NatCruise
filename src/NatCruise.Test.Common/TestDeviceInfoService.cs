@@ -1,4 +1,4 @@
-﻿using NatCruise.Core.Services;
+﻿using NatCruise.Services;
 
 namespace NatCruise.Test
 {

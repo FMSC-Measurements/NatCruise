@@ -1,7 +1,5 @@
 ﻿using FScruiser.XF.Controls;
 using FScruiser.XF.Util;
-using FScruiser.XF.ViewModels;
-using NatCruise.Cruise.Services;
 using NatCruise.MVVM.ViewModels;
 using System;
 using System.Linq;

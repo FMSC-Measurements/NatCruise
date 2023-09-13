@@ -1,6 +1,5 @@
 ﻿using FScruiser.XF.Services;
 using NatCruise.Async;
-using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
@@ -157,11 +156,13 @@ namespace FScruiser.XF.ViewModels
             get => _navOptions;
             protected set => SetProperty(ref _navOptions, value);
         }
+
         public List<NavOption> MoreNavOptions
         {
             get => _moreNavOptions;
             protected set => SetProperty(ref _moreNavOptions, value);
         }
+
         public ICruiseNavigationService NavigationService { get; }
         public IDataserviceProvider DatastoreProvider { get; }
         public IAppInfoService AppInfo { get; }
@@ -233,6 +234,5 @@ namespace FScruiser.XF.ViewModels
             NavOptions = navOptions;
             //MoreNavOptions = moreNavOptions;
         }
-
     }
 }

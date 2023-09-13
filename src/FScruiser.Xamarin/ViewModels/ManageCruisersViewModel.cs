@@ -1,13 +1,9 @@
-﻿using NatCruise.Cruise.Services;
-using FScruiser.XF.Services;
-using Prism.Navigation;
+﻿using NatCruise.Data;
+using NatCruise.MVVM;
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Xamarin.Forms;
-using NatCruise.Data;
-using System;
-using NatCruise;
-using NatCruise.MVVM;
 
 namespace FScruiser.XF.ViewModels
 {
