@@ -1,3 +1,23 @@
+# Version 3.1.9 - Aug 29
+# FScruiser
+## Fixes
+ - Fix Species Code being unset when switching between trees in Tally Pages
+
+## Changes
+- When changing Stratum on tree prompt user if SG code not valid for new stratum
+- When changing SG prompt user if Species code not valid for new SG
+
+# NatCruise
+## Fixes
+- Fix decimal being truncated while typing in values on trees
+
+## Enhancements
+- Add ability to associate file types with NatCruise
+
+## Changes
+- When changing Stratum on tree prompt user if SG code not valid for new stratum
+- When changing SG prompt user if Species code not valid for new SG
+
 # Version 3.1.8 - July 28
 # FScruiser and NatCruise 
 ## Fixes
