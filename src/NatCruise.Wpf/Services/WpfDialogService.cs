@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using NatCruise.Wpf.Views;
+using System.Windows.Navigation;
+using NatCruise.Wpf.DialogViews;
 
 namespace NatCruise.Wpf.Services
 {
     public class WpfDialogService : INatCruiseDialogService
     {
         public IAppService AppService { get; }
-
         public MainWindow MainWindow => (MainWindow)AppService.MainWindow;
 
         public WpfDialogService(IAppService appService)
@@ -33,14 +34,37 @@ namespace NatCruise.Wpf.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<AskTreeCountResult> AskTreeCount(int? defaultTreeCount)
+        public async Task<AskTreeCountResult> AskTreeCount(int? defaultTreeCount)
         {
-            throw new System.NotImplementedException();
+            var result = await MainWindow.ShowInputAsync("", "Enter Tree Count");
+
+            if (int.TryParse(result, out var treeCount))
+            {
+                return new AskTreeCountResult() { TreeCount = treeCount };
+            }
+            else if (defaultTreeCount != null)
+            {
+                return new AskTreeCountResult { TreeCount = defaultTreeCount };
+            }
+            return null;
         }
 
-        public Task<string> AskValueAsync(string prompt, params string[] values)
+        public async Task<string> AskValueAsync(string prompt, params string[] values)
         {
-            throw new System.NotImplementedException();
+
+
+            var window = MainWindow;
+            var settings = window.MetroDialogOptions;
+            var dialog = new SelectValueDialog(window, settings);
+
+            await window.ShowMetroDialogAsync(dialog, settings);
+
+            var result = await dialog.WaitForResult();
+
+            await window.HideMetroDialogAsync(dialog, settings);
+
+
+            return result;
         }
 
         public Task<bool> AskYesNoAsync(string message, string caption, bool defaultNo = false)
