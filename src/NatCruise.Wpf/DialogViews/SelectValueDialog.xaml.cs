@@ -41,43 +41,46 @@ namespace NatCruise.Wpf.DialogViews
         }
 
 
-        public SelectValueDialog()
+        public SelectValueDialog() : this(null)
+        { }
+
+        public SelectValueDialog(MetroWindow parentWindow) : this(parentWindow, null)
+        { }
+
+        public SelectValueDialog(MetroWindow parentWindow, MetroDialogSettings settings) : base(parentWindow, settings)
         {
             InitializeComponent();
         }
 
-        public SelectValueDialog(MetroWindow parentWindow) : base(parentWindow)
-        {
-        }
-
-        public SelectValueDialog(MetroDialogSettings settings) : base(settings)
-        {
-        }
-
-        public SelectValueDialog(MetroWindow parentWindow, MetroDialogSettings settings) : base(parentWindow, settings)
-        {
-        }
-
         public async Task<string> WaitForResult()
         {
-            await Dispatcher.BeginInvoke(new Action(() =>
-            {
-                Focus();
+            //await Dispatcher.BeginInvoke(new Action(() =>
+            //{
+            //    Focus();
 
-                // focus value picker
-            }));
+            //    // focus value picker
+            //}));
 
             return await tcs.Task.ConfigureAwait(false);
         }
+
 
         private void OnButtonClick(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             if (button is null) return;
 
-            var value = button.Content as string;
+            if(object.ReferenceEquals(button, _cancelButton))
+            {
+                tcs.TrySetResult(null);
+            }
 
-            this.tcs.TrySetResult(value);
+            else
+            {
+                var value = button.Content as string;
+
+                tcs.TrySetResult(value);
+            }
 
             e.Handled = true;
         }
@@ -86,7 +89,7 @@ namespace NatCruise.Wpf.DialogViews
         {
             if (e.Key == Key.Escape || (e.Key == Key.System && e.SystemKey == Key.F4))
             {
-                this.tcs.TrySetResult(null!);
+                tcs.TrySetResult(null!);
 
                 e.Handled = true;
             }

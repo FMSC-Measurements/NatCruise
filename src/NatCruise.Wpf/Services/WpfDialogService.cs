@@ -55,7 +55,11 @@ namespace NatCruise.Wpf.Services
 
             var window = MainWindow;
             var settings = window.MetroDialogOptions;
-            var dialog = new SelectValueDialog(window, settings);
+            var dialog = new SelectValueDialog(window, settings)
+            {
+                Title = prompt,
+                Values = values,
+            };
 
             await window.ShowMetroDialogAsync(dialog, settings);
 
