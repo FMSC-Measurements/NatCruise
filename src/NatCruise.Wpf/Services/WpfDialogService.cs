@@ -36,7 +36,7 @@ namespace NatCruise.Wpf.Services
 
         public async Task<AskTreeCountResult> AskTreeCount(int? defaultTreeCount)
         {
-            var result = await MainWindow.ShowInputAsync("", "Enter Tree Count");
+            var result = await MainWindow.ShowInputAsync("Enter Tree Count", "");
 
             if (int.TryParse(result, out var treeCount))
             {
