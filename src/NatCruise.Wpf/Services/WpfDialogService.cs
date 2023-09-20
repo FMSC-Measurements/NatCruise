@@ -6,6 +6,7 @@ using MahApps.Metro.Controls.Dialogs;
 using NatCruise.Wpf.Views;
 using System.Windows.Navigation;
 using NatCruise.Wpf.DialogViews;
+using System.IO;
 
 namespace NatCruise.Wpf.Services
 {
@@ -29,9 +30,22 @@ namespace NatCruise.Wpf.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<int?> AskKPIAsync(int max, int min = 1)
+        public async Task<int?> AskKPIAsync(int max, int min = 1)
         {
-            throw new System.NotImplementedException();
+            var window = MainWindow;
+            var settings = window.MetroDialogOptions;
+            var dialog = new KpiDialog(window, settings)
+            {
+                Title = "Enter KPI",
+                MaxKPI = max,
+                MinKPI = min,
+            };
+
+            await window.ShowMetroDialogAsync(dialog);
+
+            var result = await dialog.WaitForResult();
+            await window.HideMetroDialogAsync(dialog, settings);
+            return result;
         }
 
         public async Task<AskTreeCountResult> AskTreeCount(int? defaultTreeCount)
