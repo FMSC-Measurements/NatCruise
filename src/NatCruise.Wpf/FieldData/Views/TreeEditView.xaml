@@ -163,24 +163,20 @@
             </ctrls:LastChildWidthPanel>
 
             <!-- Tree Count -->
-            <!--
-            <StackPanel Orientation="Horizontal"
-                         IsVisible="{Binding CruiseMethod, Converter={StaticResource isfixCNTConverter}}">
-                <Label Content="Tree Count"/>
+            <ctrls:LastChildWidthPanel Visibility="{Binding CruiseMethod, Converter={StaticResource IsFixCNTMethodVisibilityConverter}}">
+                <TextBlock Text="Tree Count" />
                 <TextBox Text="{Binding TreeCount}"
-                       AutomationProperties.Name="Tree Count" />
-            </StackPanel>
+                         AutomationProperties.Name="Tree Count" />
+            </ctrls:LastChildWidthPanel>
 
-            -->
             <!-- KPI -->
-            <!--
-            <StackPanel Orientation="Horizontal"
-                         IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
-                <Label Content="KPI"
-                       x:Name="_kpiLabel"/>
-                <Label Content="{Binding Tree.KPI}"
-                       AutomationProperties.LabeledBy="{x:Reference _kpiLabel}" />
-            </StackPanel>-->
+
+            <ctrls:LastChildWidthPanel Visibility="{Binding CruiseMethod, Converter={StaticResource IsThreePMethodsVisibilityConverter}}">
+                <TextBlock Text="KPI"
+                       x:Name="_kpiLabel" />
+                <TextBox Text="{Binding Tree.KPI}"
+                       AutomationProperties.Name="KPI" />
+            </ctrls:LastChildWidthPanel>
 
         </WrapPanel>
 
@@ -311,7 +307,7 @@
                     <Button Style="{StaticResource errorWarningButton}"
                             AutomationProperties.Name="Error Item"
                             Command="{Binding  DataContext.ShowEditTreeErrorCommand, Source={x:Reference _page}}"
-                            CommandParameter="{Binding .}"/>
+                            CommandParameter="{Binding .}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
