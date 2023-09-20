@@ -7,6 +7,7 @@
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="400"
@@ -19,12 +20,30 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="3*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
 
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Height="23"
+                    Width="32"
+                    Style="{StaticResource AddButton}"
+                    Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                    IsEnabled="{Binding TreeID, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
+                    Command="{Binding AddLogCommand}"/>
+            <Button Height="23"
+                    Width="32"
+                    Style="{StaticResource RemoveButton}"
+                    Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
+                    Command="{Binding DeleteLogCommand}"
+                    CommandParameter="{Binding SelectedItem, ElementName=_datagrid}"
+                    IsEnabled="{Binding SelectedItem, ElementName=_datagrid, Converter={StaticResource NotNullConverter}}" />
+        </StackPanel>
+        
         <DataGrid x:Name="_datagrid"
+                  Grid.Row="1"
                   ItemsSource="{Binding Logs}"
                   SelectedItem="{Binding SelectedLog}"
                   AutoGenerateColumns="False"
@@ -39,12 +58,12 @@
                     </DataGrid.RowDetailsTemplate>-->
         </DataGrid>
 
-        <TextBlock Grid.Row="1">
+        <TextBlock Grid.Row="2">
                 <Run Text="{Binding Items.Count, Source={x:Reference _datagrid}, Mode=OneWay, FallbackValue=0}" />
                 <Run Text="Records" />
         </TextBlock>
 
-        <Border  Grid.Row="2"
+        <Border  Grid.Row="3"
                  BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}"
                  BorderThickness="1">
             <local:LogEditView DataContext="{Binding LogEditViewModel}"

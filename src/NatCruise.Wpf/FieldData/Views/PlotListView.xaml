@@ -5,10 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
-             Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+             Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+             DataContextChanged="UserControl_DataContextChanged">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -17,11 +19,40 @@
 
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <StackPanel Grid.Row="0"
+                        Orientation="Horizontal">
+                <TextBox x:Name="_addPlotNumberTextbox"
+                     mah_ctrls:TextBoxHelper.Watermark="Plot #"
+                         MinWidth="50"
+                     ToolTip="Plot Number, leave blank to auto-select">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Return"
+                                Command="{Binding AddPlotCommand}"
+                                CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                </TextBox.InputBindings>
+            </TextBox>
+                <Button Height="23"
+                        Width="32"
+                        Style="{StaticResource AddButton}"
+                        Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                        Command="{Binding AddPlotCommand}"
+                        CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                <Button Height="23"
+                        Width="32"
+                        Style="{StaticResource RemoveButton}"
+                        Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
+                        Command="{Binding DeletePlotCommand}"
+                        CommandParameter="{Binding SelectedItem, ElementName=_datagrid}"
+                        IsEnabled="{Binding SelectedItem, ElementName=_datagrid, Converter={StaticResource NotNullConverter}}" />
+            </StackPanel>
+
             <DataGrid x:Name="_datagrid"
+                      Grid.Row="1"
                       ItemsSource="{Binding Plots}"
                       SelectedItem="{Binding SelectedPlot}"
                       SelectionChanged="SelectedPlotChanged"
@@ -41,7 +72,7 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <TextBlock Grid.Row="1">
+            <TextBlock Grid.Row="2">
                 <Run Text="{Binding Items.Count, Source={x:Reference _datagrid}, Mode=OneWay, FallbackValue=0}" />
                 <Run Text="Records" />
             </TextBlock>

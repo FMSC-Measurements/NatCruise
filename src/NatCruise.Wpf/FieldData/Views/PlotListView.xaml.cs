@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Wpf.FieldData.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,8 @@ namespace NatCruise.Wpf.FieldData.Views
             InitializeComponent();
         }
 
+
+
         private void SelectedPlotChanged(object sender, SelectionChangedEventArgs e)
         {
             var deselectedItems = e.RemovedItems;
@@ -32,6 +35,19 @@ namespace NatCruise.Wpf.FieldData.Views
             {
                 _plotEditExpander.IsExpanded = true;
             }
+        }
+
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if(DataContext is PlotListViewModel viewModel)
+            {
+                viewModel.PlotAdded += ViewModel_PlotAdded;
+            }
+        }
+
+        private void ViewModel_PlotAdded(object sender, EventArgs e)
+        {
+            _addPlotNumberTextbox.Clear();
         }
     }
 }
