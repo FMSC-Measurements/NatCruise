@@ -74,7 +74,8 @@
                         <DataTemplate>
                             <Button Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
                                     Content="{Binding .}"
-                                    Click="OnButtonClick" />
+                                    Click="OnButtonClick"
+                                    Margin="0,2"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
 
