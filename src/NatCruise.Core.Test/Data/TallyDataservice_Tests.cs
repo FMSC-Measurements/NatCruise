@@ -5,6 +5,7 @@ using NatCruise.Models;
 using NatCruise.Test;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -56,6 +57,61 @@ namespace NatCruise.Cruise.Test.Data
                 tallyEntries.Should().HaveCount(2);
             }
         }
+
+        //[Fact]
+        //public void GetTallyEntriesByUnitCodeIncludeUntallied()
+        //{
+        //    var init = new DatastoreInitializer();
+
+        //    var unit = init.Units.First();
+        //    var subpop = init.Subpops[0];
+        //    var stratum = subpop.StratumCode;
+        //    var sampleGroup = subpop.SampleGroupCode;
+        //    var species = subpop.SpeciesCode;
+        //    var liveDead = subpop.LiveDead;
+
+        //    var path = base.GetTempFilePath(".crz3");
+        //    using (var database = init.CreateDatabase(path))
+        //    {
+        //        var datastore = new TallyDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID, new SamplerStateDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID));
+        //        var tlds = new TallyLedgerDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+        //        var tpds = new TallyPopulationDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+        //        var plotds = new PlotDataservice(database, init.CruiseID, TestDeviceInfoService.TEST_DEVICEID);
+
+        //        var pop = tpds.GetTallyPopulation(unit, stratum, sampleGroup, species, liveDead);
+
+        //        // insert entry using InsertTallyAction
+        //        datastore.InsertTallyAction(new TallyAction(unit, pop) { STM = true, KPI = 123 });
+        //        var tallyEntries = datastore.GetTallyEntriesByUnitCodeIncludeUntallied(unit);
+        //        tallyEntries.Should().HaveCount(1);
+        //        tallyEntries.Should().Contain(x => x.STM == true && x.KPI == 123);
+
+        //        System.Threading.Thread.Sleep(1000); // sleep so that createdTS values aren't all the same
+
+        //        // add another entry using insertTallyLedger
+        //        tlds.InsertTallyLedger(new TallyLedger(unit, pop));
+        //        tallyEntries = datastore.GetTallyEntriesByUnitCodeIncludeUntallied(unit);
+        //        tallyEntries.Should().HaveCount(2);
+
+        //        System.Threading.Thread.Sleep(1000); // sleep so that createdTS values aren't all the same
+
+        //        // inset a tally ledger with plot number
+        //        // and conferm that GetTallyEntriesByUnitCode doesn't return plot tally entries
+        //        plotds.AddNewPlot(unit);
+        //        datastore.InsertTallyAction(new TallyAction(unit, 1, pop));
+        //        tallyEntries = datastore.GetTallyEntriesByUnitCodeIncludeUntallied(unit);
+        //        tallyEntries.Should().HaveCount(2);
+
+        //        tallyEntries.Count(x => x.IsDeleted == true).Should().Be(0);
+
+        //        var toDeleteTLid = tallyEntries.First().TallyLedgerID;
+        //        datastore.DeleteTallyEntry(toDeleteTLid);
+        //        tallyEntries = datastore.GetTallyEntriesByUnitCodeIncludeUntallied(unit);
+        //        tallyEntries.Should().HaveCount(2);
+        //        tallyEntries.First().IsDeleted.Should().Be(true);
+        //        tallyEntries.Count(x =>  x.IsDeleted == true).Should().Be(1);
+        //    }
+        //}
 
         [Theory]
         [InlineData("st4", "sg2", null, null, SampleResult.C)]// non sample, null values

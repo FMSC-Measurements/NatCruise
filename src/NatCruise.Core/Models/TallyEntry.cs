@@ -39,7 +39,6 @@ namespace NatCruise.Models
         // non changing fields
         public string TallyLedgerID { get; set; }
         public string TreeID { get; set; }
-        
         public string CuttingUnitCode { get; set; }
         public int? PlotNumber { get; set; }
         public string EntryType { get; set; }

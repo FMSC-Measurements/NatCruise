@@ -300,7 +300,8 @@ namespace FScruiser.XF.ViewModels
                 // we should only need to add entries when coming back from edit tree counts and only be adding one entry when doing so
 
                 //var newTallyEntries = new List<TallyEntry>();
-                var tallyEntries = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse();
+                var tallyEntries = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode)
+                    .Reverse();
 
                 var tfIDLookup = tf.ToDictionary(x => x.TallyLedgerID);
 
@@ -327,7 +328,8 @@ namespace FScruiser.XF.ViewModels
             }
             else
             {
-                TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse().ToObservableCollection();
+                TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode)
+                    .Reverse().ToObservableCollection();
             }
 
             // refresh selected tree in case coming back from TreeEdit page

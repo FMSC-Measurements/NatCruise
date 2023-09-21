@@ -13,6 +13,8 @@ namespace NatCruise.Data
 
         IEnumerable<TallyEntry> GetTallyEntries(string unitCode, int plotNumber);
 
+        //IEnumerable<TallyEntry> GetTallyEntriesByUnitCodeIncludeUntallied(string unitCode);
+
         Task<TallyEntry> InsertTallyActionAsync(TallyAction tallyAction);
 
         TallyEntry InsertTallyAction(TallyAction atn);
