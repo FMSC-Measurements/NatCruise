@@ -2,7 +2,7 @@
 
 namespace NatCruise.Design.Util
 {
-    public static class IEnumerableExtentions
+    public static class IEnumerableExtensions
     {
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> @this)
         {

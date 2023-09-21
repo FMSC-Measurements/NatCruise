@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.Controls
 {
-    public class TextBoxHelper
+    public static class TextBoxHelper
     {
         public static readonly DependencyProperty RegexMaskProperty = DependencyProperty.RegisterAttached(
             "RegexMask",
@@ -106,7 +106,6 @@ namespace NatCruise.Wpf.Controls
             else
             {
                 System.Media.SystemSounds.Beep.Play();
-                return;
             }
         }
 

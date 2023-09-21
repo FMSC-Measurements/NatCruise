@@ -24,10 +24,8 @@ namespace NatCruise.Design.ViewModels
         private Stratum _stratum;
         private SampleGroup _selectedSampleGroup;
 
-        public SampleGroupListViewModel(IDataserviceProvider datastoreProvider, INatCruiseDialogService dialogService)
+        public SampleGroupListViewModel(ISampleGroupDataservice sampleGroupDataservice, INatCruiseDialogService dialogService)
         {
-            var sampleGroupDataservice = datastoreProvider.GetDataservice<ISampleGroupDataservice>();
-
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
@@ -95,9 +93,9 @@ namespace NatCruise.Design.ViewModels
         private void samplegroup_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if(e.PropertyName == nameof(SampleGroup.Errors)) { return; }
-            if(sender is SampleGroup sg && sg != null)
+            if(sender is SampleGroup sg)
             {
-                ValidateSampeleGroup(sg);
+                ValidateSampleGroup(sg);
             }
         }
 
@@ -109,7 +107,7 @@ namespace NatCruise.Design.ViewModels
                 SetProperty(ref _selectedSampleGroup, value);
                 if(value != null)
                 {
-                    ValidateSampeleGroup(value);
+                    ValidateSampleGroup(value);
                 }
             }
         }
@@ -178,7 +176,7 @@ namespace NatCruise.Design.ViewModels
 
                 foreach (var sampleGroup in sampleGroups)
                 {
-                    ValidateSampeleGroup(sampleGroup);
+                    ValidateSampleGroup(sampleGroup);
                 }
 
                 SampleGroups = new ObservableCollection<SampleGroup>(sampleGroups);
@@ -194,7 +192,7 @@ namespace NatCruise.Design.ViewModels
             LoadSampleGroups(Stratum);
         }
 
-        public void ValidateSampeleGroup(SampleGroup sampleGroup)
+        public void ValidateSampleGroup(SampleGroup sampleGroup)
         {
             if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
 

@@ -1,9 +1,10 @@
 ﻿using NatCruise.Models;
+using Prism.Mvvm;
 using System;
 
 namespace NatCruise.Models
 {
-    public class FixCNTTallyBucket : Model_Base
+    public class FixCNTTallyBucket : BindableBase
     {
         private int _treeCount;
 
@@ -21,7 +22,7 @@ namespace NatCruise.Models
         public int TreeCount
         {
             get => _treeCount;
-            set => SetValue(ref _treeCount, value);
+            set => SetProperty(ref _treeCount, value);
         }
     }
 }

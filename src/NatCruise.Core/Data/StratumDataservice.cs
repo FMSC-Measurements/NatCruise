@@ -245,6 +245,7 @@ WHERE StratumID = @StratumID;",
         }
 
         // TODO should method return true if has tree counts or trees?
+        // Indicates if specific unit in stratum has field data
         public bool HasTreeCounts(string unitCode, string stratum)
         {
             var treecount = Database.ExecuteScalar<int>("SELECT sum(TreeCount) FROM TallyLedger WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND CruiseID = @p3;"

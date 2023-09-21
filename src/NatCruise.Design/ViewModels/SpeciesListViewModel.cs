@@ -19,12 +19,10 @@ namespace NatCruise.Design.ViewModels
     public class SpeciesListViewModel : ViewModelBase
     {
         private DelegateCommand<string> _addSpeciesCommand;
-
-        //private DelegateCommand<Species> _updateSpeciesCommand;
         private DelegateCommand<Species> _deleteSpeciesCommand;
-
         private ObservableCollection<Species> _species;
         private IEnumerable<FIASpecies> _fiaOptions;
+
         public ISetupInfoDataservice SetupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
         public SpeciesDetailViewModel SpeciesDetailViewModel { get; }
@@ -65,23 +63,6 @@ namespace NatCruise.Design.ViewModels
                 SpeciesDetailViewModel.Species = value;
                 OnPropertyChanged();
             }
-
-            //get => _selectedSpecies;
-            //set
-            //{
-            //    //if (_selectedSpecies != null)
-            //    //{ _selectedSpecies.PropertyChanged -= SelectedSpecies_PropertyChanged; }
-            //    _selectedSpecies = value;
-            //    //if (value != null)
-            //    //{ value.PropertyChanged += SelectedSpecies_PropertyChanged; }
-            //    RaisePropertyChanged();
-
-            //    //void SelectedSpecies_PropertyChanged(object sender, PropertyChangedEventArgs e)
-            //    //{
-            //    //    var species = (Species)sender;
-            //    //    UpdateSpecies(species);
-            //    //}
-            //}
         }
 
         public IEnumerable<FIASpecies> FIAOptions
@@ -120,7 +101,7 @@ namespace NatCruise.Design.ViewModels
             var speciesList = Species;
             var alreadyExists = speciesList.Any(x => x.SpeciesCode.Equals(speciesCode, StringComparison.OrdinalIgnoreCase));
 
-            if (alreadyExists == false)
+            if (!alreadyExists)
             {
                 var newSpecies = new Species()
                 {
@@ -130,18 +111,10 @@ namespace NatCruise.Design.ViewModels
                 Species.Add(newSpecies);
                 SpeciesAdded?.Invoke(this, EventArgs.Empty);
                 SpeciesDetailViewModel.Species = newSpecies;
-                //SelectedSpecies = newSpecies;
             }
             else
             { DialogService.ShowNotification("Species Code Already Exists"); }
         }
-
-        //public void UpdateSpecies(Species species)
-        //{
-        //    if (species is null) { throw new ArgumentNullException(nameof(species)); }
-
-        //    TemplateDataservice.UpsertSpecies(species);
-        //}
 
         public void DeleteSpecies(Species species)
         {
@@ -151,7 +124,7 @@ namespace NatCruise.Design.ViewModels
             {
                 SpeciesDataservice.DeleteSpecies(species.SpeciesCode);
             }
-            catch (FMSC.ORM.ConstraintException e)
+            catch (FMSC.ORM.ConstraintException)
             {
                 DialogService.ShowNotification("Can Not Delete Species With Data");
             }

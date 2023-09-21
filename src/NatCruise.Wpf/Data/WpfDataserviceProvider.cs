@@ -30,32 +30,21 @@ namespace NatCruise.Data
             var deviceID = DeviceID;
 
 
-            try
+            if (type == typeof(ITemplateDataservice))
             {
-                if (type == typeof(ITallySettingsDataservice))
-                {
-                }
-                else if (type == typeof(ITemplateDataservice))
-                {
-                    return new TemplateDataservice(database, cruiseID, deviceID);
-                }
-                else if (type == typeof(IDesignCheckDataservice))
-                {
-                    return new DesignCheckDataservice(database, cruiseID, deviceID);
-                }
-                else if (type == typeof(ICruisersDataservice))
-                {
-                    return new CruisersDataservice(database, cruiseID, deviceID);
-                }
-                
+                return new TemplateDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(IDesignCheckDataservice))
+            {
+                return new DesignCheckDataservice(database, cruiseID, deviceID);
+            }
+            else if (type == typeof(ICruisersDataservice))
+            {
+                return new CruisersDataservice(database, cruiseID, deviceID);
+            }
 
-                return null;
-            }
-            catch (Exception e)
-            {
-                throw;
-                //return null;
-            }
+
+            return null;
         }
 
         public static void RegisterDataservices(IContainerRegistry containerRegistry)

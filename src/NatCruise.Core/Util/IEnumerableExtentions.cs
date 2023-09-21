@@ -11,12 +11,9 @@ namespace NatCruise.Util
 
     public static class IEnumerableExtentions
     {
-        private class IdentityFunction<TElement>
+        private static class IdentityFunction<TElement>
         {
-            public static Func<TElement, TElement> Instance
-            {
-                get { return x => x; }
-            }
+            public static Func<TElement, TElement> Instance { get; } = (x) => x;
         }
 
         public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> @this)
@@ -49,7 +46,7 @@ namespace NatCruise.Util
 
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> e)
         {
-            return e == null || e.Any() == false;
+            return e == null || !e.Any();
         }
 
         public static Dictionary<TKey, IEnumerable<TValue>> ToCollectionDictionary<TKey, TValue>(this IEnumerable<TValue> @this, Func<TValue, TKey> keySelector)

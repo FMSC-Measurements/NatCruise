@@ -1,19 +1,17 @@
 ﻿using CruiseDAL.Schema;
+using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
-using NatCruise.Async;
 using Prism.Commands;
-using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Documents.DocumentStructures;
 using System.Windows.Input;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
@@ -26,12 +24,12 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private string _stratumCode;
         private string _sampleGroupCode;
         private IEnumerable<TreeField> _fields;
-        private IEnumerable<int> _plotOptions;
         private int? _plotNumber;
         private TreeEx _selectedTree;
         private TreeEditViewModel _treeEditViewModel;
         private ICommand _addTreeCommand;
         private ICommand _deleteTreeCommand;
+
         private readonly IEnumerable<TreeField> COMMON_TREEFIELDS = new[]
         {
             new TreeField{DbType = "TEXT", Heading = "Cutting Unit", Field = nameof(Tree.CuttingUnitCode)},
@@ -97,6 +95,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public INatCruiseDialogService DialogService { get; }
 
         public LogListViewModel LogListViewModel { get; }
+
         public TreeEditViewModel TreeEditViewModel
         {
             get => _treeEditViewModel;
@@ -153,8 +152,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
-
-
         public int? PlotNumber
         {
             get => _plotNumber;
@@ -183,8 +180,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 }
             }
         }
-
-
 
         private void Tree_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -278,8 +273,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 else { stratumCode = strata[0]; }
             }
 
-
-
             if (sampleGroupCode is null)
             {
                 var sampleGroups = SampleGroupDataservice.GetSampleGroupCodes(stratumCode).ToArray();
@@ -324,7 +317,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 }
 
                 string countOrMeasure = "M";
-                if(CruiseMethods.TALLY_METHODS.Contains(cruiseMethod))
+                if (CruiseMethods.TALLY_METHODS.Contains(cruiseMethod))
                 {
                     var result = await DialogService.AskValueAsync("Count, Measure or Insurance tree?", "Count", "Measure", "Insurance");
                     if (result is null) { return; }
@@ -356,7 +349,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                         selectedSubPop.LiveDead,
                         countMeasure: countOrMeasure);
                 }
-
             }
             else if (cruiseMethod == CruiseMethods.THREEP || cruiseMethod == CruiseMethods.S3P)
             {
@@ -372,7 +364,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                         treeCount: 0,
                         kpi: isSTM ? 0 : kpi.Value,
                         stm: isSTM);
-
             }
             else
             {

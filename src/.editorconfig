@@ -24,7 +24,7 @@ csharp_style_prefer_local_over_anonymous_function = true:suggestion
 csharp_style_prefer_index_operator = true:suggestion
 csharp_space_around_binary_operators = before_and_after
 vsspell_section_id = 980873a9e6d84760b0774720450328e8
-vsspell_ignored_words_980873a9e6d84760b0774720450328e8 = App|DataService|Datastore|FScruiser|Haptic|ifnull|NatCruise|playbook|Scruiser|syncer|untally|xunit|Xamarin
+vsspell_ignored_words_980873a9e6d84760b0774720450328e8 = App|DataService|Datastore|FScruiser|Haptic|ifnull|NatCruise|playbook|Scruiser|syncer|untally|Util|validator|Xamarin|xunit|Recon
 
 [*.xml]
 indent_style = space

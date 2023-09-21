@@ -130,11 +130,6 @@ JOIN Stratum AS st USING (StratumCode, CruiseID)
                 "WHERE (@p1 IS NULL OR StratumCode = @p1) AND CruiseID = @p2;", stratumCode, CruiseID);
         }
 
-        public void SetTallyBySubPop(bool tallyBySubpop, string stratumCode, string sampleGroupCode)
-        {
-            throw new NotImplementedException();
-        }
-
         public void UpdateSampleGroup(SampleGroup sg)
         {
             Database.Execute2(
@@ -195,11 +190,6 @@ WHERE SampleGroupID = @SampleGroupID;",
                     sg.SampleGroupCode,
                     DeviceID
                 });
-        }
-
-        public string GetMethod(string stratumCode)
-        {
-            return Database.ExecuteScalar<string>("SELECT Method FROM Stratum WHERE StratumCode = @p1 AND CruiseID = @p2;", stratumCode, CruiseID);
         }
     }
 }

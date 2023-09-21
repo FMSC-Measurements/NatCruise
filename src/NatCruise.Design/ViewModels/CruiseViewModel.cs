@@ -106,30 +106,6 @@ namespace NatCruise.Design.ViewModels
             set => SetProperty(ref _purposeOptions, value);
         }
 
-        //private void OnCruiseChanged(Cruise newValue)
-        //{
-        //    if (newValue != null)
-        //    {
-        //        newValue.PropertyChanged += Cruise_PropertyChanged;
-        //    }
-        //}
-
-        //private void OnCruiseChanging(Cruise oldValue, Cruise newValue)
-        //{
-        //    if (oldValue != null)
-        //    {
-        //        oldValue.PropertyChanged -= Cruise_PropertyChanged;
-        //    }
-        //}
-
-        //private void Cruise_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    var cruise = sender as Cruise;
-        //    SaleDataservice.UpdateCruise(cruise);
-        //}
-
-
-
         public override void Load()
         {
             base.Load();

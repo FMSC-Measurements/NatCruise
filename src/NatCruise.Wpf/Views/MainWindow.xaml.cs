@@ -27,11 +27,6 @@ namespace NatCruise.Wpf.Views
 
         public IContainerProvider Container { get; }
 
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
@@ -56,9 +51,9 @@ See Design Checks Page For Details.", "Do You Want To Exit?", defaultNo: true).R
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
+                //do nothing
             }
         }
     }

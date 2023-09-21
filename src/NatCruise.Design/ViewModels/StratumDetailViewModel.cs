@@ -13,7 +13,7 @@ namespace NatCruise.Design.ViewModels
 {
     public class StratumDetailViewModel : ValidationViewModelBase
     {
-        public readonly string[] YealdComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
+        public readonly string[] YieldComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
         public readonly string[] Fixed_Size_Plot_Methods = new string[] { CruiseMethods.FIX, CruiseMethods.FCM, CruiseMethods.F3P, CruiseMethods.FIXCNT };
 
         private Stratum _stratum;
@@ -101,7 +101,7 @@ namespace NatCruise.Design.ViewModels
         {
             OnPropertyChanged(nameof(IsPlot));
             OnPropertyChanged(nameof(IsFixedSizePlot));
-            OnPropertyChanged(nameof(IsVariableRariousePlot));
+            OnPropertyChanged(nameof(IsVariableRadiusPlot));
             OnPropertyChanged(nameof(Is3PPNT));
             OnPropertyChanged(nameof(IsFixCNT));
         }
@@ -265,11 +265,11 @@ namespace NatCruise.Design.ViewModels
             protected set => SetProperty(ref _treefieldOptions, value);
         }
 
-        public IEnumerable<string> YieldComponentOptions => YealdComponent_Options;
+        public IEnumerable<string> YieldComponentOptions => YieldComponent_Options;
 
         public bool IsPlot => CruiseMethods.PLOT_METHODS.Contains(Stratum?.Method) || Stratum?.Method == CruiseMethods.FIXCNT || Stratum?.Method == CruiseMethods.THREEPPNT;
 
-        public bool IsVariableRariousePlot => CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(Stratum?.Method);
+        public bool IsVariableRadiusPlot => CruiseMethods.VARIABLE_RADIUS_METHODS.Contains(Stratum?.Method);
 
         public bool IsFixedSizePlot => Fixed_Size_Plot_Methods.Contains(Stratum?.Method);
 

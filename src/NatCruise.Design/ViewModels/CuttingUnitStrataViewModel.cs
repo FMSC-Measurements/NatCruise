@@ -27,7 +27,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _stratum, value);
-                OnStratumChanged(value);
+                RefreshSelectedUnits();
             }
         }
 
@@ -83,11 +83,6 @@ namespace NatCruise.Design.ViewModels
                 StratumDataservice.AddStratumToCuttingUnit(unitCode, stratumCode);
             }
 
-            RefreshSelectedUnits();
-        }
-
-        private void OnStratumChanged(Stratum newStratum)
-        {
             RefreshSelectedUnits();
         }
 

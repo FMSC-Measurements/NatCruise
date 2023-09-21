@@ -75,7 +75,7 @@ namespace NatCruise.Design.ViewModels
         private void stratum_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if(e.PropertyName == nameof(Stratum.Errors)) { return; }
-            if(sender is Stratum st && st != null)
+            if(sender is Stratum st)
             {
                 ValidateStratum(st);
             }

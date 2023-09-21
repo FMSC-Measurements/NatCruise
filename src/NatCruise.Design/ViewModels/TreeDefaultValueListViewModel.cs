@@ -25,6 +25,7 @@ namespace NatCruise.Design.ViewModels
         private IEnumerable<Product> _productOptions;
         private ICommand _addNewTreeDefaultValueCommand;
         private ICommand _deleteTreeDefaultValueCommand;
+        private IEnumerable<string> _productCodeOptions;
 
         public TreeDefaultValueListViewModel(ITemplateDataservice templateDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupInfoDataservice, INatCruiseDialogService dialogService)
         {
@@ -40,8 +41,8 @@ namespace NatCruise.Design.ViewModels
         public ISetupInfoDataservice SetupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
 
-        public ICommand AddNewTreeDefaultValueCommand => _addNewTreeDefaultValueCommand ?? new DelegateCommand(AddNewTreeDefaultValue);
-        public ICommand DeleteTreeDefaultValueCommand => _deleteTreeDefaultValueCommand ?? new DelegateCommand<TreeDefaultValue>(DeleteTreeDefaultValue);
+        public ICommand AddNewTreeDefaultValueCommand => _addNewTreeDefaultValueCommand ??= new DelegateCommand(AddNewTreeDefaultValue);
+        public ICommand DeleteTreeDefaultValueCommand => _deleteTreeDefaultValueCommand ??= new DelegateCommand<TreeDefaultValue>(DeleteTreeDefaultValue);
 
         public ObservableCollection<TreeDefaultValue> TreeDefaultValues
         {
@@ -52,7 +53,7 @@ namespace NatCruise.Design.ViewModels
                 {
                     foreach(var i in _treeDefaultValues)
                     {
-
+                        i.PropertyChanged -= TreeDefaultValue_PropertyChanged;
                     }
                 }
                 SetProperty(ref _treeDefaultValues, value);
@@ -90,11 +91,15 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _productOptions, value);
-                OnPropertyChanged(nameof(ProductCodeOptions));
+                ProductCodeOptions = (value != null) ? value.Select(x => x.ProductCode).ToArray() : Enumerable.Empty<string>();
             }
         }
 
-        public IEnumerable<string> ProductCodeOptions => ProductOptions?.Select(x => x.ProductCode).ToArray();
+        public IEnumerable<string> ProductCodeOptions
+        {
+            get => _productCodeOptions;
+            protected set => SetProperty(ref _productCodeOptions, value);
+        }
 
         public void AddNewTreeDefaultValue()
         {

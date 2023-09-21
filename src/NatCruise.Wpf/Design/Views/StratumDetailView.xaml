@@ -95,7 +95,7 @@
             <StackPanel>
 
                 <!-- baf -->
-                <ctrls:LastChildWidthPanel Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}">
+                <ctrls:LastChildWidthPanel Visibility="{Binding IsVariableRadiusPlot, Converter={StaticResource IsVisableConverter}}">
                     <TextBlock Text="BAF*" />
                     <TextBox ToolTip="Basal Area Factor"
                              Text="{Binding BasalAreaFactor}"

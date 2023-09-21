@@ -14,7 +14,7 @@ namespace NatCruise.Design.ViewModels
 {
     public class StratumTemplateDetailsViewModel : ViewModelBase
     {
-        public readonly string[] YealdComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
+        public readonly string[] YieldComponent_Options = new string[] { "CL", "CD", "NL", "ND", };
 
         private StratumTemplate _stratumTemplate;
         private IEnumerable<TreeField> _treefieldOptions;
@@ -31,7 +31,7 @@ namespace NatCruise.Design.ViewModels
         public ISetupInfoDataservice SetupDataservice { get; }
         public IStratumTemplateDataservice StratumTemplateDataservice { get; }
 
-        public IEnumerable<string> YieldComponentOptions => YealdComponent_Options;
+        public IEnumerable<string> YieldComponentOptions => YieldComponent_Options;
 
         public IEnumerable<TreeField> TreeFieldOptions
         {
