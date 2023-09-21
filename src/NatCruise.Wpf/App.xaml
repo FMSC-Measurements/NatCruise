@@ -19,69 +19,13 @@
             <sys:String x:Key="const_reges_path_input">^(?:[a-zA-Z]:)(?:[\\\/][a-zA-Z0-9\.][a-zA-Z0-9-_\. ]*)+(?:[\\\/])?$</sys:String>
             <sys:String x:Key="const_reges_path_part_input">^(?:[a-zA-Z0-9\.][a-zA-Z0-9-_\. ]*)+$</sys:String>
 
-            <!-- converters -->
-            <converters:NotConverter x:Key="NotConverter" />
 
-            <converters:IsNullConverter x:Key="NotNullConverter"
-                                        Invert="True" />
-            <converters:IsNullOrWhiteSpaceConverter x:Key="NotNullOrWhiteSpaceConverter"
-                                                    Invert="True" />
-            <converters:IsVisableConverter x:Key="IsVisableConverter" />
-            <converters:IsVisableConverter x:Key="IsNotVisableConverter" Invert="True"/>
-
-            <converters:IsEmptyConverter x:Key="IsNotNullOrEmptyConverter"
-                                         Invert="True" />
-            <converters:IsEmptyConverter x:Key="IsNullOrEmptyConverter"
-                                         Invert="False" />
-
-            <converters:AppendConverter x:Key="AppendConverter" />
-            <converters:PrependConverter x:Key="PrependConverter" />
-            <converters:ReplaceNullConverter x:Key="ReplaceNullConverter" />
-
-            <converters:PrependConverter x:Key="PrependNoneConverter"
-                                         Value="-none-" />
-            <converters:ReplaceNullConverter x:Key="ReplaceNoneWithNullConverter"
-                                             Value="-none-" />
-
-            <converters:PrependConverter x:Key="PrependAnyConverter"
-                                         Value="Any" />
-            <converters:ReplaceNullConverter x:Key="ReplaceAnyWithNullConverter"
-                                             Value="Any" />
-
-			
-            <converters:DefaultToEmptyStringConverter x:Key="DefaultToEmptyStringConverter" />
-
-			<!-- cruise method visability converters-->
-            <converters:CruiseMethodToVisableConverter x:Key="IsPlotMethodVisibilityConverter"
-                                                       MethodMap="PlotMethods" />
-			<converters:CruiseMethodToVisableConverter x:Key="IsNotPlotMethodVisibilityConverter"
-                                                       MethodMap="PlotMethods" Invert="true" />
-            <converters:CruiseMethodToVisableConverter x:Key="IsFixedSizePlotMethodVisibilityConverter"
-                                                       MethodMap="FixedSizePlotMethods" />
-            <converters:CruiseMethodToVisableConverter x:Key="IsVariableRadiousPlotMethodVisibilityConverter"
-                                                       MethodMap="VariableRadiousPlotMethods" />
-            <converters:CruiseMethodToVisableConverter x:Key="Is3PPNTMethodVisibilityConverter"
-                                                       MethodMap="ThreePPNT" />
-            <converters:CruiseMethodToVisableConverter x:Key="IsFixCNTMethodVisibilityConverter"
-                                                       MethodMap="FIXCNT" />
-            <converters:CruiseMethodToVisableConverter x:Key="IsFrequencySampleVisibilityConverter"
-                                                       MethodMap="FrequencySampleMethods" />
-            <converters:CruiseMethodToVisableConverter x:Key="IsSTRVisibilityConverter"
-                                                       MethodMap="STR" />
-            <converters:CruiseMethodToVisableConverter x:Key="IsThreePMethodsVisibilityConverter"
-                                                       MethodMap="ThreePMethods" />
-			<!-- cruise method converters -->
-			<converters:CruiseMethodToBoolConverter x:Key="IsNotPlotMethodConverter"
-													MethodMap="PlotMethods" Invert="true" />
-			
-			<!-- multibinding converters -->
-			<multiConverters:AllConverter x:Key="MultiBindingAllConverter"/>
-		    	
 			
             <!-- imported resource -->
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Colors.xaml" />
+                <ResourceDictionary Source="Converters.xaml" />
                 <ResourceDictionary Source="Images.xaml" />
                 <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
