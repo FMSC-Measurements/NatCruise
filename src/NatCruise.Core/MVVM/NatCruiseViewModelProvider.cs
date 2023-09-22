@@ -42,19 +42,7 @@ namespace NatCruise.MVVM
             var viewName = view.FullName;
             viewName = viewName.Replace(".Views.", ".ViewModels.");
 
-            string viewAssemblyName = null;
-            if (viewName.StartsWith("NatCruise.Design"))
-            {
-                viewAssemblyName = "NatCruise.Design";
-            }
-            else if (viewName.StartsWith("FSCruiser.Design"))
-            {
-                viewAssemblyName = "NatCruise.Design";
-            }
-            else
-            {
-                viewAssemblyName = view.GetTypeInfo().Assembly.FullName;
-            }
+            string viewAssemblyName = view.GetTypeInfo().Assembly.FullName;
 
             var suffix = viewName.EndsWith("View") ? "Model" : "ViewModel";
             var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);

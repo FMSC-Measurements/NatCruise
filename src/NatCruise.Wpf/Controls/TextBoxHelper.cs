@@ -109,7 +109,7 @@ namespace NatCruise.Wpf.Controls
             }
         }
 
-        private static void TextBox_Pasting(object? sender, DataObjectPastingEventArgs e)
+        private static void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
         {
             var textbox = sender as TextBox;
 

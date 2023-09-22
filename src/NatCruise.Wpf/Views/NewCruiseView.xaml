@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NatCruise.Wpf.Views"
-             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:dsgn="clr-namespace:NatCruise.Design"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"

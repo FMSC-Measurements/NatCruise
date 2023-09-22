@@ -2,10 +2,10 @@
 using CruiseDAL.UpConvert;
 using NatCruise.Async;
 using NatCruise.Data;
-using NatCruise.Design.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Services;
+using NatCruise.Wpf.Data;
 using NatCruise.Wpf.Validation;
 using Prism.Commands;
 using Prism.Services.Dialogs;

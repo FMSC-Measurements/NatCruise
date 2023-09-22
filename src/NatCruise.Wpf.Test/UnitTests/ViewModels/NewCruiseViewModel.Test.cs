@@ -1,15 +1,9 @@
 ﻿using Moq;
-using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Services;
 using NatCruise.Test;
 using NatCruise.Wpf.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace NatCruise.Wpf.Test.UnitTests.ViewModels
@@ -29,15 +23,13 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
             var setupInfo_moq = new Mock<ISetupInfoDataservice>();
             var fileDialogService_moq = new Mock<IFileDialogService>();
             var deviceInfo_moq = new Mock<IDeviceInfoService>();
-                    deviceInfo_moq.Setup(x => x.DeviceID).Returns(Guid.Empty.ToString());
-
+            deviceInfo_moq.Setup(x => x.DeviceID).Returns(Guid.Empty.ToString());
 
             var vm = new NewCruiseViewModel(dsp_moq.Object, setupInfo_moq.Object, fileDialogService_moq.Object, deviceInfo_moq.Object);
 
             vm.SelectTemplate(templatePath);
 
             vm.TemplatePath.Should().Be(templatePath);
-
         }
 
         [Fact]
@@ -56,7 +48,6 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
             fileDialogService_moq.Setup(x => x.SelectCruiseFileDestinationAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task<string>.FromResult(cruisePath));
 
-
             var vm = new NewCruiseViewModel(dsp_moq.Object, setupInfo_moq.Object, fileDialogService_moq.Object, deviceInfo_moq.Object)
             {
                 SaleNumber = "12345",
@@ -65,13 +56,12 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
                 Region = "08",
                 Forest = "08",
                 District = "08",
-                Purpose = new Purpose { PurposeCode = "Timber Sale", ShortCode = "TS"},
+                Purpose = new Purpose { PurposeCode = "Timber Sale", ShortCode = "TS" },
             };
 
             vm.SelectTemplate(templatePath);
             vm.TemplatePath.Should().Be(templatePath);
 
-            
             await vm.CreateCruise();
             vm.HasErrors.Should().BeFalse();
 

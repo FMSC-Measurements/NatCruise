@@ -1,5 +1,4 @@
 ﻿using CruiseDAL;
-using NatCruise.Design.Data;
 using NatCruise.Services;
 using NatCruise.Wpf.Data;
 using Prism.Ioc;
@@ -29,7 +28,6 @@ namespace NatCruise.Data
             var database = Database;
             var deviceID = DeviceID;
 
-
             if (type == typeof(ITemplateDataservice))
             {
                 return new TemplateDataservice(database, cruiseID, deviceID);
@@ -43,11 +41,10 @@ namespace NatCruise.Data
                 return new CruisersDataservice(database, cruiseID, deviceID);
             }
 
-
             return null;
         }
 
-        public static void RegisterDataservices(IContainerRegistry containerRegistry)
+        public static new void RegisterDataservices(IContainerRegistry containerRegistry)
         {
             DataserviceProviderBase.RegisterDataservices(containerRegistry);
 

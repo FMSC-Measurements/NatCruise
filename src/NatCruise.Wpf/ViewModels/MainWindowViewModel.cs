@@ -3,7 +3,6 @@ using CruiseDAL.UpConvert;
 using DryIoc;
 using NatCruise.Async;
 using NatCruise.Data;
-using NatCruise.Design.Services;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;

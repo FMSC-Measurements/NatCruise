@@ -1,5 +1,4 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
-using NatCruise.Design.Services;
 using NatCruise.Design.Views;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
@@ -7,7 +6,6 @@ using NatCruise.Wpf.FieldData.Views;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Views;
 using Prism.Regions;
-using Prism.Services.Dialogs;
 using System;
 using System.Threading.Tasks;
 

@@ -1,8 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using NatCruise.Data;
-using NatCruise.Design.Data;
 using NatCruise.Navigation;
-using NatCruise.Services;
+using NatCruise.Wpf.Data;
 using Prism.Ioc;
 using System;
 using System.ComponentModel;
@@ -49,7 +48,6 @@ See Design Checks Page For Details.", "Do You Want To Exit?", defaultNo: true).R
                         e.Cancel = true;
                     }
                 }
-
             }
             catch (Exception)
             {
@@ -57,6 +55,4 @@ See Design Checks Page For Details.", "Do You Want To Exit?", defaultNo: true).R
             }
         }
     }
-
-    
 }
