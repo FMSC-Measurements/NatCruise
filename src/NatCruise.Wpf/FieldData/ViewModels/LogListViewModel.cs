@@ -93,7 +93,11 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             get => _logs;
             set
             {
-                SetProperty(ref _logs, value);
+                var selectedLogID = SelectedLog?.LogID;
+                if(SetProperty(ref _logs, value) && value != null && selectedLogID != null)
+                {
+                    SelectedLog = value.FirstOrDefault(x => x.LogID == selectedLogID);
+                }
             }
         }
 

@@ -59,7 +59,14 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public IEnumerable<Plot> Plots
         {
             get => _plots;
-            set => SetProperty(ref _plots, value);
+            set
+            {
+                var selectedPlotID = SelectedPlot?.PlotID;
+                if(SetProperty(ref _plots, value) && value != null && selectedPlotID != null)
+                {
+                    SelectedPlot = value.FirstOrDefault(x => x.PlotID == selectedPlotID);
+                }
+            }
         }
 
         public override void Load()

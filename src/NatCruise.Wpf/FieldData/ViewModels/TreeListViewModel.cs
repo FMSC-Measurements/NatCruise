@@ -167,16 +167,23 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             get => _trees;
             set
             {
+                
                 if (_trees != null)
                 {
                     foreach (var tree in _trees)
                     { tree.PropertyChanged -= Tree_PropertyChanged; }
                 }
+                string selectedTreeID = SelectedTree?.TreeID;
                 SetProperty(ref _trees, value);
                 if (value != null)
                 {
                     foreach (var tree in value)
                     { tree.PropertyChanged += Tree_PropertyChanged; }
+
+                    if (selectedTreeID != null)
+                    {
+                        SelectedTree = value.FirstOrDefault(x => x.TreeID == selectedTreeID);
+                    }
                 }
             }
         }
