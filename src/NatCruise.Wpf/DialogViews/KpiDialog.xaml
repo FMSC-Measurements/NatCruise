@@ -8,8 +8,8 @@
                           xmlns:local="clr-namespace:NatCruise.Wpf.DialogViews"
                           mc:Ignorable="d"
                           d:DesignHeight="450"
+                          d:DesignWidth="768"
                           d:Title="Title"
-                          Width="768"
                           DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
                           KeyDown="OnKeyDown">
     <Grid>

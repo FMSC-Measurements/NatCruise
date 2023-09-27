@@ -91,6 +91,8 @@ namespace NatCruise.Wpf.DialogViews
 
         public async Task<int?> WaitForResult()
         {
+            _kpiTextBox.Focus();
+
             return await tcs.Task.ConfigureAwait(false);
         }
 

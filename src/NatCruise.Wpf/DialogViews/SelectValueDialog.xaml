@@ -7,10 +7,11 @@
                           xmlns:local="clr-namespace:NatCruise.Wpf.DialogViews"
                           mc:Ignorable="d"
                           x:Name="_this"
-                          Height="344"
-                          Width="723"
+                          d:Height="344"
+                          d:Width="723"
                           d:Title="Title"
-                          DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+                          DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                          KeyDown="OnKeyDownHandler">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -61,28 +62,35 @@
                            TextWrapping="Wrap" />
 
 
-                <ScrollViewer Grid.Row="1">
-                    <ItemsControl ItemsSource="{Binding Values}" d:ItemsSource="{d:SampleData ItemCount=5}">
-                    <!--<ItemsControl.ItemsPanel>
+                <ScrollViewer Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto" Margin="0,5">
+                    <ItemsControl ItemsSource="{Binding Values}"
+                                  d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <!--<ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>-->
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
-                                    Content="{Binding .}"
-                                    Click="OnButtonClick"
-                                    Margin="0,2"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
+                                        Content="{Binding .}"
+                                        Click="OnButtonClick"
+                                        Margin="0,2" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
 
-                </ItemsControl>
+                    </ItemsControl>
                 </ScrollViewer>
 
-                <Button Grid.Row="2" x:Name="_cancelButton" Click="OnButtonClick" Content="CANCEL" Style="{StaticResource MahApps.Styles.Button.Dialogs}" />
+                <Button Grid.Row="2"
+                        x:Name="_cancelButton"
+                        Click="OnButtonClick"
+                        Content="CANCEL"
+                        Margin="0,2"
+                        Style="{StaticResource MahApps.Styles.Button.Dialogs}" />
 
             </Grid>
         </Grid>
