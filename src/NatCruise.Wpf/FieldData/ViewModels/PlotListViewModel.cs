@@ -10,6 +10,8 @@ using NatCruise.Async;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
+using NatCruise.Services;
+using System.Windows.Input;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
@@ -18,20 +20,29 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private IEnumerable<Plot> _plots;
         private string _cuttingUnitCode;
         private Plot _selectedPlot;
+        private ICommand _addPlotCommand;
 
-        public PlotListViewModel(IPlotDataservice plotDataservice, ICuttingUnitDataservice cuttingUnitDataservice, PlotEditViewModel plotEditViewModel, INatCruiseDialogService dialogService)
+        public PlotListViewModel(IPlotDataservice plotDataservice,
+            ICuttingUnitDataservice cuttingUnitDataservice,
+            PlotEditViewModel plotEditViewModel,
+            INatCruiseDialogService dialogService,
+            ILoggingService loggingService)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             PlotEditViewModel = plotEditViewModel ?? throw new ArgumentNullException(nameof(plotEditViewModel));
 
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
         public IPlotDataservice PlotDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public PlotEditViewModel PlotEditViewModel { get; }
         public INatCruiseDialogService DialogService { get; }
+        public ILoggingService LoggingService { get; }
+
+        public ICommand AddPlotCommand => _addPlotCommand ??= new RelayCommand<int?>(AddPlot, AddPlotCanExecute);
 
         public event EventHandler PlotAdded;
         //public event EventHandler PlotRemoved;
@@ -77,9 +88,10 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             Plots = plots;
         }
 
-        [RelayCommand]
         public void AddPlot(int? plotNumber)
         {
+            if (plotNumber == null || plotNumber < 0) { return; }
+
             var unitCode = CuttingUnitCode;
             if (string.IsNullOrEmpty(unitCode))
             {
@@ -99,12 +111,26 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 DialogService.ShowMessageAsync("Plot Number Already Exists").FireAndForget();
             }
 
-            var plotID = (plotNumber.HasValue) ? PlotDataservice.AddNewPlot(CuttingUnitCode, plotNumber.Value)
-                : PlotDataservice.AddNewPlot(CuttingUnitCode);
-            Load();
-            var plot = Plots.FirstOrDefault(x => x.PlotID == plotID);
-            SelectedPlot = plot;
-            PlotAdded?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                var plotID = (plotNumber.HasValue) ? PlotDataservice.AddNewPlot(CuttingUnitCode, plotNumber.Value)
+                    : PlotDataservice.AddNewPlot(CuttingUnitCode);
+                Load();
+                var plot = Plots.FirstOrDefault(x => x.PlotID == plotID);
+                SelectedPlot = plot;
+                PlotAdded?.Invoke(this, EventArgs.Empty);
+            }
+            catch(Exception ex)
+            {
+                LoggingService.LogException(nameof(PlotListViewModel), "Add Plot", ex);
+            }
+        }
+
+        private bool AddPlotCanExecute(int? value)
+        {
+            if (value == null) return true;
+            if (value > 0) return true;
+            return false;
         }
 
         [RelayCommand]

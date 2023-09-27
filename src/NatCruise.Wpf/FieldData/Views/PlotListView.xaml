@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -33,7 +35,7 @@
                 <TextBox.InputBindings>
                     <KeyBinding Key="Return"
                                 Command="{Binding AddPlotCommand}"
-                                CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                                CommandParameter="{Binding Text, ElementName=_addPlotNumberTextbox, Converter={converters:StandardValueConverter Nullable=True, TargetType={x:Type sys:Int32}}}" />
                 </TextBox.InputBindings>
             </TextBox>
                 <Button Height="23"
@@ -41,7 +43,7 @@
                         Style="{StaticResource AddButton}"
                         Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
                         Command="{Binding AddPlotCommand}"
-                        CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                        CommandParameter="{Binding Text, ElementName=_addPlotNumberTextbox, Converter={converters:StandardValueConverter Nullable=True, TargetType={x:Type sys:Int32}}}" />
                 <Button Height="23"
                         Width="32"
                         Style="{StaticResource RemoveButton}"

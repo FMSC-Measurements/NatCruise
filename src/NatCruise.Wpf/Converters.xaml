@@ -37,6 +37,8 @@
 
     <converters:DefaultToEmptyStringConverter x:Key="DefaultToEmptyStringConverter" />
 
+    <converters:StandardValueConverter x:Key="StandardValueConverter" />
+
     <!-- cruise method visability converters-->
     <converters:CruiseMethodToVisableConverter x:Key="IsPlotMethodVisibilityConverter"
                                                MethodMap="PlotMethods" />
