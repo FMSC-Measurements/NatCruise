@@ -257,12 +257,25 @@
                          IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
                          Grid.Row="2"
                          Grid.Column="1">
-                <Label Text="KPI"
+                <Label Text="KPI:"
                        x:Name="_kpiLabel"
                        AutomationProperties.IsInAccessibleTree="False" />
-                <Label Text="{Binding Tree.KPI}"
+                <Label Text="{Binding Tree.KPI, Mode=OneWay}"
                        AutomationProperties.IsInAccessibleTree="True"
                        AutomationProperties.LabeledBy="{Reference _kpiLabel}" />
+            </StackLayout>
+
+            <!-- STM -->
+            <StackLayout Orientation="Horizontal"
+                         IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
+                         Grid.Row="2"
+                         Grid.Column="2">
+                <Label Text="STM:"
+                       x:Name="_stmLabel"
+                       AutomationProperties.IsInAccessibleTree="False" />
+                <Label Text="{Binding Tree.STM, Mode=OneWay, Converter={StaticResource BoolToYesNoConverter}}"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.LabeledBy="{Reference _stmLabel}" />
             </StackLayout>
         </Grid>
 

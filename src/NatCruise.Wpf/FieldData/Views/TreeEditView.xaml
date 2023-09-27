@@ -174,8 +174,16 @@
             <ctrls:LastChildWidthPanel Visibility="{Binding CruiseMethod, Converter={StaticResource IsThreePMethodsVisibilityConverter}}">
                 <TextBlock Text="KPI"
                        x:Name="_kpiLabel" />
-                <TextBox Text="{Binding Tree.KPI}"
-                       AutomationProperties.Name="KPI" />
+                <TextBox Text="{Binding Tree.KPI, Mode=OneWay}"
+                       AutomationProperties.Name="KPI" IsReadOnly="True" />
+            </ctrls:LastChildWidthPanel>
+            
+            <!-- STM -->
+            <ctrls:LastChildWidthPanel Visibility="{Binding CruiseMethod, Converter={StaticResource IsThreePMethodsVisibilityConverter}}">
+                <TextBlock Text="STM"
+                           x:Name="_stmLabel" />
+                <CheckBox IsChecked="{Binding Tree.STM, Mode=OneWay}"
+                         AutomationProperties.Name="STM" IsEnabled="False" />
             </ctrls:LastChildWidthPanel>
 
         </WrapPanel>

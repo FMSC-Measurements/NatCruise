@@ -72,7 +72,7 @@ SELECT
         LIMIT 1
     ) AS KPI,
     (
-        SELECT (CASE ifnull(STM, 0) WHEN 0 THEN 'N' WHEN 1 THEN 'Y' END)
+        SELECT ifnull(STM, 0)
         FROM TallyLedger
         WHERE TreeID = t.TreeID
         ORDER BY Created_TS DESC
