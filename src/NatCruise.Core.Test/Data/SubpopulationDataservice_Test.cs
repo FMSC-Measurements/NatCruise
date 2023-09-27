@@ -86,13 +86,36 @@ namespace NatCruise.Test.Data
                 LiveDead = "L",
             };
 
-            ds.Exists(newSubpop.StratumCode, newSubpop.SampleGroupCode, newSubpop.SpeciesCode)
+            ds.Exists(newSubpop.StratumCode, newSubpop.SampleGroupCode, newSubpop.SpeciesCode, newSubpop.LiveDead)
                 .Should().BeFalse();
 
             ds.AddSubpopulation(newSubpop);
 
-            ds.Exists(newSubpop.StratumCode, newSubpop.SampleGroupCode, newSubpop.SpeciesCode)
+            ds.Exists(newSubpop.StratumCode, newSubpop.SampleGroupCode, newSubpop.SpeciesCode, newSubpop.LiveDead)
                 .Should().BeTrue();
+
+            ds.Exists(newSubpop.StratumCode, newSubpop.SampleGroupCode, newSubpop.SpeciesCode, "D")
+                .Should().BeFalse();
+
+            var subPop2 = new Subpopulation
+            {
+                SubpopulationID = Guid.NewGuid().ToString(),
+                SampleGroupCode = sg.SampleGroupCode,
+                StratumCode = sg.StratumCode,
+                SpeciesCode = init.Species[1],
+                LiveDead = "L",
+            };
+
+            ds.Exists(subPop2.StratumCode, subPop2.SampleGroupCode, subPop2.SpeciesCode, subPop2.LiveDead)
+                .Should().BeFalse();
+
+            ds.AddSubpopulation(subPop2);
+
+            ds.Exists(subPop2.StratumCode, subPop2.SampleGroupCode, subPop2.SpeciesCode, subPop2.LiveDead)
+                .Should().BeTrue();
+
+            ds.Exists(subPop2.StratumCode, subPop2.SampleGroupCode, subPop2.SpeciesCode, "D")
+                .Should().BeFalse();
         }
 
         [Fact]
