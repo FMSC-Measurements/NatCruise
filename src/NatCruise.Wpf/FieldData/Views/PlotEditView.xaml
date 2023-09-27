@@ -29,7 +29,23 @@
                            Background="{DynamicResource brush_listItemError}"
                            FontSize="20"
                            Margin="0,0,0,7"
-                           AutomationProperties.Name="Plot Error Item" />
+                           AutomationProperties.Name="Plot Error Item">
+                        <Label.Template>
+                            <ControlTemplate TargetType="{x:Type Label}">
+                                <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Background="{TemplateBinding Background}"
+                                        Padding="{TemplateBinding Padding}"
+                                        SnapsToDevicePixels="true"
+                                        CornerRadius="3"
+                                        HorizontalAlignment="Stretch">
+
+                                    <TextBlock TextWrapping="Wrap"
+                                               Text="{TemplateBinding Content}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Label.Template>
+                    </Label>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
