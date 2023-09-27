@@ -47,6 +47,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             nameof(Tree.TreeID),
             nameof(Tree.CuttingUnitCode),
             nameof(Tree.PlotNumber),
+            nameof(TreeEx.STM),
+            nameof(TreeEx.KPI),
         };
 
         public TreeListViewModel(ITreeDataservice treeDataservice,
@@ -318,6 +320,11 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 {
                     var plotNumbers = PlotDataservice.GetPlotNumbersOrdered(cuttingUnitCode, stratumCode)
                         .Select(x => x.ToString()).ToArray();
+                    if(plotNumbers.Length is 0)
+                    {
+                        DialogService.ShowMessageAsync($"Unit Contains no Plots in Stratum {stratumCode}").FireAndForget();
+                        return;
+                    }
                     var result = await DialogService.AskValueAsync("Select Plot Number", plotNumbers);
                     if (result is null || !int.TryParse(result, out var iResult)) return;
                     plotNumber = iResult;
