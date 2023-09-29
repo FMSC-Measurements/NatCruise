@@ -671,10 +671,8 @@
                                                 <Label Text="{Binding Heading}" />
                                                 <Entry Text="{Binding ValueInt}"
                                                        Placeholder="{Binding StrDefaultValue}"
-                                                       Keyboard="Numeric">
-                                                    <Entry.Behaviors>
-                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                    </Entry.Behaviors>
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
                                                     <Entry.Effects>
                                                         <effects1:SelectAllTextEffect />
                                                     </Entry.Effects>
@@ -696,10 +694,8 @@
                                                 <Label Text="{Binding Heading}" />
                                                 <Entry Text="{Binding ValueReal}"
                                                        Placeholder="{Binding StrDefaultValue}"
-                                                       Keyboard="Numeric">
-                                                    <Entry.Behaviors>
-                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                    </Entry.Behaviors>
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
                                                     <Entry.Effects>
                                                         <effects1:SelectAllTextEffect />
                                                     </Entry.Effects>
@@ -720,10 +716,8 @@
                                             <local_ctrls:LastChildHeightLayout>
                                                 <Label Text="{Binding Heading}" />
                                                 <Entry Text="{Binding ValueText}"
-                                                       Placeholder="{Binding StrDefaultValue}">
-                                                    <Entry.Behaviors>
-                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                    </Entry.Behaviors>
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       ReturnType="Next">
                                                     <Entry.Effects>
                                                         <effects1:SelectAllTextEffect />
                                                     </Entry.Effects>
@@ -759,9 +753,6 @@
                                                 <ScrollView Orientation="Vertical">
                                                     <Editor Text="{Binding ValueText}"
                                                             AutoSize="TextChanges">
-                                                        <!--<Editor.Behaviors>
-                                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                            </Editor.Behaviors>-->
                                                     </Editor>
                                                 </ScrollView>
                                             </local_ctrls:LastChildHeightLayout>
