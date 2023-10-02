@@ -178,17 +178,17 @@ $@"SELECT
             return Database.ExecuteScalar2<int>("SELECT TreeCount FROM TallyLedger_Plot_Totals " +
                     "WHERE CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND PlotNumber = @PlotNumber AND StratumCode = @StratumCode " +
                     "AND SampleGroupCode = @SampleGroupCode " +
-                    "AND (@SpeciesCode IS NULL OR  ifnull(SpeciesCode, '') = ifnull(SpeciesCode, '')) " +
+                    "AND (@SpeciesCode IS NULL OR  ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '')) " +
                     "AND (@LiveDead IS NULL OR ifnull(LiveDead, '') = ifnull(@LiveDead, ''));",
                     new { CruiseID, pop.CuttingUnitCode, PlotNumber = plotNumber, pop.StratumCode, pop.SampleGroupCode, pop.SpeciesCode, pop.LiveDead });
         }
 
         public int GetSumKPI(TallyPopulation pop, int plotNumber)
         {
-            return Database.ExecuteScalar2<int>("SELECT SumKPI FROM TallyLedger_Plot_Totals " +
+            return Database.ExecuteScalar2<int>("SELECT ifnull(KPI, 0) FROM TallyLedger_Plot_Totals " +
                     "WHERE CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND PlotNumber = @PlotNumber AND StratumCode = @StratumCode " +
                     "AND SampleGroupCode = @SampleGroupCode " +
-                    "AND (@SpeciesCode IS NULL OR  ifnull(SpeciesCode, '') = ifnull(SpeciesCode, '')) " +
+                    "AND (@SpeciesCode IS NULL OR  ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '')) " +
                     "AND (@LiveDead IS NULL OR ifnull(LiveDead, '') = ifnull(@LiveDead, ''));",
                     new { CruiseID, pop.CuttingUnitCode, PlotNumber = plotNumber, pop.StratumCode, pop.SampleGroupCode, pop.SpeciesCode, pop.LiveDead });
         }
