@@ -44,7 +44,7 @@ namespace NatCruise.MVVM.ViewModels
             base.Initialize(parameters);
 
             var unit = parameters.GetValue<string>(NavParams.UNIT);
-            var plotNumber = parameters.GetValueOrDefault<int?>(NavParams.PLOT_NUMBER);
+            int? plotNumber = parameters.ContainsKey(NavParams.PLOT_NUMBER) ?  parameters.GetValueOrDefault<int>(NavParams.PLOT_NUMBER) : null;
             var stratum = parameters.GetValue<string>(NavParams.STRATUM);
             var sampleGroup = parameters.GetValue<string>(NavParams.SAMPLE_GROUP);
             var species = parameters.GetValue<string>(NavParams.SPECIES);
