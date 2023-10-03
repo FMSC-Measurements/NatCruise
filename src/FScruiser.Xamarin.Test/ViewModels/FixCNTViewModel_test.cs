@@ -1,7 +1,6 @@
 ﻿using CruiseDAL;
 using FluentAssertions;
 using FScruiser.XF.TestServices;
-using NatCruise.Cruise.Data;
 using NatCruise.Navigation;
 using NatCruise.Test;
 using Prism.Navigation;
@@ -10,10 +9,10 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using FScruiser.XF.Data;
-using NatCruise.Cruise.Data;
 using NatCruise.Test;
 using Moq;
-using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using FScruiser.XF.Services;
 
 namespace FScruiser.XF.ViewModels
 {
