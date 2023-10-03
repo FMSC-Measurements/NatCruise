@@ -9,13 +9,14 @@ using System.Linq;
 
 namespace NatCruise.Design.ViewModels
 {
-    public class SampleGroupDetailViewModel : ValidationViewModelBase
+    public partial class SampleGroupDetailViewModel : ValidationViewModelBase
     {
         protected readonly string[] SampleSelector_Type_Options = new[] { CruiseMethods.BLOCK_SAMPLER_TYPE, CruiseMethods.SYSTEMATIC_SAMPLER_TYPE, CruiseMethods.CLICKER_SAMPLER_TYPE };
         protected readonly string[] Supports_SamplerType_Selection = new[] { CruiseMethods.STR, };
 
         private SampleGroup _sampleGroup;
         private IEnumerable<Product> _productOptions;
+        private bool _hasFieldData;
 
         public SampleGroupDetailViewModel(ISampleGroupDataservice sampleGroupDataservice, ISetupInfoDataservice setupInfo, SampleGroupValidator validator)
             : base(validator)
@@ -37,6 +38,12 @@ namespace NatCruise.Design.ViewModels
             protected set => SetProperty(ref _productOptions, value);
         }
 
+        public bool HasFieldData
+        {
+            get => _hasFieldData;
+            set => SetProperty(ref _hasFieldData, value);
+        }
+
         public SampleGroup SampleGroup
         {
             get => _sampleGroup;
@@ -44,31 +51,37 @@ namespace NatCruise.Design.ViewModels
             {
                 //OnSampleGroupChanging(_sampleGroup);
                 SetProperty(ref _sampleGroup, value);
-                //OnSampleGroupChanged(value);
-                ValidateAll(value);
-
-                OnPropertyChanged(nameof(SampleGroupCode));
-                OnPropertyChanged(nameof(Description));
-                OnPropertyChanged(nameof(CutLeave));
-                OnPropertyChanged(nameof(UOM));
-                OnPropertyChanged(nameof(PrimaryProduct));
-                OnPropertyChanged(nameof(SecondaryProduct));
-                OnPropertyChanged(nameof(BiomassProduct));
-                OnPropertyChanged(nameof(DefaultLiveDead));
-                OnPropertyChanged(nameof(SamplingFrequency));
-                OnPropertyChanged(nameof(InsuranceFrequency));
-                OnPropertyChanged(nameof(KZ));
-                OnPropertyChanged(nameof(BigBAF));
-                OnPropertyChanged(nameof(TallyBySubPop));
-                OnPropertyChanged(nameof(UseExternalSampler));
-                OnPropertyChanged(nameof(MinKPI));
-                OnPropertyChanged(nameof(MaxKPI));
-                OnPropertyChanged(nameof(SmallFPS));
-                OnPropertyChanged(nameof(SampleSelectorType));
-
-                OnPropertyChanged(nameof(CruiseMethod));
-                OnPropertyChanged(nameof(DefaultSampleSelectorType));
+                OnSampleGroupChanged(value);
             }
+        }
+
+        private void OnSampleGroupChanged(SampleGroup newValue)
+        {
+            ValidateAll(newValue);
+
+            OnPropertyChanged(nameof(SampleGroupCode));
+            OnPropertyChanged(nameof(Description));
+            OnPropertyChanged(nameof(CutLeave));
+            OnPropertyChanged(nameof(UOM));
+            OnPropertyChanged(nameof(PrimaryProduct));
+            OnPropertyChanged(nameof(SecondaryProduct));
+            OnPropertyChanged(nameof(BiomassProduct));
+            OnPropertyChanged(nameof(DefaultLiveDead));
+            OnPropertyChanged(nameof(SamplingFrequency));
+            OnPropertyChanged(nameof(InsuranceFrequency));
+            OnPropertyChanged(nameof(KZ));
+            OnPropertyChanged(nameof(BigBAF));
+            OnPropertyChanged(nameof(TallyBySubPop));
+            OnPropertyChanged(nameof(UseExternalSampler));
+            OnPropertyChanged(nameof(MinKPI));
+            OnPropertyChanged(nameof(MaxKPI));
+            OnPropertyChanged(nameof(SmallFPS));
+            OnPropertyChanged(nameof(SampleSelectorType));
+
+            OnPropertyChanged(nameof(CruiseMethod));
+            OnPropertyChanged(nameof(DefaultSampleSelectorType));
+
+            HasFieldData = SampleGroupDataservice.GetSampleGroupHasFieldData(newValue.StratumCode, newValue.SampleGroupCode);
         }
 
         //private void SampleGroup_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

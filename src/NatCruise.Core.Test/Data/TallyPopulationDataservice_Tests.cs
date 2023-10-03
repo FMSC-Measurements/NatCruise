@@ -866,9 +866,6 @@ namespace NatCruise.Test.Data
         [Fact]
         public void GetTreeCount_Plot()
         {
-            
-
-
             var init = new DatastoreInitializer();
 
             var unit = "u1";
