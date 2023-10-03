@@ -42,6 +42,12 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             new TreeField{DbType = "TEXT", Heading = "Count/Measure", Field = nameof(Tree.CountOrMeasure)},
         };
 
+        private readonly IEnumerable<TreeField> ThreePFields = new[]
+        {
+             new TreeField{DbType = TreeFieldTableDefinition.DBTYPE_INTEGER, Heading = "KPI", Field = nameof(TreeEx.KPI)},
+             new TreeField{DbType = TreeFieldTableDefinition.DBTYPE_BOOLEAN, Heading = "STM", Field = nameof(TreeEx.STM)},
+        };
+
         public static readonly IEnumerable<string> LOCKED_FIELDS = new[]
         {
             nameof(Tree.TreeID),
@@ -247,13 +253,32 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         {
             base.Load();
 
-            var trees = TreeDataservice.GetTrees(cuttingUnitCode: CuttingUnitCode,
+            var unitCode = CuttingUnitCode;
+
+            var trees = TreeDataservice.GetTrees(cuttingUnitCode: unitCode,
                 stratumCode: StratumCode,
                 sampleGroupCode: SampleGroupCode,
                 plotNumber: PlotNumber);
             Trees = trees;
 
-            Fields = COMMON_TREEFIELDS.Concat(TreeFieldDataservice.GetTreeFieldsUsedInCruise()).ToArray();
+            var fields = COMMON_TREEFIELDS.Concat(TreeFieldDataservice.GetTreeFieldsUsedInCruise());
+
+            bool has3p = false;
+            if(string.IsNullOrEmpty(unitCode))
+            {
+                has3p = StratumDataservice.GetStrata().Any(x => CruiseMethods.THREE_P_METHODS.Contains(x.Method));
+            }
+            else
+            {
+                has3p = CuttingUnitDataservice.GetCuttingUnitStrataSummary(unitCode).Methods.Any(x => CruiseMethods.THREE_P_METHODS.Contains(x));
+            }
+
+            if(has3p)
+            {
+                fields = fields.Concat(ThreePFields);
+            }
+            
+            Fields = fields.ToArray();
         }
 
         public async Task AddTree()
