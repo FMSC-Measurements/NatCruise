@@ -21,14 +21,12 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- population information-->
-        <WrapPanel Grid.Row="0">
-            <WrapPanel.Resources>
+        <StackPanel Grid.Row="0">
+            <StackPanel.Resources>
                 <Style TargetType="controls:LastChildWidthPanel">
                     <Style.Resources>
                         <Style TargetType="TextBlock"
@@ -45,212 +43,238 @@
                     <Setter Property="Margin"
                             Value="3" />
                 </Style>
-            </WrapPanel.Resources>
-            <controls:LastChildWidthPanel>
-                <TextBlock Text="Cutting Unit:" />
-                <TextBlock Text="{Binding UnitCode}"
-                           d:Text="00" />
-            </controls:LastChildWidthPanel>
-            <controls:LastChildWidthPanel>
-                <TextBlock Text="Stratum:" />
-                <TextBlock Text="{Binding TallyPopulation.StratumCode}"
-                           d:Text="00" />
-            </controls:LastChildWidthPanel>
-            <controls:LastChildWidthPanel>
-                <TextBlock Text="Sample Group:" />
-                <TextBlock Text="{Binding TallyPopulation.SampleGroupCode}"
-                           d:Text="00" />
-            </controls:LastChildWidthPanel>
-            <controls:LastChildWidthPanel>
-                <TextBlock Text="Species:" />
-                <TextBlock Text="{Binding TallyPopulation.SpeciesCode}"
-                           d:Text="00" />
-            </controls:LastChildWidthPanel>
-            <controls:LastChildWidthPanel>
-                <TextBlock Text="Live/Dead:" />
-                <TextBlock Text="{Binding TallyPopulation.LiveDead}"
-                           d:Text="00" />
-            </controls:LastChildWidthPanel>
-        </WrapPanel>
 
-        <!-- sampling information -->
-        <WrapPanel Grid.Row="1">
-            <WrapPanel.Resources>
-                <Style TargetType="controls:LastChildWidthPanel">
+                <Style TargetType="mah_ctrls:MetroHeader">
                     <Style.Resources>
                         <Style TargetType="TextBlock"
                                BasedOn="{StaticResource MahApps.Styles.TextBlock}">
                             <Setter Property="VerticalAlignment"
                                     Value="Center" />
+                            <Setter Property="Margin"
+                                    Value="3,0" />
                         </Style>
 
                     </Style.Resources>
-                    <Setter Property="Width"
-                            Value="120" />
-                    <Setter Property="LastChildWidth"
-                            Value="30" />
-                    <Setter Property="Margin"
-                            Value="3" />
+                    <Setter Property="Orientation"
+                            Value="Horizontal" />
                 </Style>
-            </WrapPanel.Resources>
+            </StackPanel.Resources>
 
-            <!-- KZ -->
-            <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding Is3P}">
-                <TextBlock Text="KZ:" />
-                <TextBlock Text="{Binding TallyPopulation.KZ}"
-                           d:Text="00" />
-            </controls:LastChildWidthPanel>
-
-            <!-- Frequency -->
-            <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding IsSTR}">
-                <TextBlock Text="Frequency:" />
-                <TextBlock Text="{Binding TallyPopulation.Frequency}"
-                           d:Text="00" />
-            </controls:LastChildWidthPanel>
-
-            <!-- Insurance Frequency -->
-            <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding IsSTR}">
-                <TextBlock Text="Frequency:" />
-                <TextBlock Text="{Binding TallyPopulation.InsuranceFrequency}"
-                           d:Text="00" />
-            </controls:LastChildWidthPanel>
-
-        </WrapPanel>
-
-        <ScrollViewer Grid.Row="2"
-                      IsEnabled="{Binding CanEditTreeCount}">
-            <StackPanel HorizontalAlignment="Left">
-
-                <StackPanel.Resources>
-                    <Style TargetType="controls:LastChildWidthPanel">
-                        <Style.Resources>
-                            <Style TargetType="TextBlock"
-                                   BasedOn="{StaticResource MahApps.Styles.TextBlock}">
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                            </Style>
-                            <Style TargetType="TextBox"
-                                   BasedOn="{StaticResource MahApps.Styles.TextBox}">
-                                <Setter Property="Width"
-                                        Value="50" />
-                                <Setter Property="HorizontalAlignment"
-                                        Value="Left" />
-                            </Style>
-                        </Style.Resources>
-                        <Setter Property="Width"
-                                Value="220" />
-                        <Setter Property="LastChildWidth"
-                                Value="100" />
-                        <Setter Property="Margin"
-                                Value="3" />
-                    </Style>
-                </StackPanel.Resources>
-
-                <Border BorderThickness="1"
-                        BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}"
-                        Margin="1">
-                    <StackPanel Orientation="Vertical">
-                        <controls:LastChildWidthPanel>
-                            <TextBlock Text="Current Tree Count:" />
-                            <TextBlock Text="{Binding TallyPopulation.TreeCount}"
-                                       d:Text="0000" />
-                        </controls:LastChildWidthPanel>
-
-                        <!--Tree Count-->
-                        <controls:LastChildWidthPanel>
-                            <TextBlock Text="Tree Count (+/-)" />
-                            <TextBox x:Name="_treeCountDifferenceEntry"
-                                     Text="{Binding TreeCountDelta}"
-                                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                                     ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int_posNeg_input}"
-                                     AutomationProperties.Name="Tree Count Difference" />
-                        </controls:LastChildWidthPanel>
-
-                        <!--Adjusted Tree Count-->
-                        <controls:LastChildWidthPanel>
-
-                            <TextBlock Text="New Tree Count:" />
-                            <TextBlock Text="{Binding AdjustedTreeCount}"
-                                       d:Text="0000"
-                                       AutomationProperties.Name="New Tree Count" />
-                        </controls:LastChildWidthPanel>
-                    </StackPanel>
-                </Border>
-
-                <Border BorderThickness="1"
-                        Margin="1"
-                        BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}"
-                        mah_ctrls:VisibilityHelper.IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
-                    <StackPanel Orientation="Vertical">
-                        <controls:LastChildWidthPanel>
-                            <TextBlock Text="Current SumKPI:" />
-                            <TextBlock Text="{Binding TallyPopulation.SumKPI}"
-                                       d:Text="0000" />
-                        </controls:LastChildWidthPanel>
-
-                        <!--KPI-->
-                        <controls:LastChildWidthPanel>
-                            <TextBlock Text="KPI (+/-)" />
-                            <TextBox Text="{Binding KPIDelta}"
-                                     mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                                     ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int_posNeg_input}"
-                                     AutomationProperties.Name="KPI" />
-                        </controls:LastChildWidthPanel>
-
-                        <controls:LastChildWidthPanel>
-                            <TextBlock Text="New SumKPI:" />
-                            <TextBlock Text="{Binding AdjustedSumKPI}"
-                                       d:Text="0000" />
-                        </controls:LastChildWidthPanel>
-                    </StackPanel>
-                </Border>
-
-                <!--Reason-->
+            <!-- population information-->
+            <WrapPanel>
                 <controls:LastChildWidthPanel>
-                    <TextBlock Text="Reason" />
-                    <ComboBox ItemsSource="{Binding EditReasonOptions}"
-                              SelectedItem="{Binding EditReason}"
-                              AutomationProperties.Name="Reson Picker" />
+                    <TextBlock Text="Cutting Unit:" />
+                    <TextBlock Text="{Binding UnitCode}"
+                               d:Text="00" />
+                </controls:LastChildWidthPanel>
+                <controls:LastChildWidthPanel>
+                    <TextBlock Text="Stratum:" />
+                    <TextBlock Text="{Binding TallyPopulation.StratumCode}"
+                               d:Text="00" />
+                </controls:LastChildWidthPanel>
+                <controls:LastChildWidthPanel>
+                    <TextBlock Text="Sample Group:" />
+                    <TextBlock Text="{Binding TallyPopulation.SampleGroupCode}"
+                               d:Text="00" />
+                </controls:LastChildWidthPanel>
+                <controls:LastChildWidthPanel>
+                    <TextBlock Text="Species:" />
+                    <TextBlock Text="{Binding TallyPopulation.SpeciesCode}"
+                               d:Text="00" />
+                </controls:LastChildWidthPanel>
+                <controls:LastChildWidthPanel>
+                    <TextBlock Text="Live/Dead:" />
+                    <TextBlock Text="{Binding TallyPopulation.LiveDead}"
+                               d:Text="00" />
+                </controls:LastChildWidthPanel>
+            </WrapPanel>
+
+            <!-- sampling information -->
+            <WrapPanel>
+
+
+                <!-- KZ -->
+                <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding Is3P}">
+                    <TextBlock Text="KZ:" />
+                    <TextBlock Text="{Binding TallyPopulation.KZ}"
+                               d:Text="00" />
                 </controls:LastChildWidthPanel>
 
-                <controls:LastChildWidthPanel>
-                    <TextBlock Text="Initials" />
-                    <ComboBox Text="{Binding Initials}"
-                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                              AutomationProperties.Name="Initials Textbox"
-                              ItemsSource="{Binding Cruisers}"
-                              IsEditable="True" />
+                <!-- Frequency -->
+                <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding IsSTR}">
+                    <TextBlock Text="Frequency:" />
+                    <TextBlock Text="{Binding TallyPopulation.Frequency}"
+                               d:Text="00" />
                 </controls:LastChildWidthPanel>
 
-                <!--Remarks-->
-                <StackPanel>
-                    <TextBlock Text="Remarks" />
-                    <TextBox Text="{Binding Remarks}"
-                             Height="100"
-                             AutomationProperties.Name="Remaks Textbox"
-                             Background="{DynamicResource MahApps.Brushes.Gray9}" />
+                <!-- Insurance Frequency -->
+                <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding IsSTR}">
+                    <TextBlock Text="Frequency:" />
+                    <TextBlock Text="{Binding TallyPopulation.InsuranceFrequency}"
+                               d:Text="00" />
+                </controls:LastChildWidthPanel>
+
+            </WrapPanel>
+
+            <Border Margin="1"
+                    Padding="3"
+                    BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}">
+                <mah_ctrls:MetroHeader Header="Tree Count" Orientation="Vertical">
+                    <UniformGrid Rows="1">
+                        <mah_ctrls:MetroHeader Header="Unit:">
+                            <TextBlock Text="{Binding TallyPopulation.TreeCount}" />
+                        </mah_ctrls:MetroHeader>
+
+                        <mah_ctrls:MetroHeader Header="Cruise:">
+                            <TextBlock Text="{Binding TallyPopulation.TreeCountCruise}" />
+                        </mah_ctrls:MetroHeader>
+                    </UniformGrid>
+                </mah_ctrls:MetroHeader>
+            </Border>
+
+            <Border Visibility="{Binding Is3P, Converter={StaticResource IsVisableConverter}}"
+                    Margin="1"
+                    Padding="3"
+                    BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}">
+                <mah_ctrls:MetroHeader Header="SumKPI's"
+                                       Orientation="Vertical">
+                    <UniformGrid Rows="1">
+                        <mah_ctrls:MetroHeader Header="Unit:">
+                            <TextBlock Text="{Binding TallyPopulation.SumKPI}" />
+                        </mah_ctrls:MetroHeader>
+
+                        <mah_ctrls:MetroHeader Header="Cruise:">
+                            <TextBlock Text="{Binding TallyPopulation.SumKPICruise}" />
+                        </mah_ctrls:MetroHeader>
+                    </UniformGrid>
+                </mah_ctrls:MetroHeader>
+            </Border>
+
+            <Border Visibility="{Binding Is3P, Converter={StaticResource IsVisableConverter}}"
+                    Margin="1"
+                    Padding="3"
+                    BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}">
+                <mah_ctrls:MetroHeader Header="SumKPI From Trees"
+                                       Orientation="Vertical">
+                    <UniformGrid Rows="1">
+                        <mah_ctrls:MetroHeader Header="Unit:">
+                            <TextBlock Text="{Binding TallyPopulation.TreeSumKPI}" />
+                        </mah_ctrls:MetroHeader>
+
+                        <mah_ctrls:MetroHeader Header="Cruise:">
+                            <TextBlock Text="{Binding TallyPopulation.TreeSumKPICruise}" />
+                        </mah_ctrls:MetroHeader>
+                    </UniformGrid>
+                </mah_ctrls:MetroHeader>
+            </Border>
+
+        </StackPanel>
+
+        <Border BorderThickness="1"
+                BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}"
+                Grid.Row="1"
+                Margin="1,10,1,1"
+                Padding="3"
+                IsEnabled="{Binding CanEditTreeCount}">
+            <ScrollViewer>
+
+                <StackPanel HorizontalAlignment="Left">
+
+                    <StackPanel.Resources>
+                        <Style TargetType="controls:LastChildWidthPanel">
+                            <Style.Resources>
+                                <Style TargetType="TextBlock"
+                                       BasedOn="{StaticResource MahApps.Styles.TextBlock}">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                </Style>
+                                <Style TargetType="TextBox"
+                                       BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                                    <Setter Property="Width"
+                                            Value="50" />
+                                    <Setter Property="HorizontalAlignment"
+                                            Value="Left" />
+                                </Style>
+                            </Style.Resources>
+                            <Setter Property="Width"
+                                    Value="220" />
+                            <Setter Property="LastChildWidth"
+                                    Value="100" />
+                            <Setter Property="Margin"
+                                    Value="3" />
+                        </Style>
+                    </StackPanel.Resources>
+
+
+                    <!--Tree Count-->
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Tree Count (+/-)" />
+                        <TextBox x:Name="_treeCountDifferenceEntry"
+                                 Text="{Binding TreeCountDelta}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int_posNeg_input}"
+                                 AutomationProperties.Name="Tree Count Difference" />
+                    </controls:LastChildWidthPanel>
+
+                    <!--KPI-->
+                    <controls:LastChildWidthPanel mah_ctrls:VisibilityHelper.IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
+                        <TextBlock Text="KPI (+/-)" />
+                        <TextBox Text="{Binding KPIDelta}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                 ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int_posNeg_input}"
+                                 AutomationProperties.Name="KPI" />
+                    </controls:LastChildWidthPanel>
+
+                    <!--Reason-->
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Reason" />
+                        <ComboBox ItemsSource="{Binding EditReasonOptions}"
+                                  SelectedItem="{Binding EditReason}"
+                                  AutomationProperties.Name="Reson Picker" />
+                    </controls:LastChildWidthPanel>
+
+                    <controls:LastChildWidthPanel>
+                        <TextBlock Text="Initials" />
+                        <ComboBox Text="{Binding Initials}"
+                                  mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                  AutomationProperties.Name="Initials Textbox"
+                                  ItemsSource="{Binding Cruisers}"
+                                  IsEditable="True" />
+                    </controls:LastChildWidthPanel>
+
+                    <!--Remarks-->
+                    <StackPanel>
+                        <TextBlock Text="Remarks" />
+                        <TextBox Text="{Binding Remarks}"
+                                 Height="100"
+                                 AutomationProperties.Name="Remaks Textbox"
+                                 Background="{DynamicResource MahApps.Brushes.Gray9}" />
+                    </StackPanel>
+
+
                 </StackPanel>
 
+            </ScrollViewer>
+        </Border>
 
-            </StackPanel>
+        <Grid Grid.Row="2"
+              ctrls:GridHelper.ColumnDefinitions="*,Auto,Auto"
+              IsEnabled="{Binding CanEditTreeCount}">
 
-        </ScrollViewer>
-
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    IsEnabled="{Binding CanEditTreeCount}">
-
-            <Button Content="Submit"
-                    Background="{DynamicResource MahApps.Brushes.Accent}"
-                    Command="{Binding SaveTreeCountEditCommand}"
+            <Button Grid.Column="1"
+                    Content="Add"
+                    Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
+                    Margin="3,2"
+                    Command="{Binding AddTallyLedgerEntryCommand}"
                     AutomationProperties.Name="Save Button" />
 
-            <!--<Button x:Name="_cancelButton"
-                    Content="Cancel"
-                    Command="{Binding CancelCommand}"
-                    AutomationProperties.Name="Cancel Button" />-->
-        </StackPanel>
+            <Button Grid.Column="2"
+                    x:Name="_clearButton"
+                    Content="Clear"
+                    Style="{StaticResource MahApps.Styles.Button.Dialogs}"
+                    Margin="3,2"
+                    Command="{Binding ResetInputsCommand}"
+                    AutomationProperties.Name="Clear Button" />
+        </Grid>
     </Grid>
 </UserControl>

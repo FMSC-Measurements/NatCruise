@@ -1,8 +1,6 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Sync;
 using FScruiser.XF.Services;
-using NatCruise;
-using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
@@ -207,31 +205,31 @@ namespace FScruiser.XF.ViewModels
         private string GenerateConflitReport(ConflictResolutionOptions conflicts)
         {
             var sb = new StringBuilder();
-            if(conflicts.CuttingUnit.Any())
+            if (conflicts.CuttingUnit.Any())
             {
                 sb.AppendLine("Cutting Unit Conflicts: " + conflicts.CuttingUnit.Count());
             }
-            if(conflicts.Stratum.Any())
+            if (conflicts.Stratum.Any())
             {
                 sb.AppendLine("Stratum Conflicts: " + conflicts.Stratum.Count());
             }
-            if(conflicts.SampleGroup.Any())
+            if (conflicts.SampleGroup.Any())
             {
                 sb.AppendLine("Sample Group Conflicts: " + conflicts.SampleGroup.Count());
             }
-            if(conflicts.Plot.Any())
+            if (conflicts.Plot.Any())
             {
                 sb.AppendLine("Plot Conflicts: " + conflicts.Plot.Count());
             }
-            if(conflicts.PlotTree.Any())
+            if (conflicts.PlotTree.Any())
             {
                 sb.AppendLine("Plot Tree Conflicts: " + conflicts.PlotTree.Count());
             }
-            if(conflicts.Tree.Any())
+            if (conflicts.Tree.Any())
             {
                 sb.AppendLine("Tree Conflicts: " + conflicts.Tree.Count());
             }
-            if(conflicts.Log.Any())
+            if (conflicts.Log.Any())
             {
                 sb.AppendLine("Log Conflicts: " + conflicts.Log.Count());
             }

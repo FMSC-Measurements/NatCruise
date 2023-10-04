@@ -1,0 +1,106 @@
+﻿<mah_dialogs:CustomDialog x:Class="NatCruise.Wpf.DialogViews.KpiDialog"
+                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:mah_dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                          xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                          xmlns:local="clr-namespace:NatCruise.Wpf.DialogViews"
+                          mc:Ignorable="d"
+                          d:DesignHeight="450"
+                          d:DesignWidth="768"
+                          d:Title="Title"
+                          DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                          KeyDown="OnKeyDown">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ContentPresenter x:Name="PART_Top"
+                          Grid.Row="0"
+                          AutomationProperties.Name="Dialog top"
+                          Content="{Binding DialogTop}"
+                          d:Content="Dialog Top"
+                          SnapsToDevicePixels="{Binding SnapsToDevicePixels}" />
+
+        <Grid Grid.Row="1"
+              Margin="{Binding Padding}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding DialogContentMargin}" />
+                <ColumnDefinition Width="{Binding DialogContentWidth}" />
+                <ColumnDefinition Width="{Binding DialogContentMargin}" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="PART_Content"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Margin="0 10 0 0"
+                  HorizontalAlignment="{Binding HorizontalContentAlignment}"
+                  VerticalAlignment="{Binding VerticalContentAlignment}"
+                  AutomationProperties.Name="Dialog content"
+                  SnapsToDevicePixels="{Binding SnapsToDevicePixels}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Margin="0 5 0 0"
+                           FontSize="{Binding DialogMessageFontSize}"
+                           Foreground="{Binding Foreground}"
+                           Text="{Binding Message}"
+                           d:Text="Message (optional)"
+                           TextWrapping="Wrap" />
+
+
+                <Border>
+                    <StackPanel>
+                        <TextBox x:Name="_kpiTextBox"
+                                 mah:TextBoxHelper.Watermark="KPI"
+                                 Text="{Binding KPI, ValidatesOnExceptions=False,  UpdateSourceTrigger=PropertyChanged}"
+                                 IsEnabled="{Binding IsChecked, Converter={StaticResource NotConverter}, ElementName=_isStmCheckbox}"
+                                 mah:TextBoxHelper.SelectAllOnFocus="True">
+                        </TextBox>
+                        <TextBlock x:Name="_errorMessageTextBlock"
+                                   Text="{Binding ErrorMessage}"
+                                   d:Text="ErrorMessage"
+                                   Foreground="{StaticResource MahApps.Brushes.SystemControlErrorTextForeground}" />
+
+                        <CheckBox x:Name="_isStmCheckbox"
+                                  IsChecked="{Binding IsStm}"
+                                  Content="Sure To Measure (STM)"
+                                  Margin="0,10" />
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+        </Grid>
+
+        <StackPanel x:Name="PART_Bottom"
+                    Grid.Row="2"
+                    Orientation="Horizontal"
+                    AutomationProperties.Name="Dialog bottom"
+                    SnapsToDevicePixels="{Binding SnapsToDevicePixels}"
+                    HorizontalAlignment="Right">
+            <Button x:Name="_okButton"
+                    Content="OK"
+                    Command="{Binding OkCommand}"
+                    Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
+                    Margin="3,2" />
+
+            <Button x:Name="_cancelButton"
+                    Content="CANCEL"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource MahApps.Styles.Button.Dialogs}"
+                    Margin="3,2" />
+        </StackPanel>
+    </Grid>
+</mah_dialogs:CustomDialog>

@@ -1,8 +1,6 @@
 ﻿using CruiseDAL;
 using NatCruise.Async;
-using NatCruise.Core.Services;
 using NatCruise.Data;
-using NatCruise.Design.Services;
 using NatCruise.Design.Validation;
 using NatCruise.Design.Views;
 using NatCruise.MVVM;

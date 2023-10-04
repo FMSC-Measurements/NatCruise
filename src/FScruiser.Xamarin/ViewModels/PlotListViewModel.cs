@@ -1,8 +1,5 @@
 ﻿using FScruiser.XF.Services;
-using NatCruise;
 using NatCruise.Async;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
@@ -81,7 +78,7 @@ namespace FScruiser.XF.ViewModels
             //else
             //{
             //    // when Plot Tally Page is navigated we want to load Plot List behind it in the nav stack
-            //    // because we just have the plot ID, so we need to read the plot and get the unit code. 
+            //    // because we just have the plot ID, so we need to read the plot and get the unit code.
             //    var plotID = parameters.GetValue<string>(NavParams.PlotID);
             //    if (string.IsNullOrEmpty(plotID) == false)
             //    {

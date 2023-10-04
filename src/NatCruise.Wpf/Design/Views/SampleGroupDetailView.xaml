@@ -6,7 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
-             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:dsgn="clr-namespace:NatCruise.Design"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"

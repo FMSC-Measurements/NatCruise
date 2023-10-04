@@ -103,5 +103,73 @@ namespace NatCruise.Data
                     }).ToArray();
 
         }
+
+
+        public IEnumerable<TallyLedger> GetTallyLedgersFull(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null, string speciesCode = null, string liveDead = null)
+        {
+            return Database.Query2<TallyLedger>(
+@"SELECT tl.* FROM
+    (SELECT
+        TallyLedgerID,
+        CruiseID,
+        TreeID,
+        CuttingUnitCode,
+        StratumCode,
+        SampleGroupCode,
+        PlotNumber,
+        SpeciesCode,
+        LiveDead,
+        TreeCount,
+        KPI,
+        STM,
+        ThreePRandomValue,
+        Signature,
+        Reason,
+        Remarks,
+        EntryType,
+        Created_TS,
+        null as Deleted_TS
+    FROM TallyLedger
+
+    UNION ALL
+
+    SELECT
+        TallyLedgerID,
+        CruiseID,
+        TreeID,
+        CuttingUnitCode,
+        StratumCode,
+        SampleGroupCode,
+        PlotNumber,
+        SpeciesCode,
+        LiveDead,
+        TreeCount,
+        KPI,
+        STM,
+        ThreePRandomValue,
+        Signature,
+        Reason,
+        Remarks,
+        EntryType,
+        Created_TS,
+        Deleted_TS
+    FROM TallyLedger) AS tl
+
+WHERE CuttingUnitCode IS NULL OR tl.CuttingUnitCode = @CuttingUnitCode)
+    AND (@StratumCode IS NULL OR tl.StratumCode = @StratumCode)
+    AND (@SampleGroupCode IS NULL OR tl.SampleGroupCode = @SampleGroupCode)
+    AND (@SpeciesCode IS NULL OR tl.SpeciesCode = @SpeciesCode)
+    AND (@LiveDead IS NULL OR tl.LiveDead = @LiveDead)
+ORDER BY tl.Created_TS;", new
+            {
+                CuttingUnitCode = cuttingUnitCode,
+                StratumCode = stratumCode,
+                SampleGroupCode = sampleGroupCode,
+                SpeciesCode = speciesCode,
+                LiveDead = liveDead
+            }).ToArray();
+
+                
+        }
     }
 }

@@ -1,10 +1,7 @@
 ﻿using CruiseDAL.V3.Models;
 using FluentAssertions;
-using NatCruise.Cruise.Data;
 using NatCruise.Data;
-using NatCruise.Test;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -47,7 +44,6 @@ namespace NatCruise.Test.Data
 
             var treeAgain = treesAgain.Single();
             treeAgain.TreeID.Should().Be(treeID);
-
         }
 
         [Fact]
@@ -118,6 +114,7 @@ namespace NatCruise.Test.Data
 
             var init = new DatastoreInitializer();
             using var db = init.CreateDatabase();
+            var treeDs = new TreeDataservice(db, init.CruiseID, init.DeviceID);
 
             var treeID = Guid.NewGuid().ToString();
             var tree = new Tree()
@@ -142,9 +139,13 @@ namespace NatCruise.Test.Data
                 SampleGroupCode = sg,
                 SpeciesCode = sp,
                 TreeCount = 1,
-                STM = true,
+                
             };
             db.Insert(tallyLedger);
+
+
+            Validate(0,false);
+            
 
             //need to sleep for 1sec because time stamps resolution is only down to the second
             System.Threading.Thread.Sleep(1000);
@@ -159,16 +160,23 @@ namespace NatCruise.Test.Data
                 SampleGroupCode = sg,
                 SpeciesCode = sp,
                 KPI = 102,
+                STM = true,
             };
             db.Insert(tallyLedger2);
 
-            var treeDs = new TreeDataservice(db, init.CruiseID, init.DeviceID);
-            var treesAgain = treeDs.GetTrees(unit, stratum, sg, sp);
-            treesAgain.Should().HaveCount(1);
 
-            var treeAgain = treesAgain.Single();
-            treeAgain.TreeID.Should().Be(treeID);
-            treeAgain.KPI.Should().Be(102);
+            Validate(102, true);
+
+            void Validate(int kpi, bool stm)
+            {
+                var treesAgain = treeDs.GetTrees(unit, stratum, sg, sp);
+                treesAgain.Should().HaveCount(1);
+
+                var treeAgain = treesAgain.Single();
+                treeAgain.TreeID.Should().Be(treeID);
+                treeAgain.KPI.Should().Be(kpi);
+                treeAgain.STM.Should().Be(stm);
+            }
         }
 
         [Fact]
@@ -468,8 +476,6 @@ namespace NatCruise.Test.Data
                 tree.DBH.Should().Be(103.0);
             }
         }
-
-        
 
         [Fact]
         public void UpdateTreeInitials()

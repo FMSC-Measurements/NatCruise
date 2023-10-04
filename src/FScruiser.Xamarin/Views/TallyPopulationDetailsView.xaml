@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+                                xmlns:ctrls="clr-namespace:FScruiser.XF.Controls"
+                                xmlns:const="clr-namespace:FScruiser.XF.Constants"
+                                x:Class="FScruiser.XF.Views.TallyPopulationDetailsView"
+                                Title="Tally Population Info">
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- header -->
+            <RowDefinition Height="Auto" />
+            <!-- content -->
+            <RowDefinition Height="*" />
+            <!-- footer -->
+            <!--<RowDefinition Height="Auto" />-->
+
+
+        </Grid.RowDefinitions>
+
+        <!-- header -->
+        <Frame  Grid.Row="0"
+                Padding="0"
+                Margin="0"
+                BackgroundColor="{StaticResource fs_green}"
+                BindingContext="{Binding TreeCountEditViewModel}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- tally pop identifier -->
+                    <RowDefinition Height="Auto" />
+                    <!-- tally count -->
+                    <!--<RowDefinition Height="Auto" />-->
+                </Grid.RowDefinitions>
+
+                <!-- tally pop identifier -->
+                <Frame Grid.Row="0"
+                       WidthRequest="250"
+                       HorizontalOptions="Center"
+                       BackgroundColor="Black"
+                       BorderColor="Black"
+                       Padding="10,5,10,5"
+                       Margin="10"
+                       CornerRadius="30">
+                    <Grid RowSpacing="0"
+                          ColumnSpacing="0">
+
+                        <Grid.Resources>
+                            <ResourceDictionary>
+                                <x:String x:Key="tallyInfo_label_null_value">-</x:String>
+                                <x:String x:Key="tallyInfo_label_fallback_value">00</x:String>
+
+                                <Style x:Key="tallyInfo_label_base"
+                                       TargetType="Label">
+                                    <Setter Property="TextColor"
+                                            Value="White" />
+                                </Style>
+
+                                <Style x:Key="tallyInfo_label_header"
+                                       BasedOn="{StaticResource tallyInfo_label_base}"
+                                       TargetType="Label">
+                                    <Setter Property="FontSize"
+                                            Value="12" />
+                                    <Setter Property="Margin"
+                                            Value="5,-5,5,-5" />
+                                </Style>
+
+                                <Style x:Key="tallyInfo_label_value"
+                                       BasedOn="{StaticResource tallyInfo_label_base}"
+                                       TargetType="Label">
+                                    <Setter Property="FontSize"
+                                            Value="25" />
+                                    <Setter Property="HorizontalTextAlignment"
+                                            Value="Center" />
+                                    <Setter Property="Margin"
+                                            Value="0,-3" />
+                                    <Setter Property="BackgroundColor"
+                                            Value="Transparent" />
+                                </Style>
+
+                                <!-- splitter style -->
+                                <Style TargetType="BoxView">
+                                    <Setter Property="BackgroundColor"
+                                            Value="White" />
+                                    <Setter Property="WidthRequest"
+                                            Value="2" />
+                                    <Setter Property="VerticalOptions"
+                                            Value="CenterAndExpand" />
+                                </Style>
+                            </ResourceDictionary>
+                        </Grid.Resources>
+
+                        <Grid.RowDefinitions>
+                            <!-- header -->
+                            <RowDefinition Height="Auto" />
+                            <!-- value -->
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <!-- stratum -->
+                            <ColumnDefinition Width="*" />
+                            <!-- spacer -->
+                            <ColumnDefinition Width="Auto" />
+                            <!-- sample group -->
+                            <ColumnDefinition Width="*" />
+                            <!-- spacer -->
+                            <ColumnDefinition Width="Auto" />
+                            <!-- species -->
+                            <ColumnDefinition Width="*" />
+                            <!-- spacer -->
+                            <ColumnDefinition Width="Auto" />
+                            <!-- live dead -->
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- stratum -->
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               x:Name="_stratumHeader"
+                               Style="{StaticResource tallyInfo_label_header}"
+                               Text="St" />
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               x:Name="_stratumLabel"
+                               Style="{StaticResource tallyInfo_label_value}"
+                               Text="{Binding TallyPopulation.StratumCode, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.LabeledBy="{x:Reference _stratumHeader}" />
+
+                        <!-- sample group -->
+                        <Label Grid.Row="0"
+                               Grid.Column="2"
+                               x:Name="_sampleGroupHeader"
+                               Style="{StaticResource tallyInfo_label_header}"
+                               Text="Sg" />
+                        <Label Grid.Row="1"
+                               Grid.Column="2"
+                               x:Name="_sampleGroupLabel"
+                               Style="{StaticResource tallyInfo_label_value}"
+                               Text="{Binding TallyPopulation.SampleGroupCode, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.LabeledBy="{x:Reference _sampleGroupHeader}" />
+
+                        <!-- species -->
+                        <Label Grid.Row="0"
+                               Grid.Column="4"
+                               x:Name="_speciesHeader"
+                               Style="{StaticResource tallyInfo_label_header}"
+                               Text="Sp" />
+                        <Label Grid.Row="1"
+                               Grid.Column="4"
+                               x:Name="_speciesLabel"
+                               Style="{StaticResource tallyInfo_label_value}"
+                               Text="{Binding TallyPopulation.SpeciesCode, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.LabeledBy="{x:Reference _speciesHeader}" />
+
+                        <!-- live dead -->
+                        <Label Grid.Row="0"
+                               Grid.Column="6"
+                               x:Name="_liveDeadHeader"
+                               Style="{StaticResource tallyInfo_label_header}"
+                               Text="L/D" />
+                        <Label Grid.Row="1"
+                               Grid.Column="6"
+                               x:Name="_liveDeadLabel"
+                               Style="{StaticResource tallyInfo_label_value}"
+                               Text="{Binding TallyPopulation.LiveDead, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.LabeledBy="{x:Reference _liveDeadHeader}" />
+
+
+                        <!-- spacers -->
+                        <BoxView Grid.Row="0"
+                                 Grid.Column="1"
+                                 Grid.RowSpan="2" />
+                        <BoxView Grid.Row="0"
+                                 Grid.Column="3"
+                                 Grid.RowSpan="2" />
+                        <BoxView Grid.Row="0"
+                                 Grid.Column="5"
+                                 Grid.RowSpan="2" />
+
+                    </Grid>
+                </Frame>
+
+                <!--<StackLayout Orientation="Horizontal"
+                             Grid.Row="1">
+
+                    <StackLayout.Resources>
+                        <ResourceDictionary>
+                            <Style TargetType="Label">
+                                <Setter Property="TextColor"
+                                        Value="Black" />
+                            </Style>
+
+                            <Style TargetType="Frame">
+                                <Setter Property="CornerRadius"
+                                        Value="5" />
+                                <Setter Property="Padding"
+                                        Value="3,0,3,0" />
+                                <Setter Property="Margin"
+                                        Value="5" />
+                            </Style>
+                        </ResourceDictionary>
+                    </StackLayout.Resources>
+
+                    -->
+                <!--  Unit Tree Count -->
+                <!--
+                    <Frame BackgroundColor="White">
+
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Cutting Unit Tree Count:"
+                                   AutomationProperties.IsInAccessibleTree="False" />
+
+                            <Label Text="{Binding TallyPopulation.TreeCount, FallbackValue=00000}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.Name="Cutting Unit Tree Count"
+                                   AutomationProperties.HelpText="{Binding TallyPopulation.TreeCount}" />
+                        </StackLayout>
+                    </Frame>
+
+                    -->
+                <!-- Plot Tree Count -->
+                <!--
+                    <Frame BackgroundColor="White">
+
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Plot Tree Count:"
+                                   AutomationProperties.IsInAccessibleTree="False" />
+
+                            <Label Text="{Binding TallyPopulation.PlotTreeCount, FallbackValue=00000}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.Name="Plot Tree Count"
+                                   AutomationProperties.HelpText="{Binding TallyPopulation.PlotTreeCount}" />
+                        </StackLayout>
+                    </Frame>
+
+                </StackLayout >-->
+
+            </Grid>
+        </Frame>
+
+        <!-- content -->
+        <xct:TabView TabStripPlacement="Bottom"
+                     Grid.Row="1"
+                     Style="{StaticResource TabViewBase}"
+                     TabIndicatorPlacement="Top"
+                     TabIndicatorColor="{StaticResource black_70}">
+
+            <xct:TabViewItem Text="Tree Counts">
+
+                <!-- hack when tabview bindingcontext changed tabviewitem.content bindingContext set manually 
+                    so to get bindingContext propagation working we need to nest the actual content -->
+                <ContentView>
+
+                    <Grid RowDefinitions="Auto,*"
+                          BindingContext="{Binding TreeCountEditViewModel}">
+
+                        <!-- tally population summary -->
+                        <Frame Grid.Row="0"
+                               BorderColor="{StaticResource black_30}"
+                               Padding="11"
+                               Margin="5"
+                               CornerRadius="{StaticResource cornerRadius}">
+                            <Frame.Resources>
+                                <ResourceDictionary>
+                                    <!--<Style TargetType="ctrls:LastChildWidthLayout">
+                                        <Setter Property="WidthRequest"
+                                                Value="300" />
+                                        <Setter Property="LastChildWidth"
+                                                Value="100" />
+                                    </Style>-->
+
+                                    <Style TargetType="Frame">
+                                        <Setter Property="BorderColor"
+                                                Value="{StaticResource black_30}" />
+                                        <Setter Property="Padding"
+                                                Value="5" />
+                                        <Setter Property="CornerRadius"
+                                                Value="{StaticResource cornerRadius}" />
+                                    </Style>
+                                </ResourceDictionary>
+                            </Frame.Resources>
+
+                            <StackLayout Orientation="Vertical">
+                                <Frame>
+                                    <StackLayout Orientation="Vertical">
+                                        <Label Text="Tree Count" />
+                                        <ctrls:UniformGrid>
+                                            <StackLayout Orientation="Horizontal"
+                                                         IsVisible="{Binding IsPlot}">
+                                                <Label Text="{Binding PlotNumber, StringFormat='Plot {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.TreeCountPlot}" />
+                                            </StackLayout>
+
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{Binding TallyPopulation.CuttingUnitCode, StringFormat='Unit {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.TreeCount}" />
+                                            </StackLayout>
+
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Cruise:" />
+                                                <Label Text="{Binding TallyPopulation.TreeCountCruise}" />
+                                            </StackLayout>
+                                        </ctrls:UniformGrid>
+                                    </StackLayout>
+                                </Frame>
+
+                                <Frame  IsVisible="{Binding Is3P}">
+                                    <StackLayout Orientation="Vertical">
+                                        <Label Text="SumKPI" />
+                                        <ctrls:UniformGrid>
+
+                                            <StackLayout Orientation="Horizontal"
+                                                         IsVisible="{Binding IsPlot}">
+                                                <Label Text="{Binding PlotNumber, StringFormat='Plot {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.SumKPIPlot, FallbackValue='_____'}" />
+                                            </StackLayout>
+
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{Binding TallyPopulation.CuttingUnitCode, StringFormat='Unit {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.SumKPI, FallbackValue='_____'}" />
+                                            </StackLayout>
+
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Cruise" />
+                                                <Label Text="{Binding TallyPopulation.SumKPICruise, FallbackValue='_____'}" />
+                                            </StackLayout>
+
+                                        </ctrls:UniformGrid>
+                                    </StackLayout>
+                                </Frame>
+
+                                <Frame  IsVisible="{Binding Is3P}">
+                                    <StackLayout Orientation="Vertical">
+                                        <Label Text="SumKPI From Trees" />
+                                        <ctrls:UniformGrid>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{Binding TallyPopulation.CuttingUnitCode, StringFormat='Unit {0}:'}" />
+                                                <Label Text="{Binding TallyPopulation.TreeSumKPI, FallbackValue='_____'}" />
+                                            </StackLayout>
+
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Cruise:" />
+                                                <Label Text="{Binding TallyPopulation.TreeSumKPICruise, FallbackValue='_____'}" />
+                                            </StackLayout>
+
+                                        </ctrls:UniformGrid>
+                                    </StackLayout>
+                                </Frame>
+
+                            </StackLayout>
+
+                        </Frame>
+
+                        <!--<Grid.Resources>
+                        <x:Int16 x:Key="form_rowHeight">40</x:Int16>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        -->
+
+
+
+                        <Frame Grid.Row="1"
+                               IsVisible="{Binding CanEditTreeCount}">
+                            <Grid RowDefinitions="*,Auto">
+                                <ScrollView Grid.Row="0"
+                                            HorizontalScrollBarVisibility="Never"
+                                            VerticalScrollBarVisibility="Default">
+                                    <!--Tree Count-->
+                                    <StackLayout Orientation="Vertical">
+                                        <ctrls:HeaderControl Header="Tree Count (+/-)"
+                                                             Orientation="Horizontal">
+
+                                            <Entry x:Name="_treeCountDifferenceEntry"
+                                                   Text="{Binding TreeCountDelta, TargetNullValue=0}"
+                                                   WidthRequest="150"
+                                                   HorizontalOptions="Start"
+                                                   Keyboard="Numeric"
+                                                   AutomationProperties.IsInAccessibleTree="True"
+                                                   AutomationProperties.Name="Tree Count Difference">
+                                                <Entry.Effects>
+                                                    <xct:SelectAllTextEffect />
+                                                </Entry.Effects>
+                                            </Entry>
+
+                                        </ctrls:HeaderControl>
+
+                                        <!--KPI-->
+
+                                        <ctrls:HeaderControl Header="KPI (+/-)"
+                                                             Orientation="Horizontal"
+                                                             IsEnabled="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
+                                            <Entry Grid.Row="1"
+                                                   Grid.Column="1"
+                                                   Text="{Binding KPIDelta}"
+                                                   WidthRequest="50"
+                                                   HorizontalOptions="Start"
+                                                   Keyboard="Numeric"
+                                                   AutomationProperties.IsInAccessibleTree="True"
+                                                   AutomationProperties.Name="KPI">
+                                                <Entry.Effects>
+                                                    <xct:SelectAllTextEffect />
+                                                </Entry.Effects>
+                                            </Entry>
+                                        </ctrls:HeaderControl>
+
+
+                                        <!--Reason-->
+                                        <ctrls:HeaderControl Header="Reason"
+                                                             Orientation="Horizontal">
+                                            <Picker Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    ItemsSource="{Binding EditReasonOptions}"
+                                                    SelectedItem="{Binding EditReason}"
+                                                    VerticalOptions="CenterAndExpand"
+                                                    WidthRequest="150"
+                                                    AutomationProperties.IsInAccessibleTree="True"
+                                                    AutomationProperties.Name="Reson" />
+                                        </ctrls:HeaderControl>
+
+
+                                        <!-- Initials -->
+                                        <ctrls:HeaderControl Header="Initials"
+                                                             Orientation="Horizontal">
+                                            <AbsoluteLayout>
+                                                <ctrls:ValuePicker x:Name="_initialsPicker"
+                                                                   Grid.Row="3"
+                                                                   Grid.Column="1"
+                                                                   WidthRequest="50"
+                                                                   HeightRequest="{StaticResource minTouchableHeight}"
+                                                                   SelectedValue="{Binding Initials}"
+                                                                   ItemsSource="{Binding Cruisers}"
+                                                                   IsVisible="{Binding Cruisers, Converter={StaticResource listIsNotNullOrEmptyConverter}}"
+                                                                   AutomationProperties.IsInAccessibleTree="True"
+                                                                   AutomationProperties.Name="Initials" />
+                                                <Entry x:Name="_initialsEntry"
+                                                       Grid.Row="3"
+                                                       Grid.Column="1"
+                                                       WidthRequest="50"
+                                                       HeightRequest="{StaticResource minTouchableHeight}"
+                                                       Text="{Binding Initials}"
+                                                       IsVisible="{Binding Cruisers, Converter={StaticResource listIsNullOrEmptyConverter}}"
+                                                       HorizontalOptions="Start"
+                                                       AutomationProperties.IsInAccessibleTree="True"
+                                                       AutomationProperties.Name="Initials" />
+                                            </AbsoluteLayout>
+                                        </ctrls:HeaderControl>
+
+                                        <!--Remarks-->
+                                        <ctrls:LastChildHeightLayout LastChildHeight="100">
+                                            <Label Text="Remarks" />
+                                            <Editor Text="{Binding Remarks}"
+                                                    BackgroundColor="LightGray"
+                                                    AutomationProperties.IsInAccessibleTree="True"
+                                                    AutomationProperties.Name="Remaks" />
+                                        </ctrls:LastChildHeightLayout>
+
+
+
+                                    </StackLayout>
+
+                                </ScrollView>
+
+                                <StackLayout Grid.Row="1"
+                                             Orientation="Horizontal">
+                                    <Button Text="{x:Static const:FAIcons.CirclePlus}"
+                                            FontFamily="{Static const:Fonts.FAsolid}"
+                                            Command="{Binding AddTallyLedgerEntryCommand}"
+                                            BackgroundColor="{StaticResource addItemColor}" />
+                                    <Button Text="Clear"
+                                            Command="{Binding ResetInputsCommand}" />
+                                </StackLayout>
+
+                            </Grid>
+                        </Frame>
+
+                    </Grid>
+                </ContentView>
+
+            </xct:TabViewItem>
+
+            <xct:TabViewItem Text="Stratum">
+                <ContentView>
+                    <StackLayout Margin="13,7,50,50"
+                                 HorizontalOptions="FillAndExpand"
+                                 BindingContext="{Binding Stratum}">
+                        <Label Text="{Binding StratumCode, StringFormat='Stratum {0}'}"
+                               FontSize="Title" />
+                        <Label Text="{Binding Description}"
+                               FontSize="Subtitle" />
+
+                        <BoxView Color="DarkGray"
+                                 HeightRequest="2" />
+
+                        <Label Text="{Binding Method, StringFormat='Method: {0}'}" />
+
+                        <!--<Label Text="{Binding YieldComponent, StringFormat='Yield Component: {0}'}" />-->
+
+                        <Label Text="{Binding BasalAreaFactor, StringFormat='BAF: {0}'}"
+                               IsVisible="{Binding Method, Converter={StaticResource isVariableRadiousPlotConverter}}" />
+
+                        <Label Text="{Binding FixedPlotSize, StringFormat='FPS: {0}'}"
+                               IsVisible="{Binding Method, Converter={StaticResource isFixedSizePlotConverter}}" />
+
+                        <Label Text="{Binding KZ3PPNT, StringFormat='KZ (3PPNT): {0}'}"
+                               IsVisible="{Binding Method, Converter={StaticResource isThreePPNTConverter}}" />
+                    </StackLayout>
+                </ContentView>
+            </xct:TabViewItem>
+
+            <xct:TabViewItem Text="Sample Group">
+                <ContentView>
+                    <StackLayout Margin="13,7"
+                                 BindingContext="{Binding SampleGroup}">
+
+                        <Label Text="{Binding SampleGroupCode, StringFormat='Sample Group {0}'}"
+                               FontSize="Title" />
+                        <Label Grid.Row="1"
+                               Text="{Binding Description}"
+                               FontSize="Subtitle" />
+
+                        <BoxView Color="DarkGray"
+                                 HeightRequest="2" />
+
+                        <Label Text="{Binding PrimaryProduct, StringFormat='Product: {0}'}" />
+                        <Label Text="{Binding SamplingFrequency, StringFormat='Frequency: {0}'}"
+                               IsVisible="{Binding CruiseMethod, Converter={StaticResource isFrequencySampleConverter}}" />
+                        <Label Text="{Binding KZ, StringFormat='KZ: {0}'}"
+                               IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter} }" />
+                        <Label Text="{Binding InsuranceFrequency, StringFormat='Insurance Frequency: {0}'}" />
+                        <Label Text="{Binding BigBAF, StringFormat='BigBAF:{0}'}"
+                               IsVisible="{Binding CruiseMethod, Converter={StaticResource isVariableRadiousPlotConverter} }" />
+
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Tally By Species: " />
+                            <Label Text="{Binding TallyBySubPop, Converter={StaticResource BoolToYesNoConverter}}" />
+                        </StackLayout>
+
+                        <!--<Label Text="{Binding SampleGroup.SampleSelectorType, StringFormat='Sample Selector Type: {0}'}"
+                           IsVisible="{Binding SampleGroup.CruiseMethod, Converter={StaticResource isStrConverter}}" />-->
+
+                    </StackLayout>
+                </ContentView>
+            </xct:TabViewItem>
+        </xct:TabView>
+    </Grid>
+</ctrls:InitializableContentPage>

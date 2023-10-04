@@ -59,11 +59,11 @@ INSERT INTO Subpopulation (
         {
             return Database.ExecuteScalar<int>(
 @"SELECT count(*) FROM Subpopulation
-WHERE StratumCode = @p1
-AND SampleGroupCode = @p2
-AND SpeciesCode = @p3
-AND @p4 IS NULL OR LiveDead = @p4
-AND CruiseID = @p5;",
+            WHERE StratumCode = @p1
+            AND SampleGroupCode = @p2
+            AND SpeciesCode = @p3
+            AND (@p4 IS NULL OR LiveDead = @p4)
+            AND CruiseID = @p5;",
                 stratumCode, sampleGroupCode, species, livedead, CruiseID) > 0;
         }
 

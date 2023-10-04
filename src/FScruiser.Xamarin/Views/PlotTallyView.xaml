@@ -8,7 +8,7 @@
                                       xmlns:converters="clr-namespace:FScruiser.XF.Converters"
                                       xmlns:effects="http://xamarin.com/schemas/2020/toolkit"
                                       xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
-                                      xmlns:services="clr-namespace:FScruiser.XF.Services"
+                                      xmlns:data="clr-namespace:FScruiser.XF.Data"
                                       xmlns:const="clr-namespace:FScruiser.XF.Constants"
                                       x:Class="FScruiser.XF.Views.PlotTallyView"
                                       BackgroundColor="White"
@@ -28,7 +28,7 @@
 
             <converters:IsFixCNTorCountGreaterThanOneConverter x:Key="isFixCNTorCountGreaterThanOne" />
 
-            <services:TallySettingsDataService x:Key="tallySettings" />
+            <data:TallySettingsDataService x:Key="tallySettings" />
 
             <converters:PercentageToGridLengthConverter x:Key="percentageToGridLengthConverrter" />
             <converters:PercentageToGridLengthConverter Invert="True"
@@ -193,10 +193,8 @@
                                                 <Label Text="{Binding Heading}" />
                                                 <Entry Text="{Binding ValueInt}"
                                                        Placeholder="{Binding StrDefaultValue}"
-                                                       Keyboard="Numeric">
-                                                    <Entry.Behaviors>
-                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                    </Entry.Behaviors>
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
                                                     <Entry.Effects>
                                                         <effects:SelectAllTextEffect />
                                                     </Entry.Effects>
@@ -218,10 +216,8 @@
                                                 <Label Text="{Binding Heading}" />
                                                 <Entry Text="{Binding ValueReal}"
                                                        Placeholder="{Binding StrDefaultValue}"
-                                                       Keyboard="Numeric">
-                                                    <Entry.Behaviors>
-                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                    </Entry.Behaviors>
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
                                                     <Entry.Effects>
                                                         <effects:SelectAllTextEffect />
                                                     </Entry.Effects>
@@ -242,10 +238,8 @@
                                             <local_ctrls:LastChildHeightLayout>
                                                 <Label Text="{Binding Heading}" />
                                                 <Entry Text="{Binding ValueText}"
-                                                       Placeholder="{Binding StrDefaultValue}">
-                                                    <Entry.Behaviors>
-                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                    </Entry.Behaviors>
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       ReturnType="Next">
                                                     <Entry.Effects>
                                                         <effects:SelectAllTextEffect />
                                                     </Entry.Effects>
@@ -281,9 +275,6 @@
                                                 <ScrollView Orientation="Vertical">
                                                     <Editor Text="{Binding ValueText}"
                                                             AutoSize="TextChanges">
-                                                        <!--<Editor.Behaviors>
-                                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                            </Editor.Behaviors>-->
                                                     </Editor>
                                                 </ScrollView>
                                             </local_ctrls:LastChildHeightLayout>

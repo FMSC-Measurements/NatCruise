@@ -13,18 +13,16 @@ namespace NatCruise.Wpf.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            ConflictResolutionType crt = ConflictResolutionType.NotSet;
-            if (value is string str && !Enum.TryParse(str, out crt))
-            { return Invert; }
-            if (value is ConflictResolutionType)
+            if (value is string str && Enum.TryParse<ConflictResolutionType>(str, out var convertVal))
             {
-                crt = (ConflictResolutionType)value;
-
+                return convertVal;
+            }
+            else if (value is ConflictResolutionType crt)
+            {
                 return (crt == Mask) ^ Invert;
             }
 
-            throw new NotSupportedException();
-            return Invert;
+            return Binding.DoNothing;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

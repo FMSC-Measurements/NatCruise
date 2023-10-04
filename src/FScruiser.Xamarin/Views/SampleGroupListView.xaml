@@ -1,16 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<controls:InitializableContentPage  xmlns:controls="clr-namespace:FScruiser.XF.Controls"
-                                    xmlns="http://xamarin.com/schemas/2014/forms"
-                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                                    xmlns:conv="clr-namespace:FScruiser.XF.Converters"
-                                    xmlns:const="clr-namespace:FScruiser.XF.Constants"
-                                    x:Class="FScruiser.XF.Views.SampleGroupListView"
+<controls:InitializableContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                   xmlns:const="clr-namespace:FScruiser.XF.Constants"
+                                   xmlns:controls="clr-namespace:FScruiser.XF.Controls"
+                                   xmlns:conv="clr-namespace:FScruiser.XF.Converters"
+                                   x:Class="FScruiser.XF.Views.SampleGroupListView"
                                     x:Name="_page"
                                     Title="{Binding Stratum.StratumCode, StringFormat='Stratum {0} Sample Groups'}">
     <controls:InitializableContentPage.Resources>
         <conv:CruiseMethodToBoolConverter MethodMap="ThreePMethods"
                                           x:Key="isThreePConverter" />
-
     </controls:InitializableContentPage.Resources>
 
     <CollectionView ItemsSource="{Binding SampleGroups}">
@@ -23,16 +22,17 @@
                 <SwipeView IsEnabled="False">
                     <!--<SwipeView.BottomItems>
                         <SwipeItems>
-                            <SwipeItemView >
+                            <SwipeItemView>
                                 <StackLayout Orientation="Horizontal">
                                     <Button Text="Subpopulations"
                                             Command="{Binding BindingContext.ShowSubpopulationsCommand, Source={x:Reference _page}}"
                                             CommandParameter="{Binding .}"
-                                            HeightRequest="{StaticResource minTouchableHeight}"/>
+                                            HeightRequest="{StaticResource minTouchableHeight}" />
                                 </StackLayout>
                             </SwipeItemView>
                         </SwipeItems>
                     </SwipeView.BottomItems>-->
+
                     <Frame BorderColor="DarkGray"
                            Margin="3"
                            Padding="0"
@@ -64,15 +64,14 @@
                                 <Label Text="{Binding InsuranceFrequency, StringFormat='Insurance Frequency: {0}'}" />
                                 <Label Text="{Binding BigBAF, StringFormat='BigBAF:{0}'}"
                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isVariableRadiousPlotConverter} }" />
-                                
+
                                 <StackLayout Orientation="Horizontal">
-                                    <Label Text="Tally By Species: "/>
-                                    <Label Text="{Binding TallyBySubPop, Converter={StaticResource BoolToYesNoConverter}}"/>
+                                    <Label Text="Tally By Species: " />
+                                    <Label Text="{Binding TallyBySubPop, Converter={StaticResource BoolToYesNoConverter}}" />
                                 </StackLayout>
 
                                 <!--<Label Text="{Binding SampleSelectorType, StringFormat='Sample Selector Type: {0}'}"
                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isStrConverter}}" />-->
-
                             </StackLayout>
 
                             <Button AbsoluteLayout.LayoutBounds="1,0"

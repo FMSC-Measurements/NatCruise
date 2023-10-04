@@ -14,7 +14,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
-             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:dsgn="clr-namespace:NatCruise.Design"
              xmlns:models="clr-namespace:CruiseDAL.V3.Models;assembly=CruiseDAL.V3.Models"
              mc:Ignorable="d"
              d:DesignHeight="450"

@@ -79,9 +79,9 @@ namespace FScruiser.XF.Services
             return NavigationService.NavigateAsync("Navigation/CuttingUnitList");
         }
 
-        public Task ShowStratumDetail(string stratumCode)
+        public Task ShowStratumInfo(string stratumCode)
         {
-            return NavigationService.NavigateAsync("StratumDetail",
+            return NavigationService.NavigateAsync("StratumInfo",
                 new NavigationParameters($"{NavParams.STRATUM}={stratumCode}"));
         }
 
@@ -284,6 +284,23 @@ namespace FScruiser.XF.Services
                 new NavigationParameters($"{NavParams.UNIT}={unitCode}"));
         }
 
+        public Task ShowTallyPopulationInfo(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        {
+            if (unitCode is null) { throw new ArgumentNullException(nameof(unitCode)); }
+
+            if (string.IsNullOrEmpty(stratumCode)) { throw new ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty.", nameof(stratumCode)); }
+
+            if (string.IsNullOrEmpty(sampleGroupCode)) { throw new ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or empty.", nameof(sampleGroupCode)); }
+
+            var parameters = new NavigationParameters($"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}" +
+                $"&{NavParams.SAMPLE_GROUP}={sampleGroupCode}" +
+                $"&{NavParams.SPECIES}={species}" +
+                $"&{NavParams.LIVE_DEAD}={liveDead}");
+
+            return NavigationService.NavigateAsync("TallyPopulationDetails",
+                parameters);
+        }
+
         public Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead)
         {
             if (unitCode is null) { throw new ArgumentNullException(nameof(unitCode)); }
@@ -300,7 +317,7 @@ namespace FScruiser.XF.Services
                 $"&{NavParams.SPECIES}={species}" +
                 $"&{NavParams.LIVE_DEAD}={liveDead}");
 
-            return NavigationService.NavigateAsync("PlotTallyPopulationDetails",
+            return NavigationService.NavigateAsync("TallyPopulationDetails",
                 parameters);
         }
 

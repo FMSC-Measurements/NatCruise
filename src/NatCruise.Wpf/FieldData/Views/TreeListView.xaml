@@ -5,6 +5,8 @@
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
              xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Wpf.FieldData.Views.TreeListView"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -17,6 +19,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -24,8 +27,32 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <!--<TextBox x:Name="_addTreeNumberTextbox"
+                     mah:TextBoxHelper.Watermark="Tree # (optional)"
+                     ToolTip="Tree Number, leave blank to auto-select tree number">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Return"
+                                Command="{Binding AddTreeCommand}"
+                                CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                </TextBox.InputBindings>
+            </TextBox>-->
+            <Button Height="23"
+                    Width="32"
+                    Style="{StaticResource AddButton}"
+                    Content="{iconPack:MaterialDesign Kind=AddCircleOutline}"
+                    Command="{Binding AddTreeCommand}" />
+            <Button Height="23"
+                    Width="32"
+                    Style="{StaticResource RemoveButton}"
+                    Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
+                    Command="{Binding DeleteTreeCommand}"
+                    CommandParameter="{Binding SelectedItem, ElementName=_datagrid}"
+                    IsEnabled="{Binding SelectedItem, ElementName=_datagrid, Converter={StaticResource NotNullConverter}}" />
+        </StackPanel>
+        
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -48,6 +75,8 @@
         </Grid>
 
         <Expander Grid.Column="1"
+                  Grid.Row="0"
+                  Grid.RowSpan="2"
                   ExpandDirection="Left"
                   MaxWidth="460"
                   d:IsExpanded="True"

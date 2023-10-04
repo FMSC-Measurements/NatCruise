@@ -17,11 +17,13 @@
 
     <tc_conv:VariableMultiValueConverter ConditionType="Any"
                                          x:Key="AnyTrueConverter" />
+    
     <tc_conv:InvertedBoolConverter x:Key="invertedBoolConverter" />
 
     <tc_conv:BoolToObjectConverter x:Key="BoolToYesNoConverter"
                                    TrueObject="YES"
                                    FalseObject="NO" />
+    <tc_conv:EqualConverter x:Key="equalsConverter"/>
 
 
     <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
@@ -49,8 +51,11 @@
     <converters:CruiseMethodToBoolConverter MethodMap="TwoStagePlotMethods"
                                             x:Key="isTwoStagePlotMethod" />
 
+
     <converters:PrependConverter x:Key="PrependAnyConverter"
                                  Value="Any" />
     <converters:ReplaceNullConverter x:Key="ReplaceAnyWithNullConverter"
                                      Value="Any" />
+
+    <converters:NotConverter x:Key="notConverter" />
 </ResourceDictionary>

@@ -53,12 +53,16 @@
     <Color x:Key="error">Red</Color>
 	<Color x:Key="warning">Gold</Color>
 	<Color x:Key="error_suppressed">LightGray</Color>
+        
+        <!-- action colors -->
+    <Color x:Key="addItemColor">#538200</Color>
 
-	<Color x:Key="measureTreeColor">#008817</Color>
-	<!--MediumSeaGreen-->
-	<Color x:Key="insuranceTreeColor">#d85bef</Color>
-	<!--MediumOrchid-->
-	<Color x:Key="tallyCountEntryColor">#4866ff</Color>
-	<Color x:Key="manualTreeColor">#70e17b</Color>
-	<!--SandyBrown-->
+        <!-- tally feed colors, these colors do not use any of the ohter pre-defined colors
+        they were selected so that there would be a good amount of hue contrast between tree,insurance, and tally
+        measure tree and manual tree both use the same hue but with different shade -->
+    <Color x:Key="measureTreeColor">#008817</Color>
+    <Color x:Key="manualTreeColor">#70e17b</Color>
+    <Color x:Key="insuranceTreeColor">#d85bef</Color>
+    <Color x:Key="tallyCountEntryColor">#4866ff</Color>
+    
 </ResourceDictionary>

@@ -1,9 +1,5 @@
-﻿using NatCruise.Cruise.Services;
+﻿using FScruiser.XF.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace FScruiser.XF.Controls
@@ -38,7 +34,7 @@ namespace FScruiser.XF.Controls
             {
                 gestureRecognizer.Tapped -= EnableHapticFeedBack_HandelTapped;
             }
-            else if ((bool)oldValue == false && (bool) newValue == true)
+            else if ((bool)oldValue == false && (bool)newValue == true)
             {
                 gestureRecognizer.Tapped += EnableHapticFeedBack_HandelTapped;
             }

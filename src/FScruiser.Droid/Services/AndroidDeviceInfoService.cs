@@ -1,7 +1,7 @@
 ﻿using Android.Content;
 using Android.OS;
 using Android.Provider;
-using NatCruise.Core.Services;
+using NatCruise.Services;
 using NatCruise.Util;
 using System;
 

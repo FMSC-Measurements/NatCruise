@@ -1,9 +1,7 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Sync;
 using FScruiser.XF.Services;
-using NatCruise;
 using NatCruise.Async;
-using NatCruise.Core.Services;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
@@ -24,7 +22,7 @@ namespace FScruiser.XF.ViewModels
     {
         //public ICommand SelectCruiseCommand => new
 
-        const string EXPORT_TIMESTAMP_FORMAT = "yyyyMMddhhmm";
+        private const string EXPORT_TIMESTAMP_FORMAT = "yyyyMMddhhmm";
 
         private Sale _sale;
         private IEnumerable<Cruise> _cruises;
@@ -60,8 +58,6 @@ namespace FScruiser.XF.ViewModels
             get => _cruises;
             set => SetProperty(ref _cruises, value);
         }
-
-        
 
         public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, INatCruiseDialogService dialogService, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
         {
@@ -152,8 +148,6 @@ namespace FScruiser.XF.ViewModels
                 File = new ShareFile(fileToExport),
             });
         }
-
-        
 
         public Task DeleteSelectedCruise()
         {

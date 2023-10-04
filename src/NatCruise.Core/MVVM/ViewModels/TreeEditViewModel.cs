@@ -15,12 +15,6 @@ using System.Windows.Input;
 
 namespace NatCruise.MVVM.ViewModels
 {
-    public class TreeFieldValueChangedEventArgs
-    {
-        public string Field { get; set; }
-        public object Value { get; set; }
-    }
-
     public class TreeEditViewModel : ViewModelBase
     {
         private ICommand _showLogsCommand;
@@ -707,5 +701,11 @@ namespace NatCruise.MVVM.ViewModels
                 }
             }
         }
+    }
+
+    public class TreeFieldValueChangedEventArgs
+    {
+        public string Field { get; set; }
+        public object Value { get; set; }
     }
 }

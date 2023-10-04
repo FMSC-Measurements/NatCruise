@@ -80,7 +80,7 @@
                     ToolTip="Export Current Tab To CSV"/>
 
         </StackPanel>
-        <TabControl Grid.Row="1" x:Name="_tabControl">
+        <TabControl Grid.Row="1" x:Name="_tabControl" SelectionChanged="_tabControl_SelectionChanged">
             <TabItem Header="Trees">
                 <local:TreeListView DataContext="{Binding TreeListViewModel}" />
             </TabItem>

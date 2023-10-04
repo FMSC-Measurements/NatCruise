@@ -2,7 +2,7 @@
 using Android.Media;
 using Android.OS;
 using AndroidX.Media;
-using NatCruise.Cruise.Services;
+using FScruiser.XF.Services;
 using System.Threading.Tasks;
 
 namespace FScruiser.Droid.Services

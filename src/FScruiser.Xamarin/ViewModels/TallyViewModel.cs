@@ -2,10 +2,8 @@
 using CruiseDAL.Schema;
 using FScruiser.XF.Services;
 using NatCruise.Async;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.Logic;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
@@ -28,7 +26,7 @@ namespace FScruiser.XF.ViewModels
     {
         public static readonly string STRATUM_FILTER_ALL = "All";
 
-        private IEnumerable<TallyPopulationEx> _tallies;
+        private IEnumerable<TallyPopulation> _tallies;
         private IEnumerable<string> _stratumFilterOptions;
         private string _selectedStratumCode = STRATUM_FILTER_ALL;
 
@@ -48,7 +46,7 @@ namespace FScruiser.XF.ViewModels
             set { SetProperty(ref _tallyFeed, value); }
         }
 
-        public IEnumerable<TallyPopulationEx> Tallies
+        public IEnumerable<TallyPopulation> Tallies
         {
             get { return _tallies; }
             protected set
@@ -75,14 +73,14 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public IEnumerable<TallyPopulationEx> TalliesFiltered
+        public IEnumerable<TallyPopulation> TalliesFiltered
         {
             get
             {
                 var tallies = Tallies;
                 var selectedStratum = SelectedStratumCode;
 
-                if (tallies == null) { return Enumerable.Empty<TallyPopulationEx>(); }
+                if (tallies == null) { return Enumerable.Empty<TallyPopulation>(); }
                 if (selectedStratum == STRATUM_FILTER_ALL)
                 {
                     return tallies;
@@ -167,9 +165,9 @@ namespace FScruiser.XF.ViewModels
         private TallyEntry _selectedEntry;
         private CuttingUnit _cuttingUnit;
 
-        public ICommand ShowTallyMenuCommand => _showTallyMenuCommand ??= new DelegateCommand<TallyPopulationEx>((tp) => ShowTallyMenu(tp).FireAndForget());
+        public ICommand ShowTallyMenuCommand => _showTallyMenuCommand ??= new DelegateCommand<TallyPopulation>((tp) => ShowTallyMenu(tp).FireAndForget());
 
-        public ICommand TallyCommand => _tallyCommand ??= new DelegateCommand<TallyPopulationEx>((tp) => TallyAsync(tp).FireAndForget("TallyAsync"));
+        public ICommand TallyCommand => _tallyCommand ??= new DelegateCommand<TallyPopulation>((tp) => TallyAsync(tp).FireAndForget("TallyAsync"));
 
         public ICommand EditTreeCommand => _editTreeCommand ??= new DelegateCommand<string>((treeID) => EditTree(treeID).FireAndForget());
 
@@ -302,7 +300,8 @@ namespace FScruiser.XF.ViewModels
                 // we should only need to add entries when coming back from edit tree counts and only be adding one entry when doing so
 
                 //var newTallyEntries = new List<TallyEntry>();
-                var tallyEntries = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse();
+                var tallyEntries = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode)
+                    .Reverse();
 
                 var tfIDLookup = tf.ToDictionary(x => x.TallyLedgerID);
 
@@ -329,7 +328,8 @@ namespace FScruiser.XF.ViewModels
             }
             else
             {
-                TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode).Reverse().ToObservableCollection();
+                TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode)
+                    .Reverse().ToObservableCollection();
             }
 
             // refresh selected tree in case coming back from TreeEdit page
@@ -337,9 +337,9 @@ namespace FScruiser.XF.ViewModels
             OnPropertyChanged(nameof(SelectedTreeViewModel));
         }
 
-        private Task ShowTallyMenu(TallyPopulationEx tp)
+        private Task ShowTallyMenu(TallyPopulation tp)
         {
-            return NavigationService.ShowTreeCountEdit(UnitCode, tp.StratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead);
+            return NavigationService.ShowTallyPopulationInfo(UnitCode, tp.StratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead);
         }
 
         public Task EditTree(string treeID)
@@ -347,7 +347,7 @@ namespace FScruiser.XF.ViewModels
             return NavigationService.ShowTreeEdit(treeID);
         }
 
-        public async Task TallyAsync(TallyPopulationEx pop)
+        public async Task TallyAsync(TallyPopulation pop)
         {
             var entry = await TallyService.TallyAsync(UnitCode, pop);
             if (entry == null) { return; }

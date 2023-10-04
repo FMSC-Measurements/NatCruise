@@ -1,8 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using NatCruise.Data;
-using NatCruise.Design.Data;
 using NatCruise.Navigation;
-using NatCruise.Services;
+using NatCruise.Wpf.Data;
 using Prism.Ioc;
 using System;
 using System.ComponentModel;
@@ -27,11 +26,6 @@ namespace NatCruise.Wpf.Views
 
         public IContainerProvider Container { get; }
 
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
@@ -54,14 +48,11 @@ See Design Checks Page For Details.", "Do You Want To Exit?", defaultNo: true).R
                         e.Cancel = true;
                     }
                 }
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
+                //do nothing
             }
         }
     }
-
-    
 }

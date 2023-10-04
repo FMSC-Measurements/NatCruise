@@ -1,4 +1,5 @@
-﻿using NatCruise.Data;
+﻿using CommunityToolkit.Mvvm.Input;
+using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
-    public class LogListViewModel : ViewModelBase
+    public partial class LogListViewModel : ViewModelBase
     {
         private readonly IEnumerable<LogFieldSetup> COMMON_LOGFIELDS = new[]
         {
@@ -29,7 +30,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private string _cuttingUnitCode;
         private string _stratumCode;
         private string _sampleGroupCode;
-        private IEnumerable<Log> _logs;
+        private ObservableCollection<Log> _logs;
         private IEnumerable<LogFieldSetup> _fields;
         private Log _selectedLog;
         private string _treeID;
@@ -87,12 +88,16 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
-        public IEnumerable<Log> Logs
+        public ObservableCollection<Log> Logs
         {
             get => _logs;
             set
             {
-                SetProperty(ref _logs, value);
+                var selectedLogID = SelectedLog?.LogID;
+                if(SetProperty(ref _logs, value) && value != null && selectedLogID != null)
+                {
+                    SelectedLog = value.FirstOrDefault(x => x.LogID == selectedLogID);
+                }
             }
         }
 
@@ -126,17 +131,40 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
             else
             {
-
-
                 var unitCode = CuttingUnitCode;
                 var stCode = StratumCode;
                 var sgCode = SampleGroupCode;
 
-                var logs = LogDataservice.GetLogs(unitCode, stCode, sgCode);
+                var logs = LogDataservice.GetLogs(unitCode, stCode, sgCode).ToObservableCollection();
                 Logs = logs;
 
                 Fields = COMMON_LOGFIELDS.Concat(FieldSetupDataservice.GetLogFieldSetupsByCruise());
             }
+        }
+
+        [RelayCommand]
+        public void AddLog()
+        {
+            var treeID = TreeID;
+            if (treeID is null) return;
+
+
+            var newLog = new Log()
+            {
+                TreeID = treeID
+            };
+
+            LogDataservice.InsertLog(newLog);
+
+            Logs.Add(newLog);
+        }
+
+        [RelayCommand]
+        public void DeleteLog(Log log)
+        {
+            if (log is null) { return; }
+            LogDataservice.DeleteLog(log.LogID);
+            Logs.Remove(log);
         }
     }
 }

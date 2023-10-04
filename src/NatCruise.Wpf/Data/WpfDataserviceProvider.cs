@@ -1,6 +1,5 @@
 ﻿using CruiseDAL;
-using NatCruise.Core.Services;
-using NatCruise.Design.Data;
+using NatCruise.Services;
 using NatCruise.Wpf.Data;
 using Prism.Ioc;
 using System;
@@ -29,36 +28,23 @@ namespace NatCruise.Data
             var database = Database;
             var deviceID = DeviceID;
 
-
-            try
+            if (type == typeof(ITemplateDataservice))
             {
-                if (type == typeof(ITallySettingsDataservice))
-                {
-                }
-                else if (type == typeof(ITemplateDataservice))
-                {
-                    return new TemplateDataservice(database, cruiseID, deviceID);
-                }
-                else if (type == typeof(IDesignCheckDataservice))
-                {
-                    return new DesignCheckDataservice(database, cruiseID, deviceID);
-                }
-                else if (type == typeof(ICruisersDataservice))
-                {
-                    return new CruisersDataservice(database, cruiseID, deviceID);
-                }
-                
-
-                return null;
+                return new TemplateDataservice(database, cruiseID, deviceID);
             }
-            catch (Exception e)
+            else if (type == typeof(IDesignCheckDataservice))
             {
-                throw;
-                //return null;
+                return new DesignCheckDataservice(database, cruiseID, deviceID);
             }
+            else if (type == typeof(ICruisersDataservice))
+            {
+                return new CruisersDataservice(database, cruiseID, deviceID);
+            }
+
+            return null;
         }
 
-        public static void RegisterDataservices(IContainerRegistry containerRegistry)
+        public static new void RegisterDataservices(IContainerRegistry containerRegistry)
         {
             DataserviceProviderBase.RegisterDataservices(containerRegistry);
 

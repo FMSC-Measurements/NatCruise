@@ -2,15 +2,10 @@
 using FScruiser.XF.Controls;
 using FScruiser.XF.Data;
 using FScruiser.XF.Services;
-using FScruiser.XF.Util;
 using Microsoft.AppCenter.Crashes;
 using NatCruise.Async;
-using NatCruise.Core.Services;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.MVVM;
-using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism;
@@ -20,9 +15,7 @@ using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Forms.Xaml;
 
@@ -59,7 +52,6 @@ namespace FScruiser.XF
         protected override async void OnInitialized()
         {
             Xamarin.Forms.DataGrid.DataGridComponent.Init();
-
 
             // hook up our logging service to our utility TaskExtentions class
             // this helper extention class is used to get exceptions from
@@ -206,8 +198,6 @@ namespace FScruiser.XF
 
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelProvider.GetViewModel(viewType));
         }
-
-
 
         public static void LogException(string catigory, string message, Exception ex, IDictionary<string, string> data = null)
         {

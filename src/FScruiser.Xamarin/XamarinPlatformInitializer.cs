@@ -1,5 +1,4 @@
-﻿using NatCruise.Cruise.Services;
-using FScruiser.XF.Services;
+﻿using FScruiser.XF.Services;
 using Prism;
 using Prism.Ioc;
 using FScruiser.XF.Views;
@@ -8,6 +7,8 @@ using NatCruise.Services;
 using NatCruise.Navigation;
 using NatCruise.MVVM;
 using NatCruise.Data;
+using FScruiser.XF.Data;
+using NatCruise.Logic;
 
 namespace FScruiser.XF
 {
@@ -75,11 +76,11 @@ namespace FScruiser.XF
             containerRegistry.RegisterForNavigation<TreeAuditRuleListView>("TreeAuditRuleList");
             containerRegistry.RegisterForNavigation<TreeAuditRuleEditView>("TreeAuditRuleEdit");
             containerRegistry.RegisterForNavigation<StratumListView>("Strata");
-            containerRegistry.RegisterForNavigation<StratumDetailView>("StratumDetail");
+            containerRegistry.RegisterForNavigation<StratumInfoView>("StratumInfo");
             containerRegistry.RegisterForNavigation<SampleGroupListView>("SampleGroups");
             containerRegistry.RegisterForNavigation<SubpopulationListView>("Subpopulations");
             containerRegistry.RegisterForNavigation<StratumFieldSetupView>("FieldSetup");
-            containerRegistry.RegisterForNavigation<PlotTallyPopulationDetailsView>("PlotTallyPopulationDetails");
+            containerRegistry.RegisterForNavigation<TallyPopulationDetailsView>("TallyPopulationDetails");
             containerRegistry.RegisterForNavigation<AboutView>("About");
 
         }

@@ -1,3 +1,16 @@
+# Version 3.1.10 - Oct 3
+# FScruiser
+## Changes
+ - Update Tally Population Info page - adding Stratum and Sample Group tabs 
+
+# NatCruise
+## Fixes 
+ - Fixed issue when editing Stratum or Sample Group on tree
+ - Fixed issue when adding Subpopulation that errorniously says subpopulation has already been added
+ - Fixed Tree doesn't display KPI or STM 
+## Enhancments
+ - Add ability to Add/Delete field data
+
 # Version 3.1.9 - Aug 29
 # FScruiser
 ## Fixes

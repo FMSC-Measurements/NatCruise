@@ -1,5 +1,4 @@
-﻿using NatCruise.Cruise.Models;
-using NatCruise.Models;
+﻿using NatCruise.Models;
 using Xamarin.Forms;
 
 namespace FScruiser.XF.Controls

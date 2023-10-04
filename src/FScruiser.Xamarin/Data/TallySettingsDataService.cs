@@ -1,10 +1,10 @@
-﻿using NatCruise.Cruise.Services;
-using NatCruise.Models;
+﻿using NatCruise.Models;
 using NatCruise.Util;
 using Newtonsoft.Json;
+using Prism.Mvvm;
 using System.Collections.Generic;
 
-namespace FScruiser.XF.Services
+namespace FScruiser.XF.Data
 {
     public class TallySettings
     {
@@ -15,7 +15,7 @@ namespace FScruiser.XF.Services
         public List<string> Cruisers { get; set; } = new List<string>();
     }
 
-    public class TallySettingsDataService : Model_Base, ITallySettingsDataService
+    public class TallySettingsDataService : BindableBase, ITallySettingsDataService
     {
         const string PERF_TallyButtonTrayVerticalSize = "TallyButtonTrayVerticalSize";
         const string PERF_PlotTallyButtonTrayVerticalSize = "PlotTallyButtonTrayVerticalSize";

@@ -25,7 +25,7 @@
         <Setter Property="TabStripHeight"
                 Value="60" />
         <Setter Property="TabStripBorderColor"
-                Value="LightGray" />
+                Value="Black" />
         <Setter Property="TabStripBackgroundColor"
                 Value="{StaticResource black_12}" />
     </Style>

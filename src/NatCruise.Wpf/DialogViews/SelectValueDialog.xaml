@@ -1,0 +1,104 @@
+﻿<mah_dialogs:CustomDialog x:Class="NatCruise.Wpf.DialogViews.SelectValueDialog"
+                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                          xmlns:mah_dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:local="clr-namespace:NatCruise.Wpf.DialogViews"
+                          mc:Ignorable="d"
+                          x:Name="_this"
+                          d:Height="344"
+                          d:Width="723"
+                          d:Title="Title"
+                          DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                          KeyDown="OnKeyDownHandler">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ContentPresenter x:Name="PART_Top"
+                          Grid.Row="0"
+                          AutomationProperties.Name="Dialog top"
+                          Content="{Binding DialogTop}"
+                          d:Content="Dialog Top"
+                          SnapsToDevicePixels="{Binding SnapsToDevicePixels}" />
+
+        <Grid Grid.Row="1"
+              Margin="{Binding Padding}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding DialogContentMargin}" />
+                <ColumnDefinition Width="{Binding DialogContentWidth}" />
+                <ColumnDefinition Width="{Binding DialogContentMargin}" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="PART_Content"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Margin="0 10 0 0"
+                  HorizontalAlignment="{Binding HorizontalContentAlignment}"
+                  VerticalAlignment="{Binding VerticalContentAlignment}"
+                  AutomationProperties.Name="Dialog content"
+                  SnapsToDevicePixels="{Binding SnapsToDevicePixels}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Margin="0 5 0 0"
+                           FontSize="{Binding DialogMessageFontSize}"
+                           Foreground="{Binding Foreground}"
+                           Text="{Binding Message}"
+                           d:Text="Message (optional)"
+                           TextWrapping="Wrap" />
+
+
+                <ScrollViewer Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto" Margin="0,5">
+                    <ItemsControl ItemsSource="{Binding Values}"
+                                  d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <!--<ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>-->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
+                                        Content="{Binding .}"
+                                        Click="OnButtonClick"
+                                        Margin="0,2" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <Button Grid.Row="2"
+                        x:Name="_cancelButton"
+                        Click="OnButtonClick"
+                        Content="CANCEL"
+                        Margin="0,2"
+                        Style="{StaticResource MahApps.Styles.Button.Dialogs}" />
+
+            </Grid>
+        </Grid>
+
+        <ContentPresenter x:Name="PART_Bottom"
+                          Grid.Row="2"
+                          AutomationProperties.Name="Dialog bottom"
+                          Content="{Binding DialogBottom}"
+                          SnapsToDevicePixels="{Binding SnapsToDevicePixels}" />
+    </Grid>
+</mah_dialogs:CustomDialog>

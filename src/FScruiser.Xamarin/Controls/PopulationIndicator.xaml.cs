@@ -1,6 +1,4 @@
-﻿using System;
-using NatCruise.Cruise.Models;
-using NatCruise.Models;
+﻿using NatCruise.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -50,7 +48,6 @@ namespace FScruiser.XF.Controls
             typeof(string),
             typeof(PopulationIndicator),
             default(string));
-
 
         public static readonly BindableProperty SampleGroupCodeProperty = BindableProperty.Create(
             nameof(SampleGroupCode),
@@ -152,7 +149,6 @@ namespace FScruiser.XF.Controls
             get => GetValue(LiveDeadProperty) as string;
             set => SetValue(LiveDeadProperty, value);
         }
-        
 
         public PopulationIndicator()
         {

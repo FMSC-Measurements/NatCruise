@@ -21,10 +21,11 @@ namespace NatCruise.MVVM
             Register("TreeAuditRuleListView", typeof(TreeAuditRuleListViewModel));
             Register("TreeAuditRuleEditView", typeof(TreeAuditRuleEditViewModel));
             Register("SubpopulationListView", typeof(SubpopulationListViewModel));
+            Register("StratumInfoView", typeof(StratumInfoViewModel));
             Register("StratumTreeFieldSetupView", typeof(StratumTreeFieldSetupViewModel));
             Register("StratumLogFieldSetupView", typeof(StratumLogFieldSetupViewModel));
             Register("TreeErrorEditView", typeof(TreeErrorEditViewModel));
-            Register("PlotTallyPopulationDetailsView", typeof(PlotTallyPopulationDetailsViewModel));
+            Register("TallyPopulationDetailsView", typeof(TallyPopulationDetailsViewModel));
             Register("AboutView", typeof(AboutViewModel));
         }
 
@@ -41,19 +42,7 @@ namespace NatCruise.MVVM
             var viewName = view.FullName;
             viewName = viewName.Replace(".Views.", ".ViewModels.");
 
-            string viewAssemblyName = null;
-            if (viewName.StartsWith("NatCruise.Design"))
-            {
-                viewAssemblyName = "NatCruise.Design";
-            }
-            else if (viewName.StartsWith("FSCruiser.Design"))
-            {
-                viewAssemblyName = "NatCruise.Design";
-            }
-            else
-            {
-                viewAssemblyName = view.GetTypeInfo().Assembly.FullName;
-            }
+            string viewAssemblyName = view.GetTypeInfo().Assembly.FullName;
 
             var suffix = viewName.EndsWith("View") ? "Model" : "ViewModel";
             var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);

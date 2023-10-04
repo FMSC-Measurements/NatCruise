@@ -43,6 +43,17 @@ $@"SELECT
                 AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
                 AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
             ) AS TreeCount,
+            
+            (SELECT ifnull(sum(TreeCount), 0) FROM
+                TallyLedger AS tl
+            WHERE
+                tl.CruiseID = tp.CruiseID
+                AND tl.StratumCode = tp.StratumCode
+                AND tl.SampleGroupCode = tp.SampleGroupCode
+                AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
+                AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
+            ) AS TreeCountCruise,
+
             (SELECT ifnull(sum(KPI), 0) FROM
                 TallyLedger AS tl
             WHERE
@@ -53,6 +64,43 @@ $@"SELECT
                 AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
                 AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
             ) AS SumKPI,
+
+            
+
+            (SELECT ifnull(sum(KPI), 0) FROM
+                TallyLedger AS tl
+            WHERE
+                tl.CruiseID = tp.CruiseID
+                AND tl.StratumCode = tp.StratumCode
+                AND tl.SampleGroupCode = tp.SampleGroupCode
+                AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
+                AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
+            ) AS SumKPICruise,
+
+            (SELECT ifnull(sum(KPI), 0) FROM
+                TallyLedger AS tl
+            WHERE
+                tl.CruiseID = tp.CruiseID
+                AND tl.CuttingUnitCode = cust.CuttingUnitCode
+                AND tl.StratumCode = tp.StratumCode
+                AND tl.SampleGroupCode = tp.SampleGroupCode
+                AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
+                AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
+                AND tl.TreeID IS NOT NULL
+            ) AS TreeSumKPI,
+
+            (SELECT ifnull(sum(KPI), 0) FROM
+                TallyLedger AS tl
+            WHERE
+                tl.CruiseID = tp.CruiseID
+                AND tl.CuttingUnitCode = cust.CuttingUnitCode
+                AND tl.StratumCode = tp.StratumCode
+                AND tl.SampleGroupCode = tp.SampleGroupCode
+                AND (tp.SpeciesCode IS NULL OR tp.SpeciesCode = tl.SpeciesCode)
+                AND (tp.LiveDead IS NULL OR tp.LiveDead = tl.LiveDead)
+                AND tl.TreeID IS NOT NULL
+            ) AS TreeSumKPICruise,
+
         sg.SamplingFrequency AS Frequency,
         sg.InsuranceFrequency,
         sg.KZ, 
@@ -66,18 +114,18 @@ $@"SELECT
     JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
 ";
 
-        public IEnumerable<TallyPopulationEx> GetTallyPopulationsByUnitCode(string unitCode)
+        public IEnumerable<TallyPopulation> GetTallyPopulationsByUnitCode(string unitCode)
         {
-            return Database.Query<TallyPopulationEx>(
+            return Database.Query<TallyPopulation>(
                 SELECT_TALLYPOPULATION_CORE +
                 "WHERE cust.CuttingUnitCode = @p1 AND tp.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 0)"
                 , new object[] { unitCode, CruiseID }).ToArray();
         }
 
-        public TallyPopulationEx GetTallyPopulation(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        public TallyPopulation GetTallyPopulation(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
         {
 
-            return Database.Query<TallyPopulationEx>(
+            return Database.Query<TallyPopulation>(
                 SELECT_TALLYPOPULATION_CORE +
                 "WHERE cust.CuttingUnitCode = @p1 " +
                     "AND tp.CruiseID = @p2 " +
@@ -100,7 +148,9 @@ $@"SELECT
                     "AND ifNull(tp.LiveDead, '') = ifNull(@p6,'')"
                 , unitCode, CruiseID, stratumCode, sampleGroupCode, species, liveDead).Single();
 
-            tallyPop.PlotTreeCount = GetTreeCount(tallyPop, plotNumber);
+            tallyPop.TreeCountPlot = tallyPop.PlotTreeCount = GetTreeCount(tallyPop, plotNumber);
+            tallyPop.SumKPIPlot = GetSumKPI(tallyPop, plotNumber);
+
             return tallyPop;
         }
 
@@ -128,7 +178,17 @@ $@"SELECT
             return Database.ExecuteScalar2<int>("SELECT TreeCount FROM TallyLedger_Plot_Totals " +
                     "WHERE CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND PlotNumber = @PlotNumber AND StratumCode = @StratumCode " +
                     "AND SampleGroupCode = @SampleGroupCode " +
-                    "AND (@SpeciesCode IS NULL OR  ifnull(SpeciesCode, '') = ifnull(SpeciesCode, '')) " +
+                    "AND (@SpeciesCode IS NULL OR  ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '')) " +
+                    "AND (@LiveDead IS NULL OR ifnull(LiveDead, '') = ifnull(@LiveDead, ''));",
+                    new { CruiseID, pop.CuttingUnitCode, PlotNumber = plotNumber, pop.StratumCode, pop.SampleGroupCode, pop.SpeciesCode, pop.LiveDead });
+        }
+
+        public int GetSumKPI(TallyPopulation pop, int plotNumber)
+        {
+            return Database.ExecuteScalar2<int>("SELECT ifnull(KPI, 0) FROM TallyLedger_Plot_Totals " +
+                    "WHERE CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND PlotNumber = @PlotNumber AND StratumCode = @StratumCode " +
+                    "AND SampleGroupCode = @SampleGroupCode " +
+                    "AND (@SpeciesCode IS NULL OR  ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '')) " +
                     "AND (@LiveDead IS NULL OR ifnull(LiveDead, '') = ifnull(@LiveDead, ''));",
                     new { CruiseID, pop.CuttingUnitCode, PlotNumber = plotNumber, pop.StratumCode, pop.SampleGroupCode, pop.SpeciesCode, pop.LiveDead });
         }
@@ -151,9 +211,9 @@ $@"SELECT
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TallyPopulationEx> GetTallyPopulations(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null)
+        public IEnumerable<TallyPopulation> GetTallyPopulations(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null)
         {
-            return Database.Query2<TallyPopulationEx>(
+            return Database.Query2<TallyPopulation>(
                 SELECT_TALLYPOPULATION_CORE +
                 "WHERE tp.CruiseID = @CruiseID " +
                     "AND (@CuttingUnitCode IS NULL OR cust.CuttingUnitCode = @CuttingUnitCode) " +

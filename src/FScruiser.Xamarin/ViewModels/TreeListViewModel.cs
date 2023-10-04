@@ -153,7 +153,7 @@ namespace FScruiser.XF.ViewModels
 
         protected async Task AddTree(string stratumCode, string sampleGroupCode)
         {
-            var cruiseMethod = StratumDataservice.GetCruiseMethod(stratumCode);
+            
 
             var sg = SampleGroupDataservice.GetSampleGroup(stratumCode, sampleGroupCode);
 
@@ -162,58 +162,58 @@ namespace FScruiser.XF.ViewModels
                 .ToDictionary(x => x.SpeciesCode + ((x.LiveDead != defaultLD) ? $" ({x.LiveDead})" : ""));
 
             Subpopulation selectedSubPop = (subPops.Count == 1) ? subPops.Values.First() : null;
-            if(selectedSubPop == null)
+            if (selectedSubPop == null)
             {
                 var subPopAlias = subPops.Keys.ToArray();
                 var selectedSubPopAlias = await DialogService.AskValueAsync("Select Sub-Population", subPopAlias);
+                if (selectedSubPopAlias is null) return;
                 subPops.TryGetValue(selectedSubPopAlias, out selectedSubPop);
             }
 
-            if (selectedSubPop != null)
+            var cruiseMethod = StratumDataservice.GetCruiseMethod(stratumCode);
+            string treeID = null;
+            if (cruiseMethod == CruiseMethods.THREEP || cruiseMethod == CruiseMethods.S3P)
             {
-                if (cruiseMethod == CruiseMethods.THREEP || cruiseMethod == CruiseMethods.S3P)
-                {
-                    var kpi = await DialogService.AskKPIAsync((int)sg.MaxKPI, (int)sg.MinKPI);
-                    if (kpi is null) { return; }
+                var kpi = await DialogService.AskKPIAsync((int)sg.MaxKPI, (int)sg.MinKPI);
+                if (kpi is null) { return; }
 
-                    var isSTM = kpi is -1;
-                    var tree_guid = TreeDataservice.InsertManualTree(UnitCode,
-                            stratumCode,
-                            sampleGroupCode: sampleGroupCode,
-                            species: selectedSubPop.SpeciesCode,
-                            liveDead: selectedSubPop.LiveDead,
-                            treeCount: 0,
-                            kpi: isSTM ? 0 : kpi.Value,
-                            stm: isSTM);
-                    var newTree = TreeDataservice.GetTree(tree_guid);
-                    AllTrees.Add(newTree);
-                }
-                else
-                {
-                    var isHpct = cruiseMethod == CruiseMethods.H_PCT;
-                    var treeCount = (isHpct ? 1 : 0);
-
-                    var tree_guid = TreeDataservice.InsertManualTree(UnitCode,
+                var isSTM = kpi is -1;
+                treeID = TreeDataservice.InsertManualTree(UnitCode,
                         stratumCode,
-                        sampleGroupCode,
+                        sampleGroupCode: sampleGroupCode,
                         species: selectedSubPop.SpeciesCode,
                         liveDead: selectedSubPop.LiveDead,
-                        treeCount: treeCount);
-                    var newTree = TreeDataservice.GetTree(tree_guid);
-
-                    AllTrees.Add(newTree);
-                }
-                OnTreeAdded(null);
+                        treeCount: 0,
+                        kpi: isSTM ? 0 : kpi.Value,
+                        stm: isSTM);
+                
             }
+            else
+            {
+                var isHpct = cruiseMethod == CruiseMethods.H_PCT;
+                var treeCount = (isHpct ? 1 : 0);
+
+                treeID = TreeDataservice.InsertManualTree(UnitCode,
+                    stratumCode,
+                    sampleGroupCode,
+                    species: selectedSubPop.SpeciesCode,
+                    liveDead: selectedSubPop.LiveDead,
+                    treeCount: treeCount);
+            }
+            
+            OnTreeAdded(treeID);
         }
 
-        public void OnTreeAdded(EventArgs e)
+        public void OnTreeAdded(string treeID)
         {
+            var newTree = TreeDataservice.GetTree(treeID);
+            AllTrees.Add(newTree);
+
             //reset OnlyShowTreesWithErrorsOrWarnings value to ensure new tree is shown
             OnlyShowTreesWithErrorsOrWarnings = false;
             OnPropertyChanged(nameof(Trees));
 
-            TreeAdded?.Invoke(this, e);
+            TreeAdded?.Invoke(this, EventArgs.Empty);
         }
 
         public Task ShowEditTree(TreeEx tree)

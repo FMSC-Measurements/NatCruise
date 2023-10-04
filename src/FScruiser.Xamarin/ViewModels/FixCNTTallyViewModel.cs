@@ -1,8 +1,7 @@
-﻿using NatCruise;
+﻿using FScruiser.XF.Services;
 using NatCruise.Async;
-using NatCruise.Cruise.Data;
-using NatCruise.Cruise.Models;
-using NatCruise.Cruise.Services;
+using NatCruise.Data;
+using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using Prism.Common;
@@ -43,6 +42,7 @@ namespace FScruiser.XF.ViewModels
             get => _unitCode;
             private set => SetProperty(ref _unitCode, value);
         }
+
         public int PlotNumber
         {
             get => _plotNumber;
@@ -88,8 +88,6 @@ namespace FScruiser.XF.ViewModels
                     tallyPop.FieldName,
                     tallyBucket.Value);
             }
-
-            
 
             tallyBucket.TreeCount += 1;
             SoundService.SignalTallyAsync().FireAndForget();

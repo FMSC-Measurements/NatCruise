@@ -5,15 +5,15 @@ namespace NatCruise.Data
 {
     public interface ITallyPopulationDataservice : IDataservice
     {
-        IEnumerable<TallyPopulationEx> GetTallyPopulationsByUnitCode(string unitCode);
+        IEnumerable<TallyPopulation> GetTallyPopulationsByUnitCode(string unitCode);
 
-        TallyPopulationEx GetTallyPopulation(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead);
+        TallyPopulation GetTallyPopulation(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead);
 
         TallyPopulation_Plot GetPlotTallyPopulation(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead);
 
         IEnumerable<TallyPopulation_Plot> GetPlotTallyPopulationsByUnitCode(string unitCode, int plotNumber);
 
-        IEnumerable<TallyPopulationEx> GetTallyPopulations(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null);
+        IEnumerable<TallyPopulation> GetTallyPopulations(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null);
 
         void UpdateTallyPopulation(TallyPopulation tallyPop);
     }

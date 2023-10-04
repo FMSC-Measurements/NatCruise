@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using Microsoft.Win32;
+using NatCruise.MVVM;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -141,6 +142,25 @@ namespace NatCruise.Wpf.FieldData.Views
             if (needsEscape)
             {
                 sw.Write('"');
+            }
+        }
+
+        private void _tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Selection Changed is a Routed Event. meaning that all child controls that
+            // make use of the SelectionChanged event i.e. dataGrids, ListBoxes, ComboBoxes
+            // will also raise selection changed events on our tabControl.
+            // so we need to ignore all those extra events not coming directly from our tabControl
+
+            if(e.Source != sender) { return; }
+            if (sender is TabControl tabControl)
+            {
+                var selectedTab = tabControl.SelectedItem as TabItem;
+                if (selectedTab != null)
+                {
+                    var viewModel = selectedTab.DataContext as ViewModelBase;
+                    viewModel.Load();
+                }
             }
         }
     }

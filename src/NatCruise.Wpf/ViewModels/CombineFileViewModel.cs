@@ -25,7 +25,6 @@ namespace NatCruise.Wpf.ViewModels
         private const string TIMESTAMP_FORMAT = "yyyyMMddhhmm";
 
         private CrewFileInfo _currentSyncFile;
-        private FileInfo _destinationFile;
         private NatCruise.Models.Cruise _cruise;
         private ObservableCollection<CrewFileInfo> _crewFiles;
         private string _outputFileName;

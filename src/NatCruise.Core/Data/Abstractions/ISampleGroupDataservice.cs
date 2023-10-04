@@ -11,10 +11,6 @@ namespace NatCruise.Data
 
         SampleGroup GetSampleGroup(string stratumCode, string sampleGroupCode);
 
-        void SetTallyBySubPop(bool tallyBySubpop, string stratumCode, string sampleGroupCode);
-
-        string GetMethod(string stratumCode);
-
         void AddSampleGroup(SampleGroup sg);
 
         void UpdateSampleGroup(SampleGroup sg);
@@ -22,5 +18,7 @@ namespace NatCruise.Data
         void UpdateSampleGroupCode(SampleGroup sg);
 
         void DeleteSampleGroup(SampleGroup sampleGroup);
+
+        bool GetSampleGroupHasFieldData(string stratumCode, string sampleGroupCode);
     }
 }

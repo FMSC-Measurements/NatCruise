@@ -1,6 +1,6 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Models;
-using NatCruise.Core.Services;
+using NatCruise.Services;
 using Prism.Ioc;
 using System;
 using System.IO;
@@ -38,11 +38,24 @@ namespace NatCruise.Data
             }
         }
 
+        public ISampleSelectorDataService SampleSelectorDataService { get; set; }
+
         protected virtual void OnCruiseIDChanged(string value)
         {
             if (value != null)
             {
                 InitCurrentDevice(DeviceInfoService);
+            }
+
+            if (value != null)
+            {
+                SampleSelectorDataService = new SampleSelectorRepository(
+                    GetDataservice<ISamplerStateDataservice>(),
+                    GetDataservice<ISampleGroupDataservice>());
+            }
+            else
+            {
+                SampleSelectorDataService = null;
             }
         }
 
@@ -73,6 +86,9 @@ namespace NatCruise.Data
             containerRegistry.Register<ITreeAuditRuleDataservice>(x => GetDataservice<ITreeAuditRuleDataservice>(x));
             containerRegistry.Register<IStratumTemplateDataservice>(x => GetDataservice<IStratumTemplateDataservice>(x));
             containerRegistry.Register<ICruiseLogDataservice>(x => GetDataservice<ICruiseLogDataservice>(x));
+            containerRegistry.Register<ISampleSelectorDataService>(x => GetDataservice<ISampleSelectorDataService>(x));
+            containerRegistry.Register<IFixCNTDataservice>(x => GetDataservice<IFixCNTDataservice>(x));
+            containerRegistry.Register<ITallyDataservice>(x => GetDataservice<ITallyDataservice>(x));
         }
 
         public DataserviceProviderBase(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService)
@@ -209,6 +225,20 @@ namespace NatCruise.Data
             {
                 return new CruiseLogDataservice(database, cruiseID, deviceID);
             }
+            if (typeof(ISaleDataservice).IsAssignableFrom(type))
+            { return new SaleDataservice(database, cruiseID, deviceID); }
+
+            if (cruiseID == null)
+            { throw new InvalidOperationException("DataserviceProvider: no cruise selected"); }
+
+            if (typeof(ISampleSelectorDataService).IsAssignableFrom(type))
+            { return SampleSelectorDataService; }
+
+            if (typeof(IFixCNTDataservice).IsAssignableFrom(type))
+            { return new FixCNTDataservice(database, cruiseID, deviceID); }
+
+            if (typeof(ITallyDataservice).IsAssignableFrom(type))
+            { return new TallyDataservice(database, cruiseID, deviceID, GetDataservice<ISamplerStateDataservice>()); }
 
             else
             {

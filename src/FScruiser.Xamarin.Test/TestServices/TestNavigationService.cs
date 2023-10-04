@@ -209,7 +209,7 @@ namespace FScruiser.XF
             throw new NotImplementedException();
         }
 
-        public Task ShowStratumDetail(string stratumCode)
+        public Task ShowStratumInfo(string stratumCode)
         {
             throw new NotImplementedException();
         }
@@ -235,6 +235,11 @@ namespace FScruiser.XF
         }
 
         public Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowTallyPopulationInfo(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
         {
             throw new NotImplementedException();
         }

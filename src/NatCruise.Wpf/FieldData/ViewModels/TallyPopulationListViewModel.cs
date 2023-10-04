@@ -12,10 +12,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private string _cuttingUnitCode;
         private string _stratumCode;
         private string _sampleGroupCode;
-        private IEnumerable<TallyPopulationEx> _tallyPopulations;
-        private TallyPopulationEx _selectedTallyPopulation;
-        private string _speciesCode;
-        private string _liveDead;
+        private IEnumerable<TallyPopulation> _tallyPopulations;
+        private TallyPopulation _selectedTallyPopulation;
         private TreeCountEditViewModel _treeCountEditViewModel;
 
         public TallyPopulationListViewModel(ITallyPopulationDataservice tallyPopulationDataservice, TreeCountEditViewModel treeCountEditViewModel, TallyLedgerListViewModel tallyLedgerListViewModel)
@@ -55,19 +53,19 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
         }
 
-        public IEnumerable<TallyPopulationEx> TallyPopulations
+        public IEnumerable<TallyPopulation> TallyPopulations
         {
             get => _tallyPopulations;
             set => SetProperty(ref _tallyPopulations, value);
         }
 
-        public TallyPopulationEx SelectedTallyPopulation
+        public TallyPopulation SelectedTallyPopulation
         {
             get => _selectedTallyPopulation;
             set
             {
                 SetProperty(ref _selectedTallyPopulation, value);
-                TreeCountEditViewModel.TallyPopulation = value;
+                TreeCountEditViewModel.Load(value?.CuttingUnitCode, value?.StratumCode, value?.SampleGroupCode, value?.SpeciesCode, value?.LiveDead);
                 TallyLedgerListViewModel.Load(value?.CuttingUnitCode, value?.StratumCode, value?.SampleGroupCode, value?.SpeciesCode, value?.LiveDead);
             }
         }

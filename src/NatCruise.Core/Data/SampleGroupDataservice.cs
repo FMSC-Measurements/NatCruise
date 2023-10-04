@@ -130,11 +130,6 @@ JOIN Stratum AS st USING (StratumCode, CruiseID)
                 "WHERE (@p1 IS NULL OR StratumCode = @p1) AND CruiseID = @p2;", stratumCode, CruiseID);
         }
 
-        public void SetTallyBySubPop(bool tallyBySubpop, string stratumCode, string sampleGroupCode)
-        {
-            throw new NotImplementedException();
-        }
-
         public void UpdateSampleGroup(SampleGroup sg)
         {
             Database.Execute2(
@@ -197,9 +192,14 @@ WHERE SampleGroupID = @SampleGroupID;",
                 });
         }
 
-        public string GetMethod(string stratumCode)
+        public bool GetSampleGroupHasFieldData(string stratumCode, string sampleGroupCode)
         {
-            return Database.ExecuteScalar<string>("SELECT Method FROM Stratum WHERE StratumCode = @p1 AND CruiseID = @p2;", stratumCode, CruiseID);
+            if (string.IsNullOrWhiteSpace(stratumCode)) { throw new ArgumentException($"'{nameof(stratumCode)}' cannot be null or whitespace.", nameof(stratumCode)); }
+
+            if (string.IsNullOrWhiteSpace(sampleGroupCode)) { throw new ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or whitespace.", nameof(sampleGroupCode)); }
+
+            return Database.ExecuteScalar<bool>("SELECT EXISTS(SELECT * FROM Tree WHERE CruiseID = @p1 AND StratumCode = @p2 AND SampleGroupCode = @p3)",
+                CruiseID, stratumCode, sampleGroupCode);
         }
     }
 }

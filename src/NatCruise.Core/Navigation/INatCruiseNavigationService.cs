@@ -23,7 +23,7 @@ namespace NatCruise.Navigation
 
         Task ShowTreeAuditRuleEdit(string tarID);
 
-        Task ShowStratumDetail(string stratumCode);
+        Task ShowStratumInfo(string stratumCode);
 
         Task ShowFieldSetup(string stratumCode);
 
@@ -37,6 +37,8 @@ namespace NatCruise.Navigation
         #region tally
 
         Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead);
+
+        Task ShowTallyPopulationInfo(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead);
 
         #endregion
 

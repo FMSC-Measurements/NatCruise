@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using CruiseDAL;
-using FScruiser.XF.Data;
+﻿using FScruiser.XF.Data;
 using FScruiser.XF.Services;
-using NatCruise;
 using NatCruise.Async;
-using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using Prism.Ioc;
 using Prism.Navigation;
+using System;
+using System.Collections.Generic;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
@@ -53,7 +46,6 @@ namespace FScruiser.XF.ViewModels
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
 
             AppSettings.PropertyChanged += AppSettings_PropertyChanged;
-
         }
 
         private void AppSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

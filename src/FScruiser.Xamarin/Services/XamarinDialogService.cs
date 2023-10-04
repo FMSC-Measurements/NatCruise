@@ -1,6 +1,5 @@
 ﻿using FScruiser.XF.Views;
 using NatCruise.Async;
-using NatCruise.Cruise.Services;
 using NatCruise.Data;
 using NatCruise.Navigation;
 using Prism.Common;
@@ -16,6 +15,7 @@ namespace FScruiser.XF.Services
     {
         private TaskCompletionSource<int?> _askKpiTcs;
         private TaskCompletionSource<AskTreeCountResult> _askTreeCountTcs;
+
         public XamarinDialogService(IApplicationProvider applicationProvider,
             ICruisersDataservice cruisersDataservice,
             IPageDialogService pageDialogService)
@@ -49,6 +49,7 @@ namespace FScruiser.XF.Services
 
             return page;
         }
+
         public Task<bool> AskCancelAsync(string message, string caption, bool defaultCancel)
         {
             // TODO

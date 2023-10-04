@@ -6,10 +6,9 @@
                                       xmlns:effects="clr-namespace:FScruiser.XF.Effects"
                                       xmlns:local_ctrls="clr-namespace:FScruiser.XF.Controls"
                                       xmlns:core_vms="clr-namespace:NatCruise.MVVM.ViewModels;assembly=NatCruise.Core"
-                                      xmlns:cells="clr-namespace:FScruiser.XF.ViewCells"
                                       xmlns:effects1="http://xamarin.com/schemas/2020/toolkit"
                                       xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
-                                      xmlns:services="clr-namespace:FScruiser.XF.Services"
+                                      xmlns:data="clr-namespace:FScruiser.XF.Data"
                                       x:Class="FScruiser.XF.Views.TallyView"
                                       x:Name="_page"
                                       BackgroundColor="White"
@@ -20,7 +19,7 @@
         <ResourceDictionary>
 
 
-            <services:TallySettingsDataService x:Key="tallySettings" />
+            <data:TallySettingsDataService x:Key="tallySettings" />
 
             <converters:PercentageToGridLengthConverter x:Key="percentageToGridLengthConverrter" />
             <converters:PercentageToGridLengthConverter Invert="True"
@@ -672,10 +671,8 @@
                                                 <Label Text="{Binding Heading}" />
                                                 <Entry Text="{Binding ValueInt}"
                                                        Placeholder="{Binding StrDefaultValue}"
-                                                       Keyboard="Numeric">
-                                                    <Entry.Behaviors>
-                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                    </Entry.Behaviors>
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
                                                     <Entry.Effects>
                                                         <effects1:SelectAllTextEffect />
                                                     </Entry.Effects>
@@ -697,10 +694,8 @@
                                                 <Label Text="{Binding Heading}" />
                                                 <Entry Text="{Binding ValueReal}"
                                                        Placeholder="{Binding StrDefaultValue}"
-                                                       Keyboard="Numeric">
-                                                    <Entry.Behaviors>
-                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                    </Entry.Behaviors>
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
                                                     <Entry.Effects>
                                                         <effects1:SelectAllTextEffect />
                                                     </Entry.Effects>
@@ -721,10 +716,8 @@
                                             <local_ctrls:LastChildHeightLayout>
                                                 <Label Text="{Binding Heading}" />
                                                 <Entry Text="{Binding ValueText}"
-                                                       Placeholder="{Binding StrDefaultValue}">
-                                                    <Entry.Behaviors>
-                                                        <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                    </Entry.Behaviors>
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       ReturnType="Next">
                                                     <Entry.Effects>
                                                         <effects1:SelectAllTextEffect />
                                                     </Entry.Effects>
@@ -760,9 +753,6 @@
                                                 <ScrollView Orientation="Vertical">
                                                     <Editor Text="{Binding ValueText}"
                                                             AutoSize="TextChanges">
-                                                        <!--<Editor.Behaviors>
-                                                                <local_behaviors:SelectNextOnCompleatedBehavior ParentType="{x:Type StackLayout}" />
-                                                            </Editor.Behaviors>-->
                                                     </Editor>
                                                 </ScrollView>
                                             </local_ctrls:LastChildHeightLayout>
@@ -854,94 +844,90 @@
                                      VerticalItemSpacing="3" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <local_ctrls:TallyPopulationTemplateSelector>
-                        <local_ctrls:TallyPopulationTemplateSelector.TallyTemplate>
-                            <DataTemplate>
+                    <DataTemplate>
 
-                                <Frame CornerRadius="5"
-                                       BackgroundColor="{StaticResource tallyButtonBgColor}"
-                                       Margin="3"
-                                       Padding="0"
-                                       AutomationProperties.IsInAccessibleTree="True"
-                                       AutomationProperties.Name="Tally Population Item">
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
-                                                              CommandParameter="{Binding .}" />
-                                    </Frame.GestureRecognizers>
+                        <Frame CornerRadius="5"
+                               BackgroundColor="{StaticResource tallyButtonBgColor}"
+                               Margin="3"
+                               Padding="0"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.Name="Tally Population Item">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
 
-                                    <Grid Padding="0">
+                            <Grid Padding="0">
 
-                                        <Grid.RowDefinitions>
-                                            <!--Tally Settings Button-->
-                                            <RowDefinition Height="Auto" />
-                                            <!-- population info and menu button -->
-                                            <RowDefinition Height="Auto" />
-                                            <!-- tree count -->
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
+                                <Grid.RowDefinitions>
+                                    <!--Tally Settings Button-->
+                                    <RowDefinition Height="Auto" />
+                                    <!-- population info and menu button -->
+                                    <RowDefinition Height="Auto" />
+                                    <!-- tree count -->
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                                        <!--Tally Settings Button-->
-                                        <ImageButton    x:Name="_showTallyMenuButton"
-                                                        Grid.Column="1"
-                                                        Grid.Row="0"
-                                                        Padding="10,3"
-                                                        HeightRequest="{StaticResource minTouchableHeight}"
-                                                        Command="{Binding BindingContext.ShowTallyMenuCommand, Source={Reference _page}}"
-                                                        Source="ic_more_vert_black_24dp.png"
-                                                        BackgroundColor="Transparent"
-                                                        CommandParameter="{Binding .}"
-                                                        AutomationProperties.IsInAccessibleTree="True"
-                                                        AutomationProperties.Name="Tally Menu" />
+                                <!--Tally Settings Button-->
+                                <ImageButton    x:Name="_showTallyMenuButton"
+                                                Grid.Column="1"
+                                                Grid.Row="0"
+                                                Padding="10,3"
+                                                HeightRequest="{StaticResource minTouchableHeight}"
+                                                Command="{Binding BindingContext.ShowTallyMenuCommand, Source={Reference _page}}"
+                                                Source="ic_more_vert_black_24dp.png"
+                                                BackgroundColor="Transparent"
+                                                CommandParameter="{Binding .}"
+                                                AutomationProperties.IsInAccessibleTree="True"
+                                                AutomationProperties.Name="Tally Menu" />
 
-                                        <local_ctrls:PopulationIndicator Grid.Column="0"
-                                                                         Grid.ColumnSpan="2"
-                                                                         Grid.Row="1"
-                                                                         StratumCode="{Binding StratumCode}"
-                                                                         SampleGroupCode="{Binding SampleGroupCode}"
-                                                                         Species="{Binding SpeciesCode}"
-                                                                         LiveDead="{Binding LiveDead}"
-                                                                         AltFontAttributes="Bold"
-                                                                         AltFontSize="Large"
-                                                                         FontSize="Micro"
-                                                                         HorizontalOptions="Center" />
+                                <local_ctrls:PopulationIndicator Grid.Column="0"
+                                                                 Grid.ColumnSpan="2"
+                                                                 Grid.Row="1"
+                                                                 StratumCode="{Binding StratumCode}"
+                                                                 SampleGroupCode="{Binding SampleGroupCode}"
+                                                                 Species="{Binding SpeciesCode}"
+                                                                 LiveDead="{Binding LiveDead}"
+                                                                 AltFontAttributes="Bold"
+                                                                 AltFontSize="Large"
+                                                                 FontSize="Micro"
+                                                                 HorizontalOptions="Center" />
 
 
-                                        <Frame  Grid.Column="0"
-                                                Grid.Row="2"
-                                                Grid.ColumnSpan="2"
-                                                Padding="3,0"
-                                                Margin="0,0,0,2"
-                                                HorizontalOptions="Center"
-                                                BackgroundColor="White"
-                                                CornerRadius="5">
+                                <Frame  Grid.Column="0"
+                                        Grid.Row="2"
+                                        Grid.ColumnSpan="2"
+                                        Padding="3,0"
+                                        Margin="0,0,0,2"
+                                        HorizontalOptions="Center"
+                                        BackgroundColor="White"
+                                        CornerRadius="5">
 
-                                            <StackLayout Orientation="Horizontal">
-                                                <Image Source="ic_pine_tree_box_black_18dp.png"
-                                                       AutomationProperties.IsInAccessibleTree="False" />
-                                                <Label Text="{Binding TreeCount}"
-                                                       HorizontalTextAlignment="Center"
-                                                       BackgroundColor="Transparent"
-                                                       TextColor="Black"
-                                                       AutomationProperties.IsInAccessibleTree="True"
-                                                       AutomationProperties.Name="Tree Count" />
+                                    <StackLayout Orientation="Horizontal">
+                                        <Image Source="ic_pine_tree_box_black_18dp.png"
+                                               AutomationProperties.IsInAccessibleTree="False" />
+                                        <Label Text="{Binding TreeCount}"
+                                               HorizontalTextAlignment="Center"
+                                               BackgroundColor="Transparent"
+                                               TextColor="Black"
+                                               AutomationProperties.IsInAccessibleTree="True"
+                                               AutomationProperties.Name="Tree Count" />
 
-                                                <Label Text="{Binding SumKPI, StringFormat='{}Kpi:{0}'}"
-                                                       TextColor="Black"
-                                                       IsVisible="{Binding SumKPI, Converter={StaticResource intToBoolConverter}}"
-                                                       AutomationProperties.IsInAccessibleTree="False"
-                                                       AutomationProperties.Name="Total KPI" />
-                                            </StackLayout>
-                                        </Frame>
-                                    </Grid>
+                                        <Label Text="{Binding SumKPI, StringFormat='{}Kpi:{0}'}"
+                                               TextColor="Black"
+                                               IsVisible="{Binding SumKPI, Converter={StaticResource intToBoolConverter}}"
+                                               AutomationProperties.IsInAccessibleTree="False"
+                                               AutomationProperties.Name="Total KPI" />
+                                    </StackLayout>
                                 </Frame>
-                            </DataTemplate>
-                        </local_ctrls:TallyPopulationTemplateSelector.TallyTemplate>
-                    </local_ctrls:TallyPopulationTemplateSelector>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 

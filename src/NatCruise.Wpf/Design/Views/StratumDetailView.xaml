@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:dsgn="clr-namespace:NatCruise.Design;assembly=NatCruise.Design"
+             xmlns:dsgn="clr-namespace:NatCruise.Design"
              xmlns:ctrls="clr-namespace:NatCruise.Wpf.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Tag="Stratum Details"
@@ -95,7 +95,7 @@
             <StackPanel>
 
                 <!-- baf -->
-                <ctrls:LastChildWidthPanel Visibility="{Binding IsVariableRariousePlot, Converter={StaticResource IsVisableConverter}}">
+                <ctrls:LastChildWidthPanel Visibility="{Binding IsVariableRadiusPlot, Converter={StaticResource IsVisableConverter}}">
                     <TextBlock Text="BAF*" />
                     <TextBox ToolTip="Basal Area Factor"
                              Text="{Binding BasalAreaFactor}"

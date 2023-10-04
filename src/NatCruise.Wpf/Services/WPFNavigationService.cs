@@ -1,5 +1,4 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
-using NatCruise.Design.Services;
 using NatCruise.Design.Views;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
@@ -7,7 +6,6 @@ using NatCruise.Wpf.FieldData.Views;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Views;
 using Prism.Regions;
-using Prism.Services.Dialogs;
 using System;
 using System.Threading.Tasks;
 
@@ -220,7 +218,7 @@ namespace NatCruise.Wpf.Services
             throw new NotImplementedException();
         }
 
-        public Task ShowStratumDetail(string stratumCode)
+        public Task ShowStratumInfo(string stratumCode)
         {
             throw new NotImplementedException();
         }
@@ -251,6 +249,11 @@ namespace NatCruise.Wpf.Services
         }
 
         public Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowTallyPopulationInfo(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
         {
             throw new NotImplementedException();
         }

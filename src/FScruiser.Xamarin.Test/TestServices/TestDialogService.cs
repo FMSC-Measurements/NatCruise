@@ -1,5 +1,4 @@
-﻿using NatCruise.Cruise.Services;
-using NatCruise.Navigation;
+﻿using NatCruise.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -9,9 +9,13 @@ namespace NatCruise.Data
 
         string AddNewPlot(string cuttingUnitCode);
 
+        string AddNewPlot(string cuttingUnitCode, int plotNumber);
+
         Plot GetPlot(string plotID);
 
         Plot GetPlot(string cuttingUnitCode, int plotNumber);
+
+        IEnumerable<int> GetPlotNumbersOrdered(string cuttingUnitCode, string stratumCode = null);
 
         IEnumerable<Plot> GetPlotsByUnitCode(string unitCode);
 

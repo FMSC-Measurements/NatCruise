@@ -190,6 +190,8 @@ INSERT INTO TallyLedger (
             string countMeasure = "M", int treeCount = 1,
             int kpi = 0, bool stm = false)
         {
+            var treeNumber = GetNextPlotTreeNumber(unitCode, stratumCode, plotNumber);
+
             var tallyLedgerID = treeID;
 
             if(string.IsNullOrEmpty(liveDead))
@@ -274,6 +276,7 @@ INSERT INTO TallyLedger (
                     CruiseID,
                     TallyLedgerID = tallyLedgerID,
                     TreeID = treeID,
+                    TreeNumber = treeNumber,
                     CuttingUnitCode = unitCode,
                     PlotNumber = plotNumber,
                     StratumCode = stratumCode,

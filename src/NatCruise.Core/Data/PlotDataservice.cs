@@ -61,10 +61,18 @@ FROM Plot AS p
 
         public string AddNewPlot(string cuttingUnitCode)
         {
-            var plotID = Guid.NewGuid().ToString();
-
+            
             var plotNumber = GetNextPlotNumber(cuttingUnitCode);
+            return AddNewPlot(cuttingUnitCode, plotNumber);
 
+        }
+
+        public string AddNewPlot(string cuttingUnitCode, int plotNumber)
+        {
+            if (string.IsNullOrWhiteSpace(cuttingUnitCode)) { throw new ArgumentException($"'{nameof(cuttingUnitCode)}' cannot be blank.", nameof(cuttingUnitCode)); }
+            if (plotNumber <= 0) throw new ArgumentOutOfRangeException(nameof(plotNumber));
+
+            var plotID = Guid.NewGuid().ToString();
             Database.Execute2(
 $@"INSERT INTO Plot (
     PlotID,
@@ -127,6 +135,12 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
 @"WHERE (@p1 IS NULL OR CuttingUnitCode = @p1)
     AND CruiseID = @p2;"
                 , new object[] { unit, CruiseID });
+        }
+
+        public IEnumerable<int> GetPlotNumbersOrdered(string cuttingUnitCode, string stratumCode = null)
+        {
+            return Database.QueryScalar<int>("SELECT DISTINCT PlotNumber FROM Plot_Stratum WHERE CruiseID = @p1 AND CuttingUnitCode = @p2 AND (@p3 IS NULL OR StratumCode = @p3) ORDER BY PlotNumber;"
+                , CruiseID, cuttingUnitCode, stratumCode);
         }
 
         public void UpdatePlot(Plot plot)

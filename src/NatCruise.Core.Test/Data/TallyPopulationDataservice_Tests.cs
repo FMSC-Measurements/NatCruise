@@ -849,7 +849,7 @@ namespace NatCruise.Test.Data
 
 
 
-        private static void VerifyTallyPopulation(Models.TallyPopulationEx result, string species = null)
+        private static void VerifyTallyPopulation(Models.TallyPopulation result, string species = null)
         {
             if (species != null)
             {
@@ -860,6 +860,47 @@ namespace NatCruise.Test.Data
             result.StratumCode.Should().NotBeNullOrEmpty();
 
             result.Frequency.Should().BeGreaterThan(0);
+        }
+
+
+        [Fact]
+        public void GetTreeCount_Plot()
+        {
+            var init = new DatastoreInitializer();
+
+            var unit = "u1";
+            var stratum = init.PlotStrata[0].StratumCode;
+            var sg = "sg1";
+            var sp = "sp1";
+            var ld = "L";
+
+            var db = init.CreateDatabase();
+            var tpDs = new TallyPopulationDataservice(db, init.CruiseID, init.DeviceID);
+            var plotDs = new PlotDataservice(db, init.CruiseID, init.DeviceID);
+            var treeDs = new PlotTreeDataservice(db, init.CruiseID, init.DeviceID, new SamplerStateDataservice(db, init.CruiseID, init.DeviceID));
+
+
+            var plot = plotDs.GetPlot(plotDs.AddNewPlot(unit));
+
+            var tallyPop = tpDs.GetPlotTallyPopulation(unit, plot.PlotNumber, stratum, sg, sp, ld);
+
+            tpDs.GetTreeCount(tallyPop, plot.PlotNumber).Should().Be(0);
+            treeDs.CreatePlotTree(unit, plot.PlotNumber, stratum, sg, sp, ld);
+            tpDs.GetTreeCount(tallyPop, plot.PlotNumber).Should().Be(1);
+
+            var plot2 = plotDs.GetPlot(plotDs.AddNewPlot(unit));
+
+            // validate counts across plots
+            tpDs.GetTreeCount(tallyPop, plot2.PlotNumber).Should().Be(0, "check plot 2 initial state");
+            treeDs.CreatePlotTree(unit, plot2.PlotNumber, stratum, sg, sp, ld);
+            tpDs.GetTreeCount(tallyPop, plot2.PlotNumber).Should().Be(1, "check plot 2");
+            tpDs.GetTreeCount(tallyPop, plot.PlotNumber).Should().Be(1, "check plot 1 again");
+
+            // validate counts across a tally population
+            var tallyPop2 = tpDs.GetPlotTallyPopulation(unit, plot.PlotNumber, stratum, sg, "sp2", ld);
+            tpDs.GetTreeCount(tallyPop2, plot2.PlotNumber).Should().Be(0, "check plot 2 tally pop 2 initial state");
+            treeDs.CreatePlotTree(unit, plot2.PlotNumber, stratum, sg, tallyPop2.SpeciesCode, ld);
+            tpDs.GetTreeCount(tallyPop2, plot2.PlotNumber).Should().Be(1, "check plot 2 tally pop 2 after");
         }
     }
 }

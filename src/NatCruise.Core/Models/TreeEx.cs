@@ -210,6 +210,8 @@
 
         public int KPI { get; set; }
 
+        public bool STM { get; set; }
+
         public int ErrorCount
         {
             get => _errorCount;

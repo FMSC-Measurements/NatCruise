@@ -1,15 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using NatCruise.Async;
-using NatCruise.Cruise.Services;
 using NatCruise.Data;
+using NatCruise.Logic;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
-using Prism.Commands;
 using Prism.Common;
 using Prism.Ioc;
 using System;
@@ -222,7 +222,6 @@ namespace FScruiser.XF.ViewModels
                         }
                     });
 
-
                 SetProperty(ref _plot, value);
                 OnPropertyChanged(nameof(PlotNumber));
                 OnPropertyChanged(nameof(Title));
@@ -321,7 +320,6 @@ namespace FScruiser.XF.ViewModels
             SelectedTree = tree;
         }
 
-
         protected override void Load(IParameters parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
@@ -368,7 +366,7 @@ namespace FScruiser.XF.ViewModels
             {
                 Trees.Result.Add(tree);
             }
-            
+
             pop.PlotTreeCount++;
             pop.TreeCount++;
 

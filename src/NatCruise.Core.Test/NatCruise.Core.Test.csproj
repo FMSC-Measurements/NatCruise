@@ -21,7 +21,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\NatCruise.Core\NatCruise.Core.csproj" />
-		<ProjectReference Include="..\NatCruise.Cruise\NatCruise.Cruise.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
