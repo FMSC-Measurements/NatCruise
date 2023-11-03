@@ -2,7 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     x:Class="NatCruise.Wpf.Images">
     <!--https://docs.microsoft.com/en-us/dotnet/framework/wpf/app-development/pack-uris-in-wpf-->
-    <BitmapImage  x:Key="image_appIcon" UriSource="pack://application:,,,/Resources/cruisetree_setup.ico" />
+    <BitmapImage  x:Key="image_appIcon"
+                  UriSource="pack://application:,,,/Resources/cruisetree_setup.ico" />
     <BitmapImage  x:Key="image_wallpaper"
                   UriSource="pack://application:,,,/Resources/logs.jpg" />
+
+    <BitmapImage x:Key="image_usda_color"
+                 UriSource="pack://application:,,,/Resources/usda_color.png" />
+    <BitmapImage x:Key="image_fs_color"
+                 UriSource="pack://application:,,,/Resources/FS_color.png" />
 </ResourceDictionary>

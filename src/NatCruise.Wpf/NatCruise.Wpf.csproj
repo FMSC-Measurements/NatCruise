@@ -26,6 +26,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Resource Include="Resources\*.png"/>
+		
 		<Resource Include="Resources\cruisetree_setup.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Resource>
