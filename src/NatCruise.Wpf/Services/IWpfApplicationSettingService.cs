@@ -8,5 +8,7 @@ namespace NatCruise.Wpf.Services
         string LastOpenTemplateDir { get; set; }
         string DefaultOpenCruiseDir { get; }
         string DefaultOpenTemplateDir { get; }
+
+        bool IsSuperuserMode { get; set; }
     }
 }

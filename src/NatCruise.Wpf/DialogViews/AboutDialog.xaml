@@ -1,0 +1,93 @@
+﻿<mah_dialogs:CustomDialog x:Class="NatCruise.Wpf.DialogViews.AboutDialog"
+                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:mah_dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                          xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                          xmlns:local="clr-namespace:NatCruise.Wpf.DialogViews"
+                          mc:Ignorable="d"
+                          d:DesignHeight="450"
+                          d:DesignWidth="800"
+                          Title="About">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ContentPresenter x:Name="PART_Top"
+                          Grid.Row="0"
+                          AutomationProperties.Name="Dialog top"
+                          Content="{Binding DialogTop}"
+                          d:Content="Dialog Top"
+                          SnapsToDevicePixels="{Binding SnapsToDevicePixels}" />
+
+        <Grid x:Name="PART_Content"
+              Grid.Row="1"
+              Margin="0 10 0 0"
+              HorizontalAlignment="{Binding HorizontalContentAlignment}"
+              VerticalAlignment="{Binding VerticalContentAlignment}"
+              AutomationProperties.Name="Dialog content"
+              SnapsToDevicePixels="{Binding SnapsToDevicePixels}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" MinHeight="150">
+                <mah:MetroHeader Header="Version">
+                    <TextBlock Text="{Binding Version}"
+                               d:Text="0.0.0.0" />
+                </mah:MetroHeader>
+            </StackPanel>
+
+
+            <Button x:Name="logoPanel"
+                    Grid.Row="1"
+                    Command="{Binding LogoClickedCommand}"
+                    Click="logoPanel_Click">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Grid Height="59">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0"
+                                   Source="{StaticResource image_usda_color}" />
+                            <Image Grid.Column="1"
+                                   Source="{StaticResource image_fs_color}" />
+                        </Grid>
+                    </ControlTemplate>
+
+                </Button.Template>
+            </Button>
+
+            <TextBlock Grid.Row="2"
+                       Background="{StaticResource MahApps.Brushes.Badged.Background}"
+                       Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
+                       Text="Superuser Mode Enabled"
+                       mah:VisibilityHelper.IsVisible="{Binding IsSuperuserModeEnabled}"
+                       d:Visibility="Visible" />
+
+
+        </Grid>
+
+        <StackPanel x:Name="PART_Bottom"
+                    Grid.Row="2"
+                    Orientation="Horizontal"
+                    AutomationProperties.Name="Dialog bottom"
+                    SnapsToDevicePixels="{Binding SnapsToDevicePixels}"
+                    HorizontalAlignment="Right">
+            <Button x:Name="_closeButton"
+                    Content="Close"
+                    Command="{Binding CloseCommand}"
+                    Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
+                    Margin="3,2" />
+        </StackPanel>
+    </Grid>
+</mah_dialogs:CustomDialog>

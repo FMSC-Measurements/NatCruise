@@ -29,6 +29,7 @@ namespace NatCruise.Wpf.ViewModels
         private ICommand _createNewTemplateCommand;
         private ICommand _shutdownCommand;
         private ICommand _showCombineFiles;
+        private DelegateCommand _showAboutCommand;
 
         public MainWindowViewModel(
             IAppService appService,
@@ -87,6 +88,7 @@ namespace NatCruise.Wpf.ViewModels
         public ICommand OpenFileCommand => _openFileCommand ??= new DelegateCommand<string>((path) => OpenFile(path).FireAndForget());
         public ICommand OpenFileInfoCommand => _openFileCommand ??= new DelegateCommand<FileInfo>((fi) => OpenFile(fi).FireAndForget());
         public ICommand SelectFileCommand => _selectFileCommand ??= new DelegateCommand(() => SelectFile().FireAndForget());
+        public ICommand ShowAboutCommand => _showAboutCommand ??= new DelegateCommand(() => NavigationService.ShowAbout().FireAndForget());
         public ICommand ShutdownCommand => _shutdownCommand ??= new DelegateCommand(() => AppService.Shutdown());
 
         public ICommand ShowCombineFiles => _showCombineFiles ??= new DelegateCommand(() => NavigationService.ShowCombineFile().FireAndForget());
