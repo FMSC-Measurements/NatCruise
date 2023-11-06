@@ -3,8 +3,10 @@ using NatCruise.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.Wpf.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace NatCruise.Design.ViewModels
@@ -17,18 +19,55 @@ namespace NatCruise.Design.ViewModels
         private SampleGroup _sampleGroup;
         private IEnumerable<Product> _productOptions;
         private bool _hasFieldData;
+        private IWpfApplicationSettingService _appSettings;
+        private bool _isSuperuserModeEnabled;
 
-        public SampleGroupDetailViewModel(ISampleGroupDataservice sampleGroupDataservice, ISetupInfoDataservice setupInfo, SampleGroupValidator validator)
+        public SampleGroupDetailViewModel(ISampleGroupDataservice sampleGroupDataservice,
+            ISetupInfoDataservice setupInfo,
+            IWpfApplicationSettingService applicationSettingService,
+            SampleGroupValidator validator)
             : base(validator)
         {
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
             SetupDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
+
+            AppSettings = applicationSettingService ?? throw new ArgumentNullException(nameof(applicationSettingService));
 
             ProductOptions = SetupDataservice.GetProducts();
         }
 
         public ISampleGroupDataservice SampleGroupDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
+        public IWpfApplicationSettingService AppSettings
+        {
+            get => _appSettings;
+            private set
+            {
+                if (_appSettings != null) { _appSettings.PropertyChanged -= AppSettings_PropertyChanged; }
+                _appSettings = value;
+                if (value != null)
+                {
+                    IsSuperuserModeEnabled = value.IsSuperuserMode;
+                    _appSettings.PropertyChanged += AppSettings_PropertyChanged;
+                }
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IWpfApplicationSettingService.IsSuperuserMode))
+            {
+                var appSettings = (IWpfApplicationSettingService)sender;
+                IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
+            }
+        }
+
+        public bool IsSuperuserModeEnabled
+        {
+            get => _isSuperuserModeEnabled;
+            set => SetProperty(ref _isSuperuserModeEnabled, value);
+        }
 
         public IEnumerable<string> SampleSelectorTypeOptions => SampleSelector_Type_Options;
 
@@ -188,6 +227,13 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 if (value < 0) { throw new ArgumentOutOfRangeException(nameof(SamplingFrequency)); }
+
+                var sg = SampleGroup;
+                if (sg.HasTrees && !IsSuperuserModeEnabled)
+                {
+                    return;
+                }
+
                 SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.SamplingFrequency = x);
                 SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
             }
@@ -198,6 +244,14 @@ namespace NatCruise.Design.ViewModels
             get => SampleGroup?.InsuranceFrequency ?? default(int);
             set
             {
+                if (value < 0) { throw new ArgumentOutOfRangeException(nameof(InsuranceFrequency)); }
+
+                var sg = SampleGroup;
+                if(sg.HasTrees && !IsSuperuserModeEnabled)
+                {
+                    return;
+                }
+
                 SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.InsuranceFrequency = x);
                 SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
             }
@@ -208,6 +262,14 @@ namespace NatCruise.Design.ViewModels
             get => SampleGroup?.KZ ?? default(int);
             set
             {
+                if (value < 0) { throw new ArgumentOutOfRangeException(nameof(KZ)); }
+
+                var sg = SampleGroup;
+                if (sg.HasTrees && !IsSuperuserModeEnabled)
+                {
+                    return;
+                }
+
                 SetPropertyAndValidate(SampleGroup, value, (sg, x) => sg.KZ = x);
                 SampleGroupDataservice.UpdateSampleGroup(SampleGroup);
             }

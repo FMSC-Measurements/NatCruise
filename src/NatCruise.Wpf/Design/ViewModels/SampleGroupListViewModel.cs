@@ -4,6 +4,7 @@ using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
+using NatCruise.Wpf.Services;
 using Prism.Commands;
 using System;
 using System.Collections.ObjectModel;
@@ -21,11 +22,16 @@ namespace NatCruise.Design.ViewModels
         private ObservableCollection<SampleGroup> _sampleGroups;
         private Stratum _stratum;
         private SampleGroup _selectedSampleGroup;
+        private IWpfApplicationSettingService _appSettings;
+        private bool _isSuperuserModeEnabled;
 
-        public SampleGroupListViewModel(ISampleGroupDataservice sampleGroupDataservice, INatCruiseDialogService dialogService)
+        public SampleGroupListViewModel(ISampleGroupDataservice sampleGroupDataservice,
+            IWpfApplicationSettingService applicationSettingService,
+            INatCruiseDialogService dialogService)
         {
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            AppSettings = applicationSettingService ?? throw new ArgumentNullException(nameof(applicationSettingService));
 
             SampleGroupValidator = new SampleGroupValidator();
         }
@@ -35,6 +41,37 @@ namespace NatCruise.Design.ViewModels
         protected ISampleGroupDataservice SampleGroupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
         public SampleGroupValidator SampleGroupValidator { get; }
+
+        public IWpfApplicationSettingService AppSettings
+        {
+            get => _appSettings;
+            private set
+            {
+                if (_appSettings != null) { _appSettings.PropertyChanged -= AppSettings_PropertyChanged; }
+                _appSettings = value;
+                if (value != null)
+                {
+                    IsSuperuserModeEnabled = value.IsSuperuserMode;
+                    _appSettings.PropertyChanged += AppSettings_PropertyChanged;
+                }
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IWpfApplicationSettingService.IsSuperuserMode))
+            {
+                var appSettings = (IWpfApplicationSettingService)sender;
+                IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
+            }
+        }
+
+        public bool IsSuperuserModeEnabled
+        {
+            get => _isSuperuserModeEnabled;
+            set => SetProperty(ref _isSuperuserModeEnabled, value);
+        }
 
         public ICommand AddSampleGroupCommand => _addSampleGroupCommand ??= new DelegateCommand<string>(AddSampleGroup);
         public ICommand RemoveSampleGroupCommand => _removeSampleGroupCommand ??= new DelegateCommand<SampleGroup>(RemoveSampleGroup);
@@ -148,6 +185,8 @@ namespace NatCruise.Design.ViewModels
         {
             if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
             var sampleGroups = SampleGroups;
+
+            if (sampleGroup.HasTrees && !IsSuperuserModeEnabled) { return; }
 
             SampleGroupDataservice.DeleteSampleGroup(sampleGroup);
             var index = sampleGroups.IndexOf(sampleGroup);

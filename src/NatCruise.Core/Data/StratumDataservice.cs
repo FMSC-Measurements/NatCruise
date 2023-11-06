@@ -19,10 +19,8 @@ namespace NatCruise.Data
         protected const string SELECT_STRATUM_CORE =
 @"SELECT
     Stratum.*,
-    (
-        EXISTS ( SELECT * FROM Plot_Stratum WHERE CruiseID = Stratum.CruiseID AND StratumCode = Stratum.StratumCode)
-        OR EXISTS ( SELECT * FROM Tree WHERE CruiseID = Stratum.CruiseID AND StratumCode = Stratum.StratumCode)
-    ) AS HasFieldData
+    ( EXISTS ( SELECT * FROM Tree WHERE CruiseID = Stratum.CruiseID AND StratumCode = Stratum.StratumCode))
+        AS HasTrees
 FROM Stratum
 ";
 

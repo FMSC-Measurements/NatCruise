@@ -150,7 +150,7 @@ namespace NatCruise.Models
 
 
         [Field(PersistanceFlags = PersistanceFlags.Never)]
-        public bool HasFieldData { get; set; }
+        public bool HasTrees { get; set; }
 
         //[Obsolete]
         //public string Method { get; set; }

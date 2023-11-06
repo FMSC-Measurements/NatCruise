@@ -8,6 +8,8 @@ namespace NatCruise.Wpf.Services
 {
     public class WpfApplicationSettingService : BindableBase, IWpfApplicationSettingService
     {
+        private bool _isSuperuserModeEnabled;
+
         public WpfApplicationSettingService()
         {
             var userDocumentsDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -66,7 +68,11 @@ namespace NatCruise.Wpf.Services
         public bool UseNewLimitingDistanceCalculator { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public bool SelectPrevNextTreeSkipsCountTrees { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public bool IsSuperuserMode { get; set; }
+        public bool IsSuperuserMode
+        {
+            get => _isSuperuserModeEnabled;
+            set => SetProperty(ref _isSuperuserModeEnabled, value);
+        }
 
         public void Save()
         {

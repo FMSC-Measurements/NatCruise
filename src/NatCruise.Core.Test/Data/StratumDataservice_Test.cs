@@ -20,7 +20,7 @@ namespace NatCruise.Test.Data
     {
 
         [Fact]
-        public void DeleteStratum_WithFieldData()
+        public void DeleteStratum_WithTrees()
         {
             var init = new DatastoreInitializer();
 
@@ -85,8 +85,8 @@ namespace NatCruise.Test.Data
 
                 var results = datastore.GetStrata();
 
-                results.Where(s => s.StratumCode == "st1").Single().HasFieldData.Should().BeTrue();
-                results.Where(s => s.StratumCode != "st1").All(x => x.HasFieldData == false).Should().BeTrue();
+                results.Where(s => s.StratumCode == "st1").Single().HasTrees.Should().BeTrue();
+                results.Where(s => s.StratumCode != "st1").All(x => x.HasTrees == false).Should().BeTrue();
 
                 var stratum = results.Where(s => s.StratumCode == "st1").Single();
                 datastore.DeleteStratum(stratum);
@@ -189,7 +189,7 @@ namespace NatCruise.Test.Data
         }
 
         [Fact]
-        public void GetStrata_HasFieldData_With_Trees()
+        public void GetStrata_HasTrees_With_Trees()
         {
             var init = new DatastoreInitializer();
 
@@ -208,14 +208,16 @@ namespace NatCruise.Test.Data
 
                 var results = datastore.GetStrata();
 
-                results.Where(s => s.StratumCode == "st1").Single().HasFieldData.Should().BeTrue();
-                results.Where(s => s.StratumCode != "st1").All(x => x.HasFieldData == false).Should().BeTrue();
+                results.Where(s => s.StratumCode == "st1").Single().HasTrees.Should().BeTrue();
+                results.Where(s => s.StratumCode != "st1").All(x => x.HasTrees == false).Should().BeTrue();
                 results.All(x => !string.IsNullOrEmpty(x.StratumID)).Should().BeTrue();
             }
         }
 
+
+        //TODO: rewrite test for changes from HasFieldData to HasTrees
         [Fact]
-        public void GetStrata_HasFieldData_With_Plots()
+        public void GetStrata_HasTrees_With_PlotsAndTrees()
         {
             var init = new DatastoreInitializer();
 
@@ -252,8 +254,8 @@ namespace NatCruise.Test.Data
 
                 var results = datastore.GetStrata();
 
-                results.Where(s => s.StratumCode == "st1").Single().HasFieldData.Should().BeTrue();
-                results.Where(s => s.StratumCode != "st1").All(x => x.HasFieldData == false).Should().BeTrue();
+                results.Where(s => s.StratumCode == "st1").Single().HasTrees.Should().BeTrue();
+                results.Where(s => s.StratumCode != "st1").All(x => x.HasTrees == false).Should().BeTrue();
                 results.All(x => !string.IsNullOrEmpty(x.StratumID)).Should().BeTrue();
             }
         }

@@ -16,6 +16,15 @@ namespace NatCruise.Data
         {
         }
 
+        public const string SELECT_CUTTINGUNIT_CORE =
+@"SELECT
+    cu.*,
+    (
+        EXISTS ( SELECT * FROM Tree WHERE CruiseID = cu.CruiseID AND CuttingUnitCode = cu.CuttingUnitCode)
+    ) AS HasTrees
+FROM CuttingUnit AS cu
+";
+
         public void AddCuttingUnit(CuttingUnit unit)
         {
             unit.CuttingUnitID ??= Guid.NewGuid().ToString();
@@ -79,23 +88,36 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
 
         public CuttingUnit GetCuttingUnit(string unitCode)
         {
-            return Database.From<CuttingUnit>()
-                .Where("CuttingUnitCode = @p1 AND CruiseID = @p2")
-                .Query(unitCode, CruiseID).FirstOrDefault();
+            return Database.Query<CuttingUnit>(SELECT_CUTTINGUNIT_CORE +
+                "WHERE cu.CuttingUnitCode = @p1 AND cu.CruiseID = @p2;", unitCode, CruiseID)
+                .FirstOrDefault();
+
+            //return Database.From<CuttingUnit>()
+            //    .Where("CuttingUnitCode = @p1 AND CruiseID = @p2")
+            //    .Query(unitCode, CruiseID).FirstOrDefault();
         }
 
         public IEnumerable<CuttingUnit> GetCuttingUnits()
         {
-            return Database.From<CuttingUnit>()
-                .Where("CruiseID = @p1")
-                .Query(CruiseID).ToArray();
+            return Database.Query<CuttingUnit>(SELECT_CUTTINGUNIT_CORE +
+                "WHERE cu.CruiseID = @p1;", CruiseID).ToArray();
+
+
+            //return Database.From<CuttingUnit>()
+            //    .Where("CruiseID = @p1")
+            //    .Query(CruiseID).ToArray();
         }
 
         public IEnumerable<CuttingUnit> GetCuttingUnitsByStratum(string stratumCode)
         {
-            return Database.Query<CuttingUnit>("SELECT cu.* FROM CuttingUnit AS cu " +
+            return Database.Query<CuttingUnit>(SELECT_CUTTINGUNIT_CORE +
                 "JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID) " +
-                "WHERE cust.StratumCode = @p1 AND cu.CruiseID = @p2;", stratumCode, CruiseID).ToArray();
+                "WHERE cust.StratumCode = @p1 AND cu.CruiseID = @p2;", stratumCode, CruiseID)
+                .ToArray();
+
+            //return Database.Query<CuttingUnit>("SELECT cu.* FROM CuttingUnit AS cu " +
+            //    "JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID) " +
+            //    "WHERE cust.StratumCode = @p1 AND cu.CruiseID = @p2;", stratumCode, CruiseID).ToArray();
         }
 
         public CuttingUnitStrataSummary GetCuttingUnitStrataSummary(string unitCode)

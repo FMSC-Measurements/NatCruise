@@ -1,4 +1,5 @@
 ﻿using NatCruise.Services;
+using System.ComponentModel;
 
 namespace NatCruise.Wpf.Services
 {

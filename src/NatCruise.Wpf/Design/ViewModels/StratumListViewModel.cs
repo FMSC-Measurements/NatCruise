@@ -4,6 +4,7 @@ using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
+using NatCruise.Wpf.Services;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -25,14 +26,22 @@ namespace NatCruise.Design.ViewModels
         private Stratum _selectedStratum;
         private IEnumerable<StratumTemplate> _stratumTemplateOptions;
         private StratumTemplate _selectedStratumTemplate;
+        private IWpfApplicationSettingService _appSettings;
+        private bool _isSuperuserModeEnabled;
 
-        public StratumListViewModel(IStratumDataservice stratumDataservice, IStratumTemplateDataservice stratumTemplateDataservice, IFieldSetupDataservice fieldSetupDataservice, ISaleDataservice saleDataservice, INatCruiseDialogService dialogService)
+        public StratumListViewModel(IStratumDataservice stratumDataservice,
+            IStratumTemplateDataservice stratumTemplateDataservice,
+            IFieldSetupDataservice fieldSetupDataservice,
+            ISaleDataservice saleDataservice,
+            IWpfApplicationSettingService applicationSettingService,
+            INatCruiseDialogService dialogService)
         {
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
             StratumTemplateDataservice = stratumTemplateDataservice ?? throw new ArgumentNullException(nameof(stratumTemplateDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
+            AppSettings = applicationSettingService ?? throw new ArgumentNullException(nameof(applicationSettingService));
 
             StratumValidator = new StratumValidator();
         }
@@ -45,6 +54,37 @@ namespace NatCruise.Design.ViewModels
         public INatCruiseDialogService DialogService { get; }
         public ISaleDataservice SaleDataservice { get; }
         public StratumValidator StratumValidator { get; }
+
+        public IWpfApplicationSettingService AppSettings
+        {
+            get => _appSettings;
+            private set
+            {
+                if (_appSettings != null) { _appSettings.PropertyChanged -= AppSettings_PropertyChanged; }
+                _appSettings = value;
+                if (value != null)
+                {
+                    IsSuperuserModeEnabled = value.IsSuperuserMode;
+                    _appSettings.PropertyChanged += AppSettings_PropertyChanged;
+                }
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IWpfApplicationSettingService.IsSuperuserMode))
+            {
+                var appSettings = (IWpfApplicationSettingService)sender;
+                IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
+            }
+        }
+
+        public bool IsSuperuserModeEnabled
+        {
+            get => _isSuperuserModeEnabled;
+            set => SetProperty(ref _isSuperuserModeEnabled, value);
+        }
 
         public ObservableCollection<Stratum> Strata
         {
@@ -180,7 +220,7 @@ namespace NatCruise.Design.ViewModels
         public void RemoveStratum(Stratum stratum)
         {
             if (stratum is null) { throw new System.ArgumentNullException(nameof(stratum)); }
-            if (stratum.HasFieldData) { return; }
+            if (stratum.HasTrees && !IsSuperuserModeEnabled) { return; }
 
             var strata = Strata;
             StratumDataservice.DeleteStratum(stratum);

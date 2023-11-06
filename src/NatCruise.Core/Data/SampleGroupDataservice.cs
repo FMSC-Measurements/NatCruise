@@ -24,7 +24,7 @@ namespace NatCruise.Data
     st.Method AS CruiseMethod,
     (
         EXISTS ( SELECT * FROM Tree WHERE CruiseID = sg.CruiseID AND StratumCode = sg.StratumCode AND SampleGroupCode = sg.SampleGroupCode)
-    ) AS HasFieldData
+    ) AS HasTrees
 FROM SampleGroup AS sg
 JOIN Stratum AS st USING (StratumCode, CruiseID)
 ";
