@@ -154,7 +154,7 @@
                 </ComboBox>
             </ctrls:LastChildWidthPanel>
 
-            <ctrls:LastChildWidthPanel IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}">
+            <ctrls:LastChildWidthPanel IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}">
                 <CheckBox Content="Tally By Species"
                           ToolTip="Tally By Species"
                           IsChecked="{Binding TallyBySubPop}"
@@ -180,8 +180,8 @@
                     <TextBox Text="{Binding SamplingFrequency}"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
-                             IsReadOnly="{Binding SampleGroup.HasFieldData}"
-                             IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
+                             IsReadOnly="{Binding IsLocked}"
+                             IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -190,8 +190,8 @@
                     <TextBox Text="{Binding InsuranceFrequency}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
-                             IsReadOnly="{Binding SampleGroup.HasFieldData}"
-                             IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
+                             IsReadOnly="{Binding IsLocked}"
+                             IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -199,8 +199,8 @@
                     <Label Content="Sample Selector Type" />
                     <ComboBox ItemsSource="{Binding SampleSelectorTypeOptions}"
                               SelectedItem="{Binding SampleSelectorType}"
-                              IsReadOnly="{Binding SampleGroup.HasFieldData}"
-                              IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
+                              IsReadOnly="{Binding IsLocked}"
+                              IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -223,8 +223,8 @@
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              ToolTip="KZ"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
-                             IsReadOnly="{Binding SampleGroup.HasFieldData}"
-                             IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
+                             IsReadOnly="{Binding IsLocked}"
+                             IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
@@ -234,8 +234,8 @@
                              Text="{Binding InsuranceFrequency}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
-                             IsReadOnly="{Binding SampleGroup.HasFieldData}"
-                             IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
+                             IsReadOnly="{Binding IsLocked}"
+                             IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
@@ -275,8 +275,8 @@
                          ToolTip="Big BAF"
                          Grid.Column="1"
                          ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
-                         IsReadOnly="{Binding SampleGroup.HasFieldData}"
-                         IsEnabled="{Binding SampleGroup.HasFieldData, Converter={StaticResource NotConverter}}" />
+                         IsReadOnly="{Binding IsLocked}"
+                         IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}" />
             </Grid>
         </GroupBox>
     </WrapPanel>
