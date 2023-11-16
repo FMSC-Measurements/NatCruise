@@ -86,7 +86,7 @@
                                         BackgroundColor="Transparent"
                                         Text="{Static const:FAIcons.EllipsisVertical}"
                                         FontFamily="{Static const:Fonts.FAsolid}"
-                                        IsEnabled="{Binding HasFieldData, Converter={StaticResource invertedBoolConverter}}"
+                                        IsEnabled="{Binding HasTrees, Converter={StaticResource invertedBoolConverter}}"
                                         Clicked="subpopulationItemMenu_clicked"
                                         AutomationProperties.IsInAccessibleTree="True"
                                         AutomationProperties.Name="Show Actions Item" />

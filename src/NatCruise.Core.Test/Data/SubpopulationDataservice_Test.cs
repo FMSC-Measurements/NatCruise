@@ -143,12 +143,12 @@ namespace NatCruise.Test.Data
             var subpopAgain = subpopsAgain.Single();
 
             subpopAgain.Should().BeEquivalentTo(newSubpop);
-            subpopAgain.HasFieldData.Should().BeFalse();
+            subpopAgain.HasTrees.Should().BeFalse();
         }
 
 
         [Fact]
-        public void GetSubpopulations_WithFieldData()
+        public void GetSubpopulations_WithTreeData()
         {
             var init = new DatastoreInitializer();
             init.Subpops = new CruiseDAL.V3.Models.SubPopulation[0];
@@ -177,9 +177,9 @@ namespace NatCruise.Test.Data
             var subpopAgain = subpopsAgain.Single();
 
             subpopAgain.Should().BeEquivalentTo(newSubpop,
-                config: opt => opt.Excluding(x => x.HasFieldData));
+                config: opt => opt.Excluding(x => x.HasTrees));
 
-            subpopAgain.HasFieldData.Should().BeTrue();
+            subpopAgain.HasTrees.Should().BeTrue();
         }
     }
 }

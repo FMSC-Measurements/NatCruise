@@ -162,7 +162,7 @@ namespace NatCruise.Wpf
 
             // register other services
             containerRegistry.RegisterInstance<IAppService>(this);
-            containerRegistry.RegisterSingleton<IWpfApplicationSettingService, WpfApplicationSettingService>();
+            containerRegistry.RegisterManySingleton<WpfApplicationSettingService>(typeof(IWpfApplicationSettingService), typeof(IApplicationSettingService));
             containerRegistry.Register<INatCruiseDialogService, WpfDialogService>();
             containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();
             containerRegistry.Register<INatCruiseNavigationService, WPFNavigationService>();

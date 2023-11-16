@@ -4,6 +4,7 @@ using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
+using NatCruise.Services;
 using NatCruise.Wpf.Services;
 using Prism.Commands;
 using System;
@@ -26,14 +27,14 @@ namespace NatCruise.Design.ViewModels
         private Stratum _selectedStratum;
         private IEnumerable<StratumTemplate> _stratumTemplateOptions;
         private StratumTemplate _selectedStratumTemplate;
-        private IWpfApplicationSettingService _appSettings;
+        private IApplicationSettingService _appSettings;
         private bool _isSuperuserModeEnabled;
 
         public StratumListViewModel(IStratumDataservice stratumDataservice,
             IStratumTemplateDataservice stratumTemplateDataservice,
             IFieldSetupDataservice fieldSetupDataservice,
             ISaleDataservice saleDataservice,
-            IWpfApplicationSettingService applicationSettingService,
+            IApplicationSettingService applicationSettingService,
             INatCruiseDialogService dialogService)
         {
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
@@ -55,7 +56,7 @@ namespace NatCruise.Design.ViewModels
         public ISaleDataservice SaleDataservice { get; }
         public StratumValidator StratumValidator { get; }
 
-        public IWpfApplicationSettingService AppSettings
+        public IApplicationSettingService AppSettings
         {
             get => _appSettings;
             private set

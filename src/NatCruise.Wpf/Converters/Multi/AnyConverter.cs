@@ -6,11 +6,11 @@ using System.Windows.Data;
 
 namespace NatCruise.Wpf.Converters.Multi
 {
-    public class AllConverter : BooleanMultiConverterBase
+    public class AnyConverter : BooleanMultiConverterBase
     {
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = values.Select(x => (x == null || x == DependencyProperty.UnsetValue) ? DefaultValue : (bool)x).All(x => x);
+            var result = values.Select(x => (x == null || x == DependencyProperty.UnsetValue) ? DefaultValue : (bool)x).Any(x => x);
             return GetValueForResult(result);
         }
     }

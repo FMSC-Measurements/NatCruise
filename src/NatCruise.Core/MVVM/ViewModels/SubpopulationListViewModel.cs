@@ -1,16 +1,13 @@
-﻿using CruiseDAL.Schema;
-using NatCruise.Data;
+﻿using NatCruise.Data;
 using NatCruise.Models;
-using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Commands;
-using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 
 namespace NatCruise.MVVM.ViewModels
@@ -24,12 +21,20 @@ namespace NatCruise.MVVM.ViewModels
         private DelegateCommand<Subpopulation> _removeSubpopulationCommand;
         private ObservableCollection<Subpopulation> _subPopulations;
         private IEnumerable<string> _speciesOptions;
+        private IApplicationSettingService _appSettings;
+        private bool _isSuperuserModeEnabled;
+        private bool _isLocked;
 
-        public SubpopulationListViewModel(ISpeciesDataservice speciesDataservice, ISampleGroupDataservice sampleGroupDataservice, ISubpopulationDataservice subpopulationDataservice, INatCruiseDialogService dialogService)
+        public SubpopulationListViewModel(ISpeciesDataservice speciesDataservice,
+            ISampleGroupDataservice sampleGroupDataservice,
+            ISubpopulationDataservice subpopulationDataservice,
+            IApplicationSettingService applicationSettingService,
+            INatCruiseDialogService dialogService)
         {
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
             SubpopulationDataservice = subpopulationDataservice ?? throw new ArgumentNullException(nameof(subpopulationDataservice));
             SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(subpopulationDataservice));
+            AppSettings = applicationSettingService ?? throw new ArgumentNullException(nameof(applicationSettingService));
 
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
@@ -41,6 +46,47 @@ namespace NatCruise.MVVM.ViewModels
         protected ISubpopulationDataservice SubpopulationDataservice { get; }
 
         protected INatCruiseDialogService DialogService { get; }
+
+        public IApplicationSettingService AppSettings
+        {
+            get => _appSettings;
+            private set
+            {
+                if (_appSettings != null) { _appSettings.PropertyChanged -= AppSettings_PropertyChanged; }
+                _appSettings = value;
+                if (value != null)
+                {
+                    IsSuperuserModeEnabled = value.IsSuperuserMode;
+                    _appSettings.PropertyChanged += AppSettings_PropertyChanged;
+                }
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IApplicationSettingService.IsSuperuserMode))
+            {
+                var appSettings = (IApplicationSettingService)sender;
+                IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
+            }
+        }
+
+        public bool IsSuperuserModeEnabled
+        {
+            get => _isSuperuserModeEnabled;
+            set
+            {
+                SetProperty(ref _isSuperuserModeEnabled, value);
+                IsLocked = (SampleGroup?.HasTrees ?? false) && !value;
+            }
+        }
+
+        public bool IsLocked
+        {
+            get => _isLocked;
+            set => SetProperty(ref _isLocked, value);
+        }
 
         public IEnumerable<string> LiveDeadOptions { get; } = new[] { "Default", "L", "D" };
 
@@ -94,9 +140,9 @@ namespace NatCruise.MVVM.ViewModels
         {
             var subpopulation = (Subpopulation)sender;
 
-            if(subpopulation.HasFieldData)
+            if (subpopulation.HasTrees)
             {
-                throw new InvalidOperationException("Can Not Edit Subpopulation That Has Field Data");
+                throw new InvalidOperationException("Can Not Edit Subpopulation That Has Tree Data");
             }
 
             var propertyName = e.PropertyName;
@@ -211,7 +257,7 @@ namespace NatCruise.MVVM.ViewModels
 
         public void RemoveSubpopulation(Subpopulation subpopulation)
         {
-            if (subpopulation.HasFieldData || SubpopulationDataservice.HasTreeCounts(subpopulation.StratumCode, subpopulation.SampleGroupCode, subpopulation.SpeciesCode, subpopulation.LiveDead))
+            if (subpopulation.HasTrees)
             {
                 DialogService.ShowNotification($"Subpopulation: {subpopulation.SpeciesCode}|{subpopulation.LiveDead} has field data can can't be removed");
                 //NotificationRequest.Raise(new Notification { Content = $"Subpopulation: {subpopulation.Species}|{subpopulation.LiveDead} has tally data can can't be removed", Title = "!" });

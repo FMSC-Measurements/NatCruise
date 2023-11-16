@@ -3,6 +3,7 @@ using NatCruise.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.Services;
 using NatCruise.Wpf.Services;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,13 @@ namespace NatCruise.Design.ViewModels
 
         private SampleGroup _sampleGroup;
         private IEnumerable<Product> _productOptions;
-        private bool _hasFieldData;
-        private IWpfApplicationSettingService _appSettings;
+        private IApplicationSettingService _appSettings;
         private bool _isSuperuserModeEnabled;
+        private bool _isLocked;
 
         public SampleGroupDetailViewModel(ISampleGroupDataservice sampleGroupDataservice,
             ISetupInfoDataservice setupInfo,
-            IWpfApplicationSettingService applicationSettingService,
+            IApplicationSettingService applicationSettingService,
             SampleGroupValidator validator)
             : base(validator)
         {
@@ -38,7 +39,7 @@ namespace NatCruise.Design.ViewModels
 
         public ISampleGroupDataservice SampleGroupDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
-        public IWpfApplicationSettingService AppSettings
+        public IApplicationSettingService AppSettings
         {
             get => _appSettings;
             private set
@@ -56,9 +57,9 @@ namespace NatCruise.Design.ViewModels
 
         private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(IWpfApplicationSettingService.IsSuperuserMode))
+            if (e.PropertyName == nameof(IApplicationSettingService.IsSuperuserMode))
             {
-                var appSettings = (IWpfApplicationSettingService)sender;
+                var appSettings = (IApplicationSettingService)sender;
                 IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
             }
         }
@@ -66,7 +67,17 @@ namespace NatCruise.Design.ViewModels
         public bool IsSuperuserModeEnabled
         {
             get => _isSuperuserModeEnabled;
-            set => SetProperty(ref _isSuperuserModeEnabled, value);
+            set
+            {
+                SetProperty(ref _isSuperuserModeEnabled, value);
+                IsLocked = (SampleGroup?.HasTrees ?? false) && !value;
+            }
+        }
+
+        public bool IsLocked
+        {
+            get => _isLocked;
+            set => SetProperty(ref _isLocked, value);
         }
 
         public IEnumerable<string> SampleSelectorTypeOptions => SampleSelector_Type_Options;
@@ -75,12 +86,6 @@ namespace NatCruise.Design.ViewModels
         {
             get => _productOptions;
             protected set => SetProperty(ref _productOptions, value);
-        }
-
-        public bool HasFieldData
-        {
-            get => _hasFieldData;
-            set => SetProperty(ref _hasFieldData, value);
         }
 
         public SampleGroup SampleGroup
@@ -120,7 +125,7 @@ namespace NatCruise.Design.ViewModels
             OnPropertyChanged(nameof(CruiseMethod));
             OnPropertyChanged(nameof(DefaultSampleSelectorType));
 
-            HasFieldData = SampleGroupDataservice.GetSampleGroupHasFieldData(newValue.StratumCode, newValue.SampleGroupCode);
+            IsLocked = (newValue?.HasTrees ?? false) && !IsSuperuserModeEnabled;
         }
 
         //private void SampleGroup_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

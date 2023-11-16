@@ -61,7 +61,7 @@ namespace NatCruise.Models
         }
 
         [Field(PersistanceFlags = PersistanceFlags.Never)]
-        public bool HasFieldData
+        public bool HasTrees
         {
             get;
             set;

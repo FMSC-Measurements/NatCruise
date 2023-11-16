@@ -259,5 +259,39 @@ namespace NatCruise.Test.Data
                 results.All(x => !string.IsNullOrEmpty(x.StratumID)).Should().BeTrue();
             }
         }
+
+        [Fact]
+        public void GetStratumUnitInfo()
+        {
+            var init = new DatastoreInitializer();
+
+            using var db = init.CreateDatabase();
+
+            var ds = new StratumDataservice(db, init.CruiseID, init.DeviceID);
+
+            var trees = new[]
+                {
+                    new Tree { CruiseID = init.CruiseID, TreeID = Guid.NewGuid().ToString(), TreeNumber = 1, CuttingUnitCode = "u1", StratumCode = "st1", SampleGroupCode = "sg1",  },
+                    new Tree { CruiseID = init.CruiseID, TreeID = Guid.NewGuid().ToString(), TreeNumber = 2, CuttingUnitCode = "u1", StratumCode = "st1", SampleGroupCode = "sg1",  },
+                };
+            foreach (var tree in trees)
+            { db.Insert(tree); }
+
+            foreach (var st in init.Strata)
+            {
+                var units = ds.GetStratumUnitInfo(st.StratumCode);
+                units.Should().NotBeNull();
+                units.Should().HaveCountGreaterThan(0);
+            }
+
+            var unitsSt1 = ds.GetStratumUnitInfo("st1");
+            unitsSt1.Where(x => x.CuttingUnitCode == "u1").Single().HasTrees.Should().BeTrue();
+
+            var unitsSt2 = ds.GetStratumUnitInfo("st2");
+            unitsSt2.Any( x => x.HasTrees).Should().BeFalse();
+
+
+
+        }
     }
 }

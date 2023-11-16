@@ -143,6 +143,17 @@ FROM Stratum
             return Database.ExecuteScalar<string>("SELECT Method FROM Stratum WHERE StratumCode = @p1 AND CruiseID = @p2;", stratumCode, CruiseID);
         }
 
+        public IEnumerable<StratumCuttingUnitInfo> GetStratumUnitInfo(string stratumCode)
+        {
+            return Database.Query<StratumCuttingUnitInfo>(
+@"SELECT cust.*,
+(
+    EXISTS ( SELECT * FROM Tree WHERE CruiseID = cust.CruiseID AND StratumCode = cust.StratumCode)
+) AS HasTrees
+FROM CuttingUnit_Stratum as cust
+WHERE cust.CruiseID = @p1 AND cust.StratumCode = @p2;", CruiseID, stratumCode);
+        }
+
         public IEnumerable<string> GetStratumCodes(string cuttingUnitCode = null)
         {
             return Database.QueryScalar<string>(
@@ -253,6 +264,12 @@ WHERE StratumID = @StratumID;",
                 , unitCode, stratum, CruiseID);
 
             return numTrees > 0;
+        }
+
+        public bool HasTrees(string unitCode, string stratum)
+        {
+            return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND CruiseID = @p3;"
+                , unitCode, stratum, CruiseID) > 0;
         }
     }
 }

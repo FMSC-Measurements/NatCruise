@@ -3,6 +3,8 @@ using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
+using NatCruise.Services;
+using NatCruise.Wpf.Services;
 using Prism.Commands;
 using System;
 using System.Collections.ObjectModel;
@@ -19,11 +21,16 @@ namespace NatCruise.Design.ViewModels
         private DelegateCommand<string> _addCuttingUnitCommand;
         private ObservableCollection<CuttingUnit> _cuttingUnits;
         private CuttingUnit _selectedUnit;
+        private IApplicationSettingService _appSettings;
+        private bool _isSuperuserModeEnabled;
 
-        public CuttingUnitListViewModel(ICuttingUnitDataservice unitDataservice, INatCruiseDialogService dialogService)
+        public CuttingUnitListViewModel(ICuttingUnitDataservice unitDataservice,
+            INatCruiseDialogService dialogService,
+            IApplicationSettingService applicationSettingService)
         {
             UnitDataservice = unitDataservice ?? throw new ArgumentNullException(nameof(unitDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            AppSettings = applicationSettingService ?? throw new ArgumentNullException(nameof(applicationSettingService));
 
             CuttingUnitValidator = new CuttingUnitValidator();
         }
@@ -32,6 +39,38 @@ namespace NatCruise.Design.ViewModels
 
         private ICuttingUnitDataservice UnitDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
+
+        public IApplicationSettingService AppSettings
+        {
+            get => _appSettings;
+            private set
+            {
+                if (_appSettings != null) { _appSettings.PropertyChanged -= AppSettings_PropertyChanged; }
+                _appSettings = value;
+                if (value != null)
+                {
+                    IsSuperuserModeEnabled = value.IsSuperuserMode;
+                    _appSettings.PropertyChanged += AppSettings_PropertyChanged;
+                }
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IWpfApplicationSettingService.IsSuperuserMode))
+            {
+                var appSettings = (IWpfApplicationSettingService)sender;
+                IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
+            }
+        }
+
+        public bool IsSuperuserModeEnabled
+        {
+            get => _isSuperuserModeEnabled;
+            set => SetProperty(ref _isSuperuserModeEnabled, value);
+        }
+
         public CuttingUnitValidator CuttingUnitValidator { get; }
 
         public ObservableCollection<CuttingUnit> CuttingUnits
@@ -124,6 +163,8 @@ namespace NatCruise.Design.ViewModels
         {
             if (unit == null) { return; }
             var cuttingUnits = CuttingUnits;
+
+            if(unit.HasTrees && !IsSuperuserModeEnabled) { return; }
 
             UnitDataservice.DeleteCuttingUnit(unit);
             var index = cuttingUnits.IndexOf(unit);
