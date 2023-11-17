@@ -90,7 +90,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public void AddPlot(int? plotNumber)
         {
-            if (plotNumber == null || plotNumber < 0) { return; }
+            if (plotNumber < 0) { return; }
 
             var unitCode = CuttingUnitCode;
             if (string.IsNullOrEmpty(unitCode))
