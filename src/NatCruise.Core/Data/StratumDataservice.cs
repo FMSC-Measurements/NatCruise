@@ -195,12 +195,9 @@ WHERE cust.CruiseID = @p1 AND cust.StratumCode = @p2;", CruiseID, stratumCode);
 
         public void RemoveStratumFromCuttingUnit(string cuttingUnitCode, string stratumCode)
         {
-            bool force = false;
+            Database.Execute("DELETE FROM CuttingUnit_Stratum WHERE CruiseID = @p1 AND CuttingUnitCode = @p2 AND StratumCode = @p3;", CruiseID, cuttingUnitCode, stratumCode);
 
-            if (force || !HasTreeCounts(cuttingUnitCode, stratumCode))
-            {
-                Database.Execute("DELETE FROM CuttingUnit_Stratum WHERE CuttingUnitCode = @p1 AND StratumCode = @p2;", cuttingUnitCode, stratumCode);
-            }
+            Database.Execute("DELETE FROM Plot_Stratum WHERE CruiseID = @p1 AND CuttingUnitCode = @p2 AND StratumCode = @p3;", CruiseID, cuttingUnitCode, stratumCode);
         }
 
         public void UpdateStratum(Stratum stratum)
