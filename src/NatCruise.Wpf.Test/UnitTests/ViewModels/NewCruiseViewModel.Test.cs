@@ -1,11 +1,13 @@
 ﻿using CruiseDAL;
+using CruiseDAL.V3.Models;
 using Moq;
 using NatCruise.Data;
-using NatCruise.Models;
 using NatCruise.Services;
 using NatCruise.Test;
 using NatCruise.Wpf.ViewModels;
 using Xunit.Abstractions;
+
+using Purpose = NatCruise.Models.Purpose;
 
 namespace NatCruise.Wpf.Test.UnitTests.ViewModels
 {
@@ -70,6 +72,21 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
             vm.HasErrors.Should().BeFalse();
 
             File.Exists(cruisePath).Should().BeTrue();
+
+            ValidateTemplate(dataServiceProvider.Database);
+        }
+
+        protected void ValidateTemplate(CruiseDatastore db)
+        {
+            db.From<Species>().Count().Should().BeGreaterThan(0);
+            db.From<StratumTemplate>().Count().Should().BeGreaterThan(0);
+            db.From<Reports>().Count().Should().BeGreaterThan(0);
+            db.From<TreeAuditRule>().Count().Should().BeGreaterThan(0);
+            db.From<TreeDefaultValue>().Count().Should().BeGreaterThan(0);
+            //db.From<BiomassEquation>().Count().Should().BeGreaterThan(0);
+
+
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CruiseDAL;
 using CruiseDAL.UpConvert;
+using CruiseDAL.V3.Sync;
 using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -20,6 +21,8 @@ namespace NatCruise.Wpf.ViewModels
 {
     public class NewCruiseViewModel : ValidationViewModelBase, IDialogAware
     {
+        protected readonly TemplateCopier TEMPLATE_COPIER = new();
+
         private ICommand _createCruiseCommand;
         private ICommand _cancelCommand;
         private string _saleName;
@@ -210,104 +213,112 @@ namespace NatCruise.Wpf.ViewModels
 
         protected void CopyTemplateData(IDataserviceProvider src, IDataserviceProvider dest)
         {
-            var srcTemplateDS = src.GetDataservice<ITemplateDataservice>();
-            var destTemplateDS = dest.GetDataservice<ITemplateDataservice>();
+            var tmpltDs = src.Database;
+            var tmpltCruiseID = src.CruiseID;
+            var crzDs = dest.Database;
+            var crzCruiseID = dest.CruiseID;
+            TEMPLATE_COPIER.Copy(tmpltDs, crzDs, tmpltCruiseID, crzCruiseID);
 
-            // Species
-            var srcSpDS = src.GetDataservice<ISpeciesDataservice>();
-            var destSpDS = dest.GetDataservice<ISpeciesDataservice>();
 
-            var species = srcSpDS.GetSpecies();
-            foreach (var sp in species)
-            {
-                destSpDS.AddSpecies(sp);
 
-                var sp_prods = srcSpDS.GetSpeciesProducts(sp.SpeciesCode);
-                foreach (var sp_prod in sp_prods)
-                {
-                    destSpDS.AddSpeciesProduct(sp_prod);
-                }
-            }
+            //var srcTemplateDS = src.GetDataservice<ITemplateDataservice>();
+            //var destTemplateDS = dest.GetDataservice<ITemplateDataservice>();
 
-            // Tree Audit Rules
-            var srcTarDs = src.GetDataservice<ITreeAuditRuleDataservice>();
-            var destTarDs = dest.GetDataservice<ITreeAuditRuleDataservice>();
-            var tars = srcTarDs.GetTreeAuditRules();
-            foreach (var tar in tars)
-            {
-                destTarDs.AddTreeAuditRule(tar);
-            }
+            //// Species
+            //var srcSpDS = src.GetDataservice<ISpeciesDataservice>();
+            //var destSpDS = dest.GetDataservice<ISpeciesDataservice>();
 
-            // Tree Audit Rule Selectors
-            var ruleSelectors = srcTarDs.GetRuleSelectors();
-            foreach (var ruleSelector in ruleSelectors)
-            {
-                destTarDs.AddRuleSelector(ruleSelector);
-            }
+            //var species = srcSpDS.GetSpecies();
+            //foreach (var sp in species)
+            //{
+            //    destSpDS.AddSpecies(sp);
 
-            // Tree Default Values
-            var tdvs = srcTemplateDS.GetTreeDefaultValues();
-            foreach (var tdv in tdvs)
-            {
-                destTemplateDS.AddTreeDefaultValue(tdv);
-            }
+            //    var sp_prods = srcSpDS.GetSpeciesProducts(sp.SpeciesCode);
+            //    foreach (var sp_prod in sp_prods)
+            //    {
+            //        destSpDS.AddSpeciesProduct(sp_prod);
+            //    }
+            //}
 
-            // Stratum Templates
-            var srcStTemplateDS = src.GetDataservice<IStratumTemplateDataservice>();
-            var destStTemplateDS = dest.GetDataservice<IStratumTemplateDataservice>();
+            //// Tree Audit Rules
+            //var srcTarDs = src.GetDataservice<ITreeAuditRuleDataservice>();
+            //var destTarDs = dest.GetDataservice<ITreeAuditRuleDataservice>();
+            //var tars = srcTarDs.GetTreeAuditRules();
+            //foreach (var tar in tars)
+            //{
+            //    destTarDs.AddTreeAuditRule(tar);
+            //}
 
-            var stratumTemplates = srcStTemplateDS.GetStratumTemplates();
+            //// Tree Audit Rule Selectors
+            //var ruleSelectors = srcTarDs.GetRuleSelectors();
+            //foreach (var ruleSelector in ruleSelectors)
+            //{
+            //    destTarDs.AddRuleSelector(ruleSelector);
+            //}
 
-            foreach (var st in stratumTemplates)
-            {
-                destStTemplateDS.UpsertStratumTemplate(st);
+            //// Tree Default Values
+            //var tdvs = srcTemplateDS.GetTreeDefaultValues();
+            //foreach (var tdv in tdvs)
+            //{
+            //    destTemplateDS.AddTreeDefaultValue(tdv);
+            //}
 
-                var treeFieldSetupDefaults = srcStTemplateDS.GetStratumTemplateTreeFieldSetups(st.StratumTemplateName);
-                foreach (var tfsd in treeFieldSetupDefaults)
-                {
-                    destStTemplateDS.UpsertStratumTemplateTreeFieldSetup(tfsd);
-                }
+            //// Stratum Templates
+            //var srcStTemplateDS = src.GetDataservice<IStratumTemplateDataservice>();
+            //var destStTemplateDS = dest.GetDataservice<IStratumTemplateDataservice>();
 
-                var logFieldSetupDefaults = srcStTemplateDS.GetStratumTemplateLogFieldSetups(st.StratumTemplateName);
-                foreach (var lfsd in logFieldSetupDefaults)
-                {
-                    destStTemplateDS.UpsertStratumTemplateLogFieldSetup(lfsd);
-                }
-            }
+            //var stratumTemplates = srcStTemplateDS.GetStratumTemplates();
 
-            // Tree Fields
-            var scrTreeFieldDS = src.GetDataservice<ITreeFieldDataservice>();
-            var destTreeFieldDS = dest.GetDataservice<ITreeFieldDataservice>();
-            var treeFields = scrTreeFieldDS.GetTreeFields();
-            foreach (var tf in treeFields
-                .Where(x => string.IsNullOrEmpty(x.Heading) is false))
-            {
-                destTreeFieldDS.UpdateTreeField(tf);
-            }
+            //foreach (var st in stratumTemplates)
+            //{
+            //    destStTemplateDS.UpsertStratumTemplate(st);
 
-            // Log Fields
-            var srcLogFieldDS = src.GetDataservice<ILogFieldDataservice>();
-            var destLogFieldDS = dest.GetDataservice<ILogFieldDataservice>();
-            var logFields = srcLogFieldDS.GetLogFields();
-            foreach (var lf in logFields
-                .Where(x => string.IsNullOrEmpty(x.Heading) is false))
-            {
-                destLogFieldDS.UpdateLogField(lf);
-            }
+            //    var treeFieldSetupDefaults = srcStTemplateDS.GetStratumTemplateTreeFieldSetups(st.StratumTemplateName);
+            //    foreach (var tfsd in treeFieldSetupDefaults)
+            //    {
+            //        destStTemplateDS.UpsertStratumTemplateTreeFieldSetup(tfsd);
+            //    }
 
-            // Reports
-            var reports = srcTemplateDS.GetReports();
-            foreach (var rpt in reports)
-            {
-                destTemplateDS.AddReport(rpt);
-            }
+            //    var logFieldSetupDefaults = srcStTemplateDS.GetStratumTemplateLogFieldSetups(st.StratumTemplateName);
+            //    foreach (var lfsd in logFieldSetupDefaults)
+            //    {
+            //        destStTemplateDS.UpsertStratumTemplateLogFieldSetup(lfsd);
+            //    }
+            //}
 
-            // Volume Equations
-            var volumeEquations = srcTemplateDS.GetVolumeEquations();
-            foreach (var ve in volumeEquations)
-            {
-                destTemplateDS.AddVolumeEquation(ve);
-            }
+            //// Tree Fields
+            //var scrTreeFieldDS = src.GetDataservice<ITreeFieldDataservice>();
+            //var destTreeFieldDS = dest.GetDataservice<ITreeFieldDataservice>();
+            //var treeFields = scrTreeFieldDS.GetTreeFields();
+            //foreach (var tf in treeFields
+            //    .Where(x => string.IsNullOrEmpty(x.Heading) is false))
+            //{
+            //    destTreeFieldDS.UpdateTreeField(tf);
+            //}
+
+            //// Log Fields
+            //var srcLogFieldDS = src.GetDataservice<ILogFieldDataservice>();
+            //var destLogFieldDS = dest.GetDataservice<ILogFieldDataservice>();
+            //var logFields = srcLogFieldDS.GetLogFields();
+            //foreach (var lf in logFields
+            //    .Where(x => string.IsNullOrEmpty(x.Heading) is false))
+            //{
+            //    destLogFieldDS.UpdateLogField(lf);
+            //}
+
+            //// Reports
+            //var reports = srcTemplateDS.GetReports();
+            //foreach (var rpt in reports)
+            //{
+            //    destTemplateDS.AddReport(rpt);
+            //}
+
+            //// Volume Equations
+            //var volumeEquations = srcTemplateDS.GetVolumeEquations();
+            //foreach (var ve in volumeEquations)
+            //{
+            //    destTemplateDS.AddVolumeEquation(ve);
+            //}
         }
 
         public void SelectTemplate()
