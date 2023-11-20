@@ -74,7 +74,7 @@ namespace NatCruise.Design.ViewModels
         {
             base.Load();
 
-            Species = new ObservableCollection<Species>(SpeciesDataservice.GetSpecies());
+            RefreshSpecies();
 
             var speciesFiaCodes = Species.Select(x => x.FIACode).Where(x => !string.IsNullOrEmpty(x)).ToHashSet();
             var fiaOptions = SetupDataservice.GetFIASpecies().ToList();
@@ -90,6 +90,11 @@ namespace NatCruise.Design.ViewModels
             fiaOptions = fiaOptions.OrderBy(x => int.TryParse(x.FIACode, out var i)? i : 0).ToList();
 
             FIAOptions = fiaOptions;
+        }
+
+        public void RefreshSpecies()
+        {
+            Species = new ObservableCollection<Species>(SpeciesDataservice.GetSpecies());
         }
 
         public void AddSpecies(string speciesCode)
@@ -122,6 +127,7 @@ namespace NatCruise.Design.ViewModels
             try
             {
                 SpeciesDataservice.DeleteSpecies(species.SpeciesCode);
+                RefreshSpecies();
             }
             catch (FMSC.ORM.ConstraintException)
             {
