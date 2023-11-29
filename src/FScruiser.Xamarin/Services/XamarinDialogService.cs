@@ -50,13 +50,6 @@ namespace FScruiser.XF.Services
             return page;
         }
 
-        public Task<bool> AskCancelAsync(string message, string caption, bool defaultCancel)
-        {
-            // TODO
-            //throw new NotImplementedException();
-            return Task.FromResult(false);
-        }
-
         public async Task<string> AskCruiserAsync()
         {
             var cruisers = GetCruisers();
