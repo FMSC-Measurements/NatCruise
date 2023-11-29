@@ -57,6 +57,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Wpf.Test", "NatCr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V2.Updater", "C:\Users\BenCamps\Documents\FMSC_GitHub\CruiseDAL\src\CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj", "{310C36E9-2545-466E-B6F9-F09EC4F101A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NatCruise.Wpf.Controls.Test", "NatCruise.Wpf.Controls.Test\NatCruise.Wpf.Controls.Test.csproj", "{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -265,6 +267,18 @@ Global
 		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Release|x86.ActiveCfg = Release|Any CPU
 		{310C36E9-2545-466E-B6F9-F09EC4F101A1}.Release|x86.Build.0 = Release|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Debug|x86.Build.0 = Debug|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Profile|Any CPU.ActiveCfg = Debug|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Profile|Any CPU.Build.0 = Debug|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Profile|x86.ActiveCfg = Debug|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Profile|x86.Build.0 = Debug|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Release|x86.ActiveCfg = Release|Any CPU
+		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

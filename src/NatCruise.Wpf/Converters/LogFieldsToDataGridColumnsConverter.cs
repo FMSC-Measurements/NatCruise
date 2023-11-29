@@ -1,6 +1,7 @@
 ﻿using CruiseDAL.Schema;
 using FastExpressionCompiler.LightExpression;
 using NatCruise.Models;
+using NatCruise.Wpf.Controls;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,6 +18,7 @@ namespace NatCruise.Wpf.Converters
         public const string DBTYPE_BOOLEAN = TreeFieldTableDefinition.DBTYPE_BOOLEAN;
         public const string DBTYPE_INTEGER = TreeFieldTableDefinition.DBTYPE_INTEGER;
 
+        public bool SelectColumn { get; set; } = true;
         public bool TreeNumberField { get; set; } = true;
         public bool CuttingUnitField { get; set; } = true;
         public bool PlotNumberField { get; set; } = true;
@@ -30,6 +32,10 @@ namespace NatCruise.Wpf.Converters
             if (logFields == null) { return null; }
 
             var columns = new List<DataGridColumn>();
+            if (SelectColumn)
+            {
+                columns.Add(new DataGridMultiSelectColumn());
+            }
             //if(CuttingUnitField)
             //{
             //    columns.Add(new DataGridTextColumn
@@ -93,6 +99,8 @@ namespace NatCruise.Wpf.Converters
                         };
                 }
             }));
+
+            
 
             return columns;
         }

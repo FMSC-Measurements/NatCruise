@@ -48,8 +48,8 @@
                         Width="32"
                         Style="{StaticResource RemoveButton}"
                         Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
-                        Command="{Binding DeletePlotCommand}"
-                        CommandParameter="{Binding SelectedItem, ElementName=_datagrid}"
+                        Command="{Binding DeletePlotsCommand}"
+                        CommandParameter="{Binding SelectedItems, ElementName=_datagrid}"
                         IsEnabled="{Binding SelectedItem, ElementName=_datagrid, Converter={StaticResource NotNullConverter}}" />
             </StackPanel>
 
