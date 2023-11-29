@@ -168,7 +168,7 @@ WHERE cust.CruiseID = @p1 AND cust.StratumCode = @p2;", CruiseID, stratumCode);
                 "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2;", unitCode, CruiseID);
         }
 
-        // TODO method just returns tree based strata, check logic
+        // TODO method just returns tree based strata, change method name to indicate so, or consolidate getStrata methods
         public IEnumerable<Stratum> GetStrataByUnitCode(string unitCode)
         {
             return Database.Query<Stratum>(
@@ -248,19 +248,6 @@ WHERE StratumID = @StratumID;",
                 stratum.StratumCode,
                 DeviceID,
             });
-        }
-
-        // TODO should method return true if has tree counts or trees?
-        // Indicates if specific unit in stratum has field data
-        public bool HasTreeCounts(string unitCode, string stratum)
-        {
-            var treecount = Database.ExecuteScalar<int>("SELECT sum(TreeCount) FROM TallyLedger WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND CruiseID = @p3;"
-                , unitCode, stratum, CruiseID);
-
-            var numTrees = Database.ExecuteScalar<int>("SELECT count(*) FROM Tree WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND CruiseID = @p3;"
-                , unitCode, stratum, CruiseID);
-
-            return numTrees > 0;
         }
 
         public bool HasTrees(string unitCode, string stratum)

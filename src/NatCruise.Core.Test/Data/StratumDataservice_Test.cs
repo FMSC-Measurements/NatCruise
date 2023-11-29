@@ -215,7 +215,6 @@ namespace NatCruise.Test.Data
         }
 
 
-        //TODO: rewrite test for changes from HasFieldData to HasTrees
         [Fact]
         public void GetStrata_HasTrees_With_PlotsAndTrees()
         {

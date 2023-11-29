@@ -18,6 +18,7 @@ namespace NatCruise.Design.Views
         {
             InitializeComponent();
             RegionContext.GetObservableContext(this).PropertyChanged += Context_PropertyChanged;
+
         }
 
         private void Context_PropertyChanged(object sender, PropertyChangedEventArgs e)

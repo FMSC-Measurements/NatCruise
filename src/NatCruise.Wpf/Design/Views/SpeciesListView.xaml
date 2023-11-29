@@ -61,8 +61,7 @@
                 <Button Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                         Style="{StaticResource RemoveButton}"
                         Command="{Binding DeleteSpeciesCommand}"
-                        CommandParameter="{Binding SelectedItem, ElementName=_speciesDatagrid}"
-                        IsEnabled="{Binding SelectedItem, ElementName=_speciesDatagrid, Converter={StaticResource NotNullConverter}}"
+                        CommandParameter="{Binding SelectedSpecies}"
                         Width="32" />
             </StackPanel>
             <DataGrid  Grid.Column="0"

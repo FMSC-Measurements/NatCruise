@@ -69,19 +69,7 @@
                              Style="{StaticResource RemoveButton}"
                              Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                              Command="{Binding RemoveCuttingUnitCommand}"
-                             CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}">
-                        <Button.IsEnabled>
-                            <MultiBinding Converter="{StaticResource MultiBindingAllConverter}">
-                                <Binding Path="SelectedItem"
-                                         ElementName="cuttingUnitListView"
-                                         Converter="{StaticResource NotNullConverter}" />
-                                <Binding Path="SelectedItem.HasTrees"
-                                         ElementName="cuttingUnitListView"
-                                         Converter="{StaticResource NotConverter}" />
-                                <Binding Path="IsSuperuserModeEnabled"
-                                         Converter="{StaticResource NotConverter}" />
-                            </MultiBinding>
-                        </Button.IsEnabled>
+                             CommandParameter="{Binding SelectedUnit}">
                     </Button>
                 </Grid>
 

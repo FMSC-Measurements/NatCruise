@@ -33,8 +33,6 @@ namespace NatCruise.Data
 
         void UpdateStratumCode(Stratum stratum);
 
-        bool HasTreeCounts(string unitCode, string stratum);
-
         bool HasTrees(string unitCode, string stratum);
     }
 }

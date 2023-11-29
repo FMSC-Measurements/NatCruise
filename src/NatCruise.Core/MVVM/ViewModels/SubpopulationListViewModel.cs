@@ -1,4 +1,5 @@
-﻿using NatCruise.Data;
+﻿using CommunityToolkit.Mvvm.Input;
+using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
 using NatCruise.Services;
@@ -16,14 +17,15 @@ namespace NatCruise.MVVM.ViewModels
     {
         public const int SPECIES_CODE_MAX_LENGTH = 6;
 
-        private DelegateCommand<string> _addSubpopulationCommand;
+        private RelayCommand<string> _addSubpopulationCommand;
         private SampleGroup _sampleGroup;
-        private DelegateCommand<Subpopulation> _removeSubpopulationCommand;
+        private RelayCommand<Subpopulation> _removeSubpopulationCommand;
         private ObservableCollection<Subpopulation> _subPopulations;
         private IEnumerable<string> _speciesOptions;
         private IApplicationSettingService _appSettings;
         private bool _isSuperuserModeEnabled;
         private bool _isLocked;
+        private Subpopulation _selectedSubpopulation;
 
         public SubpopulationListViewModel(ISpeciesDataservice speciesDataservice,
             ISampleGroupDataservice sampleGroupDataservice,
@@ -78,20 +80,16 @@ namespace NatCruise.MVVM.ViewModels
             set
             {
                 SetProperty(ref _isSuperuserModeEnabled, value);
-                IsLocked = (SampleGroup?.HasTrees ?? false) && !value;
+                RemoveSubpopulationCommand.NotifyCanExecuteChanged();
             }
-        }
-
-        public bool IsLocked
-        {
-            get => _isLocked;
-            set => SetProperty(ref _isLocked, value);
         }
 
         public IEnumerable<string> LiveDeadOptions { get; } = new[] { "Default", "L", "D" };
 
-        public DelegateCommand<string> AddSubpopulationCommand => _addSubpopulationCommand ?? (_addSubpopulationCommand = new DelegateCommand<string>(AddSubpopulation));
-        public DelegateCommand<Subpopulation> RemoveSubpopulationCommand => _removeSubpopulationCommand ?? (_removeSubpopulationCommand = new DelegateCommand<Subpopulation>(RemoveSubpopulation));
+        public IRelayCommand<string> AddSubpopulationCommand => _addSubpopulationCommand ??= new RelayCommand<string>(AddSubpopulation);
+        public IRelayCommand<Subpopulation> RemoveSubpopulationCommand => _removeSubpopulationCommand ??= new RelayCommand<Subpopulation>(RemoveSubpopulation, CanRemoveSubpopulation);
+
+
 
         public SampleGroup SampleGroup
         {
@@ -111,6 +109,16 @@ namespace NatCruise.MVVM.ViewModels
                 OnSubpopulationsChanging(_subPopulations);
                 SetProperty(ref _subPopulations, value);
                 OnSubPopulationsChanged(value);
+            }
+        }
+
+        public Subpopulation SelectedSubpopulation
+        {
+            get => _selectedSubpopulation;
+            set
+            {
+                SetProperty(ref _selectedSubpopulation, value);
+                RemoveSubpopulationCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -253,6 +261,12 @@ namespace NatCruise.MVVM.ViewModels
             newSubpopulation.PropertyChanged += Sp_PropertyChanged;
 
             RefreshSpeciesOptions();
+        }
+
+        private bool CanRemoveSubpopulation(Subpopulation sp)
+        {
+            return sp != null
+                && (!sp.HasTrees || IsSuperuserModeEnabled);
         }
 
         public void RemoveSubpopulation(Subpopulation subpopulation)

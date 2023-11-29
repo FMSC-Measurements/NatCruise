@@ -90,19 +90,7 @@
                             Style="{StaticResource RemoveButton}"
                             Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                             Command="{Binding RemoveStratumCommand}"
-                            CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}">
-                        <Button.IsEnabled>
-                            <MultiBinding Converter="{StaticResource MultiBindingAllConverter}">
-                                <Binding Path="SelectedItem"
-                                         ElementName="_stratumListView"
-                                         Converter="{StaticResource NotNullConverter}" />
-                                <Binding Path="SelectedItem.HasTrees"
-                                         ElementName="_stratumListView"
-                                         Converter="{StaticResource NotConverter}" />
-                                <Binding Path="IsSuperuserModeEnabled"
-                                         Converter="{StaticResource NotConverter}" />
-                            </MultiBinding>
-                        </Button.IsEnabled>
+                            CommandParameter="{Binding SelectedStratum}">
                     </Button>
 
 

@@ -1,4 +1,5 @@
-﻿using CruiseDAL.Schema;
+﻿using CommunityToolkit.Mvvm.Input;
+using CruiseDAL.Schema;
 using NatCruise.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
@@ -6,14 +7,12 @@ using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Wpf.Services;
-using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
 {
@@ -21,8 +20,8 @@ namespace NatCruise.Design.ViewModels
     {
         private static readonly string[] RECON_CRUISEMETHODS = new[] { CruiseMethods.FIX, CruiseMethods.PNT, CruiseMethods.FIXCNT };
 
-        private ICommand _addStratumCommand;
-        private ICommand _removeStratumCommand;
+        private IRelayCommand _addStratumCommand;
+        private IRelayCommand _removeStratumCommand;
         private ObservableCollection<Stratum> _strata;
         private Stratum _selectedStratum;
         private IEnumerable<StratumTemplate> _stratumTemplateOptions;
@@ -84,7 +83,11 @@ namespace NatCruise.Design.ViewModels
         public bool IsSuperuserModeEnabled
         {
             get => _isSuperuserModeEnabled;
-            set => SetProperty(ref _isSuperuserModeEnabled, value);
+            set
+            {
+                SetProperty(ref _isSuperuserModeEnabled, value);
+                RemoveStratumCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public ObservableCollection<Stratum> Strata
@@ -125,6 +128,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _selectedStratum, value);
+                RemoveStratumCommand.NotifyCanExecuteChanged();
                 if (value != null)
                 {
                     ValidateStratum(value);
@@ -166,9 +170,9 @@ namespace NatCruise.Design.ViewModels
             Strata = new ObservableCollection<Stratum>(strata);
         }
 
-        public ICommand AddStratumCommand => _addStratumCommand ?? (_addStratumCommand = new DelegateCommand<string>(AddStratum));
+        public IRelayCommand AddStratumCommand => _addStratumCommand ??= new RelayCommand<string>(AddStratum);
 
-        public ICommand RemoveStratumCommand => _removeStratumCommand ?? (_removeStratumCommand = new DelegateCommand<Stratum>(RemoveStratum));
+        public IRelayCommand RemoveStratumCommand => _removeStratumCommand ??= new RelayCommand<Stratum>(RemoveStratum, CanRemoveStratum);
 
         public void AddStratum(string code)
         {
@@ -216,6 +220,12 @@ namespace NatCruise.Design.ViewModels
             {
                 DialogService.ShowNotification("Stratum Code Already Exists");
             }
+        }
+
+        private bool CanRemoveStratum(Stratum st)
+        {
+            return st != null
+                && (!st.HasTrees || IsSuperuserModeEnabled);
         }
 
         public void RemoveStratum(Stratum stratum)
