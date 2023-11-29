@@ -52,7 +52,8 @@ namespace NatCruise.Wpf
             {
                 var file = new FileInfo(startupArgs[0]);
 
-                if (file.Exists && file.Extension.ToLower() == ".crz3" || file.Extension == ".crz3t")
+                if (file.Exists
+                    && (file.Extension.ToLower() == ".crz3" || file.Extension.ToLower() == ".crz3t"))
                 {
                     StartupFilePath = file.FullName;
                 }
