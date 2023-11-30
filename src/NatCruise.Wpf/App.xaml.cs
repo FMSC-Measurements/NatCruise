@@ -52,7 +52,8 @@ namespace NatCruise.Wpf
             {
                 var file = new FileInfo(startupArgs[0]);
 
-                if (file.Exists && file.Extension.ToLower() == ".crz3" || file.Extension == ".crz3t")
+                if (file.Exists
+                    && (file.Extension.ToLower() == ".crz3" || file.Extension.ToLower() == ".crz3t"))
                 {
                     StartupFilePath = file.FullName;
                 }
@@ -162,7 +163,7 @@ namespace NatCruise.Wpf
 
             // register other services
             containerRegistry.RegisterInstance<IAppService>(this);
-            containerRegistry.Register<IWpfApplicationSettingService, WpfApplicationSettingService>();
+            containerRegistry.RegisterManySingleton<WpfApplicationSettingService>(typeof(IWpfApplicationSettingService), typeof(IApplicationSettingService));
             containerRegistry.Register<INatCruiseDialogService, WpfDialogService>();
             containerRegistry.Register<IDesignNavigationService, WPFNavigationService>();
             containerRegistry.Register<INatCruiseNavigationService, WPFNavigationService>();

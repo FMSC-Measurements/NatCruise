@@ -1,31 +1,36 @@
-﻿using CruiseDAL.Schema;
+﻿using CommunityToolkit.Mvvm.Input;
+using CruiseDAL.Schema;
 using NatCruise.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
-using Prism.Commands;
+using NatCruise.Wpf.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
 {
     public class SampleGroupListViewModel : ViewModelBase
     {
-        private DelegateCommand<string> _addSampleGroupCommand;
-        private DelegateCommand<SampleGroup> _removeSampleGroupCommand;
+        private IRelayCommand<string> _addSampleGroupCommand;
+        private IRelayCommand<SampleGroup> _removeSampleGroupCommand;
         private ObservableCollection<SampleGroup> _sampleGroups;
         private Stratum _stratum;
         private SampleGroup _selectedSampleGroup;
+        private IWpfApplicationSettingService _appSettings;
+        private bool _isSuperuserModeEnabled;
 
-        public SampleGroupListViewModel(ISampleGroupDataservice sampleGroupDataservice, INatCruiseDialogService dialogService)
+        public SampleGroupListViewModel(ISampleGroupDataservice sampleGroupDataservice,
+            IWpfApplicationSettingService applicationSettingService,
+            INatCruiseDialogService dialogService)
         {
             SampleGroupDataservice = sampleGroupDataservice ?? throw new ArgumentNullException(nameof(sampleGroupDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            AppSettings = applicationSettingService ?? throw new ArgumentNullException(nameof(applicationSettingService));
 
             SampleGroupValidator = new SampleGroupValidator();
         }
@@ -36,8 +41,39 @@ namespace NatCruise.Design.ViewModels
         public INatCruiseDialogService DialogService { get; }
         public SampleGroupValidator SampleGroupValidator { get; }
 
-        public ICommand AddSampleGroupCommand => _addSampleGroupCommand ??= new DelegateCommand<string>(AddSampleGroup);
-        public ICommand RemoveSampleGroupCommand => _removeSampleGroupCommand ??= new DelegateCommand<SampleGroup>(RemoveSampleGroup);
+        public IWpfApplicationSettingService AppSettings
+        {
+            get => _appSettings;
+            private set
+            {
+                if (_appSettings != null) { _appSettings.PropertyChanged -= AppSettings_PropertyChanged; }
+                _appSettings = value;
+                if (value != null)
+                {
+                    IsSuperuserModeEnabled = value.IsSuperuserMode;
+                    _appSettings.PropertyChanged += AppSettings_PropertyChanged;
+                }
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IWpfApplicationSettingService.IsSuperuserMode))
+            {
+                var appSettings = (IWpfApplicationSettingService)sender;
+                IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
+            }
+        }
+
+        public bool IsSuperuserModeEnabled
+        {
+            get => _isSuperuserModeEnabled;
+            set => SetProperty(ref _isSuperuserModeEnabled, value);
+        }
+
+        public IRelayCommand AddSampleGroupCommand => _addSampleGroupCommand ??= new RelayCommand<string>(AddSampleGroup);
+        public IRelayCommand RemoveSampleGroupCommand => _removeSampleGroupCommand ??= new RelayCommand<SampleGroup>(RemoveSampleGroup, CanRemoveSampleGroup);
 
         public Stratum Stratum
         {
@@ -103,6 +139,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _selectedSampleGroup, value);
+                RemoveSampleGroupCommand.NotifyCanExecuteChanged();
                 if (value != null)
                 {
                     ValidateSampleGroup(value);
@@ -144,10 +181,18 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
+        private bool CanRemoveSampleGroup(SampleGroup sg)
+        {
+            return sg != null
+                && (!sg.HasTrees || IsSuperuserModeEnabled);
+        }
+
         public void RemoveSampleGroup(SampleGroup sampleGroup)
         {
             if (sampleGroup is null) { throw new ArgumentNullException(nameof(sampleGroup)); }
             var sampleGroups = SampleGroups;
+
+            if (sampleGroup.HasTrees && !IsSuperuserModeEnabled) { return; }
 
             SampleGroupDataservice.DeleteSampleGroup(sampleGroup);
             var index = sampleGroups.IndexOf(sampleGroup);

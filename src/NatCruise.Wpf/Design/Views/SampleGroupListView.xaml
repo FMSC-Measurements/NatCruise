@@ -10,9 +10,11 @@
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:dsgn="clr-namespace:NatCruise.Design"
+             xmlns:multi="clr-namespace:NatCruise.Wpf.Converters.Multi"
              x:Class="NatCruise.Design.Views.SampleGroupListView"
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
+             x:Name="_page"
              Tag="Sample Groups"
              mc:Ignorable="d"
              d:DesignHeight="448.881"
@@ -87,8 +89,10 @@
                                     <Binding Path="SelectedItem"
                                              ElementName="_sampleGroupListView"
                                              Converter="{StaticResource NotNullConverter}" />
-                                    <Binding Path="SelectedItem.HasFieldData"
+                                    <Binding Path="SelectedItem.HasTrees"
                                              ElementName="_sampleGroupListView"
+                                             Converter="{StaticResource NotConverter}" />
+                                    <Binding Path="IsSuperuserModeEnabled"
                                              Converter="{StaticResource NotConverter}" />
                                 </MultiBinding>
                             </Button.IsEnabled>
@@ -114,6 +118,10 @@
                               SelectedItem="{Binding SelectedSampleGroup}"
                               SelectionMode="Single">
                         <ListView.Resources>
+                            <multi:AllConverter x:Key="hasDataIconConverter"
+                                                TrueObject="{x:Static Visibility.Visible}"
+                                                FalseObject="{x:Static Visibility.Hidden}" />
+
                             <Style TargetType="ListViewItem"
                                    BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
                                 <Style.Triggers>
@@ -132,8 +140,16 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Label Content="{iconPack:FontAwesome Kind=LockSolid}"
-                                                   Visibility="{Binding HasFieldData, Converter={StaticResource IsVisableConverter}}"
-                                                   ToolTip="Has Field Data Lock" />
+                                                   ToolTip="Has Field Data Lock">
+                                                <Label.Visibility>
+                                                    <MultiBinding Converter="{StaticResource hasDataIconConverter}">
+                                                        <Binding Path="HasTrees" />
+                                                        <Binding Path="DataContext.IsSuperuserModeEnabled"
+                                                                 Source="{x:Reference _page}"
+                                                                 Converter="{StaticResource NotConverter}" />
+                                                    </MultiBinding>
+                                                </Label.Visibility>
+                                            </Label>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

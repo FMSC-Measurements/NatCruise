@@ -5,9 +5,6 @@ namespace NatCruise.Navigation
 {
     public interface INatCruiseDialogService
     {
-        [Obsolete]
-        Task<bool> AskCancelAsync(String message, String caption, bool defaultCancel);
-
         Task<string> AskCruiserAsync();
 
         Task<int?> AskKPIAsync(int max, int min = 1);

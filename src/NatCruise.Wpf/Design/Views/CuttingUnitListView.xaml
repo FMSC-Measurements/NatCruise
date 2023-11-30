@@ -10,12 +10,14 @@
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="NatCruise.Design.Views.CuttingUnitListView"
+             x:Name="_page"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
              xmlns:nav="clr-namespace:NatCruise.Wpf.Navigation"
              xmlns:dsgn="clr-namespace:NatCruise.Design"
              xmlns:models="clr-namespace:CruiseDAL.V3.Models;assembly=CruiseDAL.V3.Models"
+             xmlns:multi="clr-namespace:NatCruise.Wpf.Converters.Multi"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -67,8 +69,8 @@
                              Style="{StaticResource RemoveButton}"
                              Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                              Command="{Binding RemoveCuttingUnitCommand}"
-                             CommandParameter="{Binding SelectedItem, ElementName=_cuttingUnitListView}"
-                             IsEnabled="{Binding SelectedItem, ElementName=_cuttingUnitListView, Converter={StaticResource NotNullConverter}}" />
+                             CommandParameter="{Binding SelectedUnit}">
+                    </Button>
                 </Grid>
 
                 <!--<DataGrid x:Name="_cuttingUnitListView"  Width="200"
@@ -102,10 +104,33 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
+
+                        <multi:AllConverter x:Key="hasDataVisabilityConverter"
+                                            TrueObject="{x:Static Visibility.Visible}"
+                                            FalseObject="{x:Static Visibility.Hidden}" />
+
                     </ListView.Resources>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False"
                                   ColumnHeaderToolTip="Cutting Units">
+                            <GridViewColumn>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{iconPack:FontAwesome Kind=LockSolid}"
+                                               ToolTip="Has Field Data Lock">
+                                            <Label.Visibility>
+                                                <MultiBinding Converter="{StaticResource hasDataVisabilityConverter}">
+                                                    <Binding Path="HasTrees" />
+                                                    <Binding Path="DataContext.IsSuperuserModeEnabled"
+                                                             Source="{x:Reference _page}"
+                                                             Converter="{StaticResource NotConverter}" />
+                                                </MultiBinding>
+                                            </Label.Visibility>
+                                        </Label>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
                             <GridViewColumn Header="Code"
                                             DisplayMemberBinding="{Binding CuttingUnitCode}"
                                             Width="60" />

@@ -24,7 +24,7 @@ namespace NatCruise.Data
     st.Method AS CruiseMethod,
     (
         EXISTS ( SELECT * FROM Tree WHERE CruiseID = sg.CruiseID AND StratumCode = sg.StratumCode AND SampleGroupCode = sg.SampleGroupCode)
-    ) AS HasFieldData
+    ) AS HasTrees
 FROM SampleGroup AS sg
 JOIN Stratum AS st USING (StratumCode, CruiseID)
 ";
@@ -190,16 +190,6 @@ WHERE SampleGroupID = @SampleGroupID;",
                     sg.SampleGroupCode,
                     DeviceID
                 });
-        }
-
-        public bool GetSampleGroupHasFieldData(string stratumCode, string sampleGroupCode)
-        {
-            if (string.IsNullOrWhiteSpace(stratumCode)) { throw new ArgumentException($"'{nameof(stratumCode)}' cannot be null or whitespace.", nameof(stratumCode)); }
-
-            if (string.IsNullOrWhiteSpace(sampleGroupCode)) { throw new ArgumentException($"'{nameof(sampleGroupCode)}' cannot be null or whitespace.", nameof(sampleGroupCode)); }
-
-            return Database.ExecuteScalar<bool>("SELECT EXISTS(SELECT * FROM Tree WHERE CruiseID = @p1 AND StratumCode = @p2 AND SampleGroupCode = @p3)",
-                CruiseID, stratumCode, sampleGroupCode);
         }
     }
 }

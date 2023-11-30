@@ -2,9 +2,11 @@
 using NatCruise.Design.Views;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
+using NatCruise.Wpf.DialogViews;
 using NatCruise.Wpf.FieldData.Views;
 using NatCruise.Wpf.Navigation;
 using NatCruise.Wpf.Views;
+using Prism.Ioc;
 using Prism.Regions;
 using System;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ namespace NatCruise.Wpf.Services
         public INatCruiseDialogService DialogService { get; }
 
         public IAppService AppService { get; }
+        public IContainerProvider ContainerProvider { get; }
 
         public MainWindow MainWindow => (MainWindow)AppService.MainWindow;
 
@@ -26,7 +29,7 @@ namespace NatCruise.Wpf.Services
                                     IRegionNavigationService currentRegion,
                                     Prism.Services.Dialogs.IDialogService prismDialogService,
                                     INatCruiseDialogService dialogService,
-                                    
+                                    IContainerProvider containerProvider,
                                     IAppService appService)
         {
             RegionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
@@ -34,6 +37,7 @@ namespace NatCruise.Wpf.Services
             PrismDialogService = prismDialogService ?? throw new ArgumentNullException(nameof(prismDialogService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             AppService = appService ?? throw new ArgumentNullException(nameof(appService));
+            ContainerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
         }
 
         public Task ShowFieldData(string cuttingUnit = null)
@@ -233,9 +237,22 @@ namespace NatCruise.Wpf.Services
             throw new NotImplementedException();
         }
 
-        public Task ShowAbout()
+        public async Task ShowAbout()
         {
-            throw new NotImplementedException();
+            var window = MainWindow;
+            var settings = window.MetroDialogOptions;
+            var appSettings = ContainerProvider.Resolve<IWpfApplicationSettingService>();
+            var dialog = new AboutDialog(window, settings, appSettings)
+            {
+                Title = "About",
+            };
+
+            await window.ShowMetroDialogAsync(dialog, settings);
+
+            // discard result
+            _ = await dialog.WaitForResult();
+
+            await window.HideMetroDialogAsync(dialog, settings);
         }
 
         public Task ShowPrivacyPolicy()

@@ -1,29 +1,36 @@
-﻿using NatCruise.Data;
+﻿using CommunityToolkit.Mvvm.Input;
+using NatCruise.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
-using Prism.Commands;
+using NatCruise.Services;
+using NatCruise.Wpf.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
 {
     public class CuttingUnitListViewModel : ViewModelBase
     {
-        private DelegateCommand<CuttingUnit> _removeCuttingUnitCommand;
-        private DelegateCommand<string> _addCuttingUnitCommand;
+        private IRelayCommand<CuttingUnit> _removeCuttingUnitCommand;
+        private IRelayCommand<string> _addCuttingUnitCommand;
         private ObservableCollection<CuttingUnit> _cuttingUnits;
         private CuttingUnit _selectedUnit;
+        private IApplicationSettingService _appSettings;
+        private bool _isSuperuserModeEnabled;
 
-        public CuttingUnitListViewModel(ICuttingUnitDataservice unitDataservice, INatCruiseDialogService dialogService)
+        public CuttingUnitListViewModel(ICuttingUnitDataservice unitDataservice,
+            INatCruiseDialogService dialogService,
+            IApplicationSettingService applicationSettingService)
         {
             UnitDataservice = unitDataservice ?? throw new ArgumentNullException(nameof(unitDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            AppSettings = applicationSettingService ?? throw new ArgumentNullException(nameof(applicationSettingService));
 
             CuttingUnitValidator = new CuttingUnitValidator();
         }
@@ -32,6 +39,42 @@ namespace NatCruise.Design.ViewModels
 
         private ICuttingUnitDataservice UnitDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
+
+        public IApplicationSettingService AppSettings
+        {
+            get => _appSettings;
+            private set
+            {
+                if (_appSettings != null) { _appSettings.PropertyChanged -= AppSettings_PropertyChanged; }
+                _appSettings = value;
+                if (value != null)
+                {
+                    IsSuperuserModeEnabled = value.IsSuperuserMode;
+                    _appSettings.PropertyChanged += AppSettings_PropertyChanged;
+                }
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IWpfApplicationSettingService.IsSuperuserMode))
+            {
+                var appSettings = (IWpfApplicationSettingService)sender;
+                IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
+            }
+        }
+
+        public bool IsSuperuserModeEnabled
+        {
+            get => _isSuperuserModeEnabled;
+            set
+            {
+                SetProperty(ref _isSuperuserModeEnabled, value);
+                RemoveCuttingUnitCommand.NotifyCanExecuteChanged();
+            }
+        }
+
         public CuttingUnitValidator CuttingUnitValidator { get; }
 
         public ObservableCollection<CuttingUnit> CuttingUnits
@@ -73,6 +116,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 SetProperty(ref _selectedUnit, value);
+                RemoveCuttingUnitCommand.NotifyCanExecuteChanged();
                 if (value != null)
                 {
                     ValidateUnit(value);
@@ -80,9 +124,9 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
-        public ICommand AddCuttingUnitCommand => _addCuttingUnitCommand ?? (_addCuttingUnitCommand = new DelegateCommand<string>(AddCuttingUnit));
+        public IRelayCommand AddCuttingUnitCommand => _addCuttingUnitCommand ?? (_addCuttingUnitCommand = new RelayCommand<string>(AddCuttingUnit));
 
-        public ICommand RemoveCuttingUnitCommand => _removeCuttingUnitCommand ?? (_removeCuttingUnitCommand = new DelegateCommand<CuttingUnit>(RemoveCuttingUnit));
+        public IRelayCommand RemoveCuttingUnitCommand => _removeCuttingUnitCommand ?? (_removeCuttingUnitCommand = new RelayCommand<CuttingUnit>(RemoveCuttingUnit, CanRemoveCuttingUnit));
 
         public override void Load()
         {
@@ -120,10 +164,20 @@ namespace NatCruise.Design.ViewModels
             }
         }
 
+        public bool CanRemoveCuttingUnit(CuttingUnit unit)
+        {
+            var result = unit != null
+                && (!unit.HasTrees || IsSuperuserModeEnabled);
+            Debug.WriteLine("CanRemoveCuttingunit: " + result.ToString());
+            return result;
+        }
+
         public void RemoveCuttingUnit(CuttingUnit unit)
         {
             if (unit == null) { return; }
             var cuttingUnits = CuttingUnits;
+
+            if (unit.HasTrees && !IsSuperuserModeEnabled) { return; }
 
             UnitDataservice.DeleteCuttingUnit(unit);
             var index = cuttingUnits.IndexOf(unit);

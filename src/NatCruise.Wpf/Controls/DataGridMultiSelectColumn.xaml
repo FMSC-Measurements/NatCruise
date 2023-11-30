@@ -1,0 +1,32 @@
+﻿<DataGridTemplateColumn  x:Class="NatCruise.Wpf.Controls.DataGridMultiSelectColumn"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                         xmlns:local="clr-namespace:NatCruise.Wpf.Controls"
+                         mc:Ignorable="d"
+                         IsReadOnly="True"
+                         CanUserReorder="False"
+                         CanUserResize="False"
+                         CanUserSort="False">
+
+    <DataGridTemplateColumn.Header>
+        <CheckBox x:Name="PART_headerSelectAllCheckbox"
+                  Click="SelectAll_Clicked"
+                  Checked="SelectAll_Checked"
+                  Unchecked="SelectAll_Unchecked" Selector.SelectionChanged="DataGrid_SelectionChnaged"
+                  Loaded="PART_headerSelectAllCheckbox_Loaded"
+                  Unloaded="PART_headerSelectAllCheckbox_Unloaded"
+                  ToolTip="Select All"
+                  HorizontalAlignment="Center">
+            
+        </CheckBox>
+    </DataGridTemplateColumn.Header>
+
+    <DataGridTemplateColumn.CellTemplate>
+        <DataTemplate>
+            <local:InterceptOnToggleCheckBox
+                      IsChecked="{Binding IsSelected, Mode=OneWay, RelativeSource={RelativeSource AncestorType=DataGridRow}}" HorizontalAlignment="Center"/>
+        </DataTemplate>
+    </DataGridTemplateColumn.CellTemplate>
+</DataGridTemplateColumn>

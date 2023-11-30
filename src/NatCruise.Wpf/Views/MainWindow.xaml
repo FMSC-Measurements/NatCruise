@@ -34,6 +34,9 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
 
+                <MenuItem Header="About"
+                          Command="{Binding ShowAboutCommand}" />
+
                 <MenuItem Header="Exit"
                           Command="{Binding ShutdownCommand}" />
             </MenuItem>

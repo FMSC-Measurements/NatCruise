@@ -3,8 +3,11 @@ using NatCruise.Data;
 using NatCruise.Design.Validation;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.Services;
+using NatCruise.Wpf.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace NatCruise.Design.ViewModels
@@ -17,12 +20,16 @@ namespace NatCruise.Design.ViewModels
         private Stratum _stratum;
         private IEnumerable<CruiseMethod> _methods;
         private IEnumerable<TreeField> _treefieldOptions;
+        private IApplicationSettingService _appSettings;
+        private bool _isSuperuserModeEnabled;
+        private bool _isLocked;
 
         public StratumDetailViewModel(IStratumDataservice stratumDataservice,
             ITreeFieldDataservice treeFieldDataservice,
             ISetupInfoDataservice setupDataservice,
             ISaleDataservice saleDataservice,
             ICuttingUnitDataservice cuttingUnitDataservice,
+            IApplicationSettingService applicationSettingService,
             StratumValidator validator)
             : base(validator)
         {
@@ -32,6 +39,7 @@ namespace NatCruise.Design.ViewModels
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
 
             SetupDataservice = setupDataservice ?? throw new ArgumentNullException(nameof(setupDataservice));
+            AppSettings = applicationSettingService ?? throw new ArgumentNullException(nameof(applicationSettingService));
 
             var cruise = saleDataservice.GetCruise();
             if (cruise.Purpose == "Recon")
@@ -63,6 +71,47 @@ namespace NatCruise.Design.ViewModels
         public ISaleDataservice SaleDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
+        public IApplicationSettingService AppSettings
+        {
+            get => _appSettings;
+            private set
+            {
+                if(_appSettings != null) { _appSettings.PropertyChanged -= AppSettings_PropertyChanged; }
+                _appSettings = value;
+                if(value != null)
+                {
+                    IsSuperuserModeEnabled = value.IsSuperuserMode;
+                    value.PropertyChanged += AppSettings_PropertyChanged;
+                }
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {   
+            if(e.PropertyName == nameof(IApplicationSettingService.IsSuperuserMode))
+            {
+                var appSettings = (IApplicationSettingService)sender;
+                IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
+            }
+        }
+
+        public bool IsSuperuserModeEnabled
+        {
+            get => _isSuperuserModeEnabled;
+            set
+            {
+                SetProperty(ref _isSuperuserModeEnabled, value);
+                IsLocked = (Stratum?.HasTrees ?? false) && !value;
+            }
+        }
+
+        public bool IsLocked
+        {
+            get => _isLocked;
+            set => SetProperty(ref _isLocked, value);
+        }
+
         protected IStratumDataservice StratumDataservice { get; }
 
         public Stratum Stratum
@@ -89,6 +138,8 @@ namespace NatCruise.Design.ViewModels
                 //RaisePropertyChanged(nameof(FBSCode));
                 OnPropertyChanged(nameof(YieldComponent));
                 OnPropertyChanged(nameof(FixCNTField));
+
+                IsLocked = (value?.HasTrees ?? false) && !IsSuperuserModeEnabled;
 
                 NotifyCruiseMethodChanged();
             }
@@ -140,7 +191,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 var stratum = Stratum;
-                if (stratum.HasFieldData)
+                if (stratum.HasTrees && !IsSuperuserModeEnabled)
                 {
                     return;
                 }
@@ -157,7 +208,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 var stratum = Stratum;
-                if (stratum.HasFieldData)
+                if (stratum.HasTrees && !IsSuperuserModeEnabled)
                 {
                     return;
                 }
@@ -173,7 +224,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 var stratum = Stratum;
-                if (stratum.HasFieldData)
+                if (stratum.HasTrees && !IsSuperuserModeEnabled)
                 {
                     return;
                 }
@@ -189,7 +240,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 var stratum = Stratum;
-                if (stratum.HasFieldData)
+                if (stratum.HasTrees && !IsSuperuserModeEnabled)
                 {
                     return;
                 }
@@ -205,7 +256,7 @@ namespace NatCruise.Design.ViewModels
             set
             {
                 var stratum = Stratum;
-                if (stratum.HasFieldData)
+                if (stratum.HasTrees && !IsSuperuserModeEnabled)
                 {
                     return;
                 }

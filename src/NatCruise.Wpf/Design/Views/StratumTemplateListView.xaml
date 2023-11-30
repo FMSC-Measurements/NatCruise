@@ -30,6 +30,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="40" />
                 </Grid.ColumnDefinitions>
 
                 <TextBox x:Name="_addProfileTextBox"
@@ -42,6 +43,14 @@
                         CommandParameter="{Binding Text, ElementName=_addProfileTextBox}"
                         IsEnabled="{Binding Text, ElementName=_addProfileTextBox, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
                         Grid.Column="1" />
+                <Button Grid.Row="0"
+                        Grid.Column="2"
+                        Style="{StaticResource RemoveButton}"
+                        Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
+                        Command="{Binding RemoveStratumCommand}"
+                        CommandParameter="{Binding SelectedItem, ElementName=_stratumDefaultsListBox}"
+                        IsEnabled="{Binding SelectedItem, ElementName=_stratumDefaultsListBox, Converter={StaticResource NotNullConverter}}" />
+
             </Grid>
 
             <ListBox x:Name="_stratumDefaultsListBox"

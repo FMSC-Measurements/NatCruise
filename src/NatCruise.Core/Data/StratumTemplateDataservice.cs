@@ -100,6 +100,7 @@ WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID;",
         {
             return Database.From<StratumTemplateTreeFieldSetup>()
                 .Where("StratumTemplateName = @p1 AND CruiseID = @p2")
+                .OrderBy(nameof(StratumTemplateTreeFieldSetup.FieldOrder))
                 .Query(stratumTemplateName, CruiseID).ToArray();
         }
 
@@ -166,6 +167,7 @@ WHERE StratumTemplateName = @StratumTemplateName AND CruiseID = @CruiseID AND Fi
         {
             return Database.From<StratumTemplateLogFieldSetup>()
                 .Where("StratumTemplateName = @p1 AND CruiseID = @p2")
+                .OrderBy(nameof(StratumTemplateLogFieldSetup.FieldOrder))
                 .Query(stratumTemplateName, CruiseID).ToArray();
         }
 

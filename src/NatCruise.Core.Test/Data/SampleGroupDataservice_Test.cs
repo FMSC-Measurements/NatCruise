@@ -64,19 +64,5 @@ namespace NatCruise.Test.Data
             var sgAgain = ds.GetSampleGroup(stCode, sgCode);
             sgAgain.Should().BeNull();
         }
-
-        [Fact]
-        public void GetSampleGroupHasFieldData()
-        {
-            var init = new DatastoreInitializer();
-            using var db = init.CreateDatabase();
-
-            var ds = new SampleGroupDataservice(db, init.CruiseID, init.DeviceID);
-
-            var stCode = "st1";
-            var sgCode = "sg1";
-            var hasFieldData = ds.GetSampleGroupHasFieldData(stCode, sgCode);
-            hasFieldData.Should().BeFalse();
-        }
     }
 }

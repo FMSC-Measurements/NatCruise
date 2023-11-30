@@ -7,6 +7,7 @@ using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
 using Prism.Commands;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private TreeEditViewModel _treeEditViewModel;
         private ICommand _addTreeCommand;
         private ICommand _deleteTreeCommand;
-
+        private ICommand _deleteTreesCommand;
         private readonly IEnumerable<TreeField> COMMON_TREEFIELDS = new[]
         {
             new TreeField{DbType = "TEXT", Heading = "Cutting Unit", Field = nameof(Tree.CuttingUnitCode)},
@@ -91,6 +92,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public ICommand AddTreeCommand => _addTreeCommand ??= new DelegateCommand(() => AddTree().FireAndForget());
         public ICommand DeleteTreeCommand => _deleteTreeCommand ??= new DelegateCommand(() => DeleteTree().FireAndForget());
+
+        public ICommand DeleteTreesCommand => _deleteTreesCommand ??= new DelegateCommand<IList>((x) => DeleteTrees(x).FireAndForget());
 
         public ITreeDataservice TreeDataservice { get; }
         public IPlotTreeDataservice PlotTreeDataservice { get; }
@@ -437,6 +440,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             return DeleteTree(tree);
         }
 
+        
+
         public async Task DeleteTree(Tree tree)
         {
             if (tree == null) { return; }
@@ -445,6 +450,22 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             if (result is "yes")
             {
                 TreeDataservice.DeleteTree(tree.TreeID);
+                Load();
+            }
+        }
+
+        public async Task DeleteTrees(IList trees)
+        {
+            var myTrees = trees.OfType<Tree>().ToArray();
+
+            var result = await DialogService.AskValueAsync($"Delete {myTrees.Length} Tree(s)?", "yes", "no");
+            if (result is "yes")
+            {
+                foreach (var t in myTrees)
+                {
+                    TreeDataservice.DeleteTree(t.TreeID);
+                }
+
                 Load();
             }
         }

@@ -85,18 +85,12 @@ INSERT INTO Subpopulation (
     fctp.Max,
     (
         EXISTS (SELECT * FROM Tree AS t
-                WHERE t.CruiseID = sp.CruiseID
-                AND t.StratumCode = sp.StratumCode
-                AND t.SampleGroupCode = sp.SampleGroupCode
-                AND t.SpeciesCode = sp.SpeciesCode
-                AND t.LiveDead = sp.LiveDead)
-        OR EXISTS (SELECT * FROM TallyLedger AS tl
-                WHERE tl.CruiseID = sp.CruiseID
-                AND tl.StratumCode = sp.StratumCode
-                AND tl.SampleGroupCode = sp.SampleGroupCode
-                AND tl.SpeciesCode = sp.SpeciesCode
-                AND tl.LiveDead = sp.LiveDead)
-    ) AS HasFieldData
+        WHERE t.CruiseID = sp.CruiseID
+        AND t.StratumCode = sp.StratumCode
+        AND t.SampleGroupCode = sp.SampleGroupCode
+        AND t.SpeciesCode = sp.SpeciesCode
+        AND t.LiveDead = sp.LiveDead)
+    ) AS HasTrees
 FROM SubPopulation AS sp
 LEFT JOIN FixCNTTallyPopulation AS fctp USING (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
 WHERE StratumCode = @p1 AND (@p2 IS NULL OR SampleGroupCode = @p2) AND CruiseID = @p3;",

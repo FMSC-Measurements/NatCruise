@@ -20,11 +20,6 @@ namespace NatCruise.Wpf.Services
             AppService = appService;
         }
 
-        public Task<bool> AskCancelAsync(string message, string caption, bool defaultCancel)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Task<string> AskCruiserAsync()
         {
             throw new System.NotImplementedException();

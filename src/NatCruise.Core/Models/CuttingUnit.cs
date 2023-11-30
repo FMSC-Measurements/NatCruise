@@ -66,6 +66,9 @@ namespace NatCruise.Models
             set => SetProperty(ref _rx, value);
         }
 
+        [Field(PersistanceFlags = PersistanceFlags.Never)]
+        public bool HasTrees { get; set; }
+
         [IgnoreField]
         public IEnumerable<string> Errors
         {

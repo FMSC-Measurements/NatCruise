@@ -18,7 +18,5 @@ namespace NatCruise.Data
         void UpdateSampleGroupCode(SampleGroup sg);
 
         void DeleteSampleGroup(SampleGroup sampleGroup);
-
-        bool GetSampleGroupHasFieldData(string stratumCode, string sampleGroupCode);
     }
 }

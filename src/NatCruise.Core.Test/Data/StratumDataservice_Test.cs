@@ -20,7 +20,7 @@ namespace NatCruise.Test.Data
     {
 
         [Fact]
-        public void DeleteStratum_WithFieldData()
+        public void DeleteStratum_WithTrees()
         {
             var init = new DatastoreInitializer();
 
@@ -85,8 +85,8 @@ namespace NatCruise.Test.Data
 
                 var results = datastore.GetStrata();
 
-                results.Where(s => s.StratumCode == "st1").Single().HasFieldData.Should().BeTrue();
-                results.Where(s => s.StratumCode != "st1").All(x => x.HasFieldData == false).Should().BeTrue();
+                results.Where(s => s.StratumCode == "st1").Single().HasTrees.Should().BeTrue();
+                results.Where(s => s.StratumCode != "st1").All(x => x.HasTrees == false).Should().BeTrue();
 
                 var stratum = results.Where(s => s.StratumCode == "st1").Single();
                 datastore.DeleteStratum(stratum);
@@ -189,7 +189,7 @@ namespace NatCruise.Test.Data
         }
 
         [Fact]
-        public void GetStrata_HasFieldData_With_Trees()
+        public void GetStrata_HasTrees_With_Trees()
         {
             var init = new DatastoreInitializer();
 
@@ -208,14 +208,15 @@ namespace NatCruise.Test.Data
 
                 var results = datastore.GetStrata();
 
-                results.Where(s => s.StratumCode == "st1").Single().HasFieldData.Should().BeTrue();
-                results.Where(s => s.StratumCode != "st1").All(x => x.HasFieldData == false).Should().BeTrue();
+                results.Where(s => s.StratumCode == "st1").Single().HasTrees.Should().BeTrue();
+                results.Where(s => s.StratumCode != "st1").All(x => x.HasTrees == false).Should().BeTrue();
                 results.All(x => !string.IsNullOrEmpty(x.StratumID)).Should().BeTrue();
             }
         }
 
+
         [Fact]
-        public void GetStrata_HasFieldData_With_Plots()
+        public void GetStrata_HasTrees_With_PlotsAndTrees()
         {
             var init = new DatastoreInitializer();
 
@@ -252,9 +253,103 @@ namespace NatCruise.Test.Data
 
                 var results = datastore.GetStrata();
 
-                results.Where(s => s.StratumCode == "st1").Single().HasFieldData.Should().BeTrue();
-                results.Where(s => s.StratumCode != "st1").All(x => x.HasFieldData == false).Should().BeTrue();
+                results.Where(s => s.StratumCode == "st1").Single().HasTrees.Should().BeTrue();
+                results.Where(s => s.StratumCode != "st1").All(x => x.HasTrees == false).Should().BeTrue();
                 results.All(x => !string.IsNullOrEmpty(x.StratumID)).Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void GetStratumUnitInfo()
+        {
+            var init = new DatastoreInitializer();
+
+            using var db = init.CreateDatabase();
+
+            var ds = new StratumDataservice(db, init.CruiseID, init.DeviceID);
+
+            var trees = new[]
+                {
+                    new Tree { CruiseID = init.CruiseID, TreeID = Guid.NewGuid().ToString(), TreeNumber = 1, CuttingUnitCode = "u1", StratumCode = "st1", SampleGroupCode = "sg1",  },
+                    new Tree { CruiseID = init.CruiseID, TreeID = Guid.NewGuid().ToString(), TreeNumber = 2, CuttingUnitCode = "u1", StratumCode = "st1", SampleGroupCode = "sg1",  },
+                };
+            foreach (var tree in trees)
+            { db.Insert(tree); }
+
+            foreach (var st in init.Strata)
+            {
+                var units = ds.GetStratumUnitInfo(st.StratumCode);
+                units.Should().NotBeNull();
+                units.Should().HaveCountGreaterThan(0);
+            }
+
+            var unitsSt1 = ds.GetStratumUnitInfo("st1");
+            unitsSt1.Where(x => x.CuttingUnitCode == "u1").Single().HasTrees.Should().BeTrue();
+
+            var unitsSt2 = ds.GetStratumUnitInfo("st2");
+            unitsSt2.Any( x => x.HasTrees).Should().BeFalse();
+        }
+
+        [Fact]
+        public void RemoveStratumFromCuttingUnit()
+        {
+            var unitCode = "u1";
+            var stCode = "st1";
+
+            var init = new DatastoreInitializer();
+            using (var database = init.CreateDatabase())
+            {
+                var stDs = new StratumDataservice(database, init.CruiseID, init.DeviceID);
+                var unitDs = new CuttingUnitDataservice(database, init.CruiseID, init.DeviceID);
+
+                var unitCodes = unitDs.GetCuttingUnitCodesByStratum(stCode);
+                unitCodes.Should().Contain(unitCode);
+
+                stDs.RemoveStratumFromCuttingUnit(unitCode, stCode);
+
+                var unitCodesAgain = unitDs.GetCuttingUnitCodesByStratum(stCode);
+                unitCodesAgain.Should().NotContain(unitCode);
+
+            }
+        }
+
+
+
+        [Fact]
+        public void RemoveStratumFromCuttingUnit_With_PlotStrata()
+        {
+            var unitCode = "u1";
+            var stCode = "st1";
+
+            var init = new DatastoreInitializer();
+            using (var database = init.CreateDatabase())
+            {
+                // setup and validate setup
+                var plotStDs = new PlotStratumDataservice(database, init.CruiseID, init.DeviceID);
+                var plotDs = new PlotDataservice(database, init.CruiseID, init.DeviceID);
+                plotDs.AddNewPlot(unitCode);
+                plotDs.GetPlotsByUnitCode(unitCode).Select(x => x.PlotNumber).Should().Contain(1);
+
+                var plot_strata = plotStDs.GetPlot_Strata(unitCode, 1, false);
+                plot_strata.Select(x => x.StratumCode).Should().Contain(stCode);
+
+                var stDs = new StratumDataservice(database, init.CruiseID, init.DeviceID);
+                var unitDs = new CuttingUnitDataservice(database, init.CruiseID, init.DeviceID);
+
+                var unitCodes = unitDs.GetCuttingUnitCodesByStratum(stCode);
+                unitCodes.Should().Contain(unitCode);
+
+                // remove unit from stratum
+                stDs.RemoveStratumFromCuttingUnit(unitCode, stCode);
+
+
+                // validate
+                var unitCodesAgain = unitDs.GetCuttingUnitCodesByStratum(stCode);
+                unitCodesAgain.Should().NotContain(unitCode);
+
+                var plot_strataAgian = plotStDs.GetPlot_Strata(unitCode, 1, false);
+                plot_strataAgian.Select(x => x.StratumCode).Should().NotContain(stCode);
+
             }
         }
     }

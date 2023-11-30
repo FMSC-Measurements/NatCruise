@@ -8,6 +8,7 @@
              xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -48,8 +49,8 @@
                         Width="32"
                         Style="{StaticResource RemoveButton}"
                         Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
-                        Command="{Binding DeletePlotCommand}"
-                        CommandParameter="{Binding SelectedItem, ElementName=_datagrid}"
+                        Command="{Binding DeletePlotsCommand}"
+                        CommandParameter="{Binding SelectedItems, ElementName=_datagrid}"
                         IsEnabled="{Binding SelectedItem, ElementName=_datagrid, Converter={StaticResource NotNullConverter}}" />
             </StackPanel>
 
@@ -61,6 +62,7 @@
                       AutoGenerateColumns="False"
                       IsReadOnly="True">
                 <DataGrid.Columns>
+                    <controls:DataGridMultiSelectColumn />
                     <DataGridTextColumn Header="Cutting Unit"
                                         Binding="{Binding CuttingUnitCode}" />
                     <DataGridTextColumn Header="Plot Number"

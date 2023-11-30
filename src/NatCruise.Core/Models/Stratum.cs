@@ -95,7 +95,7 @@ namespace NatCruise.Models
         }
 
         [Field(PersistanceFlags = PersistanceFlags.Never)]
-        public bool HasFieldData { get; set; }
+        public bool HasTrees { get; set; }
 
         // TODO use CruiseMethods Look up table to get this value from the db?
         public bool Is3P => CruiseMethods.THREE_P_METHODS.Contains(Method);

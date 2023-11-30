@@ -27,8 +27,8 @@ using Xamarin.Forms;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.1.10.0")]
-[assembly: AssemblyFileVersion("3.1.10.0")]
+[assembly: AssemblyVersion("3.1.11.0")]
+[assembly: AssemblyFileVersion("3.1.11.0")]
 
 // Add some common permissions, these can be removed if not needed
 //[assembly: UsesPermission(Android.Manifest.Permission.Internet)]

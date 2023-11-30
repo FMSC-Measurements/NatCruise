@@ -15,7 +15,7 @@
              x:Name="_page">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:LogFieldsToDataGridColumnsConverter x:Key="LogFieldsToColumnsConverter" />
+            <converters:LogFieldsToDataGridColumnsConverter x:Key="LogFieldsToColumnsConverter" SelectColumn="False" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>

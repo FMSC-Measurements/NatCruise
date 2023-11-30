@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Navigation;
 using NatCruise.Services;
 using System.Windows.Input;
+using System.Collections;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
@@ -21,6 +22,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private string _cuttingUnitCode;
         private Plot _selectedPlot;
         private ICommand _addPlotCommand;
+        private ICommand _deletePlotsCommand;
 
         public PlotListViewModel(IPlotDataservice plotDataservice,
             ICuttingUnitDataservice cuttingUnitDataservice,
@@ -43,6 +45,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public ILoggingService LoggingService { get; }
 
         public ICommand AddPlotCommand => _addPlotCommand ??= new RelayCommand<int?>(AddPlot, AddPlotCanExecute);
+
+        public ICommand DeletePlotsCommand => _deletePlotsCommand ??= new RelayCommand<IList>(x => DeletePlots(x).FireAndForget());
 
         public event EventHandler PlotAdded;
         //public event EventHandler PlotRemoved;
@@ -90,7 +94,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public void AddPlot(int? plotNumber)
         {
-            if (plotNumber == null || plotNumber < 0) { return; }
+            if (plotNumber < 0) { return; }
 
             var unitCode = CuttingUnitCode;
             if (string.IsNullOrEmpty(unitCode))
@@ -147,6 +151,22 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
             PlotDataservice.DeletePlot(unitCode, plotNumber);
             Load();
+        }
+
+        public async Task DeletePlots(IList items)
+        {
+            var plots = items.OfType<Plot>().ToArray();
+
+            var result = await DialogService.AskValueAsync($"Delete {plots.Length} Plot(s)?", "yes", "no");
+            if (result is "yes")
+            {
+                foreach (var p in plots)
+                {
+                    PlotDataservice.DeletePlot(p.CuttingUnitCode, p.PlotNumber);
+                }
+
+                Load();
+            }
         }
     }
 }

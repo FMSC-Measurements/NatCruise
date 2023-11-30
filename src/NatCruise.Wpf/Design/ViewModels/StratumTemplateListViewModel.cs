@@ -21,6 +21,7 @@ namespace NatCruise.Design.ViewModels
         private StratumTemplate _seletedStratumTemplate;
         private IEnumerable<string> _methods;
         private IEnumerable<TreeField> _treefieldOptions;
+        private ICommand _removeStratumTemplateCommand;
 
         public event EventHandler StratumTemplateAdded;
 
@@ -41,6 +42,9 @@ namespace NatCruise.Design.ViewModels
         public string Forest { get; protected set; }
 
         public ICommand AddStratumTemplateCommand => _addStratumTemplateCommand ??= new DelegateCommand<string>(AddStratumTemplate);
+
+        public ICommand RemoveStratumTemplateCommand => _removeStratumTemplateCommand ??= new DelegateCommand<StratumTemplate>(RemoveStratumTemplate);
+        
 
         public ObservableCollection<StratumTemplate> StratumTemplates
         {
@@ -129,6 +133,15 @@ namespace NatCruise.Design.ViewModels
             {
                 DialogService.ShowNotification("Template Already Exists");
             }
+        }
+
+        private void RemoveStratumTemplate(StratumTemplate template)
+        {
+            if(template == null) { return; }
+
+            StratumTemplateDataservice.DeleteStratumTemplate(template);
+
+            StratumTemplates.Remove(template);
         }
     }
 }

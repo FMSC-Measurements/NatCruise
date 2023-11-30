@@ -75,9 +75,8 @@
                     Style="{StaticResource RemoveButton}"
                     Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                     Command="{Binding RemoveSubpopulationCommand}"
-                    CommandParameter="{Binding SelectedItem, Source={x:Reference _subpopListView} }"
-                    Grid.Column="2"
-                    IsEnabled="{Binding SelectedItem, ElementName=_subpopListView, Converter={StaticResource NotNullConverter}}" />
+                    CommandParameter="{Binding SelectedSubpopulation}"
+                    Grid.Column="2"/>
         </Grid>
 
         <DataGrid x:Name="_subpopListView"
@@ -85,6 +84,7 @@
                   Grid.Column="0"
                   SelectionMode="Single"
                   ItemsSource="{Binding Subpopulations}"
+                  SelectedItem="{Binding SelectedSubpopulation}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserReorderColumns="False"

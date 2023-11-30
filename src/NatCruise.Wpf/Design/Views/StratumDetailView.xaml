@@ -54,7 +54,7 @@
                 <TextBox Text="{Binding StratumCode}"
                          mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                          MaxLength="{x:Static dsgn:Constants.STRATUMCODE_MAXLENGTH}"
-                         IsEnabled="{Binding HasFieldData, Converter={StaticResource NotConverter}}"/>
+                         IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}"/>
             </ctrls:LastChildWidthPanel>
 
             <!-- description -->
@@ -71,8 +71,8 @@
                 <ComboBox SelectedValue="{Binding Method}"
                           SelectedValuePath="Method"
                           ItemsSource="{Binding Methods}"
-                          IsReadOnly="{Binding Stratum.HasFieldData}"
-                          IsEnabled="{Binding Stratum.HasFieldData, Converter={StaticResource NotConverter}}"/>
+                          IsReadOnly="{Binding IsLocked}"
+                          IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}"/>
             </ctrls:LastChildWidthPanel>
 
             <!-- yield component -->
@@ -90,7 +90,7 @@
                   d:Visibility="Visible"
                   Margin="5"
                   VerticalAlignment="Top"
-                  IsEnabled="{Binding Stratum.HasFieldData, Converter={StaticResource NotConverter}}">
+                  IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}">
 
             <StackPanel>
 
@@ -101,7 +101,7 @@
                              Text="{Binding BasalAreaFactor}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_real}"
-                             IsReadOnly="{Binding HasFieldData}"/>
+                             IsReadOnly="{Binding IsLocked}"/>
                 </ctrls:LastChildWidthPanel>
 
                 <!-- fps -->
@@ -119,7 +119,7 @@
                                  mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                                  Visibility="{Binding IsFixedSizePlot, Converter={StaticResource IsVisableConverter}}"
                                  ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
-                                 IsReadOnly="{Binding HasFieldData}"/>
+                                 IsReadOnly="{Binding IsLocked}"/>
                         <TextBlock Grid.Column="1"
                                    Text="1/x Acre"
                                    Margin="5,5" />
@@ -133,7 +133,7 @@
                              Text="{Binding KZ3PPNT}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
                              ctrls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
-                             IsReadOnly="{Binding HasFieldData}"/>
+                             IsReadOnly="{Binding IsLocked}"/>
                 </ctrls:LastChildWidthPanel>
 
                 <!-- fixcnt field -->
@@ -142,7 +142,7 @@
                     <ComboBox ItemsSource="{Binding TreeFieldOptions}"
                               SelectedValue="{Binding FixCNTField}"
                               SelectedValuePath="Field"
-                              IsReadOnly="{Binding HasFieldData}"/>
+                              IsReadOnly="{Binding IsLocked}"/>
                 </ctrls:LastChildWidthPanel>
             </StackPanel>
         </GroupBox>

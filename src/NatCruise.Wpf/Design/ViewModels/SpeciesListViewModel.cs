@@ -1,24 +1,23 @@
-﻿using NatCruise.Data;
-using NatCruise.Wpf.Data;
+﻿using CommunityToolkit.Mvvm.Input;
+using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
 using NatCruise.Services;
-using Prism.Commands;
+using NatCruise.Wpf.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
 
 namespace NatCruise.Design.ViewModels
 {
     public class SpeciesListViewModel : ViewModelBase
     {
-        private DelegateCommand<string> _addSpeciesCommand;
-        private DelegateCommand<Species> _deleteSpeciesCommand;
+        private RelayCommand<string> _addSpeciesCommand;
+        private RelayCommand<Species> _deleteSpeciesCommand;
         private ObservableCollection<Species> _species;
         private IEnumerable<FIASpecies> _fiaOptions;
 
@@ -44,9 +43,9 @@ namespace NatCruise.Design.ViewModels
 
         public event EventHandler SpeciesAdded;
 
-        public ICommand AddSpeciesCommand => _addSpeciesCommand ??= new DelegateCommand<string>(AddSpecies);
+        public IRelayCommand AddSpeciesCommand => _addSpeciesCommand ??= new RelayCommand<string>(AddSpecies);
 
-        public ICommand DeleteSpeciesCommand => _deleteSpeciesCommand ??= new DelegateCommand<Species>(DeleteSpecies);
+        public IRelayCommand DeleteSpeciesCommand => _deleteSpeciesCommand ??= new RelayCommand<Species>(DeleteSpecies, CanDeleteSpecies);
 
         public ObservableCollection<Species> Species
         {
@@ -61,6 +60,7 @@ namespace NatCruise.Design.ViewModels
             {
                 SpeciesDetailViewModel.Species = value;
                 OnPropertyChanged();
+                DeleteSpeciesCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -74,7 +74,7 @@ namespace NatCruise.Design.ViewModels
         {
             base.Load();
 
-            Species = new ObservableCollection<Species>(SpeciesDataservice.GetSpecies());
+            RefreshSpecies();
 
             var speciesFiaCodes = Species.Select(x => x.FIACode).Where(x => !string.IsNullOrEmpty(x)).ToHashSet();
             var fiaOptions = SetupDataservice.GetFIASpecies().ToList();
@@ -84,12 +84,17 @@ namespace NatCruise.Design.ViewModels
 
             foreach (var fia in missingFiaCode)
             {
-                fiaOptions.Add(new FIASpecies{ FIACode = fia });
+                fiaOptions.Add(new FIASpecies { FIACode = fia });
                 LoggingService.LogEvent(nameof(SpeciesListViewModel) + ":Unrecognized FIAcode:" + fia);
             }
-            fiaOptions = fiaOptions.OrderBy(x => int.TryParse(x.FIACode, out var i)? i : 0).ToList();
+            fiaOptions = fiaOptions.OrderBy(x => int.TryParse(x.FIACode, out var i) ? i : 0).ToList();
 
             FIAOptions = fiaOptions;
+        }
+
+        public void RefreshSpecies()
+        {
+            Species = new ObservableCollection<Species>(SpeciesDataservice.GetSpecies());
         }
 
         public void AddSpecies(string speciesCode)
@@ -115,6 +120,11 @@ namespace NatCruise.Design.ViewModels
             { DialogService.ShowNotification("Species Code Already Exists"); }
         }
 
+        private bool CanDeleteSpecies(Species sp)
+        {
+            return sp != null;
+        }
+
         public void DeleteSpecies(Species species)
         {
             if (species is null) { throw new ArgumentNullException(nameof(species)); }
@@ -122,13 +132,12 @@ namespace NatCruise.Design.ViewModels
             try
             {
                 SpeciesDataservice.DeleteSpecies(species.SpeciesCode);
+                RefreshSpecies();
             }
             catch (FMSC.ORM.ConstraintException)
             {
                 DialogService.ShowNotification("Can Not Delete Species With Data");
             }
-
-            
         }
     }
 }

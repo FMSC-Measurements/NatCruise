@@ -11,9 +11,11 @@
              xmlns:triggers="clr-namespace:NatCruise.Wpf.Triggers"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
+             xmlns:multi="clr-namespace:NatCruise.Wpf.Converters.Multi"
              x:Class="NatCruise.Design.Views.StratumListView"
              prism:ViewModelLocator.AutoWireViewModel="True"
              prism:ClearChildViewsRegionBehavior.ClearChildViews="True"
+             x:Name="_page"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -88,17 +90,7 @@
                             Style="{StaticResource RemoveButton}"
                             Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                             Command="{Binding RemoveStratumCommand}"
-                            CommandParameter="{Binding SelectedItem, ElementName=_stratumListView}">
-                        <Button.IsEnabled>
-                            <MultiBinding Converter="{StaticResource MultiBindingAllConverter}">
-                                <Binding Path="SelectedItem"
-                                         ElementName="_stratumListView"
-                                         Converter="{StaticResource NotNullConverter}" />
-                                <Binding Path="SelectedItem.HasFieldData"
-                                         ElementName="_stratumListView"
-                                         Converter="{StaticResource NotConverter}" /> 
-                            </MultiBinding>
-                        </Button.IsEnabled>
+                            CommandParameter="{Binding SelectedStratum}">
                     </Button>
 
 
@@ -121,8 +113,10 @@
                             </Style.Triggers>
                         </Style>
 
-                        <converters:BoolToObjectConverter x:Key="hasDataIconConverter" TrueObject="{iconPack:FontAwesome Kind=LockSolid}"
-                                                          FalseObject="" />
+                        <multi:AllConverter x:Key="hasDataVisabilityConverter"
+                                            TrueObject="{x:Static Visibility.Visible}"
+                                            FalseObject="{x:Static Visibility.Hidden}" />
+
                     </ListView.Resources>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False"
@@ -131,8 +125,16 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{iconPack:FontAwesome Kind=LockSolid}"
-                                               Visibility="{Binding HasFieldData, Converter={StaticResource IsVisableConverter}}"
-                                               ToolTip="Has Field Data Lock"/>
+                                               ToolTip="Has Field Data Lock">
+                                            <Label.Visibility>
+                                                <MultiBinding Converter="{StaticResource hasDataVisabilityConverter}">
+                                                    <Binding Path="HasTrees" />
+                                                    <Binding Path="DataContext.IsSuperuserModeEnabled"
+                                                             Source="{x:Reference _page}"
+                                                             Converter="{StaticResource NotConverter}"/>
+                                                </MultiBinding>
+                                            </Label.Visibility>
+                                        </Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

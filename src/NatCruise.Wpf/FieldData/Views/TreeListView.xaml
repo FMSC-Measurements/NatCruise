@@ -27,7 +27,8 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal">
             <!--<TextBox x:Name="_addTreeNumberTextbox"
                      mah:TextBoxHelper.Watermark="Tree # (optional)"
                      ToolTip="Tree Number, leave blank to auto-select tree number">
@@ -46,11 +47,11 @@
                     Width="32"
                     Style="{StaticResource RemoveButton}"
                     Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
-                    Command="{Binding DeleteTreeCommand}"
-                    CommandParameter="{Binding SelectedItem, ElementName=_datagrid}"
+                    Command="{Binding DeleteTreesCommand}"
+                    CommandParameter="{Binding SelectedItems, ElementName=_datagrid}"
                     IsEnabled="{Binding SelectedItem, ElementName=_datagrid, Converter={StaticResource NotNullConverter}}" />
         </StackPanel>
-        
+
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -59,13 +60,14 @@
             </Grid.RowDefinitions>
 
             <DataGrid Grid.Row="0"
-                      x:Name="_datagrid"
-                      ItemsSource="{Binding Trees}"
-                      SelectedItem="{Binding SelectedTree}"
-                      SelectionChanged="TreeListSelectionChanged"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      controls:DataGridHelper.ColumnsBinding="{Binding Fields, Converter={StaticResource TreeFieldsToColumnsConverter}}">
+                                          x:Name="_datagrid"
+                                          ItemsSource="{Binding Trees}"
+                                          SelectedItem="{Binding SelectedTree}"
+                                          
+                                          SelectionChanged="TreeListSelectionChanged"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True"
+                                          controls:DataGridHelper.ColumnsBinding="{Binding Fields, Converter={StaticResource TreeFieldsToColumnsConverter}}">
             </DataGrid>
 
             <TextBlock Grid.Row="1">
@@ -90,7 +92,7 @@
                         <local:TreeLogListView DataContext="{Binding LogListViewModel}" />
                     </TabItem>
                 </TabControl>
-                
+
                 <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                       Visibility="{Binding SelectedTree, Converter={StaticResource IsNotVisableConverter}}"
                       d:Visibility="Hidden">

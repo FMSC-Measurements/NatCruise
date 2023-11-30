@@ -19,10 +19,8 @@ namespace NatCruise.Data
         protected const string SELECT_STRATUM_CORE =
 @"SELECT
     Stratum.*,
-    (
-        EXISTS ( SELECT * FROM Plot_Stratum WHERE CruiseID = Stratum.CruiseID AND StratumCode = Stratum.StratumCode)
-        OR EXISTS ( SELECT * FROM Tree WHERE CruiseID = Stratum.CruiseID AND StratumCode = Stratum.StratumCode)
-    ) AS HasFieldData
+    ( EXISTS ( SELECT * FROM Tree WHERE CruiseID = Stratum.CruiseID AND StratumCode = Stratum.StratumCode))
+        AS HasTrees
 FROM Stratum
 ";
 
@@ -145,6 +143,17 @@ FROM Stratum
             return Database.ExecuteScalar<string>("SELECT Method FROM Stratum WHERE StratumCode = @p1 AND CruiseID = @p2;", stratumCode, CruiseID);
         }
 
+        public IEnumerable<StratumCuttingUnitInfo> GetStratumUnitInfo(string stratumCode)
+        {
+            return Database.Query<StratumCuttingUnitInfo>(
+@"SELECT cust.*,
+(
+    EXISTS ( SELECT * FROM Tree WHERE CruiseID = cust.CruiseID AND StratumCode = cust.StratumCode)
+) AS HasTrees
+FROM CuttingUnit_Stratum as cust
+WHERE cust.CruiseID = @p1 AND cust.StratumCode = @p2;", CruiseID, stratumCode);
+        }
+
         public IEnumerable<string> GetStratumCodes(string cuttingUnitCode = null)
         {
             return Database.QueryScalar<string>(
@@ -159,7 +168,7 @@ FROM Stratum
                 "WHERE CuttingUnitCode = @p1 AND CruiseID = @p2;", unitCode, CruiseID);
         }
 
-        // TODO method just returns tree based strata, check logic
+        // TODO method just returns tree based strata, change method name to indicate so, or consolidate getStrata methods
         public IEnumerable<Stratum> GetStrataByUnitCode(string unitCode)
         {
             return Database.Query<Stratum>(
@@ -186,12 +195,9 @@ FROM Stratum
 
         public void RemoveStratumFromCuttingUnit(string cuttingUnitCode, string stratumCode)
         {
-            bool force = false;
+            Database.Execute("DELETE FROM CuttingUnit_Stratum WHERE CruiseID = @p1 AND CuttingUnitCode = @p2 AND StratumCode = @p3;", CruiseID, cuttingUnitCode, stratumCode);
 
-            if (force || !HasTreeCounts(cuttingUnitCode, stratumCode))
-            {
-                Database.Execute("DELETE FROM CuttingUnit_Stratum WHERE CuttingUnitCode = @p1 AND StratumCode = @p2;", cuttingUnitCode, stratumCode);
-            }
+            Database.Execute("DELETE FROM Plot_Stratum WHERE CruiseID = @p1 AND CuttingUnitCode = @p2 AND StratumCode = @p3;", CruiseID, cuttingUnitCode, stratumCode);
         }
 
         public void UpdateStratum(Stratum stratum)
@@ -244,17 +250,10 @@ WHERE StratumID = @StratumID;",
             });
         }
 
-        // TODO should method return true if has tree counts or trees?
-        // Indicates if specific unit in stratum has field data
-        public bool HasTreeCounts(string unitCode, string stratum)
+        public bool HasTrees(string unitCode, string stratum)
         {
-            var treecount = Database.ExecuteScalar<int>("SELECT sum(TreeCount) FROM TallyLedger WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND CruiseID = @p3;"
-                , unitCode, stratum, CruiseID);
-
-            var numTrees = Database.ExecuteScalar<int>("SELECT count(*) FROM Tree WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND CruiseID = @p3;"
-                , unitCode, stratum, CruiseID);
-
-            return numTrees > 0;
+            return Database.ExecuteScalar<int>("SELECT count(*) FROM Tree WHERE CuttingUnitCode = @p1 AND StratumCode = @p2 AND CruiseID = @p3;"
+                , unitCode, stratum, CruiseID) > 0;
         }
     }
 }
