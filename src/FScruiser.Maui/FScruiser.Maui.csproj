@@ -72,4 +72,10 @@
 	  <Folder Include="Converters\" />
 	</ItemGroup>
 
+	<!--<ItemGroup>
+	  <MauiFont Update="Resources\Fonts\FontAwesomeSolid.otf">
+	    <Generator></Generator>
+	  </MauiFont>
+	</ItemGroup>-->
+
 </Project>
