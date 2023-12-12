@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Wpf", "NatCruise.Wpf\NatCruise.Wpf.csproj", "{5ECD0664-39BD-425D-AB54-594FF7B33C11}"
 EndProject
@@ -57,7 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Wpf.Test", "NatCr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V2.Updater", "C:\Users\BenCamps\Documents\FMSC_GitHub\CruiseDAL\src\CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj", "{310C36E9-2545-466E-B6F9-F09EC4F101A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NatCruise.Wpf.Controls.Test", "NatCruise.Wpf.Controls.Test\NatCruise.Wpf.Controls.Test.csproj", "{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Wpf.Controls.Test", "NatCruise.Wpf.Controls.Test\NatCruise.Wpf.Controls.Test.csproj", "{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FScruiser.Maui", "FScruiser.Maui\FScruiser.Maui.csproj", "{B1A13EA3-9433-4701-960D-CAA430730F26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -279,6 +281,24 @@ Global
 		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Release|x86.ActiveCfg = Release|Any CPU
 		{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}.Release|x86.Build.0 = Release|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Debug|x86.Build.0 = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Profile|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Profile|Any CPU.Build.0 = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Profile|Any CPU.Deploy.0 = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Profile|x86.ActiveCfg = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Profile|x86.Build.0 = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Profile|x86.Deploy.0 = Debug|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Release|x86.ActiveCfg = Release|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Release|x86.Build.0 = Release|Any CPU
+		{B1A13EA3-9433-4701-960D-CAA430730F26}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

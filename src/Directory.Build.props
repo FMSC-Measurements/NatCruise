@@ -1,11 +1,14 @@
 <Project>
 	<PropertyGroup Label="Build Config">
-		<LangVersion>9.0</LangVersion>
 		<Version>3.1.11.0</Version>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0')) == false">
+		<LangVersion>9.0</LangVersion>
+	</PropertyGroup>
+
 	<PropertyGroup Label="Custom Properties">
-		<UseCruiseDALProjRefs Condition="$(UseCruiseDALProjRefs) == ''">false</UseCruiseDALProjRefs>
+		<UseCruiseDALProjRefs Condition="$(UseCruiseDALProjRefs) == ''">true</UseCruiseDALProjRefs>
 		<CruiseDALRepoDir>C:\Users\BenCamps\Documents\FMSC_GitHub\</CruiseDALRepoDir>
 	</PropertyGroup>
 
