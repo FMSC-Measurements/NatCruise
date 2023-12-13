@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.Maui.Controls.PopulationIndicator"
+             x:Name="_view">
+    <ContentView.Content>
+
+        <StackLayout Orientation="Horizontal"
+                     BindingContext="{x:Reference _view}"
+                     BackgroundColor="{Binding BackgroundColor}">
+            <StackLayout.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="VerticalTextAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalTextAlignment"
+                            Value="Center" />
+                    <Setter Property="LineBreakMode"
+                            Value="NoWrap" />
+                </Style>
+            </StackLayout.Resources>
+            
+            <Label x:Name="_stratumLabel"
+                   Text="{Binding StratumCode}"
+                   TextColor="{Binding TextColor }"
+                   Padding="{Binding CellPadding}"
+                   Margin="{Binding CellMargin}"/>
+            <BoxView WidthRequest="2"
+                     BackgroundColor="White"/>
+            
+            <Label x:Name="_sgLabel"
+                   Text="{Binding SampleGroupCode}"
+                   FontSize="{Binding AltFontSize}"
+                   FontAttributes="{Binding AltFontAttributes}"
+                   TextColor="{Binding TextColor }"
+                   Padding="{Binding CellPadding}"
+                   Margin="{Binding CellMargin}"/>
+            <BoxView
+                     WidthRequest="2"
+                     BackgroundColor="White"
+                     IsVisible="{Binding Species, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+            
+            <Label x:Name="_spLabel"
+                   Text="{Binding Species}"
+                   FontSize="{Binding AltFontSize}"
+                   FontAttributes="{Binding AltFontAttributes}"
+                   TextColor="{Binding TextColor }"
+                   IsVisible="{Binding Species, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                   Padding="{Binding CellPadding}"
+                   Margin="{Binding CellMargin}"/>
+            <BoxView WidthRequest="2"
+                     BackgroundColor="White"
+                     IsVisible="{Binding LiveDead, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+            
+            <Label x:Name="_ldLabel"
+                   Text="{Binding LiveDead}"
+                   TextColor="{Binding TextColor }"
+                   IsVisible="{Binding LiveDead, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                   Padding="{Binding CellPadding}"
+                   Margin="{Binding CellMargin}"/>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>
