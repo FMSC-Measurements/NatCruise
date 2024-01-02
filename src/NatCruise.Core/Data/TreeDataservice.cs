@@ -281,6 +281,10 @@ ON CONFLICT (TreeID) DO UPDATE SET
     ModifiedBy = @DeviceID
 WHERE TreeID = @TreeID;";
 
+        public TreeDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public TreeDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

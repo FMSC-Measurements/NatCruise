@@ -30,11 +30,20 @@ namespace FScruiser.Maui
         {
             var services = builder.Services;
 
+            services.AddSingleton<IDataContextService, DataContextService>();
+
             services.AddSingleton<AppShell>();
             services.AddSingleton<ISoundService, SoundService>();
             services.AddSingleton<ICruiseNavigationService, MauiNavigationService>();
             services.AddSingleton<INatCruiseDialogService, MauiDialogService>();
-            services.AddSingleton<IDataserviceProvider>
+            //services.AddSingleton<IDataserviceProvider, DataserviceProviderBase>();
+
+            services.AddTransient<IPreferences>(x => Microsoft.Maui.Storage.Preferences.Default);
+
+            DataserviceProviderBase.AddDataServiceProviderServices(services);
+
+
+
 
             return builder;
         }

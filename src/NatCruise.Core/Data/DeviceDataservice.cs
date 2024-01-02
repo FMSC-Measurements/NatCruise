@@ -7,6 +7,10 @@ namespace NatCruise.Data
 {
     public class DeviceDataservice : CruiseDataserviceBase, IDeviceDataservice
     {
+        public DeviceDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public DeviceDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

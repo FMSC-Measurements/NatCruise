@@ -8,8 +8,12 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Data
 {
-    public class StratumTemplateDataservice : CruiseDataserviceBase,IStratumTemplateDataservice
+    public class StratumTemplateDataservice : CruiseDataserviceBase, IStratumTemplateDataservice
     {
+        public StratumTemplateDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public StratumTemplateDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

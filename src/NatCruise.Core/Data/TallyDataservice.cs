@@ -9,6 +9,11 @@ namespace NatCruise.Data
 {
     public class TallyDataservice : CruiseDataserviceBase, ITallyDataservice
     {
+        public TallyDataservice(IDataContextService dataContext, ISamplerStateDataservice sampleInfoDataservice) : base(dataContext)
+        {
+            SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
+        }
+
         public TallyDataservice(string path, string cruiseID, string deviceID, ISamplerStateDataservice sampleInfoDataservice)
             : base(path, cruiseID, deviceID)
         {
@@ -81,74 +86,74 @@ namespace NatCruise.Data
             //.Query(unitCode);
         }
 
-//        public IEnumerable<TallyEntry> GetTallyEntriesByUnitCodeIncludeUntallied(string unitCode)
-//        {
-//            if (string.IsNullOrEmpty(unitCode)) { throw new ArgumentException($"'{nameof(unitCode)}' cannot be null or empty", nameof(unitCode)); }
+        //        public IEnumerable<TallyEntry> GetTallyEntriesByUnitCodeIncludeUntallied(string unitCode)
+        //        {
+        //            if (string.IsNullOrEmpty(unitCode)) { throw new ArgumentException($"'{nameof(unitCode)}' cannot be null or empty", nameof(unitCode)); }
 
-//            return Database.Query<TallyEntry>(
-//@"SELECT
-//    tl.TreeID,
-//    tl.TallyLedgerID,
-//    tl.CuttingUnitCode,
-//    tl.StratumCode,
-//    tl.SampleGroupCode,
-//    tl.SpeciesCode,
-//    tl.LiveDead,
-//    tl.TreeCount,
-//    tl.Reason,
-//    tl.KPI,
-//    tl.EntryType,
-//    tl.Remarks,
-//    tl.Signature,
-//    tl.Created_TS,
-//    t.TreeNumber,
-//    t.CountOrMeasure,
-//    tl.STM,
-//    (CASE WHEN tl.TreeID IS NULL THEN 0 ELSE
-//        (SELECT count(*) FROM TreeError AS te WHERE Level = 'E' AND te.TreeID = tl.TreeID AND IsResolved = 0)
-//    END) AS ErrorCount,
-//    (CASE WHEN tl.TreeID IS NULL THEN 0 ELSE
-//        (SELECT count(*) FROM TreeError AS te WHERE Level = 'W' AND te.TreeID = tl.TreeID AND IsResolved = 0)
-//    END) AS WarningCount,
-//    tl.Created_TS,
-//    NULL AS Deleted_TS,
-//    false AS IsDeleted
-//FROM TallyLedger AS tl
-//LEFT JOIN Tree AS t USING (TreeID)
-//WHERE tl.CuttingUnitCode = @p1 AND tl.CruiseID = @p2 AND tl.PlotNumber IS NULL
+        //            return Database.Query<TallyEntry>(
+        //@"SELECT
+        //    tl.TreeID,
+        //    tl.TallyLedgerID,
+        //    tl.CuttingUnitCode,
+        //    tl.StratumCode,
+        //    tl.SampleGroupCode,
+        //    tl.SpeciesCode,
+        //    tl.LiveDead,
+        //    tl.TreeCount,
+        //    tl.Reason,
+        //    tl.KPI,
+        //    tl.EntryType,
+        //    tl.Remarks,
+        //    tl.Signature,
+        //    tl.Created_TS,
+        //    t.TreeNumber,
+        //    t.CountOrMeasure,
+        //    tl.STM,
+        //    (CASE WHEN tl.TreeID IS NULL THEN 0 ELSE
+        //        (SELECT count(*) FROM TreeError AS te WHERE Level = 'E' AND te.TreeID = tl.TreeID AND IsResolved = 0)
+        //    END) AS ErrorCount,
+        //    (CASE WHEN tl.TreeID IS NULL THEN 0 ELSE
+        //        (SELECT count(*) FROM TreeError AS te WHERE Level = 'W' AND te.TreeID = tl.TreeID AND IsResolved = 0)
+        //    END) AS WarningCount,
+        //    tl.Created_TS,
+        //    NULL AS Deleted_TS,
+        //    false AS IsDeleted
+        //FROM TallyLedger AS tl
+        //LEFT JOIN Tree AS t USING (TreeID)
+        //WHERE tl.CuttingUnitCode = @p1 AND tl.CruiseID = @p2 AND tl.PlotNumber IS NULL
 
-//UNION ALL
+        //UNION ALL
 
-//SELECT
-//    tl.TreeID,
-//    tl.TallyLedgerID,
-//    tl.CuttingUnitCode,
-//    tl.StratumCode,
-//    tl.SampleGroupCode,
-//    tl.SpeciesCode,
-//    tl.LiveDead,
-//    tl.TreeCount,
-//    tl.Reason,
-//    tl.KPI,
-//    tl.EntryType,
-//    tl.Remarks,
-//    tl.Signature,
-//    tl.Created_TS,
-//    null AS TreeNumber,
-//    null AS CountOrMeasure,
-//    tl.STM,
-//    0 AS ErrorCount,
-//    0 AS WarningCount,
-//    tl.Created_TS,
-//    tl.Deleted_TS,
-//    true AS IsDeleted
-//FROM TallyLedger_Tombstone AS tl
-//WHERE tl.CuttingUnitCode = @p1 AND tl.CruiseID = @p2 AND tl.PlotNumber IS NULL
+        //SELECT
+        //    tl.TreeID,
+        //    tl.TallyLedgerID,
+        //    tl.CuttingUnitCode,
+        //    tl.StratumCode,
+        //    tl.SampleGroupCode,
+        //    tl.SpeciesCode,
+        //    tl.LiveDead,
+        //    tl.TreeCount,
+        //    tl.Reason,
+        //    tl.KPI,
+        //    tl.EntryType,
+        //    tl.Remarks,
+        //    tl.Signature,
+        //    tl.Created_TS,
+        //    null AS TreeNumber,
+        //    null AS CountOrMeasure,
+        //    tl.STM,
+        //    0 AS ErrorCount,
+        //    0 AS WarningCount,
+        //    tl.Created_TS,
+        //    tl.Deleted_TS,
+        //    true AS IsDeleted
+        //FROM TallyLedger_Tombstone AS tl
+        //WHERE tl.CuttingUnitCode = @p1 AND tl.CruiseID = @p2 AND tl.PlotNumber IS NULL
 
-//ORDER BY Created_TS DESC;",
-//                unitCode, CruiseID)
-//                .ToArray();
-//        }
+        //ORDER BY Created_TS DESC;",
+        //                unitCode, CruiseID)
+        //                .ToArray();
+        //        }
 
         public IEnumerable<TallyEntry> GetTallyEntries(string unitCode, int plotNumber)
         {
@@ -169,8 +174,6 @@ namespace NatCruise.Data
             //    .Query(unitCode, plotNumber);
         }
 
-        
-
         public Task<TallyEntry> InsertTallyActionAsync(TallyAction tallyAction)
         {
             return Task.Run(() => InsertTallyAction(tallyAction));
@@ -187,7 +190,6 @@ namespace NatCruise.Data
             var tallyEntry = new TallyEntry(atn);
             try
             {
-               
                 tallyEntry.TallyLedgerID = Guid.NewGuid().ToString();
 
                 if (atn.IsSample)
@@ -322,7 +324,6 @@ INSERT INTO TreeMeasurment (
                 }
 
                 Database.CommitTransaction();
-                
             }
             catch
             {

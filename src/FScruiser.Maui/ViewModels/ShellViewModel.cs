@@ -32,7 +32,7 @@ public class ShellViewModel : ViewModelBase
 
     public ICommand ShowSelectSale => new Command(() => NavigationService.ShowSaleSelect().FireAndForget());
 
-    public ICommand ShowSaleCommand => new Command(() => NavigationService.ShowSale(DatastoreProvider?.CruiseID).FireAndForget());
+    public ICommand ShowSaleCommand => new Command(() => NavigationService.ShowSale(DataContextService?.CruiseID).FireAndForget());
 
     //public ICommand ShowUnitsCommand => new Command(() => NavigationService.ShowCuttingUnitList().FireAndForget());
 
@@ -124,7 +124,7 @@ public class ShellViewModel : ViewModelBase
     {
         get
         {
-            var cruiseID = DatastoreProvider?.CruiseID;
+            var cruiseID = DataContextService?.CruiseID;
             if (cruiseID != null)
             {
                 var cruise = SaleDataservice.GetCruise(cruiseID);
@@ -137,7 +137,7 @@ public class ShellViewModel : ViewModelBase
         }
     }
 
-    public bool IsCruiseSelected => DatastoreProvider?.CruiseID != null;
+    public bool IsCruiseSelected => DataContextService?.CruiseID != null;
 
     public bool IsCuttingUnitSelected
     {
@@ -161,9 +161,10 @@ public class ShellViewModel : ViewModelBase
     }
 
     public ICruiseNavigationService NavigationService { get; }
-    public IDataserviceProvider DatastoreProvider { get; }
+    //public IDataserviceProvider DatastoreProvider { get; }
     public IAppInfoService AppInfo { get; }
     public INatCruiseDialogService DialogService { get; }
+    public IDataContextService DataContextService { get; }
     public IDeviceInfoService DeviceInfo { get; }
     public ICuttingUnitDataservice CuttingUnitDataservice { get; }
     public ISaleDataservice SaleDataservice { get; }
@@ -171,20 +172,21 @@ public class ShellViewModel : ViewModelBase
     public ShellViewModel(
             ICruiseNavigationService navigationService,
             INatCruiseDialogService dialogService,
-            IDataserviceProvider datastoreProvider,
-            IDeviceInfoService deviceInfoService,
+            IDataContextService dataContextService,
+            //IDeviceInfoService deviceInfoService,
+            IServiceProvider serviceProvider,
             IAppInfoService appInfo)
     {
         AppInfo = appInfo ?? throw new ArgumentNullException(nameof(appInfo));
         NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         DialogService = dialogService;
-        DatastoreProvider = datastoreProvider;
-        DeviceInfo = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
+        DataContextService = dataContextService;
+        //DeviceInfo = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
 
-        if (datastoreProvider.CruiseID != null)
+        if (dataContextService.CruiseID != null)
         {
-            var cuttingUnitDataservice = CuttingUnitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDataservice>();
-            SaleDataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
+            var cuttingUnitDataservice = CuttingUnitDataservice = serviceProvider.GetRequiredService<ICuttingUnitDataservice>();
+            SaleDataservice = serviceProvider.GetRequiredService<ISaleDataservice>();
             if (cuttingUnitDataservice != null)
             {
                 CuttingUnits = cuttingUnitDataservice.GetCuttingUnits();
@@ -198,7 +200,7 @@ public class ShellViewModel : ViewModelBase
     {
         var navOptions = new List<NavOption>();
         //var moreNavOptions = new List<NavOption>();
-        var isCruiseSelected = DatastoreProvider.CruiseID != null;
+        var isCruiseSelected = DataContextService.CruiseID != null;
         if (isCruiseSelected)
         {
             if (IsCuttingUnitSelected)

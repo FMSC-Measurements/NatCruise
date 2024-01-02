@@ -3,13 +3,15 @@ using NatCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Data
 {
     public class SampleGroupDataservice : CruiseDataserviceBase, ISampleGroupDataservice
     {
+        public SampleGroupDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public SampleGroupDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -36,7 +38,7 @@ JOIN Stratum AS st USING (StratumCode, CruiseID)
             Database.Execute2(
 @"INSERT INTO SampleGroup (
     CruiseID,
-    SampleGroupID,    
+    SampleGroupID,
     SampleGroupCode,
     StratumCode,
     CutLeave,

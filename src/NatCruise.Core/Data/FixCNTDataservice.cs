@@ -1,5 +1,4 @@
 ﻿using CruiseDAL;
-using NatCruise.Data;
 using NatCruise.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,10 @@ namespace NatCruise.Data
 {
     public class FixCNTDataservice : CruiseDataserviceBase, IFixCNTDataservice
     {
+        public FixCNTDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public FixCNTDataservice(string path, string cruiseID, string deviceID)
             : base(path, cruiseID, deviceID)
         {

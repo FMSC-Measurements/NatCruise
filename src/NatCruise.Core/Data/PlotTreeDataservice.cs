@@ -9,6 +9,11 @@ namespace NatCruise.Data
     {
         public ISamplerStateDataservice SampleInfoDataservice { get; }
 
+        public PlotTreeDataservice(IDataContextService dataContext, ISamplerStateDataservice sampleInfoDataservice) : base(dataContext)
+        {
+            SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
+        }
+
         public PlotTreeDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID, ISamplerStateDataservice sampleInfoDataservice) : base(database, cruiseID, deviceID)
         {
             SampleInfoDataservice = sampleInfoDataservice ?? throw new ArgumentNullException(nameof(sampleInfoDataservice));
@@ -194,7 +199,7 @@ INSERT INTO TallyLedger (
 
             var tallyLedgerID = treeID;
 
-            if(string.IsNullOrEmpty(liveDead))
+            if (string.IsNullOrEmpty(liveDead))
             {
                 liveDead = Database.ExecuteScalar<string>(
                     "SELECT DefaultLiveDead " +

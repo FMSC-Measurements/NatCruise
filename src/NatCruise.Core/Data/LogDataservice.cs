@@ -8,6 +8,10 @@ namespace NatCruise.Data
 {
     public class LogDataservice : CruiseDataserviceBase, ILogDataservice
     {
+        public LogDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public LogDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -16,15 +20,15 @@ namespace NatCruise.Data
         {
         }
 
-        const string SELECT_LOG_CORE =
-@"SELECT 
-    l.*, 
-    (SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount, 
-    t.CuttingUnitCode, 
-    t.PlotNumber, 
+        private const string SELECT_LOG_CORE =
+@"SELECT
+    l.*,
+    (SELECT count(*) FROM LogGradeError AS lge WHERE lge.LogID = l.LogID AND IsResolved=0) AS ErrorCount,
+    t.CuttingUnitCode,
+    t.PlotNumber,
     t.TreeNumber,
     t.StratumCode
-FROM Log AS l 
+FROM Log AS l
 JOIN Tree AS t USING (TreeID) ";
 
         public IEnumerable<Log> GetLogs(string cuttingUnitCode = null, string stratumCode = null, string sampleGroupCode = null)
@@ -204,7 +208,5 @@ JOIN Tree AS t USING (TreeID) ";
         {
             Database.Execute("DELETE FROM Log WHERE LogID = @p1;", logID);
         }
-
-        
     }
 }

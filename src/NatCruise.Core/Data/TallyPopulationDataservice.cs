@@ -12,6 +12,10 @@ namespace NatCruise.Data
 {
     public class TallyPopulationDataservice : CruiseDataserviceBase, ITallyPopulationDataservice
     {
+        public TallyPopulationDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public TallyPopulationDataservice(string path, string cruiseID, string deviceID)
             : base(path, cruiseID, deviceID)
         {
@@ -21,6 +25,8 @@ namespace NatCruise.Data
             : base(database, cruiseID, deviceID)
         {
         }
+
+        
 
         private string SELECT_TALLYPOPULATION_CORE =
 $@"SELECT

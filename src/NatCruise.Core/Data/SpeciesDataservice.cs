@@ -8,6 +8,10 @@ namespace NatCruise.Data
 {
     public class SpeciesDataservice : CruiseDataserviceBase, ISpeciesDataservice
     {
+        public SpeciesDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public SpeciesDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

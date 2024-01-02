@@ -1,15 +1,50 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using NatCruise.Logic;
 using NatCruise.Services;
 using Prism.Ioc;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace NatCruise.Data
 {
     public class DataserviceProviderBase : IDataserviceProvider
     {
+        private static readonly ServiceDescriptor[] SERVICE_DEFINITIONS = new[] {
+                ServiceDescriptor.Transient<ISampleSelectorDataService>(x => x.GetRequiredService<IDataContextService>().SampleSelectorDataService),
+
+                ServiceDescriptor.Transient<ISaleDataservice, SaleDataservice>(),
+                ServiceDescriptor.Transient<ICuttingUnitDataservice, CuttingUnitDataservice>(),
+                ServiceDescriptor.Transient<IStratumDataservice, StratumDataservice>(),
+                ServiceDescriptor.Transient<ISampleGroupDataservice, SampleGroupDataservice>(),
+                ServiceDescriptor.Transient<ISubpopulationDataservice, SubpopulationDataservice>(),
+                ServiceDescriptor.Transient<ITreeDataservice, TreeDataservice>(),
+                ServiceDescriptor.Transient<ITreeErrorDataservice, TreeErrorDataservice>(),
+                ServiceDescriptor.Transient<ITreeFieldDataservice, TreeFieldDataservice>(),
+                ServiceDescriptor.Transient<ITreeFieldValueDataservice, TreeFieldValueDataservice>(),
+                ServiceDescriptor.Transient<ILogDataservice, LogDataservice>(),
+                ServiceDescriptor.Transient<ILogErrorDataservice, LogErrorDataservice>(),
+                ServiceDescriptor.Transient<IFieldSetupDataservice, FieldSetupDataservice>(),
+                ServiceDescriptor.Transient<IMessageLogDataservice, MessageLogDataservice>(),
+                ServiceDescriptor.Transient<ITallyPopulationDataservice, TallyPopulationDataservice>(),
+                ServiceDescriptor.Transient<IPlotDataservice, PlotDataservice>(),
+                ServiceDescriptor.Transient<IPlotStratumDataservice, PlotStratumDataservice>(),
+                ServiceDescriptor.Transient<IPlotErrorDataservice, PlotErrorDataservice>(),
+                ServiceDescriptor.Transient<IPlotTreeDataservice, PlotTreeDataservice>(),
+                ServiceDescriptor.Transient<ILogFieldDataservice, LogFieldDataservice>(),
+                ServiceDescriptor.Transient<ITallyLedgerDataservice, TallyLedgerDataservice>(),
+                ServiceDescriptor.Transient<ISpeciesDataservice, SpeciesDataservice>(),
+                ServiceDescriptor.Transient<ITreeAuditRuleDataservice, TreeAuditRuleDataservice>(),
+                ServiceDescriptor.Transient<IStratumTemplateDataservice, StratumTemplateDataservice>(),
+                ServiceDescriptor.Transient<ICruiseLogDataservice, CruiseLogDataservice>(),
+                ServiceDescriptor.Transient<IFixCNTDataservice, FixCNTDataservice>(),
+                ServiceDescriptor.Transient<ITallyDataservice, TallyDataservice>(),
+            };
+
         private string _cruiseID;
         private CruiseDatastore_V3 _database;
 
@@ -79,7 +114,6 @@ namespace NatCruise.Data
             containerRegistry.Register<IPlotStratumDataservice>(x => GetDataservice<IPlotStratumDataservice>(x));
             containerRegistry.Register<IPlotErrorDataservice>(x => GetDataservice<IPlotErrorDataservice>(x));
             containerRegistry.Register<IPlotTreeDataservice>(x => GetDataservice<IPlotTreeDataservice>(x));
-            containerRegistry.Register<ITallyPopulationDataservice>(x => GetDataservice<ITallyPopulationDataservice>(x));
             containerRegistry.Register<ILogFieldDataservice>(x => GetDataservice<ILogFieldDataservice>(x));
             containerRegistry.Register<ITallyLedgerDataservice>(x => GetDataservice<ITallyLedgerDataservice>(x));
             containerRegistry.Register<ISpeciesDataservice>(x => GetDataservice<ISpeciesDataservice>(x));
@@ -89,6 +123,16 @@ namespace NatCruise.Data
             containerRegistry.Register<ISampleSelectorDataService>(x => GetDataservice<ISampleSelectorDataService>(x));
             containerRegistry.Register<IFixCNTDataservice>(x => GetDataservice<IFixCNTDataservice>(x));
             containerRegistry.Register<ITallyDataservice>(x => GetDataservice<ITallyDataservice>(x));
+        }
+
+        public static IServiceCollection AddDataServiceProviderServices(IServiceCollection services)
+        {
+            foreach (var serviceDef in SERVICE_DEFINITIONS)
+            {
+                services.Add(serviceDef);
+            }
+
+            return services;
         }
 
         public DataserviceProviderBase(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService)
@@ -177,11 +221,11 @@ namespace NatCruise.Data
             {
                 return new TallyPopulationDataservice(database, cruiseID, deviceID);
             }
-            else if(typeof(IPlotDataservice) == type)
+            else if (typeof(IPlotDataservice) == type)
             {
                 return new PlotDataservice(database, cruiseID, deviceID);
             }
-            else if (typeof(IPlotStratumDataservice) == type )
+            else if (typeof(IPlotStratumDataservice) == type)
             {
                 return new PlotStratumDataservice(database, cruiseID, deviceID);
             }
@@ -189,7 +233,7 @@ namespace NatCruise.Data
             {
                 return new PlotErrorDataservice(database, cruiseID, deviceID);
             }
-            else if(typeof(IPlotTreeDataservice)== type)
+            else if (typeof(IPlotTreeDataservice) == type)
             {
                 return new PlotTreeDataservice(database, cruiseID, deviceID, GetDataservice<ISamplerStateDataservice>());
             }
@@ -197,7 +241,7 @@ namespace NatCruise.Data
             {
                 return new SamplerStateDataservice(database, cruiseID, deviceID);
             }
-            else if(typeof(ITallyPopulationDataservice) == type)
+            else if (typeof(ITallyPopulationDataservice) == type)
             {
                 return new TallyPopulationDataservice(database, cruiseID, deviceID);
             }
@@ -239,7 +283,6 @@ namespace NatCruise.Data
 
             if (typeof(ITallyDataservice).IsAssignableFrom(type))
             { return new TallyDataservice(database, cruiseID, deviceID, GetDataservice<ISamplerStateDataservice>()); }
-
             else
             {
                 return null;
@@ -278,6 +321,12 @@ namespace NatCruise.Data
         public static T GetDataservice<T>(IContainerProvider container) where T : class, IDataservice
         {
             var dsp = container.Resolve<IDataserviceProvider>();
+            return dsp.GetDataservice<T>();
+        }
+
+        public static T GetDataservice<T>(IServiceProvider sp) where T : class, IDataservice
+        {
+            var dsp = sp.GetRequiredService<IDataserviceProvider>();
             return dsp.GetDataservice<T>();
         }
     }

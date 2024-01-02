@@ -55,6 +55,10 @@ namespace NatCruise.Data
         {
         }
 
+        public TreeFieldValueDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public IEnumerable<TreeFieldValue> GetTreeFieldValues(string treeID)
         {
             var tfvs = Database.Query<TreeFieldValue>(

@@ -8,6 +8,18 @@ namespace FScruiser.Maui.Services
 {
     public class MauiNavigationService : ICruiseNavigationService
     {
+        public MauiNavigationService(IServiceProvider serviceProvider)
+        {
+            ServiceProvider = serviceProvider;
+            _shell = new Lazy<Shell>(() => ServiceProvider.GetRequiredService<AppShell>());
+        }
+
+        Lazy<Shell> _shell;
+
+        public Shell Shell => _shell.Value;
+            
+        public IServiceProvider ServiceProvider { get; }
+
         public Task GoBackAsync()
         {
             throw new NotImplementedException();

@@ -7,11 +7,15 @@ namespace NatCruise.Data
 {
     public class SubpopulationDataservice : CruiseDataserviceBase, ISubpopulationDataservice
     {
-        public SubpopulationDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
+        public SubpopulationDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
         {
         }
 
-        public SubpopulationDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        public SubpopulationDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
+        public SubpopulationDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
 

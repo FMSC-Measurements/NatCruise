@@ -6,18 +6,58 @@
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
 
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="PrimaryDark">#ac99ea</Color>
-    <Color x:Key="PrimaryDarkText">#242424</Color>
-    <Color x:Key="Secondary">#DFD8F7</Color>
-    <Color x:Key="SecondaryDarkText">#9880e5</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    <!-- FS digital playbook colors -->
+    <Color x:Key="usfs_green">#345E36</Color>
+    <Color x:Key="usfs_gold">#ffc425</Color>
+    <Color x:Key="usfs_text">#333333</Color>
+    <Color x:Key="usfs_footer_top">#797979</Color>
+    <Color x:Key="usfs_footer_bottom">#E1E1E1</Color>
+    <Color x:Key="usda_blue">#002D72</Color>
+    <Color x:Key="usda_dk_green">#005440</Color>
+    <Color x:Key="usda_brgt_blue">#0068B1</Color>
+    <Color x:Key="uswds_data_table_row_alt">#E8F2D9</Color>
+    <Color x:Key="uswds_lgt_tan">#F1E5CD</Color>
+    <Color x:Key="uswds_vivid_green">#538200</Color>
 
-    <Color x:Key="White">White</Color>
-    <Color x:Key="Black">Black</Color>
-    <Color x:Key="Magenta">#D600AA</Color>
-    <Color x:Key="MidnightBlue">#190649</Color>
-    <Color x:Key="OffBlack">#1f1f1f</Color>
+    <Color x:Key="fsdp_radioButtonColor">#4c6424</Color>
+    
+    
+    <!-- -->
+    <Color x:Key="tallyButtonBgColor">#345E36</Color>
+    <Color x:Key="addItemColor">#538200</Color>
+
+    <Color x:Key="error">Red</Color>
+    <Color x:Key="warning">Gold</Color>
+    <Color x:Key="error_suppressed">LightGray</Color>
+
+    <!-- tally feed colors, these colors do not use any of the ohter pre-defined colors
+        they were selected so that there would be a good amount of hue contrast between tree,insurance, and tally
+        measure tree and manual tree both use the same hue but with different shade -->
+    <Color x:Key="measureTreeColor">#008817</Color>
+    <Color x:Key="manualTreeColor">#70e17b</Color>
+    <Color x:Key="insuranceTreeColor">#d85bef</Color>
+    <Color x:Key="tallyCountEntryColor">#4866ff</Color>
+
+
+    <!-- text -->
+    <Color x:Key="darkText">#B2000000</Color>
+    <Color x:Key="listItemText">#345E36</Color>
+    <Color x:Key="lightText">White</Color>
+
+    <!-- these colors provide semi transparent pigments to be used as background colors or text color. 
+            using a semi transparent color as a font or background color is a good alternative to using grays
+            as these semi transparent pigments will play well with any other colors lower down in the visual stack-->
+    <Color x:Key="white_90">#E1ffffff</Color>
+    <Color x:Key="white_70">#B2ffffff</Color>
+    <Color x:Key="white_60">#99ffffff</Color>
+    <Color x:Key="white_50">#7FFFFFFF</Color>
+    <Color x:Key="white_38">#60FFFFFF</Color>
+    <Color x:Key="white_20">#33ffffff</Color>
+    <Color x:Key="white_12">#1EFFFFFF</Color>
+    <Color x:Key="black_90">#E5000000</Color>
+    <Color x:Key="black_70">#B2000000</Color>
+    <Color x:Key="black_30">#4C000000</Color>
+    <Color x:Key="black_12">#1E000000</Color>
 
     <Color x:Key="Gray100">#E1E1E1</Color>
     <Color x:Key="Gray200">#C8C8C8</Color>
@@ -27,12 +67,6 @@
     <Color x:Key="Gray600">#404040</Color>
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
-
-    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
-    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
-    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
-    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
-    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
 
     <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
     <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>

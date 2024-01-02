@@ -1,0 +1,61 @@
+﻿using NatCruise.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FScruiser.Maui.Services
+{
+    public class FileDialogServiceBase : IFileDialogService
+    {
+        public async Task<string> SelectCruiseFileAsync()
+        {
+            var fileTypes = new Dictionary<DevicePlatform, IEnumerable<string>>()
+                {
+                    { DevicePlatform.Android, new string[] {"application/x-cruise", "application/x-crz3"}},
+                };
+
+            var result = await FilePicker.PickAsync();
+
+            return result?.FullPath;
+        }
+
+        public async Task<string> SelectCruiseDatabaseAsync()
+        {
+            var fileTypes = new Dictionary<DevicePlatform, IEnumerable<string>>()
+                {
+                    { DevicePlatform.Android, new string[] {"application/x-crz3db"}},
+                };
+
+            var result = await FilePicker.PickAsync();
+
+            return result?.FullPath;
+        }
+
+        public virtual Task<string> SelectCruiseFileDestinationAsync(string defaultDir = null, string defaultFileName = null, string defaultSaleFolder = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Task<string> SelectBackupFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> SelectTemplateFileAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> SelectTemplateFileDestinationAsync(string defaultDir = null, string defaultFileName = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> SelectCruiseFilesAsync()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
