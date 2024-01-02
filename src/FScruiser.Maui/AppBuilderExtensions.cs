@@ -15,6 +15,7 @@ namespace FScruiser.Maui
     {
         public static MauiAppBuilder RegisterViews(this MauiAppBuilder builder)
         {
+            Routing.RegisterRoute("blank", typeof(BlankView));
 
             return builder;
         }
