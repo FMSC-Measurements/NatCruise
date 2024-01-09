@@ -161,7 +161,6 @@ public class ShellViewModel : ViewModelBase
     }
 
     public ICruiseNavigationService NavigationService { get; }
-    //public IDataserviceProvider DatastoreProvider { get; }
     public IAppInfoService AppInfo { get; }
     public INatCruiseDialogService DialogService { get; }
     public IDataContextService DataContextService { get; }
@@ -173,7 +172,6 @@ public class ShellViewModel : ViewModelBase
             ICruiseNavigationService navigationService,
             INatCruiseDialogService dialogService,
             IDataContextService dataContextService,
-            //IDeviceInfoService deviceInfoService,
             IServiceProvider serviceProvider,
             IAppInfoService appInfo)
     {
@@ -181,7 +179,6 @@ public class ShellViewModel : ViewModelBase
         NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         DialogService = dialogService;
         DataContextService = dataContextService;
-        //DeviceInfo = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
 
         if (dataContextService.CruiseID != null)
         {

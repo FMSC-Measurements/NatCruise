@@ -1,12 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CruiseDAL;
 using CruiseDAL.V3.Sync;
+using FMSC.ORM.Logging;
 using FScruiser.Maui.Services;
+using Microsoft.Extensions.Logging;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Async;
 using System.Text;
 using System.Windows.Input;
 
@@ -23,8 +26,8 @@ public class ImportViewModel : ViewModelBase
     private string? _importPath;
     private ICommand? _cancelCommand;
 
-    public ILoggingService Log { get; }
-    public IDataserviceProvider DataserviceProvider { get; }
+    public ILogger<ImportViewModel> Log { get; }
+    public IDataContextService DataContext { get; }
     public IFileDialogService FileDialogService { get; }
     public IFileSystemService FileSystemService { get; }
     public INatCruiseDialogService DialogService { get; }
@@ -61,29 +64,29 @@ public class ImportViewModel : ViewModelBase
         protected set => SetProperty(ref _selectedCruise, value);
     }
 
-    public ICommand BrowseFileCommand => new RelayCommand(async () => await BrowseCruiseFileAsync());
+    public ICommand BrowseFileCommand => new RelayCommand(async () => BrowseCruiseFileAsync().FireAndForget());
 
     public ICommand SelectCruiseCommand => new RelayCommand<Cruise>((cruise) => SelectCruiseForImport(cruise));
 
-    public ICommand ImportCruiseCommand => new RelayCommand(async () => await ImportCruise());
+    public ICommand ImportCruiseCommand => new RelayCommand(async () => ImportCruise().FireAndForget());
 
     public ICommand CancelCommand => _cancelCommand ??= new RelayCommand(Cancel);
 
     public ImportViewModel(
-        IDataserviceProvider dataserviceProvider,
+        IDataContextService dataContext, 
         IFileDialogService fileDialogService,
         IFileSystemService fileSystemService,
         INatCruiseDialogService dialogService,
-        ILoggingService loggingService,
+        ILogger<ImportViewModel> log,
         ICruiseNavigationService navigationService,
         IDeviceInfoService deviceInfoService
         )
     {
-        DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+        DataContext = dataContext;
         FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
         FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
         DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-        Log = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
+        Log = log;
         NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         DeviceInfoService = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
     }
@@ -137,7 +140,7 @@ public class ImportViewModel : ViewModelBase
     {
         var eList = new List<string>();
         errors = eList;
-        var db = DataserviceProvider.Database;
+        var db = DataContext.Database;
         using (var importDb = new CruiseDatastore_V3(path))
         {
             var cruise = importDb.From<CruiseDAL.V3.Models.Cruise>().Where("CruiseID = @p1").Query(cruiseID).Single();
@@ -348,14 +351,14 @@ public class ImportViewModel : ViewModelBase
         {
             SelectedCruise = null;
             var errorStr = String.Join(Environment.NewLine, errors);
-            Log.LogEvent("Import Error", new Dictionary<string, string> { { "Message", errorStr } });
+            Log.LogWarning("Import Error", new Dictionary<string, string> { { "Message", errorStr } });
             DialogService.ShowNotification(errorStr, "Cruise Can Not Be Imported");
             return false;
         }
 
         options ??= new TableSyncOptions(SyncOption.InsertUpdate);
 
-        var destDb = DataserviceProvider.Database;
+        var destDb = DataContext.Database;
         using (var srcDb = new CruiseDatastore_V3(importPath))
         {
             var fromConn = srcDb.OpenConnection();
@@ -374,7 +377,7 @@ public class ImportViewModel : ViewModelBase
             catch (Exception e)
             {
                 transaction.Rollback();
-                Log.LogException("Import", "Import Failed", e);
+                Log.LogError("Import", "Import Failed", e);
 
                 return false;
             }
