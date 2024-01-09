@@ -137,7 +137,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

@@ -35,7 +35,7 @@ public class StratumFieldSetupViewModel : ViewModelBase
         }
     }
 
-    public override void Initialize(IParameters parameters)
+    public override void Initialize(IDictionary<string, object> parameters)
     {
         base.Initialize(parameters);
 

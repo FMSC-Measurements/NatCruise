@@ -5,6 +5,7 @@ using NatCruise.Navigation;
 using Prism.Commands;
 using Prism.Common;
 using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace NatCruise.MVVM.ViewModels
@@ -110,7 +111,7 @@ namespace NatCruise.MVVM.ViewModels
         //    return true;
         //}
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new System.ArgumentNullException(nameof(parameters)); }
 

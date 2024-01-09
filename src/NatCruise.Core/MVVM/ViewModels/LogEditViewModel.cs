@@ -82,7 +82,7 @@ namespace NatCruise.MVVM.ViewModels
             GradeOptions = new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

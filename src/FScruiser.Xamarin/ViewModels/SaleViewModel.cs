@@ -4,6 +4,7 @@ using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using Prism.Common;
+using System.Collections.Generic;
 
 namespace FScruiser.XF.ViewModels
 {
@@ -55,7 +56,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new System.ArgumentNullException(nameof(parameters)); }
 

@@ -25,10 +25,8 @@ public class SaleSelectViewModel : ViewModelBase
 
     public ICommand ShowImportCommand => new RelayCommand(() => NavigationService.ShowImport());
 
-    public SaleSelectViewModel(ICruiseNavigationService navigationService, ISaleDataservice saleDataservice, IDataserviceProvider dataServiceprovider)
+    public SaleSelectViewModel(ICruiseNavigationService navigationService, ISaleDataservice saleDataservice)
     {
-        if (dataServiceprovider is null) { throw new ArgumentNullException(nameof(dataServiceprovider)); }
-
         SaleDataservice = saleDataservice;
         NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
     }

@@ -36,7 +36,7 @@ namespace FScruiser.XF.ViewModels
             SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

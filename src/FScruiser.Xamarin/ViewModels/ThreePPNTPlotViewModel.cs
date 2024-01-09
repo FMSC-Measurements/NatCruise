@@ -8,6 +8,7 @@ using NatCruise.Navigation;
 using Prism.Commands;
 using Prism.Common;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -70,7 +71,7 @@ namespace FScruiser.XF.ViewModels
             Random = random ?? throw new ArgumentNullException(nameof(random));
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

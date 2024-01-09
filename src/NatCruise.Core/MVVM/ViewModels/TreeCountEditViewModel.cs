@@ -169,7 +169,7 @@ namespace NatCruise.MVVM.ViewModels
 
         #endregion Properties
 
-        protected override void OnInitialize(IParameters parameters)
+        protected override void OnInitialize(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

@@ -6,6 +6,7 @@ using System;
 using Stratum = NatCruise.Models.Stratum;
 using SampleGroup = NatCruise.Models.SampleGroup;
 using NatCruise.Util;
+using System.Collections.Generic;
 
 namespace NatCruise.MVVM.ViewModels
 {
@@ -39,7 +40,7 @@ namespace NatCruise.MVVM.ViewModels
             set => SetProperty(ref _sampleGroup, value);
         }
 
-        public override void Initialize(IParameters parameters)
+        public override void Initialize(IDictionary<string, object> parameters)
         {
             base.Initialize(parameters);
 

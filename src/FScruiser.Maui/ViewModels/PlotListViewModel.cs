@@ -61,7 +61,7 @@ public class PlotListViewModel : ViewModelBase
         DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
     }
 
-    protected override void Load(IParameters parameters)
+    protected override void Load(IDictionary<string, object> parameters)
     {
         if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

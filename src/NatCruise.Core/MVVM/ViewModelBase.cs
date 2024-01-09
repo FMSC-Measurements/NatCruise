@@ -35,7 +35,7 @@ namespace NatCruise.MVVM
         private bool _isFirstNavigatedTo = true;
 
         public event EventHandler IsActiveChanged; // TODO remove if unused
-        public IParameters Parameters { get; protected set; }
+        public IDictionary<string, object> Parameters { get; protected set; }
 
 
         public bool IsActive
@@ -80,7 +80,7 @@ namespace NatCruise.MVVM
             }
         }
 
-        public virtual void Initialize(IParameters parameters)
+        public virtual void Initialize(IDictionary<string, object> parameters)
         {
             if (_isFirstNavigatedTo)
             {
@@ -90,7 +90,7 @@ namespace NatCruise.MVVM
             OnInitialize(parameters);
         }
 
-        protected virtual void OnInitialize(IParameters parameters)
+        protected virtual void OnInitialize(IDictionary<string, object> parameters)
         { }
 
 
@@ -99,7 +99,7 @@ namespace NatCruise.MVVM
             Load(Parameters);
         }
 
-        protected virtual void Load(IParameters parameters)
+        protected virtual void Load(IDictionary<string, object> parameters)
         {
         }
     }

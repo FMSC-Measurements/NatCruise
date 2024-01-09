@@ -38,7 +38,7 @@ namespace FScruiser.XF.ViewModels
             NavigationService.ShowCuttingUnitInfo(unit.CuttingUnitCode);
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             Units = CuttingUnitDataservice.GetCuttingUnits();
         }

@@ -5,6 +5,7 @@ using NatCruise.MVVM;
 using NatCruise.Navigation;
 using Prism.Commands;
 using System.Windows.Input;
+using NatCruise.Util;
 
 namespace FScruiser.Maui.ViewModels;
 

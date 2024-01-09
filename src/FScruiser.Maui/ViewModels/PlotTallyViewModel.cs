@@ -314,7 +314,7 @@ public partial class PlotTallyViewModel : ViewModelBase
         SelectedTree = tree;
     }
 
-    protected override void Load(IParameters parameters)
+    protected override void Load(IDictionary<string, object> parameters)
     {
         if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

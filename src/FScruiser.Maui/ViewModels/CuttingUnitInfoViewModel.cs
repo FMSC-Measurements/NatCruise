@@ -37,7 +37,7 @@ public class CuttingUnitInfoViewModel : ViewModelBase
         CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
     }
 
-    protected override void Load(IParameters parameters)
+    protected override void Load(IDictionary<string, object> parameters)
     {
         if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

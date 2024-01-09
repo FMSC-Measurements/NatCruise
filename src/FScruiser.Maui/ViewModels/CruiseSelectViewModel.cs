@@ -14,8 +14,6 @@ namespace FScruiser.Maui.ViewModels;
 
 public class CruiseSelectViewModel : ViewModelBase
 {
-    //public ICommand SelectCruiseCommand => new
-
     private const string EXPORT_TIMESTAMP_FORMAT = "yyyyMMddhhmm";
 
     private Sale? _sale;
@@ -24,7 +22,7 @@ public class CruiseSelectViewModel : ViewModelBase
 
     protected ISaleDataservice SaleDataservice { get; }
     protected ICruiseNavigationService NavigationService { get; }
-    protected IDataserviceProvider DataserviceProvider { get; }
+    public IDataContextService DataContextService { get; }
     protected IFileSystemService FileSystemService { get; }
     protected IFileDialogService FileDialogService { get; }
     protected INatCruiseDialogService DialogService { get; }
@@ -53,10 +51,17 @@ public class CruiseSelectViewModel : ViewModelBase
         set => SetProperty(ref _cruises, value);
     }
 
-    public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, INatCruiseDialogService dialogService, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
+    public CruiseSelectViewModel(
+        IDataContextService dataContextService,
+        ISaleDataservice saleDataservice,
+        ICruiseNavigationService navigationService,
+        IFileSystemService fileSystemService,
+        INatCruiseDialogService dialogService,
+        IFileDialogService fileDialogService,
+        IDeviceInfoService deviceInfo)
     {
-        DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
-        SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
+        DataContextService = dataContextService;
+        SaleDataservice = saleDataservice;
         NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
         DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -74,7 +79,7 @@ public class CruiseSelectViewModel : ViewModelBase
     public Task SelectCruise(Cruise cruise)
     {
         var cruiseID = cruise.CruiseID;
-        DataserviceProvider.CruiseID = cruiseID;
+        DataContextService.CruiseID = cruiseID;
         return NavigationService.ShowCruiseLandingLayout();
     }
 
@@ -97,7 +102,7 @@ public class CruiseSelectViewModel : ViewModelBase
         var exportTempDir = FileSystemService.ExportTempDir;
         var fileToExport = Path.Combine(exportTempDir, defaultFileName);
 
-        var db = DataserviceProvider.Database;
+        var db = DataContextService.Database;
         using (var destDb = new CruiseDatastore_V3(fileToExport, true))
         {
             var cruiseCopier = new CruiseCopier();
@@ -129,7 +134,7 @@ public class CruiseSelectViewModel : ViewModelBase
         var exportTempDir = FileSystemService.ExportTempDir;
         var fileToExport = Path.Combine(exportTempDir, defaultFileName);
 
-        var db = DataserviceProvider.Database;
+        var db = DataContextService.Database;
         using (var destDb = new CruiseDatastore_V3(fileToExport, true))
         {
             var cruiseCopier = new CruiseCopier();
@@ -157,14 +162,14 @@ public class CruiseSelectViewModel : ViewModelBase
             var cruiseID = cruise.CruiseID;
             SaleDataservice.DeleteCruise(cruiseID);
             Load();
-            if (DataserviceProvider.CruiseID == cruiseID)
+            if (DataContextService.CruiseID == cruiseID)
             {
-                DataserviceProvider.CruiseID = null;
+                DataContextService.CruiseID = null;
             }
         }
     }
 
-    protected override void Load(IParameters parameters)
+    protected override void Load(IDictionary<string, object> parameters)
     {
         if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

@@ -11,10 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Xamarin.Forms;
+using NatCruise.Util;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase, INavigatedAware
+    public class SettingsViewModel : ViewModelBase
     {
         public IApplicationSettingService AppSettings { get; }
         public ITallySettingsDataService TallySettings { get; }
@@ -63,16 +64,6 @@ namespace FScruiser.XF.ViewModels
                 LoggingService.LogEvent(nameof(SettingsViewModel) + ":" + nameof(AppSettings.UseNewLimitingDistanceCalculator) + " changed",
                     new Dictionary<string, string> { { "value", value } });
             }
-        }
-
-        public void OnNavigatedFrom(INavigationParameters parameters)
-        {
-            AppSettings.Save();
-        }
-
-        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
-        {
-            // do nothing
         }
     }
 }

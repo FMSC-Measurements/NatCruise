@@ -589,7 +589,7 @@ namespace NatCruise.MVVM.ViewModels
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

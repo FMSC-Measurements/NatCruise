@@ -66,7 +66,7 @@ public class ThreePPNTPlotViewModel : ViewModelBase
         Random = random ?? throw new ArgumentNullException(nameof(random));
     }
 
-    protected override void Load(IParameters parameters)
+    protected override void Load(IDictionary<string, object> parameters)
     {
         if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
