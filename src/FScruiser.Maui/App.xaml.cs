@@ -1,21 +1,56 @@
-﻿using FScruiser.Maui.ViewModels;
+﻿using CruiseDAL;
+using FMSC.ORM.Logging;
+using FScruiser.Maui.ViewModels;
+using FScruiser.Maui.Views;
+using Microsoft.Extensions.Logging;
+using NatCruise.Data;
+using NatCruise.Services;
 
 namespace FScruiser.Maui;
 
 public partial class App : Application
 {
     public IServiceProvider ServiceProvider { get; }
+    public ILogger<App> Log { get; }
 
     protected App()
     {
         InitializeComponent();
     }
 
-    public App(IServiceProvider serviceProvider) : this()
+    public App(IServiceProvider serviceProvider, ILogger<App> log) : this()
     {
+        Log = log;
         //TODO initialize database here, if has database issues set main page to DatabaseUtilities
 
-        MainPage = new AppShell(serviceProvider.GetRequiredService<ShellViewModel>());
+        var dataContext = serviceProvider.GetRequiredService<IDataContextService>();
+        var fileSystemService = serviceProvider.GetRequiredService<IFileSystemService>();
+
+        var databasePath = fileSystemService.DefaultCruiseDatabasePath;
+
+        try
+        {
+            if (File.Exists(databasePath) == false)
+            {
+                var db = new CruiseDatastore_V3(databasePath, true);
+                dataContext.Database = db;
+            }
+            else
+            {
+                var db = new CruiseDatastore_V3(databasePath, false);
+                dataContext.Database = db;
+            }
+
+            MainPage = serviceProvider.GetRequiredService<AppShell>();
+        }
+        catch (Exception ex)
+        {
+            Log.LogError(ex, "Error Initializing Database");
+
+            MainPage = new DatabaseUtilitiesView();
+        }
+
+
         ServiceProvider = serviceProvider;
     }
 
