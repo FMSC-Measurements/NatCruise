@@ -144,6 +144,29 @@ namespace FScruiser.XF.Services
             }
         }
 
+        public async Task ShowLimitingDistance()
+        {
+            try
+            {
+                var navResult = await NavigationService.NavigateAsync("LimitingDistance");
+
+                if (navResult != null)
+                {
+                    Debug.WriteLine(navResult.Success);
+                    if (navResult.Exception != null)
+                    {
+                        Log.LogException("limiting_distance", "", navResult.Exception);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.LogException("Navigation", $"Navigating to LimitingDistance", e);
+            }
+        }
+
+
+
         public Task ShowLogEdit(string logID)
         {
             if (string.IsNullOrEmpty(logID))
@@ -255,7 +278,7 @@ namespace FScruiser.XF.Services
 
         public Task ShowSaleSelect()
         {
-            return NavigationService.NavigateAsync("Navigation/SaleSelect");
+            return  NavigationService.NavigateAsync("Navigation/SaleSelect");
         }
 
         public Task ShowSampleStateManagment()
