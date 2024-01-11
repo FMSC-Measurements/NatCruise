@@ -1,0 +1,510 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:InitializableContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                   xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                                   xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+                                   xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                                   xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+                                   xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+                                   xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                                   xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                                   x:Class="FScruiser.Maui.Views.LimitingDistanceView"
+                                   BindingContext="{mvvm:ViewModelLocater Type={Type vms:LimitingDistanceViewModel}}"
+                                   Title="Limiting Distance Calculator">
+    <controls:InitializableContentPage.Resources>
+        <!--<Style TargetType="Label">
+            <Setter Property="VerticalTextAlignment"
+                    Value="Center" />
+        </Style>
+        <Style TargetType="Frame">
+            <Setter Property="CornerRadius"
+                    Value="10" />
+            <Setter Property="BorderColor"
+                    Value="Transparent" />
+            <Setter Property="Padding"
+                    Value="5" />
+        </Style>
+        <Style TargetType="Entry">
+            <Setter Property="WidthRequest"
+                    Value="50" />
+        </Style>-->
+    </controls:InitializableContentPage.Resources>
+    <controls:InitializableContentPage.Content>
+        <ScrollView Margin="5">
+
+            <StackLayout>
+
+                <StackLayout IsVisible="{Binding Plot, Converter={StaticResource isNotNullConverter}}">
+                    <Label Text="{Binding Plot.StratumCode, StringFormat='{}Stratum {0}'}" />
+                </StackLayout>
+
+                <Label HorizontalOptions="FillAndExpand"
+                       IsVisible="{Binding UseNewLimitingDistanceCalculator}"
+                       BackgroundColor="Gold"
+                       Text="Using New Limiting Distance Calculations" />
+
+                <!-- Stratum Settings -->
+                <!-- this is an expandable setion with a set of three rows each with a radio button
+                the tree rows correspond to a RadioButton control in VerticalStackLayout bellow
+                the appearance of each row is defined by ControlTemplates that are defined as resources
+                on the VerticalStackLayout.
+                The radio button indicator is drawn using a VisualStateManager on each control template
+                
+                - 
+                -->
+                <Frame BackgroundColor="LightBlue"
+                       CornerRadius="5"
+                       Padding="0">
+                    <mct:Expander x:Name="_expander">
+                        <mct:Expander.Triggers>
+                            <DataTrigger TargetType="mct:Expander"
+                                         Binding="{Binding StratumSettingsSummary}"
+                                         Value="">
+                                <Setter Property="IsExpanded"
+                                        Value="true" />
+                            </DataTrigger>
+                        </mct:Expander.Triggers>
+                        <mct:Expander.Header>
+                            <controls:HeaderControl Header="{Binding StratumSettingsSummary}"
+                                                    Orientation="Horizontal"
+                                                    MinimumHeightRequest="{StaticResource minTouchableHeight}"
+                                                    Margin="5,10">
+
+                                <Label FontFamily="FA-solid"
+                                       Text="{Static const:FAIcons.ChevronDown}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsExpanded, Source={Reference _expander}}"
+                                                     Value="True">
+                                            <Setter Property="Text"
+                                                    Value="{Static const:FAIcons.ChevronUp}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </controls:HeaderControl>
+                        </mct:Expander.Header>
+
+                        <VerticalStackLayout RadioButtonGroup.GroupName="mode"
+                                     RadioButtonGroup.SelectedValue="{Binding Mode}">
+                            <VerticalStackLayout.Resources>
+                                <ControlTemplate x:Key="StModeRadioButtonTemplate">
+                                    <Frame BorderColor="{StaticResource usfs_footer_bottom}"
+                                           BackgroundColor="{StaticResource usfs_footer_bottom}"
+                                           HasShadow="False"
+                                           HorizontalOptions="Fill"
+                                           CornerRadius="5"
+                                           Margin="5,0"
+                                           Padding="0">
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CheckedStates">
+                                                    <VisualState x:Name="Checked">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BorderColor"
+                                                                    Value="{StaticResource usda_dk_green}" />
+                                                            <Setter TargetName="check"
+                                                                    Property="Opacity"
+                                                                    Value="1" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Unchecked">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BackgroundColor"
+                                                                    Value="{StaticResource usfs_footer_bottom}" />
+                                                            <Setter Property="BorderColor"
+                                                                    Value="{StaticResource usfs_footer_bottom}" />
+                                                            <Setter TargetName="check"
+                                                                    Property="Opacity"
+                                                                    Value="0" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <Grid RowDefinitions="*">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{StaticResource minTouchableWidth}" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <AbsoluteLayout Grid.Column="0">
+                                                <Ellipse Stroke="{StaticResource fsdp_radioButtonColor}"
+                                                         Fill="White"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                         AbsoluteLayout.LayoutBounds=".5,.5" />
+                                                <Ellipse x:Name="check"
+                                                         Fill="{StaticResource fsdp_radioButtonColor}"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                         AbsoluteLayout.LayoutBounds=".5,.5" />
+                                            </AbsoluteLayout>
+                                            <StackLayout Orientation="Vertical"
+                                                         BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
+                                                         Grid.Column="1"
+                                                         IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}">
+                                                <Label Text="Stratum" />
+                                                <StackLayout Orientation="Horizontal">
+                                                    <bp_ctrls:ValuePicker WidthRequest="150"
+                                                                          ItemsSource="{Binding StratumOptions}"
+                                                                          SelectedValue="{Binding Stratum}" />
+                                                    <StackLayout Orientation="Horizontal"
+                                                                 IsVisible="{Binding BigBAFSampleGroupOptions, Converter={StaticResource isListNotNullOrEmptyConverter}}">
+                                                        <Label Text="Use Big-BAF" />
+                                                        <Switch IsToggled="{Binding UseBigBAF}"
+                                                                x:Name="_useBigBAFSwitch" />
+                                                        <Picker ItemsSource="{Binding BigBAFSampleGroupOptions}"
+                                                                SelectedItem="{Binding BigBAFSampleGroup}"
+                                                                WidthRequest="150" />
+                                                    </StackLayout>
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </Grid>
+                                    </Frame>
+                                </ControlTemplate>
+
+                                <ControlTemplate x:Key="BAFModeRadioButtonTemplate">
+                                    <Frame BorderColor="{StaticResource usfs_footer_bottom}"
+                                           BackgroundColor="{StaticResource usfs_footer_bottom}"
+                                           HasShadow="False"
+                                           HorizontalOptions="Fill"
+                                           CornerRadius="5"
+                                           Margin="5,0"
+                                           Padding="0">
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CheckedStates">
+                                                    <VisualState x:Name="Checked">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BorderColor"
+                                                                    Value="{StaticResource usda_dk_green}" />
+                                                            <Setter TargetName="check"
+                                                                    Property="Opacity"
+                                                                    Value="1" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Unchecked">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BackgroundColor"
+                                                                    Value="{StaticResource usfs_footer_bottom}" />
+                                                            <Setter Property="BorderColor"
+                                                                    Value="{StaticResource usfs_footer_bottom}" />
+                                                            <Setter TargetName="check"
+                                                                    Property="Opacity"
+                                                                    Value="0" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <Grid RowDefinitions="*">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{StaticResource minTouchableWidth}" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <AbsoluteLayout Grid.Column="0">
+                                                <Ellipse Stroke="{StaticResource fsdp_radioButtonColor}"
+                                                         Fill="White"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                         AbsoluteLayout.LayoutBounds=".5,.5" />
+                                                <Ellipse x:Name="check"
+                                                         Fill="{StaticResource fsdp_radioButtonColor}"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                         AbsoluteLayout.LayoutBounds=".5,.5" />
+                                            </AbsoluteLayout>
+                                            <StackLayout Orientation="Vertical"
+                                                         BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
+                                                         
+                                                         Grid.Column="1">
+                                                <Label>Variable Radius Plot - BAF</Label>
+                                                <Entry Text="{Binding BAF}"
+                                                       Keyboard="Numeric"
+                                                       AutomationProperties.IsInAccessibleTree="True"
+                                                       AutomationProperties.Name="BAF">
+                                                    <Entry.Behaviors>
+                                                        <mct:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+                                                </Entry>
+                                            </StackLayout>
+                                        </Grid>
+                                    </Frame>
+                                </ControlTemplate>
+
+                                <ControlTemplate x:Key="FPSModeRadioButtonTemplate">
+                                    <Frame BorderColor="{StaticResource usfs_footer_bottom}"
+                                           BackgroundColor="{StaticResource usfs_footer_bottom}"
+                                           HasShadow="False"
+                                           HorizontalOptions="Fill"
+                                           CornerRadius="5"
+                                           Margin="5,0"
+                                           Padding="0">
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CheckedStates">
+                                                    <VisualState x:Name="Checked">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BorderColor"
+                                                                    Value="{StaticResource usda_dk_green}" />
+                                                            <Setter TargetName="check"
+                                                                    Property="Opacity"
+                                                                    Value="1" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Unchecked">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BackgroundColor"
+                                                                    Value="{StaticResource usfs_footer_bottom}" />
+                                                            <Setter Property="BorderColor"
+                                                                    Value="{StaticResource usfs_footer_bottom}" />
+                                                            <Setter TargetName="check"
+                                                                    Property="Opacity"
+                                                                    Value="0" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <Grid RowDefinitions="*">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{StaticResource minTouchableWidth}" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <AbsoluteLayout Grid.Column="0">
+                                                <Ellipse Stroke="{StaticResource fsdp_radioButtonColor}"
+                                                         Fill="White"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                         AbsoluteLayout.LayoutBounds=".5,.5" />
+                                                <Ellipse x:Name="check"
+                                                         Fill="{StaticResource fsdp_radioButtonColor}"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                         AbsoluteLayout.LayoutBounds=".5,.5" />
+                                            </AbsoluteLayout>
+                                            <StackLayout Orientation="Vertical"
+                                                         BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
+                                                         IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}"
+                                                         Grid.Column="1">
+                                                <Label>Fixed Size Plot - FPS (1/x acre)</Label>
+                                                <Entry Text="{Binding FPS}"
+                                                       Keyboard="Numeric"
+                                                       AutomationProperties.IsInAccessibleTree="True"
+                                                       AutomationProperties.Name="FPS">
+                                                    <Entry.Behaviors>
+                                                        <mct:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+                                                </Entry>
+                                            </StackLayout>
+                                        </Grid>
+                                    </Frame>
+                                </ControlTemplate>
+
+                                <!--<Style TargetType="RadioButton">
+                                    <Setter Property="ControlTemplate"
+                                            Value="{StaticResource RadioButtonTemplate}" />
+                                </Style>-->
+                            </VerticalStackLayout.Resources>
+                            <RadioButton Value="stratum"
+                                         GroupName="mode"
+                                         ControlTemplate="{StaticResource StModeRadioButtonTemplate}"
+                                         IsVisible="{Binding StratumOptions, Converter={StaticResource isListNotNullOrEmptyConverter}}">
+                            </RadioButton>
+
+                            <RadioButton Value="{Static vms:LimitingDistanceViewModel.MODE_FPS}"
+                                         GroupName="mode"
+                                         ControlTemplate="{StaticResource FPSModeRadioButtonTemplate}">
+                            </RadioButton>
+
+                            <RadioButton Value="{Static vms:LimitingDistanceViewModel.MODE_BAF}"
+                                         GroupName="mode"
+                                         ControlTemplate="{StaticResource BAFModeRadioButtonTemplate}">
+                            </RadioButton>
+                        </VerticalStackLayout>
+                    </mct:Expander>
+                </Frame>
+
+                <!-- Fields -->
+                <!-- the order that the entries appear on the screen is significant as this is the order that
+                    users typically enter in their measurements Dbh, then slope, then slope distance-->
+                <StackLayout>
+                    <StackLayout.Resources>
+
+                        <Style TargetType="Frame">
+                            <Setter Property="BackgroundColor"
+                                    Value="#F1E5CD" />
+                            <Setter Property="CornerRadius"
+                                    Value="5" />
+                            <Setter Property="Margin"
+                                    Value="0,5,0,0" />
+                            <Setter Property="Padding"
+                                    Value="0" />
+                            <!--<Setter Property="WidthRequest"
+                                    Value="200" />-->
+                        </Style>
+                    </StackLayout.Resources>
+
+                    <!-- DBH -->
+                    <Frame>
+                        <controls:HeaderControl Header="DBH" Orientation="Horizontal">
+                            <Entry x:Name="_dbhEntry"
+                                   Text="{Binding DBH}"
+                                   Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <mct:SelectAllTextBehavior />
+                                    <bhvrs:SelectNextOnCompleatedBehavior />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </controls:HeaderControl>
+                    </Frame>
+
+                    <!-- Slope PCT -->
+                    <Frame>
+                        <controls:HeaderControl Header="Slope (%)"
+                                                Orientation="Horizontal">
+                            <Entry x:Name="_slopePctEntry"
+                                   Text="{Binding SlopePCT}"
+                                   Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <mct:SelectAllTextBehavior />
+                                    <bhvrs:SelectNextOnCompleatedBehavior />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </controls:HeaderControl>
+                    </Frame>
+
+                    <!-- Slope Dist and Measure To -->
+                    <Frame>
+                        <StackLayout>
+                            <controls:HeaderControl Header="Slope Distance"
+                                                    Orientation="Horizontal">
+                                <Entry x:Name="_slopeDistanceEntry"
+                                       Text="{Binding SlopeDistanceStr}"
+                                       Keyboard="Numeric">
+                                    <Entry.Behaviors>
+                                        <mct:SelectAllTextBehavior />
+                                        <bhvrs:SelectNextOnCompleatedBehavior />
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </controls:HeaderControl>
+
+                            <controls:HeaderControl Header="Measuring To"
+                                                    Orientation="Horizontal">
+                                <bp_ctrls:ValuePicker SelectedValue="{Binding MeasureToSelection}"
+                                                      ItemsSource="{Binding MeasureToOptions}"
+                                                      HorizontalOptions="FillAndExpand"/>
+                            </controls:HeaderControl>
+                        </StackLayout>
+                    </Frame>
+
+                    <!-- Azimuth -->
+                    <!--
+                    <Frame>
+                        <StackLayout Orientation="Horizontal">
+                            <Label x:Name="_azimuthEntryHeading">Azimuth</Label>
+                            <Entry x:Name="_azimuthEntry"
+                                   Text="{Binding Azimuth}"
+                                   Keyboard="Numeric"
+                                   AutomationProperties.LabeledBy="{x:Reference _azimuthEntryHeading}">
+                                <Entry.Effects>
+                                    <tk_effects:SelectAllTextEffect />
+                                </Entry.Effects>
+                            </Entry>
+                        </StackLayout>
+                    </Frame>-->
+                </StackLayout>
+
+                <!-- Limiting Distance and Tree Status -->
+                <Frame BackgroundColor="Orange"
+                       CornerRadius="5">
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Horizontal">
+                            <Label x:Name="_limitingDistanceLabel">Limiting Distance</Label>
+                            <Label AutomationProperties.LabeledBy="{x:Reference _limitingDistanceLabel}"
+                                   Text="{Binding LimitingDistance, StringFormat='{}{0:f2}'}" />
+                            <Label x:Name="_treeInOutLabel"
+                                   Text="{Binding TreeStatus, StringFormat='{}Tree is {0}'}"
+                                   IsVisible="{Binding TreeStatus, Converter={StaticResource isStringNotNullOrEmptyConverter}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.Name="Tree In Out">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding TreeStatus}"
+                                                 Value="{Static vms:LimitingDistanceViewModel.TREE_STATUS_IN}">
+                                        <Setter Property="BackgroundColor"
+                                                Value="Green" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding TreeStatus}"
+                                                 Value="{Static vms:LimitingDistanceViewModel.TREE_STATUS_OUT}">
+                                        <Setter Property="BackgroundColor"
+                                                Value="Red" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+
+
+                        </StackLayout>
+                        <!-- Azimuth -->
+
+                        <Frame Padding="0">
+
+                            <StackLayout Orientation="Vertical"
+                                         IsEnabled="{Binding TreeStatus, Converter={StaticResource isStringNotNullOrEmptyConverter}}">
+                                <StackLayout Orientation="Horizontal"
+                                             Margin="5,0">
+                                    <Label x:Name="_azimuthEntryHeading"
+                                           VerticalOptions="Center">Azimuth</Label>
+                                    <Entry x:Name="_azimuthEntry"
+                                           Text="{Binding Azimuth}"
+                                           Keyboard="Numeric"
+                                           AutomationProperties.LabeledBy="{x:Reference _azimuthEntryHeading}"
+                                           WidthRequest="50">
+                                        <Entry.Behaviors>
+                                            <mct:SelectAllTextBehavior />
+                                            <bhvrs:SelectNextOnCompleatedBehavior />
+                                        </Entry.Behaviors>
+                                    </Entry>
+
+                                    <Label x:Name="_treeNumberHeading" VerticalOptions="Center">Tree Number</Label>
+                                    <Entry Text="{Binding TreeNumber}"
+                                           Keyboard="Numeric"
+                                           WidthRequest="50"
+                                           AutomationProperties.LabeledBy="_treeNumberHeading">
+                                        <Entry.Behaviors>
+                                            <mct:SelectAllTextBehavior />
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                </StackLayout>
+
+                                <Button Text="Save Limiting Distance Report To Remarks"
+                                        Command="{Binding SaveReportToPlotCommand}"
+                                        IsVisible="{Binding Plot, Converter={StaticResource isNotNullConverter}}" />
+                                <Button Text="Copy Limiting Distance Report To Clipboard"
+                                        Command="{Binding CopyReportToClipboardCommand}" />
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+        </ScrollView>
+    </controls:InitializableContentPage.Content>
+</controls:InitializableContentPage>
