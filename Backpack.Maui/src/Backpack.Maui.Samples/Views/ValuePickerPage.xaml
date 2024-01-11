@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+             x:Class="Backpack.Maui.Samples.Views.ValuePickerPage"
+             Title="ValuePickerPage">
+    <VerticalStackLayout>
+        <bp_ctrls:ValuePicker ItemsSource="{Binding PickerItems}"
+                              SelectedItem="{Binding SelectedItem}"
+                              SelectedValue="{Binding SelectedValue}"
+                              SelectedIndex="{Binding SelectedIndex}"
+                              Text="{Binding ValueText}">
+
+
+        </bp_ctrls:ValuePicker>
+
+        <Entry Text="{Binding SelectedItem}" />
+        <Entry Text="{Binding SelectedValue}" />
+        <Entry Text="{Binding SelectedIndex}" />
+        <Entry Text="{Binding ValueText}" />
+    </VerticalStackLayout>
+</ContentPage>

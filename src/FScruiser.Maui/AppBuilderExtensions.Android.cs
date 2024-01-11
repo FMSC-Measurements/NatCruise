@@ -25,6 +25,7 @@ public static class AppBuilderExtensions_Android
         services.AddSingleton<IDeviceInfoService, AndroidDeviceInfoService>();
         services.AddSingleton<IFileDialogService, AndroidFileDialogService>();
         services.AddSingleton<ISoundService, AndroidSoundService>();
+        
 
         return builder;
     }

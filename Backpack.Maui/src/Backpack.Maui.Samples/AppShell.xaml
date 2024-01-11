@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Backpack.Maui.Samples.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Backpack.Maui.Samples"
+    xmlns:views="clr-namespace:Backpack.Maui.Samples.Views"
+    Shell.FlyoutBehavior="Flyout"
+    Title="Backpack.Maui.Samples">
+
+    <!--<Shell.FlyoutHeader>
+        <controls:FlyoutHeader />
+    </Shell.FlyoutHeader>
+
+    <Shell.FlyoutFooter>
+        <controls:FlyoutFooter />
+    </Shell.FlyoutFooter>-->
+
+   
+
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent Title="ValuePicker"
+                      ContentTemplate="{DataTemplate views:ValuePickerPage}" />
+    </FlyoutItem>
+
+    <ShellContent Title="Home"
+                  ContentTemplate="{DataTemplate local:MainPage}"
+                  Route="MainPage" />
+
+</Shell>
