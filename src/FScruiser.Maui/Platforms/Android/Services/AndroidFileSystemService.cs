@@ -9,9 +9,9 @@ namespace FScruiser.Maui.Platforms.Android.Services;
 
 public class AndroidFileSystemService : FileSystemServiceBase
 {
-    public AndroidFileSystemService(Context context)
+    public AndroidFileSystemService()
     {
-        Context = context;
+        Context = Platform.AppContext;
 
         var importTempDir = ImportTempDir;
         var convertTempDir = ConvertTempDir;

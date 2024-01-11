@@ -8,7 +8,7 @@ using NatCruise.Services;
 using Prism.Common;
 using System.Windows.Input;
 
-namespace FScruiser.XF.ViewModels
+namespace FScruiser.Maui.ViewModels
 {
     public class LimitingDistanceViewModel : ViewModelBase//, INavigatedAware
     {
@@ -44,7 +44,6 @@ namespace FScruiser.XF.ViewModels
         private ICommand? _copyReportToClipboardCommand;
 
         public INatCruiseDialogService DialogService { get; }
-        protected IDataserviceProvider DataserviceProvider { get; }
         public IPlotDataservice PlotDataservice { get; protected set; }
         public ISampleGroupDataservice SampleGroupDataservice { get; protected set; }
         public IStratumDataservice StratumDataservice { get; protected set; }
@@ -356,17 +355,15 @@ namespace FScruiser.XF.ViewModels
 
         #endregion commands
 
-        public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService, IApplicationSettingService appSettings)
+        public LimitingDistanceViewModel(ISampleGroupDataservice sampleGroupDataservice, IPlotDataservice plotDataService, IStratumDataservice stratumDataservice, INatCruiseDialogService dialogService, IApplicationSettingService appSettings)
         {
-            // we need DataserviceProvider because we might not know if a cruise is selected until Load gets called
-            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             UseNewLimitingDistanceCalculator = appSettings.UseNewLimitingDistanceCalculator;
 
-            SampleGroupDataservice = DataserviceProvider.GetDataservice<ISampleGroupDataservice>();
-            PlotDataservice = DataserviceProvider.GetDataservice<IPlotDataservice>();
-            StratumDataservice = DataserviceProvider.GetDataservice<IStratumDataservice>();
+            SampleGroupDataservice = sampleGroupDataservice;
+            PlotDataservice = plotDataService;
+            StratumDataservice = stratumDataservice;
 
             Clipboard = Microsoft.Maui.ApplicationModel.DataTransfer.Clipboard.Default;
 
@@ -406,7 +403,7 @@ namespace FScruiser.XF.ViewModels
 
                 if (stratumCode != null)
                 {
-                    var ds = DataserviceProvider.GetDataservice<IStratumDataservice>();
+                    var ds = StratumDataservice;
                     _stratumMode = MODE_STRATUM;
                     Stratum = ds.GetStratum(stratumCode);
                 }
@@ -422,7 +419,7 @@ namespace FScruiser.XF.ViewModels
             }
             else // if no unit selected load all strata
             {
-                var stDs = DataserviceProvider.GetDataservice<IStratumDataservice>();
+                var stDs = StratumDataservice;
                 if (stDs != null)
                 {
                     var strata = stDs.GetStrata();

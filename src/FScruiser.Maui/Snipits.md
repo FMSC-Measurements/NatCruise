@@ -8,6 +8,10 @@ example of standard xmlns used
              x:Class="FScruiser.Maui.Views.SomeView"
              x:Name="_page"
 
+            -- community toolkit --
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:tc="clr-namespace:CommunityToolkit.Maui;assembly=CommunityToolkit.Maui"
+
              -- frequently used namespaces --
              xmlns:local="clr-namespace:FScruiser.Maui"
              xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors" 
@@ -23,6 +27,14 @@ example of standard xmlns used
              BindingContext="{mvvm:ViewModelLocater Type={Type vms:SomeViewModel}}">
     <ContentPage.Content>
        <!-- ... -->
+
+
+        <Entry Text={Binding ...}>
+             <Entry.Behaviors>
+                <mct:SelectAllTextBehavior />
+                <bhvrs:SelectNextOnCompleatedBehavior />
+            </Entry.Behaviors>
+        </Entry>
     </ContentPage.Content>
 </ContentPage>
 ```

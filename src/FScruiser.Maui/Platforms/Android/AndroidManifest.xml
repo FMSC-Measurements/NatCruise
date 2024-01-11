@@ -4,4 +4,6 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-sdk android:minSdkVersion="23" android:targetSdkVersion="33" />
+
+    <!-- for more manifest declarations see ./MainApplication.cs -->
 </manifest>

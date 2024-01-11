@@ -7,10 +7,25 @@
        xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
        xmlns:const="clr-namespace:FScruiser.Maui.Constants"
        Shell.FlyoutBehavior="Flyout"
-       Title="FScruiser.Maui">
+       Title="FScruiser.Maui"
+       FlyoutBackgroundColor="{StaticResource fs_brown}">
 
+    <Shell.Resources>
+        <ResourceDictionary>
+            <!-- according to https://github.com/dotnet/maui/issues/18994 this should work but is a regression -->
+            <Style Class="FlyoutItemLabelStyle"
+                   TargetType="Label">
+                <Setter Property="TextColor"
+                        Value="White"></Setter>
+            </Style>
+
+        </ResourceDictionary>
+
+    </Shell.Resources>
 
     <Shell.FlyoutHeader>
+        <!--<ShellContent Route="SelectSale"
+                  Title="Select Sale" />-->
         <ContentView>
             <!--select cruise button-->
             <Frame BackgroundColor="White"
@@ -58,12 +73,37 @@
                 </StackLayout>
             </Frame>
         </ContentView>
-    </Shell.FlyoutHeader>
-    
-    <FlyoutItem>
 
+    </Shell.FlyoutHeader>
+
+
+    <TabBar >
+        <Tab Route="Main">
+            <ShellContent Route="Blank"
+                          FlyoutItemIsVisible="False"
+                          ContentTemplate="{DataTemplate views:BlankView }" />
+        </Tab>
+    </TabBar>
+
+    <FlyoutItem Title="Utilities">
+        <ShellContent Route="Utilities"
+                      ContentTemplate="{DataTemplate views:UtilitiesView}" />
     </FlyoutItem>
 
-    <ShellContent ContentTemplate="{DataTemplate views:BlankView }"/>
+
+    <FlyoutItem Title="Settings">
+        <ShellContent Route="Settings"
+                      ContentTemplate="{DataTemplate views:SettingsView}" />
+    </FlyoutItem>
+
+
+    <FlyoutItem Title="About">
+        <ShellContent Route="About"
+                      ContentTemplate="{DataTemplate views:AboutView}" />
+    </FlyoutItem>
+
+
+    <!--<ShellContent Route="Blank"
+                  ContentTemplate="{DataTemplate views:AboutView }" />-->
 
 </Shell>
