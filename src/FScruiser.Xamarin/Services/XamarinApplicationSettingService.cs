@@ -68,10 +68,5 @@ namespace FScruiser.XF.Services
 
         public bool IsSuperuserMode { get => false; set => throw new NotImplementedException(); }
 
-        public void Save()
-        {
-
-        }
-
     }
 }

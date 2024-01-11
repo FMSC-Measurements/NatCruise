@@ -18,7 +18,5 @@ namespace NatCruise.Services
         bool SelectPrevNextTreeSkipsCountTrees { get; set; }
 
         bool IsSuperuserMode { get; set; }
-
-        void Save();
     }
 }

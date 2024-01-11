@@ -74,8 +74,5 @@ namespace NatCruise.Wpf.Services
             set => SetProperty(ref _isSuperuserModeEnabled, value);
         }
 
-        public void Save()
-        {
-        }
     }
 }
