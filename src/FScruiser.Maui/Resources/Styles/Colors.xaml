@@ -6,6 +6,10 @@
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
 
+    <!-- colors -->
+    <Color x:Key="fs_brown">#312418</Color>
+    <Color x:Key="fs_green">#345E36</Color>
+
     <!-- FS digital playbook colors -->
     <Color x:Key="usfs_green">#345E36</Color>
     <Color x:Key="usfs_gold">#ffc425</Color>
