@@ -32,7 +32,7 @@ namespace NatCruise.Wpf
         private string[] StartupArgs { get; set; }
         protected ILoggingService LoggingService { get; private set; }
 
-        public NatCruiseViewModelProvider ViewModelProvider { get; } = new NatCruiseViewModelProvider();
+        public IViewModelTypeResolver ViewModelTypeResolver { get; } = new NatCruiseViewModelTypeResolver();
         public string StartupFilePath { get; private set; }
 
         public App()
@@ -242,7 +242,7 @@ namespace NatCruise.Wpf
         {
             base.ConfigureViewModelLocator();
 
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelProvider.GetViewModel(viewType));
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelTypeResolver.GetViewModelType(viewType));
         }
     }
 }

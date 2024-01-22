@@ -2,18 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.MVVM
 {
-    public class NatCruiseViewModelProvider
+    public class NatCruiseViewModelTypeResolver : IViewModelTypeResolver
     {
         private Dictionary<string, Type> _vmTypeMap = new Dictionary<string, Type>();
 
-        public NatCruiseViewModelProvider()
+        public NatCruiseViewModelTypeResolver()
         {
             Register("TreeCountEditView", typeof(TreeCountEditViewModel));
             Register("TreeEditView", typeof(TreeEditViewModel));
@@ -29,7 +26,7 @@ namespace NatCruise.MVVM
             Register("AboutView", typeof(AboutViewModel));
         }
 
-        public Type GetViewModel(Type view)
+        public Type GetViewModelType(Type view)
         {
             var vmType = GetRegisteredViewModel(view);
             if (vmType != null) return vmType;

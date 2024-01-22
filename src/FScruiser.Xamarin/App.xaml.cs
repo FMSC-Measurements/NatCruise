@@ -41,7 +41,7 @@ namespace FScruiser.XF
         public IDataserviceProvider DataserviceProvider => _dataserviceProvider;
 
         public IApplicationSettingService Settings { get; } = new XamarinApplicationSettingService();
-        public NatCruiseViewModelProvider ViewModelProvider { get; } = new NatCruiseViewModelProvider();
+        public IViewModelTypeResolver ViewModelTypeResolver { get; } = new NatCruiseViewModelTypeResolver();
 
         public App() : this(new XamarinPlatformInitializer())
         { }
@@ -196,7 +196,7 @@ namespace FScruiser.XF
 
             base.ConfigureViewModelLocator();
 
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelProvider.GetViewModel(viewType));
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelTypeResolver.GetViewModelType(viewType));
         }
 
         public static void LogException(string catigory, string message, Exception ex, IDictionary<string, string> data = null)

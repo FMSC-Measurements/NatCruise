@@ -14,8 +14,6 @@ namespace FScruiser.XF
 {
     public class XamarinPlatformInitializer : IPlatformInitializer
     {
-        protected IViewModelRegester ViewModelRegester;
-
         public virtual void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IApplicationSettingService, XamarinApplicationSettingService>();
