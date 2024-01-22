@@ -227,7 +227,7 @@
                                             </AbsoluteLayout>
                                             <StackLayout Orientation="Vertical"
                                                          BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
-                                                         
+                                                         IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}"
                                                          Grid.Column="1">
                                                 <Label>Variable Radius Plot - BAF</Label>
                                                 <Entry Text="{Binding BAF}"
