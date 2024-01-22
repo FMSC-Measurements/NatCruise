@@ -1,4 +1,5 @@
-﻿using FScruiser.Maui.ViewModels;
+﻿using FScruiser.Maui.MVVM;
+using FScruiser.Maui.ViewModels;
 using FScruiser.Maui.Views;
 
 namespace FScruiser.Maui;
@@ -26,6 +27,8 @@ public partial class AppShell : Shell
     public AppShell(ShellViewModel viewModel) : this()
     {
         BindingContext = viewModel;
+
+        ViewModelLocaterExtension.WireView(this);
     }
 
     //protected override void OnNavigated(ShellNavigatedEventArgs args)

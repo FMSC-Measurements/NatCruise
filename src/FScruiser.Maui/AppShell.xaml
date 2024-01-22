@@ -7,6 +7,9 @@
        xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
        xmlns:const="clr-namespace:FScruiser.Maui.Constants"
        Shell.FlyoutBehavior="Flyout"
+       xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+       xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+       
        Title="FScruiser.Maui"
        FlyoutBackgroundColor="{StaticResource fs_brown}">
 
@@ -84,6 +87,12 @@
                           ContentTemplate="{DataTemplate views:BlankView }" />
         </Tab>
     </TabBar>
+
+    <FlyoutItem Title="Tally"
+                IsVisible="{Binding HasTreeStrata}">
+        <ShellContent Route="Tally"
+                      ContentTemplate="{DataTemplate views:TallyView}" />
+    </FlyoutItem>
 
     <FlyoutItem Title="Utilities">
         <ShellContent Route="Utilities"
