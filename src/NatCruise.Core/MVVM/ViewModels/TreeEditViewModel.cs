@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using NatCruise.Async;
+﻿using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.Navigation;
@@ -241,7 +240,6 @@ namespace NatCruise.MVVM.ViewModels
             protected set => SetProperty(ref _warningCount, value);
         }
 
-
         #region CountOrMeasure
 
         public string CountOrMeasure
@@ -257,7 +255,7 @@ namespace NatCruise.MVVM.ViewModels
                 if (oldValue == value) { return; }
                 SaveTree();
 
-                CruiseLogDataservice.Log($"Tree.CountOrMeasure Changed |oldCM:{oldValue}|newCM:{value}|", treeID: tree.TreeID, fieldName:"CountOrMeasure", tableName:"Tree");
+                CruiseLogDataservice.Log($"Tree.CountOrMeasure Changed |oldCM:{oldValue}|newCM:{value}|", treeID: tree.TreeID, fieldName: "CountOrMeasure", tableName: "Tree");
                 RefreshErrorsAndWarnings();
                 OnPropertyChanged();
             }
@@ -364,7 +362,7 @@ namespace NatCruise.MVVM.ViewModels
                     tree.SampleGroupCode = newSg;
                     OnPropertyChanged(nameof(SampleGroupCode));
                 }
-                
+
                 tree.StratumCode = newValue;
 
                 RefreshCruiseMethod(tree);
@@ -384,8 +382,6 @@ namespace NatCruise.MVVM.ViewModels
                     OnPropertyChanged(nameof(SampleGroupCode));
                 }
             }
-
-            
         }
 
         #endregion Stratum
@@ -424,14 +420,13 @@ namespace NatCruise.MVVM.ViewModels
             {
                 var curSt = tree.StratumCode;
 
-                if(!ValidateSpecies(curSt, newValue))
+                if (!ValidateSpecies(curSt, newValue))
                 {
-
                     DialogService.ShowMessageAsync($"Sample Group {newValue} has no Species {tree.SpeciesCode}. Add sub-population first.")
                         .FireAndForget();
                     return;
                 }
-                
+
                 tree.SampleGroupCode = newValue;
 
                 RefreshSpeciesOptions(tree);
