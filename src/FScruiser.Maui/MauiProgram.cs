@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using NatCruise.Data;
 using Backpack.Maui;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
+using NatCruise;
 
 namespace FScruiser.Maui;
 
@@ -29,6 +30,8 @@ public static class MauiProgram
             .RegisterServices()
             .RegisterViews()
             .RegisterViewModels();
+
+        builder.Services.AddNatCruiseCoreDataservices();
 
 #if DEBUG
         builder.Logging.AddDebug();

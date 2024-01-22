@@ -29,6 +29,8 @@ namespace NatCruise.Data
 
         public string DatabasePath => Database.Path;
 
+        public event EventHandler CruiseChanged;
+
         public CruiseDatastore_V3 Database
         {
             get => _database;
@@ -68,6 +70,7 @@ namespace NatCruise.Data
             {
                 SampleSelectorDataService = null;
             }
+            CruiseChanged?.Invoke(this, EventArgs.Empty);
         }
 
         protected Device InitCurrentDevice(IDeviceInfoService deviceInfoService)

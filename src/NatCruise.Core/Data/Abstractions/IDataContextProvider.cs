@@ -1,4 +1,5 @@
 ﻿using NatCruise.Services;
+using System;
 
 namespace NatCruise.Data
 {
@@ -9,6 +10,8 @@ namespace NatCruise.Data
         IDeviceInfoService DeviceInfoService { get; }
 
         ISampleSelectorDataService SampleSelectorDataService { get; }
+
+        event EventHandler CruiseChanged;
 
         string CruiseID { get; set; }
 
