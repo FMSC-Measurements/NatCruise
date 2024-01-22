@@ -1,4 +1,5 @@
 ﻿using FScruiser.Maui.Services;
+using Microsoft.Extensions.DependencyInjection;
 using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -29,6 +30,8 @@ public class ShellViewModel : ViewModelBase
     private ICommand? _showSettingsCommand;
     private ICommand? _showPlotsCommand;
     private ICommand? _showTreeCommand;
+    private string? _currentCruiseName;
+    private bool _isCruiseSelected;
 
     public ICommand ShowSelectSale => new Command(() => NavigationService.ShowSaleSelect().FireAndForget());
 
@@ -124,20 +127,19 @@ public class ShellViewModel : ViewModelBase
     {
         get
         {
-            var cruiseID = DataContextService?.CruiseID;
-            if (cruiseID != null)
-            {
-                var cruise = SaleDataservice.GetCruise(cruiseID);
-                return cruise.ToString();
-            }
-            else
-            {
-                return "Select Cruise";
-            }
+            return _currentCruiseName;
+        }
+        set
+        {
+            SetProperty(ref _currentCruiseName, value);
         }
     }
 
-    public bool IsCruiseSelected => DataContextService?.CruiseID != null;
+    public bool IsCruiseSelected
+    {
+        get => _isCruiseSelected;
+        set => SetProperty(ref _isCruiseSelected, value);
+    }
 
     public bool IsCuttingUnitSelected
     {
@@ -164,9 +166,9 @@ public class ShellViewModel : ViewModelBase
     public IAppInfoService AppInfo { get; }
     public INatCruiseDialogService DialogService { get; }
     public IDataContextService DataContextService { get; }
+    public IServiceProvider Services { get; }
     public IDeviceInfoService DeviceInfo { get; }
-    public ICuttingUnitDataservice CuttingUnitDataservice { get; }
-    public ISaleDataservice SaleDataservice { get; }
+    public ICuttingUnitDataservice CuttingUnitDataservice { get; protected set; }
 
     public ShellViewModel(
             ICruiseNavigationService navigationService,
@@ -179,15 +181,37 @@ public class ShellViewModel : ViewModelBase
         NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         DialogService = dialogService;
         DataContextService = dataContextService;
+        Services = serviceProvider;
 
-        if (dataContextService.CruiseID != null)
+        dataContextService.CruiseChanged += DataContextService_CruiseChanged;
+    }
+
+    private void DataContextService_CruiseChanged(object? sender, EventArgs e)
+    {
+        Load();
+    }
+
+    public override void Load()
+    {
+        base.Load();
+
+        var cruiseID = DataContextService?.CruiseID;
+        if (cruiseID != null)
         {
-            var cuttingUnitDataservice = CuttingUnitDataservice = serviceProvider.GetRequiredService<ICuttingUnitDataservice>();
-            SaleDataservice = serviceProvider.GetRequiredService<ISaleDataservice>();
-            if (cuttingUnitDataservice != null)
-            {
-                CuttingUnits = cuttingUnitDataservice.GetCuttingUnits();
-            }
+            var saleDataservice = Services.GetRequiredService<ISaleDataservice>();
+            var cruise = saleDataservice.GetCruise(cruiseID);
+            CurrentCruiseName = cruise.ToString();
+
+            var cuttingUnitDataservice = CuttingUnitDataservice = Services.GetRequiredService<ICuttingUnitDataservice>();
+            CuttingUnits = cuttingUnitDataservice.GetCuttingUnits();
+            IsCruiseSelected = true;
+        
+        }
+        else
+        {
+            IsCruiseSelected = false;
+            CuttingUnits = null;
+            CurrentCruiseName = "Select Cruise";
         }
 
         RefreshNavOptions();
