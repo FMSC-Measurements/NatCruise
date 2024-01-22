@@ -3,7 +3,9 @@ using Android.Media;
 using Android.OS;
 using Android.Support.V4.Media;
 using AndroidX.Media;
+using FMSC.ORM.Logging;
 using FScruiser.Maui.Services;
+using Microsoft.Extensions.Logging;
 using Stream = Android.Media.Stream;
 
 namespace FScruiser.Maui.Platforms.Android.Services;
@@ -17,13 +19,13 @@ public class AndroidSoundService : ISoundService
 
     public AudioManager AudioManager { get; private set; }
 
-    public AndroidSoundService(Context context)
+    public AndroidSoundService(ILogger<AndroidSoundService> log) : this(global::Android.App.Application.Context, log)
+    { }
+
+    public AndroidSoundService(Context context, ILogger<AndroidSoundService> log)
     {
+
         AudioManager = (AudioManager)context.GetSystemService(Context.AudioService);
-
-        var assetManager = context.Resources.Assets;
-
-        var values = assetManager.List("sounds");
 
         var audioAttrs = new AudioAttributesCompat.Builder()
             .SetContentType(AudioAttributesCompat.ContentTypeSonification)
@@ -37,9 +39,20 @@ public class AndroidSoundService : ISoundService
                     .SetMaxStreams(5)
                     .Build();
 
-        _tally = _soundPool.Load(assetManager.OpenFd("sounds/tally.wav"), 1);
-        _measure = _soundPool.Load(assetManager.OpenFd("sounds/measure.wav"), 1);
-        _insurance = _soundPool.Load(assetManager.OpenFd("sounds/insurance.wav"), 1);
+        try
+        {
+            var assetManager = context.Resources?.Assets;
+            _tally = _soundPool.Load(assetManager.OpenFd("sounds/tally.wav"), 1);
+            _measure = _soundPool.Load(assetManager.OpenFd("sounds/measure.wav"), 1);
+            _insurance = _soundPool.Load(assetManager.OpenFd("sounds/insurance.wav"), 1);
+        }
+        catch (Exception e)
+        {
+            log.LogError(e, "Error Loading Sound Resource");
+#if !DEBUG
+            throw;
+#endif
+        }
     }
 
     public Task SignalInsuranceTreeAsync()

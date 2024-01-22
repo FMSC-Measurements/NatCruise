@@ -27,10 +27,15 @@ public class TallySettingsDataService : BindableBase, ITallySettingsDataService
 
     public TallySettingsDataService(IPreferences preferences)
     {
-        Preferences = preferences ?? Microsoft.Maui.Storage.Preferences.Default;
+        Preferences = preferences;
     }
 
-    protected TallySettings Data { get; set; }
+    public TallySettingsDataService()
+    {
+        Preferences =  Microsoft.Maui.Storage.Preferences.Default;
+    }
+
+    protected TallySettings? Data { get; set; }
     protected object DataSyncLock { get; } = new object();
 
     public bool EnableCruiserPopup

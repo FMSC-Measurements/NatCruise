@@ -1,4 +1,5 @@
-﻿using FMSC.ORM.Logging;
+﻿using Android.Views;
+using FMSC.ORM.Logging;
 using FScruiser.Maui.Util;
 using Microsoft.Extensions.Logging;
 using NatCruise.MVVM;
@@ -27,7 +28,7 @@ namespace FScruiser.Maui.MVVM
 
                 if (targetElement is Page view && viewModel is ViewModelBase)
                 {
-                    view.Appearing += View_Appearing;
+                    WireView(view);
                 }
 
                 return viewModel;
@@ -37,6 +38,11 @@ namespace FScruiser.Maui.MVVM
                 context.Services.GetRequiredService<ILogger<ViewModelLocaterExtension>>().LogError(e, "Error Resolving " +Type.Name);
                 throw;
             }
+        }
+
+        public static void WireView(Page view)
+        {
+            view.Appearing += View_Appearing;
         }
 
         private static void View_Appearing(object? sender, EventArgs e)

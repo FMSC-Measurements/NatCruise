@@ -3,6 +3,7 @@ using FScruiser.Maui.Data;
 using Microsoft.Extensions.Logging;
 using NatCruise.Data;
 using Backpack.Maui;
+using Microsoft.Maui.Controls.Compatibility.Hosting;
 
 namespace FScruiser.Maui;
 
@@ -17,6 +18,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .UseMauiCompatibility() //TODO remove when done refactoring TallyPage to remove RelativeLayout
             .UseBackpack()
             .ConfigureFonts(fonts =>
             {

@@ -1,8 +1,10 @@
-﻿using FScruiser.Maui.Services;
+﻿using FScruiser.Maui.Data;
+using FScruiser.Maui.Services;
 using FScruiser.Maui.ViewModels;
 using FScruiser.Maui.Views;
 using Microsoft.Maui.LifecycleEvents;
 using NatCruise.Data;
+using NatCruise.Logic;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
 using NatCruise.Services;
@@ -79,13 +81,18 @@ namespace FScruiser.Maui
             services.AddSingleton<IDataContextService, DataContextService>();
 
             services.AddSingleton<AppShell>();
-            services.AddSingleton<ISoundService, SoundService>();
 
+            services.AddSingleton<ICruisersDataservice, CruisersDataservice>();
             services.AddSingleton<ICruiseNavigationService, MauiNavigationService>();
             services.AddSingleton<INatCruiseNavigationService, MauiNavigationService>();
             services.AddSingleton<INatCruiseDialogService, MauiDialogService>();
             services.AddSingleton<IApplicationSettingService, MauiApplicationSettingService>();
             //services.AddSingleton<IDataserviceProvider, DataserviceProviderBase>();
+
+            services.AddTransient<ITreeBasedTallyService, TreeBasedTallyService>();
+            services.AddTransient<IPlotTallyService, PlotTallyService>();
+
+            services.AddTransient<ILoggingService, AppCenterLoggerService>();
 
             services.AddTransient<IPreferences>(x => Microsoft.Maui.Storage.Preferences.Default);
 

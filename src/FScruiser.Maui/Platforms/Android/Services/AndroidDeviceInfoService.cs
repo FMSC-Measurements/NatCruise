@@ -19,7 +19,7 @@ public class AndroidDeviceInfoService : IDeviceInfoService
     //    : this(context.Context)
     //{ }
 
-    public AndroidDeviceInfoService() : this(Platform.AppContext)
+    public AndroidDeviceInfoService() : this(Microsoft.Maui.ApplicationModel.Platform.AppContext)
     {
         
     }

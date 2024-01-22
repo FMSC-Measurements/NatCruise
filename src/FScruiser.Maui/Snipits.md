@@ -34,7 +34,11 @@ example of standard xmlns used
                 <mct:SelectAllTextBehavior />
                 <bhvrs:SelectNextOnCompleatedBehavior />
             </Entry.Behaviors>
-        </Entry>
+
+            <Entry.Behaviors>
+                <mct:SelectAllTextBehavior />
+            </Entry.Behaviors>
+</Entry>
     </ContentPage.Content>
 </ContentPage>
 ```

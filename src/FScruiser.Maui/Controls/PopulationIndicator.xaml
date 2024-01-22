@@ -37,24 +37,24 @@
             <BoxView
                      WidthRequest="2"
                      BackgroundColor="White"
-                     IsVisible="{Binding Species, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+                     IsVisible="{Binding Species, Converter={StaticResource isStringNotNullOrEmptyConverter}}" />
             
             <Label x:Name="_spLabel"
                    Text="{Binding Species}"
                    FontSize="{Binding AltFontSize}"
                    FontAttributes="{Binding AltFontAttributes}"
                    TextColor="{Binding TextColor }"
-                   IsVisible="{Binding Species, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                   IsVisible="{Binding Species, Converter={StaticResource isStringNotNullOrEmptyConverter}}"
                    Padding="{Binding CellPadding}"
                    Margin="{Binding CellMargin}"/>
             <BoxView WidthRequest="2"
                      BackgroundColor="White"
-                     IsVisible="{Binding LiveDead, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+                     IsVisible="{Binding LiveDead, Converter={StaticResource isStringNotNullOrEmptyConverter}}" />
             
             <Label x:Name="_ldLabel"
                    Text="{Binding LiveDead}"
                    TextColor="{Binding TextColor }"
-                   IsVisible="{Binding LiveDead, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                   IsVisible="{Binding LiveDead, Converter={StaticResource isStringNotNullOrEmptyConverter}}"
                    Padding="{Binding CellPadding}"
                    Margin="{Binding CellMargin}"/>
         </StackLayout>
