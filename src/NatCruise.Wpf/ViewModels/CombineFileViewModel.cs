@@ -312,6 +312,9 @@ namespace NatCruise.Wpf.ViewModels
                         + "::::" + e.GetType().Name + ":::: " + e.Message);
 
                     LoggingService.LogException(nameof(CombineFileViewModel), nameof(RunSync), e);
+
+                    return;// quit syncing
+                    //todo do we need to do any cleanup
                 }
             } while (syncQue.Count > 0);
 
