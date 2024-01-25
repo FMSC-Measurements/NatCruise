@@ -69,7 +69,11 @@ namespace NatCruise.Design.ViewModels
         public bool IsSuperuserModeEnabled
         {
             get => _isSuperuserModeEnabled;
-            set => SetProperty(ref _isSuperuserModeEnabled, value);
+            set
+            {
+                SetProperty(ref _isSuperuserModeEnabled, value);
+                RemoveSampleGroupCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public IRelayCommand AddSampleGroupCommand => _addSampleGroupCommand ??= new RelayCommand<string>(AddSampleGroup);
