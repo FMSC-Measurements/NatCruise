@@ -156,9 +156,9 @@ namespace NatCruise.Wpf.FieldData.Views
             if (sender is TabControl tabControl)
             {
                 var selectedTab = tabControl.SelectedItem as TabItem;
-                if (selectedTab != null)
+                if (selectedTab != null && selectedTab.Content is FrameworkElement element)
                 {
-                    var viewModel = selectedTab.DataContext as ViewModelBase;
+                    var viewModel = element.DataContext as ViewModelBase;
                     viewModel.Load();
                 }
             }
