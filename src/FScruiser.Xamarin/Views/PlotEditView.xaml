@@ -154,6 +154,10 @@
                       WidthRequest="300"
                       AutomationProperties.IsInAccessibleTree="True"
                       AutomationProperties.Name="Plot Stratum List">
+                <ListView.Resources>
+                    
+                </ListView.Resources>
+                
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -170,6 +174,9 @@
                                                                                 x:Key="IsFixedSizedPlotMethod" />
                                         <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods"
                                                                                 x:Key="IsVRPlotMethod" />
+                                        <converters:BoolToObjectConverter x:Key="InCruiseAddRemoveConverter"
+                                                                          TrueValue="Remove"
+                                                                          FalseValue="Add" />
                                     </ResourceDictionary>
                                 </Frame.Resources>
 
@@ -186,7 +193,7 @@
                                                HorizontalOptions="StartAndExpand"
                                                AutomationProperties.IsInAccessibleTree="False" />
 
-                                        <Button Text=" Add/Remove "
+                                        <Button Text="{Binding InCruise, Converter={StaticResource InCruiseAddRemoveConverter}}"
                                                 IsVisible="{Binding BindingContext.CanAddRemoveStrata, Source={Reference _page }}"
                                                 Command="{Binding BindingContext.ToggleInCruiseCommand, Source={Reference _page }}"
                                                 CommandParameter="{Binding .}"

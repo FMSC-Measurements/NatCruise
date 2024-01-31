@@ -150,6 +150,10 @@
                                                                                 x:Key="IsFixedSizedPlotMethod" />
                                         <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods"
                                                                                 x:Key="IsVRPlotMethod" />
+
+                                        <converters:BoolToObjectConverter x:Key="InCruiseAddRemoveConverter"
+                                                                          TrueObject="Remove"
+                                                                          FalseObject="Add" />
                                     </ResourceDictionary>
                                 </Border.Resources>
 
@@ -176,7 +180,7 @@
                                                    Foreground="{DynamicResource MahApps.Brushes.Text}" />
 
                                         <Button DockPanel.Dock="Right"
-                                                Content=" Add/Remove "
+                                                Content="{Binding InCruise, Converter={StaticResource InCruiseAddRemoveConverter}}"
                                                 HorizontalAlignment="Right"
                                                 mah_ctrls:VisibilityHelper.IsVisible="{Binding DataContext.CanAddRemoveStrata, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
                                                 Command="{Binding DataContext.ToggleInCruiseCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
