@@ -89,17 +89,22 @@ namespace NatCruise.Wpf.Controls
             PART_headerSelectAllCheckbox.IsChecked = false;
         }
 
+        
+
         private void PART_headerSelectAllCheckbox_Loaded(object sender, RoutedEventArgs e)
         {
             var checkbox = sender as CheckBox;
-            var dataGrid = checkbox.GetVisualAncestor<DataGrid>();
-            dataGrid.SelectionChanged += DataGrid_SelectionChanged;
+            var dataGrid = checkbox?.GetVisualAncestor<DataGrid>();
+            if (dataGrid != null)
+            {
+                dataGrid.SelectionChanged += DataGrid_SelectionChanged;
+            }
         }
 
         private void PART_headerSelectAllCheckbox_Unloaded(object sender, RoutedEventArgs e)
         {
             var checkbox = sender as CheckBox;
-            var dataGrid = checkbox.GetVisualAncestor<DataGrid>();
+            var dataGrid = checkbox?.GetVisualAncestor<DataGrid>();
             if (dataGrid != null)
             {
                 dataGrid.SelectionChanged -= DataGrid_SelectionChanged;
