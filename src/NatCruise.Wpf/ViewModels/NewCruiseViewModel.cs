@@ -52,7 +52,6 @@ namespace NatCruise.Wpf.ViewModels
         protected ISetupInfoDataservice SetupinfoDataservice { get; }
         protected IFileDialogService FileDialogService { get; }
         protected IDeviceInfoService DeviceInfo { get; set; }
-        protected ITemplateDataservice TemplateDataservice { get; set; }
         protected IDataserviceProvider TemplateDataserviceProvider { get; set; }
 
         public string SaleName
@@ -352,8 +351,6 @@ namespace NatCruise.Wpf.ViewModels
                 CruiseID = cruiseID,
             };
 
-            var templateDataservice = new TemplateDataservice(v3TemplateDb, cruiseID, DeviceInfo.DeviceID);
-            TemplateDataservice = templateDataservice;
             TemplatePath = templatePath;
         }
 

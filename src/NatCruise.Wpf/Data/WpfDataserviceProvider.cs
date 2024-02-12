@@ -8,13 +8,16 @@ namespace NatCruise.Data
 {
     public class WpfDataserviceProvider : DataserviceProviderBase
     {
-        public WpfDataserviceProvider(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService) : base(database, deviceInfoService)
-        {
-        }
+        public WpfDataserviceProvider(DataContextService dataContext) : base(dataContext)
+        { }
 
-        public WpfDataserviceProvider(string databasePath, IDeviceInfoService deviceInfoService) : base(databasePath, deviceInfoService)
-        {
-        }
+        //public WpfDataserviceProvider(CruiseDatastore_V3 database, IDeviceInfoService deviceInfoService) : base(database, deviceInfoService)
+        //{
+        //}
+
+        //public WpfDataserviceProvider(string databasePath, IDeviceInfoService deviceInfoService) : base(databasePath, deviceInfoService)
+        //{
+        //}
 
         public override IDataservice GetDataservice(Type type)
         {
@@ -28,15 +31,12 @@ namespace NatCruise.Data
             var database = Database;
             var deviceID = DeviceID;
 
-            if (type == typeof(ITemplateDataservice))
-            {
-                return new TemplateDataservice(database, cruiseID, deviceID);
-            }
-            else if (type == typeof(IDesignCheckDataservice))
+
+            if (type == typeof(IDesignCheckDataservice))
             {
                 return new DesignCheckDataservice(database, cruiseID, deviceID);
             }
-            else if (type == typeof(ICruisersDataservice))
+            if (type == typeof(ICruisersDataservice))
             {
                 return new CruisersDataservice(database, cruiseID, deviceID);
             }
@@ -48,7 +48,6 @@ namespace NatCruise.Data
         {
             DataserviceProviderBase.RegisterDataservices(containerRegistry);
 
-            containerRegistry.Register<ITemplateDataservice>(x => GetDataservice<ITemplateDataservice>(x));
             containerRegistry.Register<IDesignCheckDataservice>(x => GetDataservice<IDesignCheckDataservice>(x));
             containerRegistry.Register<ICruisersDataservice>(x => GetDataservice<ICruisersDataservice>(x));
         }

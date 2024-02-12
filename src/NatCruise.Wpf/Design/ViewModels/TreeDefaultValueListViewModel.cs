@@ -24,16 +24,20 @@ namespace NatCruise.Design.ViewModels
         private ICommand _deleteTreeDefaultValueCommand;
         private IEnumerable<string> _productCodeOptions;
 
-        public TreeDefaultValueListViewModel(ITemplateDataservice templateDataservice, ISpeciesDataservice speciesDataservice, ISetupInfoDataservice setupInfoDataservice, INatCruiseDialogService dialogService)
+        public TreeDefaultValueListViewModel(ITreeDefaultValueDataservice treeDefaultValueDataservice,
+            ISpeciesDataservice speciesDataservice,
+            ISetupInfoDataservice setupInfoDataservice,
+            INatCruiseDialogService dialogService)
         {
-            TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
+            TreeDefaultValueDataservice = treeDefaultValueDataservice ?? throw new ArgumentNullException(nameof(treeDefaultValueDataservice));
+            //TemplateDataservice = templateDataservice ?? throw new ArgumentNullException(nameof(templateDataservice));
             SpeciesDataservice = speciesDataservice ?? throw new ArgumentNullException(nameof(speciesDataservice));
             SetupDataservice = setupInfoDataservice ?? throw new ArgumentNullException(nameof(setupInfoDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NewTreeDefaultValue = MakeNewTreeDefaultValue();
         }
 
-        public ITemplateDataservice TemplateDataservice { get; }
+        public ITreeDefaultValueDataservice TreeDefaultValueDataservice { get; }
         public ISpeciesDataservice SpeciesDataservice { get; }
         public ISetupInfoDataservice SetupDataservice { get; }
         public INatCruiseDialogService DialogService { get; }
@@ -67,7 +71,7 @@ namespace NatCruise.Design.ViewModels
         private void TreeDefaultValue_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var tdv = (TreeDefaultValue)sender;
-            TemplateDataservice.UpsertTreeDefaultValue(tdv);
+            TreeDefaultValueDataservice.UpsertTreeDefaultValue(tdv);
         }
 
         public TreeDefaultValue NewTreeDefaultValue
@@ -105,7 +109,7 @@ namespace NatCruise.Design.ViewModels
 
             try
             {
-                TemplateDataservice.AddTreeDefaultValue(newTDV);
+                TreeDefaultValueDataservice.AddTreeDefaultValue(newTDV);
                 TreeDefaultValues.Add(newTDV);
                 newTDV.PropertyChanged += TreeDefaultValue_PropertyChanged;
                 NewTreeDefaultValue = MakeNewTreeDefaultValue();
@@ -124,7 +128,7 @@ namespace NatCruise.Design.ViewModels
         public void DeleteTreeDefaultValue(TreeDefaultValue tdv)
         {
             if (tdv == null) { return; }
-            TemplateDataservice.DeleteTreeDefaultValue(tdv);
+            TreeDefaultValueDataservice.DeleteTreeDefaultValue(tdv);
             tdv.PropertyChanged -= TreeDefaultValue_PropertyChanged;
             TreeDefaultValues.Remove(tdv);
         }
@@ -135,7 +139,7 @@ namespace NatCruise.Design.ViewModels
 
             SpeciesCodeOptions = SpeciesDataservice.GetSpeciesCodes();
             ProductOptions = SetupDataservice.GetProducts();
-            var tdvs = TemplateDataservice.GetTreeDefaultValues();
+            var tdvs = TreeDefaultValueDataservice.GetTreeDefaultValues();
             TreeDefaultValues = new ObservableCollection<TreeDefaultValue>(tdvs);
         }
     }
