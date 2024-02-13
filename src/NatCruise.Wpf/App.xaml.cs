@@ -1,4 +1,6 @@
 ﻿using CruiseDAL;
+using DryIoc.Microsoft.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Design.Validation;
@@ -6,6 +8,8 @@ using NatCruise.Design.Views;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Services.Logging;
+using NatCruise.Wpf.Data;
 using NatCruise.Wpf.FieldData.Views;
 using NatCruise.Wpf.Models;
 using NatCruise.Wpf.Navigation;
@@ -17,6 +21,7 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,7 +41,9 @@ namespace NatCruise.Wpf
         public string StartupFilePath { get; private set; }
 
         public App()
-        { }
+        {
+            LoggingService = new WpfLoggingService();
+        }
 
         protected override Window CreateShell()
         {
@@ -45,8 +52,19 @@ namespace NatCruise.Wpf
 
         protected override void OnStartup(StartupEventArgs e)
         {
+#if !DEBUG
+            Microsoft.AppCenter.AppCenter.Start(Secrets.APPCENTER_KEY_WINDOWS,
+                               typeof(Microsoft.AppCenter.Analytics.Analytics), typeof(Microsoft.AppCenter.Crashes.Crashes));
+#endif
+
             // store our start up args for use later
             var startupArgs = StartupArgs = e.Args;
+
+            LoggingService.LogEvent("StartUpArgs", new Dictionary<string, string>()
+            {
+                { "ArgsCount", startupArgs.Length.ToString() },
+                { "Args", string.Join(", ", startupArgs) }
+            });
 
             if (startupArgs.Length == 1)
             {
@@ -68,11 +86,6 @@ namespace NatCruise.Wpf
 
         protected override void OnInitialized()
         {
-#if !DEBUG
-            Microsoft.AppCenter.AppCenter.Start(Secrets.APPCENTER_KEY_WINDOWS,
-                               typeof(Microsoft.AppCenter.Analytics.Analytics), typeof(Microsoft.AppCenter.Crashes.Crashes));
-#endif
-
             var container = Container;
 
             var regionManager = container.Resolve<IRegionManager>();
@@ -148,7 +161,7 @@ namespace NatCruise.Wpf
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // initialize logging service
-            var loggingService = new WpfLoggingService();
+            var loggingService = LoggingService;
             containerRegistry.RegisterInstance<ILoggingService>(loggingService);
             // wire logging service up to our task extensions. this will pride logging
             // for our FireAndForget async tasks.
@@ -173,11 +186,25 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterSingleton<IFileDialogService, WpfFileDialogService>();
             containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
 
-            // initialize Dataservice Provider
-            var deviceInfo = Container.Resolve<IDeviceInfoService>();
-            var dataserviceProvider = new WpfDataserviceProvider((CruiseDatastore_V3)null, deviceInfo);
-            WpfDataserviceProvider.RegisterDataservices(containerRegistry);
-            containerRegistry.RegisterInstance<IDataserviceProvider>(dataserviceProvider);
+            // register Microsoft.Extentions.Logging
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILoggerFactory), typeof(Microsoft.Extensions.Logging.LoggerFactory));
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.LoggerFactory), () => new Microsoft.Extensions.Logging.LoggerFactory(new[] { new AppCenterLoggerProvider() }));
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(Microsoft.Extensions.Logging.Logger<>));
+
+
+            
+
+            // should this be changed to scoped?
+            containerRegistry.RegisterSingleton<IDataContextService, DataContextService>();
+
+            // register data services.
+            var servicesToRegister = new ServiceCollection();
+            servicesToRegister.AddNatCruiseCoreDataservices();
+
+            var container = containerRegistry.GetContainer();
+            container.Populate(servicesToRegister);
+            containerRegistry.Register<IDesignCheckDataservice, DesignCheckDataservice>();
+            containerRegistry.Register<ICruisersDataservice, CruisersDataservice>();
 
             // register views for navigation
             containerRegistry.RegisterDialog<NewCruiseView, NewCruiseViewModel>("NewCruise");
@@ -204,6 +231,12 @@ namespace NatCruise.Wpf
             containerRegistry.Register<SaleValidator>();
             containerRegistry.Register<SampleGroupValidator>();
             containerRegistry.Register<StratumValidator>();
+
+
+            // register Microsoft.Extentions.Logging
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILoggerFactory), typeof(Microsoft.Extensions.Logging.LoggerFactory));
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.LoggerFactory), () => new Microsoft.Extensions.Logging.LoggerFactory(new[] { new AppCenterLoggerProvider() }));
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(Microsoft.Extensions.Logging.Logger<>));
         }
 
         //[RelayCommand]
