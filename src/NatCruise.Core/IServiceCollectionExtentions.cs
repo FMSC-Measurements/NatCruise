@@ -43,6 +43,7 @@ namespace NatCruise
                 ServiceDescriptor.Transient<ITallyPopulationDataservice, TallyPopulationDataservice>(),
                 ServiceDescriptor.Transient<ITreeDataservice, TreeDataservice>(),
                 ServiceDescriptor.Transient<ITreeAuditRuleDataservice, TreeAuditRuleDataservice>(),
+                ServiceDescriptor.Transient<ITreeDefaultValueDataservice, TreeDefaultValueDataservice>(),
                 ServiceDescriptor.Transient<ITreeErrorDataservice, TreeErrorDataservice>(),
                 ServiceDescriptor.Transient<ITreeFieldDataservice, TreeFieldDataservice>(),
                 ServiceDescriptor.Transient<ITreeFieldValueDataservice, TreeFieldValueDataservice>(),
