@@ -3,12 +3,17 @@ using FScruiser.XF.Controls;
 using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.MVVM;
 using NatCruise.Services;
+using NatCruise.Services.Logging;
 using NatCruise.Util;
+using NatCruise;
 using Prism;
+using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services;
@@ -18,6 +23,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms.Xaml;
+using DryIoc.Microsoft.DependencyInjection;
 
 namespace FScruiser.XF
 {
@@ -27,18 +33,14 @@ namespace FScruiser.XF
         public const string CURRENT_NAV_PATH = "current_nav_path";
         public const string CURRENT_NAV_PARAMS = "current_nav_params";
 
-        private FScruiserDataserviceProvider _dataserviceProvider;
-
         //private CruiseFileSelectedEvent _cruiseFileSelectedEvent;
         //private CruiseFileOpenedEvent _cruiseFileOpenedEvent;
         private ICruisersDataservice _cruisersDataservice;
 
-        private Exception _dataserviceProviderInitError;
+        private Exception _dataContextInitError;
 
         protected IPageDialogService DialogService => Container?.Resolve<IPageDialogService>();
         public ICruiseNavigationService CruiseNavigationService => Container?.Resolve<ICruiseNavigationService>();
-
-        public IDataserviceProvider DataserviceProvider => _dataserviceProvider;
 
         public IApplicationSettingService Settings { get; } = new XamarinApplicationSettingService();
         public IViewModelTypeResolver ViewModelTypeResolver { get; } = new NatCruiseViewModelTypeResolver();
@@ -62,6 +64,7 @@ namespace FScruiser.XF
             TapGestureRecognizerHelper.SoundService = Container.Resolve<ISoundService>();
 
             this.InitializeComponent();
+            
 
 #if RELEASE
             //start app center services
@@ -81,16 +84,13 @@ namespace FScruiser.XF
             //    await CruiseNavigationService.ShowDatabaseUtilities();
             //}
 
-            var dsp = GetDataserviceProvider();
-            if (_dataserviceProviderInitError == null)
+            if (InitDataContext())
             {
                 await CruiseNavigationService.ShowCruiseLandingLayout();
             }
             else
             {
                 await CruiseNavigationService.ShowDatabaseUtilities();
-
-                await LogAndShowExceptionAsync("Dataservice Provider Error", "Error Loading Dataservice Provider\r\n Please Backup and Reset Database\r\n contact support", _dataserviceProviderInitError);
             }
         }
 
@@ -143,50 +143,44 @@ namespace FScruiser.XF
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            if (containerRegistry.IsRegistered<IFileDialogService>() == false)
-            {
-                containerRegistry.Register<IFileDialogService, XamarinFileDialogService>();
-            }
+            // primary location for type registration is in XamarinPlatFormInitializer
+            // below is additional registration where we want hold on to the created instance here in the app
+            // or where we want to initialize the instance with the app instance
 
-            if (containerRegistry.IsRegistered<IDataserviceProvider>() == false)
-            {
-                containerRegistry.Register<IDataserviceProvider>(x => GetDataserviceProvider());
-                FScruiser.XF.Data.FScruiserDataserviceProvider.RegisterDataservices(containerRegistry);
-            }
+            //InitDataContext();
 
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)
             {
                 containerRegistry.RegisterInstance<ICruisersDataservice>(_cruisersDataservice = new CruisersDataservice(this));
             }
+
+            // register Microsoft.Extentions.Logging
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILoggerFactory), typeof(Microsoft.Extensions.Logging.LoggerFactory));
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.LoggerFactory), () => new Microsoft.Extensions.Logging.LoggerFactory(new[] {new AppCenterLoggerProvider()}));
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(Microsoft.Extensions.Logging.Logger<>));
+
+
+            var servicesToRegister = new ServiceCollection();
+            servicesToRegister.AddNatCruiseCoreDataservices();
+
+            var container = containerRegistry.GetContainer();
+            container.Populate(servicesToRegister);
         }
 
-        protected FScruiserDataserviceProvider GetDataserviceProvider()
+
+        protected bool InitDataContext()
         {
-            if (_dataserviceProvider is null)
+            var dataContext = Container.Resolve<IDataContextService>();
+
+            if(!dataContext.IsReady)
             {
-                var deviceInfo = Container.Resolve<IDeviceInfoService>();
                 var fileSystemService = Container.Resolve<IFileSystemService>();
                 var cruiseDbPath = fileSystemService.DefaultCruiseDatabasePath;
 
-                try
-                {
-                    if (File.Exists(cruiseDbPath) == false)
-                    {
-                        var db = new CruiseDatastore_V3(cruiseDbPath, true);
-                        _dataserviceProvider = new FScruiserDataserviceProvider(db, deviceInfo);
-                    }
-                    else
-                    {
-                        var db = new CruiseDatastore_V3(cruiseDbPath, false);
-                        _dataserviceProvider = new FScruiserDataserviceProvider(db, deviceInfo);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _dataserviceProviderInitError = ex;
-                }
+                dataContext.Init(cruiseDbPath);
             }
-            return _dataserviceProvider;
+
+            return dataContext.IsReady;
         }
 
         protected override void ConfigureViewModelLocator()

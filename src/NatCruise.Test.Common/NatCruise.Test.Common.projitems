@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DatastoreInitializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HostedTestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestDeviceInfoService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestLogger.cs" />

@@ -1,6 +1,8 @@
 ﻿using CruiseDAL;
 using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Sync;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -39,20 +41,22 @@ namespace NatCruise.Wpf.ViewModels
         private IEnumerable<Region> _regionOptions;
         private IEnumerable<UOM> _uomOptions;
 
-        public NewCruiseViewModel(IDataserviceProvider dataserviceProvider, ISetupInfoDataservice setupInfo, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
+        public NewCruiseViewModel(IDataContextService dataContext, IServiceProvider serviceProvider, ISetupInfoDataservice setupInfo, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
             : base(new NewCruiseValidator())
         {
-            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            ServiceProvider = serviceProvider;
+            DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             SetupinfoDataservice = setupInfo ?? throw new ArgumentNullException(nameof(setupInfo));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             DeviceInfo = deviceInfo ?? throw new ArgumentNullException(nameof(deviceInfo));
         }
 
-        protected IDataserviceProvider DataserviceProvider { get; }
+        protected IServiceProvider ServiceProvider { get; }
+        protected IDataContextService DataContext { get; }
         protected ISetupInfoDataservice SetupinfoDataservice { get; }
         protected IFileDialogService FileDialogService { get; }
         protected IDeviceInfoService DeviceInfo { get; set; }
-        protected IDataserviceProvider TemplateDataserviceProvider { get; set; }
+        protected IDataContextService TemplateDatacontext { get; set; }
 
         public string SaleName
         {
@@ -186,16 +190,16 @@ namespace NatCruise.Wpf.ViewModels
                     database.Insert(sale);
                     database.Insert(cruise);
 
-                    DataserviceProvider.Database = database;
-                    DataserviceProvider.CruiseID = cruiseID;
+                    DataContext.Database = database;
+                    DataContext.CruiseID = cruiseID;
 
-                    var templateDataserviceProvider = TemplateDataserviceProvider;
+                    var templateDataserviceProvider = TemplateDatacontext;
                     if (templateDataserviceProvider != null)
                     {
                         database.BeginTransaction();
                         try
                         {
-                            CopyTemplateData(TemplateDataserviceProvider, DataserviceProvider);
+                            CopyTemplateData(TemplateDatacontext, DataContext);
                             database.CommitTransaction();
                         }
                         catch
@@ -210,7 +214,7 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
-        protected void CopyTemplateData(IDataserviceProvider src, IDataserviceProvider dest)
+        protected void CopyTemplateData(IDataContextService src, IDataContextService dest)
         {
             var tmpltDs = src.Database;
             var tmpltCruiseID = src.CruiseID;
@@ -346,8 +350,9 @@ namespace NatCruise.Wpf.ViewModels
             else return;
 
             var cruiseID = v3TemplateDb.ExecuteScalar<string>("SELECT CruiseID FROM Cruise LIMIT 1;");
-            TemplateDataserviceProvider = new WpfDataserviceProvider(v3TemplateDb, DeviceInfo)
+            TemplateDatacontext = new DataContextService(ServiceProvider.GetRequiredService<IDeviceInfoService>(), ServiceProvider, ServiceProvider.GetRequiredService<ILogger<DataContextService>>())
             {
+                Database = v3TemplateDb,
                 CruiseID = cruiseID,
             };
 

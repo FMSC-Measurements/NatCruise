@@ -10,11 +10,11 @@ public class SaleViewModel : ViewModelBase
 {
     private Sale? _sale;
 
-    protected ISaleDataservice Dataservice { get; set; }
+    protected ISaleDataservice SaleDataservice { get; set; }
 
-    public SaleViewModel(IDataserviceProvider datastoreProvider)
+    public SaleViewModel(ISaleDataservice saleDataservice)
     {
-        Dataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
+        SaleDataservice = saleDataservice;
     }
 
     public Sale? Sale
@@ -42,7 +42,7 @@ public class SaleViewModel : ViewModelBase
         var sale = sender as Sale;
         if (propName == nameof(Sale.Remarks))
         {
-            Dataservice.UpdateSale(sale);
+            SaleDataservice.UpdateSale(sale);
         }
     }
 
@@ -60,6 +60,6 @@ public class SaleViewModel : ViewModelBase
 
         var cruiseID = parameters.GetValue<string>(NavParams.CruiseID);
 
-        Sale = Dataservice.GetSaleByCruiseID(cruiseID);
+        Sale = SaleDataservice.GetSaleByCruiseID(cruiseID);
     }
 }

@@ -1,9 +1,10 @@
 ﻿using NatCruise.Models;
+using System;
 using System.Collections.Generic;
 
 namespace NatCruise.Data 
 {
-    public interface ISetupInfoDataservice
+    public interface ISetupInfoDataservice : IDisposable
     {
         IEnumerable<Region> GetRegions();
 

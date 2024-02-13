@@ -12,11 +12,11 @@ namespace FScruiser.XF.ViewModels
     {
         private Sale _sale;
 
-        protected ISaleDataservice Dataservice { get; set; }
+        protected ISaleDataservice SaleDataservice { get; set; }
 
-        public SaleViewModel(IDataserviceProvider datastoreProvider)
+        public SaleViewModel(ISaleDataservice saleDataservice)
         {
-            Dataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
+            SaleDataservice = saleDataservice;
         }
 
         public Sale Sale
@@ -44,7 +44,7 @@ namespace FScruiser.XF.ViewModels
             var sale = sender as Sale;
             if (propName == nameof(Sale.Remarks))
             {
-                Dataservice.UpdateSale(sale);
+                SaleDataservice.UpdateSale(sale);
             }
         }
 
@@ -62,7 +62,7 @@ namespace FScruiser.XF.ViewModels
 
             var cruiseID = parameters.GetValue<string>(NavParams.CruiseID);
 
-            Sale = Dataservice.GetSaleByCruiseID(cruiseID);
+            Sale = SaleDataservice.GetSaleByCruiseID(cruiseID);
         }
     }
 }

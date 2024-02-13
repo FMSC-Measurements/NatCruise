@@ -96,8 +96,6 @@ namespace FScruiser.Maui
 
             services.AddTransient<IPreferences>(x => Microsoft.Maui.Storage.Preferences.Default);
 
-            DataserviceProviderBase.AddDataServiceProviderServices(services);
-
             return builder;
         }
     }

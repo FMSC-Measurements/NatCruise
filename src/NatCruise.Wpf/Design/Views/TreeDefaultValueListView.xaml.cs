@@ -1,4 +1,5 @@
 ﻿using NatCruise.Design.Models;
+using NatCruise.Models;
 using System;
 using System.Linq;
 using System.Windows.Controls;

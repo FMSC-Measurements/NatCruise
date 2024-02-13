@@ -8,6 +8,8 @@ namespace NatCruise.Wpf.Data
 {
     public class DesignCheckDataservice : CruiseDataserviceBase, IDesignCheckDataservice
     {
+        public DesignCheckDataservice(IDataContextService dataContext) : base(dataContext) { }
+
         public DesignCheckDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

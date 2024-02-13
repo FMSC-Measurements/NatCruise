@@ -1,5 +1,9 @@
-﻿using CruiseDAL;
+﻿using Castle.Core.Logging;
+using CruiseDAL;
 using CruiseDAL.V3.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NatCruise.Data;
 using NatCruise.Util;
 using System;
 using System.Linq;
@@ -120,6 +124,23 @@ namespace NatCruise.Test
                     LiveDead = "L",
                 },
             };
+        }
+
+        public void InitDataContext(IDataContextService dataContext)
+        {
+            var database = CreateDatabase();
+            dataContext.Database = database;
+            dataContext.CruiseID = CruiseID;
+        }
+
+        public void InitDataContext(IDataContextService dataContext, string path, IServiceProvider serviceProvider, string cruiseID = null, string saleID = null)
+        {
+            cruiseID = cruiseID ?? CruiseID;
+            saleID = saleID ?? SaleID;
+
+            var database = CreateDatabase(path, cruiseID, saleID);
+            dataContext.Database = database;
+            dataContext.CruiseID = CruiseID;
         }
 
         public CruiseDatastore_V3 CreateDatabase()

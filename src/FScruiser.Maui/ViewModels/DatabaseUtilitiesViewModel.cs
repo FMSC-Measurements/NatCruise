@@ -16,7 +16,7 @@ public class DatabaseUtilitiesViewModel : ViewModelBase
     public ICommand LoadDatabaseCommand => new Command(() => LoadDatabase().FireAndForget());
     public INatCruiseDialogService DialogService { get; }
     public IFileSystemService FileSystemService { get; }
-    public IDataserviceProvider? DataserviceProvider { get; }
+    public IDataContextService? DataContext { get; }
     public IFileDialogService FileDialogService { get; }
     public ICruiseNavigationService NavigationService { get; }
 
@@ -33,9 +33,9 @@ public class DatabaseUtilitiesViewModel : ViewModelBase
 
         // database utilities is shown as a fall back if the app
         // crashes at startup, so
-        // dataservice provider might not be initialized yet
-        // todo should we find a way to allow the DSP to be resolved after page load?
-        DataserviceProvider = serviceProvider.GetService<IDataserviceProvider>();
+        // datacontext might not be initialized yet
+        // todo should we find a way to allow the DC to be resolved after page load?
+        DataContext = serviceProvider.GetService<IDataContextService>();
     }
 
     public async Task ResetDatabase()
@@ -48,19 +48,19 @@ public class DatabaseUtilitiesViewModel : ViewModelBase
 
         if (await DialogService.AskYesNoAsync("Resetting Database will delete all cruise data.\r\n Do you want to continue", "Warning", defaultNo: true))
         {
-            var dsp = DataserviceProvider;
-            if (dsp != null)
+            var context = DataContext;
+            if (context != null)
             {
-                dsp.Database?.ReleaseConnection(true);
-            }
+                context.Database?.ReleaseConnection(true);
 
-            var databasePath = FileSystemService.DefaultCruiseDatabasePath;
-            File.Delete(databasePath);
-            Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Database Reset");
-            _ = new CruiseDatastore_V3(databasePath, true);
-            if (dsp != null)
-            {
-                dsp.CruiseID = null;
+                var databasePath = FileSystemService.DefaultCruiseDatabasePath;
+                File.Delete(databasePath);
+                Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Database Reset");
+                var newDatabase = new CruiseDatastore_V3(databasePath, true);
+                if (context != null)
+                {
+                    context.CruiseID = null;
+                }
             }
         }
     }
@@ -92,18 +92,20 @@ public class DatabaseUtilitiesViewModel : ViewModelBase
             { return; }
         }
 
-        var dsp = DataserviceProvider;
-        if (dsp != null)
+        var dataContext = DataContext;
+        if (dataContext != null)
         {
-            dsp.Database?.ReleaseConnection(true);
+            dataContext.Database?.ReleaseConnection(true);
         }
+
+        // data context might be null but we will try to copy in the new database regardless
         var databasePath = FileSystemService.DefaultCruiseDatabasePath;
         File.Copy(loadPath, databasePath, true);
         var newDatabase = new CruiseDatastore_V3(databasePath);
         Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Load Database");
-        if (dsp != null)
+        if (dataContext != null)
         {
-            dsp.CruiseID = null;
+            dataContext.CruiseID = null;
         }
     }
 }

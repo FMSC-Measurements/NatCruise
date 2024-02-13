@@ -31,6 +31,9 @@ namespace NatCruise
                 ServiceDescriptor.Transient<ISampleGroupDataservice, SampleGroupDataservice>(),
                 ServiceDescriptor.Transient<ISamplerStateDataservice, SamplerStateDataservice>(),
                 ServiceDescriptor.Transient<ISampleSelectorDataService>(x => x.GetRequiredService<IDataContextService>().SampleSelectorDataService),
+                // Setup Info creates its own database and doesn't use the data context
+                // because of this we only want a single instance
+                ServiceDescriptor.Singleton<ISetupInfoDataservice, SetupInfoDataservice>(),
                 ServiceDescriptor.Transient<ISpeciesDataservice, SpeciesDataservice>(),
                 ServiceDescriptor.Transient<IStratumDataservice, StratumDataservice>(),
                 ServiceDescriptor.Transient<IStratumTemplateDataservice, StratumTemplateDataservice>(),
@@ -43,7 +46,6 @@ namespace NatCruise
                 ServiceDescriptor.Transient<ITreeErrorDataservice, TreeErrorDataservice>(),
                 ServiceDescriptor.Transient<ITreeFieldDataservice, TreeFieldDataservice>(),
                 ServiceDescriptor.Transient<ITreeFieldValueDataservice, TreeFieldValueDataservice>(),
-
             };
 
 

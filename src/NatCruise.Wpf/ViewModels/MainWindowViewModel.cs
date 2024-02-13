@@ -34,7 +34,7 @@ namespace NatCruise.Wpf.ViewModels
 
         public MainWindowViewModel(
             IAppService appService,
-            IDataserviceProvider dataserviceProvider,
+            IDataContextService dataserviceProvider,
             IDesignNavigationService navigationService,
             IFileDialogService fileDialogService,
             IRecentFilesDataservice recentFilesDataservice,
@@ -44,7 +44,7 @@ namespace NatCruise.Wpf.ViewModels
             ILoggingService loggingService)
         {
             AppService = appService ?? throw new ArgumentNullException(nameof(appService));
-            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            DataContext = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             PrismDialogService = prismDialogService ?? throw new ArgumentNullException(nameof(prismDialogService));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             RecentFilesDataservice = recentFilesDataservice ?? throw new ArgumentNullException(nameof(recentFilesDataservice));
@@ -58,7 +58,7 @@ namespace NatCruise.Wpf.ViewModels
         public Version AppVersion { get; }
         public ILoggingService Log { get; }
         protected IAppService AppService { get; }
-        protected IDataserviceProvider DataserviceProvider { get; }
+        protected IDataContextService DataContext { get; }
         protected IDesignNavigationService NavigationService { get; }
         protected IRecentFilesDataservice RecentFilesDataservice { get; }
         public Prism.Services.Dialogs.IDialogService PrismDialogService { get; }
@@ -100,7 +100,7 @@ namespace NatCruise.Wpf.ViewModels
             {
                 if (r.Result == ButtonResult.OK)
                 {
-                    var filePath = DataserviceProvider.DatabasePath;
+                    var filePath = DataContext.DatabasePath;
                     var fileExtention = Path.GetExtension(filePath).ToLower();
                     RecentFilesDataservice.AddRecentFile(filePath);
                     if (fileExtention == ".crz3")
@@ -144,8 +144,8 @@ namespace NatCruise.Wpf.ViewModels
                     database.Insert(sale);
                     database.Insert(cruise);
 
-                    DataserviceProvider.Database = database;
-                    DataserviceProvider.CruiseID = cruiseID;
+                    DataContext.Database = database;
+                    DataContext.CruiseID = cruiseID;
 
                     RecentFilesDataservice.AddRecentFile(filePath);
                     OnPropertyChanged(nameof(RecentFiles));
@@ -205,8 +205,8 @@ namespace NatCruise.Wpf.ViewModels
                 }
                 var cruiseID = cruiseIDs.First();
 
-                DataserviceProvider.Database = database;
-                DataserviceProvider.CruiseID = cruiseID;
+                DataContext.Database = database;
+                DataContext.CruiseID = cruiseID;
 
                 await NavigationService.ShowCruiseLandingLayout();
                 RecentFilesDataservice.AddRecentFile(filePath);
@@ -226,8 +226,8 @@ namespace NatCruise.Wpf.ViewModels
                 }
                 var cruiseID = cruiseIDs.First();
 
-                DataserviceProvider.Database = database;
-                DataserviceProvider.CruiseID = cruiseID;
+                DataContext.Database = database;
+                DataContext.CruiseID = cruiseID;
 
                 await NavigationService.ShowTemplateLandingLayout();
                 RecentFilesDataservice.AddRecentFile(filePath);

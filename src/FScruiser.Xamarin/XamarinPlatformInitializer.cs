@@ -16,11 +16,11 @@ namespace FScruiser.XF
     {
         public virtual void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<IDataContextService, DataContextService>();
+            containerRegistry.Register<IFileDialogService, XamarinFileDialogService>();
             containerRegistry.Register<IApplicationSettingService, XamarinApplicationSettingService>();
-
             containerRegistry.Register<ICruiseNavigationService, XamarinNavigationService>();
             containerRegistry.Register<INatCruiseNavigationService, XamarinNavigationService>();
-
             containerRegistry.Register<INatCruiseDialogService, XamarinDialogService>();
             containerRegistry.RegisterSingleton<ITallySettingsDataService, TallySettingsDataService>();
             containerRegistry.RegisterInstance<ILoggingService>(new AppCenterLoggerService());

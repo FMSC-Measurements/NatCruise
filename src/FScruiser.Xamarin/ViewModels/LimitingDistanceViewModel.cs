@@ -1,4 +1,5 @@
-﻿using NatCruise.Async;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Logic;
 using NatCruise.Models;
@@ -47,7 +48,6 @@ namespace FScruiser.XF.ViewModels
         private string _treeNumber;
 
         public INatCruiseDialogService DialogService { get; }
-        protected IDataserviceProvider DataserviceProvider { get; }
         public IPlotDataservice PlotDataservice { get; protected set; }
         public ISampleGroupDataservice SampleGroupDataservice { get; protected set; }
         public IStratumDataservice StratumDataservice { get; protected set; }
@@ -357,17 +357,16 @@ namespace FScruiser.XF.ViewModels
 
         #endregion commands
 
-        public LimitingDistanceViewModel(IDataserviceProvider dataserviceProvider, INatCruiseDialogService dialogService, IApplicationSettingService appSettings)
+        public LimitingDistanceViewModel(IServiceProvider serviceProvider, INatCruiseDialogService dialogService, IApplicationSettingService appSettings)
         {
             // we need DataserviceProvider because we might not know if a cruise is selected until Load gets called
-            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             UseNewLimitingDistanceCalculator = appSettings.UseNewLimitingDistanceCalculator;
 
-            SampleGroupDataservice = DataserviceProvider.GetDataservice<ISampleGroupDataservice>();
-            PlotDataservice = DataserviceProvider.GetDataservice<IPlotDataservice>();
-            StratumDataservice = DataserviceProvider.GetDataservice<IStratumDataservice>();
+            SampleGroupDataservice = serviceProvider.GetService<ISampleGroupDataservice>();
+            PlotDataservice = serviceProvider.GetService<IPlotDataservice>();
+            StratumDataservice = serviceProvider.GetService<IStratumDataservice>();
 
             if (UseNewLimitingDistanceCalculator)
             { LimitingDistanceCalculator = new CalculateLimitingDistance2(); }
@@ -396,18 +395,18 @@ namespace FScruiser.XF.ViewModels
             var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
             var plotNumber = parameters.GetValue<string>(NavParams.PLOT_NUMBER);
 
-            if (unitCode != null)
-            {
-                var stDs = StratumDataservice;
+            var stDs = StratumDataservice;
+            if (stDs == null) { return; }
 
+            if (unitCode != null )
+            {
                 var strata = stDs.GetStrata(unitCode);
                 StratumOptions = strata;
 
                 if (stratumCode != null)
                 {
-                    var ds = DataserviceProvider.GetDataservice<IStratumDataservice>();
                     _stratumMode = MODE_STRATUM;
-                    Stratum = ds.GetStratum(stratumCode);
+                    Stratum = stDs.GetStratum(stratumCode);
                 }
 
                 if (plotNumber != null
@@ -421,7 +420,6 @@ namespace FScruiser.XF.ViewModels
             }
             else // if no unit selected load all strata
             {
-                var stDs = DataserviceProvider.GetDataservice<IStratumDataservice>();
                 if (stDs != null)
                 {
                     var strata = stDs.GetStrata();

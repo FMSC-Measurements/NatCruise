@@ -29,7 +29,7 @@ namespace FScruiser.XF.ViewModels
         private string _importPath;
 
         public ILoggingService Log { get; }
-        public IDataserviceProvider DataserviceProvider { get; }
+        public IDataContextService DataContext { get; }
         public IFileDialogService FileDialogService { get; }
         public IFileSystemService FileSystemService { get; }
         public INatCruiseDialogService DialogService { get; }
@@ -76,7 +76,7 @@ namespace FScruiser.XF.ViewModels
         public ICommand CancelCommand => cancelCommand ??= new Command(Cancel);
 
         public ImportViewModel(
-            IDataserviceProvider dataserviceProvider,
+            IDataContextService dataContext,
             IFileDialogService fileDialogService,
             IFileSystemService fileSystemService,
             INatCruiseDialogService dialogService,
@@ -85,7 +85,7 @@ namespace FScruiser.XF.ViewModels
             IDeviceInfoService deviceInfoService
             )
         {
-            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            DataContext = dataContext;
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -143,7 +143,7 @@ namespace FScruiser.XF.ViewModels
         {
             var eList = new List<string>();
             errors = eList;
-            var db = DataserviceProvider.Database;
+            var db = DataContext.Database;
             using (var importDb = new CruiseDatastore_V3(path))
             {
                 var cruise = importDb.From<CruiseDAL.V3.Models.Cruise>().Where("CruiseID = @p1").Query(cruiseID).Single();
@@ -361,7 +361,7 @@ namespace FScruiser.XF.ViewModels
 
             options ??= new TableSyncOptions(SyncOption.InsertUpdate);
 
-            var destDb = DataserviceProvider.Database;
+            var destDb = DataContext.Database;
             using (var srcDb = new CruiseDatastore_V3(importPath))
             {
                 var fromConn = srcDb.OpenConnection();

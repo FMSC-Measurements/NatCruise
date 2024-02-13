@@ -3,9 +3,15 @@ using System;
 
 namespace NatCruise.Data
 {
-    public interface IDataContextService
+    public interface IDataContextService : IDisposable
     {
         CruiseDAL.CruiseDatastore_V3 Database { get; set; }
+
+        string DatabasePath { get; }
+
+        bool IsReady { get; }
+
+        Exception InitError { get; }
 
         IDeviceInfoService DeviceInfoService { get; }
 
@@ -16,5 +22,7 @@ namespace NatCruise.Data
         string CruiseID { get; set; }
 
         string DeviceID { get;  }
+
+        bool Init(string path);
     }
 }

@@ -17,7 +17,7 @@ using Xunit.Abstractions;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class ImportViewModel_Test : TestBase
+    public class ImportViewModel_Test : HostedTestBase
     {
         public ImportViewModel_Test(ITestOutputHelper output) : base(output)
         {
@@ -41,9 +41,11 @@ namespace FScruiser.XF.ViewModels
             var mockCruiseNavService = new Mock<ICruiseNavigationService>();
             var deviceInfoService = new TestDeviceInfoService();
 
-            var dataServiceProvider = new FScruiserDataserviceProvider(destDb, deviceInfoService);
 
-            var importVm = new ImportViewModel(dataServiceProvider, mockFileDialogService.Object, mockFileSystemService.Object, mockNatCruiseDialogService.Object,
+            DataContext.Database = destDb;
+
+
+            var importVm = new ImportViewModel(DataContext, mockFileDialogService.Object, mockFileSystemService.Object, mockNatCruiseDialogService.Object,
                 mockLoggingService.Object, mockCruiseNavService.Object, deviceInfoService);
 
             var analizeResult = importVm.AnalizeCruise(srcPath, init.CruiseID, out var errors);
@@ -70,9 +72,9 @@ namespace FScruiser.XF.ViewModels
             var mockCruiseNavService = new Mock<ICruiseNavigationService>();
             var deviceInfoService = new TestDeviceInfoService();
 
-            var dataServiceProvider = new FScruiserDataserviceProvider(destDb, deviceInfoService);
+            DataContext.Database = destDb;
 
-            var importVm = new ImportViewModel(dataServiceProvider, mockFileDialogService.Object, mockFileSystemService.Object, mockNatCruiseDialogService.Object,
+            var importVm = new ImportViewModel(DataContext, mockFileDialogService.Object, mockFileSystemService.Object, mockNatCruiseDialogService.Object,
                 mockLoggingService.Object, mockCruiseNavService.Object, deviceInfoService);
 
             var analizeResult = importVm.AnalizeCruise(srcPath, init.CruiseID, out var errors);
@@ -109,9 +111,9 @@ namespace FScruiser.XF.ViewModels
             var mockCruiseNavService = new Mock<ICruiseNavigationService>();
             var deviceInfoService = new TestDeviceInfoService();
 
-            var dataServiceProvider = new FScruiserDataserviceProvider(destDb, deviceInfoService);
+            DataContext.Database = destDb;
 
-            var importVm = new ImportViewModel(dataServiceProvider, mockFileDialogService.Object, mockFileSystemService.Object, mockNatCruiseDialogService.Object,
+            var importVm = new ImportViewModel(DataContext, mockFileDialogService.Object, mockFileSystemService.Object, mockNatCruiseDialogService.Object,
                 mockLoggingService.Object, mockCruiseNavService.Object, deviceInfoService);
 
             var analizeResult = importVm.AnalizeCruise(srcPath, init.CruiseID, out var errors);
@@ -138,9 +140,9 @@ namespace FScruiser.XF.ViewModels
             var mockCruiseNavService = new Mock<ICruiseNavigationService>();
             var deviceInfoService = new TestDeviceInfoService();
 
-            var dataServiceProvider = new FScruiserDataserviceProvider(destDb, deviceInfoService);
+            DataContext.Database = destDb;
 
-            var importVm = new ImportViewModel(dataServiceProvider, mockFileDialogService.Object, mockFileSystemService.Object, mockNatCruiseDialogService.Object,
+            var importVm = new ImportViewModel(DataContext, mockFileDialogService.Object, mockFileSystemService.Object, mockNatCruiseDialogService.Object,
                 mockLoggingService.Object, mockCruiseNavService.Object, deviceInfoService);
 
             var analizeResult = await importVm.ImportCruise(init.CruiseID, srcPath);
