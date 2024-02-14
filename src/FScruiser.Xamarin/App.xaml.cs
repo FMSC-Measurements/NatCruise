@@ -177,7 +177,7 @@ namespace FScruiser.XF
                 var fileSystemService = Container.Resolve<IFileSystemService>();
                 var cruiseDbPath = fileSystemService.DefaultCruiseDatabasePath;
 
-                dataContext.Init(cruiseDbPath);
+                dataContext.OpenOrCreateDatabase(cruiseDbPath);
             }
 
             return dataContext.IsReady;

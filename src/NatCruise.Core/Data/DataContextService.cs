@@ -17,6 +17,7 @@ namespace NatCruise.Data
 
         private string _cruiseID;
         private CruiseDatastore_V3 _database;
+        private bool _isDisposed;
 
         public DataContextService(string deviceID, string deviceName, IServiceProvider serviceProvider, ILogger<DataContextService> logger)
         {
@@ -66,18 +67,19 @@ namespace NatCruise.Data
 
         public Exception InitError {get; protected set; }
 
-        public bool Init(string path)
+        public bool OpenOrCreateDatabase(string path)
         {
-            Logger.LogInformation("Initializing Data Context: {path}", path);
             try
             {
                 if (File.Exists(path) == false)
                 {
+                    Logger.LogInformation("Creating Database: {path}", path);
                     var db = new CruiseDatastore_V3(path, true);
                     Database = db;
                 }
                 else
                 {
+                    Logger.LogInformation("Opening Database: {path}", path);
                     var db = new CruiseDatastore_V3(path, false);
                     Database = db;
                 }
@@ -93,6 +95,48 @@ namespace NatCruise.Data
 
             return IsReady;
         }
+
+        public bool OpenDatabase(string path)
+        {
+            try
+            {
+                Logger.LogInformation("Opening Database: {path}", path);
+                var db = new CruiseDatastore_V3(path, false);
+                Database = db;
+
+                IsReady = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Exception While Initializing Data Context");
+                InitError = ex;
+                IsReady = true;
+            }
+
+            return IsReady;
+        }
+
+        public bool CreateDatabase(string path)
+        {
+            try
+            {
+                Logger.LogInformation("Creating Database: {path}", path);
+                var db = new CruiseDatastore_V3(path, true);
+                Database = db;
+
+                IsReady = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Exception While Initializing Data Context");
+                InitError = ex;
+                IsReady = true;
+            }
+
+            return IsReady;
+        }
+
+
 
         protected virtual void OnCruiseIDChanged(string value)
         {
@@ -138,11 +182,26 @@ namespace NatCruise.Data
             return device;
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    Database?.Dispose();
+                    Database = null;
+                    IsReady = false;
+                }
+
+                _isDisposed = true;
+            }
+        }
+
         public void Dispose()
         {
-            Database?.Dispose();
-            Database = null;
-            IsReady = false;
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

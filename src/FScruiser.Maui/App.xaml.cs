@@ -28,25 +28,9 @@ public partial class App : Application
 
         var databasePath = fileSystemService.DefaultCruiseDatabasePath;
 
-        try
-        {
-            if (File.Exists(databasePath) == false)
-            {
-                var db = new CruiseDatastore_V3(databasePath, true);
-                dataContext.Database = db;
-            }
-            else
-            {
-                var db = new CruiseDatastore_V3(databasePath, false);
-                dataContext.Database = db;
-            }
 
-            MainPage = serviceProvider.GetRequiredService<AppShell>();
-        }
-        catch (Exception ex)
+        if(!dataContext.OpenOrCreateDatabase(databasePath))
         {
-            Log.LogError(ex, "Error Initializing Database");
-
             MainPage = new DatabaseUtilitiesView();
         }
 
