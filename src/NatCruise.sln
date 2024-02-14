@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Pack_FScruiser_AAB.cmd = Pack_FScruiser_AAB.cmd
 		Pack_FScruiser_APK.cmd = Pack_FScruiser_APK.cmd
 		buildTasks\ProcessCodeTemplate.cs = buildTasks\ProcessCodeTemplate.cs
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FScruiser.Xamarin", "FScruiser.Xamarin\FScruiser.Xamarin.csproj", "{4F88C7B5-8874-4277-A59A-0F39234481BE}"
@@ -59,7 +60,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V2.Updater", "C:\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NatCruise.Wpf.Controls.Test", "NatCruise.Wpf.Controls.Test\NatCruise.Wpf.Controls.Test.csproj", "{84F19E16-F1AC-401B-98DC-4EDF1E7F514E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FScruiser.Maui", "FScruiser.Maui\FScruiser.Maui.csproj", "{B1A13EA3-9433-4701-960D-CAA430730F26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FScruiser.Maui", "FScruiser.Maui\FScruiser.Maui.csproj", "{B1A13EA3-9433-4701-960D-CAA430730F26}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backpack.Maui", "..\Backpack.Maui\src\Backpack.Maui\Backpack.Maui.csproj", "{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -299,6 +302,18 @@ Global
 		{B1A13EA3-9433-4701-960D-CAA430730F26}.Release|x86.ActiveCfg = Release|Any CPU
 		{B1A13EA3-9433-4701-960D-CAA430730F26}.Release|x86.Build.0 = Release|Any CPU
 		{B1A13EA3-9433-4701-960D-CAA430730F26}.Release|x86.Deploy.0 = Release|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Debug|x86.Build.0 = Debug|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Profile|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Profile|Any CPU.Build.0 = Debug|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Profile|x86.ActiveCfg = Debug|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Profile|x86.Build.0 = Debug|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Release|x86.ActiveCfg = Release|Any CPU
+		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
