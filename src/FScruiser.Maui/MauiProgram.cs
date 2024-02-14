@@ -2,6 +2,7 @@
 using FScruiser.Maui.Data;
 using Microsoft.Extensions.Logging;
 using NatCruise.Data;
+using NatCruise.Services.Logging;
 using Backpack.Maui;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
 using NatCruise;
@@ -35,9 +36,9 @@ public static class MauiProgram
 
 #if DEBUG
         builder.Logging.AddDebug();
+#else
+        builder.Logging.AddAppCenterLogger();
 #endif
-
-       
 
         //foreach (var service in platformServices)
         //{
