@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Async
 {
+    //TODO update TaskExtentions to use Microsoft.Extensions.Logging services
     public static class TaskExtentions
     {
         public static ILoggingService LoggingService { get; set; }
