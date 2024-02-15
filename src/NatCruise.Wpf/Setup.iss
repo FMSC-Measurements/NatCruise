@@ -1,5 +1,6 @@
 #define MsBuildOutputDir ".\bin\Release\net472"
-#define VERSION "3.1.11.0"
+#define SolutionDir ".."
+#define VERSION "3.1.12"
 
 #define APP "National Cruise System"
 #define EXEName "NatCruise.Wpf.exe"
@@ -13,7 +14,7 @@ AppName={#APP}
 ;used to prevent user from installing/uninstalling while app is running
 ;requires app code to create a mutex while program is running
 AppMutex=CruiseManager
-;not displayed in ui. used for uninstall registry key and where install detects previouse install settings
+;not displayed in ui. used for uninstall registry key and where install detects previous install settings
 ;defaults to AppName
 AppID={#APP}
 ;used as default value for AppVerName. displayed in version field of app's add/remove entry
@@ -33,9 +34,9 @@ DefaultGroupName=FMSC\{#APP}
 
 Compression=lzma
 ;causes all files to be compressed together
-;this is less effecent if some files don't need to be installed 
+;this is less efficient if some files don't need to be installed 
 SolidCompression=yes
-;notifys windows that file associations have changed when installer exits
+;notifies windows that file associations have changed when installer exits
 ChangesAssociations=yes
 
 ;dont allow program to be installed on network drives
