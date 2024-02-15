@@ -45,6 +45,8 @@ namespace FScruiser.XF
         public IApplicationSettingService Settings { get; } = new XamarinApplicationSettingService();
         public IViewModelTypeResolver ViewModelTypeResolver { get; } = new NatCruiseViewModelTypeResolver();
 
+        protected ILogger Logger { get; private set; }
+
         public App() : this(new XamarinPlatformInitializer())
         { }
 
@@ -55,16 +57,6 @@ namespace FScruiser.XF
         {
             Xamarin.Forms.DataGrid.DataGridComponent.Init();
 
-            // hook up our logging service to our utility TaskExtentions class
-            // this helper extention class is used to get exceptions from
-            // 'Fire and Forget' async actions
-            var loggingService = Container.Resolve<ILoggingService>();
-            TaskExtentions.LoggingService = loggingService;
-
-            TapGestureRecognizerHelper.SoundService = Container.Resolve<ISoundService>();
-
-            this.InitializeComponent();
-            
 
 #if RELEASE
             //start app center services
@@ -73,16 +65,18 @@ namespace FScruiser.XF
                 ,typeof(Crashes));
 
 #endif
-            //try
-            //{
-            //    var dsp = GetDataserviceProvider();
 
-            //    await CruiseNavigationService.ShowCruiseLandingLayout();
-            //}
-            //catch (Exception ex)
-            //{
-            //    await CruiseNavigationService.ShowDatabaseUtilities();
-            //}
+            // hook up our logging service to our utility TaskExtentions class
+            // this helper extention class is used to get exceptions from
+            // 'Fire and Forget' async actions
+            var loggingService = Container.Resolve<ILoggingService>();
+            TaskExtentions.LoggingService = loggingService;
+
+            var logger = Logger = Container.Resolve<ILogger<App>>();
+
+            TapGestureRecognizerHelper.SoundService = Container.Resolve<ISoundService>();
+
+            this.InitializeComponent();
 
             if (InitDataContext())
             {
@@ -94,17 +88,20 @@ namespace FScruiser.XF
             }
         }
 
-        //protected void ReloadNavigation()
-        //{
-        //    var navPath = Properties.GetValueOrDefault(CURRENT_NAV_PATH) as string;
+        protected bool InitDataContext()
+        {
+            var dataContext = Container.Resolve<IDataContextService>();
 
-        //    if(navPath != null && !navPath.EndsWith("CuttingUnits"))
-        //    {
-        //        var navParams = Properties.GetValueOrDefault(CURRENT_NAV_PARAMS) as string;
+            if (!dataContext.IsReady)
+            {
+                var fileSystemService = Container.Resolve<IFileSystemService>();
+                var cruiseDbPath = fileSystemService.DefaultCruiseDatabasePath;
 
-        //        NavigationService.NavigateAsync(navPath, new NavigationParameters(navParams));
-        //    }
-        //}
+                dataContext.OpenOrCreateDatabase(cruiseDbPath);
+            }
+
+            return dataContext.IsReady;
+        }
 
         protected override async void OnStart()
         {
@@ -122,23 +119,6 @@ namespace FScruiser.XF
 
                 Properties.SetValue("isFirstLaunch", false);
             }
-
-            //var cruise_path = _cruisePath ?? Properties.GetValueOrDefault("cruise_path") as string;
-
-            //if (!string.IsNullOrEmpty(cruise_path))
-            //{
-            //    await LoadDatabase(cruise_path);
-            //}
-        }
-
-        protected override void OnSleep()
-        {
-            // Handle when your app sleeps
-        }
-
-        protected override void OnResume()
-        {
-            // Handle when your app resumes
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -147,40 +127,29 @@ namespace FScruiser.XF
             // below is additional registration where we want hold on to the created instance here in the app
             // or where we want to initialize the instance with the app instance
 
-            //InitDataContext();
-
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)
             {
                 containerRegistry.RegisterInstance<ICruisersDataservice>(_cruisersDataservice = new CruisersDataservice(this));
             }
 
             // register Microsoft.Extentions.Logging
-            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILoggerFactory), typeof(Microsoft.Extensions.Logging.LoggerFactory));
-            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.LoggerFactory), () => new Microsoft.Extensions.Logging.LoggerFactory(new[] {new AppCenterLoggerProvider()}));
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILoggerFactory), CreateLoggerFactory);
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.LoggerFactory), CreateLoggerFactory);
             containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(Microsoft.Extensions.Logging.Logger<>));
 
+            LoggerFactory CreateLoggerFactory()
+            {
+                return new Microsoft.Extensions.Logging.LoggerFactory(new[] { new AppCenterLoggerProvider() });
+            }
 
+            // regester data services. these are defined using the Microsoft.Extentions.DependancyInjection pattern
+            // using a service collection to store all our registration definitions
+            // we can populate our existing container with these definitions.
             var servicesToRegister = new ServiceCollection();
             servicesToRegister.AddNatCruiseCoreDataservices();
 
             var container = containerRegistry.GetContainer();
             container.Populate(servicesToRegister);
-        }
-
-
-        protected bool InitDataContext()
-        {
-            var dataContext = Container.Resolve<IDataContextService>();
-
-            if(!dataContext.IsReady)
-            {
-                var fileSystemService = Container.Resolve<IFileSystemService>();
-                var cruiseDbPath = fileSystemService.DefaultCruiseDatabasePath;
-
-                dataContext.OpenOrCreateDatabase(cruiseDbPath);
-            }
-
-            return dataContext.IsReady;
         }
 
         protected override void ConfigureViewModelLocator()

@@ -1,6 +1,7 @@
 ﻿using CruiseDAL;
 using DryIoc.Microsoft.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Design.Validation;
@@ -37,6 +38,8 @@ namespace NatCruise.Wpf
         private string[] StartupArgs { get; set; }
         protected ILoggingService LoggingService { get; private set; }
 
+        protected ILogger Logger { get; private set; }
+
         public IViewModelTypeResolver ViewModelTypeResolver { get; } = new NatCruiseViewModelTypeResolver();
         public string StartupFilePath { get; private set; }
 
@@ -56,6 +59,8 @@ namespace NatCruise.Wpf
             Microsoft.AppCenter.AppCenter.Start(Secrets.APPCENTER_KEY_WINDOWS,
                                typeof(Microsoft.AppCenter.Analytics.Analytics), typeof(Microsoft.AppCenter.Crashes.Crashes));
 #endif
+
+            
 
             // store our start up args for use later
             var startupArgs = StartupArgs = e.Args;
@@ -87,6 +92,9 @@ namespace NatCruise.Wpf
         protected override void OnInitialized()
         {
             var container = Container;
+
+            Logger = container.Resolve<ILogger<App>>();
+            Logger.LogTrace("Logger Resolved");
 
             var regionManager = container.Resolve<IRegionManager>();
             //regionManager.RegisterViewWithRegion(Regions.ContentRegion, typeof(CruiseMasterPage));
@@ -187,12 +195,14 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterInstance<IRecentFilesDataservice>(new RecentFilesDataservice());
 
             // register Microsoft.Extentions.Logging
-            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILoggerFactory), typeof(Microsoft.Extensions.Logging.LoggerFactory));
-            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.LoggerFactory), () => new Microsoft.Extensions.Logging.LoggerFactory(new[] { new AppCenterLoggerProvider() }));
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILoggerFactory), CreateLoggerFactory);
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.LoggerFactory), CreateLoggerFactory);
             containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(Microsoft.Extensions.Logging.Logger<>));
 
-
-            
+            LoggerFactory CreateLoggerFactory()
+            {
+                return new Microsoft.Extensions.Logging.LoggerFactory(new[] { new AppCenterLoggerProvider() });
+            }
 
             // should this be changed to scoped?
             containerRegistry.RegisterSingleton<IDataContextService, DataContextService>();
@@ -231,12 +241,6 @@ namespace NatCruise.Wpf
             containerRegistry.Register<SaleValidator>();
             containerRegistry.Register<SampleGroupValidator>();
             containerRegistry.Register<StratumValidator>();
-
-
-            // register Microsoft.Extentions.Logging
-            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILoggerFactory), typeof(Microsoft.Extensions.Logging.LoggerFactory));
-            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.LoggerFactory), () => new Microsoft.Extensions.Logging.LoggerFactory(new[] { new AppCenterLoggerProvider() }));
-            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(Microsoft.Extensions.Logging.Logger<>));
         }
 
         //[RelayCommand]
