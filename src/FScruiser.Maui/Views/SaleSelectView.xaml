@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:FScruiser.Maui"
+             xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+             xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+             x:Class="FScruiser.Maui.Views.SaleSelectView"
+             x:Name="_page"
+             Title="Select Sale"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Select Sale Page"
+             BindingContext="{mvvm:ViewModelLocater Type={Type vms:SaleSelectViewModel}}">
+    <ContentPage.Content>
+        <Grid RowDefinitions="*,Auto">
+            <ListView Grid.Row="0"
+                      ItemsSource="{Binding Sales}"
+                      VerticalOptions="FillAndExpand"
+                      AutomationProperties.IsInAccessibleTree="True"
+                      AutomationProperties.Name="Sale List">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding .}"
+                                  Command="{Binding BindingContext.ShowCruiseSelectCommand, Source={Reference _page}}"
+                                  CommandParameter="{Binding .}"
+                                  TextColor="{StaticResource listItemText}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Grid.Row="1"
+                    Text="Import"
+                    Command="{Binding ShowImportCommand}"
+                    VerticalOptions="EndAndExpand"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Import Cruise" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

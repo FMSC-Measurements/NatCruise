@@ -17,6 +17,10 @@ namespace NatCruise.Data
                 Field = nameof(Log.SeenDefect), Heading = "PctSeenDef"}
         };
 
+        public FieldSetupDataservice(IDataContextService dataContextService) : base(dataContextService)
+        {
+        }
+
         public FieldSetupDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -199,7 +203,7 @@ COMMIT;",
 
         #region LogFieldSetup
 
-        const string SELECT_TFS_CORE =
+        private const string SELECT_TFS_CORE =
 @"SELECT
     lfs.Field,
     ifnull(lfh.Heading, lf.DefaultHeading) AS Heading,

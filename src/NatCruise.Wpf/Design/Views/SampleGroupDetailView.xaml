@@ -255,7 +255,7 @@
         </GroupBox>
 
         <GroupBox Header="Variable Radius"
-                  Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsVariableRadiousPlotMethodVisibilityConverter}, FallbackValue=Visible}"
+                  Visibility="{Binding SampleGroup.CruiseMethod, Converter={StaticResource IsPCMVisibilityConverter}, FallbackValue=Visible}"
                   Margin="5"
                   VerticalAlignment="Top">
             <Grid>

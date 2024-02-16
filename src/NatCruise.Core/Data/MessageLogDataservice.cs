@@ -4,6 +4,10 @@ namespace NatCruise.Data
 {
     public class MessageLogDataservice : DataserviceBase, IMessageLogDataservice
     {
+        public MessageLogDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public MessageLogDataservice(string path, string deviceID) : base(path, deviceID)
         {
         }

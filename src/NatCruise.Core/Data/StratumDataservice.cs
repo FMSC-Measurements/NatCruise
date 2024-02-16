@@ -8,6 +8,10 @@ namespace NatCruise.Data
 {
     public class StratumDataservice : CruiseDataserviceBase, IStratumDataservice
     {
+        public StratumDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public StratumDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

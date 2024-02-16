@@ -1,7 +1,9 @@
 ﻿using NatCruise.Navigation;
 using Prism.Navigation;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using NatCruise.Util;
 
 namespace FScruiser.XF.Controls
 {
@@ -15,7 +17,7 @@ namespace FScruiser.XF.Controls
         {
             if (BindingContext is ITheRealInitialize viewModel)
             {
-                viewModel.Initialize(parameters);
+                viewModel.Initialize(parameters.ToDictionary());
             }
         }
 
@@ -23,7 +25,7 @@ namespace FScruiser.XF.Controls
         {
             if (BindingContext is ITheRealInitializeAsync viewModel)
             {
-                return viewModel.InitializeAsync(parameters);
+                return viewModel.InitializeAsync(parameters.ToDictionary());
             }
             return Task.CompletedTask;
         }

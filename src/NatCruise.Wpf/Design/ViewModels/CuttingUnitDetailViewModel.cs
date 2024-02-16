@@ -13,13 +13,10 @@ namespace NatCruise.Design.ViewModels
         private CuttingUnit _cuttingUnit;
         private IEnumerable<LoggingMethod> _loggingMethodOptions;
 
-        public CuttingUnitDetailViewModel(IDataserviceProvider dataserviceProvider, ILoggingService loggingService, ISetupInfoDataservice setupInfoDataservice, CuttingUnitValidator validator)
+        public CuttingUnitDetailViewModel(ICuttingUnitDataservice unitDataservice, ILoggingService loggingService, ISetupInfoDataservice setupInfoDataservice, CuttingUnitValidator validator)
             : base(validator)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
-
             LoggingService = loggingService;
-            var unitDataservice = dataserviceProvider.GetDataservice<ICuttingUnitDataservice>();
             UnitDataservice = unitDataservice ?? throw new ArgumentNullException(nameof(unitDataservice));
             SetupDataservice = setupInfoDataservice ?? throw new ArgumentNullException(nameof(setupInfoDataservice));
         }

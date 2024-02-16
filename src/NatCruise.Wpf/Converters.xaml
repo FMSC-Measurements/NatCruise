@@ -59,6 +59,9 @@
                                                MethodMap="STR" />
     <converters:CruiseMethodToVisableConverter x:Key="IsThreePMethodsVisibilityConverter"
                                                MethodMap="ThreePMethods" />
+    <converters:CruiseMethodToVisableConverter x:Key="IsPCMVisibilityConverter"
+                                               MethodMap="PCM" />
+
     <!-- cruise method converters -->
     <converters:CruiseMethodToBoolConverter x:Key="IsNotPlotMethodConverter"
                                             MethodMap="PlotMethods"

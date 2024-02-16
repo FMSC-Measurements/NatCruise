@@ -392,7 +392,7 @@
 
                                         <ctrls:HeaderControl Header="KPI (+/-)"
                                                              Orientation="Horizontal"
-                                                             IsEnabled="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
+                                                             IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}">
                                             <Entry Grid.Row="1"
                                                    Grid.Column="1"
                                                    Text="{Binding KPIDelta}"

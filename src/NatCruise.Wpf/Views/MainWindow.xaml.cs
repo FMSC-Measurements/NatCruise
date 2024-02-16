@@ -32,10 +32,10 @@ namespace NatCruise.Wpf.Views
 
             try
             {
-                var dsp = Container.Resolve<IDataserviceProvider>();
-                if (dsp.Database == null) return;
+                var dataContext = Container.Resolve<IDataContextService>();
+                if (dataContext.Database == null) return;
 
-                var designChecksds = dsp.GetDataservice<IDesignCheckDataservice>();
+                var designChecksds = Container.Resolve<IDesignCheckDataservice>();
 
                 var designChecks = designChecksds.GetDesignChecks();
                 if (designChecks.Any(x => x.Level == "Error"))

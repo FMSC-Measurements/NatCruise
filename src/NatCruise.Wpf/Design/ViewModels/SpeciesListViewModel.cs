@@ -27,8 +27,7 @@ namespace NatCruise.Design.ViewModels
         public ISpeciesDataservice SpeciesDataservice { get; }
         public ILoggingService LoggingService { get; }
 
-        public SpeciesListViewModel(ITemplateDataservice templateDataservice,
-                                    ISpeciesDataservice speciesDataservice,
+        public SpeciesListViewModel(ISpeciesDataservice speciesDataservice,
                                     ISetupInfoDataservice setupDataservice,
                                     INatCruiseDialogService dialogService,
                                     SpeciesDetailViewModel speciesDetailViewModel,

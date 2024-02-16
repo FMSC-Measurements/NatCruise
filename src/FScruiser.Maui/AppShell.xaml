@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell x:Class="FScruiser.Maui.AppShell"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:FScruiser.Maui"
+       xmlns:views="clr-namespace:FScruiser.Maui.Views"
+       xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+       xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+       Shell.FlyoutBehavior="Flyout"
+       xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+       xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+       
+       Title="FScruiser.Maui"
+       FlyoutBackgroundColor="{StaticResource fs_brown}">
+
+    <Shell.Resources>
+        <ResourceDictionary>
+            <!-- according to https://github.com/dotnet/maui/issues/18994 this should work but is a regression -->
+            <Style Class="FlyoutItemLabelStyle"
+                   TargetType="Label">
+                <Setter Property="TextColor"
+                        Value="White"></Setter>
+            </Style>
+
+        </ResourceDictionary>
+
+    </Shell.Resources>
+
+    <Shell.FlyoutHeader>
+        <!--<ShellContent Route="SelectSale"
+                  Title="Select Sale" />-->
+        <ContentView>
+            <!--select cruise button-->
+            <Frame BackgroundColor="White"
+                   Padding="2"
+                   Margin="10"
+                   CornerRadius="5">
+
+                <StackLayout BackgroundColor="{StaticResource fs_brown}">
+                    <StackLayout Orientation="Horizontal"
+                                 VerticalOptions="FillAndExpand"
+                                 HorizontalOptions="FillAndExpand"
+                                 Padding="3"
+                                 BackgroundColor="{StaticResource fs_brown}"
+                                 AutomationProperties.IsInAccessibleTree="True"
+                                 AutomationProperties.Name="Select Cruise">
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowSelectSale}"
+                                                  Tapped="OnNavButtonClicked"
+                                                  controls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                        </StackLayout.GestureRecognizers>
+                        <Frame  BackgroundColor="{StaticResource usfs_gold}"
+                                HeightRequest="40"
+                                Padding="5"
+                                CornerRadius="5">
+                            <Image Source="{FontImage Glyph={Static const:FAIcons.FolderOpen}, FontFamily={Static const:Fonts.FAsolid}}" />
+                        </Frame>
+                        <Label x:Name="_currentCruiseLable"
+                               Text="{Binding CurrentCruiseName}"
+                               TextColor="{StaticResource lightText}"
+                               VerticalOptions="Fill"
+                               HorizontalOptions="Fill"
+                               VerticalTextAlignment="Center" />
+                    </StackLayout>
+                    <Picker x:Name="_cuttingUnitPicker"
+                            Title="Select Cutting Unit"
+                            TextColor="{StaticResource lightText}"
+                            TitleColor="{StaticResource white_60}"
+                            BackgroundColor="{StaticResource white_12}"
+                            ItemsSource="{Binding CuttingUnits}"
+                            SelectedItem="{Binding SelectedCuttingUnit}"
+                            IsVisible="{Binding IsCruiseSelected}"
+                            SelectedIndexChanged="_cuttingUnitPicker_SelectedIndexChanged"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Select Cutting Unit" />
+                </StackLayout>
+            </Frame>
+        </ContentView>
+
+    </Shell.FlyoutHeader>
+
+
+    <TabBar >
+        <Tab Route="Main">
+            <ShellContent Route="Blank"
+                          FlyoutItemIsVisible="False"
+                          ContentTemplate="{DataTemplate views:BlankView }" />
+        </Tab>
+    </TabBar>
+
+    <FlyoutItem Title="Tally"
+                IsVisible="{Binding HasTreeStrata}">
+        <ShellContent Route="Tally"
+                      ContentTemplate="{DataTemplate views:TallyView}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Utilities">
+        <ShellContent Route="Utilities"
+                      ContentTemplate="{DataTemplate views:UtilitiesView}" />
+    </FlyoutItem>
+
+
+    <FlyoutItem Title="Settings">
+        <ShellContent Route="Settings"
+                      ContentTemplate="{DataTemplate views:SettingsView}" />
+    </FlyoutItem>
+
+
+    <FlyoutItem Title="About">
+        <ShellContent Route="About"
+                      ContentTemplate="{DataTemplate views:AboutView}" />
+    </FlyoutItem>
+
+
+    <!--<ShellContent Route="Blank"
+                  ContentTemplate="{DataTemplate views:AboutView }" />-->
+
+</Shell>

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -280,20 +281,34 @@ namespace NatCruise.Wpf.ViewModels
                 var nextFile = syncQue.Peek();
                 CurrentSyncFile = nextFile;
 
-                CheckFile(nextFile, tableSyncOptions);
 
-                if (nextFile.DesignErrors.Any())
+                try
                 {
-                    DialogService.ShowNotification("File Has Errors");
-                    ConflictsDetected?.Invoke(this, EventArgs.Empty);
-                    return;
+                    CheckFile(nextFile, tableSyncOptions);
+
+                    if (nextFile.DesignErrors.Any())
+                    {
+                        DialogService.ShowNotification("File Has Errors");
+                        ConflictsDetected?.Invoke(this, EventArgs.Empty);
+                        return;
+                    }
+
+                    if (nextFile.Conflicts.HasConflicts)
+                    {
+                        DialogService.ShowNotification("File Has Conflicts");
+                        ConflictsDetected?.Invoke(this, EventArgs.Empty);
+                        return;
+                    }
                 }
-
-                if (nextFile.Conflicts.HasConflicts)
+                catch(Exception ex)
                 {
-                    DialogService.ShowNotification("File Has Conflicts");
-                    ConflictsDetected?.Invoke(this, EventArgs.Empty);
-                    return;
+                    var message =
+$@"Sync Error::::
+While Checking File {nextFile.OriginalFile.Name}
+{ex.Message}";
+                    CurrentSyncFile = null;
+                    nextFile.DeleteSyncTempIfExists();
+                    syncQue.Dequeue();
                 }
 
                 try
@@ -302,16 +317,26 @@ namespace NatCruise.Wpf.ViewModels
                     nextFile.SyncResult = syncResult;
                     nextFile.Status = CrewFileInfo.FileStatus.Combined;
                     nextFile.IsSynced = true;
-                    CurrentSyncFile = null;
-                    nextFile.DeleteSyncTempIfExists();
-                    syncQue.Dequeue();
                 }
                 catch (Exception e)
                 {
-                    DialogService.ShowNotification("Sync Error: " + Environment.NewLine
-                        + "::::" + e.GetType().Name + ":::: " + e.Message);
 
-                    LoggingService.LogException(nameof(CombineFileViewModel), nameof(RunSync), e);
+
+                    var message =
+$@"Sync Error::::
+::::{e.GetType().Name}::::
+While Syncing File {nextFile.OriginalFile.Name}
+{e.Message}";
+
+                    DialogService.ShowNotification(message);
+
+                    LoggingService.LogException(nameof(CombineFileViewModel), message, e);
+                }
+                finally
+                {
+                    CurrentSyncFile = null;
+                    nextFile.DeleteSyncTempIfExists();
+                    syncQue.Dequeue();
                 }
             } while (syncQue.Count > 0);
 

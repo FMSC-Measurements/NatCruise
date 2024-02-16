@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace NatCruise.Util
 {
@@ -11,11 +13,18 @@ namespace NatCruise.Util
             else { return default; }
         }
 
-        public static Tvalue GetValueOrDefault<Tvalue>(this IDictionary<string, object> @this, string key, Tvalue defaultValue)
+        public static Tvalue GetValue<Tvalue>(this IDictionary<string, object> @this, string key)
+        {
+            var value = @this[key];
+            return ConvertValue<Tvalue>(value);
+        }
+
+        public static Tvalue GetValueOrDefault<Tvalue>(this IDictionary<string, object> @this, string key, Tvalue defaultValue = default)
         {
             if (@this.ContainsKey(key))
             {
-                return (Tvalue)@this[key];
+                var value = @this[key];
+                return ConvertValue<Tvalue>(value, defaultValue);
             }
             else
             {
@@ -39,5 +48,31 @@ namespace NatCruise.Util
         {
             @this.Remove(key);
         }
+
+        
+
+        private static Tvalue ConvertValue<Tvalue>(object inValue, Tvalue defaultValue = default)
+        {
+            if (inValue == null) return defaultValue;
+
+            if(inValue is Tvalue) { return (Tvalue)inValue; }
+            
+            var targetType = inValue.GetType();
+            if(targetType.IsEnum)
+            {
+                var inValueAsString = (inValue is string str) ? str : inValue.ToString();
+                if (Enum.IsDefined(targetType, inValueAsString))
+                {
+                    return (Tvalue)Enum.Parse(targetType, inValueAsString);
+                }
+                else if(int.TryParse(inValueAsString, out int numVal))
+                {
+                    return (Tvalue)Enum.ToObject(targetType, numVal);
+                }
+            }
+
+            return (Tvalue)Convert.ChangeType(inValue, targetType);
+        }
+
     }
 }

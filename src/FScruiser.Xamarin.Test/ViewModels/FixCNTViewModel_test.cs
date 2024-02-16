@@ -13,10 +13,11 @@ using NatCruise.Test;
 using Moq;
 using NatCruise.Data;
 using FScruiser.XF.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class FixCNTViewModel_test : TestBase
+    public class FixCNTViewModel_test : HostedTestBase
     {
         public FixCNTViewModel_test(ITestOutputHelper output) : base(output)
         {
@@ -97,14 +98,13 @@ namespace FScruiser.XF.ViewModels
             using (var database = init.CreateDatabase())
             {
                 InitializeFizCNT(database, init.CruiseID);
-                var dsp = new FScruiserDataserviceProvider(database, new TestDeviceInfoService())
-                {
-                    CruiseID = init.CruiseID
-                };
+                DataContext.Database = database;
+                DataContext.CruiseID = init.CruiseID;
 
-                var viewModel = new FixCNTTallyViewModel(dsp.GetDataservice<IFixCNTDataservice>(), new Mock<ISoundService>().Object);
+                var viewModel = new FixCNTTallyViewModel(Services.GetRequiredService<IFixCNTDataservice>(), new Mock<ISoundService>().Object);
 
-                var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
+                var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1")
+                    .ToDictionary(x => x.Key, x => x.Value);
 
                 viewModel.Initialize(navParams);
                 viewModel.Load();
@@ -131,15 +131,14 @@ namespace FScruiser.XF.ViewModels
             {
                 InitializeFizCNT(database, init.CruiseID);
 
-                var deviceInfo = new TestDeviceInfoService();
-                var dsp = new FScruiserDataserviceProvider(database, deviceInfo)
-                {
-                    CruiseID = init.CruiseID,
-                };
+                DataContext.Database = database;
+                DataContext.CruiseID = init.CruiseID;
 
-                var viewModel = new FixCNTTallyViewModel( dsp.GetDataservice<IFixCNTDataservice>(), new Mock<ISoundService>().Object);
+                var viewModel = new FixCNTTallyViewModel(Services.GetRequiredService<IFixCNTDataservice>(), new Mock<ISoundService>().Object);
 
-                var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1");
+                var navParams = new NavigationParameters($"{NavParams.UNIT}=u1&{NavParams.PLOT_NUMBER}=1&{NavParams.STRATUM}=fixCnt1")
+                    .ToDictionary(x => x.Key, x => x.Value);
+
                 viewModel.Initialize(navParams);
                 viewModel.Load();
 

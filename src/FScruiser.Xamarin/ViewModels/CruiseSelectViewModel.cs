@@ -30,7 +30,7 @@ namespace FScruiser.XF.ViewModels
 
         protected ISaleDataservice SaleDataservice { get; }
         protected ICruiseNavigationService NavigationService { get; }
-        protected IDataserviceProvider DataserviceProvider { get; }
+        protected IDataContextService DataContext { get; }
         protected IFileSystemService FileSystemService { get; }
         protected IFileDialogService FileDialogService { get; }
         protected INatCruiseDialogService DialogService { get; }
@@ -59,10 +59,17 @@ namespace FScruiser.XF.ViewModels
             set => SetProperty(ref _cruises, value);
         }
 
-        public CruiseSelectViewModel(IDataserviceProvider dataserviceProvider, ICruiseNavigationService navigationService, IFileSystemService fileSystemService, INatCruiseDialogService dialogService, IFileDialogService fileDialogService, IDeviceInfoService deviceInfo)
+        public CruiseSelectViewModel(
+            IDataContextService dataContext,
+            ISaleDataservice saleDataservice,
+            ICruiseNavigationService navigationService,
+            IFileSystemService fileSystemService,
+            INatCruiseDialogService dialogService,
+            IFileDialogService fileDialogService,
+            IDeviceInfoService deviceInfo)
         {
-            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
-            SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
+            DataContext = dataContext;
+            SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -80,7 +87,7 @@ namespace FScruiser.XF.ViewModels
         public Task SelectCruise(Cruise cruise)
         {
             var cruiseID = cruise.CruiseID;
-            DataserviceProvider.CruiseID = cruiseID;
+            DataContext.CruiseID = cruiseID;
             return NavigationService.ShowCruiseLandingLayout();
         }
 
@@ -103,7 +110,7 @@ namespace FScruiser.XF.ViewModels
             var exportTempDir = FileSystemService.ExportTempDir;
             var fileToExport = Path.Combine(exportTempDir, defaultFileName);
 
-            var db = DataserviceProvider.Database;
+            var db = DataContext.Database;
             using (var destDb = new CruiseDatastore_V3(fileToExport, true))
             {
                 var cruiseCopier = new CruiseCopier();
@@ -135,7 +142,7 @@ namespace FScruiser.XF.ViewModels
             var exportTempDir = FileSystemService.ExportTempDir;
             var fileToExport = Path.Combine(exportTempDir, defaultFileName);
 
-            var db = DataserviceProvider.Database;
+            var db = DataContext.Database;
             using (var destDb = new CruiseDatastore_V3(fileToExport, true))
             {
                 var cruiseCopier = new CruiseCopier();
@@ -163,14 +170,14 @@ namespace FScruiser.XF.ViewModels
                 var cruiseID = cruise.CruiseID;
                 SaleDataservice.DeleteCruise(cruiseID);
                 Load();
-                if (DataserviceProvider.CruiseID == cruiseID)
+                if (DataContext.CruiseID == cruiseID)
                 {
-                    DataserviceProvider.CruiseID = null;
+                    DataContext.CruiseID = null;
                 }
             }
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

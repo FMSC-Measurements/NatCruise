@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:InitializableContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                   xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+                                   xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+                                   xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+                                   x:Class="FScruiser.Maui.Views.CruiseSelectView"
+                                   x:Name="_page"
+                                   Title="Select Cruise"
+                                   AutomationProperties.IsInAccessibleTree="true"
+                                   AutomationProperties.Name="Cruise Selection Page"
+                                   BindingContext="{mvvm:ViewModelLocater Type={Type vms:CruiseSelectViewModel}}">
+    <ContentPage.Content>
+        <Grid RowDefinitions="*, Auto">
+            <ListView Grid.Row="0"
+                      ItemsSource="{Binding Cruises}"
+                      SelectionMode="Single"
+                      SelectedItem="{Binding SelectedCruise}"
+                      AutomationProperties.IsInAccessibleTree="true"
+                      AutomationProperties.Name="Cruise List">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell  Text="{Binding .}"
+                                   TextColor="{StaticResource listItemText}"
+                                   AutomationProperties.IsInAccessibleTree="true"
+                                   AutomationProperties.Name="{Binding .}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Grid Grid.Row="1"
+                  RowDefinitions="Auto, Auto, Auto"
+                  ColumnDefinitions="*,*">
+                <Grid.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin"
+                                Value="2,5" />
+                    </Style>
+                </Grid.Resources>
+                
+                <Button Grid.Row="0" Grid.ColumnSpan="2" Text="Open"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="Open Cruise"
+                    Command="{Binding OpenSelectedCruiseCommand}"
+                    IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullConverter}}" />
+
+
+                <Button Grid.Row="1"
+                        Grid.Column="0"
+                        Text="Export"
+                        AutomationProperties.IsInAccessibleTree="true"
+                        AutomationProperties.Name="Export Cruise"
+                        Command="{Binding ExportSelectedCruiseCommand}"
+                        IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullConverter}}"
+                        HorizontalOptions="FillAndExpand" />
+                <Button Grid.Row="1"
+                        Grid.Column="1"
+                        Text="Share"
+                        AutomationProperties.IsInAccessibleTree="true"
+                        AutomationProperties.Name="Share Cruise"
+                        Command="{Binding ShareSelectedCruiseCommand}"
+                        IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullConverter}}"
+                        HorizontalOptions="FillAndExpand" />
+
+                <Button Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Text="Delete"
+                        AutomationProperties.IsInAccessibleTree="true"
+                        AutomationProperties.Name="Delete Cruise"
+                        Command="{Binding DeleteSelectedCruiseCommand}"
+                        IsEnabled="{Binding SelectedCruise, Converter={StaticResource isNotNullConverter}}" />
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</controls:InitializableContentPage>

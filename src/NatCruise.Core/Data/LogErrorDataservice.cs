@@ -7,6 +7,10 @@ namespace NatCruise.Data
 {
     public class LogErrorDataservice : CruiseDataserviceBase, ILogErrorDataservice
     {
+        public LogErrorDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public LogErrorDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

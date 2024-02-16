@@ -21,7 +21,6 @@ namespace FScruiser.XF.ViewModels
             set { SetProperty(ref _units, value); }
         }
 
-        public IDataserviceProvider DatastoreProvider { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public ICruiseNavigationService NavigationService { get; }
 
@@ -38,7 +37,7 @@ namespace FScruiser.XF.ViewModels
             NavigationService.ShowCuttingUnitInfo(unit.CuttingUnitCode);
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             Units = CuttingUnitDataservice.GetCuttingUnits();
         }

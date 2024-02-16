@@ -29,14 +29,13 @@ namespace FScruiser.XF.ViewModels
             set => SetProperty(ref _cruises, value);
         }
 
-        public CruiseListViewModel(IDataserviceProvider dataserviceProvider)
+        public CruiseListViewModel(ISaleDataservice saleDataservice)
         {
-            if (dataserviceProvider is null) { throw new ArgumentNullException(nameof(dataserviceProvider)); }
 
-            SaleDataservice = dataserviceProvider.GetDataservice<ISaleDataservice>();
+            SaleDataservice = saleDataservice;
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

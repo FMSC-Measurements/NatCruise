@@ -1,15 +1,16 @@
 ﻿using CruiseDAL;
 using NatCruise.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Data
 {
     public class PlotErrorDataservice : CruiseDataserviceBase, IPlotErrorDataservice
     {
+        public PlotErrorDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public PlotErrorDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

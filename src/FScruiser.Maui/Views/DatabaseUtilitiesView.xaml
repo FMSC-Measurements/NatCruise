@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+             xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+             x:Class="FScruiser.Maui.Views.DatabaseUtilitiesView"
+             BindingContext="{mvvm:ViewModelLocater Type={Type vms:DatabaseUtilitiesViewModel}}"
+             Title="Database Utilities"
+             AutomationProperties.IsInAccessibleTree="True"
+             AutomationProperties.Name="Database Utilities Page">
+    <ContentPage.Content>
+        <StackLayout>
+            <Button Text="Reset Database"
+                    Command="{Binding ResetDatabaseCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Reset Database" />
+            <Button Text="Backup Database"
+                    Command="{Binding BackupDatabaseCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Backup Database" />
+            <Button Text="Load Database"
+                    Command="{Binding LoadDatabaseCommand}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Backup Database" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

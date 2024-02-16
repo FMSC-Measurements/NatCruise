@@ -8,6 +8,10 @@ namespace NatCruise.Data
 {
     public class CuttingUnitDataservice : CruiseDataserviceBase, ICuttingUnitDataservice
     {
+        public CuttingUnitDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public CuttingUnitDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -101,7 +105,6 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
         {
             return Database.Query<CuttingUnit>(SELECT_CUTTINGUNIT_CORE +
                 "WHERE cu.CruiseID = @p1;", CruiseID).ToArray();
-
 
             //return Database.From<CuttingUnit>()
             //    .Where("CruiseID = @p1")

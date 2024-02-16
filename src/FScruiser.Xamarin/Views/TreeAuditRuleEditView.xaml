@@ -3,6 +3,7 @@
                                     xmlns="http://xamarin.com/schemas/2014/forms"
                                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                                     xmlns:const="clr-namespace:FScruiser.XF.Constants"
+                                    xmlns:converters="clr-namespace:FScruiser.XF.Converters"
                                     x:Class="FScruiser.XF.Views.TreeAuditRuleEditView"
                                     x:Name="_page"
                                     Title="Edit Tree Audit Rule">
@@ -43,6 +44,7 @@
                             <Setter  Property="LastChildHeight"
                                      Value="50" />
                         </Style>-->
+                            <converters:TrimDecimalInputConverter DecimalPlaces="2" x:Key="thousandsTrimInputConverter" />
                         </Grid.Resources>
 
                         <StackLayout Grid.Column="0">
@@ -53,12 +55,12 @@
 
                         <StackLayout Grid.Column="1">
                             <Label Text="Min" />
-                            <Entry Text="{Binding TreeAuditRule.Min, StringFormat='{}{0:F}'}" />
+                            <Entry Text="{Binding TreeAuditRule.Min, Converter={StaticResource thousandsTrimInputConverter}}" Keyboard="Numeric" />
                         </StackLayout>
 
                         <StackLayout Grid.Column="2">
                             <Label Text="Max" />
-                            <Entry Text="{Binding TreeAuditRule.Max, StringFormat='{}{0:F}'}" />
+                            <Entry Text="{Binding TreeAuditRule.Max, Converter={StaticResource thousandsTrimInputConverter}}" Keyboard="Numeric" />
                         </StackLayout>
 
                         <StackLayout Grid.Column="0"

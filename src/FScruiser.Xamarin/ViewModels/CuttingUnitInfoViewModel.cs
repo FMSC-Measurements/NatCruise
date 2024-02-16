@@ -6,6 +6,7 @@ using NatCruise.MVVM;
 using NatCruise.Navigation;
 using Prism.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace FScruiser.XF.ViewModels
@@ -40,7 +41,7 @@ namespace FScruiser.XF.ViewModels
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

@@ -320,13 +320,13 @@ namespace FScruiser.XF.ViewModels
             SelectedTree = tree;
         }
 
-        protected override void Load(IParameters parameters)
+        protected override void Load(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-            var plotID = parameters.GetValue<string>(NavParams.PlotID);
-            var unitCode = parameters.GetValue<string>(NavParams.UNIT);
-            var plotNumber = parameters.GetValue<int>(NavParams.PLOT_NUMBER);
+            var plotID = parameters.GetValueOrDefault<string>(NavParams.PlotID);
+            var unitCode = parameters.GetValueOrDefault<string>(NavParams.UNIT);
+            var plotNumber = parameters.GetValueOrDefault<int>(NavParams.PLOT_NUMBER);
 
             Plot plot = null;
             if (string.IsNullOrWhiteSpace(plotID) == false)

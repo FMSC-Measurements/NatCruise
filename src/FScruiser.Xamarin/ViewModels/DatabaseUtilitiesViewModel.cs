@@ -1,5 +1,6 @@
 ﻿using CruiseDAL;
 using FScruiser.XF.Services;
+using Microsoft.Extensions.DependencyInjection;
 using NatCruise;
 using NatCruise.Async;
 using NatCruise.Data;
@@ -25,7 +26,7 @@ namespace FScruiser.XF.ViewModels
         public ICommand LoadDatabaseCommand => new Command(() => LoadDatabase().FireAndForget());
         public INatCruiseDialogService DialogService { get; }
         public IFileSystemService FileSystemService { get; }
-        public IDataserviceProvider DataserviceProvider { get; }
+        public IDataContextService DataContext { get; }
         public IFileDialogService FileDialogService { get; }
         public ICruiseNavigationService NavigationService { get; }
 
@@ -33,18 +34,14 @@ namespace FScruiser.XF.ViewModels
             IFileSystemService fileSystemService,
             IFileDialogService fileDialogService,
             ICruiseNavigationService cruiseNavigationService,
-            IContainerProvider containerProvicer)
+            IServiceProvider serviceProvider)
         {
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             NavigationService = cruiseNavigationService ?? throw new ArgumentNullException(nameof(cruiseNavigationService));
 
-            try
-            {
-                DataserviceProvider = containerProvicer.Resolve<IDataserviceProvider>();
-            }
-            catch { }
+            DataContext = serviceProvider.GetService<IDataContextService>();
         }
 
         public async Task ResetDatabase()
@@ -57,19 +54,19 @@ namespace FScruiser.XF.ViewModels
 
             if (await DialogService.AskYesNoAsync("Resetting Database will delete all cruise data.\r\n Do you want to continue", "Warning", defaultNo: true))
             {
-                var dsp = DataserviceProvider;
-                if(dsp != null)
+                var context = DataContext;
+                if(context != null)
                 {
-                    DataserviceProvider.Database?.ReleaseConnection(true);
-                }
-                
-                var databasePath = FileSystemService.DefaultCruiseDatabasePath;
-                File.Delete(databasePath);
-                Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Database Reset");
-                var newDatabase = new CruiseDatastore_V3(databasePath, true);
-                if (DataserviceProvider != null)
-                {
-                    DataserviceProvider.CruiseID = null;
+                    context.Database?.ReleaseConnection(true);
+
+                    var databasePath = FileSystemService.DefaultCruiseDatabasePath;
+                    File.Delete(databasePath);
+                    Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Database Reset");
+                    var newDatabase = new CruiseDatastore_V3(databasePath, true);
+                    if (context != null)
+                    {
+                        context.CruiseID = null;
+                    }
                 }
             }
         }
@@ -101,18 +98,20 @@ namespace FScruiser.XF.ViewModels
                 { return; }
             }
 
-            var dsp = DataserviceProvider;
-            if (dsp != null)
+            var dataContext = DataContext;
+            if (dataContext != null)
             {
-                DataserviceProvider.Database?.ReleaseConnection(true);
+                dataContext.Database?.ReleaseConnection(true);
             }
+
+            // data context might be null but we will try to copy in the new database regardless
             var databasePath = FileSystemService.DefaultCruiseDatabasePath;
             File.Copy(loadPath, databasePath, true);
             var newDatabase = new CruiseDatastore_V3(databasePath);
             Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Load Database");
-            if (DataserviceProvider != null)
+            if (dataContext != null)
             {
-                DataserviceProvider.CruiseID = null;
+                dataContext.CruiseID = null;
             }
         }
     }

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+             x:Class="FScruiser.Maui.Controls.HeaderControl">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type ctrls:HeaderControl}">
+                <Setter Property="HorizontalOptions"
+                        Value="Fill" />
+                <Setter Property="VerticalOptions"
+                        Value="Fill" />
+                <!--<Setter Property="IsTabStop"
+                        Value="False" />-->
+                <Setter Property="HeaderFontSize"
+                        Value="Header" />
+                <!--<Setter Property="HeaderTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Label Text="{TemplateBinding Content}" />
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>-->
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <ContentView.ControlTemplate>
+        <ControlTemplate>
+            <Grid>
+                <Grid.Triggers>
+                    <DataTrigger TargetType="VisualElement"
+                                 Binding="{TemplateBinding Orientation}"
+                                 Value="Horizontal">
+                        <Setter TargetName="PART_Content"
+                                Property="Grid.Column"
+                                Value="1" />
+                        <Setter TargetName="PART_Content"
+                                Property="Grid.Row"
+                                Value="0" />
+                        <!--<Setter TargetName="PART_Header"
+                                                Property="Grid.ColumnSpan"
+                                                Value="1" />
+                                        <Setter TargetName="PART_Header"
+                                                Property="Grid.Row"
+                                                Value="1" />-->
+                    </DataTrigger>
+                </Grid.Triggers>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid x:Name="PART_Header"
+                      Grid.Row="0"
+                      Grid.Column="0">
+                    <Label x:Name="HeaderContent"
+                           Margin="{TemplateBinding  HeaderMargin}"
+                           Text="{TemplateBinding  Header}"
+                           FontSize="{TemplateBinding HeaderFontSize}"
+                           FontFamily="{TemplateBinding HeaderFontFamily}"
+                           HorizontalOptions="{TemplateBinding  HeaderHorizontalOptions}"
+                           VerticalOptions="{TemplateBinding  HeaderVerrticalOptions}"
+                           BackgroundColor="{TemplateBinding  HeaderBackgroundColor}"
+                           VerticalTextAlignment="Center"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                </Grid>
+
+                <Grid x:Name="PART_Content"
+                      Grid.Row="1"
+                      Grid.Column="0"
+                      Background="{TemplateBinding  Background}">
+                    <ContentPresenter Margin="{TemplateBinding Padding}"
+                                      AutomationProperties.LabeledBy="{Reference PART_Header}" />
+                </Grid>
+            </Grid>
+
+
+        </ControlTemplate>
+    </ContentView.ControlTemplate>
+</ContentView>

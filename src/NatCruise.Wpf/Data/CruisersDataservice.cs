@@ -8,6 +8,9 @@ namespace NatCruise.Wpf.Data
 {
     public class CruisersDataservice : CruiseDataserviceBase, ICruisersDataservice
     {
+        public CruisersDataservice(IDataContextService dataContext) : base(dataContext)
+        { }
+
         public CruisersDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

@@ -1,5 +1,7 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NatCruise.Data;
 using NatCruise.Services;
@@ -11,7 +13,7 @@ using Purpose = NatCruise.Models.Purpose;
 
 namespace NatCruise.Wpf.Test.UnitTests.ViewModels
 {
-    public class NewCruiseViewModel_Test : TestBase
+    public class NewCruiseViewModel_Test : HostedTestBase
     {
         public NewCruiseViewModel_Test(ITestOutputHelper output) : base(output)
         {
@@ -22,13 +24,12 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
         {
             var templatePath = GetTestFile("R8 Template 2015.08.05.cut");
 
-            var dsp_moq = new Mock<IDataserviceProvider>();
-            var setupInfo_moq = new Mock<ISetupInfoDataservice>();
-            var fileDialogService_moq = new Mock<IFileDialogService>();
-            var deviceInfo_moq = new Mock<IDeviceInfoService>();
-            deviceInfo_moq.Setup(x => x.DeviceID).Returns(Guid.Empty.ToString());
+            var dataContext = Services.GetRequiredService<IDataContextService>();
 
-            var vm = new NewCruiseViewModel(dsp_moq.Object, setupInfo_moq.Object, fileDialogService_moq.Object, deviceInfo_moq.Object);
+            var vm = new NewCruiseViewModel(dataContext, Services,
+                Services.GetRequiredService<ISetupInfoDataservice>(),
+                Services.GetRequiredService<IFileDialogService>(),
+                Services.GetRequiredService<IDeviceInfoService>());
 
             vm.SelectTemplate(templatePath);
 
@@ -42,19 +43,17 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
             var cruisePath = GetTempFilePath(".crz3", "CreateCruise_With_V2_Template");
             File.Delete(cruisePath);
 
-            //var dsp_moq = new Mock<IDataserviceProvider>();
-            var setupInfo_moq = new Mock<ISetupInfoDataservice>();
-            var deviceInfo_moq = new Mock<IDeviceInfoService>();
-            deviceInfo_moq.Setup(x => x.DeviceID).Returns(Guid.Empty.ToString());
-
             var fileDialogService_moq = new Mock<IFileDialogService>();
-            fileDialogService_moq.Setup(x => x.SelectCruiseFileDestinationAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            FileDialogServiceMock.Setup(x => x.SelectCruiseFileDestinationAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task<string>.FromResult(cruisePath));
             fileDialogService_moq.Setup(x => x.SelectTemplateFileAsync()).ReturnsAsync(templatePath);
 
-            var dataServiceProvider = new WpfDataserviceProvider((CruiseDatastore_V3)null, deviceInfo_moq.Object);
+            var dataContext = Services.GetRequiredService<IDataContextService>();
 
-            var vm = new NewCruiseViewModel(dataServiceProvider, setupInfo_moq.Object, fileDialogService_moq.Object, deviceInfo_moq.Object)
+            var vm = new NewCruiseViewModel(dataContext, Services,
+                Services.GetRequiredService<ISetupInfoDataservice>(),
+                Services.GetRequiredService<IFileDialogService>(),
+                Services.GetRequiredService<IDeviceInfoService>())
             {
                 SaleNumber = "12345",
                 SaleName = "something",
@@ -73,7 +72,7 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
 
             File.Exists(cruisePath).Should().BeTrue();
 
-            ValidateTemplate(dataServiceProvider.Database);
+            ValidateTemplate(dataContext.Database);
         }
 
         protected void ValidateTemplate(CruiseDatastore db)
@@ -84,9 +83,6 @@ namespace NatCruise.Wpf.Test.UnitTests.ViewModels
             db.From<TreeAuditRule>().Count().Should().BeGreaterThan(0);
             db.From<TreeDefaultValue>().Count().Should().BeGreaterThan(0);
             //db.From<BiomassEquation>().Count().Should().BeGreaterThan(0);
-
-
-
         }
     }
 }

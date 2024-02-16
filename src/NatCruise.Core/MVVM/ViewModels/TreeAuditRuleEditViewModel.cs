@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
+using NatCruise.Util;
 
 namespace NatCruise.MVVM.ViewModels
 {

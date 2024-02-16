@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NatCruise.Data;
 using NatCruise.MVVM.ViewModels;
@@ -16,13 +17,13 @@ using SubPopulation = CruiseDAL.V3.Models.SubPopulation;
 
 namespace NatCruise.Test.MVVM
 {
-    public class TreeEditViewModel_Test : TestBase
+    public class TreeEditViewModel_Test : HostedTestBase
     {
         public TreeEditViewModel_Test(ITestOutputHelper output) : base(output)
         {
         }
 
-        protected TreeEditViewModel MakeTreeEditViewModel(IDataserviceProvider dsp,
+        protected TreeEditViewModel MakeTreeEditViewModel(IServiceProvider sp,
             INatCruiseDialogService dialogServ = null,
             INatCruiseNavigationService navServ = null,
             ILoggingService logServ = null,
@@ -33,14 +34,14 @@ namespace NatCruise.Test.MVVM
             logServ ??= new Mock<ILoggingService>().Object;
             cruisersDataservice ??= new Mock<ICruisersDataservice>().Object;
 
-            return new TreeEditViewModel(dsp.GetDataservice<IStratumDataservice>(),
-                dsp.GetDataservice<ISampleGroupDataservice>(),
-                dsp.GetDataservice<ISpeciesDataservice>(),
-                dsp.GetDataservice<ISubpopulationDataservice>(),
-                dsp.GetDataservice<ITreeDataservice>(),
-                dsp.GetDataservice<ITreeErrorDataservice>(),
-                dsp.GetDataservice<ITreeFieldValueDataservice>(),
-                dsp.GetDataservice<ICruiseLogDataservice>(),
+            return new TreeEditViewModel(sp.GetRequiredService<IStratumDataservice>(),
+                sp.GetRequiredService<ISampleGroupDataservice>(),
+                sp.GetRequiredService<ISpeciesDataservice>(),
+                sp.GetRequiredService<ISubpopulationDataservice>(),
+                sp.GetRequiredService<ITreeDataservice>(),
+                sp.GetRequiredService<ITreeErrorDataservice>(),
+                sp.GetRequiredService<ITreeFieldValueDataservice>(),
+                sp.GetRequiredService<ICruiseLogDataservice>(),
                 cruisersDataservice,
                 dialogServ,
                 navServ,
@@ -51,12 +52,10 @@ namespace NatCruise.Test.MVVM
         public void Load_With_TreeID()
         {
             var init = new DatastoreInitializer();
-            using var db = init.CreateDatabase();
+            init.InitDataContext(DataContext);
+            var db = DataContext.Database;
 
-            var dsp = new DataserviceProviderBase(db, new TestDeviceInfoService());
-            dsp.CruiseID = init.CruiseID;
-
-            var treeEditVM = MakeTreeEditViewModel(dsp);
+            var treeEditVM = MakeTreeEditViewModel(Services);
             var treeDataService = treeEditVM.TreeDataservice;
 
             var treeID = treeDataService.InsertManualTree("u1", "st1", "sg1");
@@ -70,12 +69,10 @@ namespace NatCruise.Test.MVVM
         public void EditTreeRemarks()
         {
             var init = new DatastoreInitializer();
-            using var db = init.CreateDatabase();
+            init.InitDataContext(DataContext);
+            var db = DataContext.Database;
 
-            var dsp = new DataserviceProviderBase(db, new TestDeviceInfoService());
-            dsp.CruiseID = init.CruiseID;
-
-            var treeEditVM = MakeTreeEditViewModel(dsp);
+            var treeEditVM = MakeTreeEditViewModel(Services);
             var treeDataService = treeEditVM.TreeDataservice;
 
             var treeID = treeDataService.InsertManualTree("u1", "st1", "sg1");
@@ -139,10 +136,9 @@ namespace NatCruise.Test.MVVM
                     //new SubPopulation {StratumCode = "st2", SampleGroupCode = "sg2", SpeciesCode = "sp1", LiveDead = "L"},
                 }
             };
-            using var db = init.CreateDatabase();
+            init.InitDataContext(DataContext);
+            var db = DataContext.Database;
 
-            var dsp = new DataserviceProviderBase(db, new TestDeviceInfoService());
-            dsp.CruiseID = init.CruiseID;
 
             // set up mock dialog service
             var mockDialogService = new Mock<INatCruiseDialogService>();
@@ -151,7 +147,7 @@ namespace NatCruise.Test.MVVM
             if (expectSgDialog)
             { mockDialogService.Setup(x => x.AskValueAsync(It.Is<string>(x => x == sgDialogTitle), It.IsAny<string[]>())).ReturnsAsync(sgAfter); }
 
-            var treeEditVM = MakeTreeEditViewModel(dsp, dialogServ:mockDialogService.Object);
+            var treeEditVM = MakeTreeEditViewModel(Services, dialogServ:mockDialogService.Object);
             var treeDataService = treeEditVM.TreeDataservice;
 
             var treeID = treeDataService.InsertManualTree("u1", stratumBefore, sgBefore, speciesBefore, ldBefore);
@@ -182,10 +178,10 @@ namespace NatCruise.Test.MVVM
         {
             var init = new DatastoreInitializer();
             var path = base.GetTempFilePath(".crz3");
-            using var db = init.CreateDatabase(path);
+            init.InitDataContext(DataContext);
+            var db = DataContext.Database;
 
-            var dsp = new DataserviceProviderBase(db, new TestDeviceInfoService());
-            dsp.CruiseID = init.CruiseID;
+
 
             var treeFieldSetup = new CruiseDAL.V3.Models.TreeFieldSetup
             {
@@ -229,7 +225,7 @@ namespace NatCruise.Test.MVVM
                 });
             }
 
-            var treeEditVM = MakeTreeEditViewModel(dsp);
+            var treeEditVM = MakeTreeEditViewModel(Services);
             var treeDataService = treeEditVM.TreeDataservice;
 
             var treeID = treeDataService.InsertManualTree("u1", "st1", "sg1", "sp1");

@@ -3,12 +3,17 @@ using FScruiser.XF.Controls;
 using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.MVVM;
 using NatCruise.Services;
+using NatCruise.Services.Logging;
 using NatCruise.Util;
+using NatCruise;
 using Prism;
+using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services;
@@ -18,6 +23,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms.Xaml;
+using DryIoc.Microsoft.DependencyInjection;
 
 namespace FScruiser.XF
 {
@@ -27,21 +33,19 @@ namespace FScruiser.XF
         public const string CURRENT_NAV_PATH = "current_nav_path";
         public const string CURRENT_NAV_PARAMS = "current_nav_params";
 
-        private FScruiserDataserviceProvider _dataserviceProvider;
-
         //private CruiseFileSelectedEvent _cruiseFileSelectedEvent;
         //private CruiseFileOpenedEvent _cruiseFileOpenedEvent;
         private ICruisersDataservice _cruisersDataservice;
 
-        private Exception _dataserviceProviderInitError;
+        private Exception _dataContextInitError;
 
         protected IPageDialogService DialogService => Container?.Resolve<IPageDialogService>();
         public ICruiseNavigationService CruiseNavigationService => Container?.Resolve<ICruiseNavigationService>();
 
-        public IDataserviceProvider DataserviceProvider => _dataserviceProvider;
-
         public IApplicationSettingService Settings { get; } = new XamarinApplicationSettingService();
-        public NatCruiseViewModelProvider ViewModelProvider { get; } = new NatCruiseViewModelProvider();
+        public IViewModelTypeResolver ViewModelTypeResolver { get; } = new NatCruiseViewModelTypeResolver();
+
+        protected ILogger Logger { get; private set; }
 
         public App() : this(new XamarinPlatformInitializer())
         { }
@@ -53,15 +57,6 @@ namespace FScruiser.XF
         {
             Xamarin.Forms.DataGrid.DataGridComponent.Init();
 
-            // hook up our logging service to our utility TaskExtentions class
-            // this helper extention class is used to get exceptions from
-            // 'Fire and Forget' async actions
-            var loggingService = Container.Resolve<ILoggingService>();
-            TaskExtentions.LoggingService = loggingService;
-
-            TapGestureRecognizerHelper.SoundService = Container.Resolve<ISoundService>();
-
-            this.InitializeComponent();
 
 #if RELEASE
             //start app center services
@@ -70,41 +65,43 @@ namespace FScruiser.XF
                 ,typeof(Crashes));
 
 #endif
-            //try
-            //{
-            //    var dsp = GetDataserviceProvider();
 
-            //    await CruiseNavigationService.ShowCruiseLandingLayout();
-            //}
-            //catch (Exception ex)
-            //{
-            //    await CruiseNavigationService.ShowDatabaseUtilities();
-            //}
+            // hook up our logging service to our utility TaskExtentions class
+            // this helper extention class is used to get exceptions from
+            // 'Fire and Forget' async actions
+            var loggingService = Container.Resolve<ILoggingService>();
+            TaskExtentions.LoggingService = loggingService;
 
-            var dsp = GetDataserviceProvider();
-            if (_dataserviceProviderInitError == null)
+            var logger = Logger = Container.Resolve<ILogger<App>>();
+
+            TapGestureRecognizerHelper.SoundService = Container.Resolve<ISoundService>();
+
+            this.InitializeComponent();
+
+            if (InitDataContext())
             {
                 await CruiseNavigationService.ShowCruiseLandingLayout();
             }
             else
             {
                 await CruiseNavigationService.ShowDatabaseUtilities();
-
-                await LogAndShowExceptionAsync("Dataservice Provider Error", "Error Loading Dataservice Provider\r\n Please Backup and Reset Database\r\n contact support", _dataserviceProviderInitError);
             }
         }
 
-        //protected void ReloadNavigation()
-        //{
-        //    var navPath = Properties.GetValueOrDefault(CURRENT_NAV_PATH) as string;
+        protected bool InitDataContext()
+        {
+            var dataContext = Container.Resolve<IDataContextService>();
 
-        //    if(navPath != null && !navPath.EndsWith("CuttingUnits"))
-        //    {
-        //        var navParams = Properties.GetValueOrDefault(CURRENT_NAV_PARAMS) as string;
+            if (!dataContext.IsReady)
+            {
+                var fileSystemService = Container.Resolve<IFileSystemService>();
+                var cruiseDbPath = fileSystemService.DefaultCruiseDatabasePath;
 
-        //        NavigationService.NavigateAsync(navPath, new NavigationParameters(navParams));
-        //    }
-        //}
+                dataContext.OpenOrCreateDatabase(cruiseDbPath);
+            }
+
+            return dataContext.IsReady;
+        }
 
         protected override async void OnStart()
         {
@@ -122,71 +119,37 @@ namespace FScruiser.XF
 
                 Properties.SetValue("isFirstLaunch", false);
             }
-
-            //var cruise_path = _cruisePath ?? Properties.GetValueOrDefault("cruise_path") as string;
-
-            //if (!string.IsNullOrEmpty(cruise_path))
-            //{
-            //    await LoadDatabase(cruise_path);
-            //}
-        }
-
-        protected override void OnSleep()
-        {
-            // Handle when your app sleeps
-        }
-
-        protected override void OnResume()
-        {
-            // Handle when your app resumes
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            if (containerRegistry.IsRegistered<IFileDialogService>() == false)
-            {
-                containerRegistry.Register<IFileDialogService, XamarinFileDialogService>();
-            }
-
-            if (containerRegistry.IsRegistered<IDataserviceProvider>() == false)
-            {
-                containerRegistry.Register<IDataserviceProvider>(x => GetDataserviceProvider());
-                FScruiser.XF.Data.FScruiserDataserviceProvider.RegisterDataservices(containerRegistry);
-            }
+            // primary location for type registration is in XamarinPlatFormInitializer
+            // below is additional registration where we want hold on to the created instance here in the app
+            // or where we want to initialize the instance with the app instance
 
             if (containerRegistry.IsRegistered<ICruisersDataservice>() == false)
             {
                 containerRegistry.RegisterInstance<ICruisersDataservice>(_cruisersDataservice = new CruisersDataservice(this));
             }
-        }
 
-        protected FScruiserDataserviceProvider GetDataserviceProvider()
-        {
-            if (_dataserviceProvider is null)
+            // register Microsoft.Extentions.Logging
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILoggerFactory), CreateLoggerFactory);
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.LoggerFactory), CreateLoggerFactory);
+            containerRegistry.RegisterSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(Microsoft.Extensions.Logging.Logger<>));
+
+            LoggerFactory CreateLoggerFactory()
             {
-                var deviceInfo = Container.Resolve<IDeviceInfoService>();
-                var fileSystemService = Container.Resolve<IFileSystemService>();
-                var cruiseDbPath = fileSystemService.DefaultCruiseDatabasePath;
-
-                try
-                {
-                    if (File.Exists(cruiseDbPath) == false)
-                    {
-                        var db = new CruiseDatastore_V3(cruiseDbPath, true);
-                        _dataserviceProvider = new FScruiserDataserviceProvider(db, deviceInfo);
-                    }
-                    else
-                    {
-                        var db = new CruiseDatastore_V3(cruiseDbPath, false);
-                        _dataserviceProvider = new FScruiserDataserviceProvider(db, deviceInfo);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _dataserviceProviderInitError = ex;
-                }
+                return new Microsoft.Extensions.Logging.LoggerFactory(new[] { new AppCenterLoggerProvider() });
             }
-            return _dataserviceProvider;
+
+            // regester data services. these are defined using the Microsoft.Extentions.DependancyInjection pattern
+            // using a service collection to store all our registration definitions
+            // we can populate our existing container with these definitions.
+            var servicesToRegister = new ServiceCollection();
+            servicesToRegister.AddNatCruiseCoreDataservices();
+
+            var container = containerRegistry.GetContainer();
+            container.Populate(servicesToRegister);
         }
 
         protected override void ConfigureViewModelLocator()
@@ -196,7 +159,7 @@ namespace FScruiser.XF
 
             base.ConfigureViewModelLocator();
 
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelProvider.GetViewModel(viewType));
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => ViewModelTypeResolver.GetViewModelType(viewType));
         }
 
         public static void LogException(string catigory, string message, Exception ex, IDictionary<string, string> data = null)

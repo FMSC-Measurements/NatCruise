@@ -1,5 +1,6 @@
 #define MsBuildOutputDir ".\bin\Release\net472"
-#define VERSION "3.1.11.0"
+#define SolutionDir ".."
+#define VERSION "3.1.12"
 
 #define APP "National Cruise System"
 #define EXEName "NatCruise.Wpf.exe"
@@ -13,7 +14,7 @@ AppName={#APP}
 ;used to prevent user from installing/uninstalling while app is running
 ;requires app code to create a mutex while program is running
 AppMutex=CruiseManager
-;not displayed in ui. used for uninstall registry key and where install detects previouse install settings
+;not displayed in ui. used for uninstall registry key and where install detects previous install settings
 ;defaults to AppName
 AppID={#APP}
 ;used as default value for AppVerName. displayed in version field of app's add/remove entry
@@ -33,9 +34,9 @@ DefaultGroupName=FMSC\{#APP}
 
 Compression=lzma
 ;causes all files to be compressed together
-;this is less effecent if some files don't need to be installed 
+;this is less efficient if some files don't need to be installed 
 SolidCompression=yes
-;notifys windows that file associations have changed when installer exits
+;notifies windows that file associations have changed when installer exits
 ChangesAssociations=yes
 
 ;dont allow program to be installed on network drives
@@ -49,12 +50,8 @@ OutputBaseFilename=NatCruise_Setup_{#VERSION}
 
 [Tasks]
 Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons};
-;Name: associateV3CruiseFileTypes; Description: "Associate V3 Cruise (.crz3) Files with NatCruise"; GroupDescription: "Associate File Types";  
-;Name: deployV2Templates; Description: "V2 Templates"; GroupDescription: "Template Files"; Flags: checkablealone
-;Name: deployV2Templates/overwriteV2Templates; Description: "Recopy existing template files"; GroupDescription: "Template Files"; Flags: unchecked dontinheritcheck;
-
-;Name: associateV2CruiseFileTypes; Description: "Associate V2 Cruise (.cruise) Files with NatCruise"; GroupDescription: "Associate File Types"; Flags: unchecked
-;Name: associateCutFileTypes; Description: "Associate V2 Template (.cut) Files with Cruise Manager"; GroupDescription: "Associate File Types"; Flags: unchecked
+Name: deployV2Templates; Description: "V2 Templates"; GroupDescription: "Template Files"; Flags: checkablealone
+;Name: deployV3Templates; Description: "V3 Templates"; GroupDescription: "Template Files"; Flags: checkablealone
 
 
 [Files]
@@ -64,14 +61,10 @@ Source: "{#MsBuildOutputDir}\*.dll"; DestDir: {app}; Flags: ignoreversion;
 Source: "{#MsBuildOutputDir}\*.exe.config"; DestDir: {app}; Flags: ignoreversion;
 Source: "{#MsBuildOutputDir}\runtimes\win-x64\native\*.dll"; DestDir: {app}\runtimes\win-x64\native; Flags: ignoreversion;
 Source: "{#MsBuildOutputDir}\runtimes\win-x86\native\*.dll"; DestDir: {app}\runtimes\win-x86\native; Flags: ignoreversion;
-;Source: "..\..\Template Files\V2\*.cut"; DestDir: {app}\Templates; Flags: ignoreversion deleteafterinstall; Tasks: deployV2Templates
-;Source: "..\..\Template Files\V3\*.cut"; DestDir: {app}\Templates; Flags: ignoreversion deleteafterinstall; Tasks: deployV3Templates
-
-[InstallDelete]
-;clean any files from the net 6.0 release
-Type: files; Name: "{app}\*.exe"
-Type: files; Name: "{app}\*.dll"
-Type: files; Name: "{app}\NatCruise.Wpf.dll.config"
+; copy template files to a temporary location in the apps deploy dir. we will delete these after install because 
+; we will be copying them to the users documents dir. 
+Source: "{#SolutionDir}\Template Files\V2\*.cut"; DestDir: {app}\Templates; Flags: ignoreversion deleteafterinstall; Tasks: deployV2Templates
+;Source: "{#SolutionDir}\Template Files\V3\*.crz3t"; DestDir: {app}\Templates; Flags: ignoreversion deleteafterinstall; Tasks: deployV3Templates
 
 
 [Icons]
@@ -81,24 +74,116 @@ Name: {autodesktop}\{#APP}; Filename: {app}\{#EXEName}; Tasks: desktopicon
 [Run]
 Filename: "{app}\{#EXEName}"; Description: "{cm:LaunchProgram,{#APP}}"; Flags: nowait postinstall skipifsilent
 
-[Registry]
+[Code]
 
-;Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{#EXEName}; ValueType: none; Flags: deletekey noerror; Tasks: associateV3CruiseFileTypes;
+function ShouldSkipPage(PageID: Integer): Boolean;
+begin
+  Log('ShouldSkipPage(' + IntToStr(PageID) + ') called');
+  { Skip wpSelectDir page if admin install; show all others }
+  case PageID of
+    wpSelectDir:
+      Result := IsAdminInstallMode();
+  else
+    Result := False;
+  end;
+end;
 
-;Root: HKA; Subkey: "Software\Classes\Applications\{#EXEName}\SupportedTypes"; ValueType: string; ValueName: ".crz3"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
-;Root: HKA; Subkey: "Software\Classes\Applications\{#EXEName}\SupportedTypes"; ValueType: string; ValueName: ".crz3t"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+{ copies files matching pattern from srcDir to destDir }
+procedure CopyFiles(srcDir: String; pattern: String; destDir: String; overwrite: Boolean);
+var 
+  FindRec: TFindRec;
+begin
+  if ForceDirectories(destDir) then
+  begin {iterate files in srcDir and copy them to destDir }
+    if FindFirst(srcDir + pattern, FindRec) then
+    begin
+      try
+        repeat
+          Log('Copy ' + srcDir + FindRec.Name + ' -> ' + destDir + FindRec.Name);
+          if FileCopy(srcDir + FindRec.Name, destDir + FindRec.Name, not overwrite) then
+          begin
+            Log('File Copied ' + srcDir + FindRec.Name + ' -> ' + destDir + FindRec.Name);
+          end else
+          begin
+            Log('File NOT Copied ' + srcDir + FindRec.Name + ' -> ' + destDir + FindRec.Name);
+          end;
+        until not FindNext(FindRec);
+      finally
+        FindClose(FindRec);
+      end; { end try }
+    end;   { end file copy loop }   
+  end else { end if force dir }
+  begin
+    Log('Error Creating Dir ' + destDir);
+  end;
+end;
 
-;; NCS.CruiseFileV3 is the internal unique name for the file type assocation for the .crz3 extention
-;Root: HKA; Subkey: "Software\Classes\.crz3"; ValueType: string; ValueName: ""; ValueData: "NCS.CruiseFileV3"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
-;Root: HKA; Subkey: "Software\Classes\.crz3\OpenWithProgids"; ValueType: string; ValueName: "NCS.CruiseFileV3"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
-;Root: HKA; Subkey: "Software\Classes\NCS.CruiseFileV3"; ValueType: string; ValueName: ""; ValueData: "Cruise File V3"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
-;; the ',0' in ValueData tells Explorer to use the first icon from NatCruise.Wpf.exe
-;Root: HKA; Subkey: "Software\Classes\NCS.CruiseFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#EXEName},0"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
-;Root: HKA; Subkey: "Software\Classes\NCS.CruiseFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#EXEName}"" ""%1"""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  UsersPath: String;
+  DocumentsPath: String;
+  DesktopPath: String;
+  UserTemplatesPath: String;
+  CopyTemplateIfExists: Boolean;
+  UserDirFindRec: TFindRec;
+  TemplateSrcPath: String;
+begin
+  { Once the files are installed }
+  if (CurStep = ssPostInstall) and (WizardIsTaskSelected('deployV2Templates') or WizardIsTaskSelected('deployV2Templates'))  then
+  begin
+    Log('Copying Templates');
+    TemplateSrcPath := ExpandConstant('{app}') + '\Templates\';
+    if IsAdminInstallMode() then
+    begin
+      UsersPath := ExpandConstant('{%HOMEDRIVE|C:}') + '\Users\';
+      Log(Format('Users Path [%s]', [UsersPath]));
 
-;; register cruise template files
-;Root: HKA; Subkey: "Software\Classes\.crz3t"; ValueType: string; ValueName: ""; ValueData: "NCS.TemplateFileV3"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
-;Root: HKA; Subkey: "Software\Classes\.crz3t\OpenWithProgids"; ValueType: string; ValueName: "NCS.TemplateFileV3"; ValueData: ""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
-;Root: HKA; Subkey: "Software\Classes\NCS.TemplateFile"; ValueType: string; ValueName: ""; ValueData: "Cruise Template File V3"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
-;Root: HKA; Subkey: "Software\Classes\NCS.TemplateFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#EXEName},0"; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
-;Root: HKA; Subkey: "Software\Classes\NCS.TemplateFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#EXEName}"" ""%1"""; Flags: uninsdeletevalue; Tasks: associateV3CruiseFileTypes;
+      { Iterate all users }
+      if FindFirst(UsersPath + '*', UserDirFindRec) then
+      begin
+        try
+          repeat  
+            { Just directories and ignore Public, All Users, and Default User. All Users and Default User are symbolic links that we don't care about }
+
+            if (UserDirFindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY <> 0) and (UserDirFindRec.Name <> 'Public') and (UserDirFindRec.Name <> 'All Users') and (UserDirFindRec.Name <> 'Default User') then
+            begin
+              DocumentsPath := UsersPath + UserDirFindRec.Name + '\Documents';
+              Log('UserProfile ' + UsersPath + UserDirFindRec.Name);
+              if DirExists(DocumentsPath) then
+              begin
+                UserTemplatesPath := DocumentsPath + '\CruiseFiles\Templates\';
+                if WizardIsTaskSelected('deployV2Templates') then begin
+                    CopyFiles(TemplateSrcPath, '*.cut', UserTemplatesPath, CopyTemplateIfExists);
+                end;
+                if WizardIsTaskSelected('deployV3Templates') then begin
+                    CopyFiles(TemplateSrcPath, '*.crz3t', UserTemplatesPath, CopyTemplateIfExists);
+                end;
+              end;       { end if force dir }
+
+              { delete any desktop icons left behind in the user's desktop folder }
+              { note we aren't deleting from the Public\Desktop where the All Users desktop icon is located }
+
+              DesktopPath := UsersPath + UserDirFindRec.Name + '\Desktop\';
+              if DirExists(DesktopPath) then
+              begin
+                if DeleteFile(DesktopPath + 'Cruise Manager.lnk') then begin
+                  Log('File Deleted ' + DesktopPath + 'Cruise Manager.lnk');
+                end else
+                  Log('File Not Deleted ' + DesktopPath + 'Cruise Manager.lnk');
+              end;       {end if desktop exists }
+            end;         { end check user dir exists }     
+          until not FindNext(UserDirFindRec);
+        finally
+          FindClose(UserDirFindRec);
+        end;
+      end else
+      begin
+        Log(Format('Error listing User dirs [%s]', [UsersPath]));
+      end;
+    end else {end is admin mode}
+    begin
+      CopyFiles(TemplateSrcPath, '*.cut', ExpandConstant('{userdocs}') + '\CruiseFiles\Templates\', CopyTemplateIfExists); 
+    end;
+    
+  end; {end if is templates component selected }
+end;

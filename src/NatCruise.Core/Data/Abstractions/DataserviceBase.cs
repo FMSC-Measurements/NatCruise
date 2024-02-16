@@ -34,5 +34,17 @@ namespace NatCruise.Data
 
             Database = database ?? throw new ArgumentNullException(nameof(database));
         }
+
+        public DataserviceBase(IDataContextService dataContext)
+        {
+            if (dataContext is null)
+            {
+                throw new ArgumentNullException(nameof(dataContext));
+            }
+
+            DeviceID = dataContext.DeviceID;
+            Database = dataContext.Database;
+            CruiseID = dataContext.CruiseID;
+        }
     }
 }

@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace NatCruise.Data
 {
+    // TODO this seems pretty wasteful to create a in memory database just to read lookup data from it
+    // its nice and decoupled which is nice and allows us to get this data even if a database doesn't exist
+    // ie when creating a new database but can this be done better?
     public class SetupInfoDataservice : ISetupInfoDataservice
     {
         CruiseDatastore_V3 Database { get; }
@@ -66,6 +69,11 @@ namespace NatCruise.Data
         public IEnumerable<LoggingMethod> GetLoggingMethods()
         {
             return Database.From<LoggingMethod>().Query().ToArray();
+        }
+
+        public void Dispose()
+        {
+            Database?.Dispose();
         }
     }
 }

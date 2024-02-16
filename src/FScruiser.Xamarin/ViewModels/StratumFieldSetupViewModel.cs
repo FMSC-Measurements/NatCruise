@@ -41,7 +41,7 @@ namespace FScruiser.XF.ViewModels
         }
 
 
-        public override void Initialize(IParameters parameters)
+        public override void Initialize(IDictionary<string, object> parameters)
         {
             base.Initialize(parameters);
 

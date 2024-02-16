@@ -48,7 +48,7 @@ namespace FScruiser.XF
             //containerRegistry.RegisterInstance<Prism.Logging.ILoggerFacade>(new TestLogger(TestOutput));
 
             containerRegistry.RegisterInstance<IFileSystemService>(new TestFileSystemService());
-            containerRegistry.RegisterInstance<IDataserviceProvider>(new TestDataserviceProvicer());
+            containerRegistry.RegisterInstance<IDataContextService>(new Mock<IDataContextService>().Object);
         }
     }
 }

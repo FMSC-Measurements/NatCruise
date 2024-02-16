@@ -8,6 +8,11 @@ namespace NatCruise.Data
 
     public class CruiseLogDataservice : CruiseDataserviceBase, ICruiseLogDataservice
     {
+        public CruiseLogDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+            CallingProgram = CruiseDatastore_V3.GetCallingProgram();
+        }
+
         public CruiseLogDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
             CallingProgram = CruiseDatastore_V3.GetCallingProgram();

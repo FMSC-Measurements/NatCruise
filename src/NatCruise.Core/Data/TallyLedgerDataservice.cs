@@ -8,6 +8,10 @@ namespace NatCruise.Data
 {
     public class TallyLedgerDataservice : CruiseDataserviceBase, ITallyLedgerDataservice
     {
+        public TallyLedgerDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public TallyLedgerDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -15,6 +19,8 @@ namespace NatCruise.Data
         public TallyLedgerDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
         {
         }
+
+        
 
         public void InsertTallyLedger(TallyLedger tallyLedger)
         {

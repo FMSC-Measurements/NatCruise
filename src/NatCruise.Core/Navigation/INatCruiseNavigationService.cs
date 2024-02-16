@@ -50,6 +50,8 @@ namespace NatCruise.Navigation
 
         Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber);
 
+        Task ShowLimitingDistance();
+
         Task ShowLogsList(string treeID);
 
         Task ShowFeedback();

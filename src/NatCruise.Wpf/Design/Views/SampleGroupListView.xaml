@@ -83,19 +83,7 @@
                                  Style="{StaticResource RemoveButton}"
                                  Content="{iconPack:MaterialDesign Kind=RemoveCircleOutline}"
                                  Command="{Binding RemoveSampleGroupCommand}"
-                                 CommandParameter="{Binding SelectedItem, ElementName=_sampleGroupListView}">
-                            <Button.IsEnabled>
-                                <MultiBinding Converter="{StaticResource MultiBindingAllConverter}">
-                                    <Binding Path="SelectedItem"
-                                             ElementName="_sampleGroupListView"
-                                             Converter="{StaticResource NotNullConverter}" />
-                                    <Binding Path="SelectedItem.HasTrees"
-                                             ElementName="_sampleGroupListView"
-                                             Converter="{StaticResource NotConverter}" />
-                                    <Binding Path="IsSuperuserModeEnabled"
-                                             Converter="{StaticResource NotConverter}" />
-                                </MultiBinding>
-                            </Button.IsEnabled>
+                                 CommandParameter="{Binding SelectedSampleGroup}">
                         </Button>
                     </Grid>
 

@@ -8,6 +8,10 @@ namespace NatCruise.Data
 {
     public class TreeAuditRuleDataservice : CruiseDataserviceBase, ITreeAuditRuleDataservice
     {
+        public TreeAuditRuleDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public TreeAuditRuleDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

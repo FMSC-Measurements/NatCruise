@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CruiseDAL.V3.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -99,6 +100,19 @@ namespace NatCruise.Util
                 }
             }
             return d;
+        }
+
+        public static Dictionary<TKey, TElement> ToDictionary<TKey, TElement>(this IEnumerable<KeyValuePair<TKey, TElement>> source)
+        {
+            if (source is Dictionary<TKey, TElement> dict) { return dict; }
+
+            var newDict = new Dictionary<TKey, TElement>();
+            foreach(var  kvp in source)
+            {
+                newDict.Add(kvp.Key, kvp.Value);
+            }
+
+            return newDict;
         }
 
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> @this)

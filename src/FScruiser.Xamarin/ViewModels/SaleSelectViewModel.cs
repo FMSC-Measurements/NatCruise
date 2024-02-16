@@ -29,11 +29,9 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand ShowImportCommand => new Command(() => NavigationService.ShowImport());
 
-        public SaleSelectViewModel(ICruiseNavigationService navigationService, IDataserviceProvider dataServiceprovider)
+        public SaleSelectViewModel(ICruiseNavigationService navigationService, ISaleDataservice saleDataservice)
         {
-            if (dataServiceprovider is null) { throw new ArgumentNullException(nameof(dataServiceprovider)); }
-
-            SaleDataservice = dataServiceprovider.GetDataservice<ISaleDataservice>();
+            SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         }
 

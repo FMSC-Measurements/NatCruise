@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -33,7 +34,7 @@ namespace NatCruise.Wpf.ViewModels
 
         public MainWindowViewModel(
             IAppService appService,
-            IDataserviceProvider dataserviceProvider,
+            IDataContextService dataserviceProvider,
             IDesignNavigationService navigationService,
             IFileDialogService fileDialogService,
             IRecentFilesDataservice recentFilesDataservice,
@@ -43,7 +44,7 @@ namespace NatCruise.Wpf.ViewModels
             ILoggingService loggingService)
         {
             AppService = appService ?? throw new ArgumentNullException(nameof(appService));
-            DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
+            DataContext = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             PrismDialogService = prismDialogService ?? throw new ArgumentNullException(nameof(prismDialogService));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             RecentFilesDataservice = recentFilesDataservice ?? throw new ArgumentNullException(nameof(recentFilesDataservice));
@@ -57,7 +58,7 @@ namespace NatCruise.Wpf.ViewModels
         public Version AppVersion { get; }
         public ILoggingService Log { get; }
         protected IAppService AppService { get; }
-        protected IDataserviceProvider DataserviceProvider { get; }
+        protected IDataContextService DataContext { get; }
         protected IDesignNavigationService NavigationService { get; }
         protected IRecentFilesDataservice RecentFilesDataservice { get; }
         public Prism.Services.Dialogs.IDialogService PrismDialogService { get; }
@@ -99,7 +100,7 @@ namespace NatCruise.Wpf.ViewModels
             {
                 if (r.Result == ButtonResult.OK)
                 {
-                    var filePath = DataserviceProvider.DatabasePath;
+                    var filePath = DataContext.DatabasePath;
                     var fileExtention = Path.GetExtension(filePath).ToLower();
                     RecentFilesDataservice.AddRecentFile(filePath);
                     if (fileExtention == ".crz3")
@@ -143,8 +144,8 @@ namespace NatCruise.Wpf.ViewModels
                     database.Insert(sale);
                     database.Insert(cruise);
 
-                    DataserviceProvider.Database = database;
-                    DataserviceProvider.CruiseID = cruiseID;
+                    DataContext.Database = database;
+                    DataContext.CruiseID = cruiseID;
 
                     RecentFilesDataservice.AddRecentFile(filePath);
                     OnPropertyChanged(nameof(RecentFiles));
@@ -188,6 +189,9 @@ namespace NatCruise.Wpf.ViewModels
             var filePath = file.FullName;
             var extention = file.Extension;
 
+            if (!EnsurePathValid(filePath, Log, DialogService)) { return; }
+            if (!EnsurePathExistsAndCanWrite(filePath, Log, DialogService)) { return; }
+
             if (extention is ".crz3")
             {
 
@@ -201,8 +205,8 @@ namespace NatCruise.Wpf.ViewModels
                 }
                 var cruiseID = cruiseIDs.First();
 
-                DataserviceProvider.Database = database;
-                DataserviceProvider.CruiseID = cruiseID;
+                DataContext.Database = database;
+                DataContext.CruiseID = cruiseID;
 
                 await NavigationService.ShowCruiseLandingLayout();
                 RecentFilesDataservice.AddRecentFile(filePath);
@@ -222,8 +226,8 @@ namespace NatCruise.Wpf.ViewModels
                 }
                 var cruiseID = cruiseIDs.First();
 
-                DataserviceProvider.Database = database;
-                DataserviceProvider.CruiseID = cruiseID;
+                DataContext.Database = database;
+                DataContext.CruiseID = cruiseID;
 
                 await NavigationService.ShowTemplateLandingLayout();
                 RecentFilesDataservice.AddRecentFile(filePath);
@@ -260,6 +264,68 @@ namespace NatCruise.Wpf.ViewModels
                     v3Db.BackupDatabase(v3Path);
                 }
             }
+        }
+
+        public static bool EnsurePathValid(string path, ILoggingService logger, INatCruiseDialogService dialogService)
+        {
+            try
+            {
+                path = Path.GetFullPath(path);
+
+                // in net6.2 and later long paths are supported by default.
+                // however it can still cause issue. So we need to manual check the
+                // directory length
+                // 
+                var dirName = Path.GetDirectoryName(path);
+                if (dirName.Length >= 248 || path.Length >= 260)
+                {
+                    throw new PathTooLongException("The supplied path is too long");
+                }
+            }
+            catch (PathTooLongException ex)
+            {
+                var message = "File Path Too Long";
+                logger.LogException(nameof(MainWindowViewModel), message, ex, new Dictionary<string, string>() { { "Path", path } });
+                dialogService.ShowNotification(message, "Error");
+                return false;
+            }
+            catch (SecurityException ex)
+            {
+                var message = "Can Not Open File Due To File Permissions";
+                logger.LogException(nameof(MainWindowViewModel), message, ex, new Dictionary<string, string>() { { "Path", path } });
+                dialogService.ShowNotification(message, "Error");
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                var message = (!string.IsNullOrEmpty(path) && path.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+                    ? "Path Contains Invalid Characters" : "Invalid File Path";
+                logger.LogException(nameof(MainWindowViewModel), message, ex, new Dictionary<string, string>() { { "Path", path } });
+                dialogService.ShowNotification(message, "Error");
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool EnsurePathExistsAndCanWrite(string path, ILoggingService logger, INatCruiseDialogService dialogService)
+        {
+            if (!File.Exists(path))
+            {
+                var message = "Selected File Does Not Exist";
+                logger.LogEvent(message, new Dictionary<string, string>() { { "Path", path } });
+                dialogService.ShowNotification(message, "Warning");
+                return false;
+            }
+
+            if (File.GetAttributes(path).HasFlag(FileAttributes.ReadOnly))
+            {
+                var message = "Selected File Is Read Only.\r\nIf opening file from non-local location, please copy file to a location on your PC before opening.";
+                logger.LogEvent(message, new Dictionary<string, string>() { { "Path", path } });
+                dialogService.ShowNotification(message, "Warning");
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -6,7 +6,9 @@ namespace NatCruise.Data
 {
     public class SamplerStateDataservice : CruiseDataserviceBase, ISamplerStateDataservice
     {
-        
+        public SamplerStateDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
 
         public SamplerStateDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
         {

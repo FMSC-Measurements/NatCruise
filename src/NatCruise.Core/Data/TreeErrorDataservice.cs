@@ -7,6 +7,10 @@ namespace NatCruise.Data
 {
     public class TreeErrorDataservice : CruiseDataserviceBase, ITreeErrorDataservice
     {
+        public TreeErrorDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public TreeErrorDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }

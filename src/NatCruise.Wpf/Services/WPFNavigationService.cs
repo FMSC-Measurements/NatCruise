@@ -274,5 +274,10 @@ namespace NatCruise.Wpf.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowLimitingDistance()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

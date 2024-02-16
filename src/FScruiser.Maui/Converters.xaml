@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:tc_conv="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
+                    xmlns:converters="clr-namespace:FScruiser.Maui.Converters">
+    <!-- community toolkit converters -->
+    <tc_conv:IsStringNotNullOrEmptyConverter x:Key="isStringNotNullOrEmptyConverter" />
+    <tc_conv:IsStringNullOrEmptyConverter x:Key="isStringNullOrEmptyConverter" />
+    <tc_conv:IsListNotNullOrEmptyConverter x:Key="isListNotNullOrEmptyConverter" />
+    <tc_conv:IsListNullOrEmptyConverter x:Key="listIsNullOrEmptyConverter" />
+
+    <tc_conv:IsNotNullConverter x:Key="isNotNullConverter" />
+    <tc_conv:IsNullConverter x:Key="isNullConverter" />
+    <!--False if value is 0, True for everything else-->
+    <tc_conv:IntToBoolConverter x:Key="intToBoolConverter" />
+
+    <tc_conv:VariableMultiValueConverter ConditionType="All"
+                                         x:Key="AllTrueConverter" />
+
+    <tc_conv:VariableMultiValueConverter ConditionType="Any"
+                                         x:Key="AnyTrueConverter" />
+    
+    <tc_conv:InvertedBoolConverter x:Key="invertedBoolConverter" />
+
+    <tc_conv:BoolToObjectConverter x:Key="BoolToYesNoConverter"
+                                   TrueObject="YES"
+                                   FalseObject="NO" />
+    <tc_conv:IsEqualConverter x:Key="equalsConverter"/>
+
+
+    <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
+
+    <converters:ErrorLevelToColorConverter x:Key="errorLevelToColorConverter"
+                                           Default="White"
+                                           Error="Red"
+                                           Warning="Gold" />
+
+    <converters:CountMeasureToColorConverter x:Key="countMeasureToColorConverter"
+                                             Default="White"
+                                             Measure="{StaticResource measureTreeColor}"
+                                             Insurance="{StaticResource insuranceTreeColor}" />
+
+    <converters:Is3PConverter x:Key="is3pConverter" />
+    <converters:IsSTRConverter x:Key="isStrConverter" />
+    <converters:CruiseMethodToBoolConverter MethodMap="FrequencySampleMethods"
+                                            x:Key="isFrequencySampleConverter" />
+    <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods"
+                                            x:Key="isVariableRadiousPlotConverter" />
+    <converters:CruiseMethodToBoolConverter MethodMap="FixedSizePlotMethods"
+                                            x:Key="isFixedSizePlotConverter" />
+    <converters:CruiseMethodToBoolConverter MethodMap="ThreePPNT"
+                                            x:Key="isThreePPNTConverter" />
+    <converters:CruiseMethodToBoolConverter MethodMap="TwoStagePlotMethods"
+                                            x:Key="isTwoStagePlotMethod" />
+
+
+    <converters:PrependConverter x:Key="PrependAnyConverter"
+                                 Value="Any" />
+    <converters:ReplaceNullConverter x:Key="ReplaceAnyWithNullConverter"
+                                     Value="Any" />
+
+    <converters:NotConverter x:Key="notConverter" />
+</ResourceDictionary>

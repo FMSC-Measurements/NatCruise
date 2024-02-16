@@ -7,6 +7,10 @@ namespace NatCruise.Data
 {
     public class TreeFieldDataservice : CruiseDataserviceBase, ITreeFieldDataservice
     {
+        public TreeFieldDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         public TreeFieldDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
@@ -16,6 +20,7 @@ namespace NatCruise.Data
         }
 
         
+
         public IEnumerable<string> GetTreeFieldsNames()
         {
             throw new System.NotImplementedException();

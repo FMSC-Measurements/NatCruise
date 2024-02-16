@@ -8,9 +8,9 @@ namespace NatCruise.Data
 {
     public class PlotDataservice : CruiseDataserviceBase, IPlotDataservice
     {
-        const string SELECT_PLOT_CORE =
+        private const string SELECT_PLOT_CORE =
 @"SELECT
-    p.PlotID, 
+    p.PlotID,
     p.CuttingUnitCode,
     p.PlotNumber,
     p.Slope,
@@ -38,7 +38,7 @@ namespace NatCruise.Data
             AND t.PlotNumber = p.PlotNumber
             AND t.CruiseID = p.CruiseID
             AND t.CuttingUnitCode = p.CuttingUnitCode
-    ) AS TreeWarningCount, 
+    ) AS TreeWarningCount,
     (
         Select group_concat(StratumCode) FROM Plot_Stratum AS ps
             WHERE ps.PlotNumber = p.PlotNumber
@@ -57,14 +57,16 @@ FROM Plot AS p
         {
         }
 
+        public PlotDataservice(IDataContextService dataContext) : base(dataContext)
+        {
+        }
+
         #region plot
 
         public string AddNewPlot(string cuttingUnitCode)
         {
-            
             var plotNumber = GetNextPlotNumber(cuttingUnitCode);
             return AddNewPlot(cuttingUnitCode, plotNumber);
-
         }
 
         public string AddNewPlot(string cuttingUnitCode, int plotNumber)
@@ -204,6 +206,5 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
             return Database.ExecuteScalar<int>("SELECT count(*) FROM Plot AS p " +
                 "WHERE p.CuttingUnitCode = @p1 AND p.CruiseID = @p2 AND p.PlotNumber = @p3;", unitCode, CruiseID, plotNumber) == 0;
         }
-
     }
 }

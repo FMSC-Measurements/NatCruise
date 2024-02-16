@@ -10,15 +10,17 @@ namespace NatCruise.Wpf.Services
     {
         private bool _isSuperuserModeEnabled;
 
-        public WpfApplicationSettingService()
+        public WpfApplicationSettingService(ILoggingService loggingService)
         {
             var userDocumentsDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             DefaultOpenCruiseDir = Path.Combine(userDocumentsDir, "CruiseFiles");
             DefaultOpenTemplateDir = Path.Combine(DefaultOpenCruiseDir, "Templates");
             AppSettings = Settings.Default;
+            LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
         }
 
         protected Settings AppSettings { get; }
+        public ILoggingService LoggingService { get; }
         public string DefaultOpenCruiseDir { get; }
         public string DefaultOpenTemplateDir { get; }
 
@@ -71,11 +73,15 @@ namespace NatCruise.Wpf.Services
         public bool IsSuperuserMode
         {
             get => _isSuperuserModeEnabled;
-            set => SetProperty(ref _isSuperuserModeEnabled, value);
+            set
+            {
+                SetProperty(ref _isSuperuserModeEnabled, value);
+                if(value)
+                {
+                    LoggingService.LogEvent("Superuser Mode Enabled");
+                }
+            }
         }
 
-        public void Save()
-        {
-        }
     }
 }

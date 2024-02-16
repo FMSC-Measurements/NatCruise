@@ -73,6 +73,8 @@
                                         Binding="{Binding Aspect}" />
                     <DataGridTextColumn Header="Remarks"
                                         Binding="{Binding Remarks}" />
+                    <DataGridTextColumn Header="Errors"
+                                        Binding="{Binding ErrorCount}" />
                 </DataGrid.Columns>
             </DataGrid>
 

@@ -243,5 +243,10 @@ namespace FScruiser.XF
         {
             throw new NotImplementedException();
         }
+
+        public Task ShowLimitingDistance()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

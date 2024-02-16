@@ -1,12 +1,9 @@
 ﻿using FScruiser.XF.Data;
 using FScruiser.XF.Services;
 using NatCruise.Async;
-using NatCruise.Data;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
-using Prism.Ioc;
-using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
@@ -14,13 +11,12 @@ using Xamarin.Forms;
 
 namespace FScruiser.XF.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase, INavigatedAware
+    public class SettingsViewModel : ViewModelBase
     {
         public IApplicationSettingService AppSettings { get; }
         public ITallySettingsDataService TallySettings { get; }
         public INatCruiseDialogService DialogService { get; }
         public IFileSystemService FileSystemService { get; }
-        public IDataserviceProvider DataserviceProvider { get; }
 
         public ICommand ShowDatabaseUtilitiesCommand => new Command(() => NavigationService.ShowDatabaseUtilities().FireAndForget());
 
@@ -32,15 +28,13 @@ namespace FScruiser.XF.ViewModels
                                  IFileSystemService fileSystemService,
                                  IFileDialogService fileDialogService,
                                  ICruiseNavigationService navigationService,
-                                 IContainerProvider containerProvicer,
                                  ITallySettingsDataService tallySettingsDataService,
                                  ILoggingService loggingService)
         {
             AppSettings = new XamarinApplicationSettingService();
-            TallySettings = tallySettingsDataService ?? throw new ArgumentNullException();
+            TallySettings = tallySettingsDataService ?? throw new ArgumentNullException(nameof(tallySettingsDataService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
-            //DataserviceProvider = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
             FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
@@ -63,16 +57,6 @@ namespace FScruiser.XF.ViewModels
                 LoggingService.LogEvent(nameof(SettingsViewModel) + ":" + nameof(AppSettings.UseNewLimitingDistanceCalculator) + " changed",
                     new Dictionary<string, string> { { "value", value } });
             }
-        }
-
-        public void OnNavigatedFrom(INavigationParameters parameters)
-        {
-            AppSettings.Save();
-        }
-
-        void INavigatedAware.OnNavigatedTo(INavigationParameters parameters)
-        {
-            // do nothing
         }
     }
 }

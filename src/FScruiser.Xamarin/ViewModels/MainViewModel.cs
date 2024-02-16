@@ -1,4 +1,5 @@
 ﻿using FScruiser.XF.Services;
+using Microsoft.Extensions.DependencyInjection;
 using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -35,7 +36,7 @@ namespace FScruiser.XF.ViewModels
 
         public ICommand ShowSelectSale => new Command(() => NavigationService.ShowSaleSelect().FireAndForget());
 
-        public ICommand ShowSaleCommand => new Command(() => NavigationService.ShowSale(DatastoreProvider?.CruiseID).FireAndForget());
+        public ICommand ShowSaleCommand => new Command(() => NavigationService.ShowSale(DataContext?.CruiseID).FireAndForget());
 
         //public ICommand ShowUnitsCommand => new Command(() => NavigationService.ShowCuttingUnitList().FireAndForget());
 
@@ -127,7 +128,7 @@ namespace FScruiser.XF.ViewModels
         {
             get
             {
-                var cruiseID = DatastoreProvider?.CruiseID;
+                var cruiseID = DataContext?.CruiseID;
                 if (cruiseID != null)
                 {
                     var cruise = SaleDataservice.GetCruise(cruiseID);
@@ -140,7 +141,7 @@ namespace FScruiser.XF.ViewModels
             }
         }
 
-        public bool IsCruiseSelected => DatastoreProvider?.CruiseID != null;
+        public bool IsCruiseSelected => DataContext?.CruiseID != null;
 
         public bool IsCuttingUnitSelected
         {
@@ -164,7 +165,7 @@ namespace FScruiser.XF.ViewModels
         }
 
         public ICruiseNavigationService NavigationService { get; }
-        public IDataserviceProvider DatastoreProvider { get; }
+        public IDataContextService DataContext { get; }
         public IAppInfoService AppInfo { get; }
         public INatCruiseDialogService DialogService { get; }
         public IDeviceInfoService DeviceInfo { get; }
@@ -174,20 +175,21 @@ namespace FScruiser.XF.ViewModels
         public MainViewModel(
                 ICruiseNavigationService navigationService,
                 INatCruiseDialogService dialogService,
-                IDataserviceProvider datastoreProvider,
+                IDataContextService dataContext,
+                IServiceProvider serviceProvider,
                 IDeviceInfoService deviceInfoService,
                 IAppInfoService appInfo)
         {
             AppInfo = appInfo ?? throw new ArgumentNullException(nameof(appInfo));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             DialogService = dialogService;
-            DatastoreProvider = datastoreProvider;
+            DataContext = dataContext;
             DeviceInfo = deviceInfoService ?? throw new ArgumentNullException(nameof(deviceInfoService));
 
-            if (datastoreProvider.CruiseID != null)
+            if (dataContext.CruiseID != null)
             {
-                var cuttingUnitDataservice = CuttingUnitDataservice = datastoreProvider.GetDataservice<ICuttingUnitDataservice>();
-                SaleDataservice = datastoreProvider.GetDataservice<ISaleDataservice>();
+                var cuttingUnitDataservice = CuttingUnitDataservice = serviceProvider.GetRequiredService<ICuttingUnitDataservice>();
+                SaleDataservice = serviceProvider.GetRequiredService<ISaleDataservice>();
                 if (cuttingUnitDataservice != null)
                 {
                     CuttingUnits = cuttingUnitDataservice.GetCuttingUnits();
@@ -201,7 +203,7 @@ namespace FScruiser.XF.ViewModels
         {
             var navOptions = new List<NavOption>();
             //var moreNavOptions = new List<NavOption>();
-            var isCruiseSelected = DatastoreProvider.CruiseID != null;
+            var isCruiseSelected = DataContext.CruiseID != null;
             if (isCruiseSelected)
             {
                 if (IsCuttingUnitSelected)
