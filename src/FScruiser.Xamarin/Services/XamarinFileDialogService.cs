@@ -6,7 +6,7 @@ using Xamarin.Essentials;
 
 namespace FScruiser.XF.Services
 {
-    public class XamarinFileDialogService : IFileDialogService
+    public abstract class XamarinFileDialogService : IFileDialogService
     {
         public async Task<string> SelectCruiseFileAsync()
         {
