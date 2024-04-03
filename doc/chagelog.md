@@ -1,3 +1,35 @@
+# Version 3.1.12 - March 31 2024
+
+## NatCruise
+### Fixes
+ - Fix filters resetting when changing tabs in Field Data page
+ - Fix deleting Sample Group in superuser mode
+ - Fix endless loop situation when combing file fails 
+
+### Enhancements
+ - Add number of errors column to plot in Field Data page
+ - V2 Templates included on installation
+
+## FScruiser
+### Fixes
+ - Fix issue when editing Min/Max values on Tree Audit Rules
+
+# Version 3.1.11 - Dec 18 2024
+
+## NatCruise 
+### Fixes
+ - Fix when removing unit from stratum, stratum continues to show on exiting plots causing unresolvable errors if no trees exist in plot and not marked as null.
+ - Fix deleting species doesn't remove deleted species from list
+ - Fix updating fields on stratum templates 
+ - Fix deleting stratum templates
+
+### Enhancements
+ - Add a multiple selection, select all feature to tree and plot field data pages to allow deleting multiple records at a time. 
+
+### Changes
+ - Changed behavior for locking design elements. Now design elements are only locked when tree records exist belonging to it.
+
+
 # Version 3.1.10 - Oct 3
 # FScruiser
 ## Changes
