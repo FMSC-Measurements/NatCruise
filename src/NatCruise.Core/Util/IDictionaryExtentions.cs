@@ -57,7 +57,7 @@ namespace NatCruise.Util
 
             if(inValue is Tvalue) { return (Tvalue)inValue; }
             
-            var targetType = inValue.GetType();
+            var targetType = typeof(Tvalue);
             if(targetType.IsEnum)
             {
                 var inValueAsString = (inValue is string str) ? str : inValue.ToString();
