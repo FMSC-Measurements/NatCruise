@@ -31,12 +31,18 @@
                     <DataTrigger TargetType="VisualElement"
                                  Binding="{TemplateBinding Orientation}"
                                  Value="Horizontal">
+                        <!-- Config PART_Content -->
                         <Setter TargetName="PART_Content"
                                 Property="Grid.Column"
                                 Value="1" />
                         <Setter TargetName="PART_Content"
                                 Property="Grid.Row"
                                 Value="0" />
+                        <Setter TargetName="PART_Content"
+                                Property="Grid.ColumnSpan"
+                                Value="1" />
+
+                        <!-- Config PART_Header -->
                         <!--<Setter TargetName="PART_Header"
                                                 Property="Grid.ColumnSpan"
                                                 Value="1" />
