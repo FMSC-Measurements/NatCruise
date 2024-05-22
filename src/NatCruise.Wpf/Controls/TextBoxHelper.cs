@@ -90,6 +90,9 @@ namespace NatCruise.Wpf.Controls
                 text = text.Insert(position, input);
             }
 
+            var maxLength = textbox.MaxLength;
+            if(maxLength > 0 && text.Length > maxLength) { return; }
+
             // test new text value against our Regex mask
             var match = Regex.Match(text, mask, RegexOptions.None, TimeSpan.FromMilliseconds(100));
             // if there is a match and all the text is part of the match
