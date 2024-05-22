@@ -133,7 +133,7 @@ namespace NatCruise.MVVM.ViewModels
             if (oldSubPopulations == null) { return; }
 
             foreach (var sp in oldSubPopulations)
-            { sp.PropertyChanged += Sp_PropertyChanged; }
+            { sp.PropertyChanged += OnSubpopulationPropertyChanged; }
         }
 
         private void OnSubpopulationsChanging(ObservableCollection<Subpopulation> subPopulations)
@@ -141,14 +141,14 @@ namespace NatCruise.MVVM.ViewModels
             if (subPopulations == null) { return; }
 
             foreach (var sp in subPopulations)
-            { sp.PropertyChanged -= Sp_PropertyChanged; }
+            { sp.PropertyChanged -= OnSubpopulationPropertyChanged; }
         }
 
-        private void Sp_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void OnSubpopulationPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             var subpopulation = (Subpopulation)sender;
 
-            if (subpopulation.HasTrees)
+            if (subpopulation.HasTrees && !IsSuperuserModeEnabled)
             {
                 throw new InvalidOperationException("Can Not Edit Subpopulation That Has Tree Data");
             }
@@ -258,7 +258,7 @@ namespace NatCruise.MVVM.ViewModels
             SubpopulationDataservice.AddSubpopulation(newSubpopulation);
             Subpopulations.Add(newSubpopulation);
             SubpopulationAdded?.Invoke(this, EventArgs.Empty);
-            newSubpopulation.PropertyChanged += Sp_PropertyChanged;
+            newSubpopulation.PropertyChanged += OnSubpopulationPropertyChanged;
 
             RefreshSpeciesOptions();
         }
@@ -279,7 +279,7 @@ namespace NatCruise.MVVM.ViewModels
             }
 
             Subpopulations.Remove(subpopulation);
-            subpopulation.PropertyChanged -= Sp_PropertyChanged;
+            subpopulation.PropertyChanged -= OnSubpopulationPropertyChanged;
             SubpopulationDataservice.DeleteSubpopulation(subpopulation);
         }
 
