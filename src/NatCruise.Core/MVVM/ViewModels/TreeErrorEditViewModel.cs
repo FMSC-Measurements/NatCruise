@@ -16,6 +16,7 @@ namespace NatCruise.MVVM.ViewModels
         private TreeError _treeError;
         private string _treeAuditRuleID;
         private ICommand _saveCommand;
+        private bool _isResolved; 
 
         public TreeErrorEditViewModel(ITreeDataservice treeDataservice,
             ITreeErrorDataservice treeErrorDataservice,
@@ -39,13 +40,15 @@ namespace NatCruise.MVVM.ViewModels
         public INatCruiseNavigationService NavigationService { get; }
         public int TreeNumber { get => _treeNumber; set => SetProperty(ref _treeNumber, value); }
 
-        protected TreeError TreeError
+        public TreeError TreeError
         {
             get => _treeError;
-            set
+            protected set
             {
                 SetProperty(ref _treeError, value);
-                OnPropertyChanged(nameof(IsResolved));
+
+                IsResolved = _treeError?.IsResolved ?? false;
+
                 OnPropertyChanged(nameof(Message));
                 OnPropertyChanged(nameof(Level));
                 OnPropertyChanged(nameof(Resolution));
@@ -62,16 +65,8 @@ namespace NatCruise.MVVM.ViewModels
         /// </summary>
         public bool IsResolved
         {
-            get => TreeError?.IsResolved ?? default(bool);
-            set
-            {
-                var treeError = TreeError;
-                if (treeError != null)
-                {
-                    treeError.IsResolved = value;
-                    OnPropertyChanged(nameof(IsResolved));
-                }
-            }
+            get => _isResolved;
+            set => SetProperty(ref _isResolved, value);
         }
 
         public string Resolution
@@ -132,9 +127,7 @@ namespace NatCruise.MVVM.ViewModels
 
         public void Save()
         {
-            var isResolved = IsResolved;
-
-            if (isResolved == false)
+            if (IsResolved)
             {
                 SuppressError();
             }
@@ -142,7 +135,7 @@ namespace NatCruise.MVVM.ViewModels
             {
                 UnSupressError();
             }
-            Saved?.Invoke(this, EventArgs.Empty);
+            
         }
 
         public void SuppressError()
@@ -160,7 +153,6 @@ namespace NatCruise.MVVM.ViewModels
                 return;
             }
             TreeErrorDataservice.SetTreeAuditResolution(treeID, treeAuditRuleID, remarks, sig);
-
             Saved?.Invoke(this, EventArgs.Empty);
         }
 
@@ -172,7 +164,6 @@ namespace NatCruise.MVVM.ViewModels
             var treeAuditRuleID = treeError.TreeAuditRuleID;
 
             TreeErrorDataservice.ClearTreeAuditResolution(treeID, treeAuditRuleID);
-
             Saved?.Invoke(this, EventArgs.Empty);
         }
     }
