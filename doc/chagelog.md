@@ -1,3 +1,18 @@
+# Version 3.1.13
+
+## NatCruise
+### Fixes
+ - Fix Sale Number allowing values longer than 5 characters
+
+## FScruiser
+### Fixes
+ - Fix suppressing warning on trees
+ - Fix initials field not showing values to pick from when editing initials in tally page
+ - Fix issue where audit rules on production cruise created in Cruise Design can fail to import sometimes
+ - Fix issue where user unable to export cruise sometimes
+ - Fix several UI issues on setting page
+
+
 # Version 3.1.12 - March 31 2024
 
 ## NatCruise
