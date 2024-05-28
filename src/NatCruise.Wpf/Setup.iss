@@ -1,6 +1,6 @@
 #define MsBuildOutputDir ".\bin\Release\net472"
 #define SolutionDir ".."
-#define VERSION "3.1.12"
+#define VERSION "3.1.13"
 
 #define APP "National Cruise System"
 #define EXEName "NatCruise.Wpf.exe"

@@ -36,6 +36,9 @@
                                         <Setter TargetName="PART_Content"
                                                 Property="Grid.Row"
                                                 Value="0" />
+                                        <Setter TargetName="PART_Content"
+                                                Property="Grid.ColumnSpan"
+                                                Value="1" />
                                         <!--<Setter TargetName="PART_Header"
                                                 Property="Grid.ColumnSpan"
                                                 Value="1" />
@@ -73,6 +76,7 @@
                                 <Grid x:Name="PART_Content"
                                       Grid.Row="1"
                                       Grid.Column="0"
+                                      Grid.ColumnSpan="2"
                                       Background="{TemplateBinding  Background}">
                                     <ContentPresenter Margin="{TemplateBinding Padding}"
                                                       AutomationProperties.LabeledBy="{Reference PART_Header}" />

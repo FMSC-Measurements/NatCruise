@@ -594,8 +594,10 @@
 
                         <CollectionView Grid.Row="1"
                                         ItemsSource="{Binding TreeFieldValues}"
+                                        x:Name="PART_TreeFieldsPanel"
                                         SelectionMode="None"
-                                        HeightRequest="75">
+                                        HeightRequest="75"
+                                        local_ctrls:TreeFieldValueDataTemplateSelector.UseAltInitialsTemplate="{Binding Cruisers, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
@@ -739,7 +741,7 @@
                                             <local_ctrls:LastChildHeightLayout>
                                                 <Label Text="{Binding Heading}" />
                                                 <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                                         ItemsSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
+                                                                         ItemsSource="{Binding BindingContext.Cruisers, Source={Reference PART_TreeFieldsPanel}}" />
                                             </local_ctrls:LastChildHeightLayout>
                                         </DataTemplate>
                                     </local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
@@ -763,8 +765,8 @@
                                         <DataTemplate>
                                             <local_ctrls:LastChildHeightLayout>
                                                 <Label Text="L/D" />
-                                                <local_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference _treeFieldsLayout}}"
-                                                                         ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference _treeFieldsLayout}}" />
+                                                <local_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference PART_TreeFieldsPanel}}"
+                                                                         ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference PART_TreeFieldsPanel}}" />
 
                                             </local_ctrls:LastChildHeightLayout>
                                         </DataTemplate>
@@ -775,7 +777,7 @@
                                             <local_ctrls:LastChildHeightLayout>
                                                 <Label Text="Grade" />
                                                 <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                                         ItemsSource="{Binding BindingContext.GradeOptions, Source={Reference _treeEditPanel}}" />
+                                                                         ItemsSource="{Binding BindingContext.GradeOptions, Source={Reference PART_TreeFieldsPanel}}" />
 
                                             </local_ctrls:LastChildHeightLayout>
                                         </DataTemplate>

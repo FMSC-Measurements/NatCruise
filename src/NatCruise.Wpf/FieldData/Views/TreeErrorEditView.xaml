@@ -34,7 +34,7 @@
                     Margin="3,2"
                     Padding="5,0">
                 <Button.Content>
-                    <Binding Path="IsResolved" FallbackValue="Suppress Error">
+                    <Binding Path="TreeError.IsResolved" FallbackValue="Suppress Error">
                         <Binding.Converter>
                             <converters:BoolToObjectConverter TrueObject="Unsupress Error"
                                                               FalseObject="Suppress Error" />
@@ -78,7 +78,7 @@
             <mah:MetroHeader Header="Remarks">
                 <TextBox Text="{Binding Resolution}"
                          AcceptsReturn="True"
-                         IsEnabled="{Binding IsResolved, Converter={StaticResource NotConverter}}"
+                         IsEnabled="{Binding TreeError.IsResolved, Converter={StaticResource NotConverter}}"
                          Height="100"
                          VerticalScrollBarVisibility="Auto"
                          TextWrapping="Wrap" />
@@ -86,7 +86,7 @@
 
             <mah:MetroHeader Header="Initials*">
                 <TextBox Text="{Binding Initials}"
-                         IsEnabled="{Binding IsResolved, Converter={StaticResource NotConverter}}"
+                         IsEnabled="{Binding TreeError.IsResolved, Converter={StaticResource NotConverter}}"
                          d:Text="BC" />
             </mah:MetroHeader>
         </StackPanel>

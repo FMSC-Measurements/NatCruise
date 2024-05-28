@@ -204,6 +204,7 @@ namespace NatCruise.Wpf.Services
             view.OnCancelButtonClicked = hideDialogAction;
 
             viewModel.Load(treeID, treeAuditRuleID);
+            viewModel.IsResolved = !viewModel.IsResolved; 
             return MainWindow.ShowMetroDialogAsync(dialog);
 
             //await MainWindow.ShowMetroDialogAsync(dialog);

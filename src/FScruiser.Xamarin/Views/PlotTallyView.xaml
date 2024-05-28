@@ -99,6 +99,7 @@
                         </AbsoluteLayout>
 
                         <CollectionView Grid.Row="1"
+                                        x:Name="PART_TreeFieldPanel"
                                         BindingContext="{Binding SelectedTreeViewModel}"
                                         ItemsSource="{Binding TreeFieldValues}"
                                         SelectionMode="None"
@@ -261,7 +262,7 @@
                                             <local_ctrls:LastChildHeightLayout>
                                                 <Label Text="{Binding Heading}" />
                                                 <local_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                                         ItemsSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
+                                                                         ItemsSource="{Binding BindingContext.Cruisers, Source={Reference PART_TreeFieldPanel}}" />
                                             </local_ctrls:LastChildHeightLayout>
                                         </DataTemplate>
                                     </local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
@@ -285,8 +286,8 @@
                                         <DataTemplate>
                                             <local_ctrls:LastChildHeightLayout>
                                                 <Label Text="L/D" />
-                                                <local_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference _treeFieldsLayout}}"
-                                                                         ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference _treeFieldsLayout}}" />
+                                                <local_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference PART_TreeFieldPanel}}"
+                                                                         ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference PART_TreeFieldPanel}}" />
 
                                             </local_ctrls:LastChildHeightLayout>
                                         </DataTemplate>

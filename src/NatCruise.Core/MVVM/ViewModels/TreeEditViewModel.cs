@@ -546,7 +546,7 @@ namespace NatCruise.MVVM.ViewModels
                 //NavigationService.NavigateAsync("TreeErrorEdit",
                 //    new Prism.Navigation.NavigationParameters($"{NavParams.TreeID}={treeError.TreeID}&{NavParams.TreeAuditRuleID}={treeError.TreeAuditRuleID}"));
 
-                NavigationService.ShowTreeErrorEdit(treeError.TreeID, treeError.TreeAuditRuleID);
+                NavigationService.ShowTreeErrorEdit(treeError.TreeID, treeError.TreeAuditRuleID).FireAndForget();
             }
         }
 
