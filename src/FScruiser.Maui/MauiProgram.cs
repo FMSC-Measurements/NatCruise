@@ -36,6 +36,7 @@ public static class MauiProgram
 
 #if DEBUG
         builder.Logging.AddDebug();
+        builder.Logging.SetMinimumLevel(LogLevel.Trace);
 #else
         builder.Logging.AddAppCenterLogger();
 #endif
