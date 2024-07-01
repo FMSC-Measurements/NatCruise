@@ -61,14 +61,14 @@ namespace NatCruise.Data
             //DELETE FROM StratumTemplateLogFieldSetup_Tombstone WHERE CruiseID = @CruiseID;", new { CruiseID = cruiseID });
         }
 
-        public IEnumerable<Models.Cruise> GetCruises()
+        public IReadOnlyCollection<Models.Cruise> GetCruises()
         {
             return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
                 .Query().ToArray();
         }
 
-        public IEnumerable<Models.Cruise> GetCruises(string saleID)
+        public IReadOnlyCollection<Models.Cruise> GetCruises(string saleID)
         {
             return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
@@ -76,7 +76,7 @@ namespace NatCruise.Data
                 .Query(saleID).ToArray();
         }
 
-        public IEnumerable<Models.Cruise> GetCruisesBySaleNumber(string saleNumber)
+        public IReadOnlyCollection<Models.Cruise> GetCruisesBySaleNumber(string saleNumber)
         {
             return Database.From<Models.Cruise>()
                 .LeftJoin("LK_Purpose", "USING (Purpose)")
@@ -130,7 +130,7 @@ namespace NatCruise.Data
                 .FirstOrDefault();
         }
 
-        public IEnumerable<Sale> GetSales()
+        public IReadOnlyCollection<Sale> GetSales()
         {
             return Database.From<Sale>()
                 .Query().ToArray();

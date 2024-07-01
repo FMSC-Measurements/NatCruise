@@ -5,7 +5,7 @@ namespace NatCruise.Data
 {
     public interface ISaleDataservice : IDataservice
     {
-        IEnumerable<Sale> GetSales();
+        IReadOnlyCollection<Sale> GetSales();
 
         Sale GetSale();
 
@@ -21,11 +21,11 @@ namespace NatCruise.Data
 
         void DeleteCruise(string cruiseID);
 
-        IEnumerable<Models.Cruise> GetCruises();
+        IReadOnlyCollection<Models.Cruise> GetCruises();
 
-        IEnumerable<Models.Cruise> GetCruisesBySaleNumber(string saleNumber);
+        IReadOnlyCollection<Models.Cruise> GetCruisesBySaleNumber(string saleNumber);
 
-        IEnumerable<Models.Cruise> GetCruises(string saleID);
+        IReadOnlyCollection<Models.Cruise> GetCruises(string saleID);
 
         Models.Cruise GetCruise();
 
