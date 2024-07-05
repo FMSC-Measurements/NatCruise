@@ -88,14 +88,7 @@ namespace FScruiser.Maui.ViewModels
             RefreshNavItems();
         }
 
-        public Task ShowTrees()
-        {
-            if (SelectedCuttingUnit != null)
-            {
-                return NavigationService.ShowTreeList(SelectedCuttingUnit.CuttingUnitCode);
-            }
-            return Task.CompletedTask;
-        }
+
 
         private void DataContext_CruiseChanged(object? sender, EventArgs e)
         {
@@ -119,14 +112,32 @@ namespace FScruiser.Maui.ViewModels
             var selectedCuttingUnit = SelectedCuttingUnit;
             if (selectedCuttingUnit != null)
             {
-                NavItems = new[]
-                {
-                    new NavItemModel { Title = "Trees", NavAction= n => ShowTrees() },
+                var navList = new List<NavItemModel>();
+                var selectedUnitInfo = Services.GetRequiredService<ICuttingUnitDataservice>().GetCuttingUnitStrataSummary(selectedCuttingUnit.CuttingUnitCode);
 
-                    new NavItemModel { Title = "Utilities", NavAction = (n) => n.ShowUtilities() },
-                    new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() },
-                    new NavItemModel { Title = "About", NavAction= (n) => n.ShowAbout()},
-                };
+                if (selectedUnitInfo.HasTreeStrata)
+                {
+                    navList.Add(new NavItemModel { Title = "Trees", NavAction = n => ShowTrees() });
+                    navList.Add(new NavItemModel { Title = "Tally", NavAction = n => ShowTally() });
+
+                    NavItems = new[]
+                    {
+                        
+
+                        new NavItemModel { Title = "Utilities", NavAction = (n) => n.ShowUtilities() },
+                        new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() },
+                        new NavItemModel { Title = "About", NavAction= (n) => n.ShowAbout()},
+                    };
+                }
+                if (selectedUnitInfo.HasPlotStrata)
+                {
+                    navList.Add(new NavItemModel { Title = "Plot Trees", NavAction = n => ShowPlotTrees() });
+                    navList.Add(new NavItemModel { Title = "Plots", NavAction = n => ShowPlots() });
+                }
+
+                navList.Add(new NavItemModel { Title = "Cutting Unit", NavAction = n => ShowCuttingUnit() });
+
+                NavItems = navList.ToArray();
             }
             else
             {
@@ -138,6 +149,76 @@ namespace FScruiser.Maui.ViewModels
                 };
             }
 
+        }
+
+        public Task ShowTrees()
+        {
+            if (SelectedCuttingUnit != null)
+            {
+                return NavigationService.ShowTreeList(SelectedCuttingUnit.CuttingUnitCode);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task ShowTally()
+        {
+            if (SelectedCuttingUnit != null)
+            {
+                return NavigationService.ShowTally(SelectedCuttingUnit.CuttingUnitCode);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task ShowPlotTrees()
+        {
+            if (SelectedCuttingUnit != null)
+            {
+                return NavigationService.ShowPlotTreeList(SelectedCuttingUnit.CuttingUnitCode);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task ShowPlots()
+        {
+            if (SelectedCuttingUnit != null)
+            {
+                return NavigationService.ShowPlotList(SelectedCuttingUnit.CuttingUnitCode);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task ShowCuttingUnit()
+        {
+            if (SelectedCuttingUnit != null)
+            {
+                return NavigationService.ShowCuttingUnitInfo(SelectedCuttingUnit.CuttingUnitCode);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task ShowSale()
+        {
+            return NavigationService.ShowSale(SelectedCruise.CruiseID);
+        }
+
+        public Task ShowStrata()
+        {
+            return NavigationService.ShowStrata();
+        }
+
+        public Task ShowAuditRules()
+        {
+            return NavigationService.ShowTreeAuditRules();
+        }
+
+        public Task ShowCruisers()
+        {
+            return NavigationService.ShowManageCruisers();
+        }
+
+        public Task ShowUtilities()
+        {
+            return NavigationService.ShowUtilities();
         }
     }
 }

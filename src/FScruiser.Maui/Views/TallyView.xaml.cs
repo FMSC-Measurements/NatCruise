@@ -13,7 +13,7 @@ public partial class TallyView : BasePage
         InitializeComponent();
     }
 
-    public TallyView(TallyViewModel viewModel)
+    public TallyView(TallyViewModel viewModel) : this()
     {
         BindingContext = viewModel;
     }
