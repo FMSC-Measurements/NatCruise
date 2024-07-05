@@ -1,15 +1,21 @@
 ﻿using FScruiser.Maui.Controls;
 using FScruiser.Maui.Util;
+using FScruiser.Maui.ViewModels;
 using NatCruise.MVVM.ViewModels;
 
 namespace FScruiser.Maui.Views;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class TallyView : InitializableContentPage
+public partial class TallyView : BasePage
 {
     public TallyView()
     {
         InitializeComponent();
+    }
+
+    public TallyView(TallyViewModel viewModel)
+    {
+        BindingContext = viewModel;
     }
 
     protected override void OnAppearing()

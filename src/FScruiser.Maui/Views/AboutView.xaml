@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
-             xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
-             xmlns:coreVM="clr-namespace:NatCruise.MVVM.ViewModels;assembly=NatCruise.Core"
-             x:Class="FScruiser.Maui.Views.AboutView"
-             Title="About"
-             BindingContext="{mvvm:ViewModelLocater {x:Type coreVM:AboutViewModel} }">
+<controls:BasePage xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+                   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                   xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                   xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+                   xmlns:coreVM="clr-namespace:NatCruise.MVVM.ViewModels;assembly=NatCruise.Core"
+                   x:Class="FScruiser.Maui.Views.AboutView"
+                   Title="About">
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal"
@@ -25,9 +25,9 @@
                        HorizontalOptions="CenterAndExpand"
                        TextColor="White"
                        FontSize="Title"
-                       VerticalOptions="Center"/>
+                       VerticalOptions="Center" />
                 <Image Source="fs_white.png"
-                       HorizontalOptions="End"/>
+                       HorizontalOptions="End" />
             </StackLayout>
             <ctrls:HeaderControl Header="Version"
                                  Orientation="Horizontal">
@@ -50,4 +50,4 @@
                     AutomationProperties.Name="User Agreement" />
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</controls:BasePage>

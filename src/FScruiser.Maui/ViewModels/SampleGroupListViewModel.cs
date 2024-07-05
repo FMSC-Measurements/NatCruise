@@ -50,11 +50,11 @@ public class SampleGroupListViewModel : ViewModelBase
 
     public ICommand ShowSubpopulationsCommand => new DelegateCommand<SampleGroup>(sg => NavigationService.ShowSubpopulations(sg.StratumCode, sg.SampleGroupCode).FireAndForget());
 
-    public override void Load()
+    protected override void OnInitialize(IDictionary<string, object> parameters)
     {
         base.Load();
 
-        var stratumCode = Parameters.GetValue<string>(NavParams.STRATUM);
+        var stratumCode = parameters.GetValue<string>(NavParams.STRATUM);
         Stratum = StratumDataservice.GetStratum(stratumCode);
     }
 }

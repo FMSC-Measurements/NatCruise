@@ -111,7 +111,7 @@ public class PlotTreeListViewModel : ViewModelBase
         TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
     }
 
-    protected override void Load(IDictionary<string, object> parameters)
+    protected override void OnInitialize(IDictionary<string, object> parameters)
     {
         base.Load(parameters);
 

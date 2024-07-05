@@ -51,10 +51,8 @@ public class StratumListViewModel : ViewModelBase
         }
     }
 
-    public override void Load()
+    protected override void OnInitialize(IDictionary<string, object> parameters)
     {
-        base.Load();
-
         var unitFilter = CuttingUnitFilter;
         if (unitFilter == ALL_UNITS_OPTION) unitFilter = null;
         Strata = StratumDataservice.GetStrata(unitFilter);

@@ -263,7 +263,7 @@ public class PlotEditViewModel : ViewModelBase
         RefreshErrorsAndWarnings(plot);
     }
 
-    protected override void Load(IDictionary<string, object> parameters)
+    protected override void OnInitialize(IDictionary<string, object> parameters)
     {
         if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

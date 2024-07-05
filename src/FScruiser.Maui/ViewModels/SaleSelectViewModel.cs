@@ -36,7 +36,7 @@ public class SaleSelectViewModel : ViewModelBase
         NavigationService.ShowCruiseSelect(saleNumber);
     }
 
-    public override void Load()
+    protected override void OnInitialize(IDictionary<string, object> parameters)
     {
         var sales = SaleDataservice.GetSales();
         Sales = sales;

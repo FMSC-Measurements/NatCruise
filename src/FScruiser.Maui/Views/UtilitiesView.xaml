@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Name="_page"
-             x:Class="FScruiser.Maui.Views.UtilitiesView">
+<controls:BasePage xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+                   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                   x:Name="_page"
+                   x:Class="FScruiser.Maui.Views.UtilitiesView">
     <ContentPage.Content>
         <VerticalStackLayout>
             <Button Text="Limiting Distance"
-                    Command="{Binding ShowLimitingDistanceCommand, Source={Reference _page}}"/>
+                    Command="{Binding ShowLimitingDistanceCommand, Source={Reference _page}}" />
         </VerticalStackLayout>
     </ContentPage.Content>
-</ContentPage>
+</controls:BasePage>

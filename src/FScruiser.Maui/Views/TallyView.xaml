@@ -1,28 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<local_ctrls:InitializableContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                                      xmlns:compat="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls"
-                                      xmlns:converters="clr-namespace:FScruiser.Maui.Converters"
-                                      xmlns:local_behaviors="clr-namespace:FScruiser.Maui.Behaviors"
-                                      xmlns:effects="clr-namespace:FScruiser.Maui.Effects"
-                                      xmlns:local_ctrls="clr-namespace:FScruiser.Maui.Controls"
-                                      xmlns:core_vms="clr-namespace:NatCruise.MVVM.ViewModels;assembly=NatCruise.Core"
-                                      xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
-                                      xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-                                      xmlns:effects1="http://xamarin.com/schemas/2020/toolkit"
-                                      xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
-                                      xmlns:data="clr-namespace:FScruiser.Maui.Data"
-                                      xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
-                                      xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
-                                      
-                                      x:Class="FScruiser.Maui.Views.TallyView"
-                                      x:Name="_page"
-                                      BackgroundColor="White"
-                                      Title="{Binding Title}"
-                                      BindingContext="{mvvm:ViewModelLocater Type={Type vms:TallyViewModel}}"
-                                      AutomationProperties.IsInAccessibleTree="True"
-                                      AutomationProperties.Name="Tally Page">
-    <local_ctrls:InitializableContentPage.Resources>
+<controls:BasePage xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+                   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                   xmlns:compat="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls"
+                   xmlns:converters="clr-namespace:FScruiser.Maui.Converters"
+                   xmlns:local_behaviors="clr-namespace:FScruiser.Maui.Behaviors"
+                   xmlns:effects="clr-namespace:FScruiser.Maui.Effects"
+                   xmlns:core_vms="clr-namespace:NatCruise.MVVM.ViewModels;assembly=NatCruise.Core"
+                   xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                   xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                   xmlns:effects1="http://xamarin.com/schemas/2020/toolkit"
+                   xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
+                   xmlns:data="clr-namespace:FScruiser.Maui.Data"
+                   xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+                   xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+                   x:Class="FScruiser.Maui.Views.TallyView"
+                   x:Name="_page"
+                   BackgroundColor="White"
+                   Title="{Binding Title}"
+                   AutomationProperties.IsInAccessibleTree="True"
+                   AutomationProperties.Name="Tally Page">
+    <ContentPage.Resources>
         <ResourceDictionary>
 
 
@@ -32,9 +30,9 @@
             <converters:PercentageToGridLengthConverter Invert="True"
                                                         x:Key="invertedPercentageToGridLengthConverrter" />
         </ResourceDictionary>
-    </local_ctrls:InitializableContentPage.Resources>
+    </ContentPage.Resources>
 
-    <local_ctrls:InitializableContentPage.Content>
+    <ContentPage.Content>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -62,10 +60,10 @@
                     </CollectionView.Effects>
 
                     <CollectionView.ItemTemplate>
-                        <local_ctrls:TallyEntryTemplateSelector>
+                        <controls:TallyEntryTemplateSelector>
 
                             <!-- Counts Tally Entry Item Template-->
-                            <local_ctrls:TallyEntryTemplateSelector.TallyEditTemplate>
+                            <controls:TallyEntryTemplateSelector.TallyEditTemplate>
                                 <DataTemplate>
 
                                     <Frame BackgroundColor="{DynamicResource tallyCountEntryColor}"
@@ -102,7 +100,7 @@
                                                    Source="ic_counts_box_black_24dp.png" />
 
                                             <!-- pop indicator -->
-                                            <local_ctrls:PopulationIndicator Grid.Row="0"
+                                            <controls:PopulationIndicator Grid.Row="0"
                                                                              Grid.Column="1"
                                                                              StratumCode="{Binding StratumCode}"
                                                                              SampleGroupCode="{Binding SampleGroupCode}"
@@ -141,10 +139,10 @@
                                         </Grid>
                                     </Frame>
                                 </DataTemplate>
-                            </local_ctrls:TallyEntryTemplateSelector.TallyEditTemplate>
+                            </controls:TallyEntryTemplateSelector.TallyEditTemplate>
 
                             <!-- Tree Tally Entry Item Template-->
-                            <local_ctrls:TallyEntryTemplateSelector.TreeItemTemplate>
+                            <controls:TallyEntryTemplateSelector.TreeItemTemplate>
                                 <DataTemplate>
                                     <SwipeView IsEnabled="False">
                                         <SwipeView.LeftItems>
@@ -167,7 +165,7 @@
                                                                       Command="{Binding BindingContext.SelectTallyEntryCommand, Source={Reference _page}}"
                                                                       CommandParameter="{Binding .}"
                                                                       Tapped="_treeCellTappedGesture_Tapped"
-                                                                      local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                                                                      controls:TapGestureRecognizerHelper.EnableClickSound="True" />
                                             </Frame.GestureRecognizers>
                                             <Frame.Resources>
                                                 <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
@@ -206,17 +204,17 @@
 
 
 
-                                                <local_ctrls:PopulationIndicator Grid.Row="0"
-                                                                                 Grid.Column="1"
-                                                                                 StratumCode="{Binding StratumCode}"
-                                                                                 SampleGroupCode="{Binding SampleGroupCode}"
-                                                                                 Species="{Binding SpeciesCode}"
-                                                                                 LiveDead="{Binding LiveDead}"
-                                                                                 Margin="5"
-                                                                                 HeightRequest="30"
-                                                                                 VerticalOptions="Center"
-                                                                                 HorizontalOptions="Start"
-                                                                                 FontSize="Small" />
+                                                <controls:PopulationIndicator Grid.Row="0"
+                                                                              Grid.Column="1"
+                                                                              StratumCode="{Binding StratumCode}"
+                                                                              SampleGroupCode="{Binding SampleGroupCode}"
+                                                                              Species="{Binding SpeciesCode}"
+                                                                              LiveDead="{Binding LiveDead}"
+                                                                              Margin="5"
+                                                                              HeightRequest="30"
+                                                                              VerticalOptions="Center"
+                                                                              HorizontalOptions="Start"
+                                                                              FontSize="Small" />
 
 
                                                 <!--Tree Number-->
@@ -314,10 +312,10 @@
 
                                     </SwipeView>
                                 </DataTemplate>
-                            </local_ctrls:TallyEntryTemplateSelector.TreeItemTemplate>
+                            </controls:TallyEntryTemplateSelector.TreeItemTemplate>
 
                             <!-- Manual Tree Template -->
-                            <local_ctrls:TallyEntryTemplateSelector.ManualTreeTemplate>
+                            <controls:TallyEntryTemplateSelector.ManualTreeTemplate>
                                 <DataTemplate>
                                     <Frame BackgroundColor="{StaticResource manualTreeColor}"
                                            CornerRadius="5"
@@ -330,7 +328,7 @@
                                                                   Command="{Binding BindingContext.SelectTallyEntryCommand, Source={Reference _page}}"
                                                                   CommandParameter="{Binding .}"
                                                                   Tapped="_treeCellTappedGesture_Tapped"
-                                                                  local_ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                                                                  controls:TapGestureRecognizerHelper.EnableClickSound="True" />
                                         </Frame.GestureRecognizers>
                                         <Frame.Resources>
                                             <converters:GreaterThanZeroConverter x:Key="greaterThanZeroConverter" />
@@ -369,17 +367,17 @@
 
 
 
-                                            <local_ctrls:PopulationIndicator Grid.Row="0"
-                                                                             Grid.Column="1"
-                                                                             StratumCode="{Binding StratumCode}"
-                                                                             SampleGroupCode="{Binding SampleGroupCode}"
-                                                                             Species="{Binding SpeciesCode}"
-                                                                             LiveDead="{Binding LiveDead}"
-                                                                             Margin="5"
-                                                                             HeightRequest="30"
-                                                                             VerticalOptions="Center"
-                                                                             HorizontalOptions="Start"
-                                                                             FontSize="Small" />
+                                            <controls:PopulationIndicator Grid.Row="0"
+                                                                          Grid.Column="1"
+                                                                          StratumCode="{Binding StratumCode}"
+                                                                          SampleGroupCode="{Binding SampleGroupCode}"
+                                                                          Species="{Binding SpeciesCode}"
+                                                                          LiveDead="{Binding LiveDead}"
+                                                                          Margin="5"
+                                                                          HeightRequest="30"
+                                                                          VerticalOptions="Center"
+                                                                          HorizontalOptions="Start"
+                                                                          FontSize="Small" />
 
 
                                             <!--Tree Number-->
@@ -461,10 +459,10 @@
                                         </Grid>
                                     </Frame>
                                 </DataTemplate>
-                            </local_ctrls:TallyEntryTemplateSelector.ManualTreeTemplate>
+                            </controls:TallyEntryTemplateSelector.ManualTreeTemplate>
 
                             <!-- Basic Tally Entry Item Template-->
-                            <local_ctrls:TallyEntryTemplateSelector.BasicTemplate>
+                            <controls:TallyEntryTemplateSelector.BasicTemplate>
                                 <DataTemplate>
                                     <SwipeView IsEnabled="False">
                                         <SwipeView.LeftItems>
@@ -503,17 +501,17 @@
                                                        Source="ic_tally_box_black_24dp.png"
                                                        AutomationProperties.IsInAccessibleTree="False" />
 
-                                                <local_ctrls:PopulationIndicator Grid.Row="0"
-                                                                                 Grid.Column="1"
-                                                                                 StratumCode="{Binding StratumCode}"
-                                                                                 SampleGroupCode="{Binding SampleGroupCode}"
-                                                                                 Species="{Binding SpeciesCode}"
-                                                                                 LiveDead="{Binding LiveDead}"
-                                                                                 Margin="5"
-                                                                                 HeightRequest="30"
-                                                                                 VerticalOptions="Center"
-                                                                                 HorizontalOptions="Start"
-                                                                                 FontSize="Small" />
+                                                <controls:PopulationIndicator Grid.Row="0"
+                                                                              Grid.Column="1"
+                                                                              StratumCode="{Binding StratumCode}"
+                                                                              SampleGroupCode="{Binding SampleGroupCode}"
+                                                                              Species="{Binding SpeciesCode}"
+                                                                              LiveDead="{Binding LiveDead}"
+                                                                              Margin="5"
+                                                                              HeightRequest="30"
+                                                                              VerticalOptions="Center"
+                                                                              HorizontalOptions="Start"
+                                                                              FontSize="Small" />
 
                                                 <!-- KPI -->
                                                 <StackLayout Grid.Column="2"
@@ -550,8 +548,8 @@
 
                                     </SwipeView>
                                 </DataTemplate>
-                            </local_ctrls:TallyEntryTemplateSelector.BasicTemplate>
-                        </local_ctrls:TallyEntryTemplateSelector>
+                            </controls:TallyEntryTemplateSelector.BasicTemplate>
+                        </controls:TallyEntryTemplateSelector>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
@@ -609,7 +607,7 @@
 
                             <CollectionView.Resources>
                                 <ResourceDictionary>
-                                    <Style TargetType="local_ctrls:HeaderControl"
+                                    <Style TargetType="controls:HeaderControl"
                                            x:Key="baseTreeFieldStyle">
                                         <Setter Property="HeightRequest"
                                                 Value="100" />
@@ -621,17 +619,17 @@
                                                 Value="Vertical" />
                                     </Style>
 
-                                    <Style TargetType="local_ctrls:HeaderControl"
+                                    <Style TargetType="controls:HeaderControl"
                                            x:Key="treeFieldValueStyle"
                                            BasedOn="{StaticResource baseTreeFieldStyle}">
                                         <Style.Triggers>
-                                            <DataTrigger TargetType="local_ctrls:HeaderControl"
+                                            <DataTrigger TargetType="controls:HeaderControl"
                                                          Binding="{Binding Error.Level}"
                                                          Value="{Static models:ErrorBase.LEVEL_WARNING}">
                                                 <Setter Property="BackgroundColor"
                                                         Value="{StaticResource warning}" />
                                             </DataTrigger>
-                                            <DataTrigger TargetType="local_ctrls:HeaderControl"
+                                            <DataTrigger TargetType="controls:HeaderControl"
                                                          Binding="{Binding Error.Level}"
                                                          Value="{Static models:ErrorBase.LEVEL_ERROR}">
                                                 <Setter Property="BackgroundColor"
@@ -640,11 +638,11 @@
                                         </Style.Triggers>
                                     </Style>
 
-                                    <Style TargetType="local_ctrls:HeaderControl"
+                                    <Style TargetType="controls:HeaderControl"
                                            x:Key="treeSepeciesFieldStyle"
                                            BasedOn="{StaticResource baseTreeFieldStyle}">
                                         <Style.Triggers>
-                                            <DataTrigger TargetType="local_ctrls:HeaderControl"
+                                            <DataTrigger TargetType="controls:HeaderControl"
                                                          Binding="{Binding HasSpeciesError}"
                                                          Value="True">
                                                 <Setter Property="BackgroundColor"
@@ -654,7 +652,7 @@
                                     </Style>
 
                                     <!-- defatult style -->
-                                    <Style TargetType="local_ctrls:HeaderControl"
+                                    <Style TargetType="controls:HeaderControl"
                                            BasedOn="{StaticResource treeFieldValueStyle}">
                                     </Style>
 
@@ -663,20 +661,20 @@
 
                             <CollectionView.Header>
                                 <!-- species -->
-                                <local_ctrls:HeaderControl Header="Species"
+                                <controls:HeaderControl Header="Species"
                                                            Style="{StaticResource treeSepeciesFieldStyle}">
                                     <bp_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
                                                           ItemsSource="{Binding SpeciesOptions}" />
-                                </local_ctrls:HeaderControl>
+                                </controls:HeaderControl>
                             </CollectionView.Header>
 
                             <CollectionView.ItemTemplate>
-                                <local_ctrls:TreeFieldValueDataTemplateSelector>
+                                <controls:TreeFieldValueDataTemplateSelector>
 
                                     <!-- int template -->
-                                    <local_ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                                    <controls:TreeFieldValueDataTemplateSelector.IntTemplate>
                                         <DataTemplate>
-                                            <local_ctrls:HeaderControl Header="{Binding Heading}">
+                                            <controls:HeaderControl Header="{Binding Heading}">
                                                 <Entry Text="{Binding ValueInt}"
                                                        Placeholder="{Binding StrDefaultValue}"
                                                        Keyboard="Numeric"
@@ -691,14 +689,14 @@
                                                         </MultiBinding>
                                                     </Entry.IsReadOnly>
                                                 </Entry>
-                                            </local_ctrls:HeaderControl>
+                                            </controls:HeaderControl>
                                         </DataTemplate>
-                                    </local_ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                                    </controls:TreeFieldValueDataTemplateSelector.IntTemplate>
 
                                     <!-- real template -->
-                                    <local_ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                                    <controls:TreeFieldValueDataTemplateSelector.RealTemplate>
                                         <DataTemplate>
-                                            <local_ctrls:HeaderControl Header="{Binding Heading}">
+                                            <controls:HeaderControl Header="{Binding Heading}">
                                                 <Entry Text="{Binding ValueReal}"
                                                        Placeholder="{Binding StrDefaultValue}"
                                                        Keyboard="Numeric"
@@ -713,14 +711,14 @@
                                                         </MultiBinding>
                                                     </Entry.IsReadOnly>
                                                 </Entry>
-                                            </local_ctrls:HeaderControl>
+                                            </controls:HeaderControl>
                                         </DataTemplate>
-                                    </local_ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                                    </controls:TreeFieldValueDataTemplateSelector.RealTemplate>
 
                                     <!-- text template -->
-                                    <local_ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                                    <controls:TreeFieldValueDataTemplateSelector.TextTemplate>
                                         <DataTemplate>
-                                            <local_ctrls:HeaderControl Header="{Binding Heading}">
+                                            <controls:HeaderControl Header="{Binding Heading}">
                                                 <Entry Text="{Binding ValueText}"
                                                        Placeholder="{Binding StrDefaultValue}"
                                                        ReturnType="Next">
@@ -734,58 +732,58 @@
                                                         </MultiBinding>
                                                     </Entry.IsReadOnly>
                                                 </Entry>
-                                            </local_ctrls:HeaderControl>
+                                            </controls:HeaderControl>
                                         </DataTemplate>
-                                    </local_ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                                    </controls:TreeFieldValueDataTemplateSelector.TextTemplate>
 
                                     <!-- Alt initial template. When cruisers initials are defined and we want to use a picker this template will be used
                                                 otherwise the basic text template will be used for initials -->
-                                    <local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
+                                    <controls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
                                         <DataTemplate>
-                                            <local_ctrls:HeaderControl Header="{Binding Heading}">
+                                            <controls:HeaderControl Header="{Binding Heading}">
                                                 <bp_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
                                                                       ItemsSource="{Binding BindingContext.Cruisers, Source={Reference _treeFieldsLayout}}" />
-                                            </local_ctrls:HeaderControl>
+                                            </controls:HeaderControl>
                                         </DataTemplate>
-                                    </local_ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
+                                    </controls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
 
                                     <!-- remarks template -->
-                                    <local_ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+                                    <controls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
                                         <DataTemplate>
-                                            <local_ctrls:HeaderControl Header="{Binding Heading}"
-                                                                       Orientation="Vertical"
-                                                                       WidthRequest="200">
+                                            <controls:HeaderControl Header="{Binding Heading}"
+                                                                    Orientation="Vertical"
+                                                                    WidthRequest="200">
                                                 <ScrollView Orientation="Vertical"
                                                             HeightRequest="70">
                                                     <Editor Text="{Binding ValueText}"
                                                             AutoSize="TextChanges">
                                                     </Editor>
                                                 </ScrollView>
-                                            </local_ctrls:HeaderControl>
+                                            </controls:HeaderControl>
                                         </DataTemplate>
-                                    </local_ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+                                    </controls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
 
-                                    <local_ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
+                                    <controls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
                                         <DataTemplate>
-                                            <local_ctrls:HeaderControl Header="L/D">
+                                            <controls:HeaderControl Header="L/D">
                                                 <bp_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference _treeFieldsLayout}}"
                                                                       ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference _treeFieldsLayout}}" />
 
-                                            </local_ctrls:HeaderControl>
+                                            </controls:HeaderControl>
                                         </DataTemplate>
-                                    </local_ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
+                                    </controls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
 
-                                    <local_ctrls:TreeFieldValueDataTemplateSelector.GradeTemplate>
+                                    <controls:TreeFieldValueDataTemplateSelector.GradeTemplate>
                                         <DataTemplate>
-                                            <local_ctrls:HeaderControl Header="Grade">
+                                            <controls:HeaderControl Header="Grade">
                                                 <bp_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
                                                                       ItemsSource="{Binding BindingContext.GradeOptions, Source={Reference _treeEditPanel}}" />
 
-                                            </local_ctrls:HeaderControl>
+                                            </controls:HeaderControl>
                                         </DataTemplate>
-                                    </local_ctrls:TreeFieldValueDataTemplateSelector.GradeTemplate>
+                                    </controls:TreeFieldValueDataTemplateSelector.GradeTemplate>
 
-                                </local_ctrls:TreeFieldValueDataTemplateSelector>
+                                </controls:TreeFieldValueDataTemplateSelector>
                             </CollectionView.ItemTemplate>
 
                         </CollectionView>
@@ -890,17 +888,17 @@
                                                 AutomationProperties.IsInAccessibleTree="True"
                                                 AutomationProperties.Name="Tally Menu" />
 
-                                <local_ctrls:PopulationIndicator Grid.Column="0"
-                                                                 Grid.ColumnSpan="2"
-                                                                 Grid.Row="1"
-                                                                 StratumCode="{Binding StratumCode}"
-                                                                 SampleGroupCode="{Binding SampleGroupCode}"
-                                                                 Species="{Binding SpeciesCode}"
-                                                                 LiveDead="{Binding LiveDead}"
-                                                                 AltFontAttributes="Bold"
-                                                                 AltFontSize="Large"
-                                                                 FontSize="Micro"
-                                                                 HorizontalOptions="Center" />
+                                <controls:PopulationIndicator Grid.Column="0"
+                                                              Grid.ColumnSpan="2"
+                                                              Grid.Row="1"
+                                                              StratumCode="{Binding StratumCode}"
+                                                              SampleGroupCode="{Binding SampleGroupCode}"
+                                                              Species="{Binding SpeciesCode}"
+                                                              LiveDead="{Binding LiveDead}"
+                                                              AltFontAttributes="Bold"
+                                                              AltFontSize="Large"
+                                                              FontSize="Micro"
+                                                              HorizontalOptions="Center" />
 
 
                                 <Frame  Grid.Column="0"
@@ -977,5 +975,5 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Grid>
-    </local_ctrls:InitializableContentPage.Content>
-</local_ctrls:InitializableContentPage>
+    </ContentPage.Content>
+</controls:BasePage>
