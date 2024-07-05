@@ -20,6 +20,19 @@ namespace FScruiser.Maui
     {
         public static MauiAppBuilder RegisterViews(this MauiAppBuilder builder)
         {
+            var services = builder.Services;
+
+            services.AddTransient<MainView>();// should only be instantiated once, maybe change to singleton but for now I might add a instance counter to check that assumption
+            services.AddTransient<AboutView>();
+            services.AddTransient<UtilitiesView>();
+            services.AddTransient<SettingsView>();
+            services.AddTransient<SaleSelectView>();
+            services.AddTransient<CruiseSelectView>();
+            services.AddTransient<ImportView>();
+            services.AddTransient<DatabaseUtilitiesView>();
+            services.AddTransient<BlankView>();
+            services.AddTransient<TreeListPage>();
+
             //Routing.RegisterRoute("Blank", typeof(BlankView));
             //Routing.RegisterRoute("Import", typeof(ImportView));
             //Routing.RegisterRoute("SaleSelect", typeof(SaleSelectView));
@@ -36,6 +49,7 @@ namespace FScruiser.Maui
             // NatCruise.Core view models
             services.AddTransient<AboutViewModel>();
             services.AddTransient<LogEditViewModel>();
+            services.AddTransient<MainViewModel>();
             services.AddTransient<SpeciesDetailViewModel>();
             services.AddTransient<StratumInfoViewModel>();
             services.AddTransient<StratumLogFieldSetupViewModel>();
@@ -78,16 +92,23 @@ namespace FScruiser.Maui
         {
             var services = builder.Services;
 
+            services.AddSingleton<INavigationProvider, NavigationProvider>();
+            services.AddTransient<INavigation>(s => s.GetRequiredService<INavigationProvider>().Navigation);
+
             services.AddSingleton<IDataContextService, DataContextService>();
 
             services.AddSingleton<AppShell>();
 
             services.AddSingleton<ICruisersDataservice, CruisersDataservice>();
+
             services.AddSingleton<ICruiseNavigationService, MauiNavigationService>();
-            services.AddSingleton<INatCruiseNavigationService, MauiNavigationService>();
+            services.AddTransient<INatCruiseNavigationService>((x) => x.GetRequiredService<ICruiseNavigationService>());
+
             services.AddSingleton<INatCruiseDialogService, MauiDialogService>();
             services.AddSingleton<IApplicationSettingService, MauiApplicationSettingService>();
             //services.AddSingleton<IDataserviceProvider, DataserviceProviderBase>();
+
+            services.AddSingleton<ITallySettingsDataService, TallySettingsDataService>();
 
             services.AddTransient<ITreeBasedTallyService, TreeBasedTallyService>();
             services.AddTransient<IPlotTallyService, PlotTallyService>();

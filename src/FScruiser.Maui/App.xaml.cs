@@ -1,5 +1,7 @@
 ﻿using CruiseDAL;
+using DevExpress.Data.Browsing;
 using FMSC.ORM.Logging;
+using FScruiser.Maui.Services;
 using FScruiser.Maui.ViewModels;
 using FScruiser.Maui.Views;
 using Microsoft.Extensions.Logging;
@@ -10,7 +12,7 @@ namespace FScruiser.Maui;
 
 public partial class App : Application
 {
-    public IServiceProvider ServiceProvider { get; }
+    public IServiceProvider Services { get; }
     public ILogger<App> Log { get; }
 
     protected App()
@@ -21,21 +23,26 @@ public partial class App : Application
     public App(IServiceProvider serviceProvider, ILogger<App> log) : this()
     {
         Log = log;
-        //TODO initialize database here, if has database issues set main page to DatabaseUtilities
+        Services = serviceProvider;
+    }
 
-        var dataContext = serviceProvider.GetRequiredService<IDataContextService>();
-        var fileSystemService = serviceProvider.GetRequiredService<IFileSystemService>();
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        var services = activationState!.Context.Services;
+        var dataContext = services.GetRequiredService<IDataContextService>();
+        var fileSystemService = services.GetRequiredService<IFileSystemService>();
 
         var databasePath = fileSystemService.DefaultCruiseDatabasePath;
 
+        //initialize database, If Database Fails to open display database utilities view
 
-        if(!dataContext.OpenOrCreateDatabase(databasePath))
-        {
-            MainPage = new DatabaseUtilitiesView();
-        }
+        Page mainPage = dataContext.OpenOrCreateDatabase(databasePath) ? services.GetRequiredService<MainView>()
+            : services.GetRequiredService<DatabaseUtilitiesView>();
 
+        var navProvider = services.GetRequiredService<INavigationProvider>();
+        navProvider.MainPage = mainPage;
 
-        ServiceProvider = serviceProvider;
+        return new Window(mainPage);
     }
 
     //protected static IDataserviceProvider? GetDataserviceProvider(IServiceProvider sp, out Exception dspInitError)

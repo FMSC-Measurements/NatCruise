@@ -1,4 +1,5 @@
-﻿using NatCruise.Navigation;
+﻿using Android.Media.TV;
+using NatCruise.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,33 @@ namespace FScruiser.Maui.Services
 {
     public class MauiDialogService : INatCruiseDialogService
     {
+        public MauiDialogService(INavigationProvider navProvider)
+        {
+            NavigationProvider = navProvider;
+        }
+
+        public INavigationProvider NavigationProvider { get; }
+
+        protected INavigation Navigation => NavigationProvider.Navigation;
+
+        protected Page Page => NavigationProvider.MainPage;
+
+        private Page GetCurrentPage()
+        {
+            // TODO do we need to get the Navigation using this method
+            // or can we get the Navigation in the constructor
+            Page page = null;
+            if (Navigation.ModalStack.Count > 0)
+                page = Navigation.ModalStack.LastOrDefault();
+            else
+                page = Navigation.NavigationStack.LastOrDefault();
+
+            if (page == null)
+                page = Page;
+
+            return page;
+        }
+
         public Task<string> AskCruiserAsync()
         {
             throw new NotImplementedException();
@@ -24,9 +52,11 @@ namespace FScruiser.Maui.Services
             throw new NotImplementedException();
         }
 
-        public Task<string> AskValueAsync(string prompt, params string[] values)
+        public async Task<string> AskValueAsync(string prompt, params string[] values)
         {
-            throw new NotImplementedException();
+            var result = await GetCurrentPage().DisplayActionSheet(prompt, "Cancel", null, values);
+            if (result == "Cancel") { result = null; }
+            return result;
         }
 
         public Task<bool> AskYesNoAsync(string message, string caption, bool defaultNo = false)
