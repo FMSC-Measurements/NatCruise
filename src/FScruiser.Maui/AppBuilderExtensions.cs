@@ -32,6 +32,7 @@ namespace FScruiser.Maui
             services.AddTransient<DatabaseUtilitiesView>();
             services.AddTransient<BlankView>();
             services.AddTransient<TreeListPage>();
+            services.AddTransient<TallyView>();
 
             //Routing.RegisterRoute("Blank", typeof(BlankView));
             //Routing.RegisterRoute("Import", typeof(ImportView));
