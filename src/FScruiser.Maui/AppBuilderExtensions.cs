@@ -97,8 +97,6 @@ namespace FScruiser.Maui
 
             services.AddSingleton<IDataContextService, DataContextService>();
 
-            services.AddSingleton<AppShell>();
-
             services.AddSingleton<ICruisersDataservice, CruisersDataservice>();
 
             services.AddSingleton<ICruiseNavigationService, MauiNavigationService>();
