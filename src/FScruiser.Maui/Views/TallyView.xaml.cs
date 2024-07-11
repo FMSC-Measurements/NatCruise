@@ -69,4 +69,9 @@ public partial class TallyView : BasePage
             _treeEditPanel.IsVisible = false;
         }
     }
+
+    private void _treeCellTappedGesture_Tapped(object sender, TappedEventArgs e)
+    {
+
+    }
 }
