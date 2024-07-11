@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:HeaderControlBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                         xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                         x:Class="FScruiser.Maui.Controls.VerticalHeaderControl"
+                         HorizontalOptions="Fill"
+                         VerticalOptions="Fill"
+                         HeaderFontSize="Header">
+    <ctrls:HeaderControlBase.ControlTemplate>
+        <ControlTemplate>
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <!--<RowDefinition Height="*" />-->
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid x:Name="PART_Header"
+                      Grid.Row="0"
+                      Grid.Column="0">
+                    <Label x:Name="HeaderContent"
+                           Margin="{TemplateBinding  HeaderMargin}"
+                           Text="{TemplateBinding  Header}"
+                           FontSize="{TemplateBinding HeaderFontSize}"
+                           FontFamily="{TemplateBinding HeaderFontFamily}"
+                           HorizontalOptions="{TemplateBinding  HeaderHorizontalOptions}"
+                           VerticalOptions="{TemplateBinding  HeaderVerticalOptions}"
+                           BackgroundColor="{TemplateBinding  HeaderBackgroundColor}"
+                           VerticalTextAlignment="Center"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                </Grid>
+
+                <ContentPresenter x:Name="PART_Content"
+                                  Margin="{TemplateBinding Padding}"
+                                  Grid.Row="1"
+                                  Grid.Column="0"
+                                  WidthRequest="{TemplateBinding WidthRequest}"
+                                  BackgroundColor="{TemplateBinding BackgroundColor}"
+                                  AutomationProperties.LabeledBy="{Reference PART_Header}" />
+            </Grid>
+
+
+        </ControlTemplate>
+    </ctrls:HeaderControlBase.ControlTemplate>
+</ctrls:HeaderControlBase>
