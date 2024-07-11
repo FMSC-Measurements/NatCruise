@@ -2,7 +2,8 @@
 
 example of standard xmlns used
 ```xml
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ctrls:BasePage 
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 
              x:Class="FScruiser.Maui.Views.SomeView"
@@ -18,13 +19,7 @@ example of standard xmlns used
              xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
 
              -- accessibility --
-             SemanticProperties.Description="Settings Page"
-
-             -- for ViewModelLocator --
-             xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
-             xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
-
-             BindingContext="{mvvm:ViewModelLocater Type={Type vms:SomeViewModel}}">
+             SemanticProperties.Description="Settings Page">
     <ContentPage.Content>
        <!-- ... -->
 
@@ -40,6 +35,6 @@ example of standard xmlns used
             </Entry.Behaviors>
 </Entry>
     </ContentPage.Content>
-</ContentPage>
+</ctrls:BasePage>
 ```
 

@@ -42,6 +42,8 @@ namespace FScruiser.Maui.Services
 
         public Task ShowView<TView>(IDictionary<string, object> parameters = null, bool showModal = false) where TView : Page
         {
+            Log?.LogInformation("Showing View {viewType}", typeof(TView).Name);
+
             var view = Services.GetRequiredService<TView>();
             var viewModel = view.BindingContext as ViewModelBase;
 
@@ -68,10 +70,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowAbout()
         {
-            Log.LogMethodCall();
-
             return ShowView<AboutView>(showModal: true);
-            //return Shell.GoToAsync("//About");
         }
 
         public Task ShowBlank()
@@ -98,13 +97,9 @@ namespace FScruiser.Maui.Services
 
         public Task ShowCruiseSelect(string saleNumber)
         {
-            Log.LogMethodCall();
 
             var navParams = new Dictionary<string, object>() { { NavParams.SaleNumber, saleNumber } };
             return ShowView<CruiseSelectView>(navParams);
-
-            //return Shell.Current.GoToAsync($"CruiseSelect");
-            //return Shell.Current.GoToAsync($"CruiseSelect?" + $"{NavParams.SaleNumber}={saleNumber}");
         }
 
         public Task ShowCuttingUnitInfo(string unitCode)
@@ -124,8 +119,6 @@ namespace FScruiser.Maui.Services
 
         public Task ShowDatabaseUtilities()
         {
-            Log.LogMethodCall();
-
             return ShowView<DatabaseUtilitiesView>(showModal:true);
         }
 
@@ -168,16 +161,12 @@ namespace FScruiser.Maui.Services
 
         public Task ShowLimitingDistance(string unitCode, string stratumCode, int plotNumber)
         {
-            Log.LogMethodCall();
-
             var navParams = new Dictionary<string, object>() { { NavParams.UNIT, unitCode }, { NavParams.STRATUM, stratumCode }, { NavParams.PLOT_NUMBER, plotNumber } };
             return ShowView<LimitingDistanceView>(navParams, showModal: true);
         }
 
         public Task ShowLimitingDistance()
         {
-            Log.LogMethodCall();
-
             return ShowView<LimitingDistanceView>();
         }
 
@@ -207,18 +196,12 @@ namespace FScruiser.Maui.Services
 
         public Task ShowPlotEdit(string plotID)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("PlotEdit?" + $"{NavParams.PlotID}={plotID}");
+            return ShowView<PlotEditView>(new Dictionary<string, object> { { NavParams.PlotID, plotID } });
         }
 
         public Task ShowPlotList(string unitCode)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("//PlotList?" + $"{NavParams.UNIT}={unitCode}");
+            return ShowView<PlotListView>(new Dictionary<string, object> { { NavParams.UNIT, unitCode } });
         }
 
         public Task ShowPlotTally(string? plotID)
@@ -253,13 +236,9 @@ namespace FScruiser.Maui.Services
             return Shell.GoToAsync("Sale?" + $"{NavParams.CruiseID}={cruiseID}");
         }
 
-        public async Task ShowSaleSelect()
+        public Task ShowSaleSelect()
         {
-            Log.LogMethodCall();
-
-            await ShowView<SaleSelectView>();
-
-            //return Shell.GoToAsync($"//Main/SaleSelect");
+            return ShowView<SaleSelectView>();
         }
 
         public Task ShowSampleGroups(string stratumCode)
@@ -281,8 +260,6 @@ namespace FScruiser.Maui.Services
 
         public Task ShowSettings()
         {
-            Log.LogMethodCall();
-
             return ShowView<SettingsView>();
         }
 
@@ -312,8 +289,6 @@ namespace FScruiser.Maui.Services
 
         public Task ShowTally(string unitCode)
         {
-            Log.LogMethodCall();
-
             var navParams = new Dictionary<string, object>() { {NavParams.UNIT, unitCode } };
             return ShowView<TallyView>(navParams);
         }
@@ -400,11 +375,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowTreeList(string unitCode)
         {
-            Log.LogMethodCall();
-
             return ShowView<TreeListPage>(new Dictionary<string, object>() {{ NavParams.UNIT, unitCode }});
-
-            //return Shell.GoToAsync("TreeList?" + $"{NavParams.UNIT}={unitCode}");
         }
 
         public Task ShowUserAgreement()
@@ -417,7 +388,6 @@ namespace FScruiser.Maui.Services
 
         public Task ShowUtilities()
         {
-            Log.LogMethodCall();
             return ShowView<UtilitiesView>(showModal: true);
         }
     }
