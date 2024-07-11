@@ -11,6 +11,7 @@ using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Common;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -46,8 +47,8 @@ public partial class TallyViewModel : ViewModelBase
         protected set
         {
             SetProperty(ref _tallies, value);
-            OnPropertyChanged(nameof(TalliesFiltered));
-            OnPropertyChanged(nameof(StrataFilterOptions));
+            //OnPropertyChanged(nameof(TalliesFiltered));
+            //OnPropertyChanged(nameof(StrataFilterOptions));
         }
     }
 
@@ -255,21 +256,36 @@ public partial class TallyViewModel : ViewModelBase
         }
     }
 
-    protected override void OnInitialize(IDictionary<string, object> parameters)
+    protected override void Load(IDictionary<string, object> parameters)
     {
         if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
         var unitCode = parameters.GetValue<string>(NavParams.UNIT);
+
         var cuttingUnit = CuttingUnit = CuttingUnitDataservice.GetCuttingUnit(unitCode);
 
         Title = $"Unit {unitCode} - {cuttingUnit.Description}";
 
-        var tallyPopulations = TallyPopulationDataservice.GetTallyPopulationsByUnitCode(UnitCode);
+        // we need to reload tally pops on each load in case coming back from edit tree counts
+        RefreshTallyPopulations(unitCode);
+
+
+        RefreshTallyFeed(unitCode);
+
+        // refresh selected tree in case coming back from TreeEdit page
+        OnPropertyChanged(nameof(SelectedTreeViewModel));
+    }
+
+    protected void RefreshTallyPopulations(string unitCode)
+    {
+        var tallyPopulations = TallyPopulationDataservice.GetTallyPopulationsByUnitCode(unitCode);
+
         var strata = tallyPopulations.Select(x => x.StratumCode)
             .Distinct()
             .Append(STRATUM_FILTER_ALL)
             .ToArray();
 
+        Tallies = tallyPopulations;
         if (strata.Count() > 2)
         {
             StrataFilterOptions = strata;
@@ -277,10 +293,12 @@ public partial class TallyViewModel : ViewModelBase
         else
         { StrataFilterOptions = new string[0]; }
 
-        // we need to reload tally pops on each load in case coming back from edit tree counts
-        Tallies = tallyPopulations;
+        OnPropertyChanged(nameof(TalliesFiltered));
+    }
 
-        var tf = TallyFeed;
+    protected void RefreshTallyFeed(string unitCode)
+    {
+        var tf = TallyFeed as ObservableCollection<TallyEntry>;
         if (tf != null)
         {
             // HACK reassigning tally feed causes us to lose the scroll position
@@ -288,11 +306,12 @@ public partial class TallyViewModel : ViewModelBase
             // and add any new items
             // we should only need to add entries when coming back from edit tree counts and only be adding one entry when doing so
 
-            //var newTallyEntries = new List<TallyEntry>();
             var tallyEntries = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode)
                 .Reverse();
 
             var tfIDLookup = tf.ToDictionary(x => x.TallyLedgerID);
+
+            var newItems = new List<TallyEntry>();
 
             foreach (var entry in tallyEntries)
             {
@@ -317,14 +336,93 @@ public partial class TallyViewModel : ViewModelBase
         }
         else
         {
-            TallyFeed = TallyDataservice.GetTallyEntriesByUnitCode(UnitCode)
+            var tallyEntries = TallyDataservice.GetTallyEntriesByUnitCode(unitCode)
                 .Reverse().ToObservableCollection();
+            TallyFeed = tallyEntries;
         }
-
-        // refresh selected tree in case coming back from TreeEdit page
-
-        OnPropertyChanged(nameof(SelectedTreeViewModel));
     }
+
+    //protected Task RefreshTallyPopulationsAsync(string unitCode)
+    //{
+        
+
+
+    //    return Task.Run(() =>
+    //    {
+    //        return TallyPopulationDataservice.GetTallyPopulationsByUnitCode(unitCode);
+    //    }).ContinueWith((t) =>
+    //    {
+    //        var tallyPopulations = t.Result;
+
+    //        var strata = tallyPopulations.Select(x => x.StratumCode)
+    //            .Distinct()
+    //            .Append(STRATUM_FILTER_ALL)
+    //            .ToArray();
+
+    //        Tallies = tallyPopulations;
+    //        if (strata.Count() > 2)
+    //        {
+    //            StrataFilterOptions = strata;
+    //        }
+    //        else
+    //        { StrataFilterOptions = new string[0]; }
+
+    //        OnPropertyChanged(nameof(TalliesFiltered));
+    //    });
+    //}
+
+    //protected Task RefreshTallyFeedAsync(string unitCode)
+    //{
+    //    var tf = TallyFeed as ObservableCollection<TallyEntry>;
+    //    if (tf != null)
+    //    {
+    //        // HACK reassigning tally feed causes us to lose the scroll position
+    //        // to maintain the scroll position we need update each item in the list in place
+    //        // and add any new items
+    //        // we should only need to add entries when coming back from edit tree counts and only be adding one entry when doing so
+
+    //        //var newTallyEntries = new List<TallyEntry>();
+
+    //        return Task.Run(() => TallyDataservice.GetTallyEntriesByUnitCode(UnitCode)
+    //            .Reverse()).ContinueWith((t) =>
+    //            {
+    //                var tallyEntries = t.Result;
+    //                var tfIDLookup = tf.ToDictionary(x => x.TallyLedgerID);
+
+    //                var newItems = new List<TallyEntry>();
+
+    //                foreach (var entry in tallyEntries)
+    //                {
+    //                    var eTlID = entry.TallyLedgerID;
+    //                    if (tfIDLookup.ContainsKey(eTlID))
+    //                    {
+    //                        var e = tfIDLookup[eTlID];
+    //                        e.TreeNumber = entry.TreeNumber;
+    //                        e.StratumCode = entry.StratumCode;
+    //                        e.SampleGroupCode = entry.SampleGroupCode;
+    //                        e.SpeciesCode = entry.SpeciesCode;
+    //                        e.LiveDead = entry.LiveDead;
+    //                        e.CountOrMeasure = entry.CountOrMeasure;
+    //                        e.WarningCount = entry.WarningCount;
+    //                        e.ErrorCount = entry.ErrorCount;
+    //                    }
+    //                    else
+    //                    {
+    //                        tf.Add(entry);
+    //                    }
+    //                }
+    //            });
+    //    }
+    //    else
+    //    {
+    //        return Task.Run(() => TallyDataservice.GetTallyEntriesByUnitCode(unitCode)
+    //            .Reverse().ToObservableCollection()).ContinueWith((t) =>
+    //            {
+    //                var tallyEntries = t.Result;
+    //                TallyFeed = tallyEntries;
+    //            });
+    //    }
+    //}
 
     private Task ShowTallyMenu(TallyPopulation? tp)
     {
