@@ -6,6 +6,7 @@ using NatCruise.Services.Logging;
 using Backpack.Maui;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
 using NatCruise;
+using DevExpress.Maui;
 
 namespace FScruiser.Maui;
 
@@ -19,6 +20,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseDevExpress()
             .UseMauiCommunityToolkit()
             .UseMauiCompatibility() //TODO remove when done refactoring TallyPage to remove RelativeLayout
             .UseBackpack()
@@ -34,17 +36,23 @@ public static class MauiProgram
 
         builder.Services.AddNatCruiseCoreDataservices();
 
-#if DEBUG
-        builder.Logging.AddDebug();
-        builder.Logging.SetMinimumLevel(LogLevel.Trace);
+        builder.Services.AddLogging(logging =>
+        {
+#if DEBUG && WINDOWS
+            logging.AddDebug();
+#elif DEBUG
+            logging.AddConsole();
+            logging.SetMinimumLevel(LogLevel.Trace);
 #else
-        builder.Logging.AddAppCenterLogger();
+            logging.AddAppCenterLogger();
 #endif
+        });
 
-        //foreach (var service in platformServices)
-        //{
-        //    builder.Services.Add(service);
-        //}
+        builder.ConfigureEssentials(essentials =>
+        {
+            essentials.UseVersionTracking(); // used to track if app is being launched for first time. Stores info using the Preferences API
+        });
+
 
 #if ANDROID
         builder.RegisterAndroidServices();
