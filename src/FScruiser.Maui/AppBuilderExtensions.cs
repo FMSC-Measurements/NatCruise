@@ -25,6 +25,7 @@ namespace FScruiser.Maui
             services.AddTransient<MainView>();// should only be instantiated once, maybe change to singleton but for now I might add a instance counter to check that assumption
 
             services.AddTransient<AboutView>();
+            services.AddTransient<AskKpiView>();
             services.AddTransient<BlankView>();
             services.AddTransient<CruiseSelectView>();
             services.AddTransient<DatabaseUtilitiesView>();
@@ -36,6 +37,10 @@ namespace FScruiser.Maui
             services.AddTransient<TallyView>();
             services.AddTransient<TreeListPage>();
             services.AddTransient<UtilitiesView>();
+
+#if DEBUG
+            services.AddTransient<TestDialogServiceView>();
+#endif
 
             //Routing.RegisterRoute("Blank", typeof(BlankView));
             //Routing.RegisterRoute("Import", typeof(ImportView));

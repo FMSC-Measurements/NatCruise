@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:DialogPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+             x:Class="FScruiser.Maui.Views.AskKpiView"
+             Title="AskKpiView">
+    <ctrls:DialogPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="buttonBase"
+                   TargetType="Button">
+                <Setter Property="FontSize"
+                        Value="30" />
+                <Setter Property="TextColor"
+                        Value="#E1ffffff" />
+                <!-- 90% transparent white -->
+                <Setter Property="Margin"
+                        Value="0,0,0,0" />
+                <Setter Property="CornerRadius"
+                        Value="0" />
+                <!--<Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />-->
+            </Style>
+            <Style x:Key="ctrlButton"
+                   BasedOn="{StaticResource buttonBase}"
+                   TargetType="Button">
+                <Setter Property="BackgroundColor"
+                        Value="#E36500" />
+            </Style>
+            <Style  x:Key="numButton"
+                    BasedOn="{StaticResource buttonBase}"
+                    TargetType="Button">
+                <Setter Property="BackgroundColor"
+                        Value="#414143" />
+            </Style>
+        </ResourceDictionary>
+    </ctrls:DialogPage.Resources>
+
+    <ctrls:DialogPage.Content>
+        <Grid x:Name="_grid"
+              ColumnSpacing="0"
+              RowSpacing="0"
+              BackgroundColor="White"
+              VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <!--value display/clear value button-->
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition  Height="Auto" />
+                <!--0 / sure to measure-->
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label x:Name="_kpiLabel"
+                   AutomationProperties.IsInAccessibleTree="true"
+                   AutomationProperties.Name="KPI Value"
+                   AutomationProperties.HelpText="Displays the KPI value entered by the user"
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="3"
+                   HorizontalOptions="FillAndExpand"
+                   TextColor="Black"
+                   BackgroundColor="LightGray"
+                   FontSize="60"
+                   HorizontalTextAlignment="End"
+                   VerticalTextAlignment="Center"
+                   Margin="5,8,5,8" />
+            <Button x:Name="_clearBtn"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="Clear"
+                    Text="C"
+                    Grid.Column="3"
+                    Grid.Row="0"
+                    Style="{StaticResource ctrlButton}" />
+            <Button Text="7"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="7"
+                    AutomationProperties.HelpText="Appends 7 to the KPI value"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Style="{StaticResource numButton}" />
+            <Button Text="8"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="8"
+                    AutomationProperties.HelpText="Appends 8 to the KPI value"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Style="{StaticResource numButton}" />
+            <Button Text="9"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="9"
+                    AutomationProperties.HelpText="Appends 9 to the KPI value"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Style="{StaticResource numButton}" />
+            <Button Text="Cancel"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="Cancel"
+                    AutomationProperties.HelpText="Closes The KPI Dialog"
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    FontSize="Large"
+                    BackgroundColor="Red"
+                    Style="{StaticResource buttonBase}" />
+
+            <Button Text="4"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="4"
+                    AutomationProperties.HelpText="Appends 4 to the KPI value"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Style="{StaticResource numButton}" />
+            <Button Text="5"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="5"
+                    AutomationProperties.HelpText="Appends 5 to the KPI value"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Style="{StaticResource numButton}" />
+            <Button Text="6"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="6"
+                    AutomationProperties.HelpText="Appends 6 to the KPI value"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Style="{StaticResource numButton}" />
+            <Button Text="OK"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="OK"
+                    AutomationProperties.HelpText="Accept The Current KPI Value"
+                    BackgroundColor="Green"
+                    Grid.Row="3"
+                    Grid.Column="3"
+                    Grid.RowSpan="2"
+                    Style="{StaticResource buttonBase}" />
+
+            <Button Text="1"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="1"
+                    AutomationProperties.HelpText="Appends 1 to the KPI value"
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Style="{StaticResource numButton}" />
+            <Button Text="2"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="2"
+                    AutomationProperties.HelpText="Appends 2 to the KPI value"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Style="{StaticResource numButton}" />
+            <Button Text="3"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="3"
+                    AutomationProperties.HelpText="Appends 3 to the KPI value"
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Style="{StaticResource numButton}" />
+
+            <Button Text="0"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="0"
+                    AutomationProperties.HelpText="Appends 0 to the KPI value"
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Style="{StaticResource numButton}" />
+            <Button Text="STM"
+                    AutomationProperties.IsInAccessibleTree="true"
+                    AutomationProperties.Name="STM"
+                    AutomationProperties.HelpText="Accept Tree as Sure to Measure Without Entering KPI Value"
+                    BackgroundColor="Green"
+                    Grid.Row="5"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="1"
+                    Style="{StaticResource buttonBase}" />
+        </Grid>
+    </ctrls:DialogPage.Content>
+</ctrls:DialogPage>

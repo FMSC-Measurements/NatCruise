@@ -220,5 +220,11 @@ namespace FScruiser.Maui.ViewModels
         {
             return NavigationService.ShowUtilities();
         }
+
+        [RelayCommand]
+        public Task ShowTestView()
+        {
+            return (NavigationService as MauiNavigationService)?.ShowView<TestDialogServiceView>() ?? Task.CompletedTask;
+        }
     }
 }

@@ -4,6 +4,7 @@
             xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
             xmlns:const="clr-namespace:FScruiser.Maui.Constants"
             xmlns:views="clr-namespace:FScruiser.Maui.Views"
+            xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
             x:Class="FScruiser.Maui.Views.MainView"
             Title="FScruiser"
             IsPresented="True">
@@ -18,6 +19,7 @@
                                    x:Name="_flyoutHeaderRowDef" />
                     <RowDefinition Height="*"
                                    x:Name="_flyouContentRowDef" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!--select cruise button-->
@@ -103,6 +105,14 @@
 
                     </ListView>
                 </ScrollView>
+                <HorizontalStackLayout Grid.Row="2">
+                    <Button ImageSource="{FontImageSource Glyph={Static const:FAIcons.Gear}, FontFamily={Static const:Fonts.FAsolid}, Size=30}">
+                        <Button.Behaviors>
+                            <tk:TouchBehavior LongPressCommand="{Binding ShowTestViewCommand}" LongPressDuration="2000"
+                                              Command="{Binding ShowSettingCommand}" />
+                        </Button.Behaviors>
+                    </Button>
+                </HorizontalStackLayout>
             </Grid>
         </ContentPage>
 
