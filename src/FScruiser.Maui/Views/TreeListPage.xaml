@@ -46,23 +46,10 @@
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
 
-            <Grid.Resources>
-                <ResourceDictionary>
-                    <!-- BasedOn="{StaticResource button_base}"-->
-                    <Style TargetType="Button">
-                        <Setter Property="BackgroundColor"
-                                Value="{StaticResource usfs_green}" />
-                        <Setter Property="HeightRequest"
-                                Value="60" />
-                    </Style>
-                </ResourceDictionary>
-            </Grid.Resources>
 
-
-            <Button x:Name="_editTreeButton"
+            <Button x:Name="_editTreeButton" Style="{StaticResource Button.EditItem}"
                     Grid.Column="0"
-                    BackgroundColor="{StaticResource primary}"
-                    ImageSource="{FontImageSource Glyph={Static const:FAIcons.PenToSquare}, FontFamily={Static const:Fonts.FAsolid}, Size=30}"
+                    HeightRequest="60"
                     Command="{Binding EditTreeCommand}"
                     CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"
                     AutomationProperties.IsInAccessibleTree="True"
@@ -70,10 +57,10 @@
 
 
             <Button x:Name="_addTreeButton"
+                    Style="{StaticResource Button.AddItem}"
                     Grid.Column="1"
-                    ImageSource="{FontImageSource Glyph={Static const:FAIcons.CirclePlus}, FontFamily={Static const:Fonts.FAsolid}, Size=30}"
+                    HeightRequest="60"
                     Command="{Binding AddTreeCommand}"
-                    BackgroundColor="{StaticResource secondary}"
                     VerticalOptions="Fill"
                     HorizontalOptions="FillAndExpand"
                     AutomationProperties.IsInAccessibleTree="True"
@@ -81,9 +68,8 @@
 
             <Button x:Name="_deleteTreeButton"
                     Grid.Column="2"
-                    Text="Delete"
-                    TextColor="{StaticResource text.light}"
-                    BackgroundColor="{StaticResource attention}"
+                    Style="{StaticResource Button.DeleteItem}"
+                    HeightRequest="60"
                     Command="{Binding DeleteTreeCommand}"
                     CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"
                     AutomationProperties.IsInAccessibleTree="True"

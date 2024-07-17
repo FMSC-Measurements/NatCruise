@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                    xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui">
 
     <Style TargetType="ActivityIndicator"
            x:Key="ActivityIndicatorBase">
@@ -51,26 +53,74 @@
     <Style TargetType="Button"
            BasedOn="{StaticResource ButtonBase}" />
 
-    <Style TargetType="Button"
-           BasedOn="{StaticResource ButtonBase}"
-           x:Key="Button.Accept">
+    <Style x:Key="Button.Accept"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
         <Setter Property="BackgroundColor"
                 Value="{StaticResource primary}" />
     </Style>
 
-    <Style TargetType="Button"
-           BasedOn="{StaticResource ButtonBase}"
-           x:Key="Button.Cancel">
+    <Style x:Key="Button.Cancel"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
         <Setter Property="BackgroundColor"
                 Value="{StaticResource gray300}" />
     </Style>
 
-    <Style TargetType="Button"
-           BasedOn="{StaticResource ButtonBase}"
-           x:Key="Button.MainMenu">
+    <Style x:Key="Button.MainMenu"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
         <Setter Property="BackgroundColor"
                 Value="{StaticResource primary}" />
     </Style>
+
+    <Style x:Key="Button.AddItem"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource secondary}" />
+        <Setter Property="ImageSource"
+                Value="{FontImageSource Glyph={Static const:FAIcons.CirclePlus}, FontFamily={Static const:Fonts.FAsolid}, Size=30}" />
+    </Style>
+
+    <Style x:Key="Button.EditItem"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />
+        <Setter Property="ImageSource"
+                Value="{FontImageSource Glyph={Static const:FAIcons.PenToSquare}, FontFamily={Static const:Fonts.FAsolid}, Size=30}" />
+    </Style>
+
+    <Style x:Key="Button.DeleteItem"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource attention}" />
+        <Setter Property="TextColor"
+                Value="{StaticResource text.light}" />
+        <Setter Property="Text"
+                Value="Delete" />
+    </Style>
+
+    <Style x:Key="Button.ScrollTop"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />
+        <Setter Property="ImageSource"
+                Value="ic_chevron_double_up_white_24dp.png" />
+    </Style>
+
+    <Style x:Key="Button.ScrollBottom"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />
+        <Setter Property="ImageSource"
+                Value="ic_chevron_double_down_white_24dp.png" />
+    </Style>
+
 
     <Style TargetType="ImageButton"
            x:Key="ImageButtonBase">
@@ -275,6 +325,8 @@
     </Style>
     <Style TargetType="SwipeItem"
            BasedOn="{StaticResource SwipeItemBase}" />
+
+
 
     <Style TargetType="BoxView"
            x:Key="HorizontialSpacer">

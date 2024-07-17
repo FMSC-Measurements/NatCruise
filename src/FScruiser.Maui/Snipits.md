@@ -9,16 +9,12 @@ example of standard xmlns used
              x:Class="FScruiser.Maui.Views.SomeView"
              x:Name="_page"
 
-            -- community toolkit --
-             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:tc="clr-namespace:CommunityToolkit.Maui;assembly=CommunityToolkit.Maui"
+             xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
 
-             -- frequently used namespaces --
              xmlns:local="clr-namespace:FScruiser.Maui"
              xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors" 
              xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
 
-             -- accessibility --
              SemanticProperties.Description="Settings Page">
     <ContentPage.Content>
        <!-- ... -->

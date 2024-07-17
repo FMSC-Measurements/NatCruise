@@ -1,6 +1,7 @@
 ﻿# Todo
 
  - [ ] Change AutomationProperties to SemanticProperties
+ - [ ] Switch NatCruise.Core TaskExtentions to use ILogger rather than ILoggingService
 
 ## Update Converters
 Maui Community Toolkit has updated some of the converters used.
@@ -24,3 +25,7 @@ now there are more type specific converters: IsStringNotNullOrEmpty, IsListNotNu
  - [ ] look into getting rid of the ViewLifecycleEffect on the tally Feed. 
  - [ ] find/write something extension method for injecting TallySettingsDataService. Currently its just being instantiated in xaml (line 23)
  - [ ] find alternative to using relativeLayout
+ - [ ] 
+ 
+## LogListView
+ - [ ] Rework templates for Logs

@@ -30,11 +30,13 @@ namespace FScruiser.Maui
             services.AddTransient<CruiseSelectView>();
             services.AddTransient<DatabaseUtilitiesView>();
             services.AddTransient<ImportView>();
+            services.AddTransient<LogsListView>();
             services.AddTransient<PlotEditView>();
             services.AddTransient<PlotListView>();
             services.AddTransient<SaleSelectView>();
             services.AddTransient<SettingsView>();
             services.AddTransient<TallyView>();
+            services.AddTransient<TreeEditView>();
             services.AddTransient<TreeListPage>();
             services.AddTransient<UtilitiesView>();
 

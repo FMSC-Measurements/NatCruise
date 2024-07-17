@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                x:Class="FScruiser.Maui.Views.TreeEditView"
+                x:Name="_page"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:converters="clr-namespace:FScruiser.Maui.Converters"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                SemanticProperties.Description="Tree Edit Page"
+                Title="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
+                BackgroundColor="White"
+                TreeNumber="{Binding TreeNumber}">
+    <ctrls:BasePage.ToolbarItems>
+        <ToolbarItem Text="Logs"
+                     Command="{Binding ShowLogsCommand}"
+                     AutomationProperties.IsInAccessibleTree="True"
+                     AutomationProperties.Name="Logs" />
+    </ctrls:BasePage.ToolbarItems>
+
+    <ctrls:BasePage.Resources>
+        <converters:FilterTreeFieldValuesConverter x:Key="tfvFileterConverter" />
+
+        <converters:ErrorToColorConverter x:Key="errorToColorConverter"
+                                          Default="White"
+                                          Error="{StaticResource error}"
+                                          Warning="{StaticResource warning}"
+                                          SuppressedColor="{StaticResource error_suppressed}" />
+
+        <Style x:Key="errorWarningButton"
+               TargetType="Button">
+            <Setter Property="TextColor"
+                    Value="{StaticResource text.dark}" />
+
+            <Setter Property="FontSize"
+                    Value="Large" />
+
+            <Setter Property="Margin"
+                    Value="0,0,0,7" />
+
+            <Setter Property="BackgroundColor"
+                    Value="{Binding ., Converter={StaticResource errorToColorConverter}}" />
+
+            <Setter Property="Text"
+                    Value="{Binding Message}" />
+        </Style>
+
+        <tk:BoolToObjectConverter x:Key="hasErrorConverter"
+                                  x:TypeArguments="Color"
+                                  TrueObject="Red"
+                                  FalseObject="Transparent" />
+
+    </ctrls:BasePage.Resources>
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+
+            <!--main fields-->
+            <Grid Grid.Row="0"
+                  RowDefinitions="Auto,Auto, Auto"
+                  ColumnDefinitions="*,*,*,*">
+                <Grid.Resources>
+                    <Style TargetType="Label"
+                           BasedOn="{StaticResource LabelBase}">
+                        <Setter Property="VerticalTextAlignment"
+                                Value="Center" />
+                        <Setter Property="HorizontalTextAlignment"
+                                Value="End" />
+                    </Style>
+                    <Style TargetType="bp_ctrls:ValuePicker"
+                           BasedOn="{StaticResource ValuePickerBase}">
+                        <Setter Property="WidthRequest"
+                                Value="70" />
+                        <Setter Property="HeightRequest"
+                                Value="{StaticResource minTouchableHeight}" />
+                    </Style>
+
+                    <Style TargetType="ctrls:HorizontialHeaderControl"
+                           BasedOn="{StaticResource HorizontialHeaderControlBase}">
+                        <Setter Property="HeightRequest"
+                                Value="50" />
+                        <Setter Property="Margin"
+                                Value="7,0,0,3" />
+                    </Style>
+
+                    <Style TargetType="Entry"
+                           BasedOn="{StaticResource EntryBase}">
+                        <Setter Property="WidthRequest"
+                                Value="50" />
+                        <Setter Property="HeightRequest"
+                                Value="{StaticResource minTouchableHeight}" />
+                    </Style>
+                </Grid.Resources>
+
+                <!--Tree Number-->
+                <HorizontalStackLayout Grid.Row="0"
+                                       Grid.Column="0">
+
+                    <Label Text="Tree #"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <Entry x:Name="_treeNumberEntry"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Tree Number"
+                           Keyboard="Numeric">
+                        <Entry.Behaviors>
+                            <tk:SelectAllTextBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+
+                </HorizontalStackLayout>
+
+                <!--Stratum-->
+                <HorizontalStackLayout Grid.Row="0"
+                                       Grid.Column="1">
+
+                    <Label Text="Stratum"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <bp_ctrls:ValuePicker x:Name="_stratumCodeEntry"
+                                          SelectedValue="{Binding StratumCode}"
+                                          ItemsSource="{Binding StratumCodes}"
+                                          Title="Stratum"
+                                          AutomationProperties.IsInAccessibleTree="True"
+                                          AutomationProperties.Name="Stratum">
+                    </bp_ctrls:ValuePicker>
+
+                </HorizontalStackLayout>
+
+                <!--Sample Group-->
+                <HorizontalStackLayout BackgroundColor="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}"
+                                       Grid.Row="0"
+                                       Grid.Column="2">
+
+                    <Label Text="Sample Group"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <bp_ctrls:ValuePicker x:Name="_sampleGroupEntry"
+                                          SelectedValue="{Binding SampleGroupCode}"
+                                          ItemsSource="{Binding SampleGroupCodes}"
+                                          Title="Sample Group"
+                                          AutomationProperties.IsInAccessibleTree="True"
+                                          AutomationProperties.Name="Sample Group">
+                    </bp_ctrls:ValuePicker>
+
+                </HorizontalStackLayout>
+
+                <!--Species-->
+                <HorizontalStackLayout BackgroundColor="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}"
+                                       Grid.Row="0"
+                                       Grid.Column="3">
+
+                    <Label Text="Species"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <bp_ctrls:ValuePicker x:Name="_speciesEntry"
+                                          SelectedValue="{Binding SpeciesCode}"
+                                          ItemsSource="{Binding SpeciesOptions}"
+                                          Title="Species"
+                                          AutomationProperties.IsInAccessibleTree="True"
+                                          AutomationProperties.Name="Species">
+                    </bp_ctrls:ValuePicker>
+
+                </HorizontalStackLayout>
+
+                <!--Live Dead-->
+                <HorizontalStackLayout Grid.Row="1"
+                                       Grid.Column="0">
+
+                    <Label Text="Live/Dead"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <bp_ctrls:ValuePicker x:Name="_liveDeadPicker"
+                                          SelectedValue="{Binding LiveDead}"
+                                          Title="Live Dead"
+                                          AutomationProperties.IsInAccessibleTree="True"
+                                          AutomationProperties.Name="Live Dead">
+                        <bp_ctrls:ValuePicker.ItemsSource>
+                            <Array Type="{x:Type x:String}">
+                                <x:String>L</x:String>
+                                <x:String>D</x:String>
+                            </Array>
+                        </bp_ctrls:ValuePicker.ItemsSource>
+                    </bp_ctrls:ValuePicker>
+
+                </HorizontalStackLayout>
+
+                <!--Initials-->
+                <HorizontalStackLayout Grid.Row="1"
+                                       Grid.Column="1"
+                                       IsVisible="{Binding Cruisers, Converter={StaticResource isListNullOrEmptyConverter}}">
+                    <Label Text="Initials"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <Entry x:Name="_initialsEntry"
+                           Text="{Binding Initials}"
+                           Keyboard="Default"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Initialss" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Grid.Row="1"
+                                       Grid.Column="1"
+                                       IsVisible="{Binding Cruisers, Converter={StaticResource isListNotNullOrEmptyConverter}}">
+                    <Label Text="Initials"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <bp_ctrls:ValuePicker x:Name="_initialsPicker"
+                                          SelectedValue="{Binding Initials}"
+                                          ItemsSource="{Binding Cruisers}"
+                                          Title="Initials"
+                                          AutomationProperties.IsInAccessibleTree="True"
+                                          AutomationProperties.Name="Initials" />
+                </HorizontalStackLayout>
+
+
+
+                <!--Count Or Measure-->
+                <HorizontalStackLayout Grid.Row="1"
+                                       Grid.Column="2">
+                    <Label Text="Count/Measure"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <Picker WidthRequest="60"
+                            HeightRequest="{StaticResource minTouchableHeight}"
+                            SelectedItem="{Binding CountOrMeasure}"
+                            ItemsSource="{Binding CountOrMeasureOptions}"
+                            Title="Count or Measure"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Count or Measure">
+
+                    </Picker>
+
+                </HorizontalStackLayout>
+
+                <!-- Tree Count -->
+                <HorizontalStackLayout IsVisible="{Binding CruiseMethod, Converter={StaticResource isfixCNTConverter}}"
+                                       Grid.Row="2"
+                                       Grid.Column="0">
+                    <Label Text="Tree Count"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <Entry Text="{Binding TreeCount}"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Tree Count" />
+                </HorizontalStackLayout>
+
+                <!-- KPI -->
+                <HorizontalStackLayout IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
+                                       Grid.Row="2"
+                                       Grid.Column="1">
+                    <Label Text="KPI:"
+                           x:Name="_kpiLabel"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <Label Text="{Binding Tree.KPI, Mode=OneWay}" />
+                </HorizontalStackLayout>
+
+                <!-- STM -->
+                <HorizontalStackLayout IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
+                                       Grid.Row="2"
+                                       Grid.Column="2">
+                    <Label Text="STM:"
+                           x:Name="_stmLabel"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <Label Text="{Binding Tree.STM, Mode=OneWay, Converter={StaticResource BoolToYesNoConverter}}" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <ScrollView x:Name="_editViewsHost"
+                        VerticalOptions="FillAndExpand"
+                        Grid.Row="1"
+                        Margin="5,0">
+                <VerticalStackLayout>
+
+                    <VerticalStackLayout.Resources>
+
+                        <Style TargetType="ctrls:VerticalHeaderControl"
+                               BasedOn="{StaticResource VerticalHeaderControlBase}">
+                            <Setter Property="HeaderMargin"
+                                    Value="5,0" />
+                        </Style>
+
+                        <Style TargetType="ctrls:HorizontialHeaderControl"
+                               BasedOn="{StaticResource HorizontialHeaderControlBase}">
+
+                            <Setter Property="HeightRequest"
+                                    Value="50" />
+                            <!--<Setter Property="LastChildWidth"
+                                    Value="100" />-->
+                            <Setter Property="HeaderMargin"
+                                    Value="5" />
+                            <Setter Property="HeaderVerticalOptions"
+                                    Value="Center" />
+
+                        </Style>
+                        <Style TargetType="Label" BasedOn="{StaticResource LabelBase}">
+                            <Setter Property="Margin"
+                                    Value="5" />
+
+                        </Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Padding"
+                                    Value="0" />
+                            <Setter Property="Stroke"
+                                    Value="Gray" />
+                            <Setter Property="StrokeShape"
+                                    Value="RoundRectangle 5" />
+                            <Setter Property="StrokeThickness"
+                                    Value="1" />
+                        </Style>
+                    </VerticalStackLayout.Resources>
+
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding TreeFieldValues, Converter={StaticResource tfvFileterConverter}}">
+                        <BindableLayout.ItemTemplateSelector>
+                            <ctrls:TreeFieldValueDataTemplateSelector>
+
+                                <!-- int template -->
+                                <ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                                    <DataTemplate>
+                                        <Border>
+                                            <ctrls:HorizontialHeaderControl Header="{Binding Heading}">
+                                                <Entry Text="{Binding ValueInt}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
+                                                    <Entry.Behaviors>
+                                                        <tk:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </ctrls:HorizontialHeaderControl>
+                                        </Border>
+                                    </DataTemplate>
+                                </ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+
+                                <!-- real template -->
+                                <ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                                    <DataTemplate>
+                                        <Border>
+                                            <ctrls:HorizontialHeaderControl Header="{Binding Heading}">
+                                                <Entry Text="{Binding ValueReal}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
+                                                    <Entry.Behaviors>
+                                                        <tk:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </ctrls:HorizontialHeaderControl>
+                                        </Border>
+                                    </DataTemplate>
+                                </ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
+
+                                <!-- text template -->
+                                <ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                                    <DataTemplate>
+                                        <Border>
+                                            <ctrls:HorizontialHeaderControl Header="{Binding Heading}">
+                                                <Entry Text="{Binding ValueText}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       ReturnType="Next">
+                                                    <Entry.Behaviors>
+                                                        <tk:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </ctrls:HorizontialHeaderControl>
+                                        </Border>
+                                    </DataTemplate>
+                                </ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
+
+                                <!-- grade template -->
+                                <ctrls:TreeFieldValueDataTemplateSelector.GradeTemplate>
+                                    <DataTemplate>
+                                        <Border>
+                                            <ctrls:HorizontialHeaderControl Header="Grade">
+                                                <bp_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
+                                                                      ItemsSource="{Binding BindingContext.GradeOptions, Source={Reference _page}}" />
+
+                                            </ctrls:HorizontialHeaderControl>
+                                        </Border>
+                                    </DataTemplate>
+                                </ctrls:TreeFieldValueDataTemplateSelector.GradeTemplate>
+
+                                <!-- remarks template -->
+                                <!--<controls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+        <DataTemplate>
+            <BoxView WidthRequest="0"
+                     HeightRequest="0"
+                     IsVisible="false" />
+        </DataTemplate>
+    </controls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+
+    <controls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
+        <DataTemplate>
+            <BoxView WidthRequest="0"
+                     HeightRequest="0"
+                     IsVisible="false" />
+        </DataTemplate>
+    </controls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>-->
+
+                            </ctrls:TreeFieldValueDataTemplateSelector>
+                        </BindableLayout.ItemTemplateSelector>
+                    </VerticalStackLayout>
+
+                    <Border>
+                        <ctrls:VerticalHeaderControl Header="Remarks">
+                            <Editor x:Name="_remarksEditor"
+                                    HeightRequest="80"
+                                    Text="{Binding Remarks}" />
+                        </ctrls:VerticalHeaderControl>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!--Remarks-->
+
+
+            <VerticalStackLayout Grid.Row="3"
+                                 BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
+                                 VerticalOptions="End"
+                                 AutomationProperties.IsInAccessibleTree="True"
+                                 AutomationProperties.Name="Errors List">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Button Style="{StaticResource errorWarningButton}"
+                                FontSize="Medium"
+                                Command="{Binding BindingContext.ShowEditTreeErrorCommand, Source={Reference _page}}"
+                                CommandParameter="{Binding .}"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Error Item" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>

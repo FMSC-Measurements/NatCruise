@@ -212,35 +212,23 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Grid.Resources>
-                    <ResourceDictionary>
-                        <Style TargetType="Button"
-                               BasedOn="{StaticResource button_base}">
-                            <Setter Property="BackgroundColor"
-                                    Value="{StaticResource usfs_green}" />
-                            <Setter Property="HeightRequest"
-                                    Value="60" />
-                        </Style>
-                    </ResourceDictionary>
-                </Grid.Resources>
-                <Button x:Name="_goToEndButton"
+
+                <Button x:Name="_goToEndButton" Style="{StaticResource Button.ScrollBottom}"
                         Grid.Column="0"
-                        ImageSource="ic_chevron_double_down_white_24dp.png"
+                        HeightRequest="60"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Scroll to End of List" />
-                <Button x:Name="_addPlotButton"
+                <Button x:Name="_addPlotButton" Style="{StaticResource Button.AddItem}"
                         Grid.Column="1"
-                        ImageSource="ic_plus_white_24dp.png"
                         Command="{Binding AddPlotCommand}"
-                        FontSize="30"
-                        BackgroundColor="{StaticResource secondary}"
+                        HeightRequest="60"
                         VerticalOptions="Fill"
                         HorizontalOptions="FillAndExpand"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Add Plot" />
-                <Button x:Name="_goToStartButton"
+                <Button x:Name="_goToStartButton" Style="{StaticResource Button.ScrollTop}"
                         Grid.Column="2"
-                        ImageSource="ic_chevron_double_up_white_24dp.png"
+                        HeightRequest="60"
                         HorizontalOptions="End"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Scoll to Start of List" />

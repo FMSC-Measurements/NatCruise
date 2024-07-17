@@ -180,10 +180,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowLogsList(string treeID)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("LogList?" + $"{NavParams.TreeID}={treeID}");
+            return ShowView<LogsListView>(new Dictionary<string, object> { { NavParams.TreeID, treeID } });
         }
 
         public Task ShowManageCruisers()
@@ -359,10 +356,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowTreeEdit(string treeID)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("Tree?" + $"{NavParams.TreeID}={treeID}");
+            return ShowView<TreeEditView>(new Dictionary<string, object>() { { NavParams.TreeID, treeID} });
         }
 
         public Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID)

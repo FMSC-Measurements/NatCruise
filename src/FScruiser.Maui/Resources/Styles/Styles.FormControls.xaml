@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui">
 
     <Style TargetType="CheckBox"
            x:Key="CheckBoxBase">
@@ -126,6 +127,7 @@
            BasedOn="{StaticResource EntryBase}" />
 
     <Style TargetType="Picker"
+           ApplyToDerivedTypes="True"
            x:Key="PickerBase">
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
@@ -159,6 +161,14 @@
     </Style>
     <Style TargetType="Picker"
            BasedOn="{StaticResource PickerBase}" />
+
+    <Style TargetType="bp_ctrls:ValuePicker"
+           BasedOn="{StaticResource PickerBase}"
+           x:Key="ValuePickerBase">
+    </Style>
+
+    <Style TargetType="bp_ctrls:ValuePicker"
+           BasedOn="{StaticResource ValuePickerBase}" />
 
     <Style TargetType="RadioButton"
            x:Key="RadioButtonBase">
