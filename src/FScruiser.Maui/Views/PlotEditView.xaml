@@ -29,7 +29,7 @@
                          AutomationProperties.Name="Plot Error List">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Label TextColor="{StaticResource darkText}"
+                        <Label TextColor="{StaticResource text.dark}"
                                Text="{Binding Message}"
                                BackgroundColor="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}"
                                FontSize="Large"
@@ -240,17 +240,14 @@
                                                     <Label Text="Is Null Plot"
                                                            VerticalTextAlignment="Center" />
                                                     <Switch IsToggled="{Binding IsEmpty}"
-                                                            OnColor="{StaticResource primary_500}"
+                                                            OnColor="{StaticResource usfs_green}"
                                                             HeightRequest="{StaticResource minTouchableHeight}"
                                                             Margin="20,0,0,0" />
                                                 </StackLayout>
                                             </StackLayout>
 
                                             <!--horizontal spacer-->
-                                            <BoxView HeightRequest="1"
-                                                     VerticalOptions="Fill"
-                                                     Margin="0"
-                                                     Color="{StaticResource black_70}" />
+                                            <BoxView Style="{StaticResource HorizontialSpacer}" />
 
                                             <Button Text="Calculate Limiting Distances"
                                                     VerticalOptions="FillAndExpand"

@@ -23,8 +23,7 @@
                             Style="{StaticResource SwitchBase}" />
                 </ctrls:HeaderControl>
 
-                <BoxView HeightRequest="2"
-                         BackgroundColor="DarkGray" />
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
 
                 <ctrls:HeaderControl Header="Tree Based Tally Page Settings"
                                      HeaderFontSize="Subtitle"
@@ -44,8 +43,7 @@
                     </VerticalStackLayout>
                 </ctrls:HeaderControl>
 
-                <BoxView HeightRequest="2"
-                         BackgroundColor="DarkGray" />
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
 
                 <ctrls:HeaderControl Header="Plot Tally Page Settings"
                                      HeaderFontSize="Subtitle"
@@ -73,8 +71,7 @@
                     </VerticalStackLayout>
                 </ctrls:HeaderControl>
 
-                <BoxView HeightRequest="2"
-                         BackgroundColor="DarkGray" />
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
 
                 <ctrls:HeaderControl Header="App Analytics"
                                      HeaderFontSize="Subtitle"
@@ -98,8 +95,7 @@
                     </VerticalStackLayout>
                 </ctrls:HeaderControl>
 
-                <BoxView HeightRequest="2"
-                         BackgroundColor="DarkGray" />
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
 
                 <Button Text="Database Utilities"
                         Command="{Binding ShowDatabaseUtilitiesCommand}"

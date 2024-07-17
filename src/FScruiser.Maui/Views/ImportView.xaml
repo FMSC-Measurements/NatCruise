@@ -36,16 +36,15 @@
                                    AutomationProperties.Name="{Binding .}" />-->
 
                             <TextCell  Text="{Binding .}"
+                                       TextColor="{StaticResource primary}"
                                        Command="{Binding BindingContext.SelectCruiseCommand, Source={Reference _page}}"
-                                       CommandParameter="{Binding .}"
-                                       TextColor="{StaticResource listItemText}" />
+                                       CommandParameter="{Binding .}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
                 <ActivityIndicator AbsoluteLayout.LayoutBounds=".5,.5"
                                    AbsoluteLayout.LayoutFlags="PositionProportional"
-                                   Color="{StaticResource usfs_green}"
                                    IsRunning="{Binding IsWorking}" />
             </AbsoluteLayout>
             <Button Grid.Row="3"

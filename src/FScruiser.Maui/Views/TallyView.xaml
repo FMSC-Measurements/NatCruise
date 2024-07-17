@@ -1000,7 +1000,7 @@
                     <DataTemplate>
                         <Button Text="{Binding .}"
                                 TextColor="{StaticResource white_90}"
-                                BackgroundColor="{StaticResource primary_500}"
+                                BackgroundColor="{StaticResource usfs_green}"
                                 Margin="2"
                                 Padding="1"
                                 HeightRequest="40"

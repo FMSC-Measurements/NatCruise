@@ -15,13 +15,20 @@
                               Member="const:UI.MinTouchableHeight"></x:Static>
                     <x:Static x:Key="minTouchableWidth"
                               Member="const:UI.MinTouchableWidth"></x:Static>
-                </ResourceDictionary>
 
+                    
+                </ResourceDictionary>
 
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Converters.xaml" />
-                <!--<ResourceDictionary Source="Resources/Styles/Styles.xaml" />-->
+                <ResourceDictionary Source="Resources/Styles/Styles.ContentViews.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.Controls.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.ItemViews.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.Pages.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
+            
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

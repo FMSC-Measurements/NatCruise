@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:dg="clr-namespace:DevExpress.Maui.DataGrid;assembly=DevExpress.Maui.DataGrid">
+
+    <!-- indicator view is similar to horizontal carousel view with indicators that show position in collection -->
+    <Style TargetType="IndicatorView"
+           x:Key="IndicatorViewBase">
+        <Setter Property="IndicatorColor"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
+        <Setter Property="SelectedIndicatorColor"
+                Value="{AppThemeBinding Light={StaticResource gray950}, Dark={StaticResource gray100}}" />
+    </Style>
+    <Style TargetType="IndicatorView"
+           BasedOn="{StaticResource IndicatorViewBase}" />
+
+    <Style TargetType="ListView"
+           x:Key="ListViewBase">
+        <Setter Property="SeparatorColor"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
+        <Setter Property="RefreshControlColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray200}}" />
+    </Style>
+    <Style TargetType="ListView"
+           BasedOn="{StaticResource ListViewBase}" />
+
+    <Style TargetType="RefreshView"
+           x:Key="RefreshViewBase">
+        <Setter Property="RefreshColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray200}}" />
+    </Style>
+    <Style TargetType="RefreshView"
+           BasedOn="{StaticResource RefreshViewBase}" />
+
+    <!--<Style TargetType="dg:DataGridView" x:Key="DataGridViewBase">
+        <Setter Property="AutoGenerateColumnsMode"
+                Value="None" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource white}, Dark={StaticResource grey950}}" />
+        <Setter Property="BorderColor"
+                Value="{StaticResource gray500}" />
+        <Setter Property="CellAppearance">
+            <dg:CellAppearance Padding="5"
+                               FontSize="14"
+                               FontColor="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}"
+                               SelectionColor="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray900}}"
+                               SelectionFontColor="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
+        </Setter>
+    </Style>
+    <Style TargetType="dg:DataGridView"
+           BasedOn="{StaticResource DataGridViewBase}" />-->
+
+</ResourceDictionary>

@@ -38,7 +38,7 @@
 
 
                         <TextCell  Text="{Binding .}"
-                                   TextColor="{StaticResource listItemText}"
+                                   TextColor="{StaticResource primary}"
                                    AutomationProperties.IsInAccessibleTree="true"
                                    AutomationProperties.Name="{Binding .}" />
 
@@ -51,7 +51,8 @@
                   RowDefinitions="Auto, Auto, Auto"
                   ColumnDefinitions="*,*">
                 <Grid.Resources>
-                    <Style TargetType="Button">
+                    <Style TargetType="Button"
+                           BasedOn="{StaticResource ButtonBase}">
                         <Setter Property="Margin"
                                 Value="2,5" />
                     </Style>

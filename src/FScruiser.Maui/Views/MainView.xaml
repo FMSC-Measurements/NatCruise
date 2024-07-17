@@ -10,8 +10,7 @@
             IsPresented="True">
 
     <FlyoutPage.Flyout>
-        <ContentPage Title="Navigation Flyout"
-                     BackgroundColor="{StaticResource fs_brown}">
+        <ContentPage Title="Navigation Flyout">
             <Grid>
                 <Grid.RowDefinitions>
 
@@ -23,14 +22,13 @@
                 </Grid.RowDefinitions>
 
                 <!--select cruise button-->
-                <Border Grid.Row="0" BackgroundColor="White"
+                <Border Grid.Row="0" Style="{StaticResource BorderBase}"
                         Padding="2"
                         Margin="10"
                         StrokeShape="RoundRectangle 5">
 
-                    <StackLayout BackgroundColor="{StaticResource fs_brown}">
+                    <StackLayout>
                         <Grid Padding="3"
-                              BackgroundColor="{StaticResource fs_brown}"
                               AutomationProperties.IsInAccessibleTree="True"
                               AutomationProperties.Name="Select Cruise">
                             <Grid.ColumnDefinitions>
@@ -39,7 +37,7 @@
                             </Grid.ColumnDefinitions>
                             
                             <Border Grid.Column="0"
-                                    BackgroundColor="{StaticResource usfs_gold}"
+                                    BackgroundColor="{StaticResource primary}"
                                     HeightRequest="40"
                                     Padding="5"
                                     StrokeShape="RoundRectangle 5">
@@ -48,7 +46,7 @@
                             <Label Grid.Column="1"
                                    x:Name="_currentCruiseLable"
                                    Text="{Binding SelectedCruise, TargetNullValue='Select Cruise'}"
-                                   TextColor="{StaticResource lightText}"
+                                   TextColor="{StaticResource text.dark}"
                                    VerticalOptions="Fill"
                                    HorizontalOptions="Fill"
                                    VerticalTextAlignment="Center">
@@ -61,7 +59,7 @@
                         </Grid>
                         <Picker x:Name="_cuttingUnitPicker"
                                 Title="Select Cutting Unit"
-                                TextColor="{StaticResource lightText}"
+                                TextColor="{StaticResource text.light}"
                                 TitleColor="{StaticResource white_60}"
                                 BackgroundColor="{StaticResource white_12}"
                                 ItemsSource="{Binding CuttingUnits}"
@@ -87,6 +85,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <TextCell Text="{Binding Title}" 
+                                          TextColor="{StaticResource primary}"
                                           Command="{Binding BindingContext.NavigateCommand, Source={x:RelativeSource AncestorType={x:Type ContentPage}}}"
                                           CommandParameter="{Binding .}"/>
 
@@ -106,7 +105,7 @@
                     </ListView>
                 </ScrollView>
                 <HorizontalStackLayout Grid.Row="2">
-                    <Button ImageSource="{FontImageSource Glyph={Static const:FAIcons.Gear}, FontFamily={Static const:Fonts.FAsolid}, Size=30}">
+                    <Button Style="{StaticResource Button.MainMenu}" ImageSource="{FontImageSource Glyph={Static const:FAIcons.Gear}, FontFamily={Static const:Fonts.FAsolid}, Size=30}">
                         <Button.Behaviors>
                             <tk:TouchBehavior LongPressCommand="{Binding ShowTestViewCommand}" LongPressDuration="2000"
                                               Command="{Binding ShowSettingCommand}" />

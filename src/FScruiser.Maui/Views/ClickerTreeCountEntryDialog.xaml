@@ -12,16 +12,16 @@
                 <ResourceDictionary>
                     <x:Int32 x:Key="grid_rowHeight">40</x:Int32>
 
-                    <Style TargetType="Button">
+                    <!--<Style TargetType="Button">
                         <Setter Property="HeightRequest"
                                 Value="{StaticResource grid_rowHeight}" />
                         <Setter Property="WidthRequest"
                                 Value="65" />
                         <Setter Property="VerticalOptions"
                                 Value="Center" />
-                    </Style>
+                    </Style>-->
 
-                    <Style TargetType="Label">
+                    <Style TargetType="Label" BasedOn="{StaticResource Label.H1}">
                         <Setter Property="VerticalTextAlignment"
                                 Value="Center" />
                     </Style>
@@ -56,23 +56,22 @@
                     Grid.Row="1" Grid.Column="1" 
                     SelectedIndexChanged="_cruiserPicker_SelectedIndexChanged"/>-->
 
-            <StackLayout Grid.Row="1"
+            <HorizontalStackLayout Grid.Row="1"
                          Grid.Column="0"
                          Grid.ColumnSpan="2"
-                         Orientation="Horizontal"
                          HorizontalOptions="FillAndExpand">
 
                 <Button x:Name="_okButton"
-                        BackgroundColor="Green"
+                        Style="{StaticResource Button.Accept}"
                         Text="OK"
                         HorizontalOptions="Start"
                         Clicked="_okButton_Clicked" />
                 <Button x:Name="_cancelButton"
-                        BackgroundColor="Gray"
+                        Style="{StaticResource Button.Cancel}"
                         Text="Cancel"
                         HorizontalOptions="EndAndExpand"
                         Clicked="_cancelButton_Clicked" />
-            </StackLayout>
+            </HorizontalStackLayout>
         </Grid>
     </ContentPage.Content>
 </ctrls:DialogPage>

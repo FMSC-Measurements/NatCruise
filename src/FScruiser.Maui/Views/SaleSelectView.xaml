@@ -20,7 +20,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding .}"
-                                  TextColor="{StaticResource listItemText}"
+                                  TextColor="{StaticResource primary}"
                                   Command="{Binding BindingContext.ShowCruiseSelectCommand, Source={Reference _page}}"
                                   CommandParameter="{Binding .}" />
                     </DataTemplate>

@@ -33,10 +33,10 @@
                                 <SwipeItem Text="Delete"
                                            Command="{Binding BindingContext.DeletePlotCommand, Source={Reference _page}}"
                                            CommandParameter="{Binding .}"
-                                           BackgroundColor="Red" />
+                                           BackgroundColor="{StaticResource attention}" />
                             </SwipeView.LeftItems>
 
-                            <Frame BorderColor="DarkGray"
+                            <Frame Style="{StaticResource FrameBase}"
                                    Margin="3"
                                    Padding="0"
                                    HasShadow="True">
@@ -65,10 +65,10 @@
                                             <Label Grid.Column="0"
                                                    Text="Plot "
                                                    FontSize="Large"
-                                                   TextColor="Black" />
+                                                   TextColor="{StaticResource text.dark}" />
                                             <Label Grid.Column="1"
                                                    Text="{Binding PlotNumber}"
-                                                   TextColor="Black"
+                                                   TextColor="{StaticResource text.dark}"
                                                    FontSize="Large" />
 
 
@@ -80,7 +80,7 @@
                                                Padding="3"
                                                IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}"
                                                CornerRadius="3"
-                                               BackgroundColor="Red"
+                                               BackgroundColor="{StaticResource error}"
                                                VerticalOptions="Center">
 
 
@@ -90,7 +90,7 @@
                                                        AutomationProperties.IsInAccessibleTree="False" />
                                                 <Label Grid.Column="1"
                                                        Text="{Binding ErrorCount}"
-                                                       TextColor="Black"
+                                                       TextColor="{StaticResource text.dark}"
                                                        Margin="3,0"
                                                        AutomationProperties.IsInAccessibleTree="False" />
                                             </Grid>
@@ -136,12 +136,12 @@
                                                 <!-- tree count -->
                                                 <Label Margin="5,3"
                                                        Text="{Binding TreeCount, StringFormat='Count: {0}'}"
-                                                       TextColor="Black" />
+                                                       TextColor="{StaticResource text.dark}" />
 
                                                 <!-- tree errors -->
                                                 <Frame Padding="3"
                                                        CornerRadius="3"
-                                                       BackgroundColor="Red"
+                                                       BackgroundColor="{StaticResource error}"
                                                        IsVisible="{Binding TreeErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
 
                                                     <Grid ColumnDefinitions="15,Auto">
@@ -150,7 +150,7 @@
                                                                AutomationProperties.IsInAccessibleTree="False" />
                                                         <Label Grid.Column="1"
                                                                Text="{Binding TreeErrorCount}"
-                                                               TextColor="Black"
+                                                               TextColor="{StaticResource text.dark}"
                                                                Margin="3,0"
                                                                AutomationProperties.IsInAccessibleTree="False" />
                                                     </Grid>
@@ -159,7 +159,7 @@
                                                 <!-- tree warnings -->
                                                 <Frame Padding="3"
                                                        CornerRadius="3"
-                                                       BackgroundColor="Gold"
+                                                       BackgroundColor="{StaticResource warning}"
                                                        IsVisible="{Binding TreeWarningCount, Converter={StaticResource greaterThanZeroConverter}}">
 
                                                     <Grid ColumnDefinitions="15,Auto">
@@ -168,7 +168,7 @@
                                                                AutomationProperties.IsInAccessibleTree="False" />
                                                         <Label Grid.Column="1"
                                                                Text="{Binding TreeWarningCount}"
-                                                               TextColor="Black"
+                                                               TextColor="{StaticResource text.dark}"
                                                                Margin="3,0"
                                                                AutomationProperties.IsInAccessibleTree="False" />
                                                     </Grid>
@@ -186,7 +186,7 @@
                                                Margin="1"
                                                CornerRadius="5"
                                                HasShadow="True"
-                                               IsVisible="{Binding NullStrata, Converter={StaticResource listIsNotNullOrEmptyConverter}}">
+                                               IsVisible="{Binding NullStrata, Converter={StaticResource isListNotNullOrEmptyConverter}}">
                                             <Grid ColumnDefinitions="Auto,Auto">
                                                 <Label Grid.Column="0"
                                                        Text="Null:" />
@@ -217,7 +217,7 @@
                         <Style TargetType="Button"
                                BasedOn="{StaticResource button_base}">
                             <Setter Property="BackgroundColor"
-                                    Value="{StaticResource primary_500}" />
+                                    Value="{StaticResource usfs_green}" />
                             <Setter Property="HeightRequest"
                                     Value="60" />
                         </Style>
@@ -233,7 +233,7 @@
                         ImageSource="ic_plus_white_24dp.png"
                         Command="{Binding AddPlotCommand}"
                         FontSize="30"
-                        BackgroundColor="Orange"
+                        BackgroundColor="{StaticResource secondary}"
                         VerticalOptions="Fill"
                         HorizontalOptions="FillAndExpand"
                         AutomationProperties.IsInAccessibleTree="True"

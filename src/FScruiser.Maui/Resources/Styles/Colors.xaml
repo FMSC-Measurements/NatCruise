@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
+    
 
     <!-- colors -->
     <Color x:Key="fs_brown">#312418</Color>
@@ -45,6 +46,7 @@
 
     <!-- text -->
     <Color x:Key="darkText">#B2000000</Color>
+    <Color x:Key="accentTextColor">#002D72</Color>
     <Color x:Key="listItemText">#345E36</Color>
     <Color x:Key="lightText">White</Color>
 
@@ -63,21 +65,28 @@
     <Color x:Key="black_30">#4C000000</Color>
     <Color x:Key="black_12">#1E000000</Color>
 
-    <Color x:Key="Gray100">#E1E1E1</Color>
-    <Color x:Key="Gray200">#C8C8C8</Color>
-    <Color x:Key="Gray300">#ACACAC</Color>
-    <Color x:Key="Gray400">#919191</Color>
-    <Color x:Key="Gray500">#6E6E6E</Color>
-    <Color x:Key="Gray600">#404040</Color>
-    <Color x:Key="Gray900">#212121</Color>
-    <Color x:Key="Gray950">#141414</Color>
 
-    <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
-    <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
-    <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>
-    <SolidColorBrush x:Key="Gray400Brush" Color="{StaticResource Gray400}"/>
-    <SolidColorBrush x:Key="Gray500Brush" Color="{StaticResource Gray500}"/>
-    <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
-    <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
-    <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+    <Color x:Key="primary">#466C04</Color>
+    <Color x:Key="primary.dark">#005440</Color>
+    <Color x:Key="secondary">#ffc425</Color>
+    <Color x:Key="accent">#336699</Color>
+    <Color x:Key="text.primary">#466C04</Color>
+    <Color x:Key="text.accent">#336699</Color>
+    <Color x:Key="text.light">White</Color>
+    <Color x:Key="text.dark">#212121</Color>
+
+    <Color x:Key="attention">#C20303</Color>
+
+    <Color x:Key="white">White</Color>
+    <Color x:Key="black">Black</Color>
+
+    <Color x:Key="gray100">#E1E1E1</Color>
+    <Color x:Key="gray200">#C8C8C8</Color>
+    <Color x:Key="gray300">#ACACAC</Color>
+    <Color x:Key="gray400">#919191</Color>
+    <Color x:Key="gray500">#6E6E6E</Color>
+    <Color x:Key="gray600">#404040</Color>
+    <Color x:Key="gray900">#212121</Color>
+    <Color x:Key="gray950">#141414</Color>
+
 </ResourceDictionary>

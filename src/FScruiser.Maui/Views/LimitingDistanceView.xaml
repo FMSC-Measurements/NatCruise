@@ -39,7 +39,7 @@
 
                 <Label HorizontalOptions="FillAndExpand"
                        IsVisible="{Binding UseNewLimitingDistanceCalculator}"
-                       BackgroundColor="Gold"
+                       BackgroundColor="{StaticResource secondary}"
                        Text="Using New Limiting Distance Calculations" />
 
                 <!-- Stratum Settings -->
@@ -347,9 +347,8 @@
                 <StackLayout>
                     <StackLayout.Resources>
 
-                        <Style TargetType="Frame">
-                            <Setter Property="BackgroundColor"
-                                    Value="#F1E5CD" />
+                        <Style TargetType="Frame"
+                               BasedOn="{StaticResource FrameBase}">
                             <Setter Property="CornerRadius"
                                     Value="5" />
                             <Setter Property="Margin"
@@ -433,7 +432,7 @@
                 </StackLayout>
 
                 <!-- Limiting Distance and Tree Status -->
-                <Frame BackgroundColor="Orange"
+                <Frame BackgroundColor="{StaticResource secondary}"
                        CornerRadius="5">
                     <StackLayout Orientation="Vertical">
                         <StackLayout Orientation="Horizontal">
@@ -456,7 +455,7 @@
                                                  Binding="{Binding TreeStatus}"
                                                  Value="{Static vms:LimitingDistanceViewModel.TREE_STATUS_OUT}">
                                         <Setter Property="BackgroundColor"
-                                                Value="Red" />
+                                                Value="{StaticResource attention}" />
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>

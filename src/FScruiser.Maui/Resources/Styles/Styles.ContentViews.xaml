@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- content views are view that are intended to wrap another control -->
+    
+    <Style TargetType="Border"
+           x:Key="BorderBase">
+        <Setter Property="Stroke"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
+        <Setter Property="StrokeShape"
+                Value="Rectangle" />
+        <Setter Property="StrokeThickness"
+                Value="1" />
+    </Style>
+    <Style TargetType="Border"
+           BasedOn="{StaticResource BorderBase}" />
+
+    <Style TargetType="Frame"
+           x:Key="FrameBase">
+        <Setter Property="HasShadow"
+                Value="False" />
+        <Setter Property="BorderColor"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray950}}" />
+        <Setter Property="CornerRadius"
+                Value="8" />
+    </Style>
+    <Style TargetType="Frame"
+           BasedOn="{StaticResource FrameBase}" />
+
+    <Style TargetType="RefreshView"
+           x:Key="RefreshViewBase">
+        <Setter Property="RefreshColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray200}}" />
+    </Style>
+    <Style TargetType="RefreshView"
+           BasedOn="{StaticResource RefreshViewBase}" />
+
+</ResourceDictionary>
