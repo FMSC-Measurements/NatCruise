@@ -1,5 +1,6 @@
 ﻿# Todo
 
+ - [ ] add logging for view model load times, either to NavigationService or the view model base class
  - [ ] Change AutomationProperties to SemanticProperties
  - [ ] Switch NatCruise.Core TaskExtentions to use ILogger rather than ILoggingService
 

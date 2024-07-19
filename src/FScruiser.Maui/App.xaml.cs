@@ -18,6 +18,8 @@ public partial class App : Application
     protected App()
     {
         InitializeComponent();
+
+        //UserAppTheme = AppTheme.Dark;
     }
 
     public App(IServiceProvider serviceProvider, ILogger<App> log) : this()

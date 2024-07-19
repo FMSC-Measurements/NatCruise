@@ -216,12 +216,14 @@
                 <Button x:Name="_goToEndButton" Style="{StaticResource Button.ScrollBottom}"
                         Grid.Column="0"
                         HeightRequest="60"
+                        Margin="2,0"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Scroll to End of List" />
                 <Button x:Name="_addPlotButton" Style="{StaticResource Button.AddItem}"
                         Grid.Column="1"
                         Command="{Binding AddPlotCommand}"
                         HeightRequest="60"
+                        Margin="2,0"
                         VerticalOptions="Fill"
                         HorizontalOptions="FillAndExpand"
                         AutomationProperties.IsInAccessibleTree="True"
@@ -229,6 +231,7 @@
                 <Button x:Name="_goToStartButton" Style="{StaticResource Button.ScrollTop}"
                         Grid.Column="2"
                         HeightRequest="60"
+                        Margin="2,0"
                         HorizontalOptions="End"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Scoll to Start of List" />

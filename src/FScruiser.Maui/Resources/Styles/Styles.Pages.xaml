@@ -18,9 +18,9 @@
     <Style TargetType="NavigationPage"
            x:Key="NavigationPageBase">
         <Setter Property="BarBackgroundColor"
-                Value="{AppThemeBinding Light={StaticResource gray400}, Dark={StaticResource gray950}}" />
+                Value="{StaticResource gray500}" />
         <Setter Property="BarTextColor"
-                Value="{AppThemeBinding Light={StaticResource text.accent}, Dark={StaticResource text.accent}}" />
+                Value="{AppThemeBinding Light={StaticResource text.light}, Dark={StaticResource text.light}}" />
         <Setter Property="IconColor"
                 Value="{AppThemeBinding Light={StaticResource accent}, Dark={StaticResource accent}}" />
     </Style>
@@ -30,9 +30,9 @@
     <Style TargetType="TabbedPage"
            x:Key="TabbedPageBase">
         <Setter Property="BarBackgroundColor"
-                Value="{AppThemeBinding Light={StaticResource gray400}, Dark={StaticResource gray950}}" />
+                Value="{StaticResource gray500}" />
         <Setter Property="BarTextColor"
-                Value="{AppThemeBinding Light={StaticResource text.accent}, Dark={StaticResource text.accent}}" />
+                Value="{AppThemeBinding Light={StaticResource text.light}, Dark={StaticResource text.light}}" />
         <Setter Property="UnselectedTabColor"
                 Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray950}}" />
         <Setter Property="SelectedTabColor"
