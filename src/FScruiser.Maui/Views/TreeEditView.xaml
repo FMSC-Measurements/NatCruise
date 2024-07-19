@@ -25,27 +25,9 @@
 
         <converters:ErrorToColorConverter x:Key="errorToColorConverter"
                                           Default="White"
-                                          Error="{StaticResource error}"
+                                          Error="{StaticResource attention}"
                                           Warning="{StaticResource warning}"
                                           SuppressedColor="{StaticResource error_suppressed}" />
-
-        <Style x:Key="errorWarningButton"
-               TargetType="Button">
-            <Setter Property="TextColor"
-                    Value="{StaticResource text.dark}" />
-
-            <Setter Property="FontSize"
-                    Value="Large" />
-
-            <Setter Property="Margin"
-                    Value="0,0,0,7" />
-
-            <Setter Property="BackgroundColor"
-                    Value="{Binding ., Converter={StaticResource errorToColorConverter}}" />
-
-            <Setter Property="Text"
-                    Value="{Binding Message}" />
-        </Style>
 
         <tk:BoolToObjectConverter x:Key="hasErrorConverter"
                                   x:TypeArguments="Color"
@@ -293,7 +275,8 @@
                                     Value="Center" />
 
                         </Style>
-                        <Style TargetType="Label" BasedOn="{StaticResource LabelBase}">
+                        <Style TargetType="Label"
+                               BasedOn="{StaticResource LabelBase}">
                             <Setter Property="Margin"
                                     Value="5" />
 
@@ -441,8 +424,11 @@
                                  AutomationProperties.Name="Errors List">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Button Style="{StaticResource errorWarningButton}"
-                                FontSize="Medium"
+                        <Button FontSize="Medium"
+                                Margin="0,0,0,7"
+                                TextColor="{StaticResource text.dark}"
+                                BackgroundColor="{Binding ., Converter={StaticResource errorToColorConverter}}"
+                                Text="{Binding Message}"
                                 Command="{Binding BindingContext.ShowEditTreeErrorCommand, Source={Reference _page}}"
                                 CommandParameter="{Binding .}"
                                 AutomationProperties.IsInAccessibleTree="True"
