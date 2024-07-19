@@ -7,5 +7,7 @@ namespace NatCruise.Models
         public string LogID { get; set; }
 
         public int LogNumber { get; set; }
+
+        public string Message { get; set; }
     }
 }

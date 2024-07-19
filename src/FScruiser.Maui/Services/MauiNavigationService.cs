@@ -172,10 +172,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowLogEdit(string logID)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("LogEdit?" + $"{NavParams.LogID}={logID}");
+            return ShowView<LogEditView>(new Dictionary<string, object> { { NavParams.LogID, logID } });
         }
 
         public Task ShowLogsList(string treeID)

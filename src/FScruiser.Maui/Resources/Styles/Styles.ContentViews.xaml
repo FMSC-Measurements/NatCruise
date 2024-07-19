@@ -37,7 +37,10 @@
 
 
     <Style x:Key="HorizontialHeaderControlBase"
-           TargetType="ctrls:HorizontialHeaderControl"></Style>
+           TargetType="ctrls:HorizontialHeaderControl">
+        <Setter Property="HeaderFontSize"
+                Value="Header" />
+    </Style>
 
     <Style TargetType="ctrls:HorizontialHeaderControl"
            BasedOn="{StaticResource HorizontialHeaderControlBase}" />

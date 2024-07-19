@@ -15,11 +15,12 @@ namespace NatCruise.MVVM.ViewModels
     public class LogEditViewModel : ViewModelBase
     {
         private Log _log;
-        private IEnumerable<LogFieldSetup> _logFields;
-        private IEnumerable<LogError> _errors;
-        private IEnumerable<string> _gradeOptions;
+        private IReadOnlyCollection<LogFieldSetup> _logFields;
+        private IReadOnlyCollection<LogError> _errors;
+        private IReadOnlyCollection<string> _gradeOptions;
+        private IReadOnlyCollection<LogFieldValue> _logFieldValues;
 
-    public Log Log
+        public Log Log
         {
             get => _log;
             set
@@ -42,26 +43,81 @@ namespace NatCruise.MVVM.ViewModels
         {
             if (log != null)
             {
-                LogFields = FieldSetupDataservice.GetLogFieldSetupsByTreeID(log.TreeID);
-                Errors = LogErrorDataservice.GetLogErrorsByLog(log.LogID);
+                var logFieldValues = LogFieldValueDataservice.GetLogFieldValues(log.LogID).ToArray();
+                if (logFieldValues != null || logFieldValues.Length == 0)
+                {
+                    logFieldValues = new LogFieldValue[]
+                    {
+                        new LogFieldValue()
+                        {
+                            LogID = log.LogID,
+                            Field = "Grade",
+                            Heading = "Grade",
+                            ValueText = log.Grade,
+                        },
+                        new LogFieldValue()
+                        {
+                            LogID = log.LogID,
+                            Field = "SeenDefect",
+                            Heading = "PctSeenDef",
+                            ValueReal = log.SeenDefect,
+                        },
+                    };
+                }
+
+                LogFieldValues = logFieldValues;
+
+                LogFields = FieldSetupDataservice.GetLogFieldSetupsByTreeID(log.TreeID).ToArray();
+                Errors = LogErrorDataservice.GetLogErrorsByLog(log.LogID).ToArray();
             }
             else
             {
+                LogFieldValues = new LogFieldValue[0];
                 LogFields = new LogFieldSetup[0];
                 Errors = new LogError[0];
             }
         }
 
-        public IEnumerable<LogFieldSetup> LogFields { get => _logFields; set => SetProperty(ref _logFields, value); }
+        public IReadOnlyCollection<LogFieldSetup> LogFields { get => _logFields; set => SetProperty(ref _logFields, value); }
 
-        public IEnumerable<LogError> Errors { get => _errors; set => SetProperty(ref _errors, value); }
+        public IReadOnlyCollection<LogFieldValue> LogFieldValues
+        {
+            get => _logFieldValues;
+            set
+            {
+                if (_logFieldValues != null)
+                {
+                    foreach (var item in _logFieldValues)
+                    {
+                        item.PropertyChanged -= LogFieldValue_PropertyChanged;
+                    }
+                }
+                SetProperty(ref _logFieldValues, value);
+                if (value != null)
+                {
+                    foreach (var item in value)
+                    {
+                        item.PropertyChanged += LogFieldValue_PropertyChanged;
+                    }
+                }
+            }
+        }
+
+        private void LogFieldValue_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var logFieldValue = (LogFieldValue)sender;
+            LogFieldValueDataservice.UpdateLogFieldValue(logFieldValue);
+        }
+
+        public IReadOnlyCollection<LogError> Errors { get => _errors; set => SetProperty(ref _errors, value); }
         public ILogDataservice LogDataservice { get; }
         public ILogErrorDataservice LogErrorDataservice { get; }
+        public ILogFieldValueDataservice LogFieldValueDataservice { get; }
         public IFieldSetupDataservice FieldSetupDataservice { get; }
         public ILoggingService LoggingService { get; }
         public INatCruiseDialogService DialogService { get; }
 
-        public IEnumerable<string> GradeOptions
+        public IReadOnlyCollection<string> GradeOptions
         {
             get => _gradeOptions;
             set => SetProperty(ref _gradeOptions, value);
@@ -70,11 +126,13 @@ namespace NatCruise.MVVM.ViewModels
         public LogEditViewModel(ILogDataservice logDataservice,
             ILogErrorDataservice logErrorDataservice,
             IFieldSetupDataservice fieldSetupDataservice,
+            ILogFieldValueDataservice logFieldValueDataservice,
             ILoggingService loggingService,
             INatCruiseDialogService dialogService)
         {
             LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
             LogErrorDataservice = logErrorDataservice ?? throw new ArgumentNullException(nameof(logErrorDataservice));
+            LogFieldValueDataservice = logFieldValueDataservice ?? throw new ArgumentNullException(nameof(logFieldValueDataservice));
             FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));

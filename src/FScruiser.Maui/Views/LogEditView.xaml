@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                xmlns:dg="clr-namespace:DevExpress.Maui.DataGrid;assembly=DevExpress.Maui.DataGrid"
+                x:Class="FScruiser.Maui.Views.LogEditView"
+                x:Name="_page"
+                SemanticProperties.Description="Settings Page"
+                Title="Edit Log">
+    <ctrls:BasePage.Resources>
+        <Style x:Key="errorWarningLabel"
+               TargetType="Label">
+            <Setter Property="TextColor"
+                    Value="{StaticResource text.dark}" />
+
+            <Setter Property="FontSize"
+                    Value="Large" />
+
+            <Setter Property="Margin"
+                    Value="0,0,0,7" />
+
+            <Setter Property="BackgroundColor"
+                    Value="{StaticResource attention}" />
+
+            <Setter Property="Text"
+                    Value="{Binding Message}" />
+        </Style>
+    </ctrls:BasePage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout>
+
+
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ctrls:HorizontialHeaderControl Header="Log #"
+                                                Grid.Row="0">
+                    <Entry Text="{Binding Log.LogNumber}" />
+                </ctrls:HorizontialHeaderControl>
+
+                <HorizontalStackLayout Grid.Row="1"
+                                       Spacing="10">
+
+                    <ctrls:HorizontialHeaderControl Header="Unit"
+                                                    HeaderMargin="5,0">
+                        <Label Text="{Binding Log.CuttingUnitCode}" />
+                    </ctrls:HorizontialHeaderControl>
+
+                    <ctrls:HorizontialHeaderControl Header="Plot Number"
+                                                    IsVisible="{Binding Log.PlotNumber, Converter={StaticResource greaterThanZeroConverter} }">
+                        <Label Text="{Binding Log.PlotNumber}" />
+                    </ctrls:HorizontialHeaderControl>
+
+                    <ctrls:HorizontialHeaderControl Header="Tree Number">
+                        <Label Text="{Binding Log.TreeNumber}" />
+                    </ctrls:HorizontialHeaderControl>
+
+                </HorizontalStackLayout>
+
+                <dg:DataGridView Grid.Row="2"
+                                 ItemsSource="{Binding LogFieldValues}"
+                                 SelectionMode="None"
+                                 EditorShowMode="Tap"
+                                 IsColumnHeaderVisible="False">
+                    <dg:DataGridView.Columns>
+                        <dg:TextColumn FieldName="Heading" IsReadOnly="True" />
+
+                        <dg:TemplateColumn FieldName="Value"
+                                           BindingContext="{}">
+                            <dg:TemplateColumn.DisplayTemplate>
+                                <DataTemplate>
+                                    <Label VerticalOptions="Center"
+                                           FontSize="16"
+                                           Margin="14,10"
+                                           Text="{Binding Item.Value}" />
+                                </DataTemplate>
+                            </dg:TemplateColumn.DisplayTemplate>
+
+                            <dg:TemplateColumn.EditTemplate>
+                                <ctrls:LogFieldValueDataTemplateSelector>
+                                    <ctrls:LogFieldValueDataTemplateSelector.Grade>
+
+                                        <DataTemplate>
+                                            <Picker SelectedItem="{Binding Item.Value}"
+                                                    FontSize="16"
+                                                    ItemsSource="{Binding Source={x:Reference _page}, Path=BindingContext.GradeOptions}" />
+                                        </DataTemplate>
+                                    </ctrls:LogFieldValueDataTemplateSelector.Grade>
+
+                                    <ctrls:LogFieldValueDataTemplateSelector.Real>
+                                        <DataTemplate>
+                                            <Entry Text="{Binding Item.ValueReal}"
+                                                   FontSize="16"
+                                                   Keyboard="Numeric">
+                                                <Entry.Behaviors>
+                                                    <tk:SelectAllTextBehavior />
+                                                    <bhvrs:SelectNextOnCompleatedBehavior />
+                                                </Entry.Behaviors>
+                                            </Entry>
+                                        </DataTemplate>
+                                    </ctrls:LogFieldValueDataTemplateSelector.Real>
+
+                                    <ctrls:LogFieldValueDataTemplateSelector.Integer>
+
+                                        <DataTemplate>
+                                            <Entry Text="{Binding Item.ValueInt}"
+                                                   FontSize="16"
+                                                   Keyboard="Numeric">
+                                                <Entry.Behaviors>
+                                                    <tk:SelectAllTextBehavior />
+                                                    <bhvrs:SelectNextOnCompleatedBehavior />
+                                                </Entry.Behaviors>
+                                            </Entry>
+                                        </DataTemplate>
+                                    </ctrls:LogFieldValueDataTemplateSelector.Integer>
+                                </ctrls:LogFieldValueDataTemplateSelector>
+                            </dg:TemplateColumn.EditTemplate>
+
+                        </dg:TemplateColumn>
+                    </dg:DataGridView.Columns>
+
+                </dg:DataGridView>
+
+                <!--<ScrollView x:Name="_editViewsHost"
+                            Grid.Row="2"
+                            AutomationProperties.IsInAccessibleTree="False">
+                    <ScrollView.Resources>
+                        <ResourceDictionary>
+                            <Style TargetType="Label">
+                                <Setter Property="TextColor"
+                                        Value="Black" />
+                                <Setter Property="VerticalTextAlignment"
+                                        Value="Center" />
+                            </Style>
+                            <Style TargetType="Entry">
+                                <Setter Property="TextColor"
+                                        Value="Black" />
+                            </Style>
+                            <Style TargetType="Picker">
+                                <Setter Property="TextColor"
+                                        Value="Black" />
+                            </Style>
+                            -->
+                <!--<Style TargetType="Switch">
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>-->
+                <!--
+                        </ResourceDictionary>
+                    </ScrollView.Resources>
+
+                    
+
+                    -->
+                <!--<CollectionView ItemsSource="{Binding LogFieldValues}">
+                        <CollectionView.ItemTemplate>
+
+                            <ctrls:LogFieldValueDataTemplateSelector>
+                                <ctrls:LogFieldValueDataTemplateSelector.Grade>
+                                    <DataTemplate>
+                                        <ctrls:HorizontialHeaderControl Header="{Binding Heading}">
+                                            <bp_ctrls:ValuePicker>
+                                                <bp_ctrls:ValuePicker.ItemsSource>
+                                                    <x:Array Type="{x:Type x:String}">
+                                                        <x:String>0</x:String>
+                                                        <x:String>1</x:String>
+                                                        <x:String>2</x:String>
+                                                        <x:String>3</x:String>
+                                                        <x:String>4</x:String>
+                                                        <x:String>5</x:String>
+                                                        <x:String>6</x:String>
+                                                        <x:String>7</x:String>
+                                                        <x:String>8</x:String>
+                                                        <x:String>9</x:String>
+                                                    </x:Array>
+                                                </bp_ctrls:ValuePicker.ItemsSource>
+                                            </bp_ctrls:ValuePicker>
+                                        </ctrls:HorizontialHeaderControl>
+                                    </DataTemplate>
+                                </ctrls:LogFieldValueDataTemplateSelector.Grade>
+
+                                <ctrls:LogFieldValueDataTemplateSelector.Real>
+                                    <DataTemplate>
+                                        <ctrls:HorizontialHeaderControl Header="{Binding Heading}">
+                                            <Entry Text="{Binding ValueReal}"
+                                                   Keyboard="Numeric">
+                                                <Entry.Behaviors>
+                                                    <tk:SelectAllTextBehavior />
+                                                    <bhvrs:SelectNextOnCompleatedBehavior />
+                                                </Entry.Behaviors>
+                                            </Entry>
+                                        </ctrls:HorizontialHeaderControl>
+                                    </DataTemplate>
+                                </ctrls:LogFieldValueDataTemplateSelector.Real>
+
+                                <ctrls:LogFieldValueDataTemplateSelector.Integer>
+                                    <DataTemplate>
+                                        <ctrls:HorizontialHeaderControl Header="{Binding Heading}">
+                                            <Entry Text="{Binding ValueInt}"
+                                                   Keyboard="Numeric">
+                                                <Entry.Behaviors>
+                                                    <tk:SelectAllTextBehavior />
+                                                    <bhvrs:SelectNextOnCompleatedBehavior />
+                                                </Entry.Behaviors>
+                                            </Entry>
+                                        </ctrls:HorizontialHeaderControl>
+                                    </DataTemplate>
+                                </ctrls:LogFieldValueDataTemplateSelector.Integer>
+
+                            </ctrls:LogFieldValueDataTemplateSelector>
+
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>-->
+
+                <!--<VerticalStackLayout BindableLayout.ItemsSource="{Binding LogFieldValues}">
+                        <BindableLayout.ItemTemplate>
+                            <ctrls:LogFieldValueDataTemplateSelector>
+                                <ctrls:LogFieldValueDataTemplateSelector.Grade>
+                                    <DataTemplate>
+                                        <ctrls:HorizontialHeaderControl Header="{StaticResource Heading}">
+                                            <bp_ctrls:ValuePicker>
+                                                <bp_ctrls:ValuePicker.ItemsSource>
+                                                    <x:Array Type="{x:Type x:String}">
+                                                        <x:String>0</x:String>
+                                                        <x:String>1</x:String>
+                                                        <x:String>2</x:String>
+                                                        <x:String>3</x:String>
+                                                        <x:String>4</x:String>
+                                                        <x:String>5</x:String>
+                                                        <x:String>6</x:String>
+                                                        <x:String>7</x:String>
+                                                        <x:String>8</x:String>
+                                                        <x:String>9</x:String>
+                                                    </x:Array>
+                                                </bp_ctrls:ValuePicker.ItemsSource>
+                                            </bp_ctrls:ValuePicker>
+                                        </ctrls:HorizontialHeaderControl>
+                                    </DataTemplate>
+                                </ctrls:LogFieldValueDataTemplateSelector.Grade>
+
+                                <ctrls:LogFieldValueDataTemplateSelector.Real>
+                                    <DataTemplate>
+                                        <ctrls:HorizontialHeaderControl Header="{StaticResource Heading}">
+                                            <Entry Text="{Binding ValueReal}"
+                                                   Keyboard="Numeric">
+                                                <Entry.Behaviors>
+                                                    <tk:SelectAllTextBehavior />
+                                                    <bhvrs:SelectNextOnCompleatedBehavior />
+                                                </Entry.Behaviors>
+                                            </Entry>
+                                        </ctrls:HorizontialHeaderControl>
+                                    </DataTemplate>
+                                </ctrls:LogFieldValueDataTemplateSelector.Real>
+
+                                <ctrls:LogFieldValueDataTemplateSelector.Integer>
+                                    <DataTemplate>
+                                        <ctrls:HorizontialHeaderControl Header="{StaticResource Heading}">
+                                            <Entry Text="{Binding ValueInt}"
+                                                   Keyboard="Numeric">
+                                                <Entry.Behaviors>
+                                                    <tk:SelectAllTextBehavior />
+                                                    <bhvrs:SelectNextOnCompleatedBehavior />
+                                                </Entry.Behaviors>
+                                            </Entry>
+                                        </ctrls:HorizontialHeaderControl>
+                                    </DataTemplate>
+                                </ctrls:LogFieldValueDataTemplateSelector.Integer>
+
+                            </ctrls:LogFieldValueDataTemplateSelector>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>-->
+                <!--
+                </ScrollView>-->
+
+                <VerticalStackLayout Grid.Row="3"
+                                     BindableLayout.ItemsSource="{Binding Errors}"
+                                     VerticalOptions="End"
+                                     AutomationProperties.IsInAccessibleTree="True"
+                                     AutomationProperties.Name="Log Errors List">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Label FontSize="Medium"
+                                   Margin="0,0,0,7"
+                                   TextColor="{StaticResource text.dark}"
+                                   BackgroundColor="{StaticResource attention}"
+                                   Text="{Binding Message}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.HelpText="Log Error Item" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ctrls:BasePage>
