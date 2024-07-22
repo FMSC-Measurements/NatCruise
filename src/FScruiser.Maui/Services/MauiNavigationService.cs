@@ -145,9 +145,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowFixCNT(string unitCode, int plotNumber, string stratumCode)
         {
-            Log.LogMethodCall();
-            throw new NotImplementedException();
-            return Shell.GoToAsync("FixCNTTally?" + $"{NavParams.UNIT}={unitCode}&{NavParams.PLOT_NUMBER}={plotNumber}&{NavParams.STRATUM}={stratumCode}");
+            return ShowView<FixCntTallyView>(new Dictionary<string, object>() { { NavParams.UNIT, unitCode }, { NavParams.PLOT_NUMBER, plotNumber }, { NavParams.STRATUM, stratumCode } });
         }
 
         public Task ShowImport()

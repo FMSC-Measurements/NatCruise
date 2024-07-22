@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.FixCntTallyView"
+                x:Name="_page"
+                Title="{Binding Title}"
+                SemanticProperties.Description="Fix Count Tally Page">
+    <ContentPage.Content>
+        <Grid AutomationProperties.IsInAccessibleTree="False">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ctrls:HorizontialHeaderControl Grid.Column="1"
+                                            Grid.Row="1"
+                                            Header="Untally"
+                                            AutomationProperties.IsInAccessibleTree="False">
+                <Switch x:Name="_enableUntallySwitch"
+                        IsToggled="{Binding IsUntallyEnabled}"
+                        AutomationProperties.Name="Untally Switch"
+                        AutomationProperties.IsInAccessibleTree="True" />
+            </ctrls:HorizontialHeaderControl>
+
+            <VerticalStackLayout x:Name="_tallyPopulationsView"
+                         Grid.Column="0"
+                         Grid.Row="0"
+                         Grid.ColumnSpan="2"
+                         Grid.RowSpan="1"
+                         BindableLayout.ItemsSource="{Binding TallyPopulations}"
+                         AutomationProperties.IsInAccessibleTree="True"
+                         AutomationProperties.Name="Fix Count Tally Population List">
+
+                <BindableLayout.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <HorizontalStackLayout 
+                                     AutomationProperties.IsInAccessibleTree="False">
+
+                            <Frame BackgroundColor="{StaticResource accent}">
+
+                                <Label Text="{Binding SpeciesCode}"
+                                       TextColor="{StaticResource text.light}"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center"
+                                       HorizontalTextAlignment="Center" />
+
+                            </Frame >
+
+
+                            <CollectionView ItemsSource="{Binding Buckets}"
+                                            HeightRequest="90"
+                                            AutomationProperties.IsInAccessibleTree="True"
+                                            AutomationProperties.Name="{Binding SpeciesCode, StringFormat='{}{0} Species Tally List'}">
+                                <CollectionView.ItemsLayout>
+                                    <GridItemsLayout Orientation="Horizontal" />
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+
+                                    <DataTemplate>
+
+                                        <Frame BorderColor="Black"
+                                               
+                                               WidthRequest="80"
+                                               Margin="4"
+                                               BackgroundColor="LightGray"
+                                               AutomationProperties.IsInAccessibleTree="True"
+                                               AutomationProperties.Name="{Binding Value, StringFormat='{}{0} Tally Button'}"
+                                               AutomationProperties.HelpText="{Binding TreeCount, StringFormat='{}Tree Count {0}'}">
+
+                                            <VerticalStackLayout>
+                                                <VerticalStackLayout.GestureRecognizers>
+
+                                                    <TapGestureRecognizer Command="{Binding BindingContext.ProcessTallyCommand, Source={Reference _page}}"
+                                                                          CommandParameter="{Binding .}"
+                                                                          ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+
+                                                </VerticalStackLayout.GestureRecognizers>
+
+                                                <Label Text="{Binding Value, StringFormat='{}{0}&quot;'}"
+                                                       FontAttributes="Bold"
+                                                       HorizontalTextAlignment="Center"
+                                                       VerticalOptions="Center"
+                                                       AutomationProperties.IsInAccessibleTree="False" />
+
+                                                <Label Text="{Binding TreeCount}"
+                                                       HorizontalTextAlignment="Center"
+                                                       VerticalOptions="Center"
+                                                       AutomationProperties.IsInAccessibleTree="False" />
+
+                                            </VerticalStackLayout>
+
+                                        </Frame>
+
+                                    </DataTemplate>
+
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                        </HorizontalStackLayout>
+
+                    </DataTemplate>
+
+                </BindableLayout.ItemTemplate>
+
+            </VerticalStackLayout>
+
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>
