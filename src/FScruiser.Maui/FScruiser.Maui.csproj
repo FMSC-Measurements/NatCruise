@@ -79,14 +79,7 @@
 	  <ProjectReference Include="..\NatCruise.Core\NatCruise.Core.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <MauiXaml Update="Views\FixCntTallyView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\TestDialogServiceView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
+
 
 
 

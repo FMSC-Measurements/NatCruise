@@ -180,6 +180,8 @@ namespace FScruiser.Maui.Services
         {
             Log.LogMethodCall();
 
+            return ShowView<ManageCruisersView>();
+
             throw new NotImplementedException();
             return Shell.GoToAsync("//Cruisers");
         }

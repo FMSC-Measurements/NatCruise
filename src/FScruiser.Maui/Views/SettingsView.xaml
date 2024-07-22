@@ -25,6 +25,17 @@
 
                 <BoxView Style="{StaticResource HorizontialSpacer}" />
 
+                <ctrls:HorizontialHeaderControl Grid.Row="0"
+                                                Margin="4,0,0,0"
+                                                Header="Ask Cruisers Initials When Tree Created">
+
+                    <Switch  IsToggled="{Binding CruisersDataservice.PromptCruiserOnSample}"
+                             HorizontalOptions="End" />
+
+                </ctrls:HorizontialHeaderControl>
+
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
+
                 <ctrls:HeaderControl Header="Tree Based Tally Page Settings"
                                      HeaderFontSize="Subtitle"
                                      Orientation="Vertical"

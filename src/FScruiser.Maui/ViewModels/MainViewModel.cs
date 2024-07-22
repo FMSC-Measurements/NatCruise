@@ -109,25 +109,26 @@ namespace FScruiser.Maui.ViewModels
 
         public void RefreshNavItems()
         {
+            
+
+            var navList = new List<NavItemModel>();
+            if (SelectedCruise != null)
+            {
+                navList.Add(new NavItemModel { Title = "Sale", NavAction = n => ShowSale() });
+                navList.Add(new NavItemModel { Title = "Strata", NavAction = n => ShowStrata() });
+                navList.Add(new NavItemModel { Title = "Audit Rules", NavAction = n => ShowAuditRules() });
+            }
+
             var selectedCuttingUnit = SelectedCuttingUnit;
             if (selectedCuttingUnit != null)
             {
-                var navList = new List<NavItemModel>();
+
                 var selectedUnitInfo = Services.GetRequiredService<ICuttingUnitDataservice>().GetCuttingUnitStrataSummary(selectedCuttingUnit.CuttingUnitCode);
 
                 if (selectedUnitInfo.HasTreeStrata)
                 {
                     navList.Add(new NavItemModel { Title = "Trees", NavAction = n => ShowTrees() });
                     navList.Add(new NavItemModel { Title = "Tally", NavAction = n => ShowTally() });
-
-                    NavItems = new[]
-                    {
-                        
-
-                        new NavItemModel { Title = "Utilities", NavAction = (n) => n.ShowUtilities() },
-                        new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() },
-                        new NavItemModel { Title = "About", NavAction= (n) => n.ShowAbout()},
-                    };
                 }
                 if (selectedUnitInfo.HasPlotStrata)
                 {
@@ -137,17 +138,17 @@ namespace FScruiser.Maui.ViewModels
 
                 navList.Add(new NavItemModel { Title = "Cutting Unit", NavAction = n => ShowCuttingUnit() });
 
-                NavItems = navList.ToArray();
+
             }
             else
             {
-                NavItems = new[]
-                {
-                    new NavItemModel { Title = "Utilities", NavAction = (n) => n.ShowUtilities() },
-                    new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() },
-                    new NavItemModel { Title = "About", NavAction= (n) => n.ShowAbout()},
-                };
+                navList.Add(new NavItemModel { Title = "Utilities", NavAction = (n) => n.ShowUtilities() });
+                navList.Add(new NavItemModel { Title = "Cruisers", NavAction = (n) => n.ShowManageCruisers() });
+                navList.Add(new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() });
+                navList.Add(new NavItemModel { Title = "About", NavAction = (n) => n.ShowAbout() });
             }
+
+            NavItems = navList.ToArray();
 
         }
 

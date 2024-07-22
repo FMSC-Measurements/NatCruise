@@ -34,6 +34,7 @@ namespace FScruiser.Maui
             services.AddTransient<ImportView>();
             services.AddTransient<LogEditView>();
             services.AddTransient<LogsListView>();
+            services.AddTransient<ManageCruisersView>();
             services.AddTransient<PlotEditView>();
             services.AddTransient<PlotListView>();
             services.AddTransient<SaleSelectView>();

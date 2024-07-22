@@ -10,6 +10,7 @@ example of standard xmlns used
 
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+             xmlns:const="clr-namespace:FScruiser.Maui.Constants"
 
              xmlns:local="clr-namespace:FScruiser.Maui"
              xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors" 

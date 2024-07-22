@@ -77,6 +77,8 @@
     <Style x:Key="Button.AddItem"
            TargetType="Button"
            BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Text"
+                Value="Add" />
         <Setter Property="BackgroundColor"
                 Value="{StaticResource secondary}" />
         <Setter Property="ImageSource"
@@ -86,6 +88,8 @@
     <Style x:Key="Button.EditItem"
            TargetType="Button"
            BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Text"
+                Value="Edit" />
         <Setter Property="BackgroundColor"
                 Value="{StaticResource primary}" />
         <Setter Property="ImageSource"
@@ -101,6 +105,8 @@
                 Value="{StaticResource text.light}" />
         <Setter Property="Text"
                 Value="Delete" />
+        <Setter Property="ImageSource"
+                Value="{FontImageSource Glyph={Static const:FAIcons.CircleMinus}, FontFamily={Static const:Fonts.FAsolid}, Size=30}" />
     </Style>
 
     <Style x:Key="Button.ScrollTop"
