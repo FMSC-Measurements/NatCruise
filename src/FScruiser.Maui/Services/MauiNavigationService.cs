@@ -104,9 +104,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowCuttingUnitInfo(string unitCode)
         {
-            Log.LogMethodCall();
-
-            return Shell.GoToAsync("//CuttingUnitInfo?" + $"{NavParams.UNIT}={unitCode}");
+            return ShowView<CuttingUnitInfoView>(new Dictionary<string, object>() { { NavParams.UNIT, unitCode } });
         }
 
         [Obsolete]

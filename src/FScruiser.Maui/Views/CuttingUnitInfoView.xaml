@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.CuttingUnitInfoView"
+                x:Name="_page"
+                SemanticProperties.Description="Cutting Unit"
+                Title="{Binding CuttingUnit.CuttingUnitCode, StringFormat='{}Cutting Unit {0}'}">
+    <ContentPage.Content>
+        <VerticalStackLayout>
+            <ctrls:HorizontialHeaderControl Header="Cutting Unit Code" >
+                <Entry Text="{Binding CuttingUnit.CuttingUnitCode}"
+                       IsReadOnly="True" />
+            </ctrls:HorizontialHeaderControl>
+
+            <ctrls:VerticalHeaderControl Header="Description">
+                <Entry Text="{Binding CuttingUnit.Description}" />
+            </ctrls:VerticalHeaderControl>
+
+            <ctrls:VerticalHeaderControl Header="Remarks">
+                <Editor Text="{Binding CuttingUnit.Remarks}" HeightRequest="150" />
+            </ctrls:VerticalHeaderControl>
+
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ctrls:BasePage>

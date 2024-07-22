@@ -27,6 +27,7 @@
                            Text="{TemplateBinding  Header}"
                            FontSize="{TemplateBinding HeaderFontSize}"
                            FontFamily="{TemplateBinding HeaderFontFamily}"
+                           FontAttributes="{TemplateBinding HeaderFontAttributes}"
                            HorizontalOptions="{TemplateBinding  HeaderHorizontalOptions}"
                            VerticalOptions="{TemplateBinding  HeaderVerticalOptions}"
                            BackgroundColor="{TemplateBinding  HeaderBackgroundColor}"

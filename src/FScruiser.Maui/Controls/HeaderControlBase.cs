@@ -119,6 +119,23 @@ namespace FScruiser.Maui.Controls
 
         #endregion HeaderFontFamily Property
 
+        #region HeaderFontAttributes Property
+
+        public static readonly BindableProperty HeaderFontAttributesProperty =
+            BindableProperty.Create(
+                nameof(HeaderFontAttributes),
+                typeof(FontAttributes),
+                typeof(HeaderControlBase),
+                defaultValue: FontAttributes.None);
+
+        public FontAttributes HeaderFontAttributes 
+        {
+            get => (FontAttributes)GetValue(HeaderFontAttributesProperty);
+            set => SetValue(HeaderFontAttributesProperty, value);
+        }
+
+        #endregion HeaderFontAttributes Property
+
         #region HeaderMargin
 
         public static readonly BindableProperty HeaderMarginProperty =

@@ -28,6 +28,7 @@ namespace FScruiser.Maui
             services.AddTransient<AskKpiView>();
             services.AddTransient<BlankView>();
             services.AddTransient<CruiseSelectView>();
+            services.AddTransient<CuttingUnitInfoView>();
             services.AddTransient<DatabaseUtilitiesView>();
             services.AddTransient<ImportView>();
             services.AddTransient<LogEditView>();
@@ -76,6 +77,7 @@ namespace FScruiser.Maui
 
             // FScruiser.Maui view models
             services.AddTransient<CruiseSelectViewModel>();
+            services.AddTransient<CuttingUnitInfoViewModel>();
             services.AddTransient<DatabaseUtilitiesViewModel>();
             services.AddTransient<FixCNTTallyViewModel>();
             services.AddTransient<ImportViewModel>();

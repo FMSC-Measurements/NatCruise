@@ -38,6 +38,10 @@
 
     <Style x:Key="HorizontialHeaderControlBase"
            TargetType="ctrls:HorizontialHeaderControl">
+        <Setter Property="HeaderVerticalOptions"
+                Value="Center" />
+        <Setter Property="HeaderFontAttributes"
+                Value="Bold" />
         <Setter Property="HeaderFontSize"
                 Value="Header" />
     </Style>
@@ -48,7 +52,12 @@
 
 
     <Style x:Key="VerticalHeaderControlBase"
-           TargetType="ctrls:VerticalHeaderControl"></Style>
+           TargetType="ctrls:VerticalHeaderControl">
+        <Setter Property="HeaderFontAttributes"
+                Value="Bold" />
+        <Setter Property="HeaderFontSize"
+                Value="Header" />
+    </Style>
 
     <Style TargetType="ctrls:VerticalHeaderControl"
            BasedOn="{StaticResource VerticalHeaderControlBase}" />
