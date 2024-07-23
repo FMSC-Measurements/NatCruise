@@ -198,10 +198,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowPlotTally(string? plotID)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("PlotTally?" + $"{NavParams.PlotID}={plotID}");
+            return ShowView<PlotTallyView>(new Dictionary<string, object> { { NavParams.PlotID, plotID } });
         }
 
         public Task ShowPlotTreeList(string unitCode)

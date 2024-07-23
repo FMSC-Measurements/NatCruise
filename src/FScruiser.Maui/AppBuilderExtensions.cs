@@ -37,6 +37,7 @@ namespace FScruiser.Maui
             services.AddTransient<ManageCruisersView>();
             services.AddTransient<PlotEditView>();
             services.AddTransient<PlotListView>();
+            services.AddTransient<PlotTallyView>();
             services.AddTransient<SaleSelectView>();
             services.AddTransient<SettingsView>();
             services.AddTransient<TallyView>();

@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                xmlns:converters="clr-namespace:FScruiser.Maui.Converters"
+                xmlns:tk_conv="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
+                xmlns:data="clr-namespace:FScruiser.Maui.Data"
+                xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
+                x:Class="FScruiser.Maui.Views.PlotTallyView"
+                x:Name="_page"
+                Title="{Binding Title}"
+                SemanticProperties.Description="Plot Tally Page">
+    <ctrls:BasePage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="tallyIncruiseColor"></Color>
+
+            <tk_conv:BoolToObjectConverter x:Key="tallyIncruiseBackgroundColorConverter"
+                                           x:TypeArguments="Color"
+                                           TrueObject="{StaticResource tallyButtonBgColor}"
+                                           FalseObject="DimGray" />
+
+            <converters:IsFixCNTorCountGreaterThanOneConverter x:Key="isFixCNTorCountGreaterThanOne" />
+
+            <data:TallySettingsDataService x:Key="tallySettings" />
+
+            <converters:PercentageToGridLengthConverter x:Key="percentageToGridLengthConverrter" />
+            <converters:PercentageToGridLengthConverter Invert="True"
+                                                        x:Key="invertedPercentageToGridLengthConverrter" />
+
+        </ResourceDictionary>
+    </ctrls:BasePage.Resources>
+
+    <ctrls:BasePage.ToolbarItems>
+        <ToolbarItem Text="Edit"
+                     Command="{Binding EditPlotCommand}"
+                     AutomationProperties.Name="Edit Plot"
+                     AutomationProperties.IsInAccessibleTree="True">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="{Static const:Fonts.FAsolid}"
+                                 Glyph="{Static const:FAIcons.PenToSquare}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ctrls:BasePage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{Binding PlotTallyButtonTrayVerticalSize, Source={StaticResource tallySettings}, Converter={StaticResource invertedPercentageToGridLengthConverrter}}" />
+                <RowDefinition Height="{Binding PlotTallyButtonTrayVerticalSize, Source={StaticResource tallySettings}, Converter={StaticResource percentageToGridLengthConverrter}}" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackLayout Grid.Row="0">
+
+                <!--Tree Edit Panel-->
+                <!--default to not visible, when view cell expands visibility will be set to true -->
+                <Frame  x:Name="_treeEditPanel"
+                        IsVisible="false"
+                        Padding="0"
+                        BindingContextChanged="_treeEditPanel_BindingContextChanged"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Tree Edit Panel">
+
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="2" />
+                        </Grid.RowDefinitions>
+
+                        <AbsoluteLayout>
+
+                            <Button AbsoluteLayout.LayoutBounds="0,0"
+                                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                                    Text="Prev"
+                                    Margin="5,0"
+                                    Command="{Binding SelectPreviousTreeCommand}" />
+                            <Label AbsoluteLayout.LayoutBounds=".5,0"
+                                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                                   Text="{Binding SelectedTreeViewModel.TreeNumber, StringFormat='{}Tree Number {0}'}"
+                                   TextColor="{StaticResource darkText}"
+                                   FontSize="Large" />
+                            <Button AbsoluteLayout.LayoutBounds="1,0"
+                                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                                    Margin="5,0"
+                                    Text="Next"
+                                    Command="{Binding SelectNextTreeCommand}" />
+                        </AbsoluteLayout>
+
+                        <CollectionView Grid.Row="1"
+                                        x:Name="PART_TreeFieldPanel"
+                                        BindingContext="{Binding SelectedTreeViewModel}"
+                                        ItemsSource="{Binding TreeFieldValues}"
+                                        SelectionMode="None"
+                                        HeightRequest="75"
+                                        ctrls:TreeFieldValueDataTemplateSelector.UseAltInitialsTemplate="{Binding Cruisers, Converter={StaticResource isListNotNullOrEmptyConverter}}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.Resources>
+                                <ResourceDictionary>
+                                    <Style TargetType="ctrls:VerticalHeaderControl"
+                                           x:Key="baseTreeFieldStyle">
+                                        <Setter Property="WidthRequest"
+                                                Value="100" />
+                                    </Style>
+
+                                    <Style TargetType="ctrls:VerticalHeaderControl"
+                                           x:Key="treeFieldValueStyle"
+                                           BasedOn="{StaticResource baseTreeFieldStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="ctrls:VerticalHeaderControl"
+                                                         Binding="{Binding Error.Level}"
+                                                         Value="{Static models:ErrorBase.LEVEL_WARNING}">
+                                                <Setter Property="BackgroundColor"
+                                                        Value="{StaticResource warning}" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="ctrls:VerticalHeaderControl"
+                                                         Binding="{Binding Error.Level}"
+                                                         Value="{Static models:ErrorBase.LEVEL_ERROR}">
+                                                <Setter Property="BackgroundColor"
+                                                        Value="{StaticResource error}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+
+                                    <Style TargetType="ctrls:VerticalHeaderControl"
+                                           x:Key="treeSepeciesFieldStyle"
+                                           BasedOn="{StaticResource baseTreeFieldStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="ctrls:VerticalHeaderControl"
+                                                         Binding="{Binding HasSpeciesError}"
+                                                         Value="True">
+                                                <Setter Property="BackgroundColor"
+                                                        Value="{StaticResource error}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+
+                                    <!-- defatult style -->
+                                    <Style TargetType="ctrls:VerticalHeaderControl"
+                                           BasedOn="{StaticResource treeFieldValueStyle}">
+                                    </Style>
+
+                                </ResourceDictionary>
+                            </CollectionView.Resources>
+
+                            <CollectionView.Header>
+
+                                <HorizontalStackLayout x:Name="_treeFieldsLayout">
+
+                                    <!-- species -->
+                                    <ctrls:VerticalHeaderControl Style="{StaticResource treeSepeciesFieldStyle}" Header="Species">
+                                        <bp_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
+                                                              ItemsSource="{Binding SpeciesOptions}" />
+                                    </ctrls:VerticalHeaderControl>
+                                    
+                                    <!--<ctrls:LastChildHeightLayout Style="{StaticResource treeSepeciesFieldStyle}">
+                                        <Label Text="Species" />
+                                        <bp_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
+                                                                 ItemsSource="{Binding SpeciesOptions}" />
+                                    </ctrls:LastChildHeightLayout>-->
+
+                                    <!-- count measure -->
+                                    <ctrls:VerticalHeaderControl Style="{StaticResource treeSepeciesFieldStyle}"
+                                                                 IsVisible="{Binding CruiseMethod, Converter={StaticResource isTwoStagePlotMethod} }"
+                                                                 Header="Count/Measure">
+                                        <bp_ctrls:ValuePicker SelectedValue="{Binding CountOrMeasure}"
+                                                              ItemsSource="{Binding CountOrMeasureOptions}" />
+                                    </ctrls:VerticalHeaderControl>
+
+
+                                    <!--<ctrls:LastChildHeightLayout Style="{StaticResource baseTreeFieldStyle}"
+                                                                       IsVisible="{Binding CruiseMethod, Converter={StaticResource isTwoStagePlotMethod} }">
+                                        <Label Text="Count/Measure" />
+                                        <bp_ctrls:ValuePicker SelectedValue="{Binding CountOrMeasure}"
+                                                                 ItemsSource="{Binding CountOrMeasureOptions}" />
+                                    </ctrls:LastChildHeightLayout>-->
+
+                                    
+
+
+
+                                </HorizontalStackLayout>
+                            </CollectionView.Header>
+
+                            <!-- rest of the tree fields -->
+                            <CollectionView.ItemTemplate>
+                                <ctrls:TreeFieldValueDataTemplateSelector>
+
+                                    <!-- int template -->
+                                    <ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+                                        <DataTemplate>
+                                            <ctrls:VerticalHeaderControl Header="{Binding Heading}">
+                                                <Entry Text="{Binding ValueInt}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
+                                                    <Entry.Behaviors>
+                                                        <tk:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </ctrls:VerticalHeaderControl>
+                                            
+                                            
+                                            <!--<ctrls:LastChildHeightLayout>
+                                                <Label Text="{Binding Heading}" />
+                                                <Entry Text="{Binding ValueInt}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
+                                                    <Entry.Behaviors>
+                                                        <tk:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </ctrls:LastChildHeightLayout>-->
+                                        </DataTemplate>
+                                    </ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
+
+                                    <!-- real template -->
+                                    <ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
+                                        <DataTemplate>
+                                            <ctrls:VerticalHeaderControl Header="{Binding Heading}">
+                                                <Entry Text="{Binding ValueReal}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
+                                                    <Entry.Behaviors>
+                                                        <tk:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </ctrls:VerticalHeaderControl>
+
+
+                                            <!--<ctrls:LastChildHeightLayout>
+                                                <Label Text="{Binding Heading}" />
+                                                <Entry Text="{Binding ValueReal}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       Keyboard="Numeric"
+                                                       ReturnType="Next">
+                                                    <Entry.Behaviors>
+                                                        <tk:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </ctrls:LastChildHeightLayout>-->
+                                        </DataTemplate>
+                                    </ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
+
+                                    <!-- text template -->
+                                    <ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
+                                        <DataTemplate>
+                                            <ctrls:VerticalHeaderControl Header="{Binding Heading}">
+                                                <Entry Text="{Binding ValueText}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       ReturnType="Next">
+                                                    <Entry.Behaviors>
+                                                        <tk:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </ctrls:VerticalHeaderControl>
+
+                                            <!--<ctrls:LastChildHeightLayout>
+                                                <Label Text="{Binding Heading}" />
+                                                <Entry Text="{Binding ValueText}"
+                                                       Placeholder="{Binding StrDefaultValue}"
+                                                       ReturnType="Next">
+                                                    <Entry.Behaviors>
+                                                        <tk:SelectAllTextBehavior />
+                                                    </Entry.Behaviors>
+                                                    <Entry.IsReadOnly>
+                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
+                                                            <Binding Path="IsLocked" />
+                                                            <Binding Path="IsHidden" />
+                                                        </MultiBinding>
+                                                    </Entry.IsReadOnly>
+                                                </Entry>
+                                            </ctrls:LastChildHeightLayout>-->
+                                        </DataTemplate>
+                                    </ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
+
+                                    <!-- Alt initial template. When cruisers initials are defined and we want to use a picker this template will be used
+                                                otherwise the basic text template will be used for initials -->
+                                    <ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
+                                        <DataTemplate>
+                                            <ctrls:VerticalHeaderControl Header="{Binding Heading}">
+                                                <bp_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
+                                                                      ItemsSource="{Binding BindingContext.Cruisers, Source={Reference PART_TreeFieldPanel}}" />
+                                            </ctrls:VerticalHeaderControl>
+                                            
+                                            <!--<ctrls:LastChildHeightLayout>
+                                                <Label Text="{Binding Heading}" />
+                                                <bp_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
+                                                                         ItemsSource="{Binding BindingContext.Cruisers, Source={Reference PART_TreeFieldPanel}}" />
+                                            </ctrls:LastChildHeightLayout>-->
+                                        </DataTemplate>
+                                    </ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
+
+                                    <!-- remarks template -->
+                                    <ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+                                        <DataTemplate>
+                                            <ctrls:VerticalHeaderControl Header="{Binding Heading}">
+                                                <ScrollView Orientation="Vertical" HeightRequest="70" WidthRequest="200">
+                                                    <Editor Text="{Binding ValueText}"
+                                                            AutoSize="TextChanges">
+                                                    </Editor>
+                                                </ScrollView>
+                                            </ctrls:VerticalHeaderControl>
+                                            
+                                            
+                                            <!--<ctrls:LastChildHeightLayout WidthRequest="200"
+                                                                               LastChildHeight="70">
+                                                <Label Text="{Binding Heading}" />
+                                                <ScrollView Orientation="Vertical">
+                                                    <Editor Text="{Binding ValueText}"
+                                                            AutoSize="TextChanges">
+                                                    </Editor>
+                                                </ScrollView>
+                                            </ctrls:LastChildHeightLayout>-->
+                                        </DataTemplate>
+                                    </ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
+
+                                    <ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
+                                        <DataTemplate>
+                                            <ctrls:VerticalHeaderControl Header="L/D">
+                                                <bp_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference PART_TreeFieldPanel}}"
+                                                                      ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference PART_TreeFieldPanel}}" />
+                                            </ctrls:VerticalHeaderControl>
+                                            
+                                            
+                                            <!--<ctrls:LastChildHeightLayout>
+                                                <Label Text="L/D" />
+                                                <bp_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference PART_TreeFieldPanel}}"
+                                                                         ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference PART_TreeFieldPanel}}" />
+
+                                            </ctrls:LastChildHeightLayout>-->
+                                        </DataTemplate>
+                                    </ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
+                                </ctrls:TreeFieldValueDataTemplateSelector>
+                            </CollectionView.ItemTemplate>
+
+                        </CollectionView>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <!-- hide button -->
+                                <ColumnDefinition Width="*" />
+                                <!-- logs button -->
+                                <ColumnDefinition Width="Auto" />
+                                <!-- edit button -->
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+
+                            <Button  x:Name="_hideTreeEditPanelButton"
+                                     Grid.Column="0"
+                                     Text="Hide"
+                                     HorizontalOptions="Start"
+                                     Clicked="_hideTreeEditPanelButton_Clicked"
+                                     AutomationProperties.IsInAccessibleTree="True"
+                                     AutomationProperties.Name="Hide Tree Edit Panel Button" />
+
+                            <Button Grid.Column="1"
+                                    x:Name="_logsButton"
+                                    Text="Logs"
+                                    Command="{Binding SelectedTreeViewModel.ShowLogsCommand}"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Logs Button" />
+
+                            <Button Grid.Column="2"
+                                    x:Name="_editButton"
+                                    Text="Edit"
+                                    Command="{Binding EditTreeCommand}"
+                                    CommandParameter="{Binding SelectedTreeViewModel.TreeID}"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Edit Tree Button" />
+                        </Grid>
+
+                        <BoxView Grid.Row="3"
+                                 BackgroundColor="Black" />
+                    </Grid>
+                </Frame>
+
+                <!--Trees List-->
+                <AbsoluteLayout>
+                    <ActivityIndicator AbsoluteLayout.LayoutBounds=".5,.5"
+                                       AbsoluteLayout.LayoutFlags="PositionProportional"
+                                       IsRunning="{Binding Trees.IsNotCompleted}"
+                                       IsVisible="{Binding Trees.IsNotCompleted}" />
+                    <CollectionView x:Name="_tallyFeedListView"
+                                    ItemsSource="{Binding Trees.Result}"
+                                    SelectionMode="None"
+                                    ItemsUpdatingScrollMode="KeepLastItemInView"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Tree List">
+
+                        <CollectionView.Behaviors>
+                            <bhvrs:ScrollOnLoadBehavior />
+                        </CollectionView.Behaviors>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <SwipeView Threshold="300">
+                                    <SwipeView.LeftItems>
+                                        <SwipeItem Text="Delete"
+                                                   BackgroundColor="{StaticResource attention}"
+                                                   Command="{Binding BindingContext.DeleteTreeCommand, Source={Reference _page}}"
+                                                   CommandParameter="{Binding .}"
+                                                   AutomationProperties.IsInAccessibleTree="True"
+                                                   AutomationProperties.Name="Delete Tree" />
+                                    </SwipeView.LeftItems>
+
+                                    <Frame Margin="2,5,2,0"
+                                           Padding="0"
+                                           BackgroundColor="{Binding CountOrMeasure, Converter={StaticResource countMeasureToColorConverter}}">
+
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer x:Name="_treeCellTappedGesture"
+                                                                  Command="{Binding BindingContext.SelectTreeCommand, Source={Reference _page}}"
+                                                                  CommandParameter="{Binding .}"
+                                                                  Tapped="_treeCellTappedGesture_Tapped"
+                                                                  ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                                        </Frame.GestureRecognizers>
+
+                                        <Grid AutomationProperties.IsInAccessibleTree="True"
+                                              AutomationProperties.Name="Tree Item"
+                                              AutomationProperties.HelpText="{Binding TreeNumber, StringFormat='{}Tree Number {0}'} ">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="50" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <!-- Count or Measure -->
+                                                <ColumnDefinition Width="20" />
+                                                <!-- pop indicator -->
+                                                <ColumnDefinition Width="150" />
+                                                <!-- tree number -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- tree count (FixCNT only) -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- spacer -->
+                                                <ColumnDefinition Width="*" />
+                                                <!-- KPI -->
+                                                <ColumnDefinition Width="50" />
+                                                <!-- STM -->
+                                                <ColumnDefinition Width="Auto" />
+                                                <!-- errors and warnings -->
+                                                <ColumnDefinition Width="50" />
+                                                <!-- button -->
+                                                <ColumnDefinition Width="50" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding CountOrMeasure}"
+                                                   TextColor="{StaticResource text.dark}"
+                                                   FontSize="16"
+                                                   VerticalTextAlignment="Center"
+                                                   AutomationProperties.IsInAccessibleTree="False" />
+
+                                            <ctrls:PopulationIndicator Grid.Row="0"
+                                                                             Grid.Column="1"
+                                                                             StratumCode="{Binding StratumCode}"
+                                                                             SampleGroupCode="{Binding SampleGroupCode}"
+                                                                             Species="{Binding SpeciesCode}"
+                                                                             LiveDead="{Binding LiveDead}"
+                                                                             Margin="5"
+                                                                             HeightRequest="30"
+                                                                             VerticalOptions="Center"
+                                                                             HorizontalOptions="Start"
+                                                                             FontSize="Small" />
+
+
+
+                                            <Label Grid.Row="0"
+                                                   Grid.Column="2"
+                                                   Text="{Binding TreeNumber, StringFormat='{}Tree {0}'}"
+                                                   TextColor="{StaticResource text.dark}"
+                                                   FontSize="30"
+                                                   VerticalTextAlignment="Center"
+                                                   HorizontalOptions="Start"
+                                                   AutomationProperties.IsInAccessibleTree="False" />
+
+
+                                            <StackLayout Grid.Row="0"
+                                                         Grid.Column="3"
+                                                         Margin="5,0"
+                                                         IsVisible="{Binding ., Converter={StaticResource isFixCNTorCountGreaterThanOne} }">
+                                                <Label Text="Count"
+                                                       HorizontalTextAlignment="Center" />
+                                                <Label Text="{Binding TreeCount}"
+                                                       HorizontalTextAlignment="Center"
+                                                       FontAttributes="Bold"
+                                                       FontSize="Medium" />
+                                            </StackLayout>
+
+                                            <!-- KPI -->
+                                            <StackLayout Grid.Column="5"
+                                                         Grid.Row="0"
+                                                         Orientation="Vertical"
+                                                         IsVisible="{Binding KPI, Converter={StaticResource greaterThanZeroConverter}}">
+                                                <Label Text="KPI"
+                                                       FontSize="Small" />
+                                                <Label Text="{Binding KPI}"
+                                                       FontAttributes="Bold" />
+                                            </StackLayout>
+
+                                            <!-- STM -->
+                                            <Label Grid.Column="6"
+                                                   WidthRequest="50"
+                                                   Text="STM"
+                                                   FontAttributes="Bold"
+                                                   HorizontalTextAlignment="Center"
+                                                   IsVisible="{Binding STM}" />
+
+                                            <!--Error and warnings -->
+                                            <StackLayout Grid.Row="0"
+                                                         Grid.Column="7">
+
+                                                <Frame Padding="0"
+                                                       CornerRadius="5"
+                                                       BackgroundColor="{StaticResource attention}"
+                                                       VerticalOptions="Center"
+                                                       IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
+                                                    <StackLayout Orientation="Horizontal"
+                                                                 Padding="0">
+                                                        <Image Source="ic_error_outline_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Text="{Binding ErrorCount}"
+                                                               TextColor="{StaticResource text.dark}"
+                                                               VerticalTextAlignment="Center"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </StackLayout>
+                                                </Frame>
+
+                                                <Frame Padding="0"
+                                                       CornerRadius="5"
+                                                       BackgroundColor="{StaticResource warning}"
+                                                       VerticalOptions="Center"
+                                                       IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}">
+                                                    <StackLayout Orientation="Horizontal"
+                                                                 Padding="0">
+                                                        <Image Source="ic_warning_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Text="{Binding WarningCount}"
+                                                               TextColor="{StaticResource text.dark}"
+                                                               VerticalTextAlignment="Center"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </StackLayout>
+                                                </Frame>
+                                            </StackLayout>
+
+                                            <!-- show delete button-->
+                                            <ImageButton Grid.Column="8"
+                                                         BackgroundColor="Transparent"
+                                                         Clicked="openDeleteButton_Clicked"
+                                                         Source="ic_more_vert_black_24dp.png"
+                                                         Padding="0,7"
+                                                         HeightRequest="{StaticResource minTouchableHeight}"
+                                                         VerticalOptions="Center"
+                                                         AutomationProperties.IsInAccessibleTree="True"
+                                                         AutomationProperties.Name="Show Item Actions" />
+
+                                        </Grid>
+
+                                    </Frame>
+
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </AbsoluteLayout>
+
+
+            </StackLayout>
+
+            <!-- Tally Buttons -->
+            <CollectionView Grid.Row="1"
+                            x:Name="TallyListView"
+                            IsVisible="{Binding TalliesFiltered, Converter={StaticResource isListNotNullOrEmptyConverter}}"
+                            ItemsSource="{Binding TalliesFiltered}"
+                            BackgroundColor="White"
+                            VerticalOptions="CenterAndExpand"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Tally Population List">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="4"
+                                     HorizontalItemSpacing="3"
+                                     VerticalItemSpacing="3" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="0"
+                               BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.Name="Tally Population Item">
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
+                                                      CommandParameter="{Binding .}"
+                                                      ctrls:TapGestureRecognizerHelper.EnableClickSound="True"/>
+                            </Frame.GestureRecognizers>
+
+
+                            <!--<StackLayout
+                                    Orientation="Horizontal"
+                                    VerticalOptions="CenterAndExpand"
+                                    HorizontalOptions="Center"
+                                    HeightRequest="20"
+                                             BackgroundColor="Black"
+                                             Padding="5,2,5,2">
+                                    -->
+                            <!--<Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="2" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="2" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="2" />
+                                        <ColumnDefinition Width="*" />
+                                        
+                                    </Grid.ColumnDefinitions>-->
+                            <!--
+                                    <StackLayout.Resources>
+                                        <ResourceDictionary>
+                                            <Style TargetType="Label">
+                                                <Setter Property="TextColor"
+                                                        Value="White" />
+                                                <Setter Property="FontSize"
+                                                        Value="Micro" />
+                                                <Setter Property="VerticalTextAlignment"
+                                                        Value="Center" />
+                                            </Style>
+                                            <Style TargetType="BoxView">
+                                                <Setter Property="BackgroundColor"
+                                                        Value="White" />
+                                                <Setter Property="WidthRequest"
+                                                        Value="1" />
+                                            </Style>
+                                        </ResourceDictionary>
+                                    </StackLayout.Resources>
+                                    <Label x:Name="_stratumLabel"
+                                           Grid.Column="0"
+                                           Text="{Binding StratumCode}" />
+                                    <BoxView Grid.Column="1" />
+                                    <Label x:Name="_sgLabel"
+                                           Grid.Column="2"
+                                           Text="{Binding SampleGroupCode}" LineBreakMode="NoWrap"  />
+                                    <BoxView x:Name="_spLableSplitter"
+                                             Grid.Column="3"
+                                             IsVisible="{Binding SpeciesCode, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+                                    <Label x:Name="_spLabel"
+                                           Grid.Column="4"
+                                           Text="{Binding SpeciesCode}" />
+                                    <BoxView x:Name="_ldLableSplitter"
+                                             Grid.Column="5"
+                                             IsVisible="{Binding LiveDead, Converter={StaticResource isNotNullOrEmptyConverter}}" />
+                                    <Label x:Name="_ldLabel"
+                                           Grid.Column="6"
+                                           Text="{Binding LiveDead}" />
+                                </StackLayout>-->
+
+                            <Grid RowDefinitions="Auto,Auto,Auto"
+                                  ColumnDefinitions="*, Auto">
+
+                                <Button Grid.Row="0"
+                                        Grid.Column="1"
+                                        HeightRequest="{StaticResource minTouchableHeight}"
+                                        WidthRequest="{StaticResource minTouchableWidth}"
+                                        Text="{Static const:FAIcons.EllipsisVertical}"
+                                        Command="{Binding BindingContext.ShowTallyPopulationDetailsCommand, Source={Reference _page} }"
+                                        CommandParameter="{Binding .}"
+                                        FontFamily="{Static const:Fonts.FAsolid}"
+                                        BackgroundColor="Transparent"
+                                        AutomationProperties.IsInAccessibleTree="True"
+                                        AutomationProperties.Name="Show Tally Info" />
+
+                                <ctrls:PopulationIndicator Grid.Row="1"
+                                                                 Grid.Column="0"
+                                                                 Grid.ColumnSpan="2"
+                                                                 HorizontalOptions="Center"
+                                                                 StratumCode="{Binding StratumCode}"
+                                                                 SampleGroupCode="{Binding SampleGroupCode}"
+                                                                 Species="{Binding SpeciesCode}"
+                                                                 LiveDead="{Binding LiveDead}"
+                                                                 FontSize="Micro"
+                                                                 AltFontSize="Large"
+                                                                 AltFontAttributes="Bold"
+                                                                 CellPadding="2,-4" />
+
+                                <Frame Grid.Row="2"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Padding="3,0"
+                                       Margin="0,0,0,2"
+                                       HorizontalOptions="Center"
+                                       BackgroundColor="White">
+
+                                    <StackLayout Orientation="Horizontal">
+                                        <!--<Image Source="{Static const:FAIcons.Tree}"
+                                               AutomationProperties.IsInAccessibleTree="False" />-->
+                                        <Label Text="{Static const:FAIcons.Tree}"
+                                               FontFamily="{Static const:Fonts.FAsolid}"
+                                               VerticalTextAlignment="Center"
+                                               AutomationProperties.IsInAccessibleTree="False" />
+                                        <Label Text="{Binding PlotTreeCount}"
+                                               HorizontalTextAlignment="Center"
+                                               BackgroundColor="Transparent"
+                                               TextColor="Black"
+                                               AutomationProperties.IsInAccessibleTree="True"
+                                               AutomationProperties.Name="Tree Count" />
+
+                                        <!--<Label Text="{Binding SumKPI, StringFormat='{}Kpi:{0}'}"
+                                               TextColor="Black"
+                                               IsVisible="{Binding SumKPI, Converter={StaticResource intToBoolConverter}}"
+                                               AutomationProperties.IsInAccessibleTree="False"
+                                               AutomationProperties.Name="Total KPI" />-->
+                                    </StackLayout>
+                                </Frame>
+                            </Grid>
+
+
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- stratum selection -->
+            <Grid Grid.Row="2"
+                  Margin="2,1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <!--<Style TargetType="Frame">
+                            <Setter Property="Padding"
+                                    Value="7.0" />
+                            <Setter Property="HeightRequest"
+                                    Value="{Static const:UI.MinTouchableHeight}" />
+                            <Setter Property="WidthRequest"
+                                    Value="70" />
+                            <Setter Property="BackgroundColor"
+                                    Value="{StaticResource primary_500}" />
+                            <Setter Property="CornerRadius"
+                                    Value="{StaticResource cornerRadius}" />
+                        </Style>
+                        <Style TargetType="StackLayout">
+                            <Setter Property="VerticalOptions"
+                                    Value="Center" />
+                        </Style>-->
+
+                        <ControlTemplate x:Key="thing">
+                            <Frame Padding="7,0"
+                                   HeightRequest="{Static const:UI.MinTouchableHeight}"
+                                   WidthRequest="70"
+                                   BackgroundColor="{StaticResource primary}">
+                                <ContentPresenter VerticalOptions="Center" />
+                            </Frame>
+                        </ControlTemplate>
+                    </ResourceDictionary>
+                </Grid.Resources>
+
+                <ScrollView Grid.Column="0"
+                            Orientation="Horizontal">
+                    <StackLayout BindableLayout.ItemsSource="{Binding PlotStrata}"
+                                 Orientation="Horizontal">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <ContentView ControlTemplate="{StaticResource thing}">
+                                    <ContentView.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.SetStratumFilterCommand, Source={Reference _page}}"
+                                                              CommandParameter="{Binding .}"
+                                                              ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                                    </ContentView.GestureRecognizers>
+                                    <StackLayout Orientation="Horizontal">
+
+                                        <Label Grid.Column="0"
+                                               Text="{Binding StratumCode}"
+                                               TextColor="{StaticResource text.light}"
+                                               HorizontalOptions="CenterAndExpand" />
+                                        <Frame Grid.Column="1"
+                                               Padding="0"
+                                               BackgroundColor="{StaticResource black_70}"
+                                               IsVisible="{Binding IsEmpty}">
+                                            <Label Text="NULL"
+                                                   TextColor="{StaticResource text.light}" />
+                                        </Frame>
+
+                                    </StackLayout>
+                                </ContentView>
+
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </ScrollView>
+
+
+                <ContentView Grid.Column="1"
+                             ControlTemplate="{StaticResource thing}">
+                    <ContentView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SetStratumFilterCommand}"
+                                              CommandParameter="{x:Null}"
+                                              ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                    </ContentView.GestureRecognizers>
+                    <Label Text="All"
+                           HorizontalTextAlignment="Center"
+                           TextColor="{StaticResource text.light}" />
+                </ContentView>
+            </Grid>
+
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>
