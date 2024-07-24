@@ -85,6 +85,12 @@ namespace FScruiser.Maui.ViewModels
 
             dataContext.CruiseChanged += DataContext_CruiseChanged;
             DataContext_CruiseChanged(null, EventArgs.Empty);
+        }
+
+        public override void Load()
+        {
+            base.Load();
+
             RefreshNavItems();
         }
 

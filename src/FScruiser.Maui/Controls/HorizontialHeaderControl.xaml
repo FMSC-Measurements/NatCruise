@@ -5,7 +5,8 @@
                          x:Class="FScruiser.Maui.Controls.HorizontialHeaderControl">
     <ctrls:HeaderControlBase.ControlTemplate>
         <ControlTemplate>
-            <Grid>
+            <Grid Margin="{TemplateBinding Margin}"
+                  BackgroundColor="{TemplateBinding BackgroundColor}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -35,7 +36,6 @@
                                   Margin="{TemplateBinding Padding}"
                                   Grid.Row="1"
                                   Grid.Column="1"
-                                  BackgroundColor="{TemplateBinding  BackgroundColor}"
                                   AutomationProperties.LabeledBy="{Reference PART_Header}" />
             </Grid>
 

@@ -216,10 +216,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowSale(string cruiseID)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("Sale?" + $"{NavParams.CruiseID}={cruiseID}");
+            return ShowView<SaleView>(new Dictionary<string, object> { { NavParams.CruiseID, cruiseID } });
         }
 
         public Task ShowSaleSelect()

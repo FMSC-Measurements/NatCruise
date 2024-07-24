@@ -8,7 +8,8 @@
                          HeaderFontSize="Header">
     <ctrls:HeaderControlBase.ControlTemplate>
         <ControlTemplate>
-            <Grid>
+            <Grid Margin="{TemplateBinding Margin}"
+                  BackgroundColor="{TemplateBinding BackgroundColor}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -40,7 +41,6 @@
                                   Grid.Row="1"
                                   Grid.Column="0"
                                   WidthRequest="{TemplateBinding WidthRequest}"
-                                  BackgroundColor="{TemplateBinding BackgroundColor}"
                                   AutomationProperties.LabeledBy="{Reference PART_Header}" />
             </Grid>
 

@@ -61,6 +61,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Include="..\..\doc\PrivacyPolicy.md" Link="Resources\Raw\PrivacyPolicy.md" />
+	  <None Include="..\..\doc\UserAgreement.md" Link="Resources\Raw\UserAgreement.md" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="akgul.Maui.DataGrid" Version="3.0.0" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="8.0.1" />
 		<PackageReference Include="DevExpress.Maui.DataGrid" Version="23.2.5" />

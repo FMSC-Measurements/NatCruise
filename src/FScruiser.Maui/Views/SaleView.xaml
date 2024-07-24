@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.SaleView"
+                x:Name="_page"
+                Title="Sale Info"
+                SemanticProperties.Description="Settings Page">
+    <ContentPage.Content>
+        <TableView BindingContext="{Binding Sale}"
+                   HasUnevenRows="True">
+            <TableRoot>
+                <TableSection>
+                    <EntryCell Label="Sale Name"
+                               Text="{Binding Name, Mode=OneWay}"
+                               IsEnabled="False" />
+                    <EntryCell Label="Sale Number"
+                               Text="{Binding SaleNumber, Mode=OneWay}"
+                               IsEnabled="False" />
+                    <EntryCell Label="Region"
+                               Text="{Binding Region}"
+                               IsEnabled="False" />
+                    <EntryCell Label="Forest"
+                               Text="{Binding Forest}"
+                               IsEnabled="False" />
+                    <EntryCell Label="District"
+                               Text="{Binding District}"
+                               IsEnabled="False"  />
+
+                    <ViewCell>
+                        <ctrls:VerticalHeaderControl Header="Remarks" Margin="8,0">
+                            <Entry Text="{Binding Remarks}"
+                                   HeightRequest="200"/>
+                        </ctrls:VerticalHeaderControl>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+    </ContentPage.Content>
+</ctrls:BasePage>
