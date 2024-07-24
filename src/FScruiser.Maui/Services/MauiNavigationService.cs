@@ -211,10 +211,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowPrivacyPolicy()
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("PrivacyPolicy");
+            return ShowView<PrivacyPolicyView>(showModal: true);
         }
 
         public Task ShowSale(string cruiseID)
