@@ -130,6 +130,30 @@
                 Value="{FontImageSource Glyph={Static const:FAIcons.EllipsisVertical}, FontFamily={Static const:Fonts.FAsolid}, Size={StaticResource fontSize.H3}, Color={StaticResource gray900}}" />
     </Style>
 
+    <Style x:Key="Button.MoveUp"
+           TargetType="Button">
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource accent}" />
+        <Setter Property="ImageSource"
+                Value="{FontImageSource Glyph={Static const:FAIcons.SquareCaretUp}, FontFamily={Static const:Fonts.FAsolid}, Size={StaticResource fontSize.H3}, Color={StaticResource gray900}}" />
+    </Style>
+
+    <Style x:Key="Button.MoveDown"
+           TargetType="Button">
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource accent}" />
+        <Setter Property="ImageSource"
+                Value="{FontImageSource Glyph={Static const:FAIcons.SquareCaretDown}, FontFamily={Static const:Fonts.FAsolid}, Size={StaticResource fontSize.H3}, Color={StaticResource gray900}}" />
+    </Style>
+
 
     <Style TargetType="ImageButton"
            x:Key="ImageButtonBase">

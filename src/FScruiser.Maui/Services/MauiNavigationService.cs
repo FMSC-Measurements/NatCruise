@@ -137,10 +137,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowFieldSetup(string stratumCode)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("FieldSetup?" + $"{NavParams.STRATUM}={stratumCode}");
+            return ShowView<StratumFieldSetupView>(new Dictionary<string, object>() { { NavParams.STRATUM, stratumCode } });
         }
 
         public Task ShowFixCNT(string unitCode, int plotNumber, string stratumCode)

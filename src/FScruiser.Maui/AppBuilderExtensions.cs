@@ -8,6 +8,7 @@ using NatCruise.Logic;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,8 @@ namespace FScruiser.Maui
             services.AddTransient<SampleGroupListView>();
             services.AddTransient<SettingsView>();
             services.AddTransient<StratumListView>();
+            services.AddTransient<StratumFieldSetupView>();
+            services.AddTransient<StratumLogFieldSetupView>();
             services.AddTransient<TallyView>();
             services.AddTransient<TreeEditView>();
             services.AddTransient<TreeListPage>();
@@ -101,6 +104,8 @@ namespace FScruiser.Maui
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<ShellViewModel>();
             services.AddTransient<StratumFieldSetupViewModel>();
+            services.AddTransient<StratumLogFieldSetupViewModel>();
+            services.AddTransient<StratumTreeFieldSetupViewModel>();
             services.AddTransient<StratumListViewModel>();
             services.AddTransient<TallyViewModel>();
             services.AddTransient<ThreePPNTPlotViewModel>();
@@ -135,6 +140,8 @@ namespace FScruiser.Maui
             services.AddTransient<ILoggingService, AppCenterLoggerService>();
 
             services.AddTransient<IPreferences>(x => Microsoft.Maui.Storage.Preferences.Default);
+
+            services.AddTransient<TreeFieldSetupValidator>();
 
             return builder;
         }

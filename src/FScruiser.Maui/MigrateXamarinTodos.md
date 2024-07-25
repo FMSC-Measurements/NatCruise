@@ -3,7 +3,7 @@
  - [ ] add logging for view model load times, either to NavigationService or the view model base class
  - [ ] Change AutomationProperties to SemanticProperties
  - [ ] Switch NatCruise.Core TaskExtentions to use ILogger rather than ILoggingService
- - [ ] Find a alternative to using swipe views for displaying delete buttons on list items
+ - [ ] Find a alternative to using swipe views for displaying delete buttons on list items (Stratum Fields, Plot List, Tally, Plot Tally)
  - [ ] Fix ValuePicker raising multiple OnClick events
 
 ## Update Converters
