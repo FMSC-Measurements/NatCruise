@@ -226,10 +226,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowSampleGroups(string stratumCode)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("SampleGroups?" + $"{NavParams.STRATUM}={stratumCode}");
+            return ShowView<SampleGroupListView>(new Dictionary<string, object> { { NavParams.STRATUM, stratumCode } });
         }
 
         [Obsolete]
@@ -248,10 +245,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowStrata()
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("//Strata");
+            return ShowView<StratumListView>();
         }
 
         public Task ShowStratumInfo(string stratumCode)

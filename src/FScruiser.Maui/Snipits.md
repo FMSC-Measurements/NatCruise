@@ -19,7 +19,7 @@ example of standard xmlns used
 
              x:Class="FScruiser.Maui.Views.SomeView"
              x:Name="_page"
-             SemanticProperties.Description="Settings Page">
+             SemanticProperties.Description="Some Page">
     <ContentPage.Content>
        <!-- ... -->
 

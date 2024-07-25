@@ -74,6 +74,7 @@
     <Color x:Key="text.accent">#336699</Color>
     <Color x:Key="text.light">White</Color>
     <Color x:Key="text.dark">#212121</Color>
+    <Color x:Key="text.gray">#6E6E6E</Color>
 
     <Color x:Key="attention">#C20303</Color>
 

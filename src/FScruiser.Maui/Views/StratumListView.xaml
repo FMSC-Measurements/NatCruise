@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.StratumListView"
+                x:Name="_page"
+                SemanticProperties.Description="Strata List Page">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Frame Grid.Row="0"
+                   BackgroundColor="{StaticResource uswds_lgt_tan}"
+                   Padding="0">
+
+                <ctrls:HorizontialHeaderControl Header="Cutting Unit"
+                                                HorizontalOptions="End">
+                    <Picker ItemsSource="{Binding CuttingUnitCodes}"
+                            SelectedItem="{Binding CuttingUnitFilter}"
+                            Margin="13,7"
+                            WidthRequest="100" />
+                </ctrls:HorizontialHeaderControl>
+            </Frame>
+
+            <ScrollView Grid.Row="1">
+                <CollectionView ItemsSource="{Binding Strata}"
+                                ItemsLayout="VerticalGrid, 2">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Frame Margin="3"
+                                   Padding="0">
+
+                                <AbsoluteLayout>
+
+                                    <!--<AbsoluteLayout.GestureRecognizers>
+    <TapGestureRecognizer Command="{Binding BindingContext.ShowStratumDetailsCommand, Source={x:Reference _page}}"
+                          CommandParameter="{Binding .}" />
+</AbsoluteLayout.GestureRecognizers>-->
+
+                                    <StackLayout Margin="13,7,50,50"
+                                                 AbsoluteLayout.LayoutBounds="0,0"
+                                                 HorizontalOptions="FillAndExpand">
+                                        <Label Text="{Binding StratumCode, StringFormat='Stratum {0}'}"
+                                               Style="{StaticResource Label.H2}" />
+                                        <Label Text="{Binding Description}"
+                                               Style="{StaticResource Label.H3-muted}" />
+
+                                        <BoxView Style="{StaticResource HorizontialSpacer}" />
+
+                                        <Label Text="{Binding Method, StringFormat='Method: {0}'}" />
+
+                                        <!--<Label Text="{Binding YieldComponent, StringFormat='Yield Component: {0}'}" />-->
+
+                                        <Label Text="{Binding BasalAreaFactor, StringFormat='BAF: {0}'}"
+                                               IsVisible="{Binding Method, Converter={StaticResource isVariableRadiousPlotConverter}}" />
+
+                                        <Label Text="{Binding FixedPlotSize, StringFormat='FPS: {0}'}"
+                                               IsVisible="{Binding Method, Converter={StaticResource isFixedSizePlotConverter}}" />
+
+                                        <Label Text="{Binding KZ3PPNT, StringFormat='KZ (3PPNT): {0}'}"
+                                               IsVisible="{Binding Method, Converter={StaticResource isThreePPNTConverter}}" />
+                                    </StackLayout>
+
+                                    <Button AbsoluteLayout.LayoutBounds="1,0"
+                                            AbsoluteLayout.LayoutFlags="PositionProportional"
+                                            Margin="13,7"
+                                            Style="{StaticResource Button.EllipsisVertical}"
+                                            Clicked="openStratumMenu"
+                                            AutomationProperties.IsInAccessibleTree="True"
+                                            AutomationProperties.Name="Show Actions Item" />
+                                </AbsoluteLayout>
+
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>

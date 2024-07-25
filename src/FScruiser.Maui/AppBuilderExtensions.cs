@@ -41,7 +41,9 @@ namespace FScruiser.Maui
             services.AddTransient<PrivacyPolicyView>();
             services.AddTransient<SaleSelectView>();
             services.AddTransient<SaleView>();
+            services.AddTransient<SampleGroupListView>();
             services.AddTransient<SettingsView>();
+            services.AddTransient<StratumListView>();
             services.AddTransient<TallyView>();
             services.AddTransient<TreeEditView>();
             services.AddTransient<TreeListPage>();

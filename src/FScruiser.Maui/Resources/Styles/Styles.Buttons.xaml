@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style TargetType="Button"
+           x:Key="ButtonBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource text.light}, Dark={StaticResource text.dark}}" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource primary.dark}}" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="BorderWidth"
+                Value="0" />
+        <Setter Property="CornerRadius"
+                Value="8" />
+        <Setter Property="Padding"
+                Value="14,10" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray950}, Dark={StaticResource gray200}}" />
+                            <Setter Property="BackgroundColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver" />
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}" />
+
+    <Style x:Key="Button.Accept"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />
+    </Style>
+
+    <Style x:Key="Button.Cancel"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource gray300}" />
+    </Style>
+
+    <Style x:Key="Button.MainMenu"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />
+    </Style>
+
+    <Style x:Key="Button.AddItem"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Text"
+                Value="Add" />
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource secondary}" />
+        <Setter Property="ImageSource"
+                Value="{FontImageSource Glyph={Static const:FAIcons.CirclePlus}, FontFamily={Static const:Fonts.FAsolid}, Size=30}" />
+    </Style>
+
+    <Style x:Key="Button.EditItem"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Text"
+                Value="Edit" />
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />
+        <Setter Property="ImageSource"
+                Value="{FontImageSource Glyph={Static const:FAIcons.PenToSquare}, FontFamily={Static const:Fonts.FAsolid}, Size=30}" />
+    </Style>
+
+    <Style x:Key="Button.DeleteItem"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource attention}" />
+        <Setter Property="TextColor"
+                Value="{StaticResource text.light}" />
+        <Setter Property="Text"
+                Value="Delete" />
+        <Setter Property="ImageSource"
+                Value="{FontImageSource Glyph={Static const:FAIcons.CircleMinus}, FontFamily={Static const:Fonts.FAsolid}, Size=30}" />
+    </Style>
+
+    <Style x:Key="Button.ScrollTop"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />
+        <Setter Property="ImageSource"
+                Value="ic_chevron_double_up_white_24dp.png" />
+    </Style>
+
+    <Style x:Key="Button.ScrollBottom"
+           TargetType="Button"
+           BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />
+        <Setter Property="ImageSource"
+                Value="ic_chevron_double_down_white_24dp.png" />
+    </Style>
+
+    <Style x:Key="Button.EllipsisVertical"
+           TargetType="Button">
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="ImageSource"
+                Value="{FontImageSource Glyph={Static const:FAIcons.EllipsisVertical}, FontFamily={Static const:Fonts.FAsolid}, Size={StaticResource fontSize.H3}, Color={StaticResource gray900}}" />
+    </Style>
+
+
+    <Style TargetType="ImageButton"
+           x:Key="ImageButtonBase">
+        <Setter Property="Opacity"
+                Value="1" />
+        <Setter Property="BorderColor"
+                Value="Transparent" />
+        <Setter Property="BorderWidth"
+                Value="0" />
+        <Setter Property="CornerRadius"
+                Value="0" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity"
+                                    Value="0.5" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver" />
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="ImageButton"
+           BasedOn="{StaticResource ImageButtonBase}" />
+
+</ResourceDictionary>
