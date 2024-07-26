@@ -255,10 +255,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowSubpopulations(string stratumCode, string sampleGroupCode)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("Subpopulations?" + $"{NavParams.STRATUM}={stratumCode}&{NavParams.SAMPLE_GROUP}={sampleGroupCode}");
+            return ShowView<SubpopulationListView>(new Dictionary<string, object> { { NavParams.STRATUM, stratumCode }, { NavParams.SAMPLE_GROUP, sampleGroupCode } });
         }
 
         public Task ShowTally(string unitCode)

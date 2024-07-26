@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:dg="clr-namespace:DevExpress.Maui.DataGrid;assembly=DevExpress.Maui.DataGrid"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.SubpopulationListView"
+                x:Name="_page"
+                SemanticProperties.Description="Some Page">
+    <ctrls:BasePage.Title>
+        <MultiBinding StringFormat="Stratum {0} Sample Group {1}">
+            <Binding Path="SampleGroup.StratumCode" />
+            <Binding Path="SampleGroup.SampleGroupCode" />
+        </MultiBinding>
+    </ctrls:BasePage.Title>
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Frame Grid.Row="0"
+                   BackgroundColor="{StaticResource uswds_lgt_tan}"
+                   Margin="3"
+                   Padding="0">
+                <HorizontalStackLayout HorizontalOptions="End"
+                                       AbsoluteLayout.LayoutBounds="0,0">
+                    <Label Text="Species"
+                           VerticalTextAlignment="Center" />
+                    <bp_ctrls:ValuePicker ItemsSource="{Binding SpeciesOptions}"
+                                          x:Name="_addSubpopSpeciesPicker"
+                                          AuxiliaryActionHeading="New Species"
+                                          AuxiliaryActionClicked="_addSubpopSpeciesPicker_AuxiliaryActionClicked"
+                                          WidthRequest="100" />
+                    <Button Style="{StaticResource Button.AddItem}"
+                            Command="{Binding AddSubpopulationCommand}"
+                            CommandParameter="{Binding Text, Source={Reference _addSubpopSpeciesPicker}}"
+                            AbsoluteLayout.LayoutBounds="1,0"
+                            AbsoluteLayout.LayoutFlags="PositionProportional" />
+                </HorizontalStackLayout>
+            </Frame>
+
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding Subpopulations}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="2" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView
+                                   AutomationProperties.IsInAccessibleTree="True">
+                            <!-- Binding for SwipeItem.IsEnabled is broken, so I had to put the IsEnabled on the button that opens the menu -->
+                            <SwipeView.LeftItems>
+                                <SwipeItem Text="Delete"
+                                           Command="{Binding BindingContext.RemoveSubpopulationCommand, Source={Reference _page}}"
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="Red" />
+                            </SwipeView.LeftItems>
+
+                            <Frame Margin="3"
+                                   Padding="0">
+                                <AbsoluteLayout>
+                                    <VerticalStackLayout
+                                                 Margin="13,7,50,50"
+                                                 AbsoluteLayout.LayoutBounds="0,0">
+                                        <Label Text="{Binding SpeciesCode, StringFormat='Species: {0}'}"
+                                               Style="{StaticResource Label.H2}" />
+                                        <Label Text="{Binding LiveDead, StringFormat='Live/Dead: {0}'}"
+                                               Style="{StaticResource Label.H2}" />
+                                    </VerticalStackLayout>
+
+                                    <Button AbsoluteLayout.LayoutBounds="1,1"
+                                            AbsoluteLayout.LayoutFlags="PositionProportional"
+                                            Margin="13,7"
+                                            Style="{StaticResource Button.EllipsisVertical}"
+                                            IsEnabled="{Binding HasTrees, Converter={StaticResource invertedBoolConverter}}"
+                                            Clicked="subpopulationItemMenu_clicked"
+                                            AutomationProperties.IsInAccessibleTree="True"
+                                            AutomationProperties.Name="Show Actions Item" />
+                                </AbsoluteLayout>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>

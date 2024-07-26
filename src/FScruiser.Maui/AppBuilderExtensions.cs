@@ -47,6 +47,7 @@ namespace FScruiser.Maui
             services.AddTransient<StratumListView>();
             services.AddTransient<StratumFieldSetupView>();
             services.AddTransient<StratumLogFieldSetupView>();
+            services.AddTransient<SubpopulationListView>();
             services.AddTransient<TallyView>();
             services.AddTransient<TreeEditView>();
             services.AddTransient<TreeListPage>();

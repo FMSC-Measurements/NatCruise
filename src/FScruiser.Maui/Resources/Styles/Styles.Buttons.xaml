@@ -128,6 +128,20 @@
                 Value="Transparent" />
         <Setter Property="ImageSource"
                 Value="{FontImageSource Glyph={Static const:FAIcons.EllipsisVertical}, FontFamily={Static const:Fonts.FAsolid}, Size={StaticResource fontSize.H3}, Color={StaticResource gray900}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="ImageSource"
+                                    Value="{FontImageSource Glyph={Static const:FAIcons.EllipsisVertical}, FontFamily={Static const:Fonts.FAsolid}, Size={StaticResource fontSize.H3}, Color={StaticResource gray400}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver" />
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
     </Style>
 
     <Style x:Key="Button.MoveUp"
