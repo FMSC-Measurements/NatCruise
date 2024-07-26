@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.TallyPopulationDetailsView"
+                x:Name="_page"
+                SemanticProperties.Description="Tally Population Info Page"
+                Title="Tally Population Info">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <!-- header -->
+                <RowDefinition Height="Auto" />
+                <!-- content -->
+                <RowDefinition Height="*" />
+                <!-- footer -->
+                <!--<RowDefinition Height="Auto" />-->
+
+
+            </Grid.RowDefinitions>
+
+            <!-- header -->
+            <Frame  Grid.Row="0"
+                    Padding="0"
+                    Margin="0"
+                    BackgroundColor="{StaticResource fs_green}"
+                    BindingContext="{Binding TreeCountEditViewModel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!-- tally pop identifier -->
+                        <RowDefinition Height="Auto" />
+                        <!-- tally count -->
+                        <!--<RowDefinition Height="Auto" />-->
+                    </Grid.RowDefinitions>
+
+                    <!-- tally pop identifier -->
+                    <Frame Grid.Row="0"
+                           WidthRequest="250"
+                           HorizontalOptions="Center"
+                           BackgroundColor="Black"
+                           BorderColor="Black"
+                           Padding="10,5,10,5"
+                           Margin="10"
+                           CornerRadius="30">
+                        <Grid RowSpacing="0"
+                              ColumnSpacing="0">
+
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <x:String x:Key="tallyInfo_label_null_value">-</x:String>
+                                    <x:String x:Key="tallyInfo_label_fallback_value">00</x:String>
+
+                                    <Style x:Key="tallyInfo_label_base"
+                                           TargetType="Label">
+                                        <Setter Property="TextColor"
+                                                Value="White" />
+                                    </Style>
+
+                                    <Style x:Key="tallyInfo_label_header"
+                                           BasedOn="{StaticResource tallyInfo_label_base}"
+                                           TargetType="Label">
+                                        <Setter Property="FontSize"
+                                                Value="12" />
+                                        <Setter Property="Margin"
+                                                Value="5,-5,5,-5" />
+                                    </Style>
+
+                                    <Style x:Key="tallyInfo_label_value"
+                                           BasedOn="{StaticResource tallyInfo_label_base}"
+                                           TargetType="Label">
+                                        <Setter Property="FontSize"
+                                                Value="25" />
+                                        <Setter Property="HorizontalTextAlignment"
+                                                Value="Center" />
+                                        <Setter Property="Margin"
+                                                Value="0,-3" />
+                                        <Setter Property="BackgroundColor"
+                                                Value="Transparent" />
+                                    </Style>
+
+                                    <!-- splitter style -->
+                                    <Style TargetType="BoxView">
+                                        <Setter Property="BackgroundColor"
+                                                Value="White" />
+                                        <Setter Property="WidthRequest"
+                                                Value="2" />
+                                        <Setter Property="VerticalOptions"
+                                                Value="CenterAndExpand" />
+                                    </Style>
+                                </ResourceDictionary>
+                            </Grid.Resources>
+
+                            <Grid.RowDefinitions>
+                                <!-- header -->
+                                <RowDefinition Height="Auto" />
+                                <!-- value -->
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <!-- stratum -->
+                                <ColumnDefinition Width="*" />
+                                <!-- spacer -->
+                                <ColumnDefinition Width="Auto" />
+                                <!-- sample group -->
+                                <ColumnDefinition Width="*" />
+                                <!-- spacer -->
+                                <ColumnDefinition Width="Auto" />
+                                <!-- species -->
+                                <ColumnDefinition Width="*" />
+                                <!-- spacer -->
+                                <ColumnDefinition Width="Auto" />
+                                <!-- live dead -->
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- stratum -->
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   x:Name="_stratumHeader"
+                                   Style="{StaticResource tallyInfo_label_header}"
+                                   Text="St" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   x:Name="_stratumLabel"
+                                   Style="{StaticResource tallyInfo_label_value}"
+                                   Text="{Binding TallyPopulation.StratumCode, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.LabeledBy="{x:Reference _stratumHeader}" />
+
+                            <!-- sample group -->
+                            <Label Grid.Row="0"
+                                   Grid.Column="2"
+                                   x:Name="_sampleGroupHeader"
+                                   Style="{StaticResource tallyInfo_label_header}"
+                                   Text="Sg" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="2"
+                                   x:Name="_sampleGroupLabel"
+                                   Style="{StaticResource tallyInfo_label_value}"
+                                   Text="{Binding TallyPopulation.SampleGroupCode, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.LabeledBy="{x:Reference _sampleGroupHeader}" />
+
+                            <!-- species -->
+                            <Label Grid.Row="0"
+                                   Grid.Column="4"
+                                   x:Name="_speciesHeader"
+                                   Style="{StaticResource tallyInfo_label_header}"
+                                   Text="Sp" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="4"
+                                   x:Name="_speciesLabel"
+                                   Style="{StaticResource tallyInfo_label_value}"
+                                   Text="{Binding TallyPopulation.SpeciesCode, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.LabeledBy="{x:Reference _speciesHeader}" />
+
+                            <!-- live dead -->
+                            <Label Grid.Row="0"
+                                   Grid.Column="6"
+                                   x:Name="_liveDeadHeader"
+                                   Style="{StaticResource tallyInfo_label_header}"
+                                   Text="L/D" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="6"
+                                   x:Name="_liveDeadLabel"
+                                   Style="{StaticResource tallyInfo_label_value}"
+                                   Text="{Binding TallyPopulation.LiveDead, TargetNullValue={StaticResource tallyInfo_label_null_value}, FallbackValue={StaticResource tallyInfo_label_fallback_value}}"
+                                   AutomationProperties.IsInAccessibleTree="True"
+                                   AutomationProperties.LabeledBy="{x:Reference _liveDeadHeader}" />
+
+
+                            <!-- spacers -->
+                            <BoxView Grid.Row="0"
+                                     Grid.Column="1"
+                                     Grid.RowSpan="2" />
+                            <BoxView Grid.Row="0"
+                                     Grid.Column="3"
+                                     Grid.RowSpan="2" />
+                            <BoxView Grid.Row="0"
+                                     Grid.Column="5"
+                                     Grid.RowSpan="2" />
+
+                        </Grid>
+                    </Frame>
+
+                </Grid>
+            </Frame>
+
+            <!-- content -->
+
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>

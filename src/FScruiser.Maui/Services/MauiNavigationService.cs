@@ -266,29 +266,25 @@ namespace FScruiser.Maui.Services
 
         public Task ShowTallyPopulationInfo(string unitCode, int plotNumber, string stratumCode, string sampleGroupCode, string species, string liveDead)
         {
-            Log.LogMethodCall();
-
-            var parameters = $"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}" +
-               $"&{NavParams.PLOT_NUMBER}={plotNumber}" +
-               $"&{NavParams.SAMPLE_GROUP}={sampleGroupCode}" +
-               $"&{NavParams.SPECIES}={species}" +
-               $"&{NavParams.LIVE_DEAD}={liveDead}";
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("TallyPopulationDetails?" + parameters);
+            return ShowView<TallyPopulationDetailsView>(new Dictionary<string, object> {
+                { NavParams.UNIT, unitCode },
+                { NavParams.STRATUM, stratumCode },
+                { NavParams.PLOT_NUMBER, plotNumber },
+                { NavParams.SAMPLE_GROUP, sampleGroupCode },
+                { NavParams.SPECIES, species },
+                { NavParams.LIVE_DEAD, liveDead }
+            });
         }
 
         public Task ShowTallyPopulationInfo(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
         {
-            Log.LogMethodCall();
-
-            var parameters = $"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}" +
-                $"&{NavParams.SAMPLE_GROUP}={sampleGroupCode}" +
-                $"&{NavParams.SPECIES}={species}" +
-                $"&{NavParams.LIVE_DEAD}={liveDead}";
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("TallyPopulationDetails?" + parameters);
+            return ShowView<TallyPopulationDetailsView>(new Dictionary<string, object> {
+                { NavParams.UNIT, unitCode },
+                { NavParams.STRATUM, stratumCode },
+                { NavParams.SAMPLE_GROUP, sampleGroupCode },
+                { NavParams.SPECIES, species },
+                { NavParams.LIVE_DEAD, liveDead }
+            });
         }
 
         public Task ShowThreePPNTPlot(string unitCode, string stratumCode, int plotNumber)
