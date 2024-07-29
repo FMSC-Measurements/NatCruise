@@ -294,10 +294,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowTreeAuditRuleEdit(string tarID)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("TreeAuditRuleEdit?" + $"{NavParams.TreeAuditRuleID}={tarID}");
+            return ShowView<TreeAuditRuleEditView>(new Dictionary<string, object> { { NavParams.TreeAuditRuleID, tarID } });
         }
 
         public Task ShowTreeAuditRules()

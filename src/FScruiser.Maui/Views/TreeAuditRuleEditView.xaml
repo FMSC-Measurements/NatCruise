@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.TreeAuditRuleEditView"
+                x:Name="_page"
+                SemanticProperties.Description="Edit Tree Audit Rule Page"
+                Title="Edit Tree Audit Rule">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Tree Audit Rule Edit Panel -->
+            <Frame Grid.Row="0"
+                   BackgroundColor="{StaticResource uswds_data_table_row_alt}"
+                   Margin="3"
+                   Padding="3">
+                <ctrls:VerticalHeaderControl Header="Tree Audit Rule"
+                                             HeaderFontSize="{StaticResource fontSize.H1}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70" />
+                            <RowDefinition Height="70" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.Resources>
+                            <!--<Style TargetType="controls:LastChildHeightLayout">
+                    <Setter Property="HeightRequest"
+                            Value="70" />
+                    <Setter  Property="LastChildHeight"
+                             Value="50" />
+                </Style>-->
+                            <!--<converters:TrimDecimalInputConverter DecimalPlaces="2"
+                                                                  x:Key="thousandsTrimInputConverter" />-->
+                        </Grid.Resources>
+
+                        <ctrls:VerticalHeaderControl Grid.Column="0"
+                                                     Header="Field">
+                            <Label Text="{Binding TreeAuditRule.Field}"
+                                   FontSize="Title" />
+                        </ctrls:VerticalHeaderControl>
+
+                        <ctrls:VerticalHeaderControl Grid.Column="1"
+                                                     Header="Min">
+                            <Entry Text="{Binding TreeAuditRule.Min, Converter={StaticResource thousandsTrimInputConverter}}"
+                                   Keyboard="Numeric" />
+                        </ctrls:VerticalHeaderControl>
+
+                        <ctrls:VerticalHeaderControl Grid.Column="2"
+                                                     Header="Max">
+                            <Entry Text="{Binding TreeAuditRule.Max, Converter={StaticResource thousandsTrimInputConverter}}"
+                                   Keyboard="Numeric" />
+                        </ctrls:VerticalHeaderControl>
+
+                        <ctrls:VerticalHeaderControl Grid.Column="0"
+                                                     Grid.ColumnSpan="3"
+                                                     Grid.Row="1"
+                                                     Header="Description">
+                            <Entry Text="{Binding TreeAuditRule.Description}" />
+                        </ctrls:VerticalHeaderControl>
+                    </Grid>
+                </ctrls:VerticalHeaderControl>
+            </Frame>
+
+            <Frame Grid.Row="1"
+                   Margin="3"
+                   Padding="3">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           Text="Audit Rule Populations" Style="{StaticResource Label.H3}" />
+
+                    <!-- Add TARS panel -->
+                    <Frame  Grid.Row="1"
+                            BackgroundColor="{StaticResource uswds_lgt_tan}"
+                            Margin="3"
+                            Padding="3">
+                        <Grid>
+
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+
+                                <ColumnDefinition Width="Auto" />
+                                <!--<ColumnDefinition Width="Auto" />-->
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.Resources>
+                                <Style TargetType="ctrls:VerticalHeaderControl"
+                                       BasedOn="{StaticResource VerticalHeaderControlBase}">
+                                    <Setter Property="HeightRequest"
+                                            Value="70" />
+                                </Style>
+                            </Grid.Resources>
+
+                            <ctrls:VerticalHeaderControl Grid.Row="0"
+                                                         Grid.Column="0"
+                                                         Header="Species">
+                                <bp_ctrls:ValuePicker ItemsSource="{Binding SpeciesOptions, Converter={StaticResource PrependAnyConverter}}"
+                                                      SelectedValue="{Binding NewRuleSelector.SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                            </ctrls:VerticalHeaderControl>
+
+                            <ctrls:VerticalHeaderControl Grid.Row="0"
+                                                         Grid.Column="1"
+                                                         Header="Live/Dead">
+                                <bp_ctrls:ValuePicker ItemsSource="{Binding LiveDeadOptions, Converter={StaticResource PrependAnyConverter}}"
+                                                      SelectedValue="{Binding NewRuleSelector.LiveDead, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                            </ctrls:VerticalHeaderControl>
+
+                            <ctrls:VerticalHeaderControl Grid.Row="0"
+                                                         Grid.Column="2"
+                                                         Header="Product">
+                                <bp_ctrls:ValuePicker ItemsSource="{Binding ProductCodeOptions, Converter={StaticResource PrependAnyConverter}}"
+                                                      SelectedValue="{Binding NewRuleSelector.PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                            </ctrls:VerticalHeaderControl>
+
+                            <Button Style="{StaticResource Button.AddItem}"
+                                    WidthRequest="50"
+                                    Margin="5"
+                                    Text=""
+                                    Grid.Row="0"
+                                    Grid.Column="3"
+                                    Command="{Binding AddNewRuleSelectorCommand}" />
+                            <!--<Button Text="{Static const:FAIcons.CircleMinus}"
+                            FontFamily="{Static const:Fonts.FAsolid}"
+                            Grid.Row="0"
+                            Grid.Column="4" />-->
+                        </Grid>
+                    </Frame>
+
+
+                    <!-- TARs list view -->
+                    <CollectionView Grid.Row="2"
+                                    ItemsSource="{Binding Selectors}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <SwipeView AutomationProperties.IsInAccessibleTree="True">
+                                    <SwipeView.LeftItems>
+                                        <SwipeItem Text="Delete"
+                                                   Command="{Binding BindingContext.DeleteRuleSelectorCommand, Source={Reference _page}}"
+                                                   CommandParameter="{Binding .}"
+                                                   BackgroundColor="Red" />
+                                    </SwipeView.LeftItems>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.Resources>
+                                            <Style TargetType="ctrls:VerticalHeaderControl">
+                                                <Setter Property="HeightRequest"
+                                                        Value="70" />
+                                            </Style>
+                                        </Grid.Resources>
+
+                                        <ctrls:VerticalHeaderControl Grid.Row="0"
+                                                                     Grid.Column="0"
+                                                                     Header="Species">
+                                            <Label Text="{Binding SpeciesCode, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                                        </ctrls:VerticalHeaderControl>
+
+                                        <ctrls:VerticalHeaderControl Grid.Row="0"
+                                                                     Grid.Column="1"
+                                                                     Header="Live/Dead">
+                                            <Label Text="{Binding LiveDead, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                                        </ctrls:VerticalHeaderControl>
+
+                                        <ctrls:VerticalHeaderControl Grid.Row="0"
+                                                                     Grid.Column="2"
+                                                                     Header="Product">
+                                            <Label Text="{Binding PrimaryProduct, Converter={StaticResource ReplaceAnyWithNullConverter}}" />
+                                        </ctrls:VerticalHeaderControl>
+
+                                        <Button Grid.Row="0"
+                                                Grid.Column="3"
+                                                Style="{StaticResource Button.EllipsisVertical}"
+                                                Clicked="openTARSItemMenu"
+                                                AutomationProperties.IsInAccessibleTree="True"
+                                                AutomationProperties.Name="Show Actions Item" />
+                                    </Grid>
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Frame>
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>
