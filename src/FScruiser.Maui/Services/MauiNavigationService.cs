@@ -289,10 +289,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowThreePPNTPlot(string unitCode, string stratumCode, int plotNumber)
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("ThreePPNTPlot?" + $"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}&{NavParams.PLOT_NUMBER}={plotNumber}");
+            return ShowView<ThreePPNTPlotView>(new Dictionary<string, object> { { NavParams.UNIT, unitCode }, { NavParams.STRATUM, stratumCode }, { NavParams.PLOT_NUMBER, plotNumber } });
         }
 
         public Task ShowTreeAuditRuleEdit(string tarID)

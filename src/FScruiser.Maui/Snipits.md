@@ -31,7 +31,7 @@ example of standard xmlns used
             </Entry.Behaviors>
 
             <Entry.Behaviors>
-                <mct:SelectAllTextBehavior />
+                <tk:SelectAllTextBehavior />
             </Entry.Behaviors>
 </Entry>
     </ContentPage.Content>

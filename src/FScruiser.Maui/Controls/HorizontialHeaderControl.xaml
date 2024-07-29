@@ -21,6 +21,8 @@
                       Grid.Column="0">
                     <Label x:Name="HeaderContent"
                            Margin="{TemplateBinding  HeaderMargin}"
+                           MinimumWidthRequest="{TemplateBinding HeaderMinimumWidth}"
+                           WidthRequest="{TemplateBinding HeaderWidth}"
                            Text="{TemplateBinding  Header}"
                            FontSize="{TemplateBinding HeaderFontSize}"
                            FontAttributes="{TemplateBinding HeaderFontAttributes}"

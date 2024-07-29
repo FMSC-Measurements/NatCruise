@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.ThreePPNTPlotView"
+                x:Name="_page"
+                SemanticProperties.Description="Three P PNT Plot Page"
+                Title="{Binding StratumPlot.PlotNumber, StringFormat='{}Plot {0} '}">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+
+            <VerticalStackLayout Grid.Column="1"
+                         Grid.Row="1">
+
+                <VerticalStackLayout.Resources>
+                    <Style TargetType="ctrls:HorizontialHeaderControl"
+                           BasedOn="{StaticResource HorizontialHeaderControlBase}">
+                        <Setter Property="HeaderMinimumWidth"
+                                Value="150" />
+                        <Setter Property="HeaderVerticalOptions"
+                                Value="Center" />
+                        <Setter Property="HorizontalOptions"
+                                Value="Center" />
+                    </Style>
+
+                    <Style TargetType="Entry"
+                           BasedOn="{StaticResource EntryBase}">
+                        <Setter Property="Keyboard"
+                                Value="Numeric" />
+                        <Setter Property="HorizontalOptions"
+                                Value="End" />
+                    </Style>
+                </VerticalStackLayout.Resources>
+
+                <ctrls:HorizontialHeaderControl Header="Average Height" >
+                    <Entry Text="{Binding AverageHeight}"
+                           WidthRequest="40"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Average Height">
+                        <Entry.Behaviors>
+                            <tk:SelectAllTextBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+                </ctrls:HorizontialHeaderControl>
+
+                <ctrls:HorizontialHeaderControl Header="Tree Count">
+                    <Entry Text="{Binding TreeCount}"
+                           VerticalOptions="Start"
+                           WidthRequest="40"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Tree Count">
+                        <Entry.Behaviors>
+                            <tk:SelectAllTextBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+                </ctrls:HorizontialHeaderControl>
+
+                <ctrls:HorizontialHeaderControl Header="Volume Factor">
+                    <Entry Text="{Binding VolumeFactor}"
+                           IsEnabled="False"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Volume Factor">
+                        <Entry.Behaviors>
+                            <tk:SelectAllTextBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+                </ctrls:HorizontialHeaderControl>
+
+
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            Margin="2,0"
+                            Grid.Row="0"
+                            Style="{StaticResource Button.AddItem}"
+                            Text="Add Plot"
+                            Command="{Binding AddPlotCommand}" />
+                    <Button Grid.Column="1"
+                            Grid.Row="0"
+                            Margin="2,0"
+                            Text="Cancel"
+                            Command="{Binding CancelCommand}"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Cancel" />
+
+                </Grid>
+            </VerticalStackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>

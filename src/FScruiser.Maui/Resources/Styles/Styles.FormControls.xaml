@@ -50,7 +50,7 @@
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
                             <Setter Property="TextColor"
-                                    Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
+                                    Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -163,12 +163,40 @@
            BasedOn="{StaticResource PickerBase}" />
 
     <Style TargetType="bp_ctrls:ValuePicker"
-           BasedOn="{StaticResource PickerBase}"
            x:Key="ValuePickerBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
+        <Setter Property="TitleColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray200}}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="MinimumHeightRequest"
+                Value="44" />
+        <Setter Property="MinimumWidthRequest"
+                Value="44" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                            <Setter Property="TitleColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
     </Style>
 
-    <Style TargetType="bp_ctrls:ValuePicker"
-           BasedOn="{StaticResource ValuePickerBase}" />
+    <!--<Style TargetType="bp_ctrls:ValuePicker"
+           BasedOn="{StaticResource ValuePickerBase}" />-->
 
     <Style TargetType="RadioButton"
            x:Key="RadioButtonBase">

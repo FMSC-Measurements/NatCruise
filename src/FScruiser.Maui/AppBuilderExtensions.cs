@@ -50,6 +50,7 @@ namespace FScruiser.Maui
             services.AddTransient<SubpopulationListView>();
             services.AddTransient<TallyView>();
             services.AddTransient<TallyPopulationDetailsView>();
+            services.AddTransient<ThreePPNTPlotView>();
             services.AddTransient<TreeEditView>();
             services.AddTransient<TreeListPage>();
             services.AddTransient<UtilitiesView>();
@@ -120,6 +121,7 @@ namespace FScruiser.Maui
         {
             var services = builder.Services;
 
+            services.AddSingleton<Random>(FMSC.Sampling.MersenneTwister.Instance);
             services.AddSingleton<INavigationProvider, NavigationProvider>();
             services.AddTransient<INavigation>(s => s.GetRequiredService<INavigationProvider>().Navigation);
 

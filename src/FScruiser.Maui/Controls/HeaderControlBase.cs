@@ -187,6 +187,40 @@ namespace FScruiser.Maui.Controls
 
         #endregion HeaderVerticalOptions Property
 
+        #region HeaderMinimumWidth Property
+
+        public static readonly BindableProperty HeaderMinimumWidthProperty =
+            BindableProperty.Create(
+                nameof(HeaderMinimumWidth),
+                typeof(double),
+                typeof(HeaderControlBase),
+                defaultValue: 0.0);
+
+        public double HeaderMinimumWidth
+            {
+            get => (double)GetValue(HeaderMinimumWidthProperty);
+            set => SetValue(HeaderMinimumWidthProperty, value);
+        }
+
+        #endregion HeaderMinimumWidth Property
+
+        #region HeaderWidthProperty
+
+        public static readonly BindableProperty HeaderWidthProperty =
+            BindableProperty.Create(
+                nameof(HeaderWidth),
+                typeof(double),
+                typeof(HeaderControlBase),
+                defaultValue: double.NaN);
+
+        public double HeaderWidth
+        {
+            get => (double)GetValue(HeaderWidthProperty);
+            set => SetValue(HeaderWidthProperty, value);
+        }
+
+        #endregion HeaderWidthProperty
+
         //public HeaderControlBase()
         //{
         //}

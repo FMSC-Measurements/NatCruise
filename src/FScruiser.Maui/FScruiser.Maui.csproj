@@ -84,12 +84,6 @@
 	  <ProjectReference Include="..\NatCruise.Core\NatCruise.Core.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <MauiXaml Update="Views\TallyPopulationDetailsView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
-
 	<!--<ItemGroup>
 	  <MauiFont Update="Resources\Fonts\FontAwesomeSolid.otf">
 	    <Generator></Generator>

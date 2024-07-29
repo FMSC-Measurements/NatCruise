@@ -23,6 +23,7 @@
                 <ResourceDictionary Source="Converters.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.Text.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.Buttons.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.FormControls.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.ContentViews.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.Controls.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.ItemViews.xaml" />
