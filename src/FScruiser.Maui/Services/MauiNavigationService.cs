@@ -302,10 +302,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowTreeAuditRules()
         {
-            Log.LogMethodCall();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("TreeAuditRuleList");
+            return ShowView<TreeAuditRuleListView>();
         }
 
         public Task ShowTreeCountEdit(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)

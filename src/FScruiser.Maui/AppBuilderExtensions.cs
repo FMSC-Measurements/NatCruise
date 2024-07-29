@@ -51,6 +51,7 @@ namespace FScruiser.Maui
             services.AddTransient<TallyView>();
             services.AddTransient<TallyPopulationDetailsView>();
             services.AddTransient<ThreePPNTPlotView>();
+            services.AddTransient<TreeAuditRuleListView>();
             services.AddTransient<TreeEditView>();
             services.AddTransient<TreeListPage>();
             services.AddTransient<UtilitiesView>();

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.TreeAuditRuleListView"
+                x:Name="_page"
+                SemanticProperties.Description="Tree Audit Rules Page"
+                Title="Tree Audit Rules">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+
+            <!-- Add New TAR Panel-->
+            <Grid Grid.Row="0"
+                  BackgroundColor="{StaticResource uswds_lgt_tan}">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80" />
+                    <RowDefinition Height="80" />
+                </Grid.RowDefinitions>
+
+
+                <ctrls:VerticalHeaderControl Header="Field"
+                                             Grid.Column="0">
+                    <bp_ctrls:ValuePicker ItemsSource="{Binding TreeFieldOptions}"
+                                          SelectedValue="{Binding NewTreeAuditRule.Field}"
+                                          SelectedValuePath="Field"
+                                          VerticalOptions="End"/>
+                </ctrls:VerticalHeaderControl>
+
+                <ctrls:VerticalHeaderControl Header="Min"
+                                             Grid.Column="1">
+                    <Entry Text="{Binding NewTreeAuditRule.Min}"
+                           Keyboard="Numeric" />
+                </ctrls:VerticalHeaderControl>
+
+                <ctrls:VerticalHeaderControl Header="Max"
+                                             Grid.Column="2">
+                    <Entry Text="{Binding NewTreeAuditRule.Max}"
+                           Keyboard="Numeric" />
+                </ctrls:VerticalHeaderControl>
+
+                <ctrls:VerticalHeaderControl Header="Description"
+                                             Grid.Column="0"
+                                             Grid.ColumnSpan="3"
+                                             Grid.Row="1">
+                    <Entry Text="{Binding NewTreeAuditRule.Description}" />
+                </ctrls:VerticalHeaderControl>
+
+                <Button Style="{StaticResource Button.AddItem}"
+                        Command="{Binding AddNewTreeAuditRuleCommand}"
+                        WidthRequest="50"
+                        Text=""
+                        Margin="5"
+                        Grid.Column="3"
+                        Grid.Row="0"
+                        Grid.RowSpan="2" />
+            </Grid>
+
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding TreeAuditRules}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView 
+                                   AutomationProperties.IsInAccessibleTree="True">
+                            <SwipeView.LeftItems>
+                                <SwipeItem Text="Delete"
+                                           Command="{Binding BindingContext.DeleteTreeAuditRuleCommand, Source={Reference _page}}"
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="Red" />
+                            </SwipeView.LeftItems>
+                            <Frame 
+                                   Margin="5,3"
+                                   Padding="7">
+
+                                <!--<StackLayout Orientation="Vertical">
+                        <Label Text="{Binding Field, StringFormat='Field: {0}'}" FontSize="Title" />
+                        
+                        <Label Text="{Binding Description, StringFormat='Description: {0}'}" />
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding Min, StringFormat='Min: {0:F}'}" />
+                            <Label Text="{Binding Max, StringFormat='Max: {0:F}'}" />
+                        </StackLayout>
+                        
+                    </StackLayout>-->
+
+                                <Grid RowDefinitions="Auto, Auto"
+                                      ColumnDefinitions="*, Auto, Auto">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ShowEditTreeAuditRule, Source={Reference _page}}"
+                                                              CommandParameter="{Binding .}"
+                                                              ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                                    </Grid.GestureRecognizers>
+
+                                    <Label Grid.Row="0"
+                                           Grid.Column="0"
+                                           Text="{Binding Field, StringFormat='Field: {0}'}"
+                                           FontSize="Title" />
+
+                                    <Label Grid.Row="1"
+                                           Grid.Column="0"
+                                           Text="{Binding Description, StringFormat='Description: {0}'}" />
+
+                                    <StackLayout Grid.Row="1"
+                                                 Grid.Column="1"
+                                                 Orientation="Horizontal"
+                                                 Margin="0,0,7,0">
+                                        <Label Text="{Binding Min, StringFormat='Min: {0:F}'}" />
+                                        <Label Text="{Binding Max, StringFormat='Max: {0:F}'}" />
+                                    </StackLayout>
+
+                                    <Button Grid.Row="0"
+                                            Grid.Column="2"
+                                            Style="{StaticResource Button.EllipsisVertical}"
+                                            Clicked="openTARItemMenu"
+                                            AutomationProperties.IsInAccessibleTree="True"
+                                            AutomationProperties.Name="Show Actions Item" />
+                                </Grid>
+
+
+
+                                <!--<Grid>
+                        <Grid.Resources>
+                            -->
+                                <!--<Style TargetType="controls:LastChildHeightLayout">
+                                <Setter Property="LastChildHeight"
+                                        Value="40" />
+                            </Style>-->
+                                <!--
+                        </Grid.Resources>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.ShowEditTreeAuditRule, Source={Reference _page}}"
+                                                  CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+
+                        <StackLayout Grid.Column="0">
+                            <Label Text="Field" />
+                            <Label Text="{Binding Field}" />
+                        </StackLayout>
+
+                        <StackLayout Grid.Column="1">
+                            <Label Text="Min" />
+                            <Label Text="{Binding Min, StringFormat='{0:F}'}" />
+                        </StackLayout>
+
+                        <StackLayout Grid.Column="2">
+                            <Label Text="Max" />
+                            <Label Text="{Binding Max, StringFormat='{0:F}'}" />
+                        </StackLayout>
+
+                        <StackLayout Grid.Column="0"
+                                                        Grid.ColumnSpan="3"
+                                                        Grid.Row="1">
+                            <Label Text="Description" />
+                            <Label Text="{Binding Description}" />
+                        </StackLayout>
+                    </Grid>-->
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>
