@@ -20,75 +20,74 @@
             </Grid.RowDefinitions>
 
             <!-- Add New TAR Panel-->
-            <Grid Grid.Row="0"
-                  BackgroundColor="{StaticResource uswds_lgt_tan}">
+            <Frame Grid.Row="0"
+                   Margin="4"
+                   BackgroundColor="{StaticResource uswds_lgt_tan}">
+                <Grid>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
 
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="80" />
-                    <RowDefinition Height="80" />
-                </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="80" />
+                    </Grid.RowDefinitions>
 
 
-                <ctrls:VerticalHeaderControl Header="Field"
-                                             Grid.Column="0">
-                    <bp_ctrls:ValuePicker ItemsSource="{Binding TreeFieldOptions}"
-                                          SelectedValue="{Binding NewTreeAuditRule.Field}"
-                                          SelectedValuePath="Field"
-                                          VerticalOptions="End"/>
-                </ctrls:VerticalHeaderControl>
+                    <ctrls:VerticalHeaderControl Header="Field"
+                                                 Grid.Column="0">
+                        <bp_ctrls:ValuePicker ItemsSource="{Binding TreeFieldOptions}"
+                                              SelectedValue="{Binding NewTreeAuditRule.Field}"
+                                              SelectedValuePath="Field" />
+                    </ctrls:VerticalHeaderControl>
 
-                <ctrls:VerticalHeaderControl Header="Min"
-                                             Grid.Column="1">
-                    <Entry Text="{Binding NewTreeAuditRule.Min}"
-                           Keyboard="Numeric" />
-                </ctrls:VerticalHeaderControl>
+                    <ctrls:VerticalHeaderControl Header="Min"
+                                                 Grid.Column="1">
+                        <Entry Text="{Binding NewTreeAuditRule.Min}"
+                               Keyboard="Numeric" />
+                    </ctrls:VerticalHeaderControl>
 
-                <ctrls:VerticalHeaderControl Header="Max"
-                                             Grid.Column="2">
-                    <Entry Text="{Binding NewTreeAuditRule.Max}"
-                           Keyboard="Numeric" />
-                </ctrls:VerticalHeaderControl>
+                    <ctrls:VerticalHeaderControl Header="Max"
+                                                 Grid.Column="2">
+                        <Entry Text="{Binding NewTreeAuditRule.Max}"
+                               Keyboard="Numeric" />
+                    </ctrls:VerticalHeaderControl>
 
-                <ctrls:VerticalHeaderControl Header="Description"
-                                             Grid.Column="0"
-                                             Grid.ColumnSpan="3"
-                                             Grid.Row="1">
-                    <Entry Text="{Binding NewTreeAuditRule.Description}" />
-                </ctrls:VerticalHeaderControl>
+                    <ctrls:VerticalHeaderControl Header="Description"
+                                                 Grid.Column="0"
+                                                 Grid.ColumnSpan="3"
+                                                 Grid.Row="1">
+                        <Entry Text="{Binding NewTreeAuditRule.Description}" />
+                    </ctrls:VerticalHeaderControl>
 
-                <Button Style="{StaticResource Button.AddItem}"
-                        Command="{Binding AddNewTreeAuditRuleCommand}"
-                        WidthRequest="50"
-                        Text=""
-                        Margin="5"
-                        Grid.Column="3"
-                        Grid.Row="0"
-                        Grid.RowSpan="2" />
-            </Grid>
+                    <Button Style="{StaticResource Button.AddItem}"
+                            Command="{Binding AddNewTreeAuditRuleCommand}"
+                            WidthRequest="50"
+                            Text=""
+                            Margin="4"
+                            Grid.Column="3"
+                            Grid.Row="0"
+                            Grid.RowSpan="2" />
+                </Grid>
+            </Frame>
 
             <CollectionView Grid.Row="1"
                             ItemsSource="{Binding TreeAuditRules}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <SwipeView 
-                                   AutomationProperties.IsInAccessibleTree="True">
+                        <SwipeView AutomationProperties.IsInAccessibleTree="True">
                             <SwipeView.LeftItems>
                                 <SwipeItem Text="Delete"
                                            Command="{Binding BindingContext.DeleteTreeAuditRuleCommand, Source={Reference _page}}"
                                            CommandParameter="{Binding .}"
                                            BackgroundColor="Red" />
                             </SwipeView.LeftItems>
-                            <Frame 
-                                   Margin="5,3"
-                                   Padding="7">
+                            <Frame Margin="4,2" >
 
                                 <!--<StackLayout Orientation="Vertical">
                         <Label Text="{Binding Field, StringFormat='Field: {0}'}" FontSize="Title" />
@@ -112,11 +111,11 @@
                                     <Label Grid.Row="0"
                                            Grid.Column="0"
                                            Text="{Binding Field, StringFormat='Field: {0}'}"
-                                           FontSize="Title" />
+                                           Style="{StaticResource Label.H2}" />
 
                                     <Label Grid.Row="1"
                                            Grid.Column="0"
-                                           Text="{Binding Description, StringFormat='Description: {0}'}" />
+                                           Text="{Binding Description, StringFormat='Description: {0}'}"/>
 
                                     <StackLayout Grid.Row="1"
                                                  Grid.Column="1"

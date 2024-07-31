@@ -3,16 +3,13 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                 x:Class="FScruiser.Maui.Views.PlotEditView"
                 x:Name="_page"
-
                 xmlns:mctk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                 xmlns:tc="clr-namespace:CommunityToolkit.Maui;assembly=CommunityToolkit.Maui"
-
                 xmlns:local="clr-namespace:FScruiser.Maui"
                 xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
                 xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
                 xmlns:converters="clr-namespace:FScruiser.Maui.Converters"
                 xmlns:effects="clr-namespace:FScruiser.Maui.Effects"
-
                 SemanticProperties.Description="Plot Edit Page"
                 Title="Edit Plot">
     <ContentPage.Content>
@@ -24,15 +21,14 @@
 
             <!-- errors and warnings -->
             <VerticalStackLayout Grid.Row="1"
-                         BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
-                         VerticalOptions="End"
-                         AutomationProperties.Name="Plot Error List">
+                                 BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
+                                 VerticalOptions="End"
+                                 AutomationProperties.Name="Plot Error List">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Label TextColor="{StaticResource text.dark}"
-                               Text="{Binding Message}"
+                        <Label Text="{Binding Message}"
+                               Style="{StaticResource Label.H3}"
                                BackgroundColor="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}"
-                               FontSize="Large"
                                Margin="0,0,0,7"
                                AutomationProperties.IsInAccessibleTree="True"
                                AutomationProperties.Name="Plot Error Item" />
@@ -154,7 +150,9 @@
                           AutomationProperties.IsInAccessibleTree="True"
                           AutomationProperties.Name="Plot Stratum List">
                     <ListView.Resources>
-
+                        <converters:BoolToObjectConverter x:Key="InCruiseAddRemoveConverter"
+                                                          TrueValue="Remove"
+                                                          FalseValue="Add" />
                     </ListView.Resources>
 
                     <ListView.ItemTemplate>
@@ -162,101 +160,96 @@
                             <ViewCell>
 
                                 <Frame HasShadow="True"
-                                       Margin="7"
-                                       Padding="3,0,3,5"
-                                       CornerRadius="0"
+                                       Margin="4"
                                        BackgroundColor="{StaticResource accent}">
 
-                                    <Frame.Resources>
+                                    <!--<Frame.Resources>
                                         <ResourceDictionary>
-                                            <converters:CruiseMethodToBoolConverter MethodMap="FixedSizePlotMethods"
-                                                                                    x:Key="IsFixedSizedPlotMethod" />
-                                            <converters:CruiseMethodToBoolConverter MethodMap="VariableRadiousPlotMethods"
-                                                                                    x:Key="IsVRPlotMethod" />
-                                            <converters:BoolToObjectConverter x:Key="InCruiseAddRemoveConverter"
-                                                                              TrueValue="Remove"
-                                                                              FalseValue="Add" />
+                                            
                                         </ResourceDictionary>
-                                    </Frame.Resources>
+                                    </Frame.Resources>-->
 
-                                    <StackLayout>
+                                    <VerticalStackLayout>
 
                                         <!-- stratum code and add/remove button-->
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
-                                                   FontAttributes="Bold"
-                                                   FontSize="Large"
-                                                   TextColor="{StaticResource darkText}"
-                                                   Margin="10,0,30,0"
+                                        <Grid ColumnDefinitions="Auto, *, Auto">
+                                            <Label Grid.Column="0" Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
+                                                   Style="{StaticResource Label.H2}"
+                                                   Margin="8,0"
                                                    VerticalTextAlignment="Center"
                                                    HorizontalOptions="StartAndExpand"
                                                    AutomationProperties.IsInAccessibleTree="False" />
 
-                                            <Button Text="{Binding InCruise, Converter={StaticResource InCruiseAddRemoveConverter}}"
-                                                    IsVisible="{Binding BindingContext.CanAddRemoveStrata, Source={Reference _page }}"
-                                                    Command="{Binding BindingContext.ToggleInCruiseCommand, Source={Reference _page }}"
+                                            <Button Grid.Column="2" Text="{Binding InCruise, Converter={StaticResource InCruiseAddRemoveConverter}}"
+                                                    IsVisible="{Binding BindingContext.CanAddRemoveStrata, Source={RelativeSource AncestorType={Type ListView}}}"
+                                                    Command="{Binding BindingContext.ToggleInCruiseCommand, Source={RelativeSource AncestorType={Type ListView}}}"
                                                     CommandParameter="{Binding .}"
                                                     HorizontalOptions="End"
                                                     AutomationProperties.IsInAccessibleTree="True"
                                                     AutomationProperties.Name="Add Remove Stratum" />
-                                        </StackLayout>
+                                        </Grid>
 
                                         <!-- Cruise Method -->
-                                        <StackLayout Orientation="Horizontal"
+                                        <ctrls:HorizontialHeaderControl Header="Method:" Margin="8,0">
+                                            <Label Margin="2" Text="{Binding CruiseMethod}" />
+                                        </ctrls:HorizontialHeaderControl>
+                                        <!--<StackLayout Orientation="Horizontal"
                                                      Margin="10,0,10,0">
                                             <Label Text="Method:" />
-                                            <Label Text="{Binding CruiseMethod}" />
-                                        </StackLayout>
+                                            
+                                        </StackLayout>-->
 
                                         <!-- BAF -->
-                                        <StackLayout Orientation="Horizontal"
+                                        <ctrls:HorizontialHeaderControl Header="BAF:"
+                                                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isVariableRadiousPlotConverter}}"
+                                                                        Margin="8,0">
+                                            <Label Text="{Binding BAF}" />
+                                        </ctrls:HorizontialHeaderControl>
+                                        <!--<StackLayout Orientation="Horizontal"
                                                      IsVisible="{Binding CruiseMethod, Converter={StaticResource IsVRPlotMethod}}"
                                                      Margin="10,0,10,0">
                                             <Label Text="BAF:" />
                                             <Label Text="{Binding BAF}" />
-                                        </StackLayout>
+                                        </StackLayout>-->
 
                                         <!-- FPS -->
-                                        <StackLayout Orientation="Horizontal"
+                                        <ctrls:HorizontialHeaderControl Header="FPS:"
+                                                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isFixedSizePlotConverter}}"
+                                                                        Margin="8,0">
+                                            <Label Text="{Binding FPS}" />
+                                        </ctrls:HorizontialHeaderControl>
+                                        
+                                        
+                                        <!--<StackLayout Orientation="Horizontal"
                                                      IsVisible="{Binding CruiseMethod, Converter={StaticResource IsFixedSizedPlotMethod}}"
                                                      Margin="10,0,10,0">
                                             <Label Text="FPS:" />
                                             <Label Text="{Binding FPS}" />
-                                        </StackLayout>
+                                        </StackLayout>-->
 
                                         <!--this panel hides if plot is not in cruise-->
-                                        <StackLayout IsVisible="{Binding InCruise, Mode=OneWay}">
+                                        <VerticalStackLayout IsVisible="{Binding InCruise, Mode=OneWay}">
                                             <!--horizontal spacer-->
-                                            <BoxView HeightRequest="1"
-                                                     VerticalOptions="Fill"
-                                                     Margin="0"
-                                                     Color="{StaticResource black_70}" />
+                                            <BoxView Style="{StaticResource HorizontialSpacer}" />
 
                                             <!--slope, aspect, empty plot-->
-                                            <StackLayout Orientation="Horizontal"
-                                                         Margin="10,0,10,0">
-
-                                                <StackLayout Orientation="Horizontal">
-                                                    <Label Text="Is Null Plot"
-                                                           VerticalTextAlignment="Center" />
-                                                    <Switch IsToggled="{Binding IsEmpty}"
-                                                            OnColor="{StaticResource usfs_green}"
-                                                            HeightRequest="{StaticResource minTouchableHeight}"
-                                                            Margin="20,0,0,0" />
-                                                </StackLayout>
-                                            </StackLayout>
+                                            <ctrls:HorizontialHeaderControl Header="Is Null Plot"
+                                                                            Margin="8,0">
+                                                <Switch IsToggled="{Binding IsEmpty}"
+                                                        Margin="20,0,0,0" />
+                                            </ctrls:HorizontialHeaderControl>
 
                                             <!--horizontal spacer-->
                                             <BoxView Style="{StaticResource HorizontialSpacer}" />
 
                                             <Button Text="Calculate Limiting Distances"
                                                     VerticalOptions="FillAndExpand"
-                                                    Command="{Binding BindingContext.ShowLimitingDistanceCommand, Source={Reference _page }}"
+                                                    Command="{Binding BindingContext.ShowLimitingDistanceCommand, Source={RelativeSource AncestorType={Type ListView}}}"
                                                     CommandParameter="{Binding .}"
                                                     AutomationProperties.IsInAccessibleTree="True"
                                                     AutomationProperties.Name="Limiting Distance" />
-                                        </StackLayout>
-                                    </StackLayout>
+                                        </VerticalStackLayout>
+                                    </VerticalStackLayout>
                                 </Frame>
                             </ViewCell>
                         </DataTemplate>

@@ -2,22 +2,16 @@
 <controls:BasePage xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
                    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                   xmlns:compat="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls"
                    xmlns:converters="clr-namespace:FScruiser.Maui.Converters"
-                   xmlns:local_behaviors="clr-namespace:FScruiser.Maui.Behaviors"
                    xmlns:effects="clr-namespace:FScruiser.Maui.Effects"
-                   xmlns:core_vms="clr-namespace:NatCruise.MVVM.ViewModels;assembly=NatCruise.Core"
                    xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
                    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-                   xmlns:effects1="http://xamarin.com/schemas/2020/toolkit"
                    xmlns:models="clr-namespace:NatCruise.Models;assembly=NatCruise.Core"
                    xmlns:data="clr-namespace:FScruiser.Maui.Data"
-                   xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
-                   xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
                    xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                   xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
                    x:Class="FScruiser.Maui.Views.TallyView"
                    x:Name="_page"
-                   BackgroundColor="White"
                    Title="{Binding Title}"
                    AutomationProperties.IsInAccessibleTree="True"
                    AutomationProperties.Name="Tally Page">
@@ -41,9 +35,6 @@
                 <RowDefinition Height="4*" />
                 <RowDefinition Height="Auto" />
 
-                <!--<RowDefinition Height="{Binding TallyButtonTrayVerticalSize, Source={StaticResource tallySettings}, Converter={StaticResource invertedPercentageToGridLengthConverrter}}" />
-                <RowDefinition Height="{Binding TallyButtonTrayVerticalSize, Source={StaticResource tallySettings}, Converter={StaticResource percentageToGridLengthConverrter}}" />
-                <RowDefinition Height="Auto" />-->
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -272,39 +263,13 @@
                                                 <StackLayout Grid.Row="0"
                                                              Grid.Column="7">
 
-                                                    <Frame Padding="0"
-                                                           CornerRadius="5"
-                                                           BackgroundColor="Red"
-                                                           VerticalOptions="Center"
-                                                           IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
-                                                        <StackLayout Orientation="Horizontal"
-                                                                     Padding="0">
-                                                            <Image Source="ic_error_outline_black_24dp.png"
-                                                                   HeightRequest="18"
-                                                                   AutomationProperties.IsInAccessibleTree="False" />
-                                                            <Label Text="{Binding ErrorCount}"
-                                                                   TextColor="Black"
-                                                                   VerticalTextAlignment="Center"
-                                                                   AutomationProperties.IsInAccessibleTree="False" />
-                                                        </StackLayout>
-                                                    </Frame>
+                                                    <ctrls:ErrorCountTag ErrorCount="{Binding ErrorCount}"
+                                                                         IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}"
+                                                                         VerticalOptions="Center" />
 
-                                                    <Frame Padding="0"
-                                                           CornerRadius="5"
-                                                           BackgroundColor="Gold"
-                                                           VerticalOptions="Center"
-                                                           IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}">
-                                                        <StackLayout Orientation="Horizontal"
-                                                                     Padding="0">
-                                                            <Image Source="ic_warning_black_24dp.png"
-                                                                   HeightRequest="18"
-                                                                   AutomationProperties.IsInAccessibleTree="False" />
-                                                            <Label Text="{Binding WarningCount}"
-                                                                   TextColor="Black"
-                                                                   VerticalTextAlignment="Center"
-                                                                   AutomationProperties.IsInAccessibleTree="False" />
-                                                        </StackLayout>
-                                                    </Frame>
+                                                    <ctrls:WarningCountTag WarningCount="{Binding WarningCount}"
+                                                                           VerticalOptions="Center"
+                                                                           IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}" />
                                                 </StackLayout>
 
                                                 <!-- show untally button-->
@@ -434,39 +399,13 @@
                                             <StackLayout Grid.Row="0"
                                                          Grid.Column="7">
 
-                                                <Frame Padding="0"
-                                                       CornerRadius="5"
-                                                       BackgroundColor="Red"
-                                                       VerticalOptions="Center"
-                                                       IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
-                                                    <StackLayout Orientation="Horizontal"
-                                                                 Padding="0">
-                                                        <Image Source="ic_error_outline_black_24dp.png"
-                                                               AutomationProperties.IsInAccessibleTree="False"
-                                                               HeightRequest="18" />
-                                                        <Label Text="{Binding ErrorCount}"
-                                                               TextColor="Black"
-                                                               VerticalTextAlignment="Center"
-                                                               AutomationProperties.IsInAccessibleTree="False" />
-                                                    </StackLayout>
-                                                </Frame>
+                                                <ctrls:ErrorCountTag ErrorCount="{Binding ErrorCount}"
+                                                                     IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}"
+                                                                     VerticalOptions="Center" />
 
-                                                <Frame Padding="0"
-                                                       CornerRadius="5"
-                                                       BackgroundColor="Gold"
-                                                       VerticalOptions="Center"
-                                                       IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}">
-                                                    <StackLayout Orientation="Horizontal"
-                                                                 Padding="0">
-                                                        <Image Source="ic_warning_black_24dp.png"
-                                                               HeightRequest="18"
-                                                               AutomationProperties.IsInAccessibleTree="False" />
-                                                        <Label Text="{Binding WarningCount}"
-                                                               TextColor="Black"
-                                                               VerticalTextAlignment="Center"
-                                                               AutomationProperties.IsInAccessibleTree="False" />
-                                                    </StackLayout>
-                                                </Frame>
+                                                <ctrls:WarningCountTag WarningCount="{Binding WarningCount}"
+                                                                       VerticalOptions="Center"
+                                                                       IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}" />
                                             </StackLayout>
 
                                         </Grid>
@@ -569,11 +508,9 @@
                 <!--Tree Edit Panel-->
                 <!--default to not visible, when view cell expands visibility will be set to true -->
                 <Frame  x:Name="_treeEditPanel"
-                        IsVisible="True"
+                        IsVisible="False"
                         Grid.Row="0"
-                        compat:RelativeLayout.WidthConstraint="{compat:ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
-                        Padding="0"
-                        BackgroundColor="White"
+                        Margin="2"
                         BindingContext="{Binding SelectedTreeViewModel}"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Tree Edit Panel"
@@ -586,36 +523,31 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="2" />
                         </Grid.RowDefinitions>
 
 
 
-                        <AbsoluteLayout Grid.Row="0"
-                                        Margin="0,5,0,0">
+                        <AbsoluteLayout Grid.Row="0">
 
                             <Button AbsoluteLayout.LayoutBounds="0,0"
                                     AbsoluteLayout.LayoutFlags="PositionProportional"
                                     Text="Prev"
-                                    Margin="5,0"
                                     Command="{Binding BindingContext.SelectPreviousTreeCommand, Source={Reference _page}}" />
                             <Label AbsoluteLayout.LayoutBounds=".5,0"
                                    AbsoluteLayout.LayoutFlags="PositionProportional"
                                    Text="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
-                                   TextColor="{StaticResource darkText}"
-                                   FontSize="Large" />
+                                   Style="{StaticResource Label.H2}" />
                             <Button AbsoluteLayout.LayoutBounds="1,0"
                                     AbsoluteLayout.LayoutFlags="PositionProportional"
-                                    Margin="5,0"
                                     Text="Next"
                                     Command="{Binding BindingContext.SelectNextTreeCommand, Source={Reference _page}}" />
                         </AbsoluteLayout>
 
                         <CollectionView Grid.Row="1"
                                         ItemsSource="{Binding TreeFieldValues}"
+                                        Margin="2"
                                         SelectionMode="None"
-                                        HeightRequest="75"
-                                        Margin="0,5">
+                                        HeightRequest="75">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
@@ -624,10 +556,6 @@
                                 <ResourceDictionary>
                                     <Style TargetType="controls:VerticalHeaderControl"
                                            x:Key="baseTreeFieldStyle">
-                                        <!--<Setter Property="HeightRequest"
-                                                Value="100" />-->
-                                        <!--<Setter Property="LastChildHeight"
-                                                Value="50" />-->
                                         <Setter Property="WidthRequest"
                                                 Value="100" />
                                     </Style>
@@ -675,28 +603,12 @@
                             <CollectionView.Header>
                                 <!-- species -->
 
-                                <!--<Grid WidthRequest="100">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-
-                                    <Label Text="Species" />
-                                    <bp_ctrls:ValuePicker Grid.Row="1" SelectedValue="{Binding SpeciesCode}"
-                                                          ItemsSource="{Binding SpeciesOptions}" VerticalTextAlignment="End"/>
-                                </Grid>-->
-
                                 <controls:VerticalHeaderControl Header="Species">
                                     <bp_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
                                                           ItemsSource="{Binding SpeciesOptions}"
                                                           VerticalOptions="End" />
                                 </controls:VerticalHeaderControl>
 
-                                <!--<controls:HeaderControl Header="Species" 
-                                                           Style="{StaticResource treeSepeciesFieldStyle}">
-                                    <bp_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
-                                                          ItemsSource="{Binding SpeciesOptions}"  />
-                                </controls:HeaderControl>-->
                             </CollectionView.Header>
 
                             <CollectionView.ItemTemplate>
@@ -818,8 +730,7 @@
 
                         </CollectionView>
 
-                        <Grid Grid.Row="2"
-                              Margin="0,0,0,5">
+                        <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
                                 <!-- hide button -->
                                 <ColumnDefinition Width="*" />
@@ -832,7 +743,6 @@
 
                             <Button  x:Name="_hideTreeEditPanelButton"
                                      Grid.Column="0"
-                                     Margin="5,0"
                                      Text="Hide"
                                      HorizontalOptions="Start"
                                      Clicked="_hideTreeEditPanelButton_Clicked"
@@ -841,7 +751,6 @@
 
                             <Button Grid.Column="1"
                                     x:Name="_logsButton"
-                                    Margin="5,0"
                                     Text="Logs"
                                     Command="{Binding ShowLogsCommand}"
                                     AutomationProperties.IsInAccessibleTree="True"
@@ -849,16 +758,13 @@
 
                             <Button Grid.Column="2"
                                     x:Name="_editButton"
-                                    Margin="5,0"
-                                    Text="Edit"
+                                    Style="{StaticResource Button.EditItem}"
                                     Command="{Binding BindingContext.EditTreeCommand, Source={Reference _page}}"
                                     CommandParameter="{Binding TreeID}"
                                     AutomationProperties.IsInAccessibleTree="True"
                                     AutomationProperties.Name="Edit Tree Button" />
                         </Grid>
 
-                        <BoxView Grid.Row="3"
-                                 BackgroundColor="Black" />
                     </Grid>
                 </Frame>
             </Grid>
@@ -870,7 +776,7 @@
                             ItemsSource="{Binding TalliesFiltered}"
                             BackgroundColor="Gray"
                             VerticalOptions="Fill"
-                            Margin="3,0"
+                            Margin="2"
                             AutomationProperties.IsInAccessibleTree="True"
                             AutomationProperties.Name="Tally Population List">
                 <CollectionView.ItemsLayout>
@@ -884,8 +790,7 @@
 
                         <Frame CornerRadius="5"
                                BackgroundColor="{StaticResource tallyButtonBgColor}"
-                               Margin="3"
-                               Padding="0"
+                               Margin="2"
                                AutomationProperties.IsInAccessibleTree="True"
                                AutomationProperties.Name="Tally Population Item">
                             <Frame.GestureRecognizers>
@@ -893,7 +798,7 @@
                                                       CommandParameter="{Binding .}" />
                             </Frame.GestureRecognizers>
 
-                            <Grid Padding="0">
+                            <Grid>
 
                                 <Grid.RowDefinitions>
                                     <!--Tally Settings Button-->
@@ -910,14 +815,11 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!--Tally Settings Button-->
-                                <ImageButton    x:Name="_showTallyMenuButton"
+                                <Button    x:Name="_showTallyMenuButton"
                                                 Grid.Column="1"
                                                 Grid.Row="0"
-                                                Padding="10,3"
-                                                HeightRequest="{StaticResource minTouchableHeight}"
+                                                Style="{StaticResource Button.EllipsisVertical}"
                                                 Command="{Binding BindingContext.ShowTallyMenuCommand, Source={Reference _page}}"
-                                                Source="ic_more_vert_black_24dp.png"
-                                                BackgroundColor="Transparent"
                                                 CommandParameter="{Binding .}"
                                                 AutomationProperties.IsInAccessibleTree="True"
                                                 AutomationProperties.Name="Tally Menu" />
@@ -925,6 +827,7 @@
                                 <controls:PopulationIndicator Grid.Column="0"
                                                               Grid.ColumnSpan="2"
                                                               Grid.Row="1"
+                                                              Margin="2"
                                                               StratumCode="{Binding StratumCode}"
                                                               SampleGroupCode="{Binding SampleGroupCode}"
                                                               Species="{Binding SpeciesCode}"
@@ -939,15 +842,13 @@
                                         Grid.Row="2"
                                         Grid.ColumnSpan="2"
                                         Padding="3,0"
-                                        Margin="0,0,0,2"
+                                        Margin="2"
                                         HorizontalOptions="Center"
-                                        BackgroundColor="White"
-                                        CornerRadius="5">
+                                        BackgroundColor="White">
 
                                     <HorizontalStackLayout>
-                                        <Image Source="ic_pine_tree_box_black_18dp.png"
-                                               AutomationProperties.IsInAccessibleTree="False"
-                                               HeightRequest="18"/>
+                                        <Image Source="{FontImageSource Glyph={Static const:FAIcons.Tree}, FontFamily={Static const:Fonts.FAsolid}, Size=12, Color=Black}"
+                                               AutomationProperties.IsInAccessibleTree="False"/>
                                         <Label Text="{Binding TreeCount}"
                                                HorizontalTextAlignment="Center"
                                                BackgroundColor="Transparent"
@@ -974,7 +875,7 @@
                             x:Name="StratumFilterListView"
                             VerticalOptions="End"
                             HeightRequest="44"
-                            Margin="2,1"
+                            Margin="2"
                             IsVisible="{Binding StrataFilterOptions, Converter={StaticResource isListNotNullOrEmptyConverter}}"
                             ItemsSource="{Binding StrataFilterOptions}"
                             AutomationProperties.IsInAccessibleTree="False"
@@ -999,12 +900,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Button Text="{Binding .}"
-                                TextColor="{StaticResource white_90}"
-                                BackgroundColor="{StaticResource usfs_green}"
-                                Margin="2"
-                                Padding="1"
                                 HeightRequest="40"
-                                MinimumWidthRequest="{StaticResource minTouchableWidth}"
                                 Command="{Binding BindingContext.SetStratumFilterCommand, Source={x:Reference StratumFilterListView}}"
                                 CommandParameter="{Binding .}" />
                     </DataTemplate>

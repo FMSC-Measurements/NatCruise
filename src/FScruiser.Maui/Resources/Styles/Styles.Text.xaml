@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:const="clr-namespace:FScruiser.Maui.Constants"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <x:Double x:Key="fontSize.H1">32</x:Double>
@@ -130,5 +131,23 @@
     </Style>
     <Style TargetType="Span"
            BasedOn="{StaticResource SpanBase}" />
+
+    <Style TargetType="Span"
+           BasedOn="{StaticResource SpanBase}"
+           x:Key="Span.ErrorIcon">
+        <Setter Property="Text"
+                Value="{x:Static const:FAIcons.CircleExclamation}" />
+        <Setter Property="FontFamily"
+                Value="{x:Static const:Fonts.FAsolid}" />
+    </Style>
+
+    <Style TargetType="Span"
+           BasedOn="{StaticResource SpanBase}"
+           x:Key="Span.WarningIcon">
+        <Setter Property="Text"
+                Value="{x:Static const:FAIcons.TriangleExclamation}" />
+        <Setter Property="FontFamily"
+                Value="{x:Static const:Fonts.FAsolid}" />
+    </Style>
 
 </ResourceDictionary>

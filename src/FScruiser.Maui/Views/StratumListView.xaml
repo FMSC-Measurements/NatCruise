@@ -73,7 +73,6 @@
 
                                     <Button AbsoluteLayout.LayoutBounds="1,0"
                                             AbsoluteLayout.LayoutFlags="PositionProportional"
-                                            Margin="13,7"
                                             Style="{StaticResource Button.EllipsisVertical}"
                                             Clicked="openStratumMenu"
                                             AutomationProperties.IsInAccessibleTree="True"

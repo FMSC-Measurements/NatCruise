@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ctrls:BasePage 
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-
-             
-
-             xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                 xmlns:dg="clr-namespace:DevExpress.Maui.DataGrid;assembly=DevExpress.Maui.DataGrid"
                 xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
-             xmlns:const="clr-namespace:FScruiser.Maui.Constants"
-
-             xmlns:local="clr-namespace:FScruiser.Maui"
-             xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors" 
-             xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
-
-
-             x:Class="FScruiser.Maui.Views.SampleGroupListView"
-             x:Name="_page"
-             SemanticProperties.Description="Sample Groups List Page">
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.SampleGroupListView"
+                x:Name="_page"
+                SemanticProperties.Description="Sample Groups List Page"
+                Title="{Binding Stratum.StratumCode, StringFormat='Stratum {0} Sample Groups'}">
     <ContentPage.Content>
 
 
@@ -28,8 +22,7 @@
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame
-                           Margin="3"
+                    <Frame Margin="3"
                            Padding="0">
 
                         <AbsoluteLayout>
@@ -39,7 +32,7 @@
 </AbsoluteLayout.GestureRecognizers>-->
 
                             <VerticalStackLayout AbsoluteLayout.LayoutBounds="0,0"
-                                         Margin="13,7">
+                                                 Margin="13,7">
 
                                 <Label Text="{Binding SampleGroupCode, StringFormat='Sample Group {0}'}"
                                        Style="{StaticResource Label.H2}" />
@@ -69,7 +62,6 @@
 
                             <Button AbsoluteLayout.LayoutBounds="1,0"
                                     AbsoluteLayout.LayoutFlags="PositionProportional"
-                                    Margin="13,7"
                                     Style="{StaticResource Button.EllipsisVertical}"
                                     Clicked="openSampleGroupMenu"
                                     AutomationProperties.IsInAccessibleTree="True"
@@ -80,4 +72,4 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
     </ContentPage.Content>
-    </ctrls:BasePage>
+</ctrls:BasePage>

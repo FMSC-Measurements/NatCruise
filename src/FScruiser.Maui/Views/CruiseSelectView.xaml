@@ -25,24 +25,11 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
 
-                        <!--<listItems:TextListItem Text="{Binding .}"
-                                                TextColor="{StaticResource listItemText}" />-->
-
-
-                        <!--<Grid Padding="5">
-                            <Label Text="{Binding .}"
-                                   TextColor="{StaticResource listItemText}"
-                                   AutomationProperties.IsInAccessibleTree="true"
-                                   AutomationProperties.Name="{Binding .}" />
-                        </Grid>-->
-
-
                         <TextCell  Text="{Binding .}"
                                    TextColor="{StaticResource primary}"
                                    AutomationProperties.IsInAccessibleTree="true"
                                    AutomationProperties.Name="{Binding .}" />
 
-                        <!--<TextCell  Text="something" />-->
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -50,13 +37,6 @@
             <Grid Grid.Row="1"
                   RowDefinitions="Auto, Auto, Auto"
                   ColumnDefinitions="*,*">
-                <Grid.Resources>
-                    <Style TargetType="Button"
-                           BasedOn="{StaticResource ButtonBase}">
-                        <Setter Property="Margin"
-                                Value="2,5" />
-                    </Style>
-                </Grid.Resources>
 
                 <Button Grid.Row="0"
                         Grid.ColumnSpan="2"

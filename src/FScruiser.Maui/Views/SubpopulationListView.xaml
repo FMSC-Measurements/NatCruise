@@ -26,8 +26,7 @@
 
             <Frame Grid.Row="0"
                    BackgroundColor="{StaticResource uswds_lgt_tan}"
-                   Margin="3"
-                   Padding="0">
+                   Margin="4">
                 <HorizontalStackLayout HorizontalOptions="End"
                                        AbsoluteLayout.LayoutBounds="0,0">
                     <Label Text="Species"
@@ -64,8 +63,7 @@
                                            BackgroundColor="Red" />
                             </SwipeView.LeftItems>
 
-                            <Frame Margin="3"
-                                   Padding="0">
+                            <Frame Margin="4">
                                 <AbsoluteLayout>
                                     <VerticalStackLayout
                                                  Margin="13,7,50,50"
@@ -76,9 +74,8 @@
                                                Style="{StaticResource Label.H2}" />
                                     </VerticalStackLayout>
 
-                                    <Button AbsoluteLayout.LayoutBounds="1,1"
+                                    <Button AbsoluteLayout.LayoutBounds="1,0"
                                             AbsoluteLayout.LayoutFlags="PositionProportional"
-                                            Margin="13,7"
                                             Style="{StaticResource Button.EllipsisVertical}"
                                             IsEnabled="{Binding HasTrees, Converter={StaticResource invertedBoolConverter}}"
                                             Clicked="subpopulationItemMenu_clicked"

@@ -9,9 +9,9 @@
         <Setter Property="Color"
                 Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource white}}" />
         <Setter Property="MinimumHeightRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableHeight}" />
         <Setter Property="MinimumWidthRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableWidth}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -40,9 +40,9 @@
         <Setter Property="FontSize"
                 Value="14" />
         <Setter Property="MinimumHeightRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableHeight}" />
         <Setter Property="MinimumWidthRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableWidth}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -73,9 +73,9 @@
         <Setter Property="PlaceholderColor"
                 Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
         <Setter Property="MinimumHeightRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableHeight}" />
         <Setter Property="MinimumWidthRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableWidth}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -106,9 +106,9 @@
         <Setter Property="PlaceholderColor"
                 Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
         <Setter Property="MinimumHeightRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableHeight}" />
         <Setter Property="MinimumWidthRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableWidth}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -140,9 +140,9 @@
         <Setter Property="FontSize"
                 Value="14" />
         <Setter Property="MinimumHeightRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableHeight}" />
         <Setter Property="MinimumWidthRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableWidth}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -175,9 +175,9 @@
         <Setter Property="FontSize"
                 Value="14" />
         <Setter Property="MinimumHeightRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableHeight}" />
         <Setter Property="MinimumWidthRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableWidth}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -209,9 +209,9 @@
         <Setter Property="FontSize"
                 Value="14" />
         <Setter Property="MinimumHeightRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableHeight}" />
         <Setter Property="MinimumWidthRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableWidth}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -308,9 +308,9 @@
         <Setter Property="FontSize"
                 Value="14" />
         <Setter Property="MinimumHeightRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableHeight}" />
         <Setter Property="MinimumWidthRequest"
-                Value="44" />
+                Value="{StaticResource minTouchableWidth}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">

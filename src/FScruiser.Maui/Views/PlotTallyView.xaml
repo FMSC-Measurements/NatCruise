@@ -61,7 +61,7 @@
                 <!--default to not visible, when view cell expands visibility will be set to true -->
                 <Frame  x:Name="_treeEditPanel"
                         IsVisible="false"
-                        Padding="0"
+                        Margin="2"
                         BindingContextChanged="_treeEditPanel_BindingContextChanged"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Tree Edit Panel">
@@ -72,7 +72,6 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="2" />
                         </Grid.RowDefinitions>
 
                         <AbsoluteLayout>
@@ -80,22 +79,20 @@
                             <Button AbsoluteLayout.LayoutBounds="0,0"
                                     AbsoluteLayout.LayoutFlags="PositionProportional"
                                     Text="Prev"
-                                    Margin="5,0"
                                     Command="{Binding SelectPreviousTreeCommand}" />
                             <Label AbsoluteLayout.LayoutBounds=".5,0"
                                    AbsoluteLayout.LayoutFlags="PositionProportional"
                                    Text="{Binding SelectedTreeViewModel.TreeNumber, StringFormat='{}Tree Number {0}'}"
-                                   TextColor="{StaticResource darkText}"
-                                   FontSize="Large" />
+                                   Style="{StaticResource Label.H2}" />
                             <Button AbsoluteLayout.LayoutBounds="1,0"
                                     AbsoluteLayout.LayoutFlags="PositionProportional"
-                                    Margin="5,0"
                                     Text="Next"
                                     Command="{Binding SelectNextTreeCommand}" />
                         </AbsoluteLayout>
 
                         <CollectionView Grid.Row="1"
                                         x:Name="PART_TreeFieldPanel"
+                                        Margin="2"
                                         BindingContext="{Binding SelectedTreeViewModel}"
                                         ItemsSource="{Binding TreeFieldValues}"
                                         SelectionMode="None"
@@ -157,16 +154,11 @@
                                 <HorizontalStackLayout x:Name="_treeFieldsLayout">
 
                                     <!-- species -->
-                                    <ctrls:VerticalHeaderControl Style="{StaticResource treeSepeciesFieldStyle}" Header="Species">
+                                    <ctrls:VerticalHeaderControl Style="{StaticResource treeSepeciesFieldStyle}"
+                                                                 Header="Species">
                                         <bp_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
                                                               ItemsSource="{Binding SpeciesOptions}" />
                                     </ctrls:VerticalHeaderControl>
-                                    
-                                    <!--<ctrls:LastChildHeightLayout Style="{StaticResource treeSepeciesFieldStyle}">
-                                        <Label Text="Species" />
-                                        <bp_ctrls:ValuePicker SelectedValue="{Binding SpeciesCode}"
-                                                                 ItemsSource="{Binding SpeciesOptions}" />
-                                    </ctrls:LastChildHeightLayout>-->
 
                                     <!-- count measure -->
                                     <ctrls:VerticalHeaderControl Style="{StaticResource treeSepeciesFieldStyle}"
@@ -175,18 +167,6 @@
                                         <bp_ctrls:ValuePicker SelectedValue="{Binding CountOrMeasure}"
                                                               ItemsSource="{Binding CountOrMeasureOptions}" />
                                     </ctrls:VerticalHeaderControl>
-
-
-                                    <!--<ctrls:LastChildHeightLayout Style="{StaticResource baseTreeFieldStyle}"
-                                                                       IsVisible="{Binding CruiseMethod, Converter={StaticResource isTwoStagePlotMethod} }">
-                                        <Label Text="Count/Measure" />
-                                        <bp_ctrls:ValuePicker SelectedValue="{Binding CountOrMeasure}"
-                                                                 ItemsSource="{Binding CountOrMeasureOptions}" />
-                                    </ctrls:LastChildHeightLayout>-->
-
-                                    
-
-
 
                                 </HorizontalStackLayout>
                             </CollectionView.Header>
@@ -214,25 +194,7 @@
                                                     </Entry.IsReadOnly>
                                                 </Entry>
                                             </ctrls:VerticalHeaderControl>
-                                            
-                                            
-                                            <!--<ctrls:LastChildHeightLayout>
-                                                <Label Text="{Binding Heading}" />
-                                                <Entry Text="{Binding ValueInt}"
-                                                       Placeholder="{Binding StrDefaultValue}"
-                                                       Keyboard="Numeric"
-                                                       ReturnType="Next">
-                                                    <Entry.Behaviors>
-                                                        <tk:SelectAllTextBehavior />
-                                                    </Entry.Behaviors>
-                                                    <Entry.IsReadOnly>
-                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
-                                                            <Binding Path="IsLocked" />
-                                                            <Binding Path="IsHidden" />
-                                                        </MultiBinding>
-                                                    </Entry.IsReadOnly>
-                                                </Entry>
-                                            </ctrls:LastChildHeightLayout>-->
+
                                         </DataTemplate>
                                     </ctrls:TreeFieldValueDataTemplateSelector.IntTemplate>
 
@@ -256,24 +218,6 @@
                                                 </Entry>
                                             </ctrls:VerticalHeaderControl>
 
-
-                                            <!--<ctrls:LastChildHeightLayout>
-                                                <Label Text="{Binding Heading}" />
-                                                <Entry Text="{Binding ValueReal}"
-                                                       Placeholder="{Binding StrDefaultValue}"
-                                                       Keyboard="Numeric"
-                                                       ReturnType="Next">
-                                                    <Entry.Behaviors>
-                                                        <tk:SelectAllTextBehavior />
-                                                    </Entry.Behaviors>
-                                                    <Entry.IsReadOnly>
-                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
-                                                            <Binding Path="IsLocked" />
-                                                            <Binding Path="IsHidden" />
-                                                        </MultiBinding>
-                                                    </Entry.IsReadOnly>
-                                                </Entry>
-                                            </ctrls:LastChildHeightLayout>-->
                                         </DataTemplate>
                                     </ctrls:TreeFieldValueDataTemplateSelector.RealTemplate>
 
@@ -296,22 +240,6 @@
                                                 </Entry>
                                             </ctrls:VerticalHeaderControl>
 
-                                            <!--<ctrls:LastChildHeightLayout>
-                                                <Label Text="{Binding Heading}" />
-                                                <Entry Text="{Binding ValueText}"
-                                                       Placeholder="{Binding StrDefaultValue}"
-                                                       ReturnType="Next">
-                                                    <Entry.Behaviors>
-                                                        <tk:SelectAllTextBehavior />
-                                                    </Entry.Behaviors>
-                                                    <Entry.IsReadOnly>
-                                                        <MultiBinding Converter="{StaticResource AnyTrueConverter}">
-                                                            <Binding Path="IsLocked" />
-                                                            <Binding Path="IsHidden" />
-                                                        </MultiBinding>
-                                                    </Entry.IsReadOnly>
-                                                </Entry>
-                                            </ctrls:LastChildHeightLayout>-->
                                         </DataTemplate>
                                     </ctrls:TreeFieldValueDataTemplateSelector.TextTemplate>
 
@@ -323,12 +251,7 @@
                                                 <bp_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
                                                                       ItemsSource="{Binding BindingContext.Cruisers, Source={Reference PART_TreeFieldPanel}}" />
                                             </ctrls:VerticalHeaderControl>
-                                            
-                                            <!--<ctrls:LastChildHeightLayout>
-                                                <Label Text="{Binding Heading}" />
-                                                <bp_ctrls:ValuePicker SelectedValue="{Binding ValueText}"
-                                                                         ItemsSource="{Binding BindingContext.Cruisers, Source={Reference PART_TreeFieldPanel}}" />
-                                            </ctrls:LastChildHeightLayout>-->
+
                                         </DataTemplate>
                                     </ctrls:TreeFieldValueDataTemplateSelector.InitialsAltTemplate>
 
@@ -336,23 +259,15 @@
                                     <ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
                                         <DataTemplate>
                                             <ctrls:VerticalHeaderControl Header="{Binding Heading}">
-                                                <ScrollView Orientation="Vertical" HeightRequest="70" WidthRequest="200">
+                                                <ScrollView Orientation="Vertical"
+                                                            HeightRequest="70"
+                                                            WidthRequest="200">
                                                     <Editor Text="{Binding ValueText}"
                                                             AutoSize="TextChanges">
                                                     </Editor>
                                                 </ScrollView>
                                             </ctrls:VerticalHeaderControl>
-                                            
-                                            
-                                            <!--<ctrls:LastChildHeightLayout WidthRequest="200"
-                                                                               LastChildHeight="70">
-                                                <Label Text="{Binding Heading}" />
-                                                <ScrollView Orientation="Vertical">
-                                                    <Editor Text="{Binding ValueText}"
-                                                            AutoSize="TextChanges">
-                                                    </Editor>
-                                                </ScrollView>
-                                            </ctrls:LastChildHeightLayout>-->
+
                                         </DataTemplate>
                                     </ctrls:TreeFieldValueDataTemplateSelector.RemarksTemplate>
 
@@ -362,14 +277,7 @@
                                                 <bp_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference PART_TreeFieldPanel}}"
                                                                       ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference PART_TreeFieldPanel}}" />
                                             </ctrls:VerticalHeaderControl>
-                                            
-                                            
-                                            <!--<ctrls:LastChildHeightLayout>
-                                                <Label Text="L/D" />
-                                                <bp_ctrls:ValuePicker SelectedValue="{Binding BindingContext.LiveDead, Source={Reference PART_TreeFieldPanel}}"
-                                                                         ItemsSource="{Binding BindingContext.LiveDeadOptions, Source={Reference PART_TreeFieldPanel}}" />
 
-                                            </ctrls:LastChildHeightLayout>-->
                                         </DataTemplate>
                                     </ctrls:TreeFieldValueDataTemplateSelector.LiveDeadTemplate>
                                 </ctrls:TreeFieldValueDataTemplateSelector>
@@ -405,15 +313,13 @@
 
                             <Button Grid.Column="2"
                                     x:Name="_editButton"
-                                    Text="Edit"
+                                    Style="{StaticResource Button.EditItem}"
                                     Command="{Binding EditTreeCommand}"
                                     CommandParameter="{Binding SelectedTreeViewModel.TreeID}"
                                     AutomationProperties.IsInAccessibleTree="True"
                                     AutomationProperties.Name="Edit Tree Button" />
                         </Grid>
 
-                        <BoxView Grid.Row="3"
-                                 BackgroundColor="Black" />
                     </Grid>
                 </Frame>
 
@@ -493,16 +399,16 @@
                                                    AutomationProperties.IsInAccessibleTree="False" />
 
                                             <ctrls:PopulationIndicator Grid.Row="0"
-                                                                             Grid.Column="1"
-                                                                             StratumCode="{Binding StratumCode}"
-                                                                             SampleGroupCode="{Binding SampleGroupCode}"
-                                                                             Species="{Binding SpeciesCode}"
-                                                                             LiveDead="{Binding LiveDead}"
-                                                                             Margin="5"
-                                                                             HeightRequest="30"
-                                                                             VerticalOptions="Center"
-                                                                             HorizontalOptions="Start"
-                                                                             FontSize="Small" />
+                                                                       Grid.Column="1"
+                                                                       StratumCode="{Binding StratumCode}"
+                                                                       SampleGroupCode="{Binding SampleGroupCode}"
+                                                                       Species="{Binding SpeciesCode}"
+                                                                       LiveDead="{Binding LiveDead}"
+                                                                       Margin="5"
+                                                                       HeightRequest="30"
+                                                                       VerticalOptions="Center"
+                                                                       HorizontalOptions="Start"
+                                                                       FontSize="Small" />
 
 
 
@@ -551,49 +457,22 @@
                                             <StackLayout Grid.Row="0"
                                                          Grid.Column="7">
 
-                                                <Frame Padding="0"
-                                                       CornerRadius="5"
-                                                       BackgroundColor="{StaticResource attention}"
-                                                       VerticalOptions="Center"
-                                                       IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
-                                                    <StackLayout Orientation="Horizontal"
-                                                                 Padding="0">
-                                                        <Image Source="ic_error_outline_black_24dp.png"
-                                                               AutomationProperties.IsInAccessibleTree="False" />
-                                                        <Label Text="{Binding ErrorCount}"
-                                                               TextColor="{StaticResource text.dark}"
-                                                               VerticalTextAlignment="Center"
-                                                               AutomationProperties.IsInAccessibleTree="False" />
-                                                    </StackLayout>
-                                                </Frame>
 
-                                                <Frame Padding="0"
-                                                       CornerRadius="5"
-                                                       BackgroundColor="{StaticResource warning}"
-                                                       VerticalOptions="Center"
-                                                       IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}">
-                                                    <StackLayout Orientation="Horizontal"
-                                                                 Padding="0">
-                                                        <Image Source="ic_warning_black_24dp.png"
-                                                               AutomationProperties.IsInAccessibleTree="False" />
-                                                        <Label Text="{Binding WarningCount}"
-                                                               TextColor="{StaticResource text.dark}"
-                                                               VerticalTextAlignment="Center"
-                                                               AutomationProperties.IsInAccessibleTree="False" />
-                                                    </StackLayout>
-                                                </Frame>
+                                                <ctrls:ErrorCountTag ErrorCount="{Binding ErrorCount}"
+                                                                     IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}"
+                                                                     VerticalOptions="Center"/>
+
+                                                <ctrls:WarningCountTag WarningCount="{Binding WarningCount}"
+                                                                       VerticalOptions="Center"
+                                                                       IsVisible="{Binding WarningCount, Converter={StaticResource greaterThanZeroConverter}}" />
                                             </StackLayout>
 
                                             <!-- show delete button-->
-                                            <ImageButton Grid.Column="8"
-                                                         BackgroundColor="Transparent"
-                                                         Clicked="openDeleteButton_Clicked"
-                                                         Source="ic_more_vert_black_24dp.png"
-                                                         Padding="0,7"
-                                                         HeightRequest="{StaticResource minTouchableHeight}"
-                                                         VerticalOptions="Center"
-                                                         AutomationProperties.IsInAccessibleTree="True"
-                                                         AutomationProperties.Name="Show Item Actions" />
+                                            <Button Grid.Column="8"
+                                                    Style="{StaticResource Button.EllipsisVertical}"
+                                                    Clicked="openDeleteButton_Clicked"
+                                                    AutomationProperties.IsInAccessibleTree="True"
+                                                    AutomationProperties.Name="Show Item Actions" />
 
                                         </Grid>
 
@@ -626,15 +505,14 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Padding="0"
-                               BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}"
+                        <Frame BackgroundColor="{Binding InCruise, Converter={StaticResource tallyIncruiseBackgroundColorConverter}}"
                                AutomationProperties.IsInAccessibleTree="True"
                                AutomationProperties.Name="Tally Population Item">
 
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.TallyCommand, Source={Reference _page}}"
                                                       CommandParameter="{Binding .}"
-                                                      ctrls:TapGestureRecognizerHelper.EnableClickSound="True"/>
+                                                      ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
                             </Frame.GestureRecognizers>
 
 
@@ -701,43 +579,36 @@
 
                                 <Button Grid.Row="0"
                                         Grid.Column="1"
-                                        HeightRequest="{StaticResource minTouchableHeight}"
-                                        WidthRequest="{StaticResource minTouchableWidth}"
-                                        Text="{Static const:FAIcons.EllipsisVertical}"
+                                        Style="{StaticResource Button.EllipsisVertical}"
                                         Command="{Binding BindingContext.ShowTallyPopulationDetailsCommand, Source={Reference _page} }"
                                         CommandParameter="{Binding .}"
-                                        FontFamily="{Static const:Fonts.FAsolid}"
-                                        BackgroundColor="Transparent"
                                         AutomationProperties.IsInAccessibleTree="True"
                                         AutomationProperties.Name="Show Tally Info" />
 
                                 <ctrls:PopulationIndicator Grid.Row="1"
-                                                                 Grid.Column="0"
-                                                                 Grid.ColumnSpan="2"
-                                                                 HorizontalOptions="Center"
-                                                                 StratumCode="{Binding StratumCode}"
-                                                                 SampleGroupCode="{Binding SampleGroupCode}"
-                                                                 Species="{Binding SpeciesCode}"
-                                                                 LiveDead="{Binding LiveDead}"
-                                                                 FontSize="Micro"
-                                                                 AltFontSize="Large"
-                                                                 AltFontAttributes="Bold"
-                                                                 CellPadding="2,-4" />
+                                                           Grid.Column="0"
+                                                           Grid.ColumnSpan="2"
+                                                           Margin="2"
+                                                           HorizontalOptions="Center"
+                                                           StratumCode="{Binding StratumCode}"
+                                                           SampleGroupCode="{Binding SampleGroupCode}"
+                                                           Species="{Binding SpeciesCode}"
+                                                           LiveDead="{Binding LiveDead}"
+                                                           FontSize="Micro"
+                                                           AltFontSize="Large"
+                                                           AltFontAttributes="Bold"
+                                                           CellPadding="2,-4" />
 
                                 <Frame Grid.Row="2"
                                        Grid.Column="0"
                                        Grid.ColumnSpan="2"
                                        Padding="3,0"
-                                       Margin="0,0,0,2"
+                                       Margin="2"
                                        HorizontalOptions="Center"
                                        BackgroundColor="White">
 
-                                    <StackLayout Orientation="Horizontal">
-                                        <!--<Image Source="{Static const:FAIcons.Tree}"
-                                               AutomationProperties.IsInAccessibleTree="False" />-->
-                                        <Label Text="{Static const:FAIcons.Tree}"
-                                               FontFamily="{Static const:Fonts.FAsolid}"
-                                               VerticalTextAlignment="Center"
+                                    <HorizontalStackLayout>
+                                        <Image Source="{FontImageSource Glyph={Static const:FAIcons.Tree}, FontFamily={Static const:Fonts.FAsolid}, Size=12, Color=Black}"
                                                AutomationProperties.IsInAccessibleTree="False" />
                                         <Label Text="{Binding PlotTreeCount}"
                                                HorizontalTextAlignment="Center"
@@ -751,7 +622,7 @@
                                                IsVisible="{Binding SumKPI, Converter={StaticResource intToBoolConverter}}"
                                                AutomationProperties.IsInAccessibleTree="False"
                                                AutomationProperties.Name="Total KPI" />-->
-                                    </StackLayout>
+                                    </HorizontalStackLayout>
                                 </Frame>
                             </Grid>
 
@@ -794,7 +665,7 @@
                         <ControlTemplate x:Key="thing">
                             <Frame Padding="7,0"
                                    HeightRequest="{Static const:UI.MinTouchableHeight}"
-                                   WidthRequest="70"
+                                   WidthRequest="80"
                                    BackgroundColor="{StaticResource primary}">
                                 <ContentPresenter VerticalOptions="Center" />
                             </Frame>
@@ -814,7 +685,7 @@
                                                               CommandParameter="{Binding .}"
                                                               ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
                                     </ContentView.GestureRecognizers>
-                                    <StackLayout Orientation="Horizontal">
+                                    <HorizontalStackLayout>
 
                                         <Label Grid.Column="0"
                                                Text="{Binding StratumCode}"
@@ -822,13 +693,14 @@
                                                HorizontalOptions="CenterAndExpand" />
                                         <Frame Grid.Column="1"
                                                Padding="0"
+                                               Margin="2,0"
                                                BackgroundColor="{StaticResource black_70}"
                                                IsVisible="{Binding IsEmpty}">
                                             <Label Text="NULL"
                                                    TextColor="{StaticResource text.light}" />
                                         </Frame>
 
-                                    </StackLayout>
+                                    </HorizontalStackLayout>
                                 </ContentView>
 
                             </DataTemplate>

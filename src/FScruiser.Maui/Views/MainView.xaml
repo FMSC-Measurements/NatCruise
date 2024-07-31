@@ -28,40 +28,42 @@
                         StrokeShape="RoundRectangle 5">
 
                     <StackLayout>
-                        <Grid Padding="3"
+                        <Grid 
                               AutomationProperties.IsInAccessibleTree="True"
                               AutomationProperties.Name="Select Cruise">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            
+
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer x:Name="_showSelectSaleTapGestureRecognizer"
+                                                      Command="{Binding ShowSelectSaleCommand}"
+                                                      controls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                            </Grid.GestureRecognizers>
+
                             <Border Grid.Column="0"
                                     BackgroundColor="{StaticResource primary}"
                                     HeightRequest="40"
-                                    Padding="5"
+                                    Padding="4"
                                     StrokeShape="RoundRectangle 5">
                                 <Image Source="{FontImage Glyph={Static const:FAIcons.FolderOpen}, FontFamily={Static const:Fonts.FAsolid}}" />
                             </Border>
                             <Label Grid.Column="1"
                                    x:Name="_currentCruiseLable"
                                    Text="{Binding SelectedCruise, TargetNullValue='Select Cruise'}"
-                                   TextColor="{StaticResource text.dark}"
+                                   Style="{StaticResource Label.H3}"
+                                   Margin="4"
                                    VerticalOptions="Fill"
                                    HorizontalOptions="Fill"
                                    VerticalTextAlignment="Center">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer x:Name="_showSelectSaleTapGestureRecognizer"
-                                                          Command="{Binding ShowSelectSaleCommand}"
-                                                          controls:TapGestureRecognizerHelper.EnableClickSound="True" />
-                                </Label.GestureRecognizers>
+                                
                             </Label>
                         </Grid>
+                        <BoxView Style="{StaticResource HorizontialSpacer}"
+                                 IsVisible="{Binding SelectedCruise, Converter={StaticResource isNotNullConverter}}" />
                         <Picker x:Name="_cuttingUnitPicker"
                                 Title="Select Cutting Unit"
-                                TextColor="{StaticResource text.light}"
-                                TitleColor="{StaticResource white_60}"
-                                BackgroundColor="{StaticResource white_12}"
                                 ItemsSource="{Binding CuttingUnits}"
                                 SelectedItem="{Binding SelectedCuttingUnit}"
                                 IsVisible="{Binding SelectedCruise, Converter={StaticResource isNotNullConverter}}"

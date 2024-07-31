@@ -20,6 +20,8 @@
                 Value="8" />
         <Setter Property="Padding"
                 Value="14,10" />
+        <Setter Property="Margin"
+                Value="2" />
         <Setter Property="MinimumHeightRequest"
                 Value="{StaticResource minTouchableHeight}" />
         <Setter Property="MinimumWidthRequest"
@@ -79,8 +81,8 @@
     <Style x:Key="Button.EditItem"
            TargetType="Button"
            BasedOn="{StaticResource ButtonBase}">
-        <Setter Property="Text"
-                Value="Edit" />
+        <!--<Setter Property="Text"
+                Value="Edit" />-->
         <Setter Property="BackgroundColor"
                 Value="{StaticResource primary}" />
         <Setter Property="ImageSource"
