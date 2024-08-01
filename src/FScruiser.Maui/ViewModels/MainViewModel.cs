@@ -45,8 +45,11 @@ namespace FScruiser.Maui.ViewModels
         [ObservableProperty]
         private NavItemModel? _selectedNavItem;
         private ICommand _showSelectSaleCommand;
+        private Command _showSettingsCommand;
 
         public ICommand ShowSelectSaleCommand => _showSelectSaleCommand ??= new Command(() => NavigationService.ShowSaleSelect().FireAndForget());
+
+        public ICommand ShowSettingsCommand => _showSettingsCommand ??= new Command(() => NavigationService.ShowSettings().FireAndForget());
 
         public IServiceProvider Services { get; }
         public ICruiseNavigationService NavigationService { get; }
@@ -146,13 +149,11 @@ namespace FScruiser.Maui.ViewModels
 
 
             }
-            else
-            {
-                navList.Add(new NavItemModel { Title = "Utilities", NavAction = (n) => n.ShowUtilities() });
-                navList.Add(new NavItemModel { Title = "Cruisers", NavAction = (n) => n.ShowManageCruisers() });
-                navList.Add(new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() });
-                navList.Add(new NavItemModel { Title = "About", NavAction = (n) => n.ShowAbout() });
-            }
+
+            navList.Add(new NavItemModel { Title = "Utilities", NavAction = (n) => n.ShowUtilities() });
+            navList.Add(new NavItemModel { Title = "Cruisers", NavAction = (n) => n.ShowManageCruisers() });
+            navList.Add(new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() });
+            navList.Add(new NavItemModel { Title = "About", NavAction = (n) => n.ShowAbout() });
 
             NavItems = navList.ToArray();
 

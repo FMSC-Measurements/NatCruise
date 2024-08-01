@@ -110,7 +110,7 @@
                     <Button Style="{StaticResource Button.MainMenu}" ImageSource="{FontImageSource Glyph={Static const:FAIcons.Gear}, FontFamily={Static const:Fonts.FAsolid}, Size=30}">
                         <Button.Behaviors>
                             <tk:TouchBehavior LongPressCommand="{Binding ShowTestViewCommand}" LongPressDuration="2000"
-                                              Command="{Binding ShowSettingCommand}" />
+                                              Command="{Binding ShowSettingsCommand}" />
                         </Button.Behaviors>
                     </Button>
                 </HorizontalStackLayout>

@@ -237,6 +237,10 @@
                 Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray600}}" />
         <Setter Property="ThumbColor"
                 Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource white}}" />
+        <Setter Property="HeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
