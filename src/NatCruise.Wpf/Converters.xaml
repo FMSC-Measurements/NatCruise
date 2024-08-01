@@ -67,7 +67,12 @@
                                             MethodMap="PlotMethods"
                                             Invert="true" />
 
+    <converters:CruiseMethodToBoolConverter x:Key="IsFixCNTConverter"
+                                            MethodMap="FIXCNT" />
+
     <!-- multibinding converters -->
     <multiConverters:AllConverter x:Key="MultiBindingAllConverter" />
+    <multiConverters:AnyConverter x:Key="MultiBindingAnyConverter" />
+    <multiConverters:AnyToVisabilityMultiConverter x:Key="MultiBindingAnyToVisabilityConverter" />
 
 </ResourceDictionary>
