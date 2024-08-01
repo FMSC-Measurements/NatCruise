@@ -332,6 +332,7 @@
                     <CollectionView x:Name="_tallyFeedListView"
                                     ItemsSource="{Binding Trees.Result}"
                                     SelectionMode="None"
+                                    ItemSizingStrategy="MeasureFirstItem"
                                     ItemsUpdatingScrollMode="KeepLastItemInView"
                                     AutomationProperties.IsInAccessibleTree="True"
                                     AutomationProperties.Name="Tree List">
