@@ -107,6 +107,7 @@ public class LogsListViewModel : ViewModelBase
 
     public void ShowEditLogPage(Log? log)
     {
+        if (log is null) { return; }
         NavigationService.ShowLogEdit(log.LogID);
 
         //NavigationService.NavigateAsync("Log", new NavigationParameters($"{NavParams.LogEdit_CreateNew}=false&{NavParams.LogID}={log.LogID}"));
