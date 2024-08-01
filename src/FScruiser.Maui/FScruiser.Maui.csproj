@@ -26,10 +26,10 @@
 		<UseMauiEssentials>true</UseMauiEssentials>
 
 		<!-- Display name -->
-		<ApplicationTitle>FScruiser.Maui</ApplicationTitle>
+		<ApplicationTitle>FScruiser</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.fscruiser.maui</ApplicationId>
+		<ApplicationId>gov.usda.fs.fscruiser</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -45,19 +45,25 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#E1E1E1" />
-
-		<!-- Splash Screen -->
+		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#345E36" />-->
+		<!-- Using composed icon see: https://learn.microsoft.com/en-us/dotnet/maui/user-interface/images/app-icons?view=net-maui-8.0&tabs=windows#composed-icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\fscruiser48dp.png" Color="#345E36" ForegroundScale="0.65" />
+				  <!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\fscruisersplash48dp.png" Color="#345E36" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+		<!--<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />-->
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\AppIcon\fscruiser48dp.png" />
 	</ItemGroup>
 
 	<ItemGroup>
