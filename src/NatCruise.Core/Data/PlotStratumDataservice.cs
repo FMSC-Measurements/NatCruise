@@ -82,7 +82,7 @@ SELECT last_insert_rowid();",
             plotStratum.Plot_Stratum_CN = plot_stratum_CN;
         }
 
-        public IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber, bool insertIfNotExists = false)
+        public IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber)
         {
             return Database.Query<Plot_Stratum>(
 @"SELECT
@@ -105,6 +105,12 @@ LEFT JOIN Plot_Stratum AS ps USING (CuttingUnitCode, StratumCode, CruiseID, Plot
 WHERE p.CuttingUnitCode = @p1 AND p.CruiseID = @p2 AND st.Method IN (SELECT Method FROM LK_CruiseMethod WHERE IsPlotMethod = 1)
 AND p.PlotNumber = @p3;",
                 new object[] { unitCode, CruiseID, plotNumber }).ToArray();
+        }
+
+        [Obsolete("parameter insertIfNotExists no longer supported")]
+        public IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber, bool insertIfNotExists)
+        {
+            return GetPlot_Strata(unitCode, plotNumber);
         }
 
         public Plot_Stratum GetPlot_Stratum(string unitCode, string stratumCode, int plotNumber)

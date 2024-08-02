@@ -115,9 +115,7 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
         public Plot GetPlot(string plotID)
         {
             return Database.Query<Plot>(
-                "SELECT " +
-                    "p.* " +
-                "FROM Plot AS p " +
+                SELECT_PLOT_CORE +
                 "WHERE PlotID = @p1;", new object[] { plotID })
                 .FirstOrDefault();
         }
@@ -171,6 +169,11 @@ AND st.Method != '{CruiseMethods.THREEPPNT}';",
         public void UpdatePlotNumber(string plotID, int plotNumber)
         {
             Database.Execute("UPDATE Plot SET PlotNumber = @p1 WHERE PlotID = @p2;", plotNumber, plotID);
+        }
+
+        public void UpdatePlotCuttingUnit(string plotID, string cuttingUnitCode)
+        {
+            Database.Execute("UPDATE Plot SET CuttingUnitCode = @p1 WHERE PlotID = @p2;", cuttingUnitCode, plotID);
         }
 
         public void DeletePlot(string unitCode, int plotNumber)

@@ -8,6 +8,7 @@
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
              xmlns:converters="clr-namespace:NatCruise.Wpf.Converters"
              xmlns:controls="clr-namespace:NatCruise.Wpf.Controls"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"
              x:Name="_page"
              d:DesignHeight="800"
@@ -84,6 +85,17 @@
 
                     </StackPanel.Resources>
 
+                    <controls:LastChildWidthPanel>
+                        <Label Content="Cutting Unit" />
+                        <Label Content="{iconPack:FontAwesome Kind=LockSolid}"
+                               ToolTip="Has Field Data Lock"
+                               mah_ctrls:VisibilityHelper.IsVisible="{Binding IsLocked}" />
+                        <TextBox Text="{Binding CuttingUnitCode, UpdateSourceTrigger=LostFocus}"
+                                 IsReadOnly="{Binding IsLocked}"
+                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                                 AutomationProperties.Name="Cutting Unit" />
+                    </controls:LastChildWidthPanel>
+                    
                     <!--plot number-->
                     <controls:LastChildWidthPanel>
                         <Label Content="Plot " />

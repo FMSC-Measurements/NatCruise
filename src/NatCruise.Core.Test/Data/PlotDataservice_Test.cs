@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using CruiseDAL.V3.Models;
+using FluentAssertions;
 using NatCruise.Data;
 using System;
 using System.Linq;
@@ -139,7 +140,7 @@ namespace NatCruise.Test.Data
             }
         }
 
- 
+
 
         [Fact]
         public void GetPlot_ByPlotID()
@@ -234,6 +235,117 @@ namespace NatCruise.Test.Data
 
         [Fact]
         public void UpdatePlotNumber()
+        {
+            var strata = new[]
+                    {
+                        new Stratum{ StratumCode = "st1", Method = "PNT" },
+                        new Stratum{ StratumCode = "st2", Method = "PCM" },
+                    };
+            var sampleGroups = new[]
+            {
+                new SampleGroup {SampleGroupCode = "sg1", StratumCode = strata[0].StratumCode, SamplingFrequency = 101, TallyBySubPop = true},
+                new SampleGroup {SampleGroupCode = "sg2", StratumCode = strata[1].StratumCode, SamplingFrequency = 102, TallyBySubPop = false},
+            };
+
+            var subpops  = new[]
+            {
+                new SubPopulation {
+                    StratumCode = sampleGroups[0].StratumCode,
+                    SampleGroupCode = sampleGroups[0].SampleGroupCode,
+                    SpeciesCode = "sp1",
+                    LiveDead = "L",
+                },
+                new SubPopulation {
+                    StratumCode = sampleGroups[0].StratumCode,
+                    SampleGroupCode = sampleGroups[0].SampleGroupCode,
+                    SpeciesCode = "sp1",
+                    LiveDead = "D",
+                },
+                new SubPopulation {
+                    StratumCode = sampleGroups[0].StratumCode,
+                    SampleGroupCode = sampleGroups[0].SampleGroupCode,
+                    SpeciesCode = "sp2",
+                    LiveDead = "L",
+                },
+
+                new SubPopulation {
+                    StratumCode = sampleGroups[1].StratumCode,
+                    SampleGroupCode = sampleGroups[1].SampleGroupCode,
+                    SpeciesCode = "sp1",
+                    LiveDead = "L",
+                },
+                new SubPopulation {
+                    StratumCode = sampleGroups[1].StratumCode,
+                    SampleGroupCode = sampleGroups[1].SampleGroupCode,
+                    SpeciesCode = "sp1",
+                    LiveDead = "D",
+                },
+                new SubPopulation {
+                    StratumCode = sampleGroups[1].StratumCode,
+                    SampleGroupCode = sampleGroups[1].SampleGroupCode,
+                    SpeciesCode = "sp2",
+                    LiveDead = "L",
+                },
+            };
+
+            var init = new DatastoreInitializer()
+            {
+                Units = new[] { "u1", "u2" },
+                Strata = strata,
+                UnitStrata = new[]
+                    {
+                        new CuttingUnit_Stratum{ CuttingUnitCode = "u1", StratumCode = "st1" },
+                        new CuttingUnit_Stratum{ CuttingUnitCode = "u2", StratumCode = "st1" },
+                        new CuttingUnit_Stratum{ CuttingUnitCode = "u2", StratumCode = "st2" },
+                    },
+                SampleGroups = sampleGroups,
+                Subpops = subpops,
+
+            };
+            var unitCode = "u1";
+            //var plotNumber = 1;
+
+            using (var database = init.CreateDatabase())
+            {
+                var plotDataservice = new PlotDataservice(database, init.CruiseID, init.DeviceID);
+                var plotStratumDs = new PlotStratumDataservice(database, init.CruiseID, init.DeviceID);
+                var plotTallyds = new PlotTreeDataservice(database, init.CruiseID, init.DeviceID, new SamplerStateDataservice(database, init.CruiseID, init.DeviceID));
+                var treeDS = new TreeDataservice(database, init.CruiseID, init.DeviceID);
+
+                var plotID = plotDataservice.AddNewPlot(unitCode);
+                var plot = plotDataservice.GetPlot(plotID);
+                plot.TreeCount.Should().Be(0);
+
+                
+
+                var treeID = plotTallyds.CreatePlotTree(unitCode, plot.PlotNumber, "st1", "sg1");
+
+                var tallyLedgers = database.From<TallyLedger>().Where("PlotNumber = @p1").Query(plot.PlotNumber).ToArray();
+                tallyLedgers.Should().HaveCount(1);
+
+                plot = plotDataservice.GetPlot(plotID);
+                plot.TreeCount.Should().Be(1);
+
+                plotDataservice.UpdatePlotCuttingUnit(plotID, "u2");
+
+                // verify plot record
+                var plotAgain = plotDataservice.GetPlot(plotID);
+                plotAgain.TreeCount.Should().Be(1);
+
+                // verify tally ledger records
+                var tallyLedgersAgain = database.From<TallyLedger>().Where("PlotNumber = @p1").Query(plot.PlotNumber).ToArray();
+                tallyLedgersAgain.Should().HaveCount(1);
+                tallyLedgersAgain.Should().OnlyContain(x => x.CuttingUnitCode == "u2");
+
+                // verify tree records
+                var treesAgain = treeDS.GetTrees("u2", plotNumber: plot.PlotNumber);
+                treesAgain.Should().HaveCount(1);
+
+            }
+        }
+
+        [Fact]
+        public void UpdatePlotCuttingUnit()
         {
             var init = new DatastoreInitializer();
             var unitCode = init.Units.First();
