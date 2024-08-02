@@ -33,7 +33,7 @@ namespace NatCruise.Test.Data
                 plots.Should().HaveCount(1);
                 var plot = plots.Single();
 
-                var plotStrata = plotStDs.GetPlot_Strata(unit, plot.PlotNumber, insertIfNotExists: false);
+                var plotStrata = plotStDs.GetPlot_Strata(unit, plot.PlotNumber);
                 plotStrata.Should().HaveCount(2);
 
                 var tallyPops = tallyPopDs.GetPlotTallyPopulationsByUnitCode(unit, plot.PlotNumber);
@@ -190,7 +190,7 @@ namespace NatCruise.Test.Data
                 plots.Should().HaveCount(1);
                 var plot = plots.Single();
 
-                var plotStrata = plotStDs.GetPlot_Strata(unitCode, plot.PlotNumber, insertIfNotExists: false);
+                var plotStrata = plotStDs.GetPlot_Strata(unitCode, plot.PlotNumber);
                 plotStrata.Should().HaveCount(1);
 
                 db.Insert(new TallyLedger {

@@ -12,9 +12,6 @@ namespace NatCruise.Data
 
         IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber);
 
-        [Obsolete("parameter insertIfNotExists no longer supported")]
-        IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber, bool insertIfNotExists);
-
         Plot_Stratum GetPlot_Stratum(string unitCode, string stratumCode, int plotNumber);
 
         void UpdatePlot_Stratum(Plot_Stratum stratumPlot);

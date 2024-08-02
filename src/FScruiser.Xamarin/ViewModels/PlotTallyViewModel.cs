@@ -209,7 +209,7 @@ namespace FScruiser.XF.ViewModels
 
                 TallyPopulations = TallyPopulationDataservice.GetPlotTallyPopulationsByUnitCode(unitCode, plotNumber).ToArray();
                 SetStratumFilter(null);
-                PlotStrata = PlotStratumDataservice.GetPlot_Strata(unitCode, plotNumber, false).ToArray();
+                PlotStrata = PlotStratumDataservice.GetPlot_Strata(unitCode, plotNumber).ToArray();
 
                 Trees = NotifyTaskCompletion.Create<ObservableCollection<PlotTreeEntry>>(
                     Task.Run(() => PlotTreeDataservice.GetPlotTrees(unitCode, plotNumber).ToObservableCollection()),

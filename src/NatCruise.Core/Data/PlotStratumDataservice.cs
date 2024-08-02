@@ -107,12 +107,6 @@ AND p.PlotNumber = @p3;",
                 new object[] { unitCode, CruiseID, plotNumber }).ToArray();
         }
 
-        [Obsolete("parameter insertIfNotExists no longer supported")]
-        public IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber, bool insertIfNotExists)
-        {
-            return GetPlot_Strata(unitCode, plotNumber);
-        }
-
         public Plot_Stratum GetPlot_Stratum(string unitCode, string stratumCode, int plotNumber)
         {
             // we're going to read from the plot table instead of the stratum table

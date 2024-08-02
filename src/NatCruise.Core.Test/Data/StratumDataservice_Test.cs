@@ -330,7 +330,7 @@ namespace NatCruise.Test.Data
                 plotDs.AddNewPlot(unitCode);
                 plotDs.GetPlotsByUnitCode(unitCode).Select(x => x.PlotNumber).Should().Contain(1);
 
-                var plot_strata = plotStDs.GetPlot_Strata(unitCode, 1, false);
+                var plot_strata = plotStDs.GetPlot_Strata(unitCode, 1);
                 plot_strata.Select(x => x.StratumCode).Should().Contain(stCode);
 
                 var stDs = new StratumDataservice(database, init.CruiseID, init.DeviceID);
@@ -347,7 +347,7 @@ namespace NatCruise.Test.Data
                 var unitCodesAgain = unitDs.GetCuttingUnitCodesByStratum(stCode);
                 unitCodesAgain.Should().NotContain(unitCode);
 
-                var plot_strataAgian = plotStDs.GetPlot_Strata(unitCode, 1, false);
+                var plot_strataAgian = plotStDs.GetPlot_Strata(unitCode, 1);
                 plot_strataAgian.Select(x => x.StratumCode).Should().NotContain(stCode);
 
             }

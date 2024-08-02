@@ -25,7 +25,7 @@ namespace NatCruise.Test.Data
                 plots.Should().HaveCount(1);
                 var plot = plots.Single();
 
-                var plotStrata = plotStratumDs.GetPlot_Strata(unit, plot.PlotNumber, insertIfNotExists: false);
+                var plotStrata = plotStratumDs.GetPlot_Strata(unit, plot.PlotNumber);
                 plotStrata.Should().HaveCount(2);
             }
         }
