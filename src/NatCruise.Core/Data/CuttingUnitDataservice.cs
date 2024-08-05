@@ -111,6 +111,15 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
             //    .Query(CruiseID).ToArray();
         }
 
+        public IReadOnlyCollection<CuttingUnit> GetPlotCuttingUnits()
+        {
+            return Database.Query<CuttingUnit>( SELECT_CUTTINGUNIT_CORE +
+                "JOIN CuttingUnit_Stratum as cust USING (CuttingUnitCode, CruiseID) " +
+                "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
+                "JOIN LK_CruiseMethod USING (Method) " +
+                "WHERE IsPlotMethod = 1 AND CruiseID = @p1", CruiseID).ToArray();
+        }
+
         public IReadOnlyCollection<CuttingUnit> GetCuttingUnitsByStratum(string stratumCode)
         {
             return Database.Query<CuttingUnit>(SELECT_CUTTINGUNIT_CORE +

@@ -90,9 +90,9 @@
                         <Label Content="{iconPack:FontAwesome Kind=LockSolid}"
                                ToolTip="Has Field Data Lock"
                                mah_ctrls:VisibilityHelper.IsVisible="{Binding IsLocked}" />
-                        <TextBox Text="{Binding CuttingUnitCode, UpdateSourceTrigger=LostFocus}"
-                                 IsReadOnly="{Binding IsLocked}"
-                                 mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                        <ComboBox SelectedValue="{Binding CuttingUnitCode }"
+                                  ItemsSource="{Binding CuttingUnitOptions}"
+                                 IsEnabled="{Binding IsLocked, Converter={StaticResource NotConverter}}"
                                  AutomationProperties.Name="Cutting Unit" />
                     </controls:LastChildWidthPanel>
                     

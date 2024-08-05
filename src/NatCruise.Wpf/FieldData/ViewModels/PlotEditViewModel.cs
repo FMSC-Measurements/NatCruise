@@ -28,6 +28,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private bool _isSuperuserModeEnabled;
         private bool _isLocked;
         private string _cuttingUnitCode;
+        private IReadOnlyCollection<string> _cuttingUnitOptions;
 
         protected INatCruiseNavigationService NavigationService { get; }
 
@@ -95,7 +96,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 SetProperty(ref _plot, value);
                 OnPropertyChanged(nameof(PlotNumber));
                 OnPropertyChanged(nameof(CuttingUnitCode));
-                IsLocked = (Plot == null || Plot.TreeCount > 0) && !IsSuperuserModeEnabled;
+                
 
                 if (value != null)
                 {
@@ -110,6 +111,9 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             {
                 var stratumPlots = PlotStratumDataservice.GetPlot_Strata(plot.CuttingUnitCode, plot.PlotNumber);
                 StratumPlots = stratumPlots;
+                CuttingUnitOptions = CuttingUnitDataservice.GetPlotCuttingUnits()
+                    .Select(x => x.CuttingUnitCode)
+                    .Distinct().ToArray();
                 CanAddRemoveStrata = stratumPlots.Count() > 1 || stratumPlots.Any(x => x.InCruise == false);
                 RefreshErrorsAndWarnings(plot);
             }
@@ -117,6 +121,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             {
                 StratumPlots = new Plot_Stratum[0];
             }
+
+            IsLocked = (Plot == null || Plot.TreeCount > 0) && !IsSuperuserModeEnabled;
         }
 
         public ICommand UpdatePlotNumberCommand => _updatePlotNumberCommand ?? (_updatePlotNumberCommand = new DelegateCommand<string>(UpdatePlotNumber));
@@ -232,25 +238,33 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
                 if(unmatchedStrata.Any())
                 {
-                    DialogService.ShowNotification($"Can not change cutting unit, plot strata {string.Join(", ", unmatchedStrata)} not in the destination cutting unit {value}.\r\n");
-
-                    return;
+                    DialogService.ShowNotification($"Can not change Cutting Unit,\r\n Strata {string.Join(", ", unmatchedStrata)} not found in the destination cutting unit {value}.");
                 }
-
-                try
+                else
                 {
-                    PlotDataservice.UpdatePlotCuttingUnit(Plot.PlotID, value);
-                }
-                catch (FMSC.ORM.UniqueConstraintException ex)
-                {
-                    LoggingService.LogException(nameof(PlotEditViewModel), "Plot_PropertyChanged", ex);
-                    DialogService.ShowMessageAsync("Save Plot Error - Plot Number and Cutting Unit must be unique");
-                    return;
+                    try
+                    {
+                        PlotDataservice.UpdatePlotCuttingUnit(Plot.PlotID, value);
+                    }
+                    catch (FMSC.ORM.UniqueConstraintException ex)
+                    {
+                        LoggingService.LogException(nameof(PlotEditViewModel), "Plot_PropertyChanged", ex);
+                        DialogService.ShowMessageAsync("Save Plot Error - Plot Number and Cutting Unit must be unique");
+                        return;
+                    }
+
+                    Plot.CuttingUnitCode = value;
                 }
 
-                Plot.CuttingUnitCode = value;
+                
                 OnPropertyChanged();
             }
+        }
+
+        public IReadOnlyCollection<string> CuttingUnitOptions
+        {
+            get => _cuttingUnitOptions;
+            set => SetProperty(ref _cuttingUnitOptions, value);
         }
 
 
@@ -285,6 +299,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public IPlotDataservice PlotDataservice { get; }
         public IPlotStratumDataservice PlotStratumDataservice { get; }
         public IStratumDataservice StratumDataservice { get; }
+        public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public IPlotErrorDataservice PlotErrorDataservice { get; }
         public INatCruiseDialogService DialogService { get; set; }
         public ILoggingService LoggingService { get; }
@@ -292,6 +307,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public PlotEditViewModel(IPlotDataservice plotDataservice,
             IPlotStratumDataservice plotStratumDataservice,
             IStratumDataservice stratumDataservice,
+            ICuttingUnitDataservice cuttingUnitDataservice,
             IPlotErrorDataservice plotErrorDataservice,
             INatCruiseDialogService dialogService,
             INatCruiseNavigationService navigationService,
@@ -301,6 +317,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             PlotStratumDataservice = plotStratumDataservice ?? throw new ArgumentNullException(nameof(plotStratumDataservice));
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
+            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             PlotErrorDataservice = plotErrorDataservice ?? throw new ArgumentNullException(nameof(plotErrorDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));

@@ -11,6 +11,8 @@ namespace NatCruise.Data
 
         IReadOnlyCollection<string> GetCuttingUnitCodes();
 
+        IReadOnlyCollection<CuttingUnit> GetPlotCuttingUnits();
+
         IReadOnlyCollection<string> GetCuttingUnitCodesByStratum(string stratumCode);
 
         CuttingUnitStrataSummary GetCuttingUnitStrataSummary(string unitCode);
