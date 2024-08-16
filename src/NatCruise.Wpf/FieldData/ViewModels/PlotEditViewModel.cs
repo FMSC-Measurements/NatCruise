@@ -215,6 +215,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         #endregion PlotNumber
 
+        public event EventHandler PlotCuttingUnitChanged;
+
         public bool CanAddRemoveStrata
         {
             get => _canAddRemoveStrata;
@@ -254,6 +256,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                     }
 
                     Plot.CuttingUnitCode = value;
+                    PlotCuttingUnitChanged?.Invoke(this, EventArgs.Empty);
                 }
 
                 
