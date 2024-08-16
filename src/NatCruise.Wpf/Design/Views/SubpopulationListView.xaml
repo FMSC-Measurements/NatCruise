@@ -129,12 +129,14 @@
                            Grid.Row="0" />
                     <TextBox Text="{Binding IntervalSize}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             controls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
                              Grid.Column="1" />
 
                     <Label Content="Min*"
                            Grid.Row="1" />
                     <TextBox Text="{Binding Min}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             controls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
                              Grid.Column="1"
                              Grid.Row="1" />
 
@@ -142,6 +144,7 @@
                            Content="Max*" />
                     <TextBox Text="{Binding Max}"
                              mah_ctrls:TextBoxHelper.SelectAllOnFocus="True"
+                             controls:TextBoxHelper.RegexMask="{StaticResource const_regex_int}"
                              Grid.Column="1"
                              Grid.Row="2" />
                 </Grid>
