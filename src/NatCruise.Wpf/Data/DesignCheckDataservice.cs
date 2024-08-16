@@ -1,6 +1,9 @@
 ﻿using CruiseDAL;
+using CruiseDAL.Schema;
+using Microsoft.Extensions.Logging;
 using NatCruise.Data;
 using NatCruise.Design.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,23 +11,51 @@ namespace NatCruise.Wpf.Data
 {
     public class DesignCheckDataservice : CruiseDataserviceBase, IDesignCheckDataservice
     {
-        public DesignCheckDataservice(IDataContextService dataContext) : base(dataContext) { }
+        private Func<IEnumerable<DesignCheck>>[] _designQueryActions;
+
+        ILogger Log { get; }
+
+        public DesignCheckDataservice(IDataContextService dataContext, ILogger<DesignCheckDataservice> logger) : base(dataContext)
+        {
+            Log = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         public DesignCheckDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
         }
 
+        Func<IEnumerable<DesignCheck>>[] DesignQueryActions => _designQueryActions  ??= new Func<IEnumerable<DesignCheck>>[]
+            {
+                GetCuttingUnitStratumChecks,
+                GetStratumSampleGroupChecks,
+                GetStratumUnitChecks,
+                GetSampleGroupSubpopChecks,
+                GetSampleGroupUOMChecks,
+                GetSubPopTDVChecks,
+                GetTreeFieldSetupChecks,
+                GetTreeFieldSetupHeightFieldChecks,
+                GetTreeFieldSetupDiameterFieldChecks,
+                GetFIACodeChecks
+            };
+
+
         public IEnumerable<DesignCheck> GetDesignChecks()
         {
-            return GetCuttingUnitStratumChecks()
-                .Concat(GetStratumSampleGroupChecks())
-                .Concat(GetStratumUnitChecks())
-                .Concat(GetSampleGroupSubpopChecks())
-                .Concat(GetSubPopTDVChecks())
-                .Concat(GetTreeFieldSetupChecks())
-                .Concat(GetTreeFieldSetupHeightFieldChecks())
-                .Concat(GetTreeFieldSetupDiameterFieldChecks())
-                .Concat(GetFIACodeChecks()).ToArray();
+            var results = new List<DesignCheck>();
+
+            foreach(var action in DesignQueryActions)
+            {
+                try
+                {
+                    results.AddRange(action());
+                }
+                catch (Exception e)
+                {
+                    Log?.LogError(e, "Error running design check" + action.ToString());
+                }
+            }
+            
+            return results;
         }
 
         public IEnumerable<DesignCheck> GetCuttingUnitStratumChecks()
@@ -85,6 +116,25 @@ LEFT JOIN Subpopulation AS subp USING (CruiseID, StratumCode, SampleGroupCode)
 WHERE sg.CruiseID = @p1
     AND subp.RowID IS NULL;
 ", CruiseID);
+        }
+
+        public IEnumerable<DesignCheck> GetSampleGroupUOMChecks()
+        {
+            return Database.Query<DesignCheck>(
+$@"SELECT
+    'Sample Group' AS Category,
+    'Info' AS Level,
+    'Sample Group ' || sg.SampleGroupCode || ' in Stratum ' || sg.StratumCode || ' Has UOM Set Which is Different From Cruise UOM' AS Message,
+    SampleGroupID AS RecordID
+FROM SampleGroup AS sg
+JOIN Stratum AS st USING (CruiseID, StratumCode)
+Join Cruise AS c USING (CruiseID)
+WHERE sg.CruiseID = @p1
+    AND sg.UOM IS NOT NULL
+    AND st.Method != '{CruiseMethods.FIXCNT}'
+    AND sg.UOM != c.DefaultUOM;
+", CruiseID);
+
         }
 
         public IEnumerable<DesignCheck> GetSubPopTDVChecks()
