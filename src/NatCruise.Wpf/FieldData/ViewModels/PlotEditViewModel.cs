@@ -255,6 +255,12 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                         return;
                     }
 
+                    CruiseLogDataservice.Log($"Plot Cutting Unit Changed from {curValue} to {value}",
+                            CruiseLogLevel.Info,
+                            plotID: Plot.PlotID,
+                            fieldName: nameof(Plot.CuttingUnitCode),
+                            tableName: "Plot");
+
                     Plot.CuttingUnitCode = value;
                     PlotCuttingUnitChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -304,6 +310,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public IStratumDataservice StratumDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public IPlotErrorDataservice PlotErrorDataservice { get; }
+        public ICruiseLogDataservice CruiseLogDataservice { get; }
         public INatCruiseDialogService DialogService { get; set; }
         public ILoggingService LoggingService { get; }
 
@@ -312,6 +319,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             IStratumDataservice stratumDataservice,
             ICuttingUnitDataservice cuttingUnitDataservice,
             IPlotErrorDataservice plotErrorDataservice,
+            ICruiseLogDataservice cruiseLogDataService,
             INatCruiseDialogService dialogService,
             INatCruiseNavigationService navigationService,
             ILoggingService loggingService,
@@ -322,6 +330,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             PlotErrorDataservice = plotErrorDataservice ?? throw new ArgumentNullException(nameof(plotErrorDataservice));
+            CruiseLogDataservice = cruiseLogDataService ?? throw new ArgumentNullException(nameof(cruiseLogDataService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
