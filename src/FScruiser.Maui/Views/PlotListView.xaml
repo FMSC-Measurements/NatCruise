@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                x:Class="FScruiser.Maui.Views.PlotListView"
+                x:Name="_page"
+                xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:tc="clr-namespace:CommunityToolkit.Maui;assembly=CommunityToolkit.Maui"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                SemanticProperties.Description="Plots Page"
+                Title="{Binding Title}">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <CollectionView x:Name="_plotListView"
+                            Grid.Row="0"
+                            ItemsSource="{Binding Plots}"
+                            ItemSizingStrategy="MeasureFirstItem"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Plot List">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView AutomationProperties.IsInAccessibleTree="True">
+                            <SwipeView.LeftItems>
+                                <SwipeItem Text="Delete"
+                                           Command="{Binding BindingContext.DeletePlotCommand, Source={Reference _page}}"
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="{StaticResource attention}" />
+                            </SwipeView.LeftItems>
+
+                            <Frame Margin="2">
+
+                                <Grid AutomationProperties.IsInAccessibleTree="True"
+                                      AutomationProperties.Name="{Binding PlotNumber, StringFormat='{}Plot Number {0}'}">
+
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ShowTallyPlotCommand, Source={x:Reference _page} }"
+                                                              CommandParameter="{Binding .}"
+                                                              ctrls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                                    </Grid.GestureRecognizers>
+
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <AbsoluteLayout Grid.Row="0">
+
+                                        <!--plot number-->
+                                        <HorizontalStackLayout AbsoluteLayout.LayoutBounds="0,0"
+                                                               Margin="4">
+
+                                            <Label Grid.Column="0"
+                                                   Text="Plot "
+                                                   FontSize="Large"
+                                                   TextColor="{StaticResource text.dark}" />
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding PlotNumber}"
+                                                   TextColor="{StaticResource text.dark}"
+                                                   FontSize="Large" />
+
+
+                                        </HorizontalStackLayout>
+
+                                        <!-- plot error indicator -->
+                                        <ctrls:ErrorCountTag AbsoluteLayout.LayoutBounds=".75,7"
+                                                             AbsoluteLayout.LayoutFlags="XProportional"
+                                                             IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}"
+                                                             VerticalOptions="Center"
+                                                             ErrorCount="{Binding ErrorCount}" />
+
+                                        <!--<Frame AbsoluteLayout.LayoutBounds=".75,7"
+                                               AbsoluteLayout.LayoutFlags="XProportional"
+                                               Padding="2"
+                                               IsVisible="{Binding ErrorCount, Converter={StaticResource greaterThanZeroConverter}}"
+                                               CornerRadius="3"
+                                               BackgroundColor="{StaticResource error}"
+                                               VerticalOptions="Center">
+
+
+                                            <Grid ColumnDefinitions="15,Auto">
+                                                <Image Grid.Column="0"
+                                                       Source="ic_error_outline_black_24dp.png"
+                                                       AutomationProperties.IsInAccessibleTree="False" />
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding ErrorCount}"
+                                                       TextColor="{StaticResource text.dark}"
+                                                       Margin="3,0"
+                                                       AutomationProperties.IsInAccessibleTree="False" />
+                                            </Grid>
+                                        </Frame>-->
+
+                                        <Grid AbsoluteLayout.LayoutBounds="1,0"
+                                              AbsoluteLayout.LayoutFlags="PositionProportional"
+                                              ColumnDefinitions="50,50">
+                                            <!--edit button-->
+                                            <Button Grid.Column="0"
+                                                    Style="{StaticResource Button.EditItem}"
+                                                    Text=""
+                                                    Command="{Binding BindingContext.EditPlotCommand, Source={Reference _plotListView}}"
+                                                    CommandParameter="{Binding .}"
+                                                    AutomationProperties.IsInAccessibleTree="True"
+                                                    AutomationProperties.Name="Edit Plot" />
+
+                                            <!-- show item actions button -->
+                                            <Button Grid.Column="1"
+                                                    Style="{StaticResource Button.EllipsisVertical}"
+                                                    Clicked="openDeletePlotButton_Clicked"
+                                                    AutomationProperties.IsInAccessibleTree="True"
+                                                    AutomationProperties.Name="Show Actions Item" />
+                                        </Grid>
+                                    </AbsoluteLayout>
+
+                                    <!-- 2nd row -->
+                                    <Grid Grid.Row="1"
+                                          ColumnDefinitions="2*,*">
+
+                                        <!-- tree summary -->
+                                        <Frame Grid.Column="0"
+                                               Padding="4"
+                                               Margin="4">
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Tree Summary"
+                                                       Margin="3,3" />
+
+                                                <!-- tree count -->
+                                                <Label Margin="5,3"
+                                                       Text="{Binding TreeCount, StringFormat='Count: {0}'}"
+                                                       TextColor="{StaticResource text.dark}" />
+
+                                                <!-- tree errors -->
+                                                <ctrls:ErrorCountTag IsVisible="{Binding TreeErrorCount, Converter={StaticResource greaterThanZeroConverter}}"
+                                                                     ErrorCount="{Binding TreeErrorCount}" />
+
+                                                <!--<Frame Padding="3"
+                                                       BackgroundColor="{StaticResource error}"
+                                                       IsVisible="{Binding TreeErrorCount, Converter={StaticResource greaterThanZeroConverter}}">
+
+                                                    <Grid ColumnDefinitions="15,Auto">
+                                                        <Image Grid.Column="0"
+                                                               Source="ic_error_outline_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding TreeErrorCount}"
+                                                               TextColor="{StaticResource text.dark}"
+                                                               Margin="3,0"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </Grid>
+                                                </Frame>-->
+
+                                                <!-- tree warnings -->
+                                                <ctrls:WarningCountTag IsVisible="{Binding TreeWarningCount, Converter={StaticResource greaterThanZeroConverter}}"
+                                                                       WarningCount="{Binding TreeWarningCount}" />
+
+                                                <!--<Frame Padding="3"
+                                                       BackgroundColor="{StaticResource warning}"
+                                                       IsVisible="{Binding TreeWarningCount, Converter={StaticResource greaterThanZeroConverter}}">
+
+                                                    <Grid ColumnDefinitions="15,Auto">
+                                                        <Image Grid.Column="0"
+                                                               Source="ic_warning_black_24dp.png"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding TreeWarningCount}"
+                                                               TextColor="{StaticResource text.dark}"
+                                                               Margin="3,0"
+                                                               AutomationProperties.IsInAccessibleTree="False" />
+                                                    </Grid>
+                                                </Frame>-->
+
+                                            </StackLayout>
+
+
+
+                                        </Frame>
+
+                                        <!-- null strata -->
+                                        <Frame Grid.Column="1"
+                                               Padding="4"
+                                               Margin="4"
+                                               IsVisible="{Binding NullStrata, Converter={StaticResource isListNotNullOrEmptyConverter}}">
+                                            <Grid ColumnDefinitions="Auto,Auto" VerticalOptions="Center">
+                                                <Label Grid.Column="0"
+                                                       Text="Null:" />
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding NullStrata}"
+                                                       Margin="3,0" />
+                                            </Grid>
+                                        </Frame>
+                                    </Grid>
+
+                                </Grid>
+
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+
+                <Button x:Name="_goToEndButton"
+                        Style="{StaticResource Button.ScrollBottom}"
+                        Grid.Column="0"
+                        HeightRequest="60"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Scroll to End of List" />
+                <Button x:Name="_addPlotButton"
+                        Style="{StaticResource Button.AddItem}"
+                        Grid.Column="1"
+                        Command="{Binding AddPlotCommand}"
+                        HeightRequest="60"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="FillAndExpand"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Add Plot" />
+                <Button x:Name="_goToStartButton"
+                        Style="{StaticResource Button.ScrollTop}"
+                        Grid.Column="2"
+                        HeightRequest="60"
+                        HorizontalOptions="End"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Scoll to Start of List" />
+            </Grid>
+
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>

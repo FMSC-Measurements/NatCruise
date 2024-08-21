@@ -8,6 +8,7 @@ using NatCruise.Logic;
 using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
 using NatCruise.Services;
+using NatCruise.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,46 @@ namespace FScruiser.Maui
     {
         public static MauiAppBuilder RegisterViews(this MauiAppBuilder builder)
         {
+            var services = builder.Services;
+
+            services.AddTransient<MainView>();// should only be instantiated once, maybe change to singleton but for now I might add a instance counter to check that assumption
+
+            services.AddTransient<AboutView>();
+            services.AddTransient<AskKpiView>();
+            services.AddTransient<BlankView>();
+            services.AddTransient<CruiseSelectView>();
+            services.AddTransient<CuttingUnitInfoView>();
+            services.AddTransient<DatabaseUtilitiesView>();
+            services.AddTransient<FixCntTallyView>();
+            services.AddTransient<ImportView>();
+            services.AddTransient<LogEditView>();
+            services.AddTransient<LogsListView>();
+            services.AddTransient<ManageCruisersView>();
+            services.AddTransient<PlotEditView>();
+            services.AddTransient<PlotListView>();
+            services.AddTransient<PlotTallyView>();
+            services.AddTransient<PrivacyPolicyView>();
+            services.AddTransient<SaleSelectView>();
+            services.AddTransient<SaleView>();
+            services.AddTransient<SampleGroupListView>();
+            services.AddTransient<SettingsView>();
+            services.AddTransient<StratumListView>();
+            services.AddTransient<StratumFieldSetupView>();
+            services.AddTransient<StratumLogFieldSetupView>();
+            services.AddTransient<SubpopulationListView>();
+            services.AddTransient<TallyView>();
+            services.AddTransient<TallyPopulationDetailsView>();
+            services.AddTransient<ThreePPNTPlotView>();
+            services.AddTransient<TreeAuditRuleEditView>();
+            services.AddTransient<TreeAuditRuleListView>();
+            services.AddTransient<TreeEditView>();
+            services.AddTransient<TreeListPage>();
+            services.AddTransient<UtilitiesView>();
+
+#if DEBUG
+            services.AddTransient<TestDialogServiceView>();
+#endif
+
             //Routing.RegisterRoute("Blank", typeof(BlankView));
             //Routing.RegisterRoute("Import", typeof(ImportView));
             //Routing.RegisterRoute("SaleSelect", typeof(SaleSelectView));
@@ -36,6 +77,7 @@ namespace FScruiser.Maui
             // NatCruise.Core view models
             services.AddTransient<AboutViewModel>();
             services.AddTransient<LogEditViewModel>();
+            services.AddTransient<MainViewModel>();
             services.AddTransient<SpeciesDetailViewModel>();
             services.AddTransient<StratumInfoViewModel>();
             services.AddTransient<StratumLogFieldSetupViewModel>();
@@ -50,6 +92,7 @@ namespace FScruiser.Maui
 
             // FScruiser.Maui view models
             services.AddTransient<CruiseSelectViewModel>();
+            services.AddTransient<CuttingUnitInfoViewModel>();
             services.AddTransient<DatabaseUtilitiesViewModel>();
             services.AddTransient<FixCNTTallyViewModel>();
             services.AddTransient<ImportViewModel>();
@@ -66,6 +109,8 @@ namespace FScruiser.Maui
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<ShellViewModel>();
             services.AddTransient<StratumFieldSetupViewModel>();
+            services.AddTransient<StratumLogFieldSetupViewModel>();
+            services.AddTransient<StratumTreeFieldSetupViewModel>();
             services.AddTransient<StratumListViewModel>();
             services.AddTransient<TallyViewModel>();
             services.AddTransient<ThreePPNTPlotViewModel>();
@@ -78,16 +123,22 @@ namespace FScruiser.Maui
         {
             var services = builder.Services;
 
+            services.AddSingleton<Random>(FMSC.Sampling.MersenneTwister.Instance);
+            services.AddSingleton<INavigationProvider, NavigationProvider>();
+            services.AddTransient<INavigation>(s => s.GetRequiredService<INavigationProvider>().Navigation);
+
             services.AddSingleton<IDataContextService, DataContextService>();
 
-            services.AddSingleton<AppShell>();
-
             services.AddSingleton<ICruisersDataservice, CruisersDataservice>();
+
             services.AddSingleton<ICruiseNavigationService, MauiNavigationService>();
-            services.AddSingleton<INatCruiseNavigationService, MauiNavigationService>();
+            services.AddTransient<INatCruiseNavigationService>((x) => x.GetRequiredService<ICruiseNavigationService>());
+
             services.AddSingleton<INatCruiseDialogService, MauiDialogService>();
             services.AddSingleton<IApplicationSettingService, MauiApplicationSettingService>();
             //services.AddSingleton<IDataserviceProvider, DataserviceProviderBase>();
+
+            services.AddSingleton<ITallySettingsDataService, TallySettingsDataService>();
 
             services.AddTransient<ITreeBasedTallyService, TreeBasedTallyService>();
             services.AddTransient<IPlotTallyService, PlotTallyService>();
@@ -95,6 +146,8 @@ namespace FScruiser.Maui
             services.AddTransient<ILoggingService, AppCenterLoggerService>();
 
             services.AddTransient<IPreferences>(x => Microsoft.Maui.Storage.Preferences.Default);
+
+            services.AddTransient<TreeFieldSetupValidator>();
 
             return builder;
         }

@@ -19,6 +19,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private SampleGroup _selectedSampleGroup;
         private IEnumerable<Plot> _plotOptions;
         private Plot _selectedPlot;
+        private PlotListViewModel _plotListViewModel;
 
         public FieldDataViewModel(ICuttingUnitDataservice cuttingUnitDataservice,
                                   IStratumDataservice stratumDataservice,
@@ -44,9 +45,28 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public ISampleGroupDataservice SampleGroupDataservice { get; }
         public IPlotDataservice PlotDataservice { get; }
         public TreeListViewModel TreeListViewModel { get; }
-        public PlotListViewModel PlotListViewModel { get; }
+
+        public PlotListViewModel PlotListViewModel
+        {
+            get => _plotListViewModel;
+            set
+            {
+                if (value == _plotListViewModel) { return; }
+                if (_plotListViewModel != null)
+                {
+                    _plotListViewModel.PlotEditViewModel.PlotCuttingUnitChanged -= PlotListViewModel_PlotCuttingUnitChanged;
+                }
+                SetProperty(ref _plotListViewModel, value);
+                if (_plotListViewModel != null)
+                {
+                    _plotListViewModel.PlotEditViewModel.PlotCuttingUnitChanged += PlotListViewModel_PlotCuttingUnitChanged;
+                }
+            }
+        }
+
         public LogListViewModel LogListViewModel { get; }
         public TallyPopulationListViewModel TallyPopulationListViewModel { get; }
+
         public IEnumerable<CuttingUnit> CuttingUnitOptions
         {
             get => _cuttingUnitOptions;
@@ -86,8 +106,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 TreeListViewModel.PlotNumber = value?.PlotNumber;
             }
         }
-
-
 
         public IEnumerable<Stratum> StratumOptions
         {
@@ -168,7 +186,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public void RefreshStratumOptions()
         {
             var cuttingUnitCode = SelectedCuttingUnit?.CuttingUnitCode;
-            if(cuttingUnitCode != null)
+            if (cuttingUnitCode != null)
             {
                 StratumOptions = StratumDataservice.GetStrata(cuttingUnitCode);
             }
@@ -181,7 +199,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public void RefreshSampleGroupOptions()
         {
             var stratumCode = SelectedStratum?.StratumCode;
-            if(stratumCode != null)
+            if (stratumCode != null)
             {
                 SampleGroupOptions = SampleGroupDataservice.GetSampleGroups(stratumCode);
             }
@@ -189,6 +207,15 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             {
                 SampleGroupOptions = new SampleGroup[0];
             }
+        }
+
+        private void PlotListViewModel_PlotCuttingUnitChanged(object sender, EventArgs e)
+        {
+            RefreshPlotOptions();
+
+            TreeListViewModel.Load();
+            PlotListViewModel.Load();
+            TallyPopulationListViewModel.Load();
         }
     }
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                x:Class="FScruiser.Maui.Views.StratumTreeFieldSetupView"
+                x:Name="_page"
+                SemanticProperties.Description="Some Page"
+                Title="Tree Fields">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Frame Grid.Row="0"
+                   Padding="2"
+                   BackgroundColor="{StaticResource uswds_lgt_tan}">
+                <StackLayout HorizontalOptions="End"
+                             Orientation="Horizontal">
+                    <Picker x:Name="_addTreeFieldPicker"
+                            Title="Select Field"
+                            ItemsSource="{Binding AvalibleTreeFields}"
+                            WidthRequest="200" />
+                    <Button Style="{StaticResource Button.AddItem}"
+                            Margin="4,0"
+                            Command="{Binding AddTreeFieldCommand}"
+                            CommandParameter="{Binding SelectedItem, Source={Reference _addTreeFieldPicker}}" />
+                </StackLayout>
+            </Frame>
+
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding FieldSetups}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView 
+                                   AutomationProperties.IsInAccessibleTree="True">
+                            <SwipeView.LeftItems>
+                                <SwipeItem Text="Remove"
+                                           Command="{Binding BindingContext.RemoveTreeFieldCommand, Source={Reference _page}}"
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="Red" />
+                            </SwipeView.LeftItems>
+                            <Frame BorderColor="DarkGray"
+                                   Margin="3"
+                                   Padding="0"
+                                   HasShadow="True">
+                                <AbsoluteLayout>
+                                    <StackLayout AbsoluteLayout.LayoutBounds="0,0">
+                                        <Label Text="{Binding Field}"
+                                               Style="{StaticResource Label.H1}"
+                                               Margin="4,0"/>
+                                    </StackLayout>
+
+                                    <StackLayout AbsoluteLayout.LayoutBounds="1,0"
+                                                 AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                 Margin="13,7"
+                                                 Orientation="Horizontal">
+                                        <Button Style="{StaticResource Button.MoveUp}"
+                                                Margin="4,0"
+                                                Command="{Binding BindingContext.MoveUpCommand, Source={Reference _page}}"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Style="{StaticResource Button.MoveDown}"
+                                                Margin="4,0"
+                                                Command="{Binding BindingContext.MoveDownCommand, Source={Reference _page}}"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Style="{StaticResource Button.EllipsisVertical}"
+                                                Margin="4,0"
+                                                AutomationProperties.IsInAccessibleTree="True"
+                                                AutomationProperties.Name="Show Actions Item">
+                                            <!--<Button.Behaviors>
+                                                <bhvr:OpenSwipeViewBehavior />
+                                            </Button.Behaviors>-->
+                                        </Button>
+                                    </StackLayout>
+                                </AbsoluteLayout>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>

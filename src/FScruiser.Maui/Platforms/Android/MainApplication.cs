@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.OS;
 using Android.Runtime;
+using NatCruise.Services;
 
 [assembly: UsesPermission(Android.Manifest.Permission.ReadExternalStorage, MaxSdkVersion = 32)]
 [assembly: UsesPermission(Android.Manifest.Permission.ReadMediaAudio)]
@@ -20,6 +21,8 @@ public class MainApplication : MauiApplication
     public override void OnCreate()
     {
         base.OnCreate();
+
+        NatCruise.Async.TaskExtentions.LoggingService = Services.GetRequiredService<ILoggingService>();// logging service required by taskExtentions. TODO transition taskExtentions to using ILogger
 
 #if DEBUG
         // logs use of unencrypted network traffic

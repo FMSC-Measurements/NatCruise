@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FScruiser.Maui.Views.TestDialogServiceView"
+             Title="TestDialogServiceView">
+    <VerticalStackLayout>
+        <Button x:Name="_showNotificationButton"
+                Text="Show Notification"
+                Clicked="_showNotificationButton_Clicked" />
+        <Button x:Name="_showAskKpiButton"
+                Text="Ask KPI"
+                Clicked="_showAskKpiButton_Clicked" />
+        <Button x:Name="_showAskTreeCountButton"
+                Text="Ask Tree Count"
+                Clicked="_showAskTreeCountButton_Clicked" />
+    </VerticalStackLayout>
+</ContentPage>

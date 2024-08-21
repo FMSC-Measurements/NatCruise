@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                x:Class="FScruiser.Maui.Views.LogsListView"
+                x:Name="_page"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:dg="clr-namespace:DevExpress.Maui.DataGrid;assembly=DevExpress.Maui.DataGrid"
+                xmlns:converters="clr-namespace:FScruiser.Maui.Converters"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                SemanticProperties.Description="Log List Page"
+                Title="{Binding Tree.TreeNumber, StringFormat='{}Logs: Tree Number {0}'}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:LogFieldSetupToDxDataGridColumnConverter x:Key="logFieldToDataGridColumnConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto, *, Auto">
+            <HorizontalStackLayout Grid.Row="0">
+                <HorizontalStackLayout.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Label"
+                               BasedOn="{StaticResource Label.H2}">
+                            <Setter Property="FontSize"
+                                    Value="Large" />
+                        </Style>
+                    </ResourceDictionary>
+                </HorizontalStackLayout.Resources>
+
+
+                <HorizontalStackLayout>
+                    <Label Text="Unit:" />
+                    <Label Text="{Binding Tree.CuttingUnitCode}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout IsVisible="{Binding Tree.PlotNumber, Converter={StaticResource greaterThanZeroConverter} }">
+                    <Label Text="Plot Number:" />
+                    <Label Text="{Binding Tree.PlotNumber}" />
+                </HorizontalStackLayout>
+
+                <!--<StackLayout Orientation="Horizontal">
+            <Label Text="Tree Number:" />
+            <Label Text="{Binding Tree.TreeNumber}" />
+        </StackLayout>-->
+
+            </HorizontalStackLayout>
+
+            <dg:DataGridView Grid.Row="1"
+                                x:Name="_logsDataGrid"
+                             ctrls:DXDatagridHelper.Columns="{Binding LogFields, Converter={StaticResource logFieldToDataGridColumnConverter}}"
+                             ItemsSource="{Binding Logs}"
+                             SelectionMode="Single">
+            </dg:DataGridView>
+            
+            <!--<CollectionView x:Name="_logListView"
+                            Grid.Row="1"
+                            ItemsSource="{Binding Logs}"
+                            ItemSizingStrategy="MeasureFirstItem"
+                            AutomationProperties.Name="Logs List">
+                --><!--DataTemplate generated at runtime--><!--
+            </CollectionView>-->
+            
+            
+            <Grid ColumnDefinitions="Auto, *, *, Auto" Grid.Row="2"
+                         VerticalOptions="End">
+
+                <Button x:Name="_goToEndButton"
+                        Grid.Column="0"
+                        Style="{StaticResource Button.ScrollBottom}"
+                        HeightRequest="60"
+                        Margin="2,0"
+                        AutomationProperties.Name="Scroll To End of List" />
+                <Button Style="{StaticResource Button.EditItem}"
+                        Grid.Column="1"
+                        HeightRequest="60"
+                        Margin="2,0"
+                        Command="{Binding EditLogCommand}"
+                        CommandParameter="{Binding SelectedItem, Source={Reference _logsDataGrid}}" />
+                <Button x:Name="_addLogButton"
+                        Grid.Column="2"
+                        Command="{Binding AddLogCommand}"
+                        Style="{StaticResource Button.AddItem}"
+                        HeightRequest="60"
+                        Margin="2,0"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="FillAndExpand"
+                        AutomationProperties.Name="Add Log" />
+                <Button x:Name="_goToStartButton"
+                        Grid.Column="3"
+                        Margin="2,0"
+                        Style="{StaticResource Button.ScrollTop}"
+                        HeightRequest="60"
+                        HorizontalOptions="End"
+                        AutomationProperties.Name="Scroll To Start of List" />
+            </Grid>
+        </Grid>
+
+    </ContentPage.Content>
+</ctrls:BasePage>

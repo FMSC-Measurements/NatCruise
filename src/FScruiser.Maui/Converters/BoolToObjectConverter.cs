@@ -9,10 +9,10 @@ namespace FScruiser.Maui.Converters;
 
 public class BoolToObjectConverter : IValueConverter
 {
-    public object TrueValue { get; set; }
-    public object FalseValue { get; set; }
+    public object? TrueValue { get; set; }
+    public object? FalseValue { get; set; }
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is bool b)
         {

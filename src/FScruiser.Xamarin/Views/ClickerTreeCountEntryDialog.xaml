@@ -2,6 +2,7 @@
 <views:DialogPage xmlns:views="clr-namespace:FScruiser.XF.Views"
                   xmlns="http://xamarin.com/schemas/2014/forms"
                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:effects="clr-namespace:Xamarin.CommunityToolkit.Effects;assembly=Xamarin.CommunityToolkit"
                   x:Class="FScruiser.XF.Views.ClickerTreeCountEntryDialog">
 
     <ContentPage.Content>
@@ -43,7 +44,12 @@
             <Entry x:Name="_treeCountEntry"
                    Grid.Row="0"
                    Grid.Column="1"
-                   TextChanged="_treeCountEntry_TextChanged" />
+                   Keyboard="Numeric"
+                   TextChanged="_treeCountEntry_TextChanged">
+                <Entry.Effects>
+                    <effects:SelectAllTextEffect />
+                </Entry.Effects>
+            </Entry>
 
             <!--<Label Grid.Row="1" Grid.Column="0" >Cruiser</Label>
             <Picker x:Name="_cruiserPicker" 

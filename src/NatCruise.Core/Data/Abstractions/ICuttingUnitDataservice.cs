@@ -7,11 +7,13 @@ namespace NatCruise.Data
     {
         CuttingUnit GetCuttingUnit(string unitCode);
 
-        IEnumerable<CuttingUnit> GetCuttingUnits();
+        IReadOnlyCollection<CuttingUnit> GetCuttingUnits();
 
-        IEnumerable<string> GetCuttingUnitCodes();
+        IReadOnlyCollection<string> GetCuttingUnitCodes();
 
-        IEnumerable<string> GetCuttingUnitCodesByStratum(string stratumCode);
+        IReadOnlyCollection<CuttingUnit> GetPlotCuttingUnits();
+
+        IReadOnlyCollection<string> GetCuttingUnitCodesByStratum(string stratumCode);
 
         CuttingUnitStrataSummary GetCuttingUnitStrataSummary(string unitCode);
 

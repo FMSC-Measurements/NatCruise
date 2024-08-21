@@ -8,30 +8,24 @@ namespace NatCruise.Data
 
     public class CruiseLogDataservice : CruiseDataserviceBase, ICruiseLogDataservice
     {
+        private static string _callingProgram;
+
         public CruiseLogDataservice(IDataContextService dataContext) : base(dataContext)
         {
-            CallingProgram = CruiseDatastore_V3.GetCallingProgram();
+            
         }
 
         public CruiseLogDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
         {
-            CallingProgram = CruiseDatastore_V3.GetCallingProgram();
         }
 
         public CruiseLogDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
         {
-            CallingProgram = CruiseDatastore_V3.GetCallingProgram();
         }
 
-        public string CallingProgram { get; }
+        public static string CallingProgram  => _callingProgram ??= CruiseDatastore_V3.GetCallingProgram();
 
-        public static string CruiseLogLevelToString(CruiseLogLevel level) => level switch
-        {
-            CruiseLogLevel.Debug => "D",
-            CruiseLogLevel.Info => "I",
-            CruiseLogLevel.Error => "E",
-            _ => throw new ArgumentOutOfRangeException(nameof(level), "Unexpected level value"),
-        };
+
 
         public void Log(string message, CruiseLogLevel level = CruiseLogLevel.Debug, string unitID = null, string stratumID = null,
             string sgID = null,
@@ -42,9 +36,25 @@ namespace NatCruise.Data
             string fieldName = null,
             string tableName = null)
         {
+            Log(this, message, level, unitID, stratumID, sgID, plotID, treeID, logID, tallyID, fieldName, tableName);
+        }
+
+        public static void Log(CruiseDataserviceBase dataService, string message, CruiseLogLevel level = CruiseLogLevel.Debug, string unitID = null, string stratumID = null,
+            string sgID = null,
+            string plotID = null,
+            string treeID = null,
+            string logID = null,
+            string tallyID = null,
+            string fieldName = null,
+            string tableName = null)
+        {
+            var cruiseID = dataService.CruiseID;
+            var deviceID = dataService.DeviceID;
+            var database = dataService.Database;
+
             var data = new
             {
-                CruiseID,
+                CruiseID = cruiseID,
                 Message = message,
                 Level = CruiseLogLevelToString(level),
                 Program = CallingProgram,
@@ -59,10 +69,10 @@ namespace NatCruise.Data
 
                 Field = fieldName,
                 TableName = tableName,
-                CreatedBy = DeviceID,
+                CreatedBy = deviceID,
             };
 
-            Database.Execute2(
+            database.Execute2(
 @"INSERT INTO CruiseLog (
     CruiseID,
     Message,
@@ -99,5 +109,13 @@ namespace NatCruise.Data
     @CreatedBy
 );", data);
         }
+
+        public static string CruiseLogLevelToString(CruiseLogLevel level) => level switch
+        {
+            CruiseLogLevel.Debug => "D",
+            CruiseLogLevel.Info => "I",
+            CruiseLogLevel.Error => "E",
+            _ => throw new ArgumentOutOfRangeException(nameof(level), "Unexpected level value"),
+        };
     }
 }

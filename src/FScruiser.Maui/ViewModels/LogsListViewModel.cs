@@ -70,7 +70,7 @@ public class LogsListViewModel : ViewModelBase
         FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
     }
 
-    protected override void Load(IDictionary<string, object> parameters)
+    protected override void OnInitialize(IDictionary<string, object> parameters)
     {
         if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
@@ -107,6 +107,7 @@ public class LogsListViewModel : ViewModelBase
 
     public void ShowEditLogPage(Log? log)
     {
+        if (log is null) { return; }
         NavigationService.ShowLogEdit(log.LogID);
 
         //NavigationService.NavigateAsync("Log", new NavigationParameters($"{NavParams.LogEdit_CreateNew}=false&{NavParams.LogID}={log.LogID}"));

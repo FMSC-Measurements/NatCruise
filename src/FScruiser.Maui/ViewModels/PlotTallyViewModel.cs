@@ -203,7 +203,7 @@ public partial class PlotTallyViewModel : ViewModelBase
 
             TallyPopulations = TallyPopulationDataservice.GetPlotTallyPopulationsByUnitCode(unitCode, plotNumber).ToArray();
             SetStratumFilter(null);
-            PlotStrata = PlotStratumDataservice.GetPlot_Strata(unitCode, plotNumber, false).ToArray();
+            PlotStrata = PlotStratumDataservice.GetPlot_Strata(unitCode, plotNumber).ToArray();
 
             Trees = NotifyTaskCompletion.Create<ObservableCollection<PlotTreeEntry>>(
                 Task.Run(() => PlotTreeDataservice.GetPlotTrees(unitCode, plotNumber).ToObservableCollection()),
@@ -314,7 +314,7 @@ public partial class PlotTallyViewModel : ViewModelBase
         SelectedTree = tree;
     }
 
-    protected override void Load(IDictionary<string, object> parameters)
+    protected override void OnInitialize(IDictionary<string, object> parameters)
     {
         if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 

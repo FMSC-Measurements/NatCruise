@@ -4,6 +4,8 @@ namespace FScruiser.Maui.Services;
 
 public interface ICruiseNavigationService : INatCruiseNavigationService
 {
+    INavigation Navigation { get; }
+
     Task ShowBlank();
 
     Task ShowCuttingUnitInfo(string unitCode);

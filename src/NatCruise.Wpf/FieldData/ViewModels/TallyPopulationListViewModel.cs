@@ -4,6 +4,7 @@ using NatCruise.MVVM;
 using NatCruise.MVVM.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
@@ -56,7 +57,20 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public IEnumerable<TallyPopulation> TallyPopulations
         {
             get => _tallyPopulations;
-            set => SetProperty(ref _tallyPopulations, value);
+            set
+            {
+                var tp = SelectedTallyPopulation;
+                SetProperty(ref _tallyPopulations, value);
+
+                if(value != null && value.Any() && tp != null)
+                {
+                    SelectedTallyPopulation = value.FirstOrDefault(x => x.CuttingUnitCode == tp.CuttingUnitCode
+                        && x.StratumCode == tp.StratumCode
+                        && x.SampleGroupCode == tp.SampleGroupCode
+                        && x.SpeciesCode == tp.SpeciesCode
+                        && x.LiveDead == tp.LiveDead);
+                }
+            }
         }
 
         public TallyPopulation SelectedTallyPopulation
@@ -84,7 +98,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         private void TreeCountEditViewModel_TreeCountModified(object sender, EventArgs e)
         {
-            TallyLedgerListViewModel.Load();
+            Load();
         }
 
         public TallyLedgerListViewModel TallyLedgerListViewModel { get; }

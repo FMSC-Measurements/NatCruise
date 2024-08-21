@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                x:Class="FScruiser.Maui.Views.ManageCruisersView"
+                x:Name="_page"
+                Title="Manage Cruisers"
+                SemanticProperties.Description="Manage Cruisers Page">
+    <ContentPage.Content>
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+
+
+            <ctrls:HorizontialHeaderControl Grid.Row="0"
+                                            Header="Ask Cruisers Initials When Tree Created">
+
+                <Switch  IsToggled="{Binding PromptCruiserOnSample}"
+                         HorizontalOptions="End" />
+
+            </ctrls:HorizontialHeaderControl>
+
+            <CollectionView x:Name="_cruisersListView"
+                            Grid.Row="1"
+                            ItemsSource="{Binding Cruisers}"
+                            AutomationProperties.Name="Cruisers List">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="0,4" Margin="2">
+                            <Grid ColumnDefinitions="*, Auto">
+
+
+                                <Label Grid.Column="0"
+                                       Text="{Binding .}"
+                                       TextColor="Black"
+                                       FontSize="Large"
+                                       VerticalTextAlignment="Center"
+                                       Margin="10,0,0,0"
+                                       AutomationProperties.IsInAccessibleTree="False" />
+
+                                <Button Grid.Column="1"
+                                        Style="{StaticResource Button.DeleteItem}"
+                                        Margin="11,0"
+                                        Text=""
+                                        Command="{Binding BindingContext.RemoveCruiserCommand, Source={RelativeSource AncestorType={Type CollectionView}}}"
+                                        CommandParameter="{Binding .}"
+                                        AutomationProperties.IsInAccessibleTree="True"
+                                        AutomationProperties.Name="{Binding . ,StringFormat='{}Remove {0}'}" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Grid Grid.Row="2"
+                  ColumnDefinitions="Auto, *">
+
+                <Button x:Name="_addCruiserButton"
+                        Grid.Column="0"
+                        Style="{StaticResource Button.AddItem}"
+                        WidthRequest="60"
+                        IsEnabled="{Binding Text, Source={Reference _addCruiserEntry}, Converter={StaticResource isNotNullOrEmptyConverter}}"
+                        Command="{Binding AddCruiserCommand}"
+                        Margin="4"
+                        AutomationProperties.IsInAccessibleTree="True"
+                        AutomationProperties.Name="Add Cruiser" />
+
+                <Entry x:Name="_addCruiserEntry"
+                       Grid.Column="1"
+                       Placeholder="Initials"
+                       Text=""
+                       ReturnCommand="{Binding AddCruiserCommand}"
+                       ReturnCommandParameter="{Binding Text, Source={RelativeSource Mode=Self}}"
+                       AutomationProperties.IsInAccessibleTree="True"
+                       AutomationProperties.Name="Add Cruiser Entry" />
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ctrls:BasePage>

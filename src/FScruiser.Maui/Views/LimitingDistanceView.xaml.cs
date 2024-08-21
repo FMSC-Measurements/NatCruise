@@ -1,9 +1,10 @@
 ﻿using FScruiser.Maui.Controls;
+using FScruiser.Maui.ViewModels;
 
 namespace FScruiser.Maui.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LimitingDistanceView : InitializableContentPage
+    public partial class LimitingDistanceView : BasePage
     {
         public LimitingDistanceView()
         {
@@ -14,6 +15,11 @@ namespace FScruiser.Maui.Views
             //_dbhEntry.Completed += (sender, e) => _slopePctEntry.Focus();
             //_slopePctEntry.Completed += (s, e) => _slopeDistanceEntry.Focus();
             //_slopeDistanceEntry.Completed += (s, e) => _azimuthEntry.Focus();
+        }
+
+        public LimitingDistanceView(LimitingDistanceViewModel viewModel) : this()
+        {
+            BindingContext = viewModel;
         }
 
 

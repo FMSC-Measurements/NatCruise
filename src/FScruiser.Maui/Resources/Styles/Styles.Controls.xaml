@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                    xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui">
+
+    <Style TargetType="ActivityIndicator"
+           x:Key="ActivityIndicatorBase">
+        <Setter Property="Color"
+                Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource white}}" />
+    </Style>
+    <Style TargetType="ActivityIndicator"
+           BasedOn="{StaticResource ActivityIndicatorBase}" />
+
+    <Style TargetType="ProgressBar"
+           x:Key="ProgressBarBase">
+        <Setter Property="ProgressColor"
+                Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource primary}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="ProgressColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="ProgressBar"
+           BasedOn="{StaticResource ProgressBarBase}" />
+
+    <Style TargetType="SearchBar"
+           x:Key="SearchBarBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource text.primary}, Dark={StaticResource text.primary}}" />
+        <Setter Property="PlaceholderColor"
+                Value="{StaticResource gray500}" />
+        <Setter Property="CancelButtonColor"
+                Value="{StaticResource gray500}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="MinimumHeightRequest"
+                Value="44" />
+        <Setter Property="MinimumWidthRequest"
+                Value="44" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                            <Setter Property="PlaceholderColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="SearchBar"
+           BasedOn="{StaticResource SearchBarBase}" />
+
+    <Style TargetType="SearchHandler"
+           x:Key="SearchHandlerBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource white}}" />
+        <Setter Property="PlaceholderColor"
+                Value="{StaticResource gray500}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                            <Setter Property="PlaceholderColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="SearchHandler"
+           BasedOn="{StaticResource SearchHandlerBase}" />
+
+    <Style TargetType="Shadow"
+           x:Key="ShadowBase">
+        <Setter Property="Radius"
+                Value="15" />
+        <Setter Property="Opacity"
+                Value="0.5" />
+        <Setter Property="Brush"
+                Value="{AppThemeBinding Light={StaticResource white}, Dark={StaticResource white}}" />
+        <Setter Property="Offset"
+                Value="10,10" />
+    </Style>
+    <Style TargetType="Shadow"
+           BasedOn="{StaticResource ShadowBase}" />
+
+    <Style TargetType="SwipeItem"
+           x:Key="SwipeItemBase">
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource white}, Dark={StaticResource black}}" />
+    </Style>
+    <Style TargetType="SwipeItem"
+           BasedOn="{StaticResource SwipeItemBase}" />
+
+    <Style TargetType="BoxView"
+           x:Key="HorizontialSpacer">
+        <Setter Property="HeightRequest"
+                Value="1" />
+        <Setter Property="VerticalOptions"
+                Value="Fill" />
+        <Setter Property="Color"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray300}}" />
+        <Setter Property="Margin"
+                Value="0" />
+    </Style>
+</ResourceDictionary>

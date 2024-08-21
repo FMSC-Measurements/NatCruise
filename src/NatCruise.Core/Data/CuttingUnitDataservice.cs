@@ -76,12 +76,12 @@ FROM CuttingUnit AS cu
             Database.Execute("DELETE FROM  CuttingUnit WHERE CuttingUnitCode = @p1 AND CruiseID = @p2", unit.CuttingUnitCode, CruiseID);
         }
 
-        public IEnumerable<string> GetCuttingUnitCodes()
+        public IReadOnlyCollection<string> GetCuttingUnitCodes()
         {
             return Database.ExecuteScalar<string>("SELECT group_concat(cu.CuttingUnitCode) FROM CuttingUnit AS cu WHERE CruiseID = @p1;", CruiseID)?.Split(',') ?? new string[0];
         }
 
-        public IEnumerable<string> GetCuttingUnitCodesByStratum(string stratumCode)
+        public IReadOnlyCollection<string> GetCuttingUnitCodesByStratum(string stratumCode)
         {
             return Database.QueryScalar2<string>(
 @"SELECT cust.CuttingUnitCode
@@ -101,7 +101,7 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
             //    .Query(unitCode, CruiseID).FirstOrDefault();
         }
 
-        public IEnumerable<CuttingUnit> GetCuttingUnits()
+        public IReadOnlyCollection<CuttingUnit> GetCuttingUnits()
         {
             return Database.Query<CuttingUnit>(SELECT_CUTTINGUNIT_CORE +
                 "WHERE cu.CruiseID = @p1;", CruiseID).ToArray();
@@ -111,7 +111,16 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
             //    .Query(CruiseID).ToArray();
         }
 
-        public IEnumerable<CuttingUnit> GetCuttingUnitsByStratum(string stratumCode)
+        public IReadOnlyCollection<CuttingUnit> GetPlotCuttingUnits()
+        {
+            return Database.Query<CuttingUnit>( SELECT_CUTTINGUNIT_CORE +
+                "JOIN CuttingUnit_Stratum as cust USING (CuttingUnitCode, CruiseID) " +
+                "JOIN Stratum AS st USING (StratumCode, CruiseID) " +
+                "JOIN LK_CruiseMethod USING (Method) " +
+                "WHERE IsPlotMethod = 1 AND CruiseID = @p1", CruiseID).ToArray();
+        }
+
+        public IReadOnlyCollection<CuttingUnit> GetCuttingUnitsByStratum(string stratumCode)
         {
             return Database.Query<CuttingUnit>(SELECT_CUTTINGUNIT_CORE +
                 "JOIN CuttingUnit_Stratum AS cust USING (CuttingUnitCode, CruiseID) " +

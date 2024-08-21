@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                x:Class="FScruiser.Maui.Views.PlotEditView"
+                x:Name="_page"
+                xmlns:mctk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:tc="clr-namespace:CommunityToolkit.Maui;assembly=CommunityToolkit.Maui"
+                xmlns:local="clr-namespace:FScruiser.Maui"
+                xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                xmlns:converters="clr-namespace:FScruiser.Maui.Converters"
+                xmlns:effects="clr-namespace:FScruiser.Maui.Effects"
+                SemanticProperties.Description="Plot Edit Page"
+                Title="Edit Plot">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition  Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- errors and warnings -->
+            <VerticalStackLayout Grid.Row="1"
+                                 BindableLayout.ItemsSource="{Binding ErrorsAndWarnings}"
+                                 VerticalOptions="End"
+                                 AutomationProperties.Name="Plot Error List">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Message}"
+                               Style="{StaticResource Label.H3}"
+                               BackgroundColor="{Binding Level, Converter={StaticResource errorLevelToColorConverter}}"
+                               Margin="0,0,0,7"
+                               AutomationProperties.IsInAccessibleTree="True"
+                               AutomationProperties.Name="Plot Error Item" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <FlexLayout Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Direction="Row"
+                        Wrap="Wrap"
+                        JustifyContent="Start">
+
+                <Grid RowSpacing="0"
+                      ColumnSpacing="0"
+                      WidthRequest="250"
+                      FlexLayout.Grow="1">
+                    <Grid.RowDefinitions>
+                        <!--plot number-->
+                        <RowDefinition Height="Auto" />
+                        <!--slope-->
+                        <RowDefinition Height="Auto" />
+                        <!--Aspect-->
+                        <RowDefinition Height="Auto" />
+                        <!-- remarks header -->
+                        <RowDefinition Height="Auto" />
+                        <!-- remarks editor -->
+                        <RowDefinition Height="150" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.Resources>
+                        <Style TargetType="Label">
+                            <Setter Property="Margin"
+                                    Value="10,0,10,0" />
+                            <Setter Property="VerticalTextAlignment"
+                                    Value="Center" />
+                        </Style>
+                    </Grid.Resources>
+
+                    <!--plot number-->
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Plot "
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <Entry Grid.Row="0"
+                           Grid.Column="1"
+                           x:Name="_plotNumberEntry"
+                           Text="{Binding PlotNumber, Mode=OneWay}"
+                           WidthRequest="50"
+                           Keyboard="Numeric"
+                           ReturnCommand="{Binding UpdatePlotNumberCommand}"
+                           ReturnCommandParameter="{Binding Text, Source={Reference _plotNumberEntry}}"
+                           ReturnType="Default"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Plot Number">
+                        <Entry.Behaviors>
+                            <mctk:SelectAllTextBehavior />
+                            <bhvrs:SendCompletedOnLostFocusBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <!--slope-->
+
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Text="Slope"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <Entry Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding Plot.Slope}"
+                           WidthRequest="50"
+                           Keyboard="Numeric"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Slope" />
+
+                    <!--aspect-->
+
+                    <Label Grid.Row="2"
+                           Grid.Column="0"
+                           Text="Aspect"
+                           AutomationProperties.IsInAccessibleTree="False" />
+                    <Entry Grid.Row="2"
+                           Grid.Column="1"
+                           Text="{Binding Plot.Aspect}"
+                           WidthRequest="50"
+                           Keyboard="Numeric"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Aspect" />
+
+                    <!-- remarks -->
+                    <Label Grid.Row="3"
+                           Grid.Column="0"
+                           Text="Remarks"
+                           VerticalTextAlignment="End"
+                           AutomationProperties.IsInAccessibleTree="False" />
+
+                    <Editor Grid.Row="4"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="3"
+                            Margin="7"
+                            Text="{Binding Plot.Remarks}"
+                            IsSpellCheckEnabled="False"
+                            HorizontalOptions="Fill"
+                            BackgroundColor="LightGray"
+                            AutomationProperties.IsInAccessibleTree="True"
+                            AutomationProperties.Name="Remarks" />
+                </Grid>
+
+                <ListView x:Name="_plotListView"
+                          ItemsSource="{Binding StratumPlots}"
+                          SeparatorVisibility="None"
+                          HasUnevenRows="True"
+                          SelectionMode="None"
+                          WidthRequest="300"
+                          AutomationProperties.IsInAccessibleTree="True"
+                          AutomationProperties.Name="Plot Stratum List">
+                    <ListView.Resources>
+                        <converters:BoolToObjectConverter x:Key="InCruiseAddRemoveConverter"
+                                                          TrueValue="Remove"
+                                                          FalseValue="Add" />
+                    </ListView.Resources>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+
+                                <Frame HasShadow="True"
+                                       Margin="4"
+                                       BackgroundColor="{StaticResource accent}">
+
+                                    <!--<Frame.Resources>
+                                        <ResourceDictionary>
+                                            
+                                        </ResourceDictionary>
+                                    </Frame.Resources>-->
+
+                                    <VerticalStackLayout>
+
+                                        <!-- stratum code and add/remove button-->
+                                        <Grid ColumnDefinitions="Auto, *, Auto">
+                                            <Label Grid.Column="0" Text="{Binding StratumCode, StringFormat='{}Stratum {0}'}"
+                                                   Style="{StaticResource Label.H2}"
+                                                   Margin="8,0"
+                                                   VerticalTextAlignment="Center"
+                                                   HorizontalOptions="StartAndExpand"
+                                                   AutomationProperties.IsInAccessibleTree="False" />
+
+                                            <Button Grid.Column="2" Text="{Binding InCruise, Converter={StaticResource InCruiseAddRemoveConverter}}"
+                                                    IsVisible="{Binding BindingContext.CanAddRemoveStrata, Source={RelativeSource AncestorType={Type ListView}}}"
+                                                    Command="{Binding BindingContext.ToggleInCruiseCommand, Source={RelativeSource AncestorType={Type ListView}}}"
+                                                    CommandParameter="{Binding .}"
+                                                    HorizontalOptions="End"
+                                                    AutomationProperties.IsInAccessibleTree="True"
+                                                    AutomationProperties.Name="Add Remove Stratum" />
+                                        </Grid>
+
+                                        <!-- Cruise Method -->
+                                        <ctrls:HorizontialHeaderControl Header="Method:" Margin="8,0">
+                                            <Label Margin="2" Text="{Binding CruiseMethod}" />
+                                        </ctrls:HorizontialHeaderControl>
+                                        <!--<StackLayout Orientation="Horizontal"
+                                                     Margin="10,0,10,0">
+                                            <Label Text="Method:" />
+                                            
+                                        </StackLayout>-->
+
+                                        <!-- BAF -->
+                                        <ctrls:HorizontialHeaderControl Header="BAF:"
+                                                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isVariableRadiousPlotConverter}}"
+                                                                        Margin="8,0">
+                                            <Label Text="{Binding BAF}" />
+                                        </ctrls:HorizontialHeaderControl>
+                                        <!--<StackLayout Orientation="Horizontal"
+                                                     IsVisible="{Binding CruiseMethod, Converter={StaticResource IsVRPlotMethod}}"
+                                                     Margin="10,0,10,0">
+                                            <Label Text="BAF:" />
+                                            <Label Text="{Binding BAF}" />
+                                        </StackLayout>-->
+
+                                        <!-- FPS -->
+                                        <ctrls:HorizontialHeaderControl Header="FPS:"
+                                                                        IsVisible="{Binding CruiseMethod, Converter={StaticResource isFixedSizePlotConverter}}"
+                                                                        Margin="8,0">
+                                            <Label Text="{Binding FPS}" />
+                                        </ctrls:HorizontialHeaderControl>
+                                        
+                                        
+                                        <!--<StackLayout Orientation="Horizontal"
+                                                     IsVisible="{Binding CruiseMethod, Converter={StaticResource IsFixedSizedPlotMethod}}"
+                                                     Margin="10,0,10,0">
+                                            <Label Text="FPS:" />
+                                            <Label Text="{Binding FPS}" />
+                                        </StackLayout>-->
+
+                                        <!--this panel hides if plot is not in cruise-->
+                                        <VerticalStackLayout IsVisible="{Binding InCruise, Mode=OneWay}">
+                                            <!--horizontal spacer-->
+                                            <BoxView Style="{StaticResource HorizontialSpacer}" />
+
+                                            <!--slope, aspect, empty plot-->
+                                            <ctrls:HorizontialHeaderControl Header="Is Null Plot"
+                                                                            Margin="8,0">
+                                                <Switch IsToggled="{Binding IsEmpty}"
+                                                        Margin="20,0,0,0" />
+                                            </ctrls:HorizontialHeaderControl>
+
+                                            <!--horizontal spacer-->
+                                            <BoxView Style="{StaticResource HorizontialSpacer}" />
+
+                                            <Button Text="Calculate Limiting Distances"
+                                                    VerticalOptions="FillAndExpand"
+                                                    Command="{Binding BindingContext.ShowLimitingDistanceCommand, Source={RelativeSource AncestorType={Type ListView}}}"
+                                                    CommandParameter="{Binding .}"
+                                                    AutomationProperties.IsInAccessibleTree="True"
+                                                    AutomationProperties.Name="Limiting Distance" />
+                                        </VerticalStackLayout>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </FlexLayout>
+
+
+        </Grid>
+
+    </ContentPage.Content>
+</ctrls:BasePage>

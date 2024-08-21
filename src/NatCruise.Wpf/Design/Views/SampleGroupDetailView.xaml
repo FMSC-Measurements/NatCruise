@@ -141,8 +141,18 @@
                 </ComboBox>
             </ctrls:LastChildWidthPanel>
 
-            <ctrls:LastChildWidthPanel Visibility="{Binding CruiseMethod, Converter={StaticResource IsFixCNTMethodVisibilityConverter}, FallbackValue=Collapsed}"
+            <ctrls:LastChildWidthPanel 
                                        d:Visibility="Visible">
+                <ctrls:LastChildWidthPanel.Visibility>
+                    <MultiBinding Converter="{StaticResource MultiBindingAnyToVisabilityConverter}">
+                        <Binding Path="CruiseMethod"
+                                 Converter="{StaticResource IsFixCNTConverter}"
+                                 FallbackValue="false" />
+                        <Binding Path="UOM"
+                                 Converter="{StaticResource NotNullConverter}"
+                                 FallbackValue="false" />
+                    </MultiBinding>
+                </ctrls:LastChildWidthPanel.Visibility>
                 <TextBlock Text="UOM" />
                 <ComboBox SelectedValue="{Binding UOM, TargetNullValue=''}">
                     <ComboBox.ItemsSource>

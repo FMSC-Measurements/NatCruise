@@ -1,6 +1,7 @@
 ﻿using FScruiser.Maui.Data;
 using FScruiser.Maui.Services;
 using NatCruise.Async;
+using NatCruise.Data;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
@@ -12,6 +13,7 @@ public class SettingsViewModel : ViewModelBase
 {
     public IApplicationSettingService AppSettings { get; }
     public ITallySettingsDataService TallySettings { get; }
+    public ICruisersDataservice CruisersDataservice { get; }
     public INatCruiseDialogService DialogService { get; }
     public IFileSystemService FileSystemService { get; }
     public IFileDialogService FileDialogService { get; }
@@ -25,11 +27,13 @@ public class SettingsViewModel : ViewModelBase
                              IFileDialogService fileDialogService,
                              ICruiseNavigationService navigationService,
                              ITallySettingsDataService tallySettingsDataService,
+                             ICruisersDataservice cruisersDataservice,
                              ILoggingService loggingService,
                              IApplicationSettingService appSettings)
     {
         AppSettings = appSettings;
         TallySettings = tallySettingsDataService;
+        CruisersDataservice = cruisersDataservice ?? throw new ArgumentNullException(nameof(cruisersDataservice));
         DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         FileSystemService = fileSystemService ?? throw new ArgumentNullException(nameof(fileSystemService));
         FileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));

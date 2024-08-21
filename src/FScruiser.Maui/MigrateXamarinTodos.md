@@ -1,6 +1,11 @@
 ﻿# Todo
 
+ - [ ] add logging for view model load times, either to NavigationService or the view model base class
  - [ ] Change AutomationProperties to SemanticProperties
+ - [ ] Switch NatCruise.Core TaskExtentions to use ILogger rather than ILoggingService
+ - [ ] Find a alternative to using swipe views for displaying delete buttons on list items (Stratum Fields, Plot List, Tally, Plot Tally, Subpopulation list view)
+ - [ ] Fix ValuePicker raising multiple OnClick events
+ - [ ] find alternative layout for TallyPopulationDetailsView that doesn't use tabview or rewrite tabview for maui
 
 ## Update Converters
 Maui Community Toolkit has updated some of the converters used.
@@ -24,3 +29,10 @@ now there are more type specific converters: IsStringNotNullOrEmpty, IsListNotNu
  - [ ] look into getting rid of the ViewLifecycleEffect on the tally Feed. 
  - [ ] find/write something extension method for injecting TallySettingsDataService. Currently its just being instantiated in xaml (line 23)
  - [ ] find alternative to using relativeLayout
+ - [ ] 
+ - [ ] 
+ ## PlotTallyView
+ - [ ] find/write something extension method for injecting TallySettingsDataService. Currently its just being instantiated in xaml
+ 
+## LogListView
+ - [ ] Rework templates for Logs

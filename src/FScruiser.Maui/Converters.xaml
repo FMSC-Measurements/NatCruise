@@ -8,7 +8,7 @@
     <tc_conv:IsStringNotNullOrEmptyConverter x:Key="isStringNotNullOrEmptyConverter" />
     <tc_conv:IsStringNullOrEmptyConverter x:Key="isStringNullOrEmptyConverter" />
     <tc_conv:IsListNotNullOrEmptyConverter x:Key="isListNotNullOrEmptyConverter" />
-    <tc_conv:IsListNullOrEmptyConverter x:Key="listIsNullOrEmptyConverter" />
+    <tc_conv:IsListNullOrEmptyConverter x:Key="isListNullOrEmptyConverter" />
 
     <tc_conv:IsNotNullConverter x:Key="isNotNullConverter" />
     <tc_conv:IsNullConverter x:Key="isNullConverter" />
@@ -53,6 +53,8 @@
                                             x:Key="isThreePPNTConverter" />
     <converters:CruiseMethodToBoolConverter MethodMap="TwoStagePlotMethods"
                                             x:Key="isTwoStagePlotMethod" />
+    <converters:CruiseMethodToBoolConverter x:Key="isfixCNTConverter"
+                                            MethodMap="FIXCNT" />
 
 
     <converters:PrependConverter x:Key="PrependAnyConverter"

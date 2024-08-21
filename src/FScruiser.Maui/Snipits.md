@@ -2,29 +2,24 @@
 
 example of standard xmlns used
 ```xml
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ctrls:BasePage 
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 
-             x:Class="FScruiser.Maui.Views.SomeView"
-             x:Name="_page"
+             
 
-            -- community toolkit --
-             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:tc="clr-namespace:CommunityToolkit.Maui;assembly=CommunityToolkit.Maui"
+             xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+             xmlns:const="clr-namespace:FScruiser.Maui.Constants"
 
-             -- frequently used namespaces --
              xmlns:local="clr-namespace:FScruiser.Maui"
              xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors" 
              xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
 
-             -- accessibility --
-             SemanticProperties.Description="Settings Page"
 
-             -- for ViewModelLocator --
-             xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
-             xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
-
-             BindingContext="{mvvm:ViewModelLocater Type={Type vms:SomeViewModel}}">
+             x:Class="FScruiser.Maui.Views.SomeView"
+             x:Name="_page"
+             SemanticProperties.Description="Some Page">
     <ContentPage.Content>
        <!-- ... -->
 
@@ -36,10 +31,10 @@ example of standard xmlns used
             </Entry.Behaviors>
 
             <Entry.Behaviors>
-                <mct:SelectAllTextBehavior />
+                <tk:SelectAllTextBehavior />
             </Entry.Behaviors>
 </Entry>
     </ContentPage.Content>
-</ContentPage>
+</ctrls:BasePage>
 ```
 

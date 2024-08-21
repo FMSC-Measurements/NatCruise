@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style TargetType="Page"
+           ApplyToDerivedTypes="True"
+           x:Key="PageBase">
+        <Setter Property="Padding"
+                Value="0" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource white}, Dark={StaticResource gray950}}" />
+    </Style>
+    <Style TargetType="Page"
+           ApplyToDerivedTypes="True"
+           BasedOn="{StaticResource PageBase}" />
+
+    <Style TargetType="NavigationPage"
+           x:Key="NavigationPageBase">
+        <Setter Property="BarBackgroundColor"
+                Value="{StaticResource gray500}" />
+        <Setter Property="BarTextColor"
+                Value="{AppThemeBinding Light={StaticResource text.light}, Dark={StaticResource text.light}}" />
+        <Setter Property="IconColor"
+                Value="{AppThemeBinding Light={StaticResource accent}, Dark={StaticResource accent}}" />
+    </Style>
+    <Style TargetType="NavigationPage"
+           BasedOn="{StaticResource NavigationPageBase}" />
+
+    <Style TargetType="TabbedPage"
+           x:Key="TabbedPageBase">
+        <Setter Property="BarBackgroundColor"
+                Value="{StaticResource gray500}" />
+        <Setter Property="BarTextColor"
+                Value="{AppThemeBinding Light={StaticResource text.light}, Dark={StaticResource text.light}}" />
+        <Setter Property="UnselectedTabColor"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray950}}" />
+        <Setter Property="SelectedTabColor"
+                Value="{AppThemeBinding Light={StaticResource gray950}, Dark={StaticResource gray200}}" />
+    </Style>
+    <Style TargetType="TabbedPage"
+           BasedOn="{StaticResource TabbedPageBase}" />
+
+</ResourceDictionary>

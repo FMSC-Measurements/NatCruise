@@ -82,7 +82,7 @@ SELECT last_insert_rowid();",
             plotStratum.Plot_Stratum_CN = plot_stratum_CN;
         }
 
-        public IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber, bool insertIfNotExists = false)
+        public IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber)
         {
             return Database.Query<Plot_Stratum>(
 @"SELECT

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+            xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+            xmlns:views="clr-namespace:FScruiser.Maui.Views"
+            xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+            x:Class="FScruiser.Maui.Views.MainView"
+            Title="FScruiser"
+            IsPresented="True">
+
+    <FlyoutPage.Flyout>
+        <ContentPage Title="Navigation Flyout">
+            <Grid>
+                <Grid.RowDefinitions>
+
+                    <RowDefinition Height="Auto"
+                                   x:Name="_flyoutHeaderRowDef" />
+                    <RowDefinition Height="*"
+                                   x:Name="_flyouContentRowDef" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--select cruise button-->
+                <Border Grid.Row="0" Style="{StaticResource BorderBase}"
+                        Padding="2"
+                        Margin="10"
+                        StrokeShape="RoundRectangle 5">
+
+                    <StackLayout>
+                        <Grid 
+                              AutomationProperties.IsInAccessibleTree="True"
+                              AutomationProperties.Name="Select Cruise">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer x:Name="_showSelectSaleTapGestureRecognizer"
+                                                      Command="{Binding ShowSelectSaleCommand}"
+                                                      controls:TapGestureRecognizerHelper.EnableClickSound="True" />
+                            </Grid.GestureRecognizers>
+
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource primary}"
+                                    HeightRequest="40"
+                                    Padding="4"
+                                    StrokeShape="RoundRectangle 5">
+                                <Image Source="{FontImage Glyph={Static const:FAIcons.FolderOpen}, FontFamily={Static const:Fonts.FAsolid}}" />
+                            </Border>
+                            <Label Grid.Column="1"
+                                   x:Name="_currentCruiseLable"
+                                   Text="{Binding SelectedCruise, TargetNullValue='Select Cruise'}"
+                                   Style="{StaticResource Label.H3}"
+                                   Margin="4"
+                                   VerticalOptions="Fill"
+                                   HorizontalOptions="Fill"
+                                   VerticalTextAlignment="Center">
+                                
+                            </Label>
+                        </Grid>
+                        <BoxView Style="{StaticResource HorizontialSpacer}"
+                                 IsVisible="{Binding SelectedCruise, Converter={StaticResource isNotNullConverter}}" />
+                        <Picker x:Name="_cuttingUnitPicker"
+                                Title="Select Cutting Unit"
+                                ItemsSource="{Binding CuttingUnits}"
+                                SelectedItem="{Binding SelectedCuttingUnit}"
+                                IsVisible="{Binding SelectedCruise, Converter={StaticResource isNotNullConverter}}"
+                                AutomationProperties.IsInAccessibleTree="True"
+                                AutomationProperties.Name="Select Cutting Unit" />
+                    </StackLayout>
+                </Border>
+
+
+                <!-- navigation buttons -->
+                <ScrollView Grid.Row="1">
+                    <ListView ItemsSource="{Binding NavItems}"
+                              SelectionMode="Single"
+                              SelectedItem="{Binding BindingContext.SelectedNavItem, Source={x:RelativeSource AncestorType={x:Type ContentPage}}, Mode=TwoWay}">
+                        <!--SelectionChangedCommand="{Binding BindingContext.NavigateCommand, Source={x:RelativeSource AncestorType={x:Type ContentPage}}}">-->
+                        <!--<ListView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical"
+                                               ItemSpacing="6" />
+                        </ListView.ItemsLayout>-->
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextCell Text="{Binding Title}" 
+                                          TextColor="{StaticResource primary}"
+                                          Command="{Binding BindingContext.NavigateCommand, Source={x:RelativeSource AncestorType={x:Type ContentPage}}}"
+                                          CommandParameter="{Binding .}"/>
+
+                                <!--<Border BackgroundColor="{StaticResource white_50}"
+                                        Padding="2"
+                                        Margin="0"
+                                        StrokeShape="RoundRectangle 0">
+                                    <Grid>
+                                        <VerticalStackLayout>
+                                            <Label Text="Title" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>-->
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                    </ListView>
+                </ScrollView>
+                <HorizontalStackLayout Grid.Row="2">
+                    <Button Style="{StaticResource Button.MainMenu}" ImageSource="{FontImageSource Glyph={Static const:FAIcons.Gear}, FontFamily={Static const:Fonts.FAsolid}, Size=30}">
+                        <Button.Behaviors>
+                            <tk:TouchBehavior LongPressCommand="{Binding ShowTestViewCommand}" LongPressDuration="2000"
+                                              Command="{Binding ShowSettingsCommand}" />
+                        </Button.Behaviors>
+                    </Button>
+                </HorizontalStackLayout>
+            </Grid>
+        </ContentPage>
+
+
+    </FlyoutPage.Flyout>
+
+    <FlyoutPage.Detail>
+        <NavigationPage x:Name="_navigationPage"
+                        Title="Root Navigation Page">
+        </NavigationPage>
+    </FlyoutPage.Detail>
+
+    <!--<VerticalStackLayout>
+        <Label 
+            Text="Welcome to .NET MAUI!"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>-->
+</FlyoutPage>

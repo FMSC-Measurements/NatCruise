@@ -3,22 +3,21 @@ using FScruiser.Maui.Services;
 using System.Windows.Input;
 using NatCruise.Async;
 using FScruiser.Maui.Util;
+using FScruiser.Maui.Controls;
 
 namespace FScruiser.Maui.Views;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class UtilitiesView : ContentPage
+public partial class UtilitiesView : BasePage
 {
-    private ICommand _showLimitingDistanceCommand;
+    private ICommand? _showLimitingDistanceCommand;
 
     public UtilitiesView()
     {
         InitializeComponent();
-
-        NavigationService = this.FindMauiContext(true).Services.GetRequiredService<ICruiseNavigationService>();
     }
 
-    protected UtilitiesView(ICruiseNavigationService navigationService)
+    protected UtilitiesView(ICruiseNavigationService navigationService) : this()
     {
         InitializeComponent();
 

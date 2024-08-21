@@ -34,7 +34,7 @@ namespace NatCruise.Test.Data
                 plots.Should().HaveCount(1);
                 var plot = plots.Single();
 
-                var plotStrata = plotStratumDs.GetPlot_Strata(unit, plot.PlotNumber, insertIfNotExists: false);
+                var plotStrata = plotStratumDs.GetPlot_Strata(unit, plot.PlotNumber);
                 plotStrata.Should().HaveCount(2);
             }
         }
@@ -58,7 +58,7 @@ namespace NatCruise.Test.Data
                 db.Execute("DELETE FROM Plot_Stratum;");
                 db.GetRowCount("Plot_Stratum", "").Should().Be(0);
 
-                var plotStrata = plotStratumDs.GetPlot_Strata(unit, plot.PlotNumber, insertIfNotExists: false);
+                var plotStrata = plotStratumDs.GetPlot_Strata(unit, plot.PlotNumber);
                 plotStrata.Should().HaveCount(2);
             }
         }

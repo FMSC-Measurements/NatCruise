@@ -1,18 +1,24 @@
-﻿using FMSC.ORM.EntityModel.Attributes;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using FMSC.ORM.EntityModel.Attributes;
 using Prism.Mvvm;
 
 namespace NatCruise.Models
 {
     [Table("Plot")]
-    public class Plot : BindableBase
+    public class Plot : ObservableObject
     {
         private double _slope;
         private double _aspect;
         private string _remarks;
         private int _plotNumber;
+        private string _cuttingUnitCode;
 
         public string PlotID { get; set; }
-        public string CuttingUnitCode { get; set; }
+        public string CuttingUnitCode
+        {
+            get => _cuttingUnitCode;
+            set => SetProperty(ref _cuttingUnitCode, value);
+        }
 
         public int PlotNumber
         {

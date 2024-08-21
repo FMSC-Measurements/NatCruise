@@ -1,112 +1,108 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:FScruiser.Maui"
-             xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
-             xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
-             xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
-             xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
-             x:Class="FScruiser.Maui.Views.SettingsView"
-             Title="Settings"
-             SemanticProperties.Description="Settings Page"
-             BindingContext="{mvvm:ViewModelLocater Type={Type vms:SettingsViewModel}}">
+<controls:BasePage xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+                   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                   xmlns:local="clr-namespace:FScruiser.Maui"
+                   xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                   xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                   xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+                   xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+                   x:Class="FScruiser.Maui.Views.SettingsView"
+                   Title="Settings"
+                   SemanticProperties.Description="Settings Page">
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout Padding="5">
+            <VerticalStackLayout Padding="5">
 
-                <ctrls:HeaderControl Header="Use New Limiting Distance Calculator"
-                                     Orientation="Horizontal"
-                                     BackgroundColor="{StaticResource uswds_lgt_tan}">
+                <ctrls:HorizontialHeaderControl Header="Use New Limiting Distance Calculator">
 
                     <Switch IsToggled="{Binding AppSettings.UseNewLimitingDistanceCalculator}"
                             HorizontalOptions="EndAndExpand"
                             Style="{StaticResource SwitchBase}" />
-                </ctrls:HeaderControl>
+                </ctrls:HorizontialHeaderControl>
 
-                <BoxView HeightRequest="2"
-                         BackgroundColor="DarkGray" />
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
 
-                <ctrls:HeaderControl Header="Tree Based Tally Page Settings"
-                                     HeaderFontSize="Subtitle"
-                                     Orientation="Vertical"
-                                     BackgroundColor="{StaticResource uswds_lgt_tan}">
-                    <StackLayout BackgroundColor="{StaticResource white_20}">
-                        <ctrls:HeaderControl Header="Tally Panel Size"
-                                             Orientation="Vertical">
+                <ctrls:HorizontialHeaderControl Grid.Row="0"
+                                                Header="Ask Cruisers Initials When Tree Created">
+
+                    <Switch  IsToggled="{Binding CruisersDataservice.PromptCruiserOnSample}"
+                             HorizontalOptions="End" />
+
+                </ctrls:HorizontialHeaderControl>
+
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
+
+                <ctrls:VerticalHeaderControl Header="Tree Based Tally Page Settings"
+                                     HeaderFontSize="{StaticResource fontSize.H3}">
+                    <VerticalStackLayout>
+                        <ctrls:VerticalHeaderControl Header="Tally Panel Size"
+                                                     Margin="4,0,0,0">
                             <Slider Minimum="0.3"
                                     Maximum="0.7"
-                                    Value="{Binding TallySettings.TallyButtonTrayVerticalSize}"
-                                    Style="{StaticResource SliderBase}">
+                                    Value="{Binding TallySettings.TallyButtonTrayVerticalSize}">
                                 <Slider.Behaviors>
                                     <bhvrs:SliderStepBehavior />
                                 </Slider.Behaviors>
                             </Slider>
-                        </ctrls:HeaderControl>
-                    </StackLayout>
-                </ctrls:HeaderControl>
+                        </ctrls:VerticalHeaderControl>
+                    </VerticalStackLayout>
+                </ctrls:VerticalHeaderControl>
 
-                <BoxView HeightRequest="2"
-                         BackgroundColor="DarkGray" />
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
 
-                <ctrls:HeaderControl Header="Plot Tally Page Settings"
-                                     HeaderFontSize="Subtitle"
-                                     Orientation="Vertical"
-                                     BackgroundColor="{StaticResource uswds_lgt_tan}">
-                    <StackLayout BackgroundColor="{StaticResource white_20}">
-                        <ctrls:HeaderControl Header="Select Prev/Next Tree Skips Count Trees"
-                                             Orientation="Horizontal">
+                <ctrls:VerticalHeaderControl Header="Plot Tally Page Settings"
+                                     HeaderFontSize="{StaticResource fontSize.H3}">
+                    <VerticalStackLayout>
+                        <ctrls:HorizontialHeaderControl Header="Select Prev/Next Tree Skips Count Trees"
+                                                        Margin="4,0,0,0">
                             <Switch IsToggled="{Binding AppSettings.SelectPrevNextTreeSkipsCountTrees}"
                                     HorizontalOptions="EndAndExpand"
                                     Style="{StaticResource SwitchBase}" />
-                        </ctrls:HeaderControl>
+                        </ctrls:HorizontialHeaderControl>
 
-                        <ctrls:HeaderControl Header="Tally Panel Size"
-                                             Orientation="Vertical">
+                        <ctrls:VerticalHeaderControl Header="Tally Panel Size"
+                                                     Margin="4,0,0,0">
                             <Slider Minimum="0.3"
                                     Maximum="0.7"
-                                    Value="{Binding TallySettings.PlotTallyButtonTrayVerticalSize}"
-                                    Style="{StaticResource SliderBase}">
+                                    Value="{Binding TallySettings.PlotTallyButtonTrayVerticalSize}">
                                 <Slider.Behaviors>
                                     <bhvrs:SliderStepBehavior />
                                 </Slider.Behaviors>
                             </Slider>
-                        </ctrls:HeaderControl>
-                    </StackLayout>
-                </ctrls:HeaderControl>
+                        </ctrls:VerticalHeaderControl>
+                    </VerticalStackLayout>
+                </ctrls:VerticalHeaderControl>
 
-                <BoxView HeightRequest="2"
-                         BackgroundColor="DarkGray" />
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
 
-                <ctrls:HeaderControl Header="App Analytics"
-                                     HeaderFontSize="Subtitle"
-                                     Orientation="Vertical"
-                                     BackgroundColor="{StaticResource uswds_lgt_tan}">
-                    <StackLayout BackgroundColor="{StaticResource white_20}">
-                        <ctrls:HeaderControl Header="Analytics"
-                                             Orientation="Horizontal">
+                <ctrls:VerticalHeaderControl Header="App Analytics"
+                                     HeaderFontSize="{StaticResource fontSize.H3}">
+                    <VerticalStackLayout>
+                        <ctrls:HorizontialHeaderControl Header="Analytics"
+                                                        Margin="4,0,0,0">
 
                             <Switch IsToggled="{Binding AppSettings.EnableAnalitics}"
                                     HorizontalOptions="EndAndExpand"
                                     Style="{StaticResource SwitchBase}" />
-                        </ctrls:HeaderControl>
-                        <ctrls:HeaderControl Header="Crash/Error Reports"
-                                             Orientation="Horizontal">
+                        </ctrls:HorizontialHeaderControl>
+                        <ctrls:HorizontialHeaderControl Header="Crash/Error Reports"
+                                                        Margin="4,0,0,0">
 
                             <Switch IsToggled="{Binding AppSettings.EnableCrashReports}"
                                     HorizontalOptions="EndAndExpand"
                                     Style="{StaticResource SwitchBase}" />
-                        </ctrls:HeaderControl>
-                    </StackLayout>
-                </ctrls:HeaderControl>
+                        </ctrls:HorizontialHeaderControl>
+                    </VerticalStackLayout>
+                </ctrls:VerticalHeaderControl>
 
-                <BoxView HeightRequest="2"
-                         BackgroundColor="DarkGray" />
+                <BoxView Style="{StaticResource HorizontialSpacer}" />
 
                 <Button Text="Database Utilities"
                         Command="{Binding ShowDatabaseUtilitiesCommand}"
                         AutomationProperties.IsInAccessibleTree="True"
                         AutomationProperties.Name="Database Utilities" />
-            </StackLayout>
+            </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>
-</ContentPage>
+</controls:BasePage>

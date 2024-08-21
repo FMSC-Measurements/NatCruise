@@ -21,6 +21,7 @@ namespace NatCruise
                 ServiceDescriptor.Transient<ILogDataservice, LogDataservice>(),
                 ServiceDescriptor.Transient<ILogErrorDataservice, LogErrorDataservice>(),
                 ServiceDescriptor.Transient<ILogFieldDataservice, LogFieldDataservice>(),
+                ServiceDescriptor.Transient<ILogFieldValueDataservice, LogFieldValueDataservice>(),
                 ServiceDescriptor.Transient<IMessageLogDataservice, MessageLogDataservice>(),
 
                 ServiceDescriptor.Transient<IPlotDataservice, PlotDataservice>(),

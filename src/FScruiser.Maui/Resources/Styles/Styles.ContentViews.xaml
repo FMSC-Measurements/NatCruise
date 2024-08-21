@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls">
+
+    <!-- content views are view that are intended to wrap another control -->
+
+    <Style TargetType="Border"
+           x:Key="BorderBase">
+        <Setter Property="Stroke"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
+        <Setter Property="StrokeShape"
+                Value="Rectangle" />
+        <Setter Property="StrokeThickness"
+                Value="1" />
+        <Setter Property="Padding"
+                Value="2" />
+    </Style>
+
+    <Style TargetType="Border"
+           BasedOn="{StaticResource BorderBase}" />
+
+
+
+    <Style TargetType="Frame"
+           x:Key="FrameBase">
+        <Setter Property="HasShadow"
+                Value="False" />
+        <Setter Property="BorderColor"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray950}}" />
+        <Setter Property="CornerRadius"
+                Value="8" />
+        <Setter Property="Padding"
+                Value="2" />
+    </Style>
+
+    <Style TargetType="Frame"
+           BasedOn="{StaticResource FrameBase}" />
+
+
+
+    <Style x:Key="HorizontialHeaderControlBase"
+           TargetType="ctrls:HorizontialHeaderControl">
+        <Setter Property="HeaderVerticalOptions"
+                Value="Center" />
+        <Setter Property="HeaderFontAttributes"
+                Value="Bold" />
+        <Setter Property="HeaderFontSize"
+                Value="Header" />
+    </Style>
+
+    <Style TargetType="ctrls:HorizontialHeaderControl"
+           BasedOn="{StaticResource HorizontialHeaderControlBase}" />
+
+
+
+    <Style x:Key="VerticalHeaderControlBase"
+           TargetType="ctrls:VerticalHeaderControl">
+        <Setter Property="HeaderFontAttributes"
+                Value="Bold" />
+        <Setter Property="HeaderFontSize"
+                Value="Header" />
+    </Style>
+
+    <Style TargetType="ctrls:VerticalHeaderControl"
+           BasedOn="{StaticResource VerticalHeaderControlBase}" />
+
+
+
+    <Style TargetType="RefreshView"
+           x:Key="RefreshViewBase">
+        <Setter Property="RefreshColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray200}}" />
+    </Style>
+
+    <Style TargetType="RefreshView"
+           BasedOn="{StaticResource RefreshViewBase}" />
+
+</ResourceDictionary>

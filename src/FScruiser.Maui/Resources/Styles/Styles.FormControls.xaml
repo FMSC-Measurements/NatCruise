@@ -1,0 +1,335 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui">
+
+    <Style TargetType="CheckBox"
+           x:Key="CheckBoxBase">
+        <Setter Property="Color"
+                Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource white}}" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Color"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="CheckBox"
+           BasedOn="{StaticResource CheckBoxBase}" />
+
+    <Style TargetType="DatePicker"
+           x:Key="DatePickerBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource white}}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="DatePicker"
+           BasedOn="{StaticResource DatePickerBase}" />
+
+    <Style TargetType="Editor"
+           x:Key="EditorBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="PlaceholderColor"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="Editor"
+           BasedOn="{StaticResource EditorBase}" />
+
+    <Style TargetType="Entry"
+           x:Key="EntryBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="PlaceholderColor"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray500}}" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="Entry"
+           BasedOn="{StaticResource EntryBase}" />
+
+    <Style TargetType="Picker"
+           ApplyToDerivedTypes="True"
+           x:Key="PickerBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
+        <Setter Property="TitleColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray200}}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                            <Setter Property="TitleColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="Picker"
+           BasedOn="{StaticResource PickerBase}" />
+
+    <Style TargetType="bp_ctrls:ValuePicker"
+           x:Key="ValuePickerBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
+        <Setter Property="TitleColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray200}}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                            <Setter Property="TitleColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!--<Style TargetType="bp_ctrls:ValuePicker"
+           BasedOn="{StaticResource ValuePickerBase}" />-->
+
+    <Style TargetType="RadioButton"
+           x:Key="RadioButtonBase">
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="RadioButton"
+           BasedOn="{StaticResource RadioButtonBase}" />
+
+    <Style TargetType="Slider"
+           x:Key="SliderBase">
+        <Setter Property="MinimumTrackColor"
+                Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource white}}" />
+        <Setter Property="MaximumTrackColor"
+                Value="{AppThemeBinding Light={StaticResource gray200}, Dark={StaticResource gray600}}" />
+        <Setter Property="ThumbColor"
+                Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource white}}" />
+        <Setter Property="HeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="MinimumTrackColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                            <Setter Property="MaximumTrackColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                            <Setter Property="ThumbColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="Slider"
+           BasedOn="{StaticResource SliderBase}" />
+
+    <Style TargetType="Switch"
+           x:Key="SwitchBase">
+        <Setter Property="OnColor"
+                Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource white}}" />
+        <Setter Property="ThumbColor"
+                Value="{StaticResource white}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="OnColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                            <Setter Property="ThumbColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="On">
+                        <VisualState.Setters>
+                            <Setter Property="OnColor"
+                                    Value="{AppThemeBinding Light={StaticResource secondary}, Dark={StaticResource gray200}}" />
+                            <Setter Property="ThumbColor"
+                                    Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource white}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Off">
+                        <VisualState.Setters>
+                            <Setter Property="ThumbColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray400}, Dark={StaticResource gray500}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="Switch"
+           BasedOn="{StaticResource SwitchBase}" />
+
+    <Style TargetType="TimePicker"
+           x:Key="TimePickerBase">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource white}}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="MinimumHeightRequest"
+                Value="{StaticResource minTouchableHeight}" />
+        <Setter Property="MinimumWidthRequest"
+                Value="{StaticResource minTouchableWidth}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource gray300}, Dark={StaticResource gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="TimePicker"
+           BasedOn="{StaticResource TimePickerBase}" />
+
+</ResourceDictionary>

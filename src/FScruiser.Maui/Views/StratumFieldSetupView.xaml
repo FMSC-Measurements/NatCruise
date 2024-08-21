@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctrls:BaseTabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                      xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                      xmlns:views="clr-namespace:FScruiser.Maui.Views"
+                      xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                      xmlns:local="clr-namespace:FScruiser.Maui"
+                      xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                      xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+                      x:Class="FScruiser.Maui.Views.StratumFieldSetupView"
+                      x:Name="_page"
+                      SemanticProperties.Description="Stratum Field Setup"
+                      Title="{Binding Stratum.StratumCode, StringFormat='Stratum {0} Fields'}">
+    <views:StratumTreeFieldSetupView BindingContext="{Binding TreeFieldSetupViewModel}" />
+    <views:StratumLogFieldSetupView BindingContext="{Binding LogFieldSetupViewModel}" />
+</ctrls:BaseTabbedPage>

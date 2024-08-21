@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<controls:BasePage xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+                   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                   xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                   xmlns:dg="clr-namespace:DevExpress.Maui.DataGrid;assembly=DevExpress.Maui.DataGrid"
+                   xmlns:converters="clr-namespace:FScruiser.Maui.Converters"
+                   xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+                   xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+                   x:Class="FScruiser.Maui.Views.TreeListPage"
+                   Title="{Binding Title}">
+
+    <Grid>
+        <Grid.Resources>
+            <converters:TreeFieldToDxDataGridColumnConverter x:Key="treeFieldToDxColumnConverter" />
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <HorizontalStackLayout Grid.Row="0">
+            <Label Text="Only Trees With Errors"
+                   VerticalTextAlignment="Center"
+                   AutomationProperties.IsInAccessibleTree="True" />
+            <Switch IsToggled="{Binding OnlyShowTreesWithErrorsOrWarnings}"
+                    HeightRequest="{StaticResource minTouchableHeight}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Only Show Trees With Errors Toggle" />
+        </HorizontalStackLayout>
+
+        <dg:DataGridView Grid.Row="1"
+                         x:Name="_treesDataGrid"
+                         controls:DXDatagridHelper.Columns="{Binding TreeFields, Converter={StaticResource treeFieldToDxColumnConverter}}"
+                         ItemsSource="{Binding Trees}"
+                         SelectionMode="Single">
+        </dg:DataGridView>
+
+        <Grid Grid.Row="2">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+
+
+            <Button x:Name="_editTreeButton" Style="{StaticResource Button.EditItem}"
+                    Grid.Column="0"
+                    HeightRequest="60"
+                    Command="{Binding EditTreeCommand}"
+                    CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Edit Tree" />
+
+
+            <Button x:Name="_addTreeButton"
+                    Style="{StaticResource Button.AddItem}"
+                    Grid.Column="1"
+                    HeightRequest="60"
+                    Command="{Binding AddTreeCommand}"
+                    VerticalOptions="Fill"
+                    HorizontalOptions="FillAndExpand"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Add Tree" />
+
+            <Button x:Name="_deleteTreeButton"
+                    Grid.Column="2"
+                    Style="{StaticResource Button.DeleteItem}"
+                    HeightRequest="60"
+                    Command="{Binding DeleteTreeCommand}"
+                    CommandParameter="{Binding SelectedItem, Source={Reference _treesDataGrid}}"
+                    AutomationProperties.IsInAccessibleTree="True"
+                    AutomationProperties.Name="Delete Tree" />
+        </Grid>
+    </Grid>
+</controls:BasePage>

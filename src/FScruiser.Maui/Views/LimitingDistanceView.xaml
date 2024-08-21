@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<controls:InitializableContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                                   xmlns:const="clr-namespace:FScruiser.Maui.Constants"
-                                   xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
-                                   xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-                                   xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
-                                   xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
-                                   xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
-                                   xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
-                                   x:Class="FScruiser.Maui.Views.LimitingDistanceView"
-                                   BindingContext="{mvvm:ViewModelLocater Type={Type vms:LimitingDistanceViewModel}}"
-                                   Title="Limiting Distance Calculator">
-    <controls:InitializableContentPage.Resources>
+<controls:BasePage  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+                    xmlns:controls="clr-namespace:FScruiser.Maui.Controls"
+                    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                    xmlns:vms="clr-namespace:FScruiser.Maui.ViewModels"
+                    xmlns:mvvm="clr-namespace:FScruiser.Maui.MVVM"
+                    xmlns:bhvrs="clr-namespace:FScruiser.Maui.Behaviors"
+                    xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                    x:Class="FScruiser.Maui.Views.LimitingDistanceView"
+                    Title="Limiting Distance Calculator">
+    <controls:BasePage.Resources>
         <!--<Style TargetType="Label">
             <Setter Property="VerticalTextAlignment"
                     Value="Center" />
@@ -28,8 +27,8 @@
             <Setter Property="WidthRequest"
                     Value="50" />
         </Style>-->
-    </controls:InitializableContentPage.Resources>
-    <controls:InitializableContentPage.Content>
+    </controls:BasePage.Resources>
+    <controls:BasePage.Content>
         <ScrollView Margin="5">
 
             <StackLayout>
@@ -40,7 +39,7 @@
 
                 <Label HorizontalOptions="FillAndExpand"
                        IsVisible="{Binding UseNewLimitingDistanceCalculator}"
-                       BackgroundColor="Gold"
+                       BackgroundColor="{StaticResource secondary}"
                        Text="Using New Limiting Distance Calculations" />
 
                 <!-- Stratum Settings -->
@@ -85,7 +84,7 @@
                         </mct:Expander.Header>
 
                         <VerticalStackLayout RadioButtonGroup.GroupName="mode"
-                                     RadioButtonGroup.SelectedValue="{Binding Mode}">
+                                             RadioButtonGroup.SelectedValue="{Binding Mode}">
                             <VerticalStackLayout.Resources>
                                 <ControlTemplate x:Key="StModeRadioButtonTemplate">
                                     <Frame BorderColor="{StaticResource usfs_footer_bottom}"
@@ -348,9 +347,8 @@
                 <StackLayout>
                     <StackLayout.Resources>
 
-                        <Style TargetType="Frame">
-                            <Setter Property="BackgroundColor"
-                                    Value="#F1E5CD" />
+                        <Style TargetType="Frame"
+                               BasedOn="{StaticResource FrameBase}">
                             <Setter Property="CornerRadius"
                                     Value="5" />
                             <Setter Property="Margin"
@@ -364,7 +362,8 @@
 
                     <!-- DBH -->
                     <Frame>
-                        <controls:HeaderControl Header="DBH" Orientation="Horizontal">
+                        <controls:HeaderControl Header="DBH"
+                                                Orientation="Horizontal">
                             <Entry x:Name="_dbhEntry"
                                    Text="{Binding DBH}"
                                    Keyboard="Numeric">
@@ -410,7 +409,7 @@
                                                     Orientation="Horizontal">
                                 <bp_ctrls:ValuePicker SelectedValue="{Binding MeasureToSelection}"
                                                       ItemsSource="{Binding MeasureToOptions}"
-                                                      HorizontalOptions="FillAndExpand"/>
+                                                      HorizontalOptions="FillAndExpand" />
                             </controls:HeaderControl>
                         </StackLayout>
                     </Frame>
@@ -433,7 +432,7 @@
                 </StackLayout>
 
                 <!-- Limiting Distance and Tree Status -->
-                <Frame BackgroundColor="Orange"
+                <Frame BackgroundColor="{StaticResource secondary}"
                        CornerRadius="5">
                     <StackLayout Orientation="Vertical">
                         <StackLayout Orientation="Horizontal">
@@ -456,7 +455,7 @@
                                                  Binding="{Binding TreeStatus}"
                                                  Value="{Static vms:LimitingDistanceViewModel.TREE_STATUS_OUT}">
                                         <Setter Property="BackgroundColor"
-                                                Value="Red" />
+                                                Value="{StaticResource attention}" />
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
@@ -484,7 +483,8 @@
                                         </Entry.Behaviors>
                                     </Entry>
 
-                                    <Label x:Name="_treeNumberHeading" VerticalOptions="Center">Tree Number</Label>
+                                    <Label x:Name="_treeNumberHeading"
+                                           VerticalOptions="Center">Tree Number</Label>
                                     <Entry Text="{Binding TreeNumber}"
                                            Keyboard="Numeric"
                                            WidthRequest="50"
@@ -506,5 +506,5 @@
                 </Frame>
             </StackLayout>
         </ScrollView>
-    </controls:InitializableContentPage.Content>
-</controls:InitializableContentPage>
+    </controls:BasePage.Content>
+</controls:BasePage>

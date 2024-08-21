@@ -24,14 +24,62 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private IEnumerable<PlotError> _errorsAndWarnings;
         private ICommand _updatePlotNumberCommand;
         private bool _canAddRemoveStrata;
+        private IApplicationSettingService _appSettings;
+        private bool _isSuperuserModeEnabled;
+        private bool _isLocked;
+        private string _cuttingUnitCode;
+        private IReadOnlyCollection<string> _cuttingUnitOptions;
 
         protected INatCruiseNavigationService NavigationService { get; }
+
+        public IApplicationSettingService AppSettings
+        {
+            get => _appSettings;
+            private set
+            {
+                if (_appSettings != null) { _appSettings.PropertyChanged -= AppSettings_PropertyChanged; }
+                _appSettings = value;
+                if (value != null)
+                {
+                    IsSuperuserModeEnabled = value.IsSuperuserMode;
+                    value.PropertyChanged += AppSettings_PropertyChanged;
+                }
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void AppSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IApplicationSettingService.IsSuperuserMode))
+            {
+                var appSettings = (IApplicationSettingService)sender;
+                IsSuperuserModeEnabled = appSettings.IsSuperuserMode;
+            }
+        }
+
+        public bool IsSuperuserModeEnabled
+        {
+            get => _isSuperuserModeEnabled;
+            set
+            {
+                SetProperty(ref _isSuperuserModeEnabled, value);
+                IsLocked = (Plot == null || Plot.TreeCount > 0) && !value;
+            }
+        }
+
+        public bool IsLocked
+        {
+            get => _isLocked;
+            set => SetProperty(ref _isLocked, value);
+        }
 
         public IEnumerable<PlotError> ErrorsAndWarnings
         {
             get => _errorsAndWarnings;
             set => SetProperty(ref _errorsAndWarnings, value);
         }
+
+
 
         public Plot Plot
         {
@@ -47,6 +95,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 OnPlotChanged(value);
                 SetProperty(ref _plot, value);
                 OnPropertyChanged(nameof(PlotNumber));
+                OnPropertyChanged(nameof(CuttingUnitCode));
+                
 
                 if (value != null)
                 {
@@ -61,6 +111,9 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             {
                 var stratumPlots = PlotStratumDataservice.GetPlot_Strata(plot.CuttingUnitCode, plot.PlotNumber);
                 StratumPlots = stratumPlots;
+                CuttingUnitOptions = CuttingUnitDataservice.GetPlotCuttingUnits()
+                    .Select(x => x.CuttingUnitCode)
+                    .Distinct().ToArray();
                 CanAddRemoveStrata = stratumPlots.Count() > 1 || stratumPlots.Any(x => x.InCruise == false);
                 RefreshErrorsAndWarnings(plot);
             }
@@ -68,6 +121,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             {
                 StratumPlots = new Plot_Stratum[0];
             }
+
+            IsLocked = (Plot == null || Plot.TreeCount > 0) && !IsSuperuserModeEnabled;
         }
 
         public ICommand UpdatePlotNumberCommand => _updatePlotNumberCommand ?? (_updatePlotNumberCommand = new DelegateCommand<string>(UpdatePlotNumber));
@@ -160,11 +215,67 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         #endregion PlotNumber
 
+        public event EventHandler PlotCuttingUnitChanged;
+
         public bool CanAddRemoveStrata
         {
             get => _canAddRemoveStrata;
             protected set => SetProperty(ref _canAddRemoveStrata, value);
         }
+
+        public string CuttingUnitCode
+        {
+            get => Plot?.CuttingUnitCode;
+            set
+            {
+                if (Plot == null) { return; }
+
+                var curValue = Plot.CuttingUnitCode;
+                if (curValue == value) { return; }
+                if (IsLocked) { return; }
+
+                var plotStrata = PlotStratumDataservice.GetPlot_Strata(curValue, Plot.PlotNumber).Where(x => x.InCruise == true);
+                var targetUnitStrata = StratumDataservice.GetStrata(value).Select(x => x.StratumCode).ToArray();
+                var unmatchedStrata = plotStrata.Where(x => !targetUnitStrata.Contains(x.StratumCode)).Select(x => x.StratumCode).ToArray();
+
+                if(unmatchedStrata.Any())
+                {
+                    DialogService.ShowNotification($"Can not change Cutting Unit,\r\n Strata {string.Join(", ", unmatchedStrata)} not found in the destination cutting unit {value}.");
+                }
+                else
+                {
+                    try
+                    {
+                        PlotDataservice.UpdatePlotCuttingUnit(Plot.PlotID, value);
+                    }
+                    catch (FMSC.ORM.UniqueConstraintException ex)
+                    {
+                        LoggingService.LogException(nameof(PlotEditViewModel), "Plot_PropertyChanged", ex);
+                        DialogService.ShowMessageAsync("Save Plot Error - Plot Number and Cutting Unit must be unique");
+                        return;
+                    }
+
+                    CruiseLogDataservice.Log($"Plot Cutting Unit Changed from {curValue} to {value}",
+                            CruiseLogLevel.Info,
+                            plotID: Plot.PlotID,
+                            fieldName: nameof(Plot.CuttingUnitCode),
+                            tableName: "Plot");
+
+                    Plot.CuttingUnitCode = value;
+                    PlotCuttingUnitChanged?.Invoke(this, EventArgs.Empty);
+                }
+
+                
+                OnPropertyChanged();
+            }
+        }
+
+        public IReadOnlyCollection<string> CuttingUnitOptions
+        {
+            get => _cuttingUnitOptions;
+            set => SetProperty(ref _cuttingUnitOptions, value);
+        }
+
 
         public string UnitCode => Plot?.CuttingUnitCode;
 
@@ -196,23 +307,34 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public IPlotDataservice PlotDataservice { get; }
         public IPlotStratumDataservice PlotStratumDataservice { get; }
+        public IStratumDataservice StratumDataservice { get; }
+        public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public IPlotErrorDataservice PlotErrorDataservice { get; }
+        public ICruiseLogDataservice CruiseLogDataservice { get; }
         public INatCruiseDialogService DialogService { get; set; }
         public ILoggingService LoggingService { get; }
 
         public PlotEditViewModel(IPlotDataservice plotDataservice,
             IPlotStratumDataservice plotStratumDataservice,
+            IStratumDataservice stratumDataservice,
+            ICuttingUnitDataservice cuttingUnitDataservice,
             IPlotErrorDataservice plotErrorDataservice,
+            ICruiseLogDataservice cruiseLogDataService,
             INatCruiseDialogService dialogService,
             INatCruiseNavigationService navigationService,
-            ILoggingService loggingService)
+            ILoggingService loggingService,
+            IApplicationSettingService appSettings)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
             PlotStratumDataservice = plotStratumDataservice ?? throw new ArgumentNullException(nameof(plotStratumDataservice));
+            StratumDataservice = stratumDataservice ?? throw new ArgumentNullException(nameof(stratumDataservice));
+            CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             PlotErrorDataservice = plotErrorDataservice ?? throw new ArgumentNullException(nameof(plotErrorDataservice));
+            CruiseLogDataservice = cruiseLogDataService ?? throw new ArgumentNullException(nameof(cruiseLogDataService));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
+            AppSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
         }
 
         public async Task ToggleInCruiseAsync(Plot_Stratum stratumPlot)

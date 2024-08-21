@@ -1,4 +1,5 @@
 ﻿using NatCruise.Models;
+using System;
 using System.Collections.Generic;
 
 namespace NatCruise.Data
@@ -9,7 +10,7 @@ namespace NatCruise.Data
 
         void Insert3PPNT_Plot_Stratum(Plot_Stratum plotStratum);
 
-        IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber, bool insertIfNotExists = false);
+        IEnumerable<Plot_Stratum> GetPlot_Strata(string unitCode, int plotNumber);
 
         Plot_Stratum GetPlot_Stratum(string unitCode, string stratumCode, int plotNumber);
 
