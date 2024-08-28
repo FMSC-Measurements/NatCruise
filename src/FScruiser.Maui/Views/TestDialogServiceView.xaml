@@ -13,5 +13,13 @@
         <Button x:Name="_showAskTreeCountButton"
                 Text="Ask Tree Count"
                 Clicked="_showAskTreeCountButton_Clicked" />
+
+        <Button x:Name="_darkModeButton"
+                Text="Dark Mode"
+                Clicked="_darkModeButton_Clicked" />
+
+        <Button x:Name="_lightModeButton"
+                Text="Light Mode"
+                Clicked="_lightModeButton_Clicked" />
     </VerticalStackLayout>
 </ContentPage>

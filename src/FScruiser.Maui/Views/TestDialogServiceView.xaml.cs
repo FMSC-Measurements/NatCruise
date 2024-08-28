@@ -29,4 +29,15 @@ public partial class TestDialogServiceView : ContentPage
         var result = await DialogService.AskTreeCount(30);
         DialogService.ShowNotification(result?.TreeCount?.ToString() ?? "Null", "Result");
     }
+
+    private void _darkModeButton_Clicked(object sender, EventArgs e)
+    {
+        App.Current.UserAppTheme = AppTheme.Dark;
+    }
+
+    private void _lightModeButton_Clicked(object sender, EventArgs e)
+    {
+
+        App.Current.UserAppTheme = AppTheme.Light;
+    }
 }

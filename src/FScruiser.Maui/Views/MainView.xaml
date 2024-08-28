@@ -19,17 +19,18 @@
                     <RowDefinition Height="*"
                                    x:Name="_flyouContentRowDef" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!--select cruise button-->
-                <Border Grid.Row="0" Style="{StaticResource BorderBase}"
+                <Border Grid.Row="0"
+                        Style="{StaticResource BorderBase}"
                         Padding="2"
                         Margin="10"
                         StrokeShape="RoundRectangle 5">
 
                     <StackLayout>
-                        <Grid 
-                              AutomationProperties.IsInAccessibleTree="True"
+                        <Grid AutomationProperties.IsInAccessibleTree="True"
                               AutomationProperties.Name="Select Cruise">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -57,7 +58,7 @@
                                    VerticalOptions="Fill"
                                    HorizontalOptions="Fill"
                                    VerticalTextAlignment="Center">
-                                
+
                             </Label>
                         </Grid>
                         <BoxView Style="{StaticResource HorizontialSpacer}"
@@ -86,33 +87,75 @@
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextCell Text="{Binding Title}" 
-                                          TextColor="{StaticResource primary}"
-                                          Command="{Binding BindingContext.NavigateCommand, Source={x:RelativeSource AncestorType={x:Type ContentPage}}}"
-                                          CommandParameter="{Binding .}"/>
 
-                                <!--<Border BackgroundColor="{StaticResource white_50}"
-                                        Padding="2"
-                                        Margin="0"
-                                        StrokeShape="RoundRectangle 0">
-                                    <Grid>
-                                        <VerticalStackLayout>
-                                            <Label Text="Title" />
-                                        </VerticalStackLayout>
-                                    </Grid>
-                                </Border>-->
+                                <controls:ClickableViewCell Command="{Binding BindingContext.NavigateCommand, Source={x:RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                            CommandParameter="{Binding .}">
+                                    <Label Text="{Binding Title}"
+                                           Style="{StaticResource Label.H3}"
+                                           TextColor="{StaticResource primary}"
+                                           FontAttributes="Bold"
+                                           VerticalTextAlignment="Center"
+                                           Margin="10,0" />
+                                </controls:ClickableViewCell>
+
                             </DataTemplate>
                         </ListView.ItemTemplate>
 
                     </ListView>
                 </ScrollView>
-                <HorizontalStackLayout Grid.Row="2">
-                    <Button Style="{StaticResource Button.MainMenu}" ImageSource="{FontImageSource Glyph={Static const:FAIcons.Gear}, FontFamily={Static const:Fonts.FAsolid}, Size=30}">
+
+                <!-- Device Name and Version info -->
+                <VerticalStackLayout>
+                    <VerticalStackLayout.Resources>
+                        <ResourceDictionary>
+                            <Style TargetType="Label">
+                                <Setter Property="TextColor"
+                                        Value="{StaticResource lightText}" />
+                                <Setter Property="Margin"
+                                        Value="5" />
+                                <Setter Property="HorizontalTextAlignment"
+                                        Value="Center" />
+                            </Style>
+                        </ResourceDictionary>
+                    </VerticalStackLayout.Resources>
+
+                    <Label Text="{Binding DeviceInfo.DeviceName, StringFormat='{}Device ID:{0}'}" />
+                    <Label Text="{Binding AppInfo.Version, StringFormat='{}Version {0}'}" />
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Grid.Row="2"
+                                       HorizontalOptions="Center">
+                    <HorizontalStackLayout.Resources>
+                        <tk:AppThemeObject x:Key="toggleDarkModeIcon" >
+                            <tk:AppThemeObject.Light>
+                                <FontImageSource Glyph="{Static const:FAIcons.Sun}"
+                                                 FontFamily="{Static const:Fonts.FAsolid}"
+                                                 Size="16" />
+                            </tk:AppThemeObject.Light>
+                            <tk:AppThemeObject.Dark>
+                                <FontImageSource Glyph="{Static const:FAIcons.Moon}"
+                                                 FontFamily="{Static const:Fonts.FAsolid}"
+                                                 Size="16" />
+                            </tk:AppThemeObject.Dark>
+                        </tk:AppThemeObject>
+                    </HorizontalStackLayout.Resources>
+                    
+                    <Button Style="{StaticResource Button.MainMenu}"
+                            ImageSource="{FontImageSource Glyph={Static const:FAIcons.Gear}, FontFamily={Static const:Fonts.FAsolid}, Size=16}">
                         <Button.Behaviors>
-                            <tk:TouchBehavior LongPressCommand="{Binding ShowTestViewCommand}" LongPressDuration="2000"
+                            <tk:TouchBehavior LongPressCommand="{Binding ShowTestViewCommand}"
+                                              LongPressDuration="2000"
                                               Command="{Binding ShowSettingsCommand}" />
                         </Button.Behaviors>
                     </Button>
+
+                    <Button Style="{StaticResource Button.MainMenu}"
+                            ImageSource="{FontImage Glyph={Static const:FAIcons.CircleInfo}, FontFamily={Static const:Fonts.FAsolid}, Size=16}"
+                            Command="{Binding ShowAboutCommand}" />
+
+                    <Button x:Name="_toggleDarkModeButton" Style="{StaticResource Button.MainMenu}"
+                            ImageSource="{tk:AppThemeResource toggleDarkModeIcon}"
+                            Clicked="_toggleDarkModeButton_Clicked" />
                 </HorizontalStackLayout>
             </Grid>
         </ContentPage>
