@@ -16,6 +16,7 @@ using NatCruise.Async;
 using NatCruise.Data;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using NatCruise.Services;
 
 namespace FScruiser.Maui.ViewModels
 {
@@ -51,11 +52,13 @@ namespace FScruiser.Maui.ViewModels
 
         public ICommand ShowSettingsCommand => _showSettingsCommand ??= new Command(() => NavigationService.ShowSettings().FireAndForget());
 
+        public ICommand ShowAboutCommand => new Command(() => NavigationService.ShowAbout().FireAndForget());
+
         public IServiceProvider Services { get; }
         public ICruiseNavigationService NavigationService { get; }
         public IDataContextService DataContext { get; }
-
-
+        public IAppInfoService AppInfo { get; }
+        public IDeviceInfoService DeviceInfo { get; }
 
         [RelayCommand]
         public void Navigate()
@@ -80,11 +83,18 @@ namespace FScruiser.Maui.ViewModels
 
 
 
-        public MainViewModel(IServiceProvider services, ILogger<MainViewModel> log, ICruiseNavigationService navigationService, IDataContextService dataContext)
+        public MainViewModel(IServiceProvider services,
+                            ILogger<MainViewModel> log,
+                            ICruiseNavigationService navigationService,
+                            IDataContextService dataContext,
+                            IDeviceInfoService deviceInfoService,
+                            IAppInfoService appInfo)
         {
             Services = services;
             NavigationService = navigationService;
             DataContext = dataContext;
+            AppInfo = appInfo;
+            DeviceInfo = deviceInfoService;
 
             dataContext.CruiseChanged += DataContext_CruiseChanged;
             DataContext_CruiseChanged(null, EventArgs.Empty);
@@ -118,7 +128,7 @@ namespace FScruiser.Maui.ViewModels
 
         public void RefreshNavItems()
         {
-            
+
 
             var navList = new List<NavItemModel>();
             if (SelectedCruise != null)

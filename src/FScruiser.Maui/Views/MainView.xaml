@@ -91,8 +91,7 @@
                                 <controls:ClickableViewCell Command="{Binding BindingContext.NavigateCommand, Source={x:RelativeSource AncestorType={x:Type ContentPage}}}"
                                                             CommandParameter="{Binding .}">
                                     <Label Text="{Binding Title}"
-                                           Style="{StaticResource Label.H3}"
-                                           TextColor="{StaticResource primary}"
+                                           StyleClass="H3, primary"
                                            FontAttributes="Bold"
                                            VerticalTextAlignment="Center"
                                            Margin="10,0" />
@@ -105,12 +104,10 @@
                 </ScrollView>
 
                 <!-- Device Name and Version info -->
-                <VerticalStackLayout>
+                <VerticalStackLayout Grid.Row="2">
                     <VerticalStackLayout.Resources>
                         <ResourceDictionary>
-                            <Style TargetType="Label">
-                                <Setter Property="TextColor"
-                                        Value="{StaticResource lightText}" />
+                            <Style TargetType="Label" BasedOn="{StaticResource LabelBase}">
                                 <Setter Property="Margin"
                                         Value="5" />
                                 <Setter Property="HorizontalTextAlignment"
@@ -123,7 +120,7 @@
                     <Label Text="{Binding AppInfo.Version, StringFormat='{}Version {0}'}" />
                 </VerticalStackLayout>
 
-                <HorizontalStackLayout Grid.Row="2"
+                <HorizontalStackLayout Grid.Row="3"
                                        HorizontalOptions="Center">
                     <HorizontalStackLayout.Resources>
                         <tk:AppThemeObject x:Key="toggleDarkModeIcon" >
