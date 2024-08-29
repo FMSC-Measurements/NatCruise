@@ -7,7 +7,7 @@
     <Style TargetType="Button"
            x:Key="ButtonBase">
         <Setter Property="TextColor"
-                Value="{AppThemeBinding Light={StaticResource text.light}, Dark={StaticResource text.dark}}" />
+                Value="{StaticResource text.light}" />
         <Setter Property="BackgroundColor"
                 Value="{AppThemeBinding Light={StaticResource primary}, Dark={StaticResource primary.dark}}" />
         <Setter Property="FontFamily"
@@ -63,8 +63,8 @@
     <Style x:Key="Button.MainMenu"
            TargetType="Button"
            BasedOn="{StaticResource ButtonBase}">
-        <Setter Property="BackgroundColor"
-                Value="{StaticResource primary}" />
+        <!--<Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />-->
     </Style>
 
     <Style x:Key="Button.AddItem"

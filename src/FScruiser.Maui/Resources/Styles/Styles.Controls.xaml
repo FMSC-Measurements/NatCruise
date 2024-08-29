@@ -3,7 +3,8 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:const="clr-namespace:FScruiser.Maui.Constants"
-                    xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui">
+                    xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
+                    xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
     <Style TargetType="ActivityIndicator"
            x:Key="ActivityIndicatorBase">
@@ -37,7 +38,7 @@
     <Style TargetType="SearchBar"
            x:Key="SearchBarBase">
         <Setter Property="TextColor"
-                Value="{AppThemeBinding Light={StaticResource text.primary}, Dark={StaticResource text.primary}}" />
+                Value="{tk:AppThemeResource text.primary}" />
         <Setter Property="PlaceholderColor"
                 Value="{StaticResource gray500}" />
         <Setter Property="CancelButtonColor"
