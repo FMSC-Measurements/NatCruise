@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <style name="FScruiser.Base" parent="Maui.SplashTheme">
+        <item name="android:colorActivatedHighlight">@color/customColorActivatedHighlight</item>
+    </style>
+</resources>
