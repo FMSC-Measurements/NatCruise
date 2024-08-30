@@ -162,8 +162,8 @@ namespace FScruiser.Maui.ViewModels
 
             navList.Add(new NavItemModel { Title = "Utilities", NavAction = (n) => n.ShowUtilities() });
             navList.Add(new NavItemModel { Title = "Cruisers", NavAction = (n) => n.ShowManageCruisers() });
-            navList.Add(new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() });
-            navList.Add(new NavItemModel { Title = "About", NavAction = (n) => n.ShowAbout() });
+            //navList.Add(new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() });
+            //navList.Add(new NavItemModel { Title = "About", NavAction = (n) => n.ShowAbout() });
 
             NavItems = navList.ToArray();
 
