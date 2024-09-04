@@ -1,12 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using FScruiser.Maui.Services;
+using Microsoft.Extensions.Logging;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
+using NatCruise.MVVM.ViewModels;
 using NatCruise.Navigation;
+using NatCruise.Services;
 using NatCruise.Util;
 using Prism.Common;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace FScruiser.Maui.ViewModels;
@@ -35,7 +39,35 @@ public class LogsListViewModel : ViewModelBase
     public ObservableCollection<Log>? Logs
     {
         get => _logs;
-        protected set => SetProperty(ref _logs, value);
+        protected set
+        {
+            if(_logs != null)
+            {
+                foreach (var log in _logs)
+                {
+                    log.PropertyChanged -= Log_PropertyChanged;
+                }
+            }
+
+            SetProperty(ref _logs, value);
+
+            if(value != null)
+            {
+                foreach (var log in value)
+                {
+                    log.PropertyChanged += Log_PropertyChanged;
+                }
+            }
+        }
+    }
+
+    private void Log_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is Log log)
+        {
+            Logger.LogTrace($"Log property changed: {e.PropertyName}");
+            SaveLog(log);
+        }
     }
 
     public IEnumerable<LogFieldSetup>? LogFields
@@ -49,6 +81,8 @@ public class LogsListViewModel : ViewModelBase
     protected ICuttingUnitDataservice Datastore { get; }
     protected ICruiseNavigationService NavigationService { get; }
     public IFieldSetupDataservice FieldSetupDataservice { get; }
+    public ILogger Logger { get; }
+    public INatCruiseDialogService DialogService { get; }
 
     public ICommand AddLogCommand => _addLogCommand ??= new RelayCommand(ShowAddLogPage);
 
@@ -62,12 +96,16 @@ public class LogsListViewModel : ViewModelBase
         ICruiseNavigationService navigationService,
         ITreeDataservice treeDataservice,
         ILogDataservice logDataservice,
-        IFieldSetupDataservice fieldSetupDataservice)
+        IFieldSetupDataservice fieldSetupDataservice,
+        ILogger<LogsListViewModel> log,
+        INatCruiseDialogService dialogService)
     {
         TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
         LogDataservice = logDataservice ?? throw new ArgumentNullException(nameof(logDataservice));
         NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         FieldSetupDataservice = fieldSetupDataservice ?? throw new ArgumentNullException(nameof(fieldSetupDataservice));
+        Logger = log ?? throw new ArgumentNullException(nameof(log));
+        DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
     }
 
     protected override void OnInitialize(IDictionary<string, object> parameters)
@@ -111,5 +149,20 @@ public class LogsListViewModel : ViewModelBase
         NavigationService.ShowLogEdit(log.LogID);
 
         //NavigationService.NavigateAsync("Log", new NavigationParameters($"{NavParams.LogEdit_CreateNew}=false&{NavParams.LogID}={log.LogID}"));
+    }
+
+    public void SaveLog(Log log)
+    {
+        if(log == null) { return; }
+
+        try
+        {
+            LogDataservice.UpdateLog(log);
+        }
+        catch (FMSC.ORM.ConstraintException ex)
+        {
+            Logger.LogError(ex, "Error saving log: Constraint Exception");
+            DialogService.ShowMessageAsync("Save Log Error - Invalid Field Value");
+        }
     }
 }

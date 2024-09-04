@@ -14,7 +14,7 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:LogFieldSetupToDxDataGridColumnConverter x:Key="logFieldToDataGridColumnConverter" />
+            <converters:LogFieldSetupToDxDataGridColumnConverter x:Key="logFieldToDataGridColumnConverter" CreateReadOnly="False" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -52,7 +52,8 @@
                                 x:Name="_logsDataGrid"
                              ctrls:DXDatagridHelper.Columns="{Binding LogFields, Converter={StaticResource logFieldToDataGridColumnConverter}}"
                              ItemsSource="{Binding Logs}"
-                             SelectionMode="Single">
+                             SelectionMode="None"
+                             EditorShowMode="Tap">
             </dg:DataGridView>
             
             <!--<CollectionView x:Name="_logListView"
@@ -67,18 +68,18 @@
             <Grid ColumnDefinitions="Auto, *, *, Auto" Grid.Row="2"
                          VerticalOptions="End">
 
-                <Button x:Name="_goToEndButton"
+                <!--<Button x:Name="_goToEndButton"
                         Grid.Column="0"
                         Style="{StaticResource Button.ScrollBottom}"
                         HeightRequest="60"
                         Margin="2,0"
-                        AutomationProperties.Name="Scroll To End of List" />
-                <Button Style="{StaticResource Button.EditItem}"
+                        AutomationProperties.Name="Scroll To End of List" />-->
+                <!--<Button Style="{StaticResource Button.EditItem}"
                         Grid.Column="1"
                         HeightRequest="60"
                         Margin="2,0"
                         Command="{Binding EditLogCommand}"
-                        CommandParameter="{Binding SelectedItem, Source={Reference _logsDataGrid}}" />
+                        CommandParameter="{Binding SelectedItem, Source={Reference _logsDataGrid}}" />-->
                 <Button x:Name="_addLogButton"
                         Grid.Column="2"
                         Command="{Binding AddLogCommand}"
@@ -88,13 +89,13 @@
                         VerticalOptions="Fill"
                         HorizontalOptions="FillAndExpand"
                         AutomationProperties.Name="Add Log" />
-                <Button x:Name="_goToStartButton"
+                <!--<Button x:Name="_goToStartButton"
                         Grid.Column="3"
                         Margin="2,0"
                         Style="{StaticResource Button.ScrollTop}"
                         HeightRequest="60"
                         HorizontalOptions="End"
-                        AutomationProperties.Name="Scroll To Start of List" />
+                        AutomationProperties.Name="Scroll To Start of List" />-->
             </Grid>
         </Grid>
 

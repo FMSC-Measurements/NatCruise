@@ -15,4 +15,11 @@ public partial class LogsListView : BasePage
         InitializeComponent();
         BindingContext = viewModel;
     }
+
+    protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
+    {
+        base.OnNavigatedFrom(args);
+
+        _logsDataGrid.CloseEditor(true);
+    }
 }
