@@ -49,8 +49,8 @@
     <Style x:Key="Button.Accept"
            TargetType="Button"
            BasedOn="{StaticResource ButtonBase}">
-        <Setter Property="BackgroundColor"
-                Value="{StaticResource primary}" />
+        <!--<Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />-->
     </Style>
 
     <Style x:Key="Button.Cancel"
@@ -83,8 +83,8 @@
            BasedOn="{StaticResource ButtonBase}">
         <!--<Setter Property="Text"
                 Value="Edit" />-->
-        <Setter Property="BackgroundColor"
-                Value="{StaticResource primary}" />
+        <!--<Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />-->
         <Setter Property="ImageSource"
                 Value="{FontImageSource Glyph={Static const:FAIcons.PenToSquare}, FontFamily={Static const:Fonts.FAsolid}, Size=30}" />
     </Style>
@@ -105,8 +105,8 @@
     <Style x:Key="Button.ScrollTop"
            TargetType="Button"
            BasedOn="{StaticResource ButtonBase}">
-        <Setter Property="BackgroundColor"
-                Value="{StaticResource primary}" />
+        <!--<Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />-->
         <Setter Property="ImageSource"
                 Value="ic_chevron_double_up_white_24dp.png" />
     </Style>
@@ -114,8 +114,8 @@
     <Style x:Key="Button.ScrollBottom"
            TargetType="Button"
            BasedOn="{StaticResource ButtonBase}">
-        <Setter Property="BackgroundColor"
-                Value="{StaticResource primary}" />
+        <!--<Setter Property="BackgroundColor"
+                Value="{StaticResource primary}" />-->
         <Setter Property="ImageSource"
                 Value="ic_chevron_double_down_white_24dp.png" />
     </Style>
@@ -127,7 +127,7 @@
         <Setter Property="MinimumWidthRequest"
                 Value="{StaticResource minTouchableWidth}" />
         <Setter Property="BackgroundColor"
-                Value="Transparent" />
+                Value="{StaticResource white_38}" />
         <Setter Property="ImageSource"
                 Value="{FontImageSource Glyph={Static const:FAIcons.EllipsisVertical}, FontFamily={Static const:Fonts.FAsolid}, Size={StaticResource fontSize.H3}, Color={StaticResource gray900}}" />
         <Setter Property="VisualStateManager.VisualStateGroups">

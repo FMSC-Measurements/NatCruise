@@ -34,7 +34,7 @@
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource white}}" />
         <Setter Property="BackgroundColor"
-                Value="Transparent" />
+                Value="{AppThemeBinding Light={StaticResource gray100}, Dark={StaticResource gray900}}" />
         <Setter Property="FontFamily"
                 Value="OpenSansRegular" />
         <Setter Property="FontSize"
@@ -65,7 +65,7 @@
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
         <Setter Property="BackgroundColor"
-                Value="Transparent" />
+                Value="{AppThemeBinding Light={StaticResource gray100}, Dark={StaticResource gray900}}" />
         <Setter Property="FontFamily"
                 Value="OpenSansRegular" />
         <Setter Property="FontSize"
@@ -98,7 +98,7 @@
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource text.dark}, Dark={StaticResource text.light}}" />
         <Setter Property="BackgroundColor"
-                Value="Transparent" />
+                Value="{AppThemeBinding Light={StaticResource gray100}, Dark={StaticResource gray900}}" />
         <Setter Property="FontFamily"
                 Value="OpenSansRegular" />
         <Setter Property="FontSize"
@@ -134,7 +134,7 @@
         <Setter Property="TitleColor"
                 Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray200}}" />
         <Setter Property="BackgroundColor"
-                Value="Transparent" />
+                Value="{AppThemeBinding Light={StaticResource gray100}, Dark={StaticResource gray900}}" />
         <Setter Property="FontFamily"
                 Value="OpenSansRegular" />
         <Setter Property="FontSize"
@@ -169,7 +169,7 @@
         <Setter Property="TitleColor"
                 Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource gray200}}" />
         <Setter Property="BackgroundColor"
-                Value="Transparent" />
+                Value="{AppThemeBinding Light={StaticResource gray100}, Dark={StaticResource gray900}}" />
         <Setter Property="FontFamily"
                 Value="OpenSansRegular" />
         <Setter Property="FontSize"
@@ -306,7 +306,7 @@
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource gray900}, Dark={StaticResource white}}" />
         <Setter Property="BackgroundColor"
-                Value="Transparent" />
+                Value="{AppThemeBinding Light={StaticResource gray100}, Dark={StaticResource gray900}}" />
         <Setter Property="FontFamily"
                 Value="OpenSansRegular" />
         <Setter Property="FontSize"

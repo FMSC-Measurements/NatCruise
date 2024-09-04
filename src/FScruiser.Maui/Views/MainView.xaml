@@ -138,7 +138,7 @@
                     </HorizontalStackLayout.Resources>
                     
                     <Button Style="{StaticResource Button.MainMenu}"
-                            ImageSource="{FontImageSource Glyph={Static const:FAIcons.Gear}, FontFamily={Static const:Fonts.FAsolid}, Size=16}">
+                            ImageSource="{FontImage Glyph={Static const:FAIcons.Gear}, FontFamily={Static const:Fonts.FAsolid}, Size=16}">
                         <Button.Behaviors>
                             <tk:TouchBehavior LongPressCommand="{Binding ShowTestViewCommand}"
                                               LongPressDuration="2000"
