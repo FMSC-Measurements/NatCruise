@@ -7,6 +7,6 @@
                    AutomationProperties.Name="Blank Page"
                    AutomationProperties.HelpText="A Blank Page">
 
-    <Image Source="logs2.jpg"
+    <Image Source="contour_linesc.svg"
            Aspect="AspectFill" />
 </controls:BasePage>
