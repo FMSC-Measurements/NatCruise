@@ -3,9 +3,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
-using Android.Views;
 using System.Collections.Concurrent;
-
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
 
 namespace FScruiser.Maui;
@@ -91,6 +89,18 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
         Platform.Init(this, savedInstanceState);
+
+        //var attr = global::Android.Resource.Attribute.ColorActivatedHighlight;
+        //using var value = new TypedValue();
+        //var theme = Theme;
+        //if(theme.ResolveAttribute(attr, value, true))
+        //{
+        //    Log.WriteLine(LogPriority.Debug, "MainActivity", $"ColorActivatedHighlight: {value.Data}");
+        //}
+        //else
+        //{
+        //    Log.WriteLine(LogPriority.Debug, "MainActivity", $"ColorActivatedHighlight: not found");
+        //}
     }
 
     // required for maui essentials
