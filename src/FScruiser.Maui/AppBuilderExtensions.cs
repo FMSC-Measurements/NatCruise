@@ -1,4 +1,5 @@
-﻿using FScruiser.Maui.Data;
+﻿using CommunityToolkit.Maui;
+using FScruiser.Maui.Data;
 using FScruiser.Maui.Services;
 using FScruiser.Maui.ViewModels;
 using FScruiser.Maui.Views;
@@ -33,6 +34,7 @@ namespace FScruiser.Maui
             services.AddTransient<DatabaseUtilitiesView>();
             services.AddTransient<FixCntTallyView>();
             services.AddTransient<ImportView>();
+            services.AddTransient<LimitingDistanceView>();
             services.AddTransient<LogEditView>();
             services.AddTransient<LogsListView>();
             services.AddTransient<ManageCruisersView>();

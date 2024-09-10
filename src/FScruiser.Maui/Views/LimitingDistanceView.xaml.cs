@@ -6,7 +6,7 @@ namespace FScruiser.Maui.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LimitingDistanceView : BasePage
     {
-        public LimitingDistanceView()
+        protected LimitingDistanceView()
         {
             InitializeComponent();
 

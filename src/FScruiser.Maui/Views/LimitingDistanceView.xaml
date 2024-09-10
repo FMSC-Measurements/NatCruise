@@ -37,11 +37,6 @@
                     <Label Text="{Binding Plot.StratumCode, StringFormat='{}Stratum {0}'}" />
                 </StackLayout>
 
-                <Label HorizontalOptions="FillAndExpand"
-                       IsVisible="{Binding UseNewLimitingDistanceCalculator}"
-                       BackgroundColor="{StaticResource secondary}"
-                       Text="Using New Limiting Distance Calculations" />
-
                 <!-- Stratum Settings -->
                 <!-- this is an expandable setion with a set of three rows each with a radio button
                 the tree rows correspond to a RadioButton control in VerticalStackLayout bellow
@@ -51,9 +46,7 @@
                 
                 - 
                 -->
-                <Frame BackgroundColor="LightBlue"
-                       CornerRadius="5"
-                       Padding="0">
+                <Border StyleClass="accent">
                     <mct:Expander x:Name="_expander">
                         <mct:Expander.Triggers>
                             <DataTrigger TargetType="mct:Expander"
@@ -64,10 +57,9 @@
                             </DataTrigger>
                         </mct:Expander.Triggers>
                         <mct:Expander.Header>
-                            <controls:HeaderControl Header="{Binding StratumSettingsSummary}"
-                                                    Orientation="Horizontal"
-                                                    MinimumHeightRequest="{StaticResource minTouchableHeight}"
-                                                    Margin="5,10">
+                            <controls:HorizontialHeaderControl Header="{Binding StratumSettingsSummary}"
+                                                               MinimumHeightRequest="{StaticResource minTouchableHeight}"
+                                                               Margin="5,10">
 
                                 <Label FontFamily="FA-solid"
                                        Text="{Static const:FAIcons.ChevronDown}">
@@ -80,7 +72,7 @@
                                         </DataTrigger>
                                     </Label.Triggers>
                                 </Label>
-                            </controls:HeaderControl>
+                            </controls:HorizontialHeaderControl>
                         </mct:Expander.Header>
 
                         <VerticalStackLayout RadioButtonGroup.GroupName="mode"
@@ -143,26 +135,26 @@
                                                          AbsoluteLayout.LayoutFlags="PositionProportional"
                                                          AbsoluteLayout.LayoutBounds=".5,.5" />
                                             </AbsoluteLayout>
-                                            <StackLayout Orientation="Vertical"
-                                                         BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
-                                                         Grid.Column="1"
-                                                         IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}">
-                                                <Label Text="Stratum" />
-                                                <StackLayout Orientation="Horizontal">
+                                            <controls:VerticalHeaderControl Header="Stratum"
+                                                                            BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
+                                                                            Grid.Column="1"
+                                                                            IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}">
+                                                <HorizontalStackLayout>
                                                     <bp_ctrls:ValuePicker WidthRequest="150"
                                                                           ItemsSource="{Binding StratumOptions}"
                                                                           SelectedValue="{Binding Stratum}" />
-                                                    <StackLayout Orientation="Horizontal"
-                                                                 IsVisible="{Binding BigBAFSampleGroupOptions, Converter={StaticResource isListNotNullOrEmptyConverter}}">
-                                                        <Label Text="Use Big-BAF" />
-                                                        <Switch IsToggled="{Binding UseBigBAF}"
-                                                                x:Name="_useBigBAFSwitch" />
-                                                        <Picker ItemsSource="{Binding BigBAFSampleGroupOptions}"
-                                                                SelectedItem="{Binding BigBAFSampleGroup}"
-                                                                WidthRequest="150" />
-                                                    </StackLayout>
-                                                </StackLayout>
-                                            </StackLayout>
+                                                    <controls:HorizontialHeaderControl Header="Use Big-BAF"
+                                                                                       IsVisible="{Binding BigBAFSampleGroupOptions, Converter={StaticResource isListNotNullOrEmptyConverter}}">
+                                                        <HorizontalStackLayout>
+                                                            <Switch IsToggled="{Binding UseBigBAF}"
+                                                                    x:Name="_useBigBAFSwitch" />
+                                                            <Picker ItemsSource="{Binding BigBAFSampleGroupOptions}"
+                                                                    SelectedItem="{Binding BigBAFSampleGroup}"
+                                                                    WidthRequest="150" />
+                                                        </HorizontalStackLayout>
+                                                    </controls:HorizontialHeaderControl>
+                                                </HorizontalStackLayout>
+                                            </controls:VerticalHeaderControl>
                                         </Grid>
                                     </Frame>
                                 </ControlTemplate>
@@ -224,11 +216,10 @@
                                                          AbsoluteLayout.LayoutFlags="PositionProportional"
                                                          AbsoluteLayout.LayoutBounds=".5,.5" />
                                             </AbsoluteLayout>
-                                            <StackLayout Orientation="Vertical"
-                                                         BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
-                                                         IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}"
-                                                         Grid.Column="1">
-                                                <Label>Variable Radius Plot - BAF</Label>
+                                            <controls:VerticalHeaderControl Header="Variable Radius Plot - BAF"
+                                                                            BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
+                                                                            IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}"
+                                                                            Grid.Column="1">
                                                 <Entry Text="{Binding BAF}"
                                                        Keyboard="Numeric"
                                                        AutomationProperties.IsInAccessibleTree="True"
@@ -237,7 +228,7 @@
                                                         <mct:SelectAllTextBehavior />
                                                     </Entry.Behaviors>
                                                 </Entry>
-                                            </StackLayout>
+                                            </controls:VerticalHeaderControl>
                                         </Grid>
                                     </Frame>
                                 </ControlTemplate>
@@ -299,11 +290,10 @@
                                                          AbsoluteLayout.LayoutFlags="PositionProportional"
                                                          AbsoluteLayout.LayoutBounds=".5,.5" />
                                             </AbsoluteLayout>
-                                            <StackLayout Orientation="Vertical"
-                                                         BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
-                                                         IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}"
-                                                         Grid.Column="1">
-                                                <Label>Fixed Size Plot - FPS (1/x acre)</Label>
+                                            <controls:VerticalHeaderControl Header="Fixed Size Plot - FPS (1/x acre)"
+                                                                            BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}"
+                                                                            IsEnabled="{Binding IsChecked, Source={RelativeSource TemplatedParent}}"
+                                                                            Grid.Column="1">
                                                 <Entry Text="{Binding FPS}"
                                                        Keyboard="Numeric"
                                                        AutomationProperties.IsInAccessibleTree="True"
@@ -312,7 +302,7 @@
                                                         <mct:SelectAllTextBehavior />
                                                     </Entry.Behaviors>
                                                 </Entry>
-                                            </StackLayout>
+                                            </controls:VerticalHeaderControl>
                                         </Grid>
                                     </Frame>
                                 </ControlTemplate>
@@ -339,7 +329,7 @@
                             </RadioButton>
                         </VerticalStackLayout>
                     </mct:Expander>
-                </Frame>
+                </Border>
 
                 <!-- Fields -->
                 <!-- the order that the entries appear on the screen is significant as this is the order that
