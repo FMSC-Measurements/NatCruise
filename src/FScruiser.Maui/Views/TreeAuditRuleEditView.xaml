@@ -21,8 +21,8 @@
             </Grid.RowDefinitions>
 
             <!-- Tree Audit Rule Edit Panel -->
-            <Frame Grid.Row="0"
-                   BackgroundColor="{StaticResource uswds_data_table_row_alt}"
+            <Border Grid.Row="0"
+                   StyleClass="accent"
                    Margin="3"
                    Padding="3">
                 <ctrls:VerticalHeaderControl Header="Tree Audit Rule"
@@ -76,9 +76,9 @@
                         </ctrls:VerticalHeaderControl>
                     </Grid>
                 </ctrls:VerticalHeaderControl>
-            </Frame>
+            </Border>
 
-            <Frame Grid.Row="1"
+            <Border Grid.Row="1"
                    Margin="3"
                    Padding="3">
                 <Grid>
@@ -91,10 +91,8 @@
                            Text="Audit Rule Populations" Style="{StaticResource Label.H3}" />
 
                     <!-- Add TARS panel -->
-                    <Frame  Grid.Row="1"
-                            BackgroundColor="{StaticResource uswds_lgt_tan}"
-                            Margin="3"
-                            Padding="3">
+                    <Border  Grid.Row="1"
+                            StyleClass="accent">
                         <Grid>
 
 
@@ -148,7 +146,7 @@
                             Grid.Row="0"
                             Grid.Column="4" />-->
                         </Grid>
-                    </Frame>
+                    </Border>
 
 
                     <!-- TARs list view -->
@@ -208,7 +206,7 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </Grid>
-            </Frame>
+            </Border>
         </Grid>
     </ContentPage.Content>
 </ctrls:BasePage>

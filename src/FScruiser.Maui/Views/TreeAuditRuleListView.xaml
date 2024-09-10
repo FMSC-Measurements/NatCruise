@@ -20,9 +20,9 @@
             </Grid.RowDefinitions>
 
             <!-- Add New TAR Panel-->
-            <Frame Grid.Row="0"
+            <Border Grid.Row="0"
                    Margin="4"
-                   BackgroundColor="{StaticResource uswds_lgt_tan}">
+                   StyleClass="accent">
                 <Grid>
 
                     <Grid.ColumnDefinitions>
@@ -74,7 +74,7 @@
                             Grid.Row="0"
                             Grid.RowSpan="2" />
                 </Grid>
-            </Frame>
+            </Border>
 
             <CollectionView Grid.Row="1"
                             ItemsSource="{Binding TreeAuditRules}">
