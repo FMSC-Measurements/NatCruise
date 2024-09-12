@@ -22,6 +22,11 @@ namespace FScruiser.Maui.Views
             BindingContext = viewModel;
         }
 
+        private void RadioButton_Tapped(object sender, TappedEventArgs e)
+        {
+
+        }
+
 
         //private void _treeInOutLabel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         //{
