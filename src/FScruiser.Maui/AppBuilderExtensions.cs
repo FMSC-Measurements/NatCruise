@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using FScruiser.Maui.Data;
 using FScruiser.Maui.Services;
+using FScruiser.Maui.TestViews;
 using FScruiser.Maui.ViewModels;
 using FScruiser.Maui.Views;
 using Microsoft.Maui.LifecycleEvents;
@@ -60,7 +61,9 @@ namespace FScruiser.Maui
             services.AddTransient<UtilitiesView>();
 
 #if DEBUG
+            services.AddTransient<TestControlsViews>();
             services.AddTransient<TestDialogServiceView>();
+            services.AddTransient<TestsListView>();
 #endif
 
             //Routing.RegisterRoute("Blank", typeof(BlankView));

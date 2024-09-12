@@ -17,6 +17,7 @@ using NatCruise.Data;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using NatCruise.Services;
+using FScruiser.Maui.TestViews;
 
 namespace FScruiser.Maui.ViewModels
 {
@@ -242,7 +243,7 @@ namespace FScruiser.Maui.ViewModels
         [RelayCommand]
         public Task ShowTestView()
         {
-            return (NavigationService as MauiNavigationService)?.ShowView<TestDialogServiceView>() ?? Task.CompletedTask;
+            return (NavigationService as MauiNavigationService)?.ShowView<TestsListView>() ?? Task.CompletedTask;
         }
     }
 }

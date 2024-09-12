@@ -37,11 +37,31 @@ namespace FScruiser.Maui.Services
             return Navigation.PopAsync();
         }
 
+        public Task ShowView(Type tView, IDictionary<string, object> parameters = null, bool showModal = false)
+        {
+            if(!tView.IsAssignableTo(typeof(Page)))
+            {
+                throw new ArgumentException("tView must be a type of Page", nameof(tView));
+            }
+
+            var view = Services.GetRequiredService(tView) as Page;
+            return ShowViewInternal(view, parameters, showModal);
+        }
+
         public Task ShowView<TView>(IDictionary<string, object> parameters = null, bool showModal = false) where TView : Page
         {
-            Log?.LogInformation("Showing View {viewType}", typeof(TView).Name);
-
             var view = Services.GetRequiredService<TView>();
+            return ShowViewInternal(view, parameters, showModal);
+        }
+
+        protected Task ShowViewInternal(Page view, IDictionary<string, object> parameters = null, bool showModal = false)
+        {
+            parameters ??= new Dictionary<string, object>();
+
+            Log?.LogInformation("Showing View {viewType}", view.GetType().Name);
+            Log.LogInformation("Parameters: {parameters}",
+                (parameters.Count == 0) ? "none" : String.Join(",\r\n", parameters.Select(x => x.Key + "=" + x.Value).ToArray()));
+
             var viewModel = view.BindingContext as ViewModelBase;
 
             if (viewModel != null)

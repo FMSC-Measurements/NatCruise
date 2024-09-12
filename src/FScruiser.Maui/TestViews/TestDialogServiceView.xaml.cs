@@ -1,6 +1,6 @@
 using NatCruise.Navigation;
 
-namespace FScruiser.Maui.Views;
+namespace FScruiser.Maui.TestViews;
 
 public partial class TestDialogServiceView : ContentPage
 {
