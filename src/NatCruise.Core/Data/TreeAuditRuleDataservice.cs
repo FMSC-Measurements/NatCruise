@@ -48,18 +48,18 @@ namespace NatCruise.Data
             });
         }
 
-        public IEnumerable<TreeAuditRuleSelector> GetRuleSelectors()
-        {
-            return Database.From<TreeAuditRuleSelector>()
-                .Where("CruiseID = @p1")
-                .Query(CruiseID).ToArray();
-        }
+        //public IEnumerable<TreeAuditRuleSelector> GetRuleSelectors()
+        //{
+        //    return Database.From<TreeAuditRuleSelector>()
+        //        .Where("CruiseID = @p1")
+        //        .Query(CruiseID).ToArray();
+        //}
 
         public IEnumerable<TreeAuditRuleSelector> GetRuleSelectors(string tarID)
         {
             return Database.From<TreeAuditRuleSelector>()
-                .Where("TreeAuditRuleID = @p1")
-                .Query(tarID).ToArray();
+                .Where("TreeAuditRuleID = @p1 AND CruiseID = @p2")
+                .Query(tarID, CruiseID).ToArray();
         }
 
         public void DeleteRuleSelector(TreeAuditRuleSelector tars)
@@ -67,6 +67,7 @@ namespace NatCruise.Data
             Database.Execute2(
 @"DELETE FROM TreeAuditRuleSelector
 WHERE TreeAuditRuleID = @TreeAuditRuleID
+AND CruiseID = @CruiseID 
 AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '')
 AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '')
 AND ifnull(LiveDead, '') = ifnull(@LiveDead, '');",
@@ -125,7 +126,7 @@ AND ifnull(LiveDead, '') = ifnull(@LiveDead, '');",
         public IEnumerable<TreeAuditRule> GetTreeAuditRules(string species, string prod, string livedead)
         {
             return Database.From<TreeAuditRule>()
-                .Join("TreeAuditRuleSelector", "USING (TreeAuditRuleID)")
+                .Join("TreeAuditRuleSelector", "USING (TreeAuditRuleID, CruiseID)")
                 .Where("CruiseID = @CruiseID AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '') AND ifnull(LiveDead, '') = ifnull(@LiveDead, '')")
                 .Query2(new
                 {
@@ -150,7 +151,7 @@ AND ifnull(LiveDead, '') = ifnull(@LiveDead, '');",
 
         public void DeleteTreeAuditRule(TreeAuditRule tar)
         {
-            Database.Execute("DELETE FROM TreeAuditRule WHERE TreeAuditRuleID = @p1;", tar.TreeAuditRuleID);
+            Database.Execute("DELETE FROM TreeAuditRule WHERE TreeAuditRuleID = @p1 AND CruiseID = @p2;", tar.TreeAuditRuleID, CruiseID);
         }
 
         public void UpsertTreeAuditRule(TreeAuditRule tar)
@@ -173,7 +174,7 @@ AND ifnull(LiveDead, '') = ifnull(@LiveDead, '');",
     @Max,
     @Description
 )
-ON CONFLICT (TreeAuditRuleID) DO
+ON CONFLICT (TreeAuditRuleID, CruiseID) DO
 UPDATE SET
     Field = @Field,
     Min = @Min,
