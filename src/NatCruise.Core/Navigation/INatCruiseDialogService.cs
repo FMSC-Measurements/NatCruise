@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace NatCruise.Navigation
@@ -12,6 +13,8 @@ namespace NatCruise.Navigation
         Task<AskTreeCountResult> AskTreeCount(int? defaultTreeCount);
 
         Task<string> AskValueAsync(string prompt, params string[] values);
+
+        Task<TValue> AskValueAsync<TValue>(string prompt, params TValue[] values);
 
         Task<bool> AskYesNoAsync(string message, string caption, bool defaultNo = false);
 

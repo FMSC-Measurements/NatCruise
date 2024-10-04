@@ -20,7 +20,7 @@ namespace FScruiser.XF
         bool AskCancelResult { get; set; }
         string AskCruiserResult { get; set; }
         public int? AskKPIResult { get; set; }
-        public string AskValueResult { get; set; }
+        public object AskValueResult { get; set; }
         public bool AskYesNoResult { get; set; }
 
         public Task<bool> AskCancelAsync(string message, string caption, bool defaultCancel)
@@ -44,7 +44,13 @@ namespace FScruiser.XF
         public Task<string> AskValueAsync(string prompt, params string[] values)
         {
             Output.WriteLine($"AskValueAsync::prompt={prompt}::values={string.Join(',', values)}");
-            return Task.FromResult(AskValueResult);
+            return Task.FromResult(AskValueResult as string);
+        }
+
+        public Task<TValue> AskValueAsync<TValue>(string prompt, params object[] values) where TValue : class
+        {
+            Output.WriteLine($"AskValueAsync::prompt={prompt}::values={string.Join(',', values)}");
+            return Task.FromResult(AskValueResult as TValue);
         }
 
         public Task<bool> AskYesNoAsync(string message, string caption, bool defaultNo = false)

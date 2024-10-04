@@ -146,6 +146,13 @@ namespace FScruiser.XF.Services
             return result;
         }
 
+        public async Task<TValue> AskValueAsync<TValue>(string prompt, params TValue[] values)
+        {
+            var value = await GetCurrentPage().DisplayActionSheet(prompt, "Cancel", null, values.Select(x => x.ToString()).ToArray());
+            if (value == "Cancel") { return default; }
+            return values.First(x => x.ToString() == value);
+        }
+
         public Task<bool> AskYesNoAsync(string message, string caption, bool defaultNo = false)
         {
             return PageDialogService.DisplayAlertAsync(caption, message, "Yes", "No");

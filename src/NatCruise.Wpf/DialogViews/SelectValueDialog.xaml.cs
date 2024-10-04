@@ -1,6 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,32 +15,31 @@ namespace NatCruise.Wpf.DialogViews
     /// </summary>
     public partial class SelectValueDialog : CustomDialog
     {
-        private readonly TaskCompletionSource<string> tcs = new();
+        private readonly TaskCompletionSource<object> tcs = new();
 
         public static readonly DependencyProperty SelectedValueProperty
              = DependencyProperty.Register(nameof(SelectedValue),
-        typeof(string),
+        typeof(object),
         typeof(SelectValueDialog),
         new PropertyMetadata(default(string)));
 
-        public string SelectedValue
+        public object SelectedValue
         {
-            get => (string)GetValue(SelectedValueProperty);
+            get => GetValue(SelectedValueProperty);
             set => SetValue(SelectedValueProperty, value);
         }
 
         public static readonly DependencyProperty ValuesProperty
             = DependencyProperty.Register(nameof(Values),
-                typeof(IEnumerable<string>),
+                typeof(IList),
                 typeof(SelectValueDialog),
-                new PropertyMetadata(default(IEnumerable<string>)));
+                new PropertyMetadata(default(IList)));
 
-        public IEnumerable<string> Values
+        public IList Values
         {
-            get => (IEnumerable<string>)GetValue(ValuesProperty);
+            get => (IList)GetValue(ValuesProperty);
             set => SetValue(ValuesProperty, value);
         }
-
 
         public SelectValueDialog() : this(null)
         { }
@@ -52,7 +52,7 @@ namespace NatCruise.Wpf.DialogViews
             InitializeComponent();
         }
 
-        public async Task<string> WaitForResult()
+        public async Task<object> WaitForResult()
         {
             //await Dispatcher.BeginInvoke(new Action(() =>
             //{
@@ -64,20 +64,18 @@ namespace NatCruise.Wpf.DialogViews
             return await tcs.Task.ConfigureAwait(false);
         }
 
-
         private void OnButtonClick(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             if (button is null) return;
 
-            if(object.ReferenceEquals(button, _cancelButton))
+            if (object.ReferenceEquals(button, _cancelButton))
             {
                 tcs.TrySetResult(null);
             }
-
             else
             {
-                var value = button.Content as string;
+                var value = button.Content;
 
                 tcs.TrySetResult(value);
             }
