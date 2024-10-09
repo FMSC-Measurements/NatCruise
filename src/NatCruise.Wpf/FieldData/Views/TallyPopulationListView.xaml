@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mah_ctrls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:NatCruise.Wpf.FieldData.Views"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -57,19 +58,91 @@
                   MaxWidth="460"
                   d:IsExpanded="True"
                   x:Name="_treeCountEditExpander">
-            <Grid>
+            <Grid Width="460">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                <TabControl x:Name="_sidePanelTabControl">
-                    <TabItem Header="Tallies">
-                        <local:TallyLedgerListView DataContext="{Binding TallyLedgerListViewModel}" />
-                    </TabItem>
+                <WrapPanel Grid.Row="0"
+                           Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                           DataContext="{Binding SelectedTallyPopulation}">
+                    <WrapPanel.Resources>
+
+                        <Style TargetType="mah_ctrls:MetroHeader"
+                               BasedOn="{StaticResource MahApps.Styles.MetroHeader}">
+                            <Setter Property="Orientation"
+                                    Value="Horizontal" />
+                            <Setter Property="Margin"
+                                    Value="5" />
+                            <Setter Property="mah_ctrls:HeaderedControlHelper.HeaderVerticalContentAlignment"
+                                    Value="Center" />
+                            <!--<Setter Property="VerticalContentAlignment"
+                    Value="Stretch" />
+            <Setter Property="Padding"
+                    Value="5" />-->
+                        </Style>
+
+                        <Style TargetType="Label"
+                               BasedOn="{StaticResource MahApps.Styles.Label}">
+                            <Setter Property="VerticalAlignment"
+                                    Value="Stretch" />
+                            <Setter Property="VerticalContentAlignment"
+                                    Value="Center" />
+                            <Setter Property="Margin"
+                                    Value="5" />
+                            <Setter Property="Background"
+                                    Value="{StaticResource MahApps.Brushes.Accent4}" />
+                        </Style>
+                    </WrapPanel.Resources>
+
+                    <mah_ctrls:MetroHeader Header="Cutting Unit">
+                        <Label Content="{Binding CuttingUnitCode}"
+                               d:Content="00" />
+                    </mah_ctrls:MetroHeader>
+
+                    <mah_ctrls:MetroHeader Header="Stratum">
+                        <Label Content="{Binding StratumCode}"
+                               d:Content="00" />
+                    </mah_ctrls:MetroHeader>
+
+                    <mah_ctrls:MetroHeader Header="Sample Group">
+                        <Label Content="{Binding SampleGroupCode}"
+                               d:Content="00" />
+                    </mah_ctrls:MetroHeader>
+
+                    <mah_ctrls:MetroHeader Header="Species"
+                                           mah_ctrls:VisibilityHelper.IsVisible="{Binding SpeciesCode, Converter={StaticResource NotNullConverter}}">
+                        <Label Content="{Binding SpeciesCode}"
+                               d:Content="00" />
+                    </mah_ctrls:MetroHeader>
+
+                    <mah_ctrls:MetroHeader Header="Live/Dead"
+                                           mah_ctrls:VisibilityHelper.IsVisible="{Binding LiveDead, Converter={StaticResource NotNullConverter}}">
+                        <Label Content="{Binding LiveDead}"
+                               d:Content="00" />
+                    </mah_ctrls:MetroHeader>
+
+                </WrapPanel>
+
+                <TabControl Grid.Row="1" x:Name="_sidePanelTabControl">
+                    
                     <TabItem Header="Edit Tree Count"
                              Visibility="{Binding SelectedTallyPopulation.Method, Converter={StaticResource IsNotPlotMethodVisibilityConverter}}">
                         <local:TreeCountEditView DataContext="{Binding TreeCountEditViewModel}"  />
                     </TabItem>
 
+                    <TabItem Header="{iconPack:MaterialDesign Kind=History}"
+                             mah_ctrls:HeaderedControlHelper.HeaderHorizontalContentAlignment="Center"
+                             mah_ctrls:HeaderedControlHelper.HeaderVerticalContentAlignment="Center"
+                             mah_ctrls:HeaderedControlHelper.HeaderFontSize="30">
+                        
+
+                        <local:TallyLedgerListView DataContext="{Binding TallyLedgerListViewModel}" />
+                    </TabItem>
+
                 </TabControl>
-                <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                <Grid Grid.Row="0" Grid.RowSpan="2" Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                       mah_ctrls:VisibilityHelper.IsHidden="{Binding SelectedTallyPopulation, Converter={StaticResource NotNullConverter}}"
                       d:Visibility="Hidden">
                     <Label Content="No Tally Population Selected"
