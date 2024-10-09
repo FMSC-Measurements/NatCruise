@@ -21,6 +21,13 @@
     <Style TargetType="Border"
            BasedOn="{StaticResource BorderBase}" />
 
+    <Style TargetType="Border"
+           Class="accent"
+           BasedOn="{StaticResource BorderBase}">
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource accent}, Dark={StaticResource usda_blue}}" />
+    </Style>
+
 
 
     <Style TargetType="Frame"

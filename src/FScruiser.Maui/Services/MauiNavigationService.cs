@@ -32,19 +32,36 @@ namespace FScruiser.Maui.Services
 
         public Task GoBackAsync()
         {
-            Log.LogMethodCall();
+            Log.TraceMethodCall();
 
             return Navigation.PopAsync();
+        }
 
-            //return Shell.Navigation.PopAsync();
-            //return Shell.GoToAsync("..");
+        public Task ShowView(Type tView, IDictionary<string, object> parameters = null, bool showModal = false)
+        {
+            if(!tView.IsAssignableTo(typeof(Page)))
+            {
+                throw new ArgumentException("tView must be a type of Page", nameof(tView));
+            }
+
+            var view = Services.GetRequiredService(tView) as Page;
+            return ShowViewInternal(view, parameters, showModal);
         }
 
         public Task ShowView<TView>(IDictionary<string, object> parameters = null, bool showModal = false) where TView : Page
         {
-            Log?.LogInformation("Showing View {viewType}", typeof(TView).Name);
-
             var view = Services.GetRequiredService<TView>();
+            return ShowViewInternal(view, parameters, showModal);
+        }
+
+        protected Task ShowViewInternal(Page view, IDictionary<string, object> parameters = null, bool showModal = false)
+        {
+            parameters ??= new Dictionary<string, object>();
+
+            Log?.LogInformation("Showing View {viewType}", view.GetType().Name);
+            Log.LogInformation("Parameters: {parameters}",
+                (parameters.Count == 0) ? "none" : String.Join(",\r\n", parameters.Select(x => x.Key + "=" + x.Value).ToArray()));
+
             var viewModel = view.BindingContext as ViewModelBase;
 
             if (viewModel != null)
@@ -59,7 +76,9 @@ namespace FScruiser.Maui.Services
             else
             {
                 var mainView = MainView;
-                if(mainView is FlyoutPage fp)
+                if (mainView is FlyoutPage fp && fp is IFlyoutPageController fpc
+                    && fpc.CanChangeIsPresented
+                    && !fpc.ShouldShowSplitMode)
                 {
                     fp.IsPresented = false;
                 }
@@ -70,12 +89,12 @@ namespace FScruiser.Maui.Services
 
         public Task ShowAbout()
         {
-            return ShowView<AboutView>(showModal: true);
+            return ShowView<AboutView>();
         }
 
         public Task ShowBlank()
         {
-            Log.LogMethodCall();
+            Log.TraceMethodCall();
 
             return Navigation.PopToRootAsync();
 
@@ -86,7 +105,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowCruiseLandingLayout()
         {
-            Log.LogMethodCall();
+            Log.TraceMethodCall();
 
             return Navigation.PopToRootAsync();
 
@@ -110,28 +129,25 @@ namespace FScruiser.Maui.Services
         [Obsolete]
         public Task ShowCuttingUnitList()
         {
-            Log.LogMethodCall();
+            Log.TraceMethodCall();
 
             throw new NotImplementedException();
         }
 
         public Task ShowDatabaseUtilities()
         {
-            return ShowView<DatabaseUtilitiesView>(showModal:true);
+            return ShowView<DatabaseUtilitiesView>(showModal: true);
         }
 
         [Obsolete]
         public Task ShowFeedback()
         {
-            Log.LogMethodCall();
-
             throw new NotImplementedException();
         }
 
+        // not used on mobile although maybe we could 
         public Task ShowFieldData(string cuttingUnit = null)
         {
-            Log.LogMethodCall();
-
             throw new NotImplementedException();
         }
 
@@ -147,8 +163,6 @@ namespace FScruiser.Maui.Services
 
         public Task ShowImport()
         {
-            Log.LogMethodCall();
-
             return ShowView<ImportView>();
         }
 
@@ -175,12 +189,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowManageCruisers()
         {
-            Log.LogMethodCall();
-
             return ShowView<ManageCruisersView>();
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("//Cruisers");
         }
 
         public Task ShowPlotEdit(string plotID)
@@ -200,10 +209,8 @@ namespace FScruiser.Maui.Services
 
         public Task ShowPlotTreeList(string unitCode)
         {
-            Log.LogMethodCall();
-
+            // TODO implement plot trees page or consolidate into single trees page
             throw new NotImplementedException();
-            return Shell.GoToAsync("//PlotTreeList?" + $"{NavParams.UNIT}={unitCode}");
         }
 
         public Task ShowPrivacyPolicy()
@@ -229,10 +236,7 @@ namespace FScruiser.Maui.Services
         [Obsolete]
         public Task ShowSampleStateManagment()
         {
-            Log.LogMethodCall();
-
             throw new NotImplementedException();
-            return Shell.GoToAsync("SampleStateManagment");
         }
 
         public Task ShowSettings()
@@ -247,10 +251,8 @@ namespace FScruiser.Maui.Services
 
         public Task ShowStratumInfo(string stratumCode)
         {
-            Log.LogMethodCall();
-
+            // on mobile we don't have a full details view for stratum
             throw new NotImplementedException();
-            return Shell.GoToAsync("StratumInfo?" + $"{NavParams.STRATUM}={stratumCode}");
         }
 
         public Task ShowSubpopulations(string stratumCode, string sampleGroupCode)
@@ -260,7 +262,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowTally(string unitCode)
         {
-            var navParams = new Dictionary<string, object>() { {NavParams.UNIT, unitCode } };
+            var navParams = new Dictionary<string, object>() { { NavParams.UNIT, unitCode } };
             return ShowView<TallyView>(navParams);
         }
 
@@ -302,27 +304,14 @@ namespace FScruiser.Maui.Services
             return ShowView<TreeAuditRuleListView>();
         }
 
-        public Task ShowTreeCountEdit(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead)
-        {
-            Log.LogMethodCall();
-
-            var parameters = $"{NavParams.UNIT}={unitCode}&{NavParams.STRATUM}={stratumCode}" +
-                $"&{NavParams.SAMPLE_GROUP}={sampleGroupCode}" +
-                $"&{NavParams.SPECIES}={species}" +
-                $"&{NavParams.LIVE_DEAD}={liveDead}";
-
-            throw new NotImplementedException();
-            return Shell.GoToAsync("TreeCountEdit?" + parameters);
-        }
-
         public Task ShowTreeEdit(string treeID)
         {
-            return ShowView<TreeEditView>(new Dictionary<string, object>() { { NavParams.TreeID, treeID} });
+            return ShowView<TreeEditView>(new Dictionary<string, object>() { { NavParams.TreeID, treeID } });
         }
 
         public Task ShowTreeErrorEdit(string treeID, string treeAuditRuleID)
         {
-            Log.LogMethodCall();
+            Log.TraceMethodCall();
 
             throw new NotImplementedException();
             return Shell.GoToAsync("TreeErrorEdit?" + $"{NavParams.TreeID}={treeID}&{NavParams.TreeAuditRuleID}={treeAuditRuleID}");
@@ -330,12 +319,12 @@ namespace FScruiser.Maui.Services
 
         public Task ShowTreeList(string unitCode)
         {
-            return ShowView<TreeListPage>(new Dictionary<string, object>() {{ NavParams.UNIT, unitCode }});
+            return ShowView<TreeListPage>(new Dictionary<string, object>() { { NavParams.UNIT, unitCode } });
         }
 
         public Task ShowUserAgreement()
         {
-            Log.LogMethodCall();
+            Log.TraceMethodCall();
 
             throw new NotImplementedException();
             return Shell.GoToAsync("//UserAgreement");
@@ -343,7 +332,7 @@ namespace FScruiser.Maui.Services
 
         public Task ShowUtilities()
         {
-            return ShowView<UtilitiesView>(showModal: true);
+            return ShowView<UtilitiesView>();
         }
     }
 }

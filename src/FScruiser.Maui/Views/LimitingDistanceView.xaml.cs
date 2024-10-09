@@ -6,7 +6,7 @@ namespace FScruiser.Maui.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LimitingDistanceView : BasePage
     {
-        public LimitingDistanceView()
+        protected LimitingDistanceView()
         {
             InitializeComponent();
 
@@ -20,6 +20,11 @@ namespace FScruiser.Maui.Views
         public LimitingDistanceView(LimitingDistanceViewModel viewModel) : this()
         {
             BindingContext = viewModel;
+        }
+
+        private void RadioButton_Tapped(object sender, TappedEventArgs e)
+        {
+
         }
 
 

@@ -80,7 +80,7 @@ namespace NatCruise.MVVM
             }
         }
 
-        public virtual void Initialize(IDictionary<string, object> parameters)
+        public void Initialize(IDictionary<string, object> parameters)
         {
             if (_isFirstNavigatedTo)
             {

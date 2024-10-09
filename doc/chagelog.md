@@ -1,3 +1,13 @@
+# Version 3.1.14
+## NatCruise
+### Fixes
+   - Fix user unable to change or clear UOM if it is set at the sample group level if cruise method is not FixCNT. 
+Also added  design check if UOM is set at the sample group level and the cruise method is not FixCNT. 
+   - Fix tally populations page not updating after adding tree counts
+
+### Enhancements
+ - Add ability to move plots between units. Moving plots containing tree between units will need to be done by measurement specialist.
+
 # Version 3.1.13
 
 ## NatCruise

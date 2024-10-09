@@ -93,11 +93,8 @@ namespace NatCruise.Wpf.Controls
             var maxLength = textbox.MaxLength;
             if(maxLength > 0 && text.Length > maxLength) { return; }
 
-            // test new text value against our Regex mask
-            var match = Regex.Match(text, mask, RegexOptions.None, TimeSpan.FromMilliseconds(100));
-            // if there is a match and all the text is part of the match
-            // it might be possible to have multiple matches but we aren't allowing that
-            if (match != null && match.Length == text.Length)
+            
+            if (IsInputValid(text, mask))
             {
                 textbox.SetValue(TextBox.TextProperty, text);
 
@@ -109,6 +106,22 @@ namespace NatCruise.Wpf.Controls
             else
             {
                 System.Media.SystemSounds.Beep.Play();
+            }
+        }
+
+        private static bool IsInputValid(string text, string mask)
+        {
+            try
+            {
+                // test new text value against our Regex mask
+                var match = Regex.Match(text, mask, RegexOptions.None, TimeSpan.FromMilliseconds(100));
+                // if there is a match and all the text is part of the match
+                // it might be possible to have multiple matches but we aren't allowing that
+                return match != null && match.Length == text.Length;
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return true;
             }
         }
 
@@ -129,11 +142,8 @@ namespace NatCruise.Wpf.Controls
 
                 var mask = GetRegexMask(textbox);
                 if (mask == null) return;
-                // test new text value against our Regex mask
-                var match = Regex.Match(text, mask, RegexOptions.None, TimeSpan.FromMilliseconds(100));
-                // if there is a match and all the text is part of the match
-                // it might be possible to have multiple matches but we aren't allowing that
-                if (match != null && match.Length == text.Length)
+
+                if (IsInputValid(text, mask))
                 {
                     textbox.SetValue(TextBox.TextProperty, text);
 

@@ -72,12 +72,31 @@ namespace NatCruise.Wpf.Services
 
             await window.ShowMetroDialogAsync(dialog, settings);
 
-            var result = await dialog.WaitForResult();
+            var result = await dialog.WaitForResult() as string;
 
             await window.HideMetroDialogAsync(dialog, settings);
 
 
             return result;
+        }
+
+        public async Task<TValue> AskValueAsync<TValue>(string prompt, params TValue[] values)
+        {
+            var window = MainWindow;
+            var settings = window.MetroDialogOptions;
+            var dialog = new SelectValueDialog(window, settings)
+            {
+                Title = prompt,
+                Values = values,
+            };
+
+            await window.ShowMetroDialogAsync(dialog, settings);
+
+            var result = await dialog.WaitForResult();
+
+            await window.HideMetroDialogAsync(dialog, settings);
+
+            return (TValue)result;
         }
 
         public Task<bool> AskYesNoAsync(string message, string caption, bool defaultNo = false)

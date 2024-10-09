@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrls="clr-namespace:FScruiser.Maui.Controls"
+             xmlns:const="clr-namespace:FScruiser.Maui.Constants"
+             x:Class="FScruiser.Maui.TestViews.TestControlsViews"
+             Title="TestControlsViews">
+    <VerticalStackLayout>
+        <Label Text="Radio Buttons" />
+        <Label Text="{Binding SelectedRadioButtonValue}" />
+        <VerticalStackLayout x:Name="_rbGroupHost" RadioButtonGroup.GroupName="radioButtonGroup1" RadioButtonGroup.SelectedValue="{Binding SelectedRadioButtonValue}"
+                             BackgroundColor="Green">
+            <VerticalStackLayout.Resources>
+                <ControlTemplate x:Key="RadioButtonTemplate">
+                    <HorizontalStackLayout BackgroundColor="Red">
+                        <ctrls:RadioButtonIndicator IsChecked="{TemplateBinding IsChecked}" />
+                        <Label Text="Option 3" />
+                    </HorizontalStackLayout>
+                </ControlTemplate>
+            </VerticalStackLayout.Resources>
+
+            <RadioButton Content="Option 1"
+                         BackgroundColor="Blue"
+                         HorizontalOptions="Fill" />
+            <RadioButton Value="Option 2">
+                <RadioButton.Content>
+                    <Image Source="{FontImage FontFamily={Static const:Fonts.FAsolid}, Glyph={Static const:FAIcons.Tree}}" />
+                </RadioButton.Content>
+            </RadioButton>
+
+            
+            
+            <RadioButton ControlTemplate="{StaticResource RadioButtonTemplate}" />
+
+            <HorizontalStackLayout>
+                <RadioButton Value="Option 4"
+                             RadioButtonGroup.GroupName="radioButtonGroup1" />
+                <Border>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="RadioButton_Tapped" />
+                    </Border.GestureRecognizers>
+                    
+                    <Label Text="Option 4" />
+                </Border>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

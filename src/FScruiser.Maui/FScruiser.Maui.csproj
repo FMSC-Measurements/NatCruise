@@ -32,8 +32,8 @@
 		<ApplicationId>gov.usda.fs.fscruiser</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>$(Version)</ApplicationDisplayVersion>
+		<ApplicationVersion>$(AndroidAppVersionCode)</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
@@ -47,7 +47,7 @@
 		<!-- App Icon -->
 		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#345E36" />-->
 		<!-- Using composed icon see: https://learn.microsoft.com/en-us/dotnet/maui/user-interface/images/app-icons?view=net-maui-8.0&tabs=windows#composed-icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\fscruiser48dp.png" Color="#345E36" ForegroundScale="0.65" />
+		<MauiIcon Include="Resources\AppIcon\appicon.png" ForegroundFile="Resources\AppIcon\appicon_fg.png" Color="#345E36" ForegroundScale="1" />
 				  <!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\fscruisersplash48dp.png" Color="#345E36" />
 
@@ -63,6 +63,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <!--<None Remove="Platforms\Android\Resources\values\styles.xml" />-->
 	  <None Remove="Resources\AppIcon\fscruiser48dp.png" />
 	</ItemGroup>
 

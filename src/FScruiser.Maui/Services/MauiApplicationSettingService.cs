@@ -68,5 +68,14 @@ namespace FScruiser.Maui.Services
 
         public bool IsSuperuserMode { get => false; set => throw new NotImplementedException(); }
 
+        public bool IsDarkModeEnabled => AppInfo.Current.RequestedTheme == AppTheme.Dark;
+
+        public void ToggleDarkMode()
+        {
+            var app = Application.Current;
+
+            var currentTheme = app.RequestedTheme;
+            app.UserAppTheme = (currentTheme == AppTheme.Dark) ? AppTheme.Light : AppTheme.Dark;
+        }
     }
 }

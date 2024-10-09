@@ -24,7 +24,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Frame Grid.Row="0"
+            <Border Grid.Row="0"
                    BackgroundColor="{StaticResource uswds_lgt_tan}"
                    Margin="4">
                 <HorizontalStackLayout HorizontalOptions="End"
@@ -42,7 +42,7 @@
                             AbsoluteLayout.LayoutBounds="1,0"
                             AbsoluteLayout.LayoutFlags="PositionProportional" />
                 </HorizontalStackLayout>
-            </Frame>
+            </Border>
 
             <CollectionView Grid.Row="1"
                             ItemsSource="{Binding Subpopulations}">
@@ -63,7 +63,7 @@
                                            BackgroundColor="Red" />
                             </SwipeView.LeftItems>
 
-                            <Frame Margin="4">
+                            <Border Margin="4">
                                 <AbsoluteLayout>
                                     <VerticalStackLayout
                                                  Margin="13,7,50,50"
@@ -82,7 +82,7 @@
                                             AutomationProperties.IsInAccessibleTree="True"
                                             AutomationProperties.Name="Show Actions Item" />
                                 </AbsoluteLayout>
-                            </Frame>
+                            </Border>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

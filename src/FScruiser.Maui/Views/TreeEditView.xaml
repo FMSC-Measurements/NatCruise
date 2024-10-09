@@ -11,7 +11,6 @@
                 xmlns:bp_ctrls="clr-namespace:Backpack.Maui.Controls;assembly=Backpack.Maui"
                 SemanticProperties.Description="Tree Edit Page"
                 Title="{Binding TreeNumber, StringFormat='{}Tree Number {0}'}"
-                BackgroundColor="White"
                 TreeNumber="{Binding TreeNumber}">
     <ctrls:BasePage.ToolbarItems>
         <ToolbarItem Text="Logs"
@@ -84,83 +83,64 @@
                 </Grid.Resources>
 
                 <!--Tree Number-->
-                <HorizontalStackLayout Grid.Row="0"
-                                       Grid.Column="0">
-
-                    <Label Text="Tree #"
-                           AutomationProperties.IsInAccessibleTree="False" />
+                <ctrls:HorizontialHeaderControl Grid.Row="0"
+                                                Grid.Column="0"
+                                                Header="Tree #">
                     <Entry x:Name="_treeNumberEntry"
-                           AutomationProperties.IsInAccessibleTree="True"
-                           AutomationProperties.Name="Tree Number"
                            Keyboard="Numeric">
                         <Entry.Behaviors>
                             <tk:SelectAllTextBehavior />
                         </Entry.Behaviors>
                     </Entry>
 
-                </HorizontalStackLayout>
+                </ctrls:HorizontialHeaderControl>
 
                 <!--Stratum-->
-                <HorizontalStackLayout Grid.Row="0"
-                                       Grid.Column="1">
+                <ctrls:HorizontialHeaderControl Grid.Row="0"
+                                                Grid.Column="1"
+                                                Header="Stratum">
 
-                    <Label Text="Stratum"
-                           AutomationProperties.IsInAccessibleTree="False" />
                     <bp_ctrls:ValuePicker x:Name="_stratumCodeEntry"
                                           SelectedValue="{Binding StratumCode}"
                                           ItemsSource="{Binding StratumCodes}"
-                                          Title="Stratum"
-                                          AutomationProperties.IsInAccessibleTree="True"
-                                          AutomationProperties.Name="Stratum">
+                                          Title="Stratum">
                     </bp_ctrls:ValuePicker>
-
-                </HorizontalStackLayout>
+                </ctrls:HorizontialHeaderControl>
 
                 <!--Sample Group-->
-                <HorizontalStackLayout BackgroundColor="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}"
-                                       Grid.Row="0"
-                                       Grid.Column="2">
+                <ctrls:HorizontialHeaderControl BackgroundColor="{Binding HasSampleGroupError, Converter={StaticResource hasErrorConverter}}"
+                                                Grid.Row="0"
+                                                Grid.Column="2"
+                                                Header="Sample Group">
 
-                    <Label Text="Sample Group"
-                           AutomationProperties.IsInAccessibleTree="False" />
                     <bp_ctrls:ValuePicker x:Name="_sampleGroupEntry"
                                           SelectedValue="{Binding SampleGroupCode}"
                                           ItemsSource="{Binding SampleGroupCodes}"
-                                          Title="Sample Group"
-                                          AutomationProperties.IsInAccessibleTree="True"
-                                          AutomationProperties.Name="Sample Group">
+                                          Title="Sample Group">
                     </bp_ctrls:ValuePicker>
-
-                </HorizontalStackLayout>
+                </ctrls:HorizontialHeaderControl>
 
                 <!--Species-->
-                <HorizontalStackLayout BackgroundColor="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}"
-                                       Grid.Row="0"
-                                       Grid.Column="3">
-
-                    <Label Text="Species"
-                           AutomationProperties.IsInAccessibleTree="False" />
+                <ctrls:HorizontialHeaderControl BackgroundColor="{Binding HasSpeciesError, Converter={StaticResource hasErrorConverter}}"
+                                                Grid.Row="0"
+                                                Grid.Column="3"
+                                                Header="Species">
                     <bp_ctrls:ValuePicker x:Name="_speciesEntry"
                                           SelectedValue="{Binding SpeciesCode}"
                                           ItemsSource="{Binding SpeciesOptions}"
-                                          Title="Species"
-                                          AutomationProperties.IsInAccessibleTree="True"
-                                          AutomationProperties.Name="Species">
+                                          Title="Species">
                     </bp_ctrls:ValuePicker>
 
-                </HorizontalStackLayout>
+                </ctrls:HorizontialHeaderControl>
 
                 <!--Live Dead-->
-                <HorizontalStackLayout Grid.Row="1"
-                                       Grid.Column="0">
+                <ctrls:HorizontialHeaderControl Grid.Row="1"
+                                                Grid.Column="0"
+                                                Header="Live Dead">
 
-                    <Label Text="Live/Dead"
-                           AutomationProperties.IsInAccessibleTree="False" />
                     <bp_ctrls:ValuePicker x:Name="_liveDeadPicker"
                                           SelectedValue="{Binding LiveDead}"
-                                          Title="Live Dead"
-                                          AutomationProperties.IsInAccessibleTree="True"
-                                          AutomationProperties.Name="Live Dead">
+                                          Title="Live Dead">
                         <bp_ctrls:ValuePicker.ItemsSource>
                             <Array Type="{x:Type x:String}">
                                 <x:String>L</x:String>
@@ -169,83 +149,72 @@
                         </bp_ctrls:ValuePicker.ItemsSource>
                     </bp_ctrls:ValuePicker>
 
-                </HorizontalStackLayout>
+                </ctrls:HorizontialHeaderControl>
 
                 <!--Initials-->
-                <HorizontalStackLayout Grid.Row="1"
-                                       Grid.Column="1"
-                                       IsVisible="{Binding Cruisers, Converter={StaticResource isListNullOrEmptyConverter}}">
-                    <Label Text="Initials"
-                           AutomationProperties.IsInAccessibleTree="False" />
+                <ctrls:HorizontialHeaderControl Grid.Row="1"
+                                                Grid.Column="1"
+                                                IsVisible="{Binding Cruisers, Converter={StaticResource isListNullOrEmptyConverter}}"
+                                                Header="Initials">
+
                     <Entry x:Name="_initialsEntry"
                            Text="{Binding Initials}"
-                           Keyboard="Default"
-                           AutomationProperties.IsInAccessibleTree="True"
-                           AutomationProperties.Name="Initialss" />
-                </HorizontalStackLayout>
+                           Keyboard="Default" />
+                </ctrls:HorizontialHeaderControl>
 
-                <HorizontalStackLayout Grid.Row="1"
-                                       Grid.Column="1"
-                                       IsVisible="{Binding Cruisers, Converter={StaticResource isListNotNullOrEmptyConverter}}">
-                    <Label Text="Initials"
-                           AutomationProperties.IsInAccessibleTree="False" />
+                <ctrls:HorizontialHeaderControl Grid.Row="1"
+                                                Grid.Column="1"
+                                                IsVisible="{Binding Cruisers, Converter={StaticResource isListNotNullOrEmptyConverter}}"
+                                                Header="Initials">
+
                     <bp_ctrls:ValuePicker x:Name="_initialsPicker"
                                           SelectedValue="{Binding Initials}"
                                           ItemsSource="{Binding Cruisers}"
-                                          Title="Initials"
-                                          AutomationProperties.IsInAccessibleTree="True"
-                                          AutomationProperties.Name="Initials" />
-                </HorizontalStackLayout>
+                                          Title="Initials" />
+                </ctrls:HorizontialHeaderControl>
 
 
 
                 <!--Count Or Measure-->
-                <HorizontalStackLayout Grid.Row="1"
-                                       Grid.Column="2">
-                    <Label Text="Count/Measure"
-                           AutomationProperties.IsInAccessibleTree="False" />
+                <ctrls:HorizontialHeaderControl Grid.Row="1"
+                                                Grid.Column="2"
+                                                Header="Count or Measure">
+
                     <Picker WidthRequest="60"
                             HeightRequest="{StaticResource minTouchableHeight}"
                             SelectedItem="{Binding CountOrMeasure}"
                             ItemsSource="{Binding CountOrMeasureOptions}"
-                            Title="Count or Measure"
-                            AutomationProperties.IsInAccessibleTree="True"
-                            AutomationProperties.Name="Count or Measure">
+                            Title="Count or Measure">
 
                     </Picker>
-
-                </HorizontalStackLayout>
+                </ctrls:HorizontialHeaderControl>
 
                 <!-- Tree Count -->
-                <HorizontalStackLayout IsVisible="{Binding CruiseMethod, Converter={StaticResource isfixCNTConverter}}"
-                                       Grid.Row="2"
-                                       Grid.Column="0">
-                    <Label Text="Tree Count"
-                           AutomationProperties.IsInAccessibleTree="False" />
-                    <Entry Text="{Binding TreeCount}"
-                           AutomationProperties.IsInAccessibleTree="True"
-                           AutomationProperties.Name="Tree Count" />
-                </HorizontalStackLayout>
+                <ctrls:HorizontialHeaderControl IsVisible="{Binding CruiseMethod, Converter={StaticResource isfixCNTConverter}}"
+                                                Grid.Row="2"
+                                                Grid.Column="0"
+                                                Header="Tree Count">
+
+                    <Entry Text="{Binding TreeCount}" />
+                </ctrls:HorizontialHeaderControl>
 
                 <!-- KPI -->
-                <HorizontalStackLayout IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
-                                       Grid.Row="2"
-                                       Grid.Column="1">
-                    <Label Text="KPI:"
-                           x:Name="_kpiLabel"
-                           AutomationProperties.IsInAccessibleTree="False" />
+                <ctrls:HorizontialHeaderControl IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Header="KPI:">
+
                     <Label Text="{Binding Tree.KPI, Mode=OneWay}" />
-                </HorizontalStackLayout>
+                </ctrls:HorizontialHeaderControl>
 
                 <!-- STM -->
-                <HorizontalStackLayout IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
-                                       Grid.Row="2"
-                                       Grid.Column="2">
-                    <Label Text="STM:"
-                           x:Name="_stmLabel"
-                           AutomationProperties.IsInAccessibleTree="False" />
+                <ctrls:HorizontialHeaderControl IsVisible="{Binding CruiseMethod, Converter={StaticResource is3pConverter}}"
+                                                Grid.Row="2"
+                                                Grid.Column="2"
+                                                Header="STM:">
+
                     <Label Text="{Binding Tree.STM, Mode=OneWay, Converter={StaticResource BoolToYesNoConverter}}" />
-                </HorizontalStackLayout>
+                </ctrls:HorizontialHeaderControl>
             </Grid>
 
             <ScrollView x:Name="_editViewsHost"

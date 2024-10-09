@@ -40,9 +40,9 @@ namespace NatCruise.MVVM.ViewModels
             set => SetProperty(ref _sampleGroup, value);
         }
 
-        public override void Initialize(IDictionary<string, object> parameters)
+        protected override void OnInitialize(IDictionary<string, object> parameters)
         {
-            base.Initialize(parameters);
+            base.OnInitialize(parameters);
 
             var unit = parameters.GetValue<string>(NavParams.UNIT);
             int? plotNumber = parameters.ContainsKey(NavParams.PLOT_NUMBER) ?  parameters.GetValueOrDefault<int>(NavParams.PLOT_NUMBER) : null;

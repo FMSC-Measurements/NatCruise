@@ -145,17 +145,12 @@ public class FixCNTTallyViewModel : ViewModelBase
         foreach (var tp in tallyPopulations)
         {
             var buckets = new List<FixCNTTallyBucket>();
-            var interval = tp.Min + Math.Round((double)tp.IntervalSize / 2, 1);
-
-            //foreach interval value try to read a tree
-            do
+            foreach (var interval in NatCruise.Data.FixCNTDataservice.GetIntervalValues(tp.Min, tp.Max, tp.IntervalSize))
             {
                 var treeCount = FixCNTDataservice.GetTreeCount(unit, plotNumber, stratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead, tp.FieldName, interval);
 
                 buckets.Add(new FixCNTTallyBucket(tp, interval, treeCount));
-
-                interval += tp.IntervalSize;
-            } while (interval <= tp.Max);
+            }
 
             tp.Buckets = buckets;
         }
@@ -163,4 +158,6 @@ public class FixCNTTallyViewModel : ViewModelBase
         TallyPopulations = tallyPopulations;
         OnPropertyChanged(nameof(TallyPopulations));
     }
+
+
 }

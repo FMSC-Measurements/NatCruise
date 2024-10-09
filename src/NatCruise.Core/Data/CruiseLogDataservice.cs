@@ -54,7 +54,7 @@ namespace NatCruise.Data
 
             var data = new
             {
-                cruiseID,
+                CruiseID = cruiseID,
                 Message = message,
                 Level = CruiseLogLevelToString(level),
                 Program = CallingProgram,
