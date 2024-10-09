@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Label="Custom Properties">
-		<UseCruiseDALProjRefs Condition="$(UseCruiseDALProjRefs) == ''">true</UseCruiseDALProjRefs>
+		<UseCruiseDALProjRefs Condition="$(UseCruiseDALProjRefs) == ''">false</UseCruiseDALProjRefs>
 		<CruiseDALRepoDir>C:\Users\BenCamps\Documents\FMSC_GitHub\</CruiseDALRepoDir>
 	</PropertyGroup>
 
