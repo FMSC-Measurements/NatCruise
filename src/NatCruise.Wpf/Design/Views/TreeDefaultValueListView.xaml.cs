@@ -1,4 +1,5 @@
-﻿using NatCruise.Design.Models;
+﻿using MahApps.Metro.Controls;
+using NatCruise.Design.Models;
 using NatCruise.Models;
 using System;
 using System.Linq;
@@ -33,14 +34,41 @@ namespace NatCruise.Design.Views
             e.Cancel = isDefinedColumn;
             if (isDefinedColumn) { return; }
 
+            var cellNullValue = propName switch
+            {
+                nameof(TreeDefaultValue.MerchHeightType) => "F",
+                _ => "0",
+            };
+
+            //var tbEditingStyle = new Style(typeof(TextBox), basedOn: DataGridTextColumn.DefaultEditingElementStyle)
+            //{
+            //    Setters =
+            //    {
+            //        new Setter(TextBoxHelper.WatermarkProperty, colDefatutValue),
+            //    }
+            //};
+
+            //var tbStyle = new Style(typeof(TextBlock), basedOn: DataGridTextColumn.DefaultElementStyle)
+            //{
+            //    Setters =
+            //    {
+            //        new Setter(TextBoxHelper.WatermarkProperty, colDefatutValue),
+            //    }
+            //};
+
             var col = new DataGridTextColumn()
             {
                 Header = propName,
-                Binding = new System.Windows.Data.Binding(propName)
-                { UpdateSourceTrigger = System.Windows.Data.UpdateSourceTrigger.LostFocus },
-                // although generally the default behavior of datagrid binding is close to this
+                // although generally the default behavior of datagrid binding behaves the same as LostFocus
                 // this is needed to cause the binding to update with the window is closed
                 // this brings binding control back to the cell edit control rather than the datagrid
+                Binding = new System.Windows.Data.Binding(propName)
+                {
+                    TargetNullValue = cellNullValue,
+                    UpdateSourceTrigger = System.Windows.Data.UpdateSourceTrigger.LostFocus,
+                },
+                //EditingElementStyle = tbEditingStyle,
+                //ElementStyle = tbStyle,
             };
 
             e.Column = col;
