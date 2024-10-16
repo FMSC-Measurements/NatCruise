@@ -20,7 +20,7 @@ namespace NatCruise.MVVM.ViewModels
     {
         public Product DefaultProductOption { get; } = new Product
         {
-            FriendlyName = "default",
+            FriendlyName = "ANY",
             ProductCode = null,
         };
 

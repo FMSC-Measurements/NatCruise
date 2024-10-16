@@ -192,7 +192,7 @@
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
                                 <GridViewColumn Header="Product"
-                                                DisplayMemberBinding="{Binding PrimaryProduct, TargetNullValue='default'}" />
+                                                DisplayMemberBinding="{Binding PrimaryProduct, TargetNullValue='ANY'}" />
                                 <GridViewColumn Header="Contract Species"
                                                 DisplayMemberBinding="{Binding ContractSpecies}" />
 
