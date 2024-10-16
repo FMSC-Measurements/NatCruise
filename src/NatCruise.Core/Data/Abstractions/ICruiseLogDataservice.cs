@@ -1,4 +1,6 @@
-﻿namespace NatCruise.Data
+﻿using Microsoft.Extensions.Logging;
+
+namespace NatCruise.Data
 {
     public interface ICruiseLogDataservice : IDataservice
     {
@@ -12,6 +14,7 @@
             string logID = null,
             string tallyID = null,
             string fieldName = null,
-            string tableName = null);
+            string tableName = null,
+            ILogger logger = null);
     }
 }
