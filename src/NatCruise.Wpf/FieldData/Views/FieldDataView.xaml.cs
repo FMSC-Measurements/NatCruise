@@ -1,6 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using Microsoft.Win32;
 using NatCruise.MVVM;
+using NatCruise.Wpf.FieldData.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -43,7 +44,7 @@ namespace NatCruise.Wpf.FieldData.Views
                 OverwritePrompt = true,
             };
             var result = fileDialog.ShowDialog();
-            if(result == true)
+            if (result == true)
             {
                 var filePath = fileDialog.FileName;
 
@@ -60,12 +61,12 @@ namespace NatCruise.Wpf.FieldData.Views
             var colCount = cols.Length;
             var lastColIndex = colCount - 1;
             // write headers
-            
-            for( int i = 0; i < colCount; i++)
+
+            for (int i = 0; i < colCount; i++)
             {
                 var col = cols[i];
                 AppendFormatedCellValue(col.Header, sb);
-                if(i == lastColIndex)
+                if (i == lastColIndex)
                 {
                     sb.Append(Environment.NewLine);
                 }
@@ -73,7 +74,6 @@ namespace NatCruise.Wpf.FieldData.Views
                 {
                     sb.Append(',');
                 }
-                
             }
 
             // write rows
@@ -82,7 +82,7 @@ namespace NatCruise.Wpf.FieldData.Views
             {
                 var item = dataGrid.Items[i];
 
-                for(int j = 0; j < colCount; j++)
+                for (int j = 0; j < colCount; j++)
                 {
                     var col = cols[j];
 
@@ -97,15 +97,14 @@ namespace NatCruise.Wpf.FieldData.Views
                         sb.Append(',');
                     }
                 }
-
             }
 
             return sb.ToString();
         }
 
-        private void AppendFormatedCellValue(object cellValue, StringBuilder sb )
+        private void AppendFormatedCellValue(object cellValue, StringBuilder sb)
         {
-            if(cellValue == null )
+            if (cellValue == null)
             {
                 sb.Append("");
                 return;
@@ -115,16 +114,16 @@ namespace NatCruise.Wpf.FieldData.Views
             var sw = new StringWriter(sb, CultureInfo.CurrentCulture);
 
             bool needsEscape = false;
-            foreach(var ch in s)
+            foreach (var ch in s)
             {
-                if(ch == '"' || ch == ',')
+                if (ch == '"' || ch == ',')
                 {
                     needsEscape = true;
                     break;
                 }
             }
 
-            if(needsEscape)
+            if (needsEscape)
             {
                 sw.Write('"');
             }
@@ -152,14 +151,14 @@ namespace NatCruise.Wpf.FieldData.Views
             // will also raise selection changed events on our tabControl.
             // so we need to ignore all those extra events not coming directly from our tabControl
 
-            if(e.Source != sender) { return; }
+            if (e.Source != sender) { return; }
             if (sender is TabControl tabControl)
             {
                 var selectedTab = tabControl.SelectedItem as TabItem;
                 if (selectedTab != null && selectedTab.Content is FrameworkElement element)
                 {
-                    var viewModel = element.DataContext as ViewModelBase;
-                    viewModel.Load();
+                    var viewModel = element.DataContext as IFieldDataListViewModel;
+                    viewModel?.RefreshData();
                 }
             }
         }

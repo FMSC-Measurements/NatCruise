@@ -17,7 +17,7 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
-    public class TreeListViewModel : ViewModelBase
+    public class TreeListViewModel : ViewModelBase, IFieldDataListViewModel
     {
         private Dictionary<string, PropertyInfo> TreeProperties { get; }
         private IEnumerable<TreeEx> _trees;
@@ -259,25 +259,13 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         {
             base.Load();
 
-            var unitCode = CuttingUnitCode;
-
-            var trees = TreeDataservice.GetTrees(cuttingUnitCode: unitCode,
-                stratumCode: StratumCode,
-                sampleGroupCode: SampleGroupCode,
-                plotNumber: PlotNumber);
-            Trees = trees;
+            RefreshData();
 
             var fields = COMMON_TREEFIELDS.Concat(TreeFieldDataservice.GetTreeFieldsUsedInCruise());
 
-            bool has3p = false;
-            if(string.IsNullOrEmpty(unitCode))
-            {
-                has3p = StratumDataservice.GetStrata().Any(x => CruiseMethods.THREE_P_METHODS.Contains(x.Method));
-            }
-            else
-            {
-                has3p = CuttingUnitDataservice.GetCuttingUnitStrataSummary(unitCode).Methods.Any(x => CruiseMethods.THREE_P_METHODS.Contains(x));
-            }
+            var unitCode = CuttingUnitCode;
+            bool has3p = CuttingUnitDataservice.GetCruiseMethodsByUnit(unitCode)
+                .Any(x => CruiseMethods.THREE_P_METHODS.Contains(x));
 
             if(has3p)
             {
@@ -285,6 +273,17 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
             
             Fields = fields.ToArray();
+        }
+
+        public void RefreshData()
+        {
+            var unitCode = CuttingUnitCode;
+
+            var trees = TreeDataservice.GetTrees(cuttingUnitCode: unitCode,
+                stratumCode: StratumCode,
+                sampleGroupCode: SampleGroupCode,
+                plotNumber: PlotNumber);
+            Trees = trees;
         }
 
         public async Task AddTree()
