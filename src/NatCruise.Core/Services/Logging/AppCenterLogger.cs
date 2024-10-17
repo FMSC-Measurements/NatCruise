@@ -1,6 +1,7 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.Logging;
+using NatCruise.Util;
 using System;
 using System.Collections.Generic;
 
@@ -64,7 +65,11 @@ namespace NatCruise.Services.Logging
             }
             else
             {
-                Analytics.TrackEvent(CategoryName + ":" + eventId.Name, properties);
+                var eventName = eventId.Name
+                    ?? properties.GetValueOrDefault("{OriginalFormat}")
+                    ?? ""; // if no event name is provided, use the unformatted original message
+
+                Analytics.TrackEvent(CategoryName + ":" + eventName, properties);
             }
         }
 
