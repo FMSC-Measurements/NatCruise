@@ -65,6 +65,7 @@ namespace NatCruise.Design.Views
                 Binding = new System.Windows.Data.Binding(propName)
                 {
                     TargetNullValue = cellNullValue,
+                    
                     UpdateSourceTrigger = System.Windows.Data.UpdateSourceTrigger.LostFocus,
                 },
                 //EditingElementStyle = tbEditingStyle,

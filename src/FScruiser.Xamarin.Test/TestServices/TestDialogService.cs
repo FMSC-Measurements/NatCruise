@@ -81,5 +81,11 @@ namespace FScruiser.XF
             Output.WriteLine($"ShowNotification::msg={message}::title={title}");
             return Task.CompletedTask;
         }
+
+        public Task<TValue> AskValueAsync<TValue>(string prompt, params TValue[] values)
+        {
+            Output.WriteLine($"AskValueAsync::prompt={prompt}::values={string.Join(',', values)}");
+            return Task.FromResult((TValue)AskValueResult);
+        }
     }
 }

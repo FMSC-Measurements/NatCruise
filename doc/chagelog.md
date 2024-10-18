@@ -1,3 +1,19 @@
+# Version 3.1.15
+## FScruiser and NatCruise
+### Fixes
+- Fix audit rules cant be edited
+
+### Enhancements
+ - For FixCNT cruise method, display tree count in data grid 
+
+## NatCruise
+### Fixes 
+- Fix tree default values not saving if program closed right after making changes
+- Fix issue adding tree to FixCNT stratum doesn't ask for plot number
+
+### Enhancements 
+ - Tree Default Values show system default values when no user set value entered. 
+
 # Version 3.1.14
 ## NatCruise
 ### Fixes
