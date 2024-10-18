@@ -68,5 +68,11 @@ namespace FScruiser.XF.Services
 
         public bool IsSuperuserMode { get => false; set => throw new NotImplementedException(); }
 
+        public bool IsDarkModeEnabled => throw new NotImplementedException();
+
+        public void ToggleDarkMode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

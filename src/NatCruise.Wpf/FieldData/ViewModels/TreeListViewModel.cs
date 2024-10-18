@@ -268,7 +268,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
             if (cruiseMethods.Any(x => x == CruiseMethods.FIXCNT) /*|| Trees.Any(x => x.TreeCount > 1)*/)
             {
-                fields.Add(new TreeField { DbType = "INTEGER", Heading = "Tree Count", Field = nameof(TreeEx.TreeCount) });
+                fields.Add(new TreeField { DbType = TreeFieldTableDefinition.DBTYPE_INTEGER, Heading = "Tree Count", Field = nameof(TreeEx.TreeCount) });
             }
 
             if(cruiseMethods.Any(x => CruiseMethods.THREE_P_METHODS.Contains(x)))
@@ -290,6 +290,15 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 sampleGroupCode: SampleGroupCode,
                 plotNumber: PlotNumber);
             Trees = trees;
+        }
+
+        protected void RefreshTrees()
+        {
+            var selectedTreeID = SelectedTree?.TreeID;
+            RefreshData();
+            var tree = (selectedTreeID != null) ? Trees.FirstOrDefault(x => x.TreeID == selectedTreeID)
+                : null;
+            SelectedTree = tree;
         }
 
         public async Task AddTree()
@@ -505,14 +514,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             TreeAdded?.Invoke(this, EventArgs.Empty);
         }
 
-        protected void RefreshTrees()
-        {
-            var selectedTreeID = SelectedTree?.TreeID;
-            Load();
-            var tree = (selectedTreeID != null) ? Trees.FirstOrDefault(x => x.TreeID == selectedTreeID)
-                : null;
-            SelectedTree = tree;
-        }
+
 
         public Task DeleteTree()
         {
