@@ -261,17 +261,23 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
             RefreshData();
 
-            var fields = COMMON_TREEFIELDS.Concat(TreeFieldDataservice.GetTreeFieldsUsedInCruise());
-
             var unitCode = CuttingUnitCode;
-            bool has3p = CuttingUnitDataservice.GetCruiseMethodsByUnit(unitCode)
-                .Any(x => CruiseMethods.THREE_P_METHODS.Contains(x));
+            var fields = COMMON_TREEFIELDS.ToList();
 
-            if(has3p)
+            var cruiseMethods = CuttingUnitDataservice.GetCruiseMethodsByUnit(unitCode);
+
+            if (cruiseMethods.Any(x => x == CruiseMethods.FIXCNT) /*|| Trees.Any(x => x.TreeCount > 1)*/)
             {
-                fields = fields.Concat(ThreePFields);
+                fields.Add(new TreeField { DbType = "INTEGER", Heading = "Tree Count", Field = nameof(TreeEx.TreeCount) });
             }
-            
+
+            if(cruiseMethods.Any(x => CruiseMethods.THREE_P_METHODS.Contains(x)))
+            {
+                fields.AddRange(ThreePFields);
+            }
+
+            fields.AddRange(TreeFieldDataservice.GetTreeFieldsUsedInCruise());
+
             Fields = fields.ToArray();
         }
 
@@ -368,15 +374,21 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 var intervalOptionns = NatCruise.Data.FixCNTDataservice.GetIntervalValues(tallyPop.Min, tallyPop.Max, tallyPop.IntervalSize).ToArray();
                 var intervalValue = await DialogService.AskValueAsync("Select Interval", intervalOptionns);
 
-                if (FixCNTDataservice.GetOneTreePerTallyOption() == false)
-                {
-                    treeID = FixCNTDataservice.IncrementFixCNTTreeCount(cuttingUnitCode, plotNumber.Value, stratumCode, sampleGroupCode, speciesCode, tallyPop.LiveDead, tallyPop.FieldName, intervalValue);
-                    RefreshTrees();
-                }
-                else
+                if (FixCNTDataservice.GetOneTreePerTallyOption())
                 {
                     treeID = FixCNTDataservice.AddFixCNTTree(cuttingUnitCode, plotNumber.Value, stratumCode, sampleGroupCode, speciesCode, tallyPop.LiveDead, tallyPop.FieldName, intervalValue);
                     OnTreeAdded(treeID);
+                }
+                else
+                {
+                    treeID = FixCNTDataservice.IncrementFixCNTTreeCount(cuttingUnitCode, plotNumber.Value, stratumCode, sampleGroupCode, speciesCode, tallyPop.LiveDead, tallyPop.FieldName, intervalValue);
+
+                    var tree = Trees.FirstOrDefault(x => x.TreeID == treeID);
+                    if ((tree!= null))
+                    {
+                        tree.TreeCount++;
+                    }
+                    //RefreshTrees();
                 }
 
                 return;

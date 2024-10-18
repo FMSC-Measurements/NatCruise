@@ -39,6 +39,7 @@
         private string _initials;
         private int _errorCount;
         private int _warningCount;
+        private int _treeCount;
 
         public bool IsFallBuckScale
         {
@@ -211,6 +212,12 @@
         public int KPI { get; set; }
 
         public bool STM { get; set; }
+
+        public int TreeCount
+        {
+            get => _treeCount;
+            set => SetProperty(ref _treeCount, value);
+        }
 
         public int ErrorCount
         {
