@@ -16,6 +16,8 @@ using NatCruise.Async;
 using NatCruise.Data;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using NatCruise.Services;
+using FScruiser.Maui.TestViews;
 
 namespace FScruiser.Maui.ViewModels
 {
@@ -51,11 +53,13 @@ namespace FScruiser.Maui.ViewModels
 
         public ICommand ShowSettingsCommand => _showSettingsCommand ??= new Command(() => NavigationService.ShowSettings().FireAndForget());
 
+        public ICommand ShowAboutCommand => new Command(() => NavigationService.ShowAbout().FireAndForget());
+
         public IServiceProvider Services { get; }
         public ICruiseNavigationService NavigationService { get; }
         public IDataContextService DataContext { get; }
-
-
+        public IAppInfoService AppInfo { get; }
+        public IDeviceInfoService DeviceInfo { get; }
 
         [RelayCommand]
         public void Navigate()
@@ -80,11 +84,18 @@ namespace FScruiser.Maui.ViewModels
 
 
 
-        public MainViewModel(IServiceProvider services, ILogger<MainViewModel> log, ICruiseNavigationService navigationService, IDataContextService dataContext)
+        public MainViewModel(IServiceProvider services,
+                            ILogger<MainViewModel> log,
+                            ICruiseNavigationService navigationService,
+                            IDataContextService dataContext,
+                            IDeviceInfoService deviceInfoService,
+                            IAppInfoService appInfo)
         {
             Services = services;
             NavigationService = navigationService;
             DataContext = dataContext;
+            AppInfo = appInfo;
+            DeviceInfo = deviceInfoService;
 
             dataContext.CruiseChanged += DataContext_CruiseChanged;
             DataContext_CruiseChanged(null, EventArgs.Empty);
@@ -118,7 +129,7 @@ namespace FScruiser.Maui.ViewModels
 
         public void RefreshNavItems()
         {
-            
+
 
             var navList = new List<NavItemModel>();
             if (SelectedCruise != null)
@@ -152,8 +163,8 @@ namespace FScruiser.Maui.ViewModels
 
             navList.Add(new NavItemModel { Title = "Utilities", NavAction = (n) => n.ShowUtilities() });
             navList.Add(new NavItemModel { Title = "Cruisers", NavAction = (n) => n.ShowManageCruisers() });
-            navList.Add(new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() });
-            navList.Add(new NavItemModel { Title = "About", NavAction = (n) => n.ShowAbout() });
+            //navList.Add(new NavItemModel { Title = "Settings", NavAction = (n) => n.ShowSettings() });
+            //navList.Add(new NavItemModel { Title = "About", NavAction = (n) => n.ShowAbout() });
 
             NavItems = navList.ToArray();
 
@@ -232,7 +243,7 @@ namespace FScruiser.Maui.ViewModels
         [RelayCommand]
         public Task ShowTestView()
         {
-            return (NavigationService as MauiNavigationService)?.ShowView<TestDialogServiceView>() ?? Task.CompletedTask;
+            return (NavigationService as MauiNavigationService)?.ShowView<TestsListView>() ?? Task.CompletedTask;
         }
     }
 }

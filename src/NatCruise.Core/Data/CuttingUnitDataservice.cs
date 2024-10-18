@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#nullable enable
+
 namespace NatCruise.Data
 {
     public class CuttingUnitDataservice : CruiseDataserviceBase, ICuttingUnitDataservice
@@ -12,11 +14,11 @@ namespace NatCruise.Data
         {
         }
 
-        public CuttingUnitDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
+        public CuttingUnitDataservice(CruiseDatastore_V3 database, string? cruiseID, string? deviceID) : base(database, cruiseID, deviceID)
         {
         }
 
-        public CuttingUnitDataservice(string path, string cruiseID, string deviceID) : base(path, cruiseID, deviceID)
+        public CuttingUnitDataservice(string path, string? cruiseID, string? deviceID) : base(path, cruiseID, deviceID)
         {
         }
 
@@ -132,7 +134,7 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
             //    "WHERE cust.StratumCode = @p1 AND cu.CruiseID = @p2;", stratumCode, CruiseID).ToArray();
         }
 
-        public CuttingUnitStrataSummary GetCuttingUnitStrataSummary(string unitCode)
+        public CuttingUnitStrataSummary? GetCuttingUnitStrataSummary(string unitCode)
         {
             var summary = Database.Query<CuttingUnitStrataSummary>(
 @"SELECT
@@ -152,16 +154,22 @@ WHERE StratumCode = @StratumCode AND CruiseID = @CruiseID;",
             AND cust.CuttingUnitCode = cu.CuttingUnitCode
             AND cust.CruiseID = cu.CruiseID) AS HasTreeStrata
 FROM CuttingUnit AS cu
-WHERE CruiseID = @p1 AND CuttingUnitCode = @p2;", CruiseID, unitCode).SingleOrDefault();
+WHERE CruiseID = @p1 AND (@p2 IS NULL OR cu.CuttingUnitCode = @p2);", CruiseID, unitCode).SingleOrDefault();
             if (summary != null)
             {
-                summary.Methods = Database.QueryScalar<string>(
-@"SELECT Method FROM Stratum AS st
-JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
-WHERE st.CruiseID = @p1 AND cust.CuttingUnitCode = @p2;", CruiseID, unitCode).ToArray();
+                summary.Methods = GetCruiseMethodsByUnit(unitCode);
             }
 
             return summary;
+        }
+
+
+        public IReadOnlyCollection<string> GetCruiseMethodsByUnit(string? unitCode = null)
+        {
+            return Database.QueryScalar<string>(
+@"SELECT DISTINCT Method FROM Stratum AS st
+JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
+WHERE st.CruiseID = @p1 AND (@p2 IS NULL OR cust.CuttingUnitCode = @p2);", CruiseID, unitCode).ToArray();
         }
 
         public void UpdateCuttingUnit(CuttingUnit unit)

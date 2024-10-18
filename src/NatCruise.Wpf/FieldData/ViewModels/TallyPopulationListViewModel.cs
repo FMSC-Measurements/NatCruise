@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
-    public class TallyPopulationListViewModel : ViewModelBase
+    public class TallyPopulationListViewModel : ViewModelBase, IFieldDataListViewModel
     {
         private string _cuttingUnitCode;
         private string _stratumCode;
@@ -107,6 +107,11 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         {
             base.Load();
 
+            RefreshData();
+        }
+
+        public void RefreshData()
+        {
             TallyPopulations = TallyPopulationDataservice.GetTallyPopulations(CuttingUnitCode, StratumCode, SampleGroupCode);
         }
     }

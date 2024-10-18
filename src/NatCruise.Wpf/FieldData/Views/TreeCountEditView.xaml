@@ -61,7 +61,7 @@
             </StackPanel.Resources>
 
             <!-- population information-->
-            <WrapPanel>
+            <!--<WrapPanel>
                 <controls:LastChildWidthPanel>
                     <TextBlock Text="Cutting Unit:" />
                     <TextBlock Text="{Binding UnitCode}"
@@ -87,7 +87,7 @@
                     <TextBlock Text="{Binding TallyPopulation.LiveDead}"
                                d:Text="00" />
                 </controls:LastChildWidthPanel>
-            </WrapPanel>
+            </WrapPanel>-->
 
             <!-- sampling information -->
             <WrapPanel>

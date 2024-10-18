@@ -26,7 +26,19 @@ namespace NatCruise.Data
             return false;
         }
 
-        public void IncrementFixCNTTreeCount(string unitCode, int plotNumber, string stratumCode,
+        /// <summary>
+        /// Increment the tree count for a tree in the tally
+        /// </summary>
+        /// <param name="unitCode"></param>
+        /// <param name="plotNumber"></param>
+        /// <param name="stratumCode"></param>
+        /// <param name="sgCode"></param>
+        /// <param name="species"></param>
+        /// <param name="liveDead"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="value"></param>
+        /// <returns>TreeID value of the existing tree or tree that was created</returns>
+        public string IncrementFixCNTTreeCount(string unitCode, int plotNumber, string stratumCode,
             string sgCode, string species, string liveDead,
             string fieldName, double value)
         {
@@ -84,6 +96,8 @@ namespace NatCruise.Data
                     LiveDead = liveDead,
                     CreatedBy = DeviceID,
                 });
+
+            return treeID;
         }
 
         public void DecrementFixCNTTreeCount(string unitCode, int plotNumber, string stratumCode,
@@ -145,7 +159,7 @@ namespace NatCruise.Data
             }
         }
 
-        public void AddFixCNTTree(string unitCode, int plotNumber, string stratumCode,
+        public string AddFixCNTTree(string unitCode, int plotNumber, string stratumCode,
             string sgCode, string species, string liveDead,
             string fieldName, double value)
         {
@@ -194,6 +208,8 @@ namespace NatCruise.Data
                     LiveDead = liveDead,
                     CreatedBy = DeviceID,
                 });
+
+            return treeID;
         }
 
         public void RemoveFixCNTTree(string unitCode, int plotNumber, string stratumCode,
@@ -344,5 +360,18 @@ WHERE   CruiseID = @CruiseID
                     Value = value,
                 });
         }
+
+        public static IEnumerable<double> GetIntervalValues(double min, double max, double intervalSize)
+        {
+            var interval = min + Math.Round(intervalSize / 2.0d, 1);
+
+            do
+            {
+                yield return interval;
+                interval += intervalSize;
+            } while (interval <= max);
+        }
     }
+
+
 }

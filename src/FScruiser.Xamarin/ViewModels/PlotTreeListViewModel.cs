@@ -1,4 +1,5 @@
-﻿using FScruiser.XF.Services;
+﻿using CruiseDAL.Schema;
+using FScruiser.XF.Services;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
@@ -129,7 +130,19 @@ namespace FScruiser.XF.ViewModels
 
             if (IsLoaded is false)
             {
-                TreeFields = TreeFieldDataservice.GetPlotTreeFields(unitCode);
+                var treeFields = TreeFieldDataservice.GetPlotTreeFields(unitCode);
+
+                if(CuttingUnitDeataservice.GetCruiseMethodsByUnit(unitCode).Contains(CruiseMethods.FIXCNT))
+                {
+                    treeFields = treeFields.Prepend(new TreeField
+                    {
+                        Field = "TreeCount",
+                        Heading = "Tree Count",
+                        DbType = TreeFieldTableDefinition.DBTYPE_INTEGER,
+                    });
+                }
+
+                TreeFields = treeFields.ToArray();
             }
 
             AllTrees = TreeDataservice.GetPlotTreesByUnitCode(unitCode).ToArray();

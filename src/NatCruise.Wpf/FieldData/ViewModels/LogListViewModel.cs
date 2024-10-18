@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
-    public partial class LogListViewModel : ViewModelBase
+    public partial class LogListViewModel : ViewModelBase, IFieldDataListViewModel
     {
         private readonly IEnumerable<LogFieldSetup> COMMON_LOGFIELDS = new[]
         {
@@ -121,10 +121,19 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         {
             base.Load();
 
+            RefreshData();
+
+            var treeID = TreeID;
+
+            Fields = (treeID != null) ? FieldSetupDataservice.GetLogFieldSetupsByTreeID(treeID)
+                : COMMON_LOGFIELDS.Concat(FieldSetupDataservice.GetLogFieldSetupsByCruise());
+        }
+
+        public void RefreshData()
+        {
             var treeID = TreeID;
             if (treeID != null)
             {
-                Fields = FieldSetupDataservice.GetLogFieldSetupsByTreeID(treeID);
 
                 Logs = LogDataservice.GetLogs(treeID).ToObservableCollection()
                     ?? new ObservableCollection<Log>();
@@ -137,8 +146,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
                 var logs = LogDataservice.GetLogs(unitCode, stCode, sgCode).ToObservableCollection();
                 Logs = logs;
-
-                Fields = COMMON_LOGFIELDS.Concat(FieldSetupDataservice.GetLogFieldSetupsByCruise());
             }
         }
 

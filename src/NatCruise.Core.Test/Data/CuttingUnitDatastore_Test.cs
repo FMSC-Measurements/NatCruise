@@ -52,5 +52,30 @@ namespace NatCruise.Test.Data
                 units.Should().HaveCountGreaterThan(0);
             }
         }
+
+        [Fact]
+        public void GetCuttingUnitStrataSummary()
+        {
+            var unitCode = "u1";
+
+            var init = new DatastoreInitializer();
+            using var db = init.CreateDatabase();
+            var ds = new CuttingUnitDataservice(db, init.CruiseID, init.DeviceID);
+
+            var unitStrata = ds.GetCuttingUnitStrataSummary(unitCode);
+            unitStrata.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void GetCruiseMethodsByUnit()
+        {
+
+            var init = new DatastoreInitializer();
+            using var db = init.CreateDatabase();
+            var ds = new CuttingUnitDataservice(db, init.CruiseID, init.DeviceID);
+
+            var unitStrata = ds.GetCruiseMethodsByUnit();
+            unitStrata.Should().NotBeNull();
+        }
     }
 }

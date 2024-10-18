@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using CruiseDAL.Schema;
 using FScruiser.Maui.Services;
 using NatCruise.Data;
 using NatCruise.Models;
@@ -125,7 +126,19 @@ public class PlotTreeListViewModel : ViewModelBase
 
         if (IsLoaded is false)
         {
-            TreeFields = TreeFieldDataservice.GetPlotTreeFields(unitCode);
+            var treeFields = TreeFieldDataservice.GetPlotTreeFields(unitCode);
+
+            if (CuttingUnitDeataservice.GetCruiseMethodsByUnit(unitCode).Contains(CruiseMethods.FIXCNT))
+            {
+                treeFields = treeFields.Prepend(new TreeField
+                {
+                    Field = "TreeCount",
+                    Heading = "Tree Count",
+                    DbType = TreeFieldTableDefinition.DBTYPE_INTEGER,
+                });
+            }
+
+            TreeFields = treeFields.ToArray();
         }
 
         AllTrees = TreeDataservice.GetPlotTreesByUnitCode(unitCode).ToArray();

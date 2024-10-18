@@ -23,7 +23,7 @@ namespace NatCruise.Data
 
         #region TreeAuditRules
 
-        IEnumerable<TreeAuditRuleSelector> GetRuleSelectors();
+        //IEnumerable<TreeAuditRuleSelector> GetRuleSelectors();
 
         IEnumerable<TreeAuditRuleSelector> GetRuleSelectors(string tarID);
 

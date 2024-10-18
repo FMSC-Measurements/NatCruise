@@ -37,7 +37,7 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
 
-                            <Frame Margin="3"
+                            <Border Margin="3"
                                    Padding="0">
 
                                 <AbsoluteLayout>
@@ -79,7 +79,7 @@
                                             AutomationProperties.Name="Show Actions Item" />
                                 </AbsoluteLayout>
 
-                            </Frame>
+                            </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

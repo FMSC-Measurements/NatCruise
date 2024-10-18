@@ -1,4 +1,5 @@
 ﻿using CruiseDAL;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace NatCruise.Data
@@ -9,10 +10,11 @@ namespace NatCruise.Data
     public class CruiseLogDataservice : CruiseDataserviceBase, ICruiseLogDataservice
     {
         private static string _callingProgram;
+        private ILogger Logger { get; }
 
-        public CruiseLogDataservice(IDataContextService dataContext) : base(dataContext)
+        public CruiseLogDataservice(IDataContextService dataContext, ILogger<CruiseLogDataservice> logger) : base(dataContext)
         {
-            
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public CruiseLogDataservice(CruiseDatastore_V3 database, string cruiseID, string deviceID) : base(database, cruiseID, deviceID)
@@ -34,9 +36,18 @@ namespace NatCruise.Data
             string logID = null,
             string tallyID = null,
             string fieldName = null,
-            string tableName = null)
+            string tableName = null,
+            ILogger logger = null)
         {
             Log(this, message, level, unitID, stratumID, sgID, plotID, treeID, logID, tallyID, fieldName, tableName);
+
+            (logger ?? Logger)?.Log(level switch
+            {
+                CruiseLogLevel.Debug => LogLevel.Debug,
+                CruiseLogLevel.Info => LogLevel.Information,
+                CruiseLogLevel.Error => LogLevel.Error,
+                _ => LogLevel.Debug,
+            }, "CruiseLog:" + message);
         }
 
         public static void Log(CruiseDataserviceBase dataService, string message, CruiseLogLevel level = CruiseLogLevel.Debug, string unitID = null, string stratumID = null,
@@ -71,6 +82,7 @@ namespace NatCruise.Data
                 TableName = tableName,
                 CreatedBy = deviceID,
             };
+
 
             database.Execute2(
 @"INSERT INTO CruiseLog (

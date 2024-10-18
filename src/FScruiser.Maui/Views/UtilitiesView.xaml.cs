@@ -12,12 +12,12 @@ public partial class UtilitiesView : BasePage
 {
     private ICommand? _showLimitingDistanceCommand;
 
-    public UtilitiesView()
+    protected UtilitiesView()
     {
         InitializeComponent();
     }
 
-    protected UtilitiesView(ICruiseNavigationService navigationService) : this()
+    public UtilitiesView(ICruiseNavigationService navigationService) : this()
     {
         InitializeComponent();
 

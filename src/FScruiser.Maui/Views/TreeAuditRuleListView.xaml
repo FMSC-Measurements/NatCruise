@@ -20,9 +20,9 @@
             </Grid.RowDefinitions>
 
             <!-- Add New TAR Panel-->
-            <Frame Grid.Row="0"
+            <Border Grid.Row="0"
                    Margin="4"
-                   BackgroundColor="{StaticResource uswds_lgt_tan}">
+                   StyleClass="accent">
                 <Grid>
 
                     <Grid.ColumnDefinitions>
@@ -74,7 +74,7 @@
                             Grid.Row="0"
                             Grid.RowSpan="2" />
                 </Grid>
-            </Frame>
+            </Border>
 
             <CollectionView Grid.Row="1"
                             ItemsSource="{Binding TreeAuditRules}">
@@ -87,7 +87,7 @@
                                            CommandParameter="{Binding .}"
                                            BackgroundColor="Red" />
                             </SwipeView.LeftItems>
-                            <Frame Margin="4,2" >
+                            <Border>
 
                                 <!--<StackLayout Orientation="Vertical">
                         <Label Text="{Binding Field, StringFormat='Field: {0}'}" FontSize="Title" />
@@ -183,7 +183,7 @@
                             <Label Text="{Binding Description}" />
                         </StackLayout>
                     </Grid>-->
-                            </Frame>
+                            </Border>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

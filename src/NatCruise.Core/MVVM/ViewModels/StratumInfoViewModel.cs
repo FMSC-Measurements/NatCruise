@@ -72,11 +72,11 @@ namespace NatCruise.MVVM.ViewModels
             protected set => SetProperty(ref _cuttingUnits, value);
         }
 
-        public override void Initialize(IDictionary<string, object> parameters)
+        protected override void OnInitialize(IDictionary<string, object> parameters)
         {
             if (parameters is null) { throw new ArgumentNullException(nameof(parameters)); }
 
-            base.Initialize(parameters);
+            base.OnInitialize(parameters);
 
             var stratumCode = Parameters.GetValue<string>(NavParams.STRATUM);
             Load(stratumCode);

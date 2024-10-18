@@ -16,7 +16,7 @@ using System.Collections;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
-    public partial class PlotListViewModel : ViewModelBase
+    public partial class PlotListViewModel : ViewModelBase, IFieldDataListViewModel
     {
         private IEnumerable<Plot> _plots;
         private string _cuttingUnitCode;
@@ -88,6 +88,11 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         {
             base.Load();
 
+            RefreshData();
+        }
+
+        public void RefreshData()
+        {
             var plots = PlotDataservice.GetPlotsByUnitCode(CuttingUnitCode);
             Plots = plots;
         }

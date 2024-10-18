@@ -83,5 +83,11 @@ namespace NatCruise.Wpf.Services
             }
         }
 
+        public bool IsDarkModeEnabled => throw new NotImplementedException();
+
+        public void ToggleDarkMode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

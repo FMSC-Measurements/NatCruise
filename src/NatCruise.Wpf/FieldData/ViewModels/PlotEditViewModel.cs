@@ -1,4 +1,5 @@
-﻿using NatCruise.Data;
+﻿using Microsoft.Extensions.Logging;
+using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
 using NatCruise.Navigation;
@@ -250,16 +251,18 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                     }
                     catch (FMSC.ORM.UniqueConstraintException ex)
                     {
-                        LoggingService.LogException(nameof(PlotEditViewModel), "Plot_PropertyChanged", ex);
+                        Logger.LogError(ex, "Save Plot Error - Plot Number and Cutting Unit must be unique");
                         DialogService.ShowMessageAsync("Save Plot Error - Plot Number and Cutting Unit must be unique");
                         return;
                     }
 
+                    //Logger.LogInformation("Plot Cutting Unit Changed from {curValue} to {value}", curValue, value);
                     CruiseLogDataservice.Log($"Plot Cutting Unit Changed from {curValue} to {value}",
                             CruiseLogLevel.Info,
                             plotID: Plot.PlotID,
                             fieldName: nameof(Plot.CuttingUnitCode),
-                            tableName: "Plot");
+                            tableName: "Plot",
+                            logger: Logger);
 
                     Plot.CuttingUnitCode = value;
                     PlotCuttingUnitChanged?.Invoke(this, EventArgs.Empty);
@@ -314,6 +317,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         public INatCruiseDialogService DialogService { get; set; }
         public ILoggingService LoggingService { get; }
 
+        protected ILogger Logger { get; }
+
         public PlotEditViewModel(IPlotDataservice plotDataservice,
             IPlotStratumDataservice plotStratumDataservice,
             IStratumDataservice stratumDataservice,
@@ -323,6 +328,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             INatCruiseDialogService dialogService,
             INatCruiseNavigationService navigationService,
             ILoggingService loggingService,
+            ILogger<PlotEditViewModel> logger,
             IApplicationSettingService appSettings)
         {
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
@@ -334,6 +340,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             LoggingService = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             AppSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
         }
 
@@ -447,7 +454,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                         }
                         catch (FMSC.ORM.ConstraintException ex)
                         {
-                            LoggingService.LogException(nameof(PlotEditViewModel), "Plot_PropertyChanged", ex);
+                            Logger.LogError(ex, "Save Plot Error - Invalid Field Value");
                             DialogService.ShowMessageAsync("Save Plot Error - Invalid Field Value");
                         }
                         break;

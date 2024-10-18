@@ -40,8 +40,6 @@ public interface ICruiseNavigationService : INatCruiseNavigationService
 
     Task ShowTally(string unitCode);
 
-    Task ShowTreeCountEdit(string unitCode, string stratumCode, string sampleGroupCode, string species, string liveDead);
-
     Task ShowTreeEdit(string treeID);
 
     Task ShowTreeList(string unitCode);

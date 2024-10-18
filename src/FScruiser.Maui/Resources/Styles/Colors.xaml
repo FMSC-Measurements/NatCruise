@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary 
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
-    
+
 
     <!-- colors -->
     <Color x:Key="fs_brown">#312418</Color>
@@ -25,8 +25,8 @@
     <Color x:Key="uswds_vivid_green">#538200</Color>
 
     <Color x:Key="fsdp_radioButtonColor">#4c6424</Color>
-    
-    
+
+
     <!-- -->
     <Color x:Key="tallyButtonBgColor">#345E36</Color>
     <Color x:Key="addItemColor">#538200</Color>
@@ -70,7 +70,10 @@
     <Color x:Key="primary.dark">#005440</Color>
     <Color x:Key="secondary">#ffc425</Color>
     <Color x:Key="accent">#336699</Color>
-    <Color x:Key="text.primary">#466C04</Color>
+
+    <tk:AppThemeColor x:Key="text.primary" Light="{StaticResource primary}"
+                      Dark="{StaticResource uswds_vivid_green}" />
+    <!--<Color x:Key="text.primary">#466C04</Color>-->
     <Color x:Key="text.accent">#336699</Color>
     <Color x:Key="text.light">White</Color>
     <Color x:Key="text.dark">#212121</Color>

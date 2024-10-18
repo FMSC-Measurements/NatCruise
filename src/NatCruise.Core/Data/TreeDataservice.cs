@@ -60,6 +60,15 @@ treeWarningCount AS
     FROM TreeError
     WHERE Level = 'W' AND IsResolved = 0
     GROUP BY TreeID
+),
+
+treeCount AS
+(
+    SELECT
+        TreeID,
+        total(TreeCount) AS TreeCount
+    FROM TallyLedger
+    GROUP BY TreeID
 )
 
 SELECT
@@ -80,6 +89,7 @@ SELECT
     ) AS STM,
     te.ErrorCount,
     tw.WarningCount,
+    tc.TreeCount,
 
         -- MEASURMENT FIELDS
         tm.SeenDefectPrimary,
@@ -124,6 +134,7 @@ JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
 LEFT JOIN TreeMeasurment_DefaultResolved AS tm USING (TreeID)
 LEFT JOIN treeErrorCount AS te USING (TreeID)
 LEFT JOIN treeWarningCount AS tw USING (TreeID)
+LEFT JOIN treeCount AS tc USING (TreeID)
 ";
 
         private const string GET_TREESTUB_BASE_COMMAND =

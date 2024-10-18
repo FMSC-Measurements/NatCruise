@@ -2,7 +2,8 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:const="clr-namespace:FScruiser.Maui.Constants"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
     <x:Double x:Key="fontSize.H1">32</x:Double>
     <x:Double x:Key="fontSize.H2">24</x:Double>
@@ -37,8 +38,59 @@
            BasedOn="{StaticResource LabelBase}" />
 
     
+    <!-- style classes -->
+    <Style TargetType="Label"
+           Class="H1">
+        <Setter Property="FontSize"
+                Value="{StaticResource fontSize.H1}" />
+    </Style>
+
+    <Style TargetType="Label"
+           Class="H2">
+        <Setter Property="FontSize"
+                Value="{StaticResource fontSize.H2}" />
+    </Style>
+
+    <Style TargetType="Label"
+           Class="H3">
+        <Setter Property="FontSize"
+                Value="{StaticResource fontSize.H3}" />
+    </Style>
+
+    <Style TargetType="Label"
+           Class="H4">
+        <Setter Property="FontSize"
+                Value="{StaticResource fontSize.H4}" />
+    </Style>
+
+    <Style TargetType="Label"
+           Class="primary">
+        <Setter Property="TextColor"
+                Value="{tk:AppThemeResource text.primary}" />
+    </Style>
+
+    <Style TargetType="Label"
+           Class="secondary">
+        <Setter Property="TextColor"
+                Value="{StaticResource secondary}" />
+    </Style>
+
+    <Style TargetType="Label"
+           Class="accent">
+        <Setter Property="TextColor"
+                Value="{StaticResource text.accent}" />
+    </Style>
+
+    <Style TargetType="Label"
+           Class="muted">
+        <Setter Property="TextColor"
+                Value="{StaticResource text.gray}" />
+    </Style>
+
+
     <!-- Label header styles-->
     <Style TargetType="Label"
+           Class="H1"
            BasedOn="{StaticResource LabelBase}"
            x:Key="Label.H1">
         <Setter Property="FontSize"

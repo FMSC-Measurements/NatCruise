@@ -76,15 +76,16 @@
                            AutomationProperties.IsInAccessibleTree="False" />
                 </Grid>
 
+                <!--  -->
                 <Grid x:Name="PART_Content"
                       Grid.Row="1"
                       Grid.Column="0"
-                      Background="{TemplateBinding  Background}">
+                      Grid.ColumnSpan="2"
+                      BackgroundColor="{TemplateBinding  BackgroundColor}">
                     <ContentPresenter Margin="{TemplateBinding Padding}"
                                       AutomationProperties.LabeledBy="{Reference PART_Header}" />
                 </Grid>
             </Grid>
-
 
         </ControlTemplate>
     </ContentView.ControlTemplate>

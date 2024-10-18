@@ -17,7 +17,7 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
-    public class TreeListViewModel : ViewModelBase
+    public class TreeListViewModel : ViewModelBase, IFieldDataListViewModel
     {
         private Dictionary<string, PropertyInfo> TreeProperties { get; }
         private IEnumerable<TreeEx> _trees;
@@ -60,6 +60,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public TreeListViewModel(ITreeDataservice treeDataservice,
                                  IPlotTreeDataservice plotTreeDataservice,
+                                 IFixCNTDataservice fixCNTDataservice,
                                  ITreeFieldDataservice treeFieldDataservice,
                                  ICuttingUnitDataservice cuttingUnitDataservice,
                                  IPlotDataservice plotDataservice,
@@ -72,6 +73,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         {
             TreeDataservice = treeDataservice ?? throw new ArgumentNullException(nameof(treeDataservice));
             PlotTreeDataservice = plotTreeDataservice ?? throw new ArgumentNullException(nameof(plotTreeDataservice));
+            FixCNTDataservice = fixCNTDataservice ?? throw new ArgumentNullException(nameof(fixCNTDataservice));
             TreeFieldDataservice = treeFieldDataservice ?? throw new ArgumentNullException(nameof(treeFieldDataservice));
             CuttingUnitDataservice = cuttingUnitDataservice ?? throw new ArgumentNullException(nameof(cuttingUnitDataservice));
             PlotDataservice = plotDataservice ?? throw new ArgumentNullException(nameof(plotDataservice));
@@ -97,6 +99,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
         public ITreeDataservice TreeDataservice { get; }
         public IPlotTreeDataservice PlotTreeDataservice { get; }
+        public IFixCNTDataservice FixCNTDataservice { get; }
         public ITreeFieldDataservice TreeFieldDataservice { get; }
         public ICuttingUnitDataservice CuttingUnitDataservice { get; }
         public IPlotDataservice PlotDataservice { get; }
@@ -256,6 +259,30 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         {
             base.Load();
 
+            RefreshData();
+
+            var unitCode = CuttingUnitCode;
+            var fields = COMMON_TREEFIELDS.ToList();
+
+            var cruiseMethods = CuttingUnitDataservice.GetCruiseMethodsByUnit(unitCode);
+
+            if (cruiseMethods.Any(x => x == CruiseMethods.FIXCNT) /*|| Trees.Any(x => x.TreeCount > 1)*/)
+            {
+                fields.Add(new TreeField { DbType = TreeFieldTableDefinition.DBTYPE_INTEGER, Heading = "Tree Count", Field = nameof(TreeEx.TreeCount) });
+            }
+
+            if(cruiseMethods.Any(x => CruiseMethods.THREE_P_METHODS.Contains(x)))
+            {
+                fields.AddRange(ThreePFields);
+            }
+
+            fields.AddRange(TreeFieldDataservice.GetTreeFieldsUsedInCruise());
+
+            Fields = fields.ToArray();
+        }
+
+        public void RefreshData()
+        {
             var unitCode = CuttingUnitCode;
 
             var trees = TreeDataservice.GetTrees(cuttingUnitCode: unitCode,
@@ -263,25 +290,15 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 sampleGroupCode: SampleGroupCode,
                 plotNumber: PlotNumber);
             Trees = trees;
+        }
 
-            var fields = COMMON_TREEFIELDS.Concat(TreeFieldDataservice.GetTreeFieldsUsedInCruise());
-
-            bool has3p = false;
-            if(string.IsNullOrEmpty(unitCode))
-            {
-                has3p = StratumDataservice.GetStrata().Any(x => CruiseMethods.THREE_P_METHODS.Contains(x.Method));
-            }
-            else
-            {
-                has3p = CuttingUnitDataservice.GetCuttingUnitStrataSummary(unitCode).Methods.Any(x => CruiseMethods.THREE_P_METHODS.Contains(x));
-            }
-
-            if(has3p)
-            {
-                fields = fields.Concat(ThreePFields);
-            }
-            
-            Fields = fields.ToArray();
+        protected void RefreshTrees()
+        {
+            var selectedTreeID = SelectedTree?.TreeID;
+            RefreshData();
+            var tree = (selectedTreeID != null) ? Trees.FirstOrDefault(x => x.TreeID == selectedTreeID)
+                : null;
+            SelectedTree = tree;
         }
 
         public async Task AddTree()
@@ -307,6 +324,11 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
                     stratumCode = selection;
                 }
+                else if(strata.Length == 0)
+                {
+                    DialogService.ShowMessageAsync($"Unit Contains no Strata").FireAndForget();
+                    return;
+                }
                 else { stratumCode = strata[0]; }
             }
 
@@ -320,10 +342,66 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
                     sampleGroupCode = selection;
                 }
+                else if(sampleGroups.Length == 0)
+                {
+                    DialogService.ShowMessageAsync($"Stratum Contains no Sample Groups").FireAndForget();
+                    return;
+                }
                 else { sampleGroupCode = sampleGroups[0]; }
             }
 
             var sg = SampleGroupDataservice.GetSampleGroup(stratumCode, sampleGroupCode);
+
+            string treeID = null;
+            var cruiseMethod = StratumDataservice.GetCruiseMethod(stratumCode);
+            if (cruiseMethod == CruiseMethods.THREEPPNT)
+            {
+                DialogService.ShowMessageAsync("Cannot Add Tree to 3PPNT Stratum").FireAndForget();
+                return;
+            }
+            if (cruiseMethod == CruiseMethods.FIXCNT)
+            {
+                plotNumber ??= await AskPlotNumber(cuttingUnitCode, stratumCode);
+                if (plotNumber == null || plotNumber.Value < 0) return;
+
+                var fixCNTTallyPopulations = FixCNTDataservice.GetFixCNTTallyPopulations(stratumCode)
+                    .Where(x => x.SampleGroupCode == sampleGroupCode)
+                    .ToArray();
+                if (fixCNTTallyPopulations.Length == 0)
+                {
+                    DialogService.ShowMessageAsync($"FixCNT Tally Populations Have Not Been Setup For Sample Group {sampleGroupCode}").FireAndForget();
+                    return;
+                }
+
+                var speciesOptions = fixCNTTallyPopulations.Select(x => x.SpeciesCode).ToArray();
+                // we implicitly know that there is at least one species in the fixcnt tally populations
+
+                var speciesCode = speciesOptions.FirstOrDefault() ?? await DialogService.AskValueAsync("Select Species", speciesOptions);
+
+                var tallyPop = fixCNTTallyPopulations.First(x => x.SpeciesCode == speciesCode); //should only be one
+
+                var intervalOptionns = NatCruise.Data.FixCNTDataservice.GetIntervalValues(tallyPop.Min, tallyPop.Max, tallyPop.IntervalSize).ToArray();
+                var intervalValue = await DialogService.AskValueAsync("Select Interval", intervalOptionns);
+
+                if (FixCNTDataservice.GetOneTreePerTallyOption())
+                {
+                    treeID = FixCNTDataservice.AddFixCNTTree(cuttingUnitCode, plotNumber.Value, stratumCode, sampleGroupCode, speciesCode, tallyPop.LiveDead, tallyPop.FieldName, intervalValue);
+                    OnTreeAdded(treeID);
+                }
+                else
+                {
+                    treeID = FixCNTDataservice.IncrementFixCNTTreeCount(cuttingUnitCode, plotNumber.Value, stratumCode, sampleGroupCode, speciesCode, tallyPop.LiveDead, tallyPop.FieldName, intervalValue);
+
+                    var tree = Trees.FirstOrDefault(x => x.TreeID == treeID);
+                    if ((tree!= null))
+                    {
+                        tree.TreeCount++;
+                    }
+                    //RefreshTrees();
+                }
+
+                return;
+            }
 
             var defaultLD = sg.DefaultLiveDead;
             var subPops = SubpopulationDataservice.GetSubpopulations(stratumCode, sampleGroupCode)
@@ -340,23 +418,12 @@ namespace NatCruise.Wpf.FieldData.ViewModels
                 subPops.TryGetValue(selectedSubPopAlias, out selectedSubPop);
             }
 
-            string treeID = null;
-            var cruiseMethod = StratumDataservice.GetCruiseMethod(stratumCode);
+            
+            
             if (CruiseMethods.PLOT_METHODS.Contains(cruiseMethod))
             {
-                if (plotNumber is null)
-                {
-                    var plotNumbers = PlotDataservice.GetPlotNumbersOrdered(cuttingUnitCode, stratumCode)
-                        .Select(x => x.ToString()).ToArray();
-                    if(plotNumbers.Length is 0)
-                    {
-                        DialogService.ShowMessageAsync($"Unit Contains no Plots in Stratum {stratumCode}").FireAndForget();
-                        return;
-                    }
-                    var result = await DialogService.AskValueAsync("Select Plot Number", plotNumbers);
-                    if (result is null || !int.TryParse(result, out var iResult)) return;
-                    plotNumber = iResult;
-                }
+                plotNumber ??= await AskPlotNumber(cuttingUnitCode, stratumCode);
+                if (plotNumber == null || plotNumber.Value < 0) return;
 
                 string countOrMeasure = "M";
                 if (CruiseMethods.TALLY_METHODS.Contains(cruiseMethod))
@@ -421,6 +488,21 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             }
 
             OnTreeAdded(treeID);
+
+            Task<int> AskPlotNumber(string cuttingUnitCode, string stratumCode)
+            {
+                if (plotNumber is null)
+                {
+                    var plotNumbers = PlotDataservice.GetPlotNumbersOrdered(cuttingUnitCode, stratumCode).ToArray();
+                    if (plotNumbers.Length is 0)
+                    {
+                        DialogService.ShowMessageAsync($"Unit Contains no Plots in Stratum {stratumCode}").FireAndForget();
+                        return Task.FromResult(-1);
+                    }
+                    return DialogService.AskValueAsync("Select Plot Number", plotNumbers);
+                }
+                return Task.FromResult(-1);
+            }
         }
 
         protected void OnTreeAdded(string treeID)
@@ -431,6 +513,8 @@ namespace NatCruise.Wpf.FieldData.ViewModels
 
             TreeAdded?.Invoke(this, EventArgs.Empty);
         }
+
+
 
         public Task DeleteTree()
         {

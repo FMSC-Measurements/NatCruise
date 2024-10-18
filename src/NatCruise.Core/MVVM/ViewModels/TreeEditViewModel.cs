@@ -224,6 +224,7 @@ namespace NatCruise.MVVM.ViewModels
                 var tree = Tree;
                 if (tree == null) { return; }
                 TreeDataservice.UpdateTreeCount(tree.TreeID, value);
+                tree.TreeCount = value;
                 OnPropertyChanged();
             }
         }

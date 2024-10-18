@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AndroidX.Annotations;
 
 namespace FScruiser.Maui.Services
 {
@@ -146,11 +147,18 @@ namespace FScruiser.Maui.Services
             return _askTreeCountTcs.Task;
         }
 
-        public async Task<string> AskValueAsync(string prompt, params string[] values)
+        public async Task<string?> AskValueAsync(string prompt, params string[] values)
         {
             var result = await GetCurrentPage().DisplayActionSheet(prompt, "Cancel", null, values);
             if (result == "Cancel") { result = null; }
             return result;
+        }
+
+        public async Task<TValue?> AskValueAsync<TValue>(string prompt, params TValue[] values)
+        {
+            var value = await GetCurrentPage().DisplayActionSheet(prompt, "Cancel", null, values.Select(x => x.ToString()).ToArray());
+            if (value == "Cancel") { return default; }
+            return values.First(x => x.ToString() == value);
         }
 
         public async Task<bool> AskYesNoAsync(string message, string caption, bool defaultNo = false)

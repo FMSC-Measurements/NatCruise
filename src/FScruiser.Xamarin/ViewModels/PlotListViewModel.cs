@@ -97,8 +97,7 @@ namespace FScruiser.XF.ViewModels
             Plots = PlotDataservice.GetPlotsByUnitCode(UnitCode).ToArray();
             OnPropertyChanged(nameof(Plots));
 
-            HasFixCNTStrata = CuttingUnitDataservice.GetCuttingUnitStrataSummary(UnitCode)
-                .Methods
+            HasFixCNTStrata = CuttingUnitDataservice.GetCruiseMethodsByUnit(UnitCode)
                 .Any(x => x == CruiseDAL.Schema.CruiseMethods.FIXCNT);
         }
 
