@@ -22,8 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Pack_FScruiser_AAB.cmd = Pack_FScruiser_AAB.cmd
 		Pack_FScruiser_APK.cmd = Pack_FScruiser_APK.cmd
 		buildTasks\ProcessCodeTemplate.cs = buildTasks\ProcessCodeTemplate.cs
-		..\README.md = ..\README.md
 		Publish_Maui_AAB_unsigned.cmd = Publish_Maui_AAB_unsigned.cmd
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FScruiser.Xamarin", "FScruiser.Xamarin\FScruiser.Xamarin.csproj", "{4F88C7B5-8874-4277-A59A-0F39234481BE}"
@@ -65,6 +65,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FScruiser.Maui", "FScruiser.Maui\FScruiser.Maui.csproj", "{B1A13EA3-9433-4701-960D-CAA430730F26}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backpack.Maui", "..\Backpack.Maui\src\Backpack.Maui\Backpack.Maui.csproj", "{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NatCruise.Check", "NatCruise.Check\NatCruise.Check.csproj", "{C2FBF686-DCB4-4443-8EFA-B50795261981}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -316,6 +318,18 @@ Global
 		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Release|x86.ActiveCfg = Release|Any CPU
 		{A1423C55-0CDB-40B4-AABB-C60B79C43EB9}.Release|x86.Build.0 = Release|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Debug|x86.Build.0 = Debug|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Profile|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Profile|Any CPU.Build.0 = Debug|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Profile|x86.ActiveCfg = Debug|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Profile|x86.Build.0 = Debug|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Release|x86.ActiveCfg = Release|Any CPU
+		{C2FBF686-DCB4-4443-8EFA-B50795261981}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

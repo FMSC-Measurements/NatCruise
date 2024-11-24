@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+	  <UseWPF>true</UseWPF>
+    <!--<ImplicitUsings>enable</ImplicitUsings>-->
+    <!--<Nullable>enable</Nullable>-->
+	  
+	  
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+	  <PackageReference Include="CruiseDAL.V2" Version="2.7.4.124" />
+	  <PackageReference Include="CruiseDAL.V3.DownConvert" Version="3.6.7.12403" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NatCruise.Core\NatCruise.Core.csproj" />
+  </ItemGroup>
+
+</Project>
