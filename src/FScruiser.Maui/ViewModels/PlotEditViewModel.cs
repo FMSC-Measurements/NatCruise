@@ -51,7 +51,7 @@ public class PlotEditViewModel : ViewModelBase
         }
     }
 
-    private void OnPlotChanged(Plot plot)
+    private void OnPlotChanged(Plot? plot)
     {
         if (plot != null)
         {
@@ -100,7 +100,7 @@ public class PlotEditViewModel : ViewModelBase
         //    }
         //}
 
-        PlotDataservice.UpdatePlotNumber(Plot.PlotID, plotNumber);
+        PlotDataservice.UpdatePlotNumber(Plot!.PlotID, plotNumber);
 
         OnPropertyChanged(nameof(PlotNumber));
     }
@@ -133,15 +133,18 @@ public class PlotEditViewModel : ViewModelBase
 
     private void UpdatePlotNumber(int newValue)
     {
-        var oldValue = Plot.PlotNumber;
+        var plot = Plot;
+        if(plot is null) { return; }
+
+        var oldValue = plot.PlotNumber;
         // HACK because UpdatePlotNumber may be called twice when the value changes,
         // i.e. once when the control loses focus and once when the ReturnCommand is fired
         // we need to assure that the old and new values are different
         if (oldValue == newValue) { return; }
 
-        if (PlotDataservice.IsPlotNumberAvalible(UnitCode, newValue))
+        if (PlotDataservice.IsPlotNumberAvalible(plot.CuttingUnitCode, newValue))
         {
-            PlotDataservice.UpdatePlotNumber(Plot.PlotID, newValue);
+            PlotDataservice.UpdatePlotNumber(plot.PlotID, newValue);
 
             PlotNumber = newValue;
         }
@@ -215,6 +218,8 @@ public class PlotEditViewModel : ViewModelBase
     public async Task ToggleInCruiseAsync(Plot_Stratum? stratumPlot)
     {
         var plot = Plot;
+        if (stratumPlot is null || plot is null) { return; }
+
         var plotNumber = plot.PlotNumber;
         var stratumCode = stratumPlot.StratumCode;
 
@@ -293,8 +298,13 @@ public class PlotEditViewModel : ViewModelBase
         Plot = PlotDataservice.GetPlot(unitCode, plotNumber);
     }
 
-    protected void RefreshErrorsAndWarnings(Plot plot)
+    protected void RefreshErrorsAndWarnings(Plot? plot)
     {
+        if (plot is null)
+        {
+            ErrorsAndWarnings = Array.Empty<PlotError>();
+            return;
+        }
         var errorsAndWarnings = PlotErrorDataservice.GetPlotErrors(plot.PlotID);
         ErrorsAndWarnings = errorsAndWarnings;
     }
@@ -341,6 +351,8 @@ public class PlotEditViewModel : ViewModelBase
 
     public Task ShowLimitingDistanceCalculatorAsync(Plot_Stratum? stratumPlot)
     {
+        if(stratumPlot == null) { return Task.CompletedTask; }
+
         return NavigationService.ShowLimitingDistance(UnitCode, stratumPlot.StratumCode, stratumPlot.PlotNumber);
     }
 }
