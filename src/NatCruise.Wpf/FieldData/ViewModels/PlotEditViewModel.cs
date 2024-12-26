@@ -28,7 +28,6 @@ namespace NatCruise.Wpf.FieldData.ViewModels
         private IApplicationSettingService _appSettings;
         private bool _isSuperuserModeEnabled;
         private bool _isLocked;
-        private string _cuttingUnitCode;
         private IReadOnlyCollection<string> _cuttingUnitOptions;
 
         protected INatCruiseNavigationService NavigationService { get; }
