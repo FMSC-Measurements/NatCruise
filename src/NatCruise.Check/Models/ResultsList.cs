@@ -54,7 +54,7 @@ namespace NatCruise.Check.Models
         public int R_LogGrade_R { get; set; }
         public float R_CC_LogSeenDef { get; set; }
         public int R_LogSeenDef_R { get; set; }
-        public int R_IncludeVol { get; set; }
+        //public int R_IncludeVol { get; set; }
         public string R_TreeSpecies { get; set; }
         public string R_TreeProduct { get; set; }
         public string R_MarkerInitials { get; set; }

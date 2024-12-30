@@ -18,31 +18,32 @@ namespace NatCruise.Check.Reports
 
         public dataBaseCommands CheckCruiseDataService { get; }
 
-        public ReportLevel ReportLevel { get; }
-        public string CruiserName { get; }
         public string CruiserInitials { get; }
 
-        public string SaleName { get; }
-        public string Region { get; }
-        public List<ResultsList> CheckResults { get; }
-        public List<TolerancesList> CruiseTolerances { get; }
-        public List<TreeDO> CheckTrees { get; }
-        public List<LogStockDO> CheckLogs { get; }
+        public string SaleName { get; protected set; }
+        public string Region { get; protected set; }
+        public List<ResultsList> CheckResults { get; protected set; }
+        public List<TreeDO> CheckTrees { get; protected set; }
+        public List<LogStockDO> CheckLogs { get; protected set; }
 
-        public string CheckCruiserInitials { get; }
+        public string CheckCruiserInitials { get; protected set; }
 
-        public EvaluationReportBuilder(dataBaseCommands checkCruiseDataService, ReportLevel reportLevel, string cruiserName, string cruiserInitials)
+        public EvaluationReportBuilder(dataBaseCommands checkCruiseDataService)
         {
             CheckCruiseDataService = checkCruiseDataService;
+        }
 
-            ReportLevel = reportLevel;
-
+        public void Initialize()
+        {
             SaleName = CheckCruiseDataService.getSaleName();
             Region = CheckCruiseDataService.getRegion();
             CheckLogs = CheckCruiseDataService.getLogStock();
-            CruiseTolerances = CheckCruiseDataService.getTolerances();
+            //CruiseTolerances = CheckCruiseDataService.getTolerances();
             CheckCruiserInitials = CheckCruiseDataService.getCheckCruiserInitials();
+        }
 
+        public void BuildReport(TextWriter writer, ToleranceConfig toleranceConfig, ReportLevel reportLevel, string cruiserName, string cruiserInitials)
+        {
             if (reportLevel == ReportLevel.BySale)
             {
                 CheckResults = CheckCruiseDataService.getResultsTable("", "");
@@ -65,65 +66,66 @@ namespace NatCruise.Check.Reports
                     { CheckTrees.Add(tree); }
                 }
             }
-        }
-
-        public void CreateReport(TextWriter writer)
-        {
-            //  first, check if the entire cruise has tree-based methods
-            //  the reason being, in/out trees are not checked and need to be
-            //  suppressed from the evaluation report and the pass/fail
-            //  calculation --  July 2015
-            var hasAllTreeBasedStrata = CheckHasAllTreeBasedStrata(CheckCruiseDataService);
 
             //  create RTF objer
             EvaluationReportRTF evalRTF = new EvaluationReportRTF();
 
-            float totalOverallErr = 0;
+            double totalOverallErr = 0;
 
             int overallTotalPossible = 0;
-            var passFail = 0; // 1 is fail 0 is pass
 
             //  update main header and print
             evalRTF.MainHeader[13] = evalRTF.MainHeader[13].Replace("XXXXX", SaleName);
             evalRTF.MainHeader[16] = evalRTF.MainHeader[16].Replace("XX", Region);
             printLines(writer, evalRTF.MainHeader, 18);
 
-            if (ReportLevel == ReportLevel.ByCruiser)
+            if (reportLevel == ReportLevel.ByCruiser)
             {
                 //  update and print cruiser ID and name
-                evalRTF.CruiserID[7] = evalRTF.CruiserID[7].Replace("XXXX", CruiserName);
+                evalRTF.CruiserID[7] = evalRTF.CruiserID[7].Replace("XXXX", cruiserName);
                 printLines(writer, evalRTF.CruiserID, 9);
-                evalRTF.CruiserName[7] = evalRTF.CruiserName[7].Replace("XXXX", CruiserInitials);
+                evalRTF.CruiserName[7] = evalRTF.CruiserName[7].Replace("XXXX", cruiserInitials);
                 printLines(writer, evalRTF.CruiserName, 9);
             }
 
-            WriteTreeMeasurmentsTable(writer, hasAllTreeBasedStrata, evalRTF, ref totalOverallErr, ref overallTotalPossible, ref passFail);
+            var passFail = WriteTreeMeasurmentsTable(writer,
+                toleranceConfig,
+                evalRTF,
+                ref totalOverallErr,
+                ref overallTotalPossible);
 
             //  printing volume goes here
             //  June 2015 -- volume section has been revised
             //  check for include volume is moved to volume output
-            int nResult = 0;
-            if (ReportLevel == ReportLevel.BySale)
+            PassFail volumeComparisonResult = PassFail.Pass;
+            if (reportLevel == ReportLevel.BySale)
             {
-                nResult = DisplayVolume(writer, CruiseTolerances[0], "");
+                volumeComparisonResult = DisplayVolume(writer, toleranceConfig.VolumeConfig, "");
             }
-            else if (ReportLevel == ReportLevel.ByCruiser)
+            else if (reportLevel == ReportLevel.ByCruiser)
             {
-                nResult = DisplayVolume(writer, CruiseTolerances[0], CruiserInitials);
+                volumeComparisonResult = DisplayVolume(writer, toleranceConfig.VolumeConfig, cruiserInitials);
             }
 
             //  printing rest of page goes here
-            float calcError = (float)((1.0 - totalOverallErr / overallTotalPossible)) * 100;
-            if (passFail == 1 || calcError < CruiseTolerances[0].T_OverallAccuracy || nResult == 1)
+            double calcError = (1.0 - totalOverallErr / overallTotalPossible) * 100.0;
+            if (passFail == PassFail.Fail
+                || calcError < toleranceConfig.MinOverallAccuracy
+                || volumeComparisonResult == PassFail.Fail)
+             {
                 evalRTF.EvaluationLines[1] = evalRTF.EvaluationLines[1].Replace("XXXX", "FAIL");
-            else evalRTF.EvaluationLines[1] = evalRTF.EvaluationLines[1].Replace("XXXX", "PASS");
+            }
+            else
+            {
+                evalRTF.EvaluationLines[1] = evalRTF.EvaluationLines[1].Replace("XXXX", "PASS");
+            }
             printLines(writer, evalRTF.EvaluationLines, 2);
 
             printLines(writer, evalRTF.FirstText, 6);
             printLines(writer, evalRTF.SecondText, 5);
 
-            evalRTF.ThirdText[2] = evalRTF.ThirdText[2].Replace("XXX", Utilities.FormatField(CruiseTolerances[0].T_ElementAccuracy, "{0,3:F0}").ToString());
-            evalRTF.ThirdText[2] = evalRTF.ThirdText[2].Replace("ZZZ", Utilities.FormatField(CruiseTolerances[0].T_OverallAccuracy, "{0,3:F0}").ToString());
+            evalRTF.ThirdText[2] = evalRTF.ThirdText[2].Replace("XXX", Utilities.FormatField(toleranceConfig.MinElementAccuracy, "{0,3:F0}").ToString());
+            evalRTF.ThirdText[2] = evalRTF.ThirdText[2].Replace("ZZZ", Utilities.FormatField(toleranceConfig.MinOverallAccuracy, "{0,3:F0}").ToString());
             printLines(writer, evalRTF.ThirdText, 5);
 
             printLines(writer, evalRTF.CommentSection, 27);
@@ -132,10 +134,21 @@ namespace NatCruise.Check.Reports
             writer.WriteLine("}");
         }
 
-        private void WriteTreeMeasurmentsTable(TextWriter writer, bool hasAllTreeBasedStrata, EvaluationReportRTF evalRTF, ref float totalOverallErr, ref int overallTotalPossible, ref int passFail)
+        private PassFail WriteTreeMeasurmentsTable(TextWriter writer,
+            ToleranceConfig toleranceConfig,
+            EvaluationReportRTF evalRTF,
+            ref double totalOverallErr,
+            ref int overallTotalPossible)
         {
+            //  first, check if the entire cruise has tree-based methods
+            //  the reason being, in/out trees are not checked and need to be
+            //  suppressed from the evaluation report and the pass/fail
+            //  calculation --  July 2015
+            var hasAllTreeBasedStrata = CheckHasAllTreeBasedStrata(CheckCruiseDataService);
+
+            PassFail passFail = PassFail.Pass;
             int numElements = 0;
-            float totalAccuracyScore = 0;
+            double totalAccuracyScore = 0;
 
             //  need a small array for element line so replacement doesn't mess up original;
             string hold15 = evalRTF.ElementLine[15];
@@ -152,74 +165,72 @@ namespace NatCruise.Check.Reports
             printLines(writer, evalRTF.ThirdHeader, 23); // Third row of headers
 
             // output tolerances list
-            foreach (TolerancesList tl in CruiseTolerances)
+            foreach (TolerancesList tl in toleranceConfig.Tolerances)
             {
                 //  if the cruise is all tree-based strata and element is in/out trees
                 //  skip printing of this element
-                if (!hasAllTreeBasedStrata || tl.T_Element != "In/Out Trees")
+                if (hasAllTreeBasedStrata && tl.T_Element == "In/Out Trees")
+                { continue; }
+
+                //  insert element
+                if (tl.T_Element != "" || tl.T_Element != null)
+                    evalRTF.ElementLine[15] = evalRTF.ElementLine[15].Replace("XXXXX", tl.T_Element);
+
+                //  insert tolerance, units and additional parameter
+                if (tl.T_Tolerance == "None")
                 {
-                    StringBuilder tempString = new StringBuilder();
-                    //  insert element
-                    if (tl.T_Element != "" || tl.T_Element != null)
-                        evalRTF.ElementLine[15] = evalRTF.ElementLine[15].Replace("XXXXX", tl.T_Element);
-
-                    //  insert tolerance, units and additional parameter
-                    if (tl.T_Tolerance == "None")
+                    evalRTF.ElementLine[16] = evalRTF.ElementLine[16].Replace("TTTT", tl.T_Tolerance);
+                }
+                else
+                {
+                    var str = "+/- " + tl.T_Tolerance + " " + tl.T_Units;
+                    if (tl.T_AddParam != "None")
                     {
-                        evalRTF.ElementLine[16] = evalRTF.ElementLine[16].Replace("TTTT", tl.T_Tolerance);
+                        str = str + " or " + tl.T_AddParam;
                     }
-                    else if (tl.T_Tolerance != "None")
-                    {
-                        tempString.Remove(0, tempString.Length);
-                        tempString.Append("+/- ");
-                        tempString.Append(tl.T_Tolerance);
-                        tempString.Append(" ");
-                        tempString.Append(tl.T_Units);
-                        if (tl.T_AddParam != "None")
-                        {
-                            tempString.Append(" or ");
-                            tempString.Append(tl.T_AddParam);
-                        }   //  endif
-                        evalRTF.ElementLine[16] = evalRTF.ElementLine[16].Replace("TTTT", tempString.ToString());
-                    }   //  endif
+                    evalRTF.ElementLine[16] = evalRTF.ElementLine[16].Replace("TTTT", str);
+                }   //  endif
 
-                    //  put weight in correct position
-                    tempString.Remove(0, tempString.Length);
-                    tempString.Append(Utilities.FormatField(tl.T_Weight, "{0,3:F0}").ToString());
-                    evalRTF.ElementLine[19] = evalRTF.ElementLine[19].Replace("AAAA", tempString.ToString());
+                //  put weight in correct position
+                evalRTF.ElementLine[19] = evalRTF.ElementLine[19]
+                    .Replace("AAAA", Utilities.FormatField(tl.T_Weight, "{0,3:F0}").ToString());
 
-                    //  Calculate values for each element except in/out trees
-                    passFail = CalculateValues(tl, out float totalPossible, out int numberIncorrect, out float totalError, out float accuracyScore,
-                                            CruiseTolerances[0].T_ElementAccuracy) ? passFail : 1; // passFail value of 1 is fail
+                //  Calculate values for each element except in/out trees
+                if (!CalculateValues(tl,
+                    out int totalPossible,
+                    out int numberIncorrect,
+                    out double totalError,
+                    out double accuracyScore,
+                    toleranceConfig.MinElementAccuracy))
+                { passFail = PassFail.Fail; }
 
-                    //  load element line with values
-                    evalRTF.ElementLine[17] = evalRTF.ElementLine[17].Replace("YYYY", Utilities.FormatField(totalPossible, "{0,4:F0}").ToString());
-                    evalRTF.ElementLine[18] = evalRTF.ElementLine[18].Replace("ZZZZ", Utilities.FormatField(numberIncorrect, "{0,4:F0}").ToString());
-                    evalRTF.ElementLine[20] = evalRTF.ElementLine[20].Replace("BBBB", Utilities.FormatField(totalError, "{0,4:F0}").ToString());
-                    evalRTF.ElementLine[21] = evalRTF.ElementLine[21].Replace("DDDD", Utilities.FormatField(accuracyScore, "{0,4:F0}").ToString());
-                    //  When an area-based stratum is not checked, the in/out element shows zero for everything
-                    //  The accuracy of zero causes the check to fail so need to suppress  printing that element
-                    //  If there are multiple strata that are area-based, even one checked would prevent the
-                    //  element from being suppressed since total possible will be greater than zero
-                    //  February 2016
-                    if (totalPossible > 0)
-                        printLines(writer, evalRTF.ElementLine, 23);
+                //  load element line with values
+                evalRTF.ElementLine[17] = evalRTF.ElementLine[17].Replace("YYYY", Utilities.FormatField(totalPossible, "{0,4:F0}").ToString());
+                evalRTF.ElementLine[18] = evalRTF.ElementLine[18].Replace("ZZZZ", Utilities.FormatField(numberIncorrect, "{0,4:F0}").ToString());
+                evalRTF.ElementLine[20] = evalRTF.ElementLine[20].Replace("BBBB", Utilities.FormatField(totalError, "{0,4:F0}").ToString());
+                evalRTF.ElementLine[21] = evalRTF.ElementLine[21].Replace("DDDD", Utilities.FormatField(accuracyScore, "{0,4:F0}").ToString());
+                //  When an area-based stratum is not checked, the in/out element shows zero for everything
+                //  The accuracy of zero causes the check to fail so need to suppress  printing that element
+                //  If there are multiple strata that are area-based, even one checked would prevent the
+                //  element from being suppressed since total possible will be greater than zero
+                //  February 2016
+                if (totalPossible > 0)
+                    printLines(writer, evalRTF.ElementLine, 23);
 
-                    //  add values to overall totals
-                    overallTotalPossible += (int)totalPossible;
-                    totalOverallErr += totalError;
-                    totalAccuracyScore += accuracyScore;
-                    numElements++;
+                //  add values to overall totals
+                overallTotalPossible += totalPossible;
+                totalOverallErr += totalError;
+                totalAccuracyScore += accuracyScore;
+                numElements++;
 
-                    //  replace lines in the element line to get originals back for next element store
-                    evalRTF.ElementLine[15] = hold15;
-                    evalRTF.ElementLine[16] = hold16;
-                    evalRTF.ElementLine[17] = hold17;
-                    evalRTF.ElementLine[18] = hold18;
-                    evalRTF.ElementLine[19] = hold19;
-                    evalRTF.ElementLine[20] = hold20;
-                    evalRTF.ElementLine[21] = hold21;
-                }   //  endif all tree-based strata
+                //  replace lines in the element line to get originals back for next element store
+                evalRTF.ElementLine[15] = hold15;
+                evalRTF.ElementLine[16] = hold16;
+                evalRTF.ElementLine[17] = hold17;
+                evalRTF.ElementLine[18] = hold18;
+                evalRTF.ElementLine[19] = hold19;
+                evalRTF.ElementLine[20] = hold20;
+                evalRTF.ElementLine[21] = hold21;
             }   //  end foreach
 
             //  print total line
@@ -232,6 +243,8 @@ namespace NatCruise.Check.Reports
                     Utilities.FormatField(calcValue, "{0,3:F0}").ToString());
             }   //  endif
             printLines(writer, evalRTF.TotalLine, 23);
+
+            return passFail;
         }
 
         private bool CheckHasAllTreeBasedStrata(dataBaseCommands checkCruiseDataService)
@@ -239,6 +252,8 @@ namespace NatCruise.Check.Reports
             //  check each stratum in checkResults for all tree-based methods
             List<StratumDO> sList = checkCruiseDataService.getStrata();
 
+            // TODO it would probably be more effective to check for any plot based methods
+            // than to check that all strata are tree based, but that was what the original implimentation did
             return sList.All(x => TREE_BASED_CRUISE_METHODS.Contains(x.Method));
 
             //int numTreeBased = 0;
@@ -258,8 +273,8 @@ namespace NatCruise.Check.Reports
             //return 0;
         }   //  end CheckStrata
 
-        private bool CalculateValues(TolerancesList currTL, out float totalPossible, out int numberIncorrect,
-                            out float totalError, out float accuracyScore, float elementAccuracy)
+        private bool CalculateValues(TolerancesList currTL, out int totalPossible, out int numberIncorrect,
+                            out double totalError, out double accuracyScore, double elementAccuracy)
         {
             //  this has to change slightly for log elements
             //  total possible is the total number of logs in the selected units.  even though only three trees may have been checked
@@ -283,21 +298,21 @@ namespace NatCruise.Check.Reports
             numberIncorrect = justIncorrect.Count();
 
             //  calculate total error
-            totalError = numberIncorrect * currTL.T_Weight;
+            totalError = numberIncorrect * currTL.T_Weight; // TODO is weighting the error at this point a bug, shouldn't wight be applied later
             if ((Region == "10" && currTL.T_Element == "Log Defect %") ||
                 (Region == "10" && currTL.T_Element == "Log Grade"))
-                totalError = (float)(justIncorrect.Count * 0.85);
+            { totalError = numberIncorrect * 0.85; } // TODO remove magic element weight for R10
 
             //  Calculate accuracy score
-            accuracyScore = (totalPossible > 0.0) ? (float)(1.00 - (totalError / totalPossible)) * 100 : 0.0f;
+            accuracyScore = (totalPossible > 0.0) ? (1.00 - (totalError / totalPossible)) * 100.0 : 0.0;
 
             //  if score is less than individual accuracy score, cruiser fails on in/out trees
             return !(accuracyScore < elementAccuracy && totalPossible > 0);
         }   //  end CalculateValues
 
-        private float TrueNumberOfTrees(string currElement, string CCinitials)
+        private int TrueNumberOfTrees(string currElement, string CCinitials)
         {
-            float returnTrees = 0;
+            int returnTrees = 0;
             //  pull stratum list to get two stage methods separated from other methods
             List<StratumDO> sList = CheckCruiseDataService.getStrata();
             if (currElement == "In/Out Trees")

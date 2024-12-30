@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NatCruise.Check.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,31 +10,34 @@ namespace NatCruise.Check.Reports
 {
     public partial class EvaluationReportBuilder
     {
-        public int DisplayVolume(TextWriter writer, TolerancesList currTolerance, string cruiserInitials)
+        //  displays either volume with no comparison or comparison volume depending on if include volumes is selected
+        public PassFail DisplayVolume(TextWriter writer,
+            //TolerancesList currTolerance,
+            ToleranceVolumeOptions volumeToleranceConfig,
+            string cruiserInitials)
         {
             EvaluationReportRTF eRTF = new EvaluationReportRTF();
-            int includeFlag = 0;
-            int compareResult = 0;
 
-            //  displays either volume with no comparison or comparison volume
-            includeFlag = CheckResults.Sum(c => c.R_IncludeVol);
+            PassFail compareResult = PassFail.Pass;
+
+
 
             //  get results data based on group selected
             List<ResultsList> groupedTrees = new List<ResultsList>();
             int byWhich = 0;
-            if (currTolerance.T_BySpecies == 1)
+            if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.BySpecies)
             {
                 groupedTrees = CheckCruiseDataService.getResultsTable("R_TreeSpecies", "");
                 byWhich = 1;
             }
-            else if (currTolerance.T_ByProduct == 1)
+            else if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.ByProduct)
             {
                 groupedTrees = CheckCruiseDataService.getResultsTable("R_TreeProduct", "");
                 byWhich = 2;
             }   //  endif
 
             //  complete and print header for volume portion
-            int tableToUse = CompleteAndPrintHeader(currTolerance, writer, eRTF, includeFlag);
+            int tableToUse = CompleteAndPrintHeader(volumeToleranceConfig, writer, eRTF);
 
             //  capture volumeLine for future changes
             string[] lineHold = new string[13];
@@ -129,80 +133,118 @@ namespace NatCruise.Check.Reports
                     eRTF.VolumeLine[37] = eRTF.VolumeLine[37].Replace("xxxxxx", Utilities.FormatField(BDFTnet, "{0,4:F0}").ToString());
                     eRTF.VolumeLine[38] = eRTF.VolumeLine[38].Replace("xxxxxx", Utilities.FormatField(BDFTnetCC, "{0,4:F0}").ToString());
 
-                    //  is comparison needed
-                    double PC_CUFTgross = 0;
-                    double PC_CUFTnet = 0;
-                    double PC_BDFTgross = 0;
-                    double PC_BDFTnet = 0;
-                    if (includeFlag > 0)
+
+                    if (volumeToleranceConfig.IncludeVolumes)
                     {
+                        //  is comparison needed
+                        double PC_CUFTgross = 0;
+                        double PC_CUFTnet = 0;
+                        double PC_BDFTgross = 0;
+                        double PC_BDFTnet = 0;
+
                         if (CUFTgross > 0)
                             PC_CUFTgross = ((CUFTgross - CUFTgrossCC) / CUFTgross) * 100;
                         else PC_CUFTgross = 0;
-                        if (CUFTgross == 0.0 && CUFTgrossCC == 0.0 && PC_CUFTgross == 100.0)
-                            eRTF.VolumeLine[30] = eRTF.VolumeLine[30].Replace("xx", "na");
-                        else if (currTolerance.T_CUFTPGtolerance == 0.0 && currTolerance.T_CUFTSGtolerance == 0.0 &&
-                                    currTolerance.T_CUFTPSGtolerance == 0.0)
-                            eRTF.VolumeLine[30] = eRTF.VolumeLine[30].Replace("xx", "na");
-                        else eRTF.VolumeLine[30] = eRTF.VolumeLine[30].Replace("xx", Utilities.FormatField(Math.Abs(PC_CUFTgross), "{0,2:F0}").ToString());
+
+                        if ((CUFTgross == 0.0 && CUFTgrossCC == 0.0 && PC_CUFTgross == 100.0)
+                            || (volumeToleranceConfig.T_CUFTPGtolerance == 0.0
+                                && volumeToleranceConfig.T_CUFTSGtolerance == 0.0
+                                && volumeToleranceConfig.T_CUFTPSGtolerance == 0.0))
+                        { eRTF.VolumeLine[30] = eRTF.VolumeLine[30].Replace("xx", "na"); }
+                        else
+                        {
+                            eRTF.VolumeLine[30] = eRTF.VolumeLine[30]
+                                .Replace("xx", Utilities.FormatField(Math.Abs(PC_CUFTgross), "{0,2:F0}").ToString());
+                        }
+
                         //  is lercent difference greater than tolerance?
-                        if (currTolerance.T_CUFTPGtolerance != 0.0 && Math.Abs(PC_CUFTgross) > currTolerance.T_CUFTPGtolerance)
-                            compareResult = 1;
-                        else if (currTolerance.T_CUFTSGtolerance != 0.0 && Math.Abs(PC_CUFTgross) > currTolerance.T_CUFTSGtolerance)
-                            compareResult = 1;
-                        else if (currTolerance.T_CUFTPSGtolerance != 0.0 && Math.Abs(PC_CUFTgross) > currTolerance.T_CUFTPSGtolerance)
-                            compareResult = 1;
+                        if (volumeToleranceConfig.T_CUFTPGtolerance != 0.0
+                            && Math.Abs(PC_CUFTgross) > volumeToleranceConfig.T_CUFTPGtolerance)
+                        { compareResult = PassFail.Fail; }
+                        else if (volumeToleranceConfig.T_CUFTSGtolerance != 0.0
+                            && Math.Abs(PC_CUFTgross) > volumeToleranceConfig.T_CUFTSGtolerance)
+                        { compareResult = PassFail.Fail; }
+                        else if (volumeToleranceConfig.T_CUFTPSGtolerance != 0.0
+                            && Math.Abs(PC_CUFTgross) > volumeToleranceConfig.T_CUFTPSGtolerance)
+                        { compareResult = PassFail.Fail; }
 
                         if (CUFTnet > 0)
-                            PC_CUFTnet = ((CUFTnet - CUFTnetCC) / CUFTnet) * 100;
-                        else PC_CUFTnet = 0;
-                        if (CUFTnet == 0.0 && CUFTnetCC == 0.0 && PC_CUFTnet == 100.0)
-                            eRTF.VolumeLine[33] = eRTF.VolumeLine[33].Replace("xx", "na");
-                        else if (currTolerance.T_CUFTPNtolerance == 0.0 && currTolerance.T_CUFTSNtolerance == 0.0 &&
-                                    currTolerance.T_CUFTPSNtolerance == 0.0)
-                            eRTF.VolumeLine[33] = eRTF.VolumeLine[33].Replace("xx", "na");
-                        else eRTF.VolumeLine[33] = eRTF.VolumeLine[33].Replace("xx", Utilities.FormatField(Math.Abs(PC_CUFTnet), "{0,2:F0}").ToString());
+                        { PC_CUFTnet = ((CUFTnet - CUFTnetCC) / CUFTnet) * 100; }
+                        else
+                        { PC_CUFTnet = 0; }
+
+                        if ((CUFTnet == 0.0 && CUFTnetCC == 0.0 && PC_CUFTnet == 100.0)
+                            || (volumeToleranceConfig.T_CUFTPNtolerance == 0.0
+                                && volumeToleranceConfig.T_CUFTSNtolerance == 0.0
+                                && volumeToleranceConfig.T_CUFTPSNtolerance == 0.0))
+                        { eRTF.VolumeLine[33] = eRTF.VolumeLine[33].Replace("xx", "na"); }
+                        else
+                        {
+                            eRTF.VolumeLine[33] = eRTF.VolumeLine[33]
+                                .Replace("xx", Utilities.FormatField(Math.Abs(PC_CUFTnet), "{0,2:F0}").ToString());
+                        }
                         //  is lercent difference greater than tolerance?
-                        if (currTolerance.T_CUFTPNtolerance != 09.0 && Math.Abs(PC_CUFTnet) > currTolerance.T_CUFTPNtolerance)
-                            compareResult = 1;
-                        else if (currTolerance.T_CUFTSNtolerance != 0.0 && Math.Abs(PC_CUFTnet) > currTolerance.T_CUFTSNtolerance)
-                            compareResult = 1;
-                        else if (currTolerance.T_CUFTPSNtolerance != 0.0 && Math.Abs(PC_CUFTnet) > currTolerance.T_CUFTPSNtolerance)
-                            compareResult = 1;
+                        if (volumeToleranceConfig.T_CUFTPNtolerance != 09.0
+                            && Math.Abs(PC_CUFTnet) > volumeToleranceConfig.T_CUFTPNtolerance)
+                        { compareResult = PassFail.Fail; }
+                        else if (volumeToleranceConfig.T_CUFTSNtolerance != 0.0
+                            && Math.Abs(PC_CUFTnet) > volumeToleranceConfig.T_CUFTSNtolerance)
+                        { compareResult = PassFail.Fail; }
+                        else if (volumeToleranceConfig.T_CUFTPSNtolerance != 0.0
+                            && Math.Abs(PC_CUFTnet) > volumeToleranceConfig.T_CUFTPSNtolerance)
+                        { compareResult = PassFail.Fail; }
 
                         if (BDFTgross > 0)
                             PC_BDFTgross = ((BDFTgross - BDFTgrossCC) / BDFTgross) * 100;
                         else PC_BDFTgross = 0;
-                        if (BDFTgross == 0.0 && BDFTgrossCC == 0.0 && PC_BDFTgross == 100.0)
-                            eRTF.VolumeLine[36] = eRTF.VolumeLine[36].Replace("xx", "na");
-                        else if (currTolerance.T_BDFTPGtolerance == 0.0 && currTolerance.T_BDFTSGtolerance == 0.0 &&
-                                    currTolerance.T_BDFTPSGtolerance == 0.0)
-                            eRTF.VolumeLine[36] = eRTF.VolumeLine[36].Replace("xx", "na");
-                        else eRTF.VolumeLine[36] = eRTF.VolumeLine[36].Replace("xx", Utilities.FormatField(Math.Abs(PC_BDFTgross), "{0,2:F0}").ToString());
+
+                        if ((BDFTgross == 0.0 && BDFTgrossCC == 0.0 && PC_BDFTgross == 100.0)
+                            || (volumeToleranceConfig.T_BDFTPGtolerance == 0.0
+                                && volumeToleranceConfig.T_BDFTSGtolerance == 0.0
+                                && volumeToleranceConfig.T_BDFTPSGtolerance == 0.0))
+                        { eRTF.VolumeLine[36] = eRTF.VolumeLine[36].Replace("xx", "na"); }
+                        else
+                        {
+                            eRTF.VolumeLine[36] = eRTF.VolumeLine[36]
+                                .Replace("xx", Utilities.FormatField(Math.Abs(PC_BDFTgross), "{0,2:F0}").ToString());
+                        }
                         //  is lercent difference greater than tolerance?
-                        if (currTolerance.T_BDFTPGtolerance != 0.0 && Math.Abs(PC_BDFTgross) > currTolerance.T_BDFTPGtolerance)
-                            compareResult = 1;
-                        else if (currTolerance.T_BDFTSGtolerance != 0.0 && Math.Abs(PC_BDFTgross) > currTolerance.T_BDFTSGtolerance)
-                            compareResult = 1;
-                        else if (currTolerance.T_BDFTPSGtolerance != 0.0 && Math.Abs(PC_BDFTgross) > currTolerance.T_BDFTPSGtolerance)
-                            compareResult = 1;
+                        if (volumeToleranceConfig.T_BDFTPGtolerance != 0.0
+                            && Math.Abs(PC_BDFTgross) > volumeToleranceConfig.T_BDFTPGtolerance)
+                        { compareResult = PassFail.Fail; }
+                        else if (volumeToleranceConfig.T_BDFTSGtolerance != 0.0
+                            && Math.Abs(PC_BDFTgross) > volumeToleranceConfig.T_BDFTSGtolerance)
+                        { compareResult = PassFail.Fail; }
+                        else if (volumeToleranceConfig.T_BDFTPSGtolerance != 0.0
+                            && Math.Abs(PC_BDFTgross) > volumeToleranceConfig.T_BDFTPSGtolerance)
+                        { compareResult = PassFail.Fail; }
 
                         if (BDFTnet > 0)
-                            PC_BDFTnet = ((BDFTnet - BDFTnetCC) / BDFTnet) * 100;
-                        else PC_BDFTnet = 0;
-                        if (BDFTnet == 0.0 && BDFTnetCC == 0.0 && PC_BDFTnet == 100.0)
-                            eRTF.VolumeLine[39] = eRTF.VolumeLine[39].Replace("xx", "na");
-                        else if (currTolerance.T_BDFTPNtolerance == 0.0 && currTolerance.T_BDFTSNtolerance == 0.0 &&
-                                    currTolerance.T_BDFTPSNtolerance == 0.0)
-                            eRTF.VolumeLine[39] = eRTF.VolumeLine[39].Replace("xx", "na");
-                        else eRTF.VolumeLine[39] = eRTF.VolumeLine[39].Replace("xx", Utilities.FormatField(Math.Abs(PC_BDFTnet), "{0,2:F0}").ToString());
+                        { PC_BDFTnet = ((BDFTnet - BDFTnetCC) / BDFTnet) * 100; }
+                        else
+                        { PC_BDFTnet = 0; }
+
+                        if ((BDFTnet == 0.0 && BDFTnetCC == 0.0 && PC_BDFTnet == 100.0)
+                            || (volumeToleranceConfig.T_BDFTPNtolerance == 0.0
+                            && volumeToleranceConfig.T_BDFTSNtolerance == 0.0
+                            && volumeToleranceConfig.T_BDFTPSNtolerance == 0.0))
+                        { eRTF.VolumeLine[39] = eRTF.VolumeLine[39].Replace("xx", "na"); }
+                        else
+                        {
+                            eRTF.VolumeLine[39] = eRTF.VolumeLine[39]
+                                .Replace("xx", Utilities.FormatField(Math.Abs(PC_BDFTnet), "{0,2:F0}").ToString());
+                        }
+
                         //  is lercent difference greater than tolerance?
-                        if (currTolerance.T_BDFTPNtolerance != 0.0 && Math.Abs(PC_BDFTnet) > currTolerance.T_BDFTPNtolerance)
-                            compareResult = 1;
-                        else if (currTolerance.T_BDFTSNtolerance != 0.0 && Math.Abs(PC_BDFTnet) > currTolerance.T_BDFTSNtolerance)
-                            compareResult = 1;
-                        else if (currTolerance.T_BDFTPSNtolerance != 0.0 && Math.Abs(PC_BDFTnet) > currTolerance.T_BDFTPSNtolerance)
-                            compareResult = 1;
+                        if (volumeToleranceConfig.T_BDFTPNtolerance != 0.0
+                            && Math.Abs(PC_BDFTnet) > volumeToleranceConfig.T_BDFTPNtolerance)
+                        { compareResult = PassFail.Fail; }
+                        else if (volumeToleranceConfig.T_BDFTSNtolerance != 0.0
+                            && Math.Abs(PC_BDFTnet) > volumeToleranceConfig.T_BDFTSNtolerance)
+                        { compareResult = PassFail.Fail; }
+                        else if (volumeToleranceConfig.T_BDFTPSNtolerance != 0.0
+                            && Math.Abs(PC_BDFTnet) > volumeToleranceConfig.T_BDFTPSNtolerance)
+                        { compareResult = PassFail.Fail; }
 
                     }
                     else
@@ -228,40 +270,55 @@ namespace NatCruise.Check.Reports
         }   //  end DisplayVolume
 
 
-        private int CompleteAndPrintHeader(TolerancesList currTolerance, TextWriter writer, EvaluationReportRTF eRTF, int includeFlag)
+        private static int CompleteAndPrintHeader(
+            ToleranceVolumeOptions volumeToleranceConfig,
+            TextWriter writer,
+            EvaluationReportRTF eRTF)
         {
             int tableType = 0;
             //  show percent tolerance as needed
-            if (includeFlag == 0)
+            if (volumeToleranceConfig.IncludeVolumes == false)
             {
-                if (currTolerance.T_CUFTPGtolerance == 1 && currTolerance.T_BDFTPGtolerance == 1)
+                if (volumeToleranceConfig.T_CUFTPGtolerance == 1 && volumeToleranceConfig.T_BDFTPGtolerance == 1)
                 {
-                    if (currTolerance.T_BySpecies == 1)
+                    if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.BySpecies)
+                    {
                         eRTF.VolumeHeaderPrimary[22] = eRTF.VolumeHeaderPrimary[22].Replace("xxxx", "Species");
-                    else if (currTolerance.T_ByProduct == 1)
+                    }
+                    else if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.ByProduct)
+                    {
                         eRTF.VolumeHeaderPrimary[22] = eRTF.VolumeHeaderPrimary[22].Replace("xxxx", "Product");
+                    }
 
                     eRTF.VolumeHeaderPrimary[8] = eRTF.VolumeHeaderPrimary[8].Replace("zzz%", "None");
                     printLines(writer, eRTF.VolumeHeaderPrimary, 28);
                     tableType = 1;
                 }
-                else if (currTolerance.T_CUFTSGtolerance == 1 && currTolerance.T_BDFTSGtolerance == 1)
+                else if (volumeToleranceConfig.T_CUFTSGtolerance == 1 && volumeToleranceConfig.T_BDFTSGtolerance == 1)
                 {
-                    if (currTolerance.T_BySpecies == 1)
+                    if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.BySpecies)
+                      {
                         eRTF.VolumeHeaderSecondary[22] = eRTF.VolumeHeaderSecondary[22].Replace("xxxx", "Species");
-                    else if (currTolerance.T_ByProduct == 1)
+                    }
+                    else if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.ByProduct)
+                     {
                         eRTF.VolumeHeaderSecondary[22] = eRTF.VolumeHeaderSecondary[22].Replace("xxxx", "Product");
+                    }
 
                     eRTF.VolumeHeaderSecondary[8] = eRTF.VolumeHeaderSecondary[8].Replace("zzz%", "None");
                     printLines(writer, eRTF.VolumeHeaderSecondary, 28);
                     tableType = 2;
                 }
-                else if (currTolerance.T_CUFTPSGtolerance == 1 && currTolerance.T_BDFTPSGtolerance == 1)
+                else if (volumeToleranceConfig.T_CUFTPSGtolerance == 1 && volumeToleranceConfig.T_BDFTPSGtolerance == 1)
                 {
-                    if (currTolerance.T_BySpecies == 1)
+                    if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.BySpecies)
+                     {
                         eRTF.VolumeHeaderBoth[13] = eRTF.VolumeHeaderBoth[13].Replace("xxxx", "Species");
-                    else if (currTolerance.T_ByProduct == 1)
+                    }
+                    else if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.ByProduct)
+                     {
                         eRTF.VolumeHeaderBoth[13] = eRTF.VolumeHeaderBoth[13].Replace("xxxx", "Product");
+                    }
 
                     eRTF.VolumeHeaderBoth[14] = eRTF.VolumeHeaderBoth[14].Replace("zzz%", "None");
                     eRTF.VolumeHeaderBoth[15] = eRTF.VolumeHeaderBoth[15].Replace("zzz%", "None");
@@ -271,42 +328,57 @@ namespace NatCruise.Check.Reports
                     printLines(writer, eRTF.VolumeHeaderBoth, 19);
                 }   //  endif
             }
-            else if (includeFlag > 0)
+            else
             {
-                if (currTolerance.T_CUFTPGtolerance > 0 || currTolerance.T_BDFTPGtolerance > 0)
+                if (volumeToleranceConfig.T_CUFTPGtolerance > 0 || volumeToleranceConfig.T_BDFTPGtolerance > 0)
                 {
-                    if (currTolerance.T_BySpecies == 1)
+                    if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.BySpecies)
+                     {
                         eRTF.VolumeHeaderPrimary[22] = eRTF.VolumeHeaderPrimary[22].Replace("xxxx", "Species");
-                    else if (currTolerance.T_ByProduct == 1)
+                    }
+                    else if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.ByProduct)
+                     {
                         eRTF.VolumeHeaderPrimary[22] = eRTF.VolumeHeaderPrimary[22].Replace("xxxx", "Product");
+                    }
 
-                    eRTF.VolumeHeaderPrimary[8] = eRTF.VolumeHeaderPrimary[8].Replace("zzz", Utilities.FormatField(currTolerance.T_CUFTPGtolerance, "{0,3:F0}").ToString());
+                    eRTF.VolumeHeaderPrimary[8] = eRTF.VolumeHeaderPrimary[8]
+                        .Replace("zzz", Utilities.FormatField(volumeToleranceConfig.T_CUFTPGtolerance, "{0,3:F0}").ToString());
 
                     printLines(writer, eRTF.VolumeHeaderPrimary, 28);
                     tableType = 1;
                 }
-                else if (currTolerance.T_CUFTSGtolerance > 0 || currTolerance.T_BDFTPGtolerance > 0)
+                else if (volumeToleranceConfig.T_CUFTSGtolerance > 0 || volumeToleranceConfig.T_BDFTPGtolerance > 0)
                 {
-                    if (currTolerance.T_BySpecies == 1)
+                    if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.BySpecies)
+                     {
                         eRTF.VolumeHeaderSecondary[22] = eRTF.VolumeHeaderSecondary[22].Replace("xxxx", "Species");
-                    else if (currTolerance.T_ByProduct == 1)
+                    }
+                    else if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.ByProduct)
+                     {
                         eRTF.VolumeHeaderSecondary[22] = eRTF.VolumeHeaderSecondary[22].Replace("xxxx", "Product");
+                    }
 
-                    eRTF.VolumeHeaderSecondary[8] = eRTF.VolumeHeaderSecondary[8].Replace("zzz", Utilities.FormatField(currTolerance.T_CUFTSGtolerance, "{0,3:F0}").ToString());
+                    eRTF.VolumeHeaderSecondary[8] = eRTF.VolumeHeaderSecondary[8]
+                        .Replace("zzz", Utilities.FormatField(volumeToleranceConfig.T_CUFTSGtolerance, "{0,3:F0}").ToString());
 
                     printLines(writer, eRTF.VolumeHeaderSecondary, 28);
                     tableType = 2;
                 }
-                else if (currTolerance.T_CUFTPSGtolerance > 0 || currTolerance.T_BDFTPSGtolerance > 0)
+                else if (volumeToleranceConfig.T_CUFTPSGtolerance > 0 || volumeToleranceConfig.T_BDFTPSGtolerance > 0)
                 {
-                    if (currTolerance.T_BySpecies == 1)
+                    if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.BySpecies)
+                    {
                         eRTF.VolumeHeaderBoth[13] = eRTF.VolumeHeaderBoth[13].Replace("xxxx", "Species");
-                    else if (currTolerance.T_ByProduct == 1)
+                    }
+                    else if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.ByProduct)
+                    {
                         eRTF.VolumeHeaderBoth[13] = eRTF.VolumeHeaderBoth[13].Replace("xxxx", "Product");
-                    eRTF.VolumeHeaderBoth[14] = eRTF.VolumeHeaderBoth[14].Replace("zzz", Utilities.FormatField(currTolerance.T_CUFTPSGtolerance, "{0,3:F0}").ToString());
-                    eRTF.VolumeHeaderBoth[15] = eRTF.VolumeHeaderBoth[15].Replace("zzz", Utilities.FormatField(currTolerance.T_CUFTPSNtolerance, "{0,3:F0}").ToString());
-                    eRTF.VolumeHeaderBoth[16] = eRTF.VolumeHeaderBoth[16].Replace("zzz", Utilities.FormatField(currTolerance.T_BDFTPSGtolerance, "{0,3:F0}").ToString());
-                    eRTF.VolumeHeaderBoth[17] = eRTF.VolumeHeaderBoth[17].Replace("zzz", Utilities.FormatField(currTolerance.T_BDFTPSNtolerance, "{0,3:F0}").ToString());
+                    }
+
+                    eRTF.VolumeHeaderBoth[14] = eRTF.VolumeHeaderBoth[14].Replace("zzz", Utilities.FormatField(volumeToleranceConfig.T_CUFTPSGtolerance, "{0,3:F0}").ToString());
+                    eRTF.VolumeHeaderBoth[15] = eRTF.VolumeHeaderBoth[15].Replace("zzz", Utilities.FormatField(volumeToleranceConfig.T_CUFTPSNtolerance, "{0,3:F0}").ToString());
+                    eRTF.VolumeHeaderBoth[16] = eRTF.VolumeHeaderBoth[16].Replace("zzz", Utilities.FormatField(volumeToleranceConfig.T_BDFTPSGtolerance, "{0,3:F0}").ToString());
+                    eRTF.VolumeHeaderBoth[17] = eRTF.VolumeHeaderBoth[17].Replace("zzz", Utilities.FormatField(volumeToleranceConfig.T_BDFTPSNtolerance, "{0,3:F0}").ToString());
 
                     tableType = 3;
                     printLines(writer, eRTF.VolumeHeaderBoth, 19);
