@@ -4,11 +4,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CheckCruise
+namespace NatCruise.Check.Models
 {
     [Table("Tolerances")]
     public class TolerancesList
     {
+        public const string ADD_PARAM_NONE = "None";
+        public const string ADD_PARAM_7PCT = "7% whichever >";
+        //public const string ADD_PARAM_3PCT = "3% whichever >"; // not used 
+        public const string ADD_PARAM_PLUS1PER25FTOVER100 = "+1 per 25 feet > 100 feet";
+
+        public const string UNIT_INCHES = "inches";
+        public const string UNIT_FEET = "feet";
+        public const string UNIT_PERCENT = "percent";
+
+        public static readonly IReadOnlyCollection<string> ADD_PARAM_VALUES = new string[]
+        {
+            ADD_PARAM_NONE,
+            ADD_PARAM_7PCT,
+            //ADD_PARAM_3PCT,
+            ADD_PARAM_PLUS1PER25FTOVER100,
+        };
+
         public string T_Element { get; set; }
         public string T_Tolerance { get; set; }
         public string T_Units { get; set; }

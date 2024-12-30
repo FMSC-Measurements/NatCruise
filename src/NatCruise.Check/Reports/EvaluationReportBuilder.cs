@@ -1,4 +1,6 @@
 ﻿using CruiseDAL.DataObjects;
+using NatCruise.Check.Data;
+using NatCruise.Check.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,10 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CheckCruise.Reports
+namespace NatCruise.Check.Reports
 {
-    public enum ReportLevel
-    { ByCruiser, BySale }
+
 
     public partial class EvaluationReportBuilder
     {

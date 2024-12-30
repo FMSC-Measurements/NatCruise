@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CheckCruise.Reports
+namespace NatCruise.Check.Reports
 {
-    public class EvaluationReportRTF
+    internal class EvaluationReportRTF
     {
         public string[] MainHeader = new string[18] {"{\\rtf1\\ansi\\deff0",
                                                      "{\\fonttbl{\\f0 Arial;}{\\f1 Times New Roman;}{\\f2 Courier;}}",

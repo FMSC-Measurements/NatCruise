@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CheckCruise.Reports
+namespace NatCruise.Check.Reports
 {
     public partial class EvaluationReportBuilder
     {

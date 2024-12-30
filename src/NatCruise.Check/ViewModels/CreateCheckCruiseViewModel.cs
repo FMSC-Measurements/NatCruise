@@ -1,11 +1,13 @@
-﻿using CheckCruise;
-using CheckCruise.Models;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CruiseDAL;
+using NatCruise.Check.Data;
+using NatCruise.Check.Models;
 using NatCruise.Data;
 using NatCruise.Navigation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;

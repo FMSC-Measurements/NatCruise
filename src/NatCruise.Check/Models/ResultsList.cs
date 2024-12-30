@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CheckCruise
+namespace NatCruise.Check.Models
 {
     [Table("Results")]
     public class ResultsList

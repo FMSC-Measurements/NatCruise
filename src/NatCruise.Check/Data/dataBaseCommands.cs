@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CheckCruise.Models;
 using CruiseDAL;
 using CruiseDAL.DataObjects;
+using NatCruise.Check.Models;
 
-namespace CheckCruise
+namespace NatCruise.Check.Data
 {
     public class dataBaseCommands
     {

@@ -1,5 +1,7 @@
 ﻿using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
+using NatCruise.Check.Data;
+using NatCruise.Check.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CheckCruise.Reports
+namespace NatCruise.Check.Reports
 {
     public class SummaryReportBuilder
     {
