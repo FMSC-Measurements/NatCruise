@@ -12,113 +12,85 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Check.Reports
 {
-    public class SummaryReportBuilder
+    public partial class SummaryReportBuilder
     {
         public static readonly string[] TREE_BASED_CRUISE_METHODS = new[] { "100", "STR", "S3P", "3P" };
         private const string COLUMN_SEPARATOR = "     |";
 
-        public class TextReportHeaders
-        {
-            public string[] TextHeader = new string[3] {"                                                  NATIONAL CHECK CRUISE PROGRAM",
-                                                    "                                                       VERSION: XXXX",
-                                                    "                                              RUN DATE & TIME: XXXX"};
 
-            public string[] singleSaleHeader = new string[7] {"SUMMARY REPORT BY CRUISER",
-                                                           "SINGLE SALE",
-                                                           "SALENAME:  XXXX",
-                                                           "CRUISE FILE:  XXXX",
-                                                           "CHECK CRUISE FILE:  XXXX",
-                                                           "NUMBER OF ELEMENTS CHECKED:  XX",
-                                                           "TOLERANCES DATED:  XXXX"};
-
-            public string[] multipleSaleHeader = new string[5] {"SUMMARY REPORT BY CRUISER",
-                                                            "MULTIPLE SALES",
-                                                            "SALENAMES                  CRUISE FILES                                                  CHECK CRUISE FILES",
-                                                            "NUMBER OF ELEMENTS CHECKED:  XX",
-                                                            "TOLERANCES DATED:  XXXX"};
-
-            public string[] saleSummaryHeader = new string[6] {"SUMMARY REPORT BY SALE",
-                                                           "SALENAME:  XXXX",
-                                                           "CRUISE FILE:  XXXX",
-                                                           "CHECK CRUISE FILE:  XXXX",
-                                                           "NUMBER OF ELEMENTS CHECKED:  XX",
-                                                           "TOLERANCES DATED:  XXXX"};
-
-            public string[] columnHeadings = new string[3] {"ELEMENT:  XXX",
-                                                        "     CUTTING                                      CRUISER    *********** DIFFERENCE **********    OUT OF",
-                                                        "     UNIT     TREE   C/M   ORIGINAL    CHECK      INITIALS    ACTUAL       # DIFF      % DIFF    TOLERANCE"};
-
-            public string[] summaryColumnHeaders = new string[3] {"ELEMENT: XXX ",
-                                                              "           CUTTING                                                CRUISER     ********* DIFFERENCE *********     OUT OF",
-                                                              " STRATUM   UNIT     PLOT    TREE   C/M     ORIGINAL    CHECK      INITIALS    ACTUAL      # DIFF      % DIFF     TOLERANCE"};
-            public string[] summaryLogElementHeaders = new string[3] {"ELEMENT: XXX ",
-                                                              "               CUTTING                                                   CRUISER    ********* DIFFERENCE *********     OUT OF",
-                                                              "     STRATUM   UNIT     PLOT    TREE   C/M  LOG   ORIGINAL    CHECK      INITIALS   ACTUAL      # DIFF      % DIFF     TOLERANCE"};
-        }   //  end TextReportHeaders
-
+        public string ApplicationVersion { get; set; }
 
         public dataBaseCommands CheckCruiseDataService { get; }
         public dataBaseCommands CruiseDataService { get; }
 
-        public string SaleName { get; }
-        public string Region { get; }
+        public string SaleName { get; protected set; }
+        public string Region { get; protected set; }
 
-        public List<ResultsList> CheckResults { get; }
-        public List<TolerancesList> CruiseTolerances { get; }
-        public List<LogStockDO> CheckLogs { get; }
+        public List<ResultsList> CheckResults { get; protected set; }
+        public List<TolerancesList> CruiseTolerances { get; protected set; }
+        public List<LogStockDO> CheckLogs { get; protected set; }
 
-        public List<TreeDO> CruiserTrees { get; }
-        private List<TreeCalculatedValuesDO> CalculatedTrees { get; }
-        public string MarkersInitials { get; }
-        private int ReportToOutput { get; }
-        private TextReportHeaders TRH = new TextReportHeaders();
-        private int[] DefaultFieldLengths { get; }
-        //private List<string> prtArray = new List<string>();
+        public List<TreeDO> CruiserTrees { get; protected set; }
+        private List<TreeCalculatedValuesDO> CalculatedTrees { get; set; }
+        private TextReportHeaders TRH;
+        private int[] DefaultFieldLengths { get; set; }
 
-        public SummaryReportBuilder(dataBaseCommands checkCruiseDataService, dataBaseCommands cruiseDataService, string markersInitials, int reportToOutput, string applicationVersion)
+
+        public SummaryReportBuilder(dataBaseCommands checkCruiseDataService, dataBaseCommands cruiseDataService, string applicationVersion)
         {
             CheckCruiseDataService = checkCruiseDataService;
             CruiseDataService = cruiseDataService;
-            ReportToOutput = reportToOutput;
-            MarkersInitials = markersInitials;
+            ApplicationVersion = applicationVersion;
 
-            TRH.TextHeader[1] = TRH.TextHeader[1].Replace("XXXX", applicationVersion);
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            CruiseTolerances = CheckCruiseDataService.getTolerances();
+
+            CheckLogs = CruiseDataService.getLogStock();
+            CruiserTrees = CruiseDataService.getTrees();
+            CalculatedTrees = CruiseDataService.getCalculatedTrees();
+            SaleName = CruiseDataService.getSaleName();
+            Region = CruiseDataService.getRegion();
+        }
+
+        public void BuildReport(TextWriter writer, string markersInitials, ReportLevel reportLevel)
+        {
+            TRH = new TextReportHeaders();
+
+            CheckResults = CheckCruiseDataService.getResultsTable("", markersInitials);
+
+            TRH.TextHeader[1] = TRH.TextHeader[1].Replace("XXXX", ApplicationVersion);
             TRH.TextHeader[2] = TRH.TextHeader[2].Replace("XXXX", DateTime.Now.ToString());
 
-            var checkCruiseFile = checkCruiseDataService.DAL.Path;
-            var cruiserFile = cruiseDataService.DAL.Path;
-
-            CheckResults = checkCruiseDataService.getResultsTable("", markersInitials);
-            CruiseTolerances = checkCruiseDataService.getTolerances();
-
-            CheckLogs = cruiseDataService.getLogStock();
-            CruiserTrees = cruiseDataService.getTrees();
-            CalculatedTrees = cruiseDataService.getCalculatedTrees();
-            SaleName = cruiseDataService.getSaleName();
-            Region = cruiseDataService.getRegion();
-
-            switch (reportToOutput)
+            var tolerancesLastUpdated = CruiseTolerances.FirstOrDefault(x => !string.IsNullOrEmpty(x.T_DateStamp))?.T_DateStamp
+                ?? "";
+            var checkCruiseFile = CheckCruiseDataService.DAL.Path;
+            var cruiserFile = CruiseDataService.DAL.Path;
+            switch (reportLevel)
             {
-                case 1:
+                case ReportLevel.BySale:
                     {
 
                         TRH.saleSummaryHeader[1] = TRH.saleSummaryHeader[1].Replace("XXXX", SaleName);
                         TRH.saleSummaryHeader[2] = TRH.saleSummaryHeader[2].Replace("XXXX", cruiserFile);
                         TRH.saleSummaryHeader[3] = TRH.saleSummaryHeader[3].Replace("XXXX", checkCruiseFile);
                         TRH.saleSummaryHeader[4] = TRH.saleSummaryHeader[4].Replace("XX", CruiseTolerances.Count.ToString());
-                        TRH.saleSummaryHeader[5] = TRH.saleSummaryHeader[5].Replace("XXXX", CruiseTolerances[0].T_DateStamp);
+                        TRH.saleSummaryHeader[5] = TRH.saleSummaryHeader[5].Replace("XXXX", tolerancesLastUpdated);
 
                         //  fill fieldLengths
                         DefaultFieldLengths = new int[17] { 1, 4, 9, 9, 8, 6, 14, 12, 9, 5, 6, 3, 6, 3, 6, 3, 6 };
                         break;
                     }
-                case 2:
+                case ReportLevel.ByCruiser:
                     {
                         TRH.singleSaleHeader[2] = TRH.singleSaleHeader[2].Replace("XXXX", SaleName);
                         TRH.singleSaleHeader[3] = TRH.singleSaleHeader[3].Replace("XXXX", cruiserFile);
                         TRH.singleSaleHeader[4] = TRH.singleSaleHeader[4].Replace("XXXX", checkCruiseFile);
                         TRH.singleSaleHeader[5] = TRH.singleSaleHeader[5].Replace("XX", CruiseTolerances.Count.ToString());
-                        TRH.singleSaleHeader[6] = TRH.singleSaleHeader[6].Replace("XXXX", CruiseTolerances[0].T_DateStamp);
+                        TRH.singleSaleHeader[6] = TRH.singleSaleHeader[6].Replace("XXXX", tolerancesLastUpdated);
 
                         //  fill fieldLengths
                         DefaultFieldLengths = new int[15] { 1, 8, 8, 6, 11, 10, 9, 8, 6, 3, 6, 3, 6, 3, 6 };
@@ -134,26 +106,7 @@ namespace NatCruise.Check.Reports
                     //    //  fill fieldLengths
                     //    DefaultFieldLengths = new int[14] { 1, 8, 10, 10, 11, 9, 5, 6, 3, 6, 3, 6, 3, 6 };
                     //    break;
-            }   //  end switch on reportToOutput
-
-
-        }
-
-        public void GenerateSummaryReport(string outputFileName)
-        {
-            using (StreamWriter writer = new StreamWriter(outputFileName))
-            {
-                BuildSummaryReport(writer);
             }
-        }
-
-
-
-
-        public void BuildSummaryReport(TextWriter writer)
-        {
-            var reportToOutput = ReportToOutput;
-            var markInits = MarkersInitials;
 
             //checkResults = CheckCruiseDataService.getResultsTable("", markInits);
             //cruiseTolerances = CheckCruiseDataService.getTolerances();
@@ -172,11 +125,11 @@ namespace NatCruise.Check.Reports
                 if (!hasAllTreeBasedStrata || tl.T_Element != "In/Out Trees")
                 {
                     //  write report heading and column headers for each new element
-                    WriteReportHeading(writer, ref numOlines);
+                    WriteReportHeading(writer, reportLevel, ref numOlines);
                     //  then write column headigns
-                    WriteColumnHeaders(writer, tl.T_Element, ref numOlines);
+                    WriteColumnHeaders(writer, tl.T_Element, reportLevel, ref numOlines);
                     //  print records for current element
-                    PrintElement(writer, tl, ref numOlines);
+                    PrintElement(writer, tl, markersInitials, reportLevel, ref numOlines);
                     numOlines = 0;
                 }   //  endif
             }   //  end foreach
@@ -188,59 +141,59 @@ namespace NatCruise.Check.Reports
                 {
                     //  create output for both gross and net primary product volume
                     //  gross cuft
-                    PrintVolume(1, writer, CheckResults, ct.T_CUFTPGtolerance, markInits, reportToOutput);
+                    PrintVolume(1, writer, CheckResults, ct.T_CUFTPGtolerance, markersInitials, reportLevel);
                     //  net cuft
-                    PrintVolume(2, writer, CheckResults, ct.T_CUFTPNtolerance, markInits, reportToOutput);
+                    PrintVolume(2, writer, CheckResults, ct.T_CUFTPNtolerance, markersInitials, reportLevel);
                 }   //  endif
                 if (ct.T_CUFTSGtolerance > 0 || ct.T_CUFTSGtolerance == -1)
                 {
                     //  create output for both gross and net secondary product volume
                     //  gross cuft
-                    PrintVolume(3, writer, CheckResults, ct.T_CUFTSGtolerance, markInits, reportToOutput);
+                    PrintVolume(3, writer, CheckResults, ct.T_CUFTSGtolerance, markersInitials, reportLevel);
                     //  net cuft
-                    PrintVolume(4, writer, CheckResults, ct.T_CUFTSNtolerance, markInits, reportToOutput);
+                    PrintVolume(4, writer, CheckResults, ct.T_CUFTSNtolerance, markersInitials, reportLevel);
                 }   //  endif
                 if (ct.T_BDFTPGtolerance > 0 || ct.T_BDFTPGtolerance == -1)
                 {
                     //  create output for both gross and net primary product volume
                     //  gross BDFT
-                    PrintVolume(5, writer, CheckResults, ct.T_BDFTPGtolerance, markInits, reportToOutput);
+                    PrintVolume(5, writer, CheckResults, ct.T_BDFTPGtolerance, markersInitials, reportLevel);
                     //  net BDFT
-                    PrintVolume(6, writer, CheckResults, ct.T_BDFTPNtolerance, markInits, reportToOutput);
+                    PrintVolume(6, writer, CheckResults, ct.T_BDFTPNtolerance, markersInitials, reportLevel);
                 }   //  endif
                 if (ct.T_BDFTSGtolerance > 0 || ct.T_BDFTSGtolerance == -1)
                 {
                     //  create output for both gross and net secondary product volume
                     //  gross BDFT
-                    PrintVolume(7, writer, CheckResults, ct.T_BDFTSGtolerance, markInits, reportToOutput);
+                    PrintVolume(7, writer, CheckResults, ct.T_BDFTSGtolerance, markersInitials, reportLevel);
                     //  net BDFT
-                    PrintVolume(8, writer, CheckResults, ct.T_BDFTSNtolerance, markInits, reportToOutput);
+                    PrintVolume(8, writer, CheckResults, ct.T_BDFTSNtolerance, markersInitials, reportLevel);
                 }   //  endif
                 if (ct.T_CUFTPSGtolerance > 0 || ct.T_CUFTPSGtolerance == -1)
                 {
                     //  create output for just gross CUFT which includes primary and secondary
-                    PrintVolume(9, writer, CheckResults, ct.T_CUFTPSGtolerance, markInits, reportToOutput);
+                    PrintVolume(9, writer, CheckResults, ct.T_CUFTPSGtolerance, markersInitials, reportLevel);
                 }   //  endif
                 if (ct.T_CUFTPSNtolerance > 0 || ct.T_CUFTPSNtolerance == -1)
                 {
                     //  and net CUFT including primary and secondary
-                    PrintVolume(10, writer, CheckResults, ct.T_CUFTPSNtolerance, markInits, reportToOutput);
+                    PrintVolume(10, writer, CheckResults, ct.T_CUFTPSNtolerance, markersInitials, reportLevel);
                 }   //  endif
                 if (ct.T_BDFTPSGtolerance > 0 || ct.T_BDFTPSGtolerance == -1)
                 {
                     //  gross BDFT including primary and secondary
-                    PrintVolume(11, writer, CheckResults, ct.T_BDFTPSGtolerance, markInits, reportToOutput);
+                    PrintVolume(11, writer, CheckResults, ct.T_BDFTPSGtolerance, markersInitials, reportLevel);
                 }   //  endif
                 if (ct.T_BDFTPSNtolerance > 0 || ct.T_BDFTPSNtolerance == -1)
                 {
                     // net BDFT including primary and secondary
-                    PrintVolume(12, writer, CheckResults, ct.T_BDFTPSNtolerance, markInits, reportToOutput);
+                    PrintVolume(12, writer, CheckResults, ct.T_BDFTPSNtolerance, markersInitials, reportLevel);
                 }   //  endif
             }   //  end for each loop
         }
 
 
-        private void WriteReportHeading(TextWriter strTextOut, ref int numOlines)
+        private void WriteReportHeading(TextWriter strTextOut, ReportLevel reportLevel, ref int numOlines)
         {
             if (numOlines == 0 || numOlines >= 50)
             {
@@ -253,42 +206,47 @@ namespace NatCruise.Check.Reports
                 {
                     strTextOut.WriteLine(TRH.TextHeader[k]);
                     numOlines++;
-                }   //  end for k loop
+                }
 
-                switch (ReportToOutput)
+                switch (reportLevel)
                 {
-                    case 1:
-                        for (int k = 0; k < TRH.saleSummaryHeader.Count(); k++)
+                    case ReportLevel.BySale:
                         {
-                            strTextOut.WriteLine(TRH.saleSummaryHeader[k]);
-                            numOlines++;
-                        }   //  end foreach
-                        break;
-                    case 2:
-                        for (int k = 0; k < TRH.singleSaleHeader.Count(); k++)
+                            for (int k = 0; k < TRH.saleSummaryHeader.Count(); k++)
+                            {
+                                strTextOut.WriteLine(TRH.saleSummaryHeader[k]);
+                                numOlines++;
+                            }
+                            break;
+                        }
+                    case ReportLevel.ByCruiser:
                         {
-                            strTextOut.WriteLine(TRH.singleSaleHeader[k]);
-                            numOlines++;
-                        }   //  end foreach
-                        break;
-                    case 3:
-                        for (int k = 0; k < TRH.multipleSaleHeader.Count(); k++)
-                        {
-                            strTextOut.WriteLine(TRH.multipleSaleHeader[k]);
-                            numOlines++;
-                        }   //  end foreach
-                        break;
-                }   //  end switch
-                    //  write two blank lines before headers
+                            for (int k = 0; k < TRH.singleSaleHeader.Count(); k++)
+                            {
+                                strTextOut.WriteLine(TRH.singleSaleHeader[k]);
+                                numOlines++;
+                            }
+                            break;
+                        }
+                    //case 3:
+                    //    for (int k = 0; k < TRH.multipleSaleHeader.Count(); k++)
+                    //    {
+                    //        strTextOut.WriteLine(TRH.multipleSaleHeader[k]);
+                    //        numOlines++;
+                    //    }   //  end foreach
+                    //    break;
+                    default: { throw new ArgumentException("invalid report level value", nameof(reportLevel)); }
+                } 
+                //  write two blank lines before headers
                 strTextOut.WriteLine("");
                 numOlines++;
                 strTextOut.WriteLine("");
                 numOlines++;
             }   //  endif
             return;
-        }   //  end WriteReportHeading
+        }
 
-        private void WriteColumnHeaders(TextWriter strTextOut, string currElement, ref int numOlines)
+        private void WriteColumnHeaders(TextWriter strTextOut, string currElement, ReportLevel reportLevel, ref int numOlines)
         {
             string holdHeading;
             //  log element headings
@@ -304,47 +262,50 @@ namespace NatCruise.Check.Reports
             }
             else
             {
-                switch (ReportToOutput)
+                switch (reportLevel)
                 {
-                    case 1:
-                        holdHeading = TRH.summaryColumnHeaders[0];
-                        TRH.summaryColumnHeaders[0] = TRH.summaryColumnHeaders[0].Replace("XXX", currElement);
-                        for (int k = 0; k < TRH.summaryColumnHeaders.Count(); k++)
+                    case ReportLevel.BySale:
                         {
-                            strTextOut.WriteLine(TRH.summaryColumnHeaders[k]);
-                            numOlines++;
-                        }   //  end for k loop
-                            //  replace first line of heading for next page
-                        TRH.summaryColumnHeaders[0] = holdHeading;
-                        break;
-                    case 2:
-                    case 3:
-                        holdHeading = TRH.columnHeadings[0];
-                        TRH.columnHeadings[0] = TRH.columnHeadings[0].Replace("XXX", currElement);
-                        for (int k = 0; k < TRH.columnHeadings.Count(); k++)
+                            holdHeading = TRH.summaryColumnHeaders[0];
+                            TRH.summaryColumnHeaders[0] = TRH.summaryColumnHeaders[0].Replace("XXX", currElement);
+                            for (int k = 0; k < TRH.summaryColumnHeaders.Count(); k++)
+                            {
+                                strTextOut.WriteLine(TRH.summaryColumnHeaders[k]);
+                                numOlines++;
+                            }   //  end for k loop
+                                //  replace first line of heading for next page
+                            TRH.summaryColumnHeaders[0] = holdHeading;
+                            break;
+                        }
+                    case ReportLevel.ByCruiser:
+                        //case 3:
                         {
-                            strTextOut.WriteLine(TRH.columnHeadings[k]);
-                            numOlines++;
-                        }   //  end for k loop
-                            //  replace first line of heading for next page
-                        TRH.columnHeadings[0] = holdHeading;
-                        break;
+                            holdHeading = TRH.columnHeadings[0];
+                            TRH.columnHeadings[0] = TRH.columnHeadings[0].Replace("XXX", currElement);
+                            for (int k = 0; k < TRH.columnHeadings.Count(); k++)
+                            {
+                                strTextOut.WriteLine(TRH.columnHeadings[k]);
+                                numOlines++;
+                            }   //  end for k loop
+                                //  replace first line of heading for next page
+                            TRH.columnHeadings[0] = holdHeading;
+                            break;
+                        }
+                    default: { throw new ArgumentException("invalid report level value", nameof(reportLevel)); }
                 }   // end switch
             }   //  endif
                 //  write long line or medium  line whatever you call it
             strTextOut.WriteLine("___________________________________________________________________________________________________________________________________");
             numOlines++;
+        }
 
-            return;
-        }   //  end WriteColumnHeaders
-
-        private void printLine(TextWriter strTextOut, string currentElement, IEnumerable<string> prtArray, int[] fieldLengths, ref int numOlines)
+        private void printLine(TextWriter strTextOut, string currentElement, IEnumerable<string> prtArray, int[] fieldLengths, ReportLevel reportLevel, ref int numOlines)
         {
             //  new page needed?
             if (numOlines >= 50 || numOlines == 0)
             {
-                WriteReportHeading(strTextOut, ref numOlines);
-                WriteColumnHeaders(strTextOut, currentElement, ref numOlines);
+                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                WriteColumnHeaders(strTextOut, currentElement, reportLevel, ref numOlines);
             }   //  endif
             StringBuilder printLine = new StringBuilder();
             int k = 0;
@@ -358,7 +319,7 @@ namespace NatCruise.Check.Reports
         }   //  end printLine
 
 
-        private void PrintVolume(int whichVolume, TextWriter strTextOut, List<ResultsList> checkResults, double currTolerance, string markInits, int reportToOutput)
+        private void PrintVolume(int whichVolume, TextWriter strTextOut, List<ResultsList> checkResults, double currTolerance, string markInits, ReportLevel reportLevel)
         {
             //  reset field lengths
             var fieldLengths = new int[17] { 1, 4, 9, 9, 8, 6, 14, 12, 9, 5, 6, 3, 6, 3, 6, 3, 6 };
@@ -377,21 +338,26 @@ namespace NatCruise.Check.Reports
                 var prtArray = new List<string>();
                 prtArray.Add("");
                 //  identifying data
-                switch (reportToOutput)
+                switch (reportLevel)
                 {
-                    case 1:
-                        prtArray.Add(rl.R_Stratum.PadLeft(4, ' '));
-                        prtArray.Add(rl.R_CuttingUnit.PadLeft(9, ' '));
-                        prtArray.Add(rl.R_Plot.PadLeft(9, ' '));
-                        prtArray.Add(rl.R_TreeNumber.PadLeft(8, ' '));
-                        prtArray.Add(rl.R_CountMeasure.PadLeft(6, ' '));
-                        break;
-                    case 2:
-                    case 3:
-                        prtArray.Add(rl.R_CuttingUnit.PadLeft(8, ' '));
-                        prtArray.Add(rl.R_TreeNumber.PadLeft(10, ' '));
-                        prtArray.Add(rl.R_CountMeasure.PadLeft(6, ' '));
-                        break;
+                    case ReportLevel.BySale:
+                        {
+                            prtArray.Add(rl.R_Stratum.PadLeft(4, ' '));
+                            prtArray.Add(rl.R_CuttingUnit.PadLeft(9, ' '));
+                            prtArray.Add(rl.R_Plot.PadLeft(9, ' '));
+                            prtArray.Add(rl.R_TreeNumber.PadLeft(8, ' '));
+                            prtArray.Add(rl.R_CountMeasure.PadLeft(6, ' '));
+                            break;
+                        }
+                    case ReportLevel.ByCruiser:
+                        //case 3:
+                        {
+                            prtArray.Add(rl.R_CuttingUnit.PadLeft(8, ' '));
+                            prtArray.Add(rl.R_TreeNumber.PadLeft(10, ' '));
+                            prtArray.Add(rl.R_CountMeasure.PadLeft(6, ' '));
+                            break;
+                        }
+                    default: { throw new ArgumentException("invalid report level value", nameof(reportLevel)); }
                 }   //  end switch
 
                 //  need cruiser initials for current tree
@@ -481,7 +447,7 @@ namespace NatCruise.Check.Reports
 
                 //  load print array
                 LoadPrintArray(prtArray, ev, markInits);
-                printLine(strTextOut, currElement, prtArray, fieldLengths, ref numOlines);
+                printLine(strTextOut, currElement, prtArray, fieldLengths, reportLevel, ref numOlines);
             }   //  end foreach loop
             return;
         }   //  end PrintVolume
@@ -514,10 +480,10 @@ namespace NatCruise.Check.Reports
             };
         }   //  end LoadVolumeVariables
 
-        private void PrintElement(TextWriter strTextOut, TolerancesList currElement, ref int numOlines)
+        private void PrintElement(TextWriter strTextOut, TolerancesList currElement, string markInits, ReportLevel reportLevel, ref int numOlines)
         {
             int[] fieldLengths = DefaultFieldLengths;
-            string markInits = MarkersInitials;
+            //string markInits = MarkersInitials;
 
             //  Change to checkResults list added all record to the table
             //  So this is fine for In/out Trees and species but the rest of the elements
@@ -560,7 +526,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -569,8 +535,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -581,7 +547,7 @@ namespace NatCruise.Check.Reports
                             else oot = "0";
                             var ev = LoadElementVariables(CruiserTrees[nthRow].Species.PadLeft(6, ' '), cr.R_CC_Species.PadLeft(6, ' '), "na", "na", "na", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -592,7 +558,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -601,8 +567,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -613,7 +579,7 @@ namespace NatCruise.Check.Reports
                             else oot = "0";
                             var ev = LoadElementVariables(CruiserTrees[nthRow].LiveDead.PadLeft(6, ' '), cr.R_CC_LiveDead.PadLeft(6, ' '), "na", "na", "na", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -624,7 +590,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -633,8 +599,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -645,7 +611,7 @@ namespace NatCruise.Check.Reports
                             else oot = "0";
                             var ev = LoadElementVariables(CruiserTrees[nthRow].SampleGroup.PrimaryProduct.PadLeft(6, ' '), cr.R_CC_Product.PadLeft(6, ' '), "na", "na", "na", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -656,7 +622,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -665,8 +631,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -677,7 +643,7 @@ namespace NatCruise.Check.Reports
                             else oot = "0";
                             var ev = LoadElementVariables(CruiserTrees[nthRow].ClearFace.PadLeft(6, ' '), cr.R_CC_Clear.PadLeft(6, ' '), "na", "na", "na", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -688,7 +654,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -697,8 +663,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -709,7 +675,7 @@ namespace NatCruise.Check.Reports
                             else oot = "0";
                             var ev = LoadElementVariables(CruiserTrees[nthRow].Grade.PadLeft(6, ' '), cr.R_CC_TreeGrade.PadLeft(6, ' '), "na", "na", "na", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -720,7 +686,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -729,8 +695,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -742,7 +708,7 @@ namespace NatCruise.Check.Reports
                             var ev = LoadElementVariables(CruiserTrees[nthRow].DBH.ToString().PadLeft(6, ' '), cr.R_CC_DBHOB.ToString().PadLeft(6, ' '),
                                         Utilities.FormatField(cr.R_CC_DBHOB - CruiserTrees[nthRow].DBH, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -753,7 +719,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -762,8 +728,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -775,7 +741,7 @@ namespace NatCruise.Check.Reports
                             var ev = LoadElementVariables(CruiserTrees[nthRow].TotalHeight.ToString().PadLeft(6, ' '), cr.R_CC_TotalHeight.ToString().PadLeft(6, ' '),
                                          Utilities.FormatField(cr.R_CC_TotalHeight - CruiserTrees[nthRow].TotalHeight, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -786,7 +752,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -795,8 +761,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -808,7 +774,7 @@ namespace NatCruise.Check.Reports
                             var ev = LoadElementVariables(CruiserTrees[nthRow].TotalHeight.ToString().PadLeft(6, ' '), cr.R_CC_TotHeightUnder.ToString().PadLeft(6, ' '),
                                             Utilities.FormatField(cr.R_CC_TotHeightUnder - CruiserTrees[nthRow].TotalHeight, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -819,7 +785,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -828,8 +794,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -841,7 +807,7 @@ namespace NatCruise.Check.Reports
                             var ev = LoadElementVariables(CruiserTrees[nthRow].TotalHeight.ToString().PadLeft(6, ' '), cr.R_CC_TotHeightOver.ToString().PadLeft(6, ' '),
                                             Utilities.FormatField(cr.R_CC_TotHeightOver - CruiserTrees[nthRow].TotalHeight, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -852,7 +818,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -861,8 +827,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -874,7 +840,7 @@ namespace NatCruise.Check.Reports
                             var ev = LoadElementVariables(CruiserTrees[nthRow].MerchHeightPrimary.ToString().PadLeft(6, ' '), cr.R_CC_MerchHgtPP.ToString().PadLeft(6, ' '),
                                            Utilities.FormatField(cr.R_CC_MerchHgtPP - CruiserTrees[nthRow].MerchHeightPrimary, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -885,7 +851,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -894,8 +860,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -907,7 +873,7 @@ namespace NatCruise.Check.Reports
                             var ev = LoadElementVariables(CruiserTrees[nthRow].MerchHeightSecondary.ToString().PadLeft(6, ' '), cr.R_CC_MerchHgtSP.ToString().PadLeft(6, ' '),
                                            Utilities.FormatField(cr.R_CC_MerchHgtSP - CruiserTrees[nthRow].MerchHeightSecondary, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -918,7 +884,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -927,8 +893,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -940,7 +906,7 @@ namespace NatCruise.Check.Reports
                             var ev = LoadElementVariables(CruiserTrees[nthRow].HeightToFirstLiveLimb.ToString().PadLeft(6, ' '), cr.R_CC_HgtFLL.ToString().PadLeft(6, ' '),
                                            Utilities.FormatField(cr.R_CC_HgtFLL - CruiserTrees[nthRow].HeightToFirstLiveLimb, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -951,7 +917,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -960,8 +926,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -973,7 +939,7 @@ namespace NatCruise.Check.Reports
                             var ev = LoadElementVariables(CruiserTrees[nthRow].TopDIBPrimary.ToString().PadLeft(6, ' '), cr.R_CC_TopDIBPP.ToString().PadLeft(6, ' '),
                                            Utilities.FormatField(cr.R_CC_TopDIBPP - CruiserTrees[nthRow].TopDIBPrimary, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -984,7 +950,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -993,8 +959,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -1006,7 +972,7 @@ namespace NatCruise.Check.Reports
                             var ev = LoadElementVariables(CruiserTrees[nthRow].RecoverablePrimary.ToString().PadLeft(6, ' '), cr.R_CC_RecDef.ToString().PadLeft(6, ' '),
                                             Utilities.FormatField(cr.R_CC_RecDef - CruiserTrees[nthRow].RecoverablePrimary, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -1017,7 +983,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -1026,8 +992,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -1045,7 +1011,7 @@ namespace NatCruise.Check.Reports
                                                 Utilities.FormatField(cr.R_CC_SeenDefPP - seenDefect, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
 
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -1056,7 +1022,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -1065,8 +1031,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -1080,7 +1046,7 @@ namespace NatCruise.Check.Reports
                                                 Utilities.FormatField(cr.R_CC_SeenDefSP, "{0,6:F1}").ToString().PadLeft(6, ' '),
                                         Utilities.FormatField(cr.R_CC_SeenDefSP - CruiserTrees[nthRow].SeenDefectSecondary, "{0,6:F1}").ToString().PadLeft(6, ' '), " ", " ", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -1091,7 +1057,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Log", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Log", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserLog(CheckLogs, cr);
                         if (nthRow >= 0)
@@ -1100,8 +1066,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CheckLogs[nthRow].Tree.Initials != null)
                                 markInits = CheckLogs[nthRow].Tree.Initials;
@@ -1113,7 +1079,7 @@ namespace NatCruise.Check.Reports
 
                             var ev = LoadElementVariables(CheckLogs[nthRow].Grade.PadLeft(6, ' '), cr.R_CC_LogGrade.PadLeft(6, ' '), "na", "na", "na", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -1124,7 +1090,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Log", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Log", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserLog(CheckLogs, cr);
                         if (nthRow >= 0)
@@ -1133,8 +1099,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CheckLogs[nthRow].Tree.Initials != null)
                                 markInits = CheckLogs[nthRow].Tree.Initials;
@@ -1155,7 +1121,7 @@ namespace NatCruise.Check.Reports
 
                             var ev = LoadElementVariables(cruiserString, checkCruiserString, diff1, diff2, diff3, oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
@@ -1166,7 +1132,7 @@ namespace NatCruise.Check.Reports
                         var prtArray = new List<string>();
                         prtArray.Add("");
                         //  load Identifying information
-                        LoadIdentifyingInfo(prtArray, cr, "Tree", ReportToOutput);
+                        LoadIdentifyingInfo(prtArray, cr, "Tree", reportLevel);
                         //  find cruiser tree
                         int nthRow = findCruiserTree(CruiserTrees, cr);
                         if (nthRow >= 0)
@@ -1175,8 +1141,8 @@ namespace NatCruise.Check.Reports
                             //  new page needed?
                             if (numOlines >= 50 || numOlines == 0)
                             {
-                                WriteReportHeading(strTextOut, ref numOlines);
-                                WriteColumnHeaders(strTextOut, currElement.T_Element, ref numOlines);
+                                WriteReportHeading(strTextOut, reportLevel, ref numOlines);
+                                WriteColumnHeaders(strTextOut, currElement.T_Element, reportLevel, ref numOlines);
                             }   //  endif
                             if (CruiserTrees[nthRow].Initials != null)
                                 markInits = CruiserTrees[nthRow].Initials;
@@ -1188,7 +1154,7 @@ namespace NatCruise.Check.Reports
 
                             var ev = LoadElementVariables("      ", "      ", "na", "na", "na", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }
                         else if (nthRow < 0)
                         {
@@ -1199,37 +1165,40 @@ namespace NatCruise.Check.Reports
 
                             var ev = LoadElementVariables("      ", "      ", "na", "na", "na", oot);
                             LoadPrintArray(prtArray, ev, markInits);
-                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, ref numOlines);
+                            printLine(strTextOut, currElement.T_Element, prtArray, fieldLengths, reportLevel, ref numOlines);
                         }   //  endif on nthRow
                     }   //  end foreach loop
                     break;
             }   //  end switch on element
 
-            return;
-        }   //  end PrintElements
+        }
 
-        private static void LoadIdentifyingInfo(IList<string> prtArray, ResultsList cr, string logElement, int reportToOutput)
+        private static void LoadIdentifyingInfo(IList<string> prtArray, ResultsList cr, string logElement, ReportLevel reportLevel)
         {
             //  loads identifying information for specified report
-            switch (reportToOutput)
+            switch (reportLevel)
             {
-                case 1:
-                    prtArray.Add(cr.R_Stratum.PadLeft(4, ' '));
-                    prtArray.Add(cr.R_CuttingUnit.PadLeft(9, ' '));
-                    prtArray.Add(cr.R_Plot.PadLeft(9, ' '));
-                    prtArray.Add(cr.R_TreeNumber.PadLeft(8, ' '));
-                    prtArray.Add(cr.R_CountMeasure.PadLeft(6, ' '));
-                    if (logElement == "Log") prtArray.Add(cr.R_LogNumber.PadLeft(5, ' '));
-                    break;
-                case 2:
-                case 3:
-                    prtArray.Add(cr.R_CuttingUnit.PadLeft(8, ' '));
-                    prtArray.Add(cr.R_TreeNumber.PadLeft(8, ' '));
-                    prtArray.Add(cr.R_CountMeasure.PadLeft(6, ' '));
-                    break;
-            }   //  end switcu
-            return;
-        }   //  end LoadIdentifyingInto
+                case ReportLevel.BySale:
+                    {
+                        prtArray.Add(cr.R_Stratum.PadLeft(4, ' '));
+                        prtArray.Add(cr.R_CuttingUnit.PadLeft(9, ' '));
+                        prtArray.Add(cr.R_Plot.PadLeft(9, ' '));
+                        prtArray.Add(cr.R_TreeNumber.PadLeft(8, ' '));
+                        prtArray.Add(cr.R_CountMeasure.PadLeft(6, ' '));
+                        if (logElement == "Log")
+                        { prtArray.Add(cr.R_LogNumber.PadLeft(5, ' ')); }
+                        break;
+                    }
+                case ReportLevel.ByCruiser:
+                    //case 3:
+                    {
+                        prtArray.Add(cr.R_CuttingUnit.PadLeft(8, ' '));
+                        prtArray.Add(cr.R_TreeNumber.PadLeft(8, ' '));
+                        prtArray.Add(cr.R_CountMeasure.PadLeft(6, ' '));
+                        break;
+                    }
+            }
+        }
 
         private ElementValues LoadElementVariables(string Value1, string Value2, string Value3, string Value4, string Value5, string Value6)
         {
