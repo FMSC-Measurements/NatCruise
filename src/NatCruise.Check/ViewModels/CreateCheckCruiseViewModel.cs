@@ -19,9 +19,9 @@ namespace NatCruise.Check.ViewModels
     {
         private bool _isDisposed;
 
-        [ObservableProperty]
-        IEnumerable<UnitStratumSelectionItem> _unitSelection;
+        IReadOnlyCollection<UnitStratumSelectionItem> _unitSelection;
         private string _checkCruisePath;
+        private RelayCommand _createCheckCruiseCommand;
 
         public partial class UnitStratumSelectionItem : ObservableObject
         {
@@ -29,6 +29,34 @@ namespace NatCruise.Check.ViewModels
             bool _isSelected;
 
             public UnitStratum Item { get; set; }
+        }
+
+        public IReadOnlyCollection<UnitStratumSelectionItem> UnitSelection
+        {
+            get => _unitSelection;
+            set
+            {
+                if (_unitSelection != null)
+                {
+                    foreach (var item in _unitSelection)
+                    {
+                        item.PropertyChanged -= UnitSelectionItem_PropertyChanged;
+                    }
+                }
+                SetProperty(ref _unitSelection, value);
+                if (value != null)
+                {
+                    foreach(var item in _unitSelection)
+                    {
+                        item.PropertyChanged += UnitSelectionItem_PropertyChanged;
+                    }
+                }
+            }
+        }
+
+        private void UnitSelectionItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            CreateCheckCruiseCommand.NotifyCanExecuteChanged();
         }
 
         public IDataContextService DataContext { get; }
@@ -43,7 +71,10 @@ namespace NatCruise.Check.ViewModels
 
         protected DAL V2_Database { get; set; }
 
-        
+        public RelayCommand CreateCheckCruiseCommand => _createCheckCruiseCommand ??= new RelayCommand(CreateCheckCruise, CanCreateCheckCruise);
+
+
+
 
         public CreateCheckCruiseViewModel(IDataContextService dataContext, INatCruiseDialogService dialogService)
         {
@@ -84,8 +115,17 @@ namespace NatCruise.Check.ViewModels
             V2_Database = v2_db;
 
 
-            UnitSelection = CheckCruiseDataService.GetUnitStrata().Select(x => new UnitStratumSelectionItem { Item = x });
+            UnitSelection = CheckCruiseDataService.GetUnitStrata()
+                .Select(x => new UnitStratumSelectionItem { Item = x })
+                .ToArray();
 
+        }
+
+        public bool CanCreateCheckCruise()
+        {
+            if(string.IsNullOrEmpty(CheckCruisePath)) {  return false; }
+            if (UnitSelection == null) { return false; }
+            return UnitSelection.Any(x => x.IsSelected);
         }
 
         public void CreateCheckCruise()
