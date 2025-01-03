@@ -13,7 +13,7 @@
 		<PackageReference Include="FluentValidation" Version="10.1.0" />
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.1.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
 		<PackageReference Include="Prism.Core" Version="8.0.0.1909" />
 		<PackageReference Include="FMSC.Sampling" Version="2.0.1" />
 	</ItemGroup>
@@ -25,9 +25,9 @@
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'false' OR $(UseCruiseDALProjRefs) == '' ">
-		<PackageReference Include="CruiseDAL.V3" Version="3.6.7.130" />
-		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.6.7.13001" />
-		<PackageReference Include="CruiseDAL.V3.Models" Version="3.6.7.130" />
+		<PackageReference Include="CruiseDAL.V3" Version="3.6.7.131" />
+		<PackageReference Include="CruiseDAL.V3.Sync" Version="3.6.7.13103" />
+		<PackageReference Include="CruiseDAL.V3.Models" Version="3.6.7.131" />
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.2" />
 	</ItemGroup>
 
