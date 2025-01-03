@@ -1,15 +1,12 @@
-﻿using Backpack.SqlBuilder;
-using CruiseDAL;
+﻿using CruiseDAL;
+using NatCruise.Data.Abstractions;
 using NatCruise.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise.Data
 {
-    public class CuttingUnitStratumDataservice : CruiseDataserviceBase
+    public class CuttingUnitStratumDataservice : CruiseDataserviceBase, ICuttingUnitStratumDataservice
     {
         public CuttingUnitStratumDataservice(IDataContextService dataContext) : base(dataContext)
         {

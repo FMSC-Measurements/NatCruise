@@ -1,11 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NatCruise.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NatCruise
 {
@@ -16,6 +10,7 @@ namespace NatCruise
 
                 ServiceDescriptor.Transient<ICruiseLogDataservice, CruiseLogDataservice>(),
                 ServiceDescriptor.Transient<ICuttingUnitDataservice, CuttingUnitDataservice>(),
+                ServiceDescriptor.Transient<ICuttingUnitStratumDataservice, CuttingUnitStratumDataservice>(),
                 ServiceDescriptor.Transient<IFieldSetupDataservice, FieldSetupDataservice>(),
                 ServiceDescriptor.Transient<IFixCNTDataservice, FixCNTDataservice>(),
                 ServiceDescriptor.Transient<ILogDataservice, LogDataservice>(),
