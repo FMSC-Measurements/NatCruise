@@ -36,11 +36,12 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0"
                            Text="Select Cutting Units from the original cruise to include in the check cruise"
-                           Margin="4" />
-                <ListView Grid.Row="1">
+                           Margin="0,2" />
+                <ListView Grid.Row="1"
+                          d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn>
+                            <GridViewColumn Width="Auto">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox IsChecked="{Binding IsSelected}" />
@@ -63,22 +64,27 @@
 
             <GroupBox Grid.Row="2"
                       Header="Options">
-                <StackPanel>
+                <StackPanel >
                     <CheckBox x:Name="IncludeTreeMeasurmentsCheckBox"
-                              Content="Include Tree Measurements" />
+                              Content="Include Tree Measurements"
+                              IsChecked="{Binding IncludeTreeMeasurments}"
+                              Margin="0,2" />
                     <CheckBox x:Name="IncludeLogRecordsCheckBox"
-                              Content="Include Log Records" />
+                              Content="Include Log Records"
+                              IsChecked="{Binding IncludeLogRecords}"
+                              Margin="0,2" />
                 </StackPanel>
             </GroupBox>
 
-            <Grid Grid.Row="3" Margin="0,4">
+            <Grid Grid.Row="3" Margin="0,2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Check Cruise File" VerticalAlignment="Center" />
-                <TextBox Grid.Column="1" Text="{Binding CheckCruisePath}" Margin="4,0" />
+                <TextBox Grid.Column="1"
+                         Text="{Binding CheckCruisePath}" Margin="4,0" />
                 <Button Grid.Column="2"
                         Style="{StaticResource MahApps.Styles.Button}"
                         Content="Browse" />

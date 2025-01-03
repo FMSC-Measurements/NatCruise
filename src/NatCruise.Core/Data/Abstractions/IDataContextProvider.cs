@@ -23,6 +23,8 @@ namespace NatCruise.Data
 
         string DeviceID { get;  }
 
+        bool OpenDatabase(string path);
+
         bool OpenOrCreateDatabase(string path);
     }
 }

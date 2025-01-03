@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CruiseDAL;
+using Microsoft.Extensions.Logging;
 using NatCruise.Check.Data;
 using NatCruise.Check.Models;
 using NatCruise.Data;
@@ -19,14 +20,14 @@ namespace NatCruise.Check.ViewModels
     {
         private bool _isDisposed;
 
-        IReadOnlyCollection<UnitStratumSelectionItem> _unitSelection;
+        private IReadOnlyCollection<UnitStratumSelectionItem> _unitSelection;
         private string _checkCruisePath;
         private RelayCommand _createCheckCruiseCommand;
 
         public partial class UnitStratumSelectionItem : ObservableObject
         {
             [ObservableProperty]
-            bool _isSelected;
+            private bool _isSelected;
 
             public UnitStratum Item { get; set; }
         }
@@ -46,7 +47,7 @@ namespace NatCruise.Check.ViewModels
                 SetProperty(ref _unitSelection, value);
                 if (value != null)
                 {
-                    foreach(var item in _unitSelection)
+                    foreach (var item in _unitSelection)
                     {
                         item.PropertyChanged += UnitSelectionItem_PropertyChanged;
                     }
@@ -54,14 +55,14 @@ namespace NatCruise.Check.ViewModels
             }
         }
 
-        private void UnitSelectionItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            CreateCheckCruiseCommand.NotifyCanExecuteChanged();
-        }
+        public bool IncludeLogRecords { get; set; }
+
+        public bool IncludeTreeMeasurments { get; set; }
 
         public IDataContextService DataContext { get; }
         protected dataBaseCommands CheckCruiseDataService { get; set; }
         public INatCruiseDialogService DialogService { get; }
+        public ILogger Log { get; }
 
         public string CheckCruisePath
         {
@@ -69,61 +70,58 @@ namespace NatCruise.Check.ViewModels
             set => SetProperty(ref _checkCruisePath, value);
         }
 
-        protected DAL V2_Database { get; set; }
+        //protected DAL V2_Database { get; set; }
 
         public RelayCommand CreateCheckCruiseCommand => _createCheckCruiseCommand ??= new RelayCommand(CreateCheckCruise, CanCreateCheckCruise);
 
-
-
-
-        public CreateCheckCruiseViewModel(IDataContextService dataContext, INatCruiseDialogService dialogService)
+        public CreateCheckCruiseViewModel(IDataContextService dataContext, , INatCruiseDialogService dialogService, ILogger<CreateCheckCruiseViewModel> log)
         {
             DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            Log = log;
         }
-
 
         protected void OnInitialize(IDictionary<string, object> parameters)
         {
             var database = DataContext.Database;
 
-            var cruiseID = DataContext.CruiseID;
-            var migrator = new DownMigrator();
-            if(!migrator.EnsureCanMigrate(cruiseID, database, out var errors))
-            {
-                DialogService.ShowNotification("Error Creating File: migration error ", string.Join(Environment.NewLine, errors));
-            }
+            //var cruiseID = DataContext.CruiseID;
+            //var migrator = new DownMigrator();
+            //if(!migrator.EnsureCanMigrate(cruiseID, database, out var errors))
+            //{
+            //    DialogService.ShowNotification("Error Creating File: migration error ", string.Join(Environment.NewLine, errors));
+            //}
 
-            var v2_db = new DAL();
-            try
-            {
-                
+            //var v2_db = new DAL();
+            //try
+            //{
+            //    migrator.MigrateFromV3ToV2(cruiseID, database, v2_db);
 
-                migrator.MigrateFromV3ToV2(cruiseID, database, v2_db);
+            //}
+            //catch
+            //{
+            //    v2_db.Dispose();
+            //    V2_Database = null;
+            //    CheckCruiseDataService = null;
+            //    return;
+            //}
 
-                
-            }
-            catch
-            {
-                v2_db.Dispose();
-                V2_Database = null;
-                CheckCruiseDataService = null;
-                return;
-            }
-
-            CheckCruiseDataService = new dataBaseCommands(v2_db);
-            V2_Database = v2_db;
-
+            //CheckCruiseDataService = new dataBaseCommands(v2_db);
+            //V2_Database = v2_db;
 
             UnitSelection = CheckCruiseDataService.GetUnitStrata()
                 .Select(x => new UnitStratumSelectionItem { Item = x })
                 .ToArray();
 
+            var currentCruisePath = database.Path;
+            var currentCruiseDir = Path.GetDirectoryName(currentCruisePath);
+
+            var sale = CheckCruiseDataService.GetSale();
         }
 
         public bool CanCreateCheckCruise()
         {
-            if(string.IsNullOrEmpty(CheckCruisePath)) {  return false; }
+            if (string.IsNullOrEmpty(CheckCruisePath)) { return false; }
             if (UnitSelection == null) { return false; }
             return UnitSelection.Any(x => x.IsSelected);
         }
@@ -164,14 +162,11 @@ namespace NatCruise.Check.ViewModels
                 checkCruiseFile = new FileInfo(checkCruisePath);
                 if (checkCruiseFile.Exists)
                 {
-                    if(DialogService.AskYesNoAsync("Check Cruise File Already Exists", "Overwrite Existing Check Cruise File?").Result == false)
+                    if (DialogService.AskYesNoAsync("Check Cruise File Already Exists", "Overwrite Existing Check Cruise File?").Result == false)
                     {
                         return;
                     }
-
                 }
-
-                
             }
             catch (System.IO.IOException e)
             {
@@ -179,14 +174,39 @@ namespace NatCruise.Check.ViewModels
                 return;
             }
 
-            var checkCruiseDb = new DAL(checkCruisePath, true);
+            var selectedUnits = UnitSelection.Where(x => x.IsSelected).Select(x => x.Item).ToArray();
+            var destinationCruiseID = Guid.NewGuid().ToString();
 
-            var selectedUnits = UnitSelection.Where(x => x.IsSelected).Select(x => x.Item);
-            var checkCruise = CheckCruiseDataService.CreateCheckCruise(selectedUnits);
-            DialogService.ShowCheckCruise(checkCruise);
+            var checkCruiseDb = new CruiseDatastore_V3(checkCruisePath, true);
+            try
+            {
+                var checkCruiseCopier = new CheckCruiseCopier(selectedUnits)
+                {
+                    IncludeLogRecords = IncludeLogRecords,
+                    IncludeTreeMeasurments = IncludeTreeMeasurments,
+                };
+                checkCruiseCopier.Copy(DataContext.Database, checkCruiseDb, DataContext.CruiseID, destinationCruiseID: destinationCruiseID);
+            }
+            catch (Exception e)
+            {
+                Log?.LogWarning(e, "Error Creating Check Cruise");
+                DialogService.ShowNotification("Error Creating File", e.Message);
+                return;
+            }
+            finally
+            {
+                checkCruiseDb.Dispose();
+            }
+
+            // open check cruise
+            //DataContext.OpenDatabase(checkCruisePath);
+            //DataContext.CruiseID = destinationCruiseID;
         }
 
-
+        private void UnitSelectionItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            CreateCheckCruiseCommand.NotifyCanExecuteChanged();
+        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -194,13 +214,14 @@ namespace NatCruise.Check.ViewModels
             {
                 if (disposing)
                 {
-                    var v2_db = V2_Database;
-                    if(v2_db != null)
-                    {
-                        v2_db.Dispose();
-                    }
-                    V2_Database = null;
+                    //var v2_db = V2_Database;
+                    //if (v2_db != null)
+                    //{
+                    //    v2_db.Dispose();
+                    //}
+                    //V2_Database = null;
                     CheckCruiseDataService = null;
+                    UnitSelection = null;
                 }
 
                 _isDisposed = true;
