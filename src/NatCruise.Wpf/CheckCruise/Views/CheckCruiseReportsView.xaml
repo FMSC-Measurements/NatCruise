@@ -1,40 +1,107 @@
 ﻿<Page x:Class="NatCruise.Wpf.CheckCruise.Views.CheckCruiseReportsView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:NatCruise.Wpf.CheckCruise.Views"
       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      mc:Ignorable="d"
+      d:DesignHeight="450"
+      d:DesignWidth="800"
       Title="CheckCruiseReportsView"
       d:Background="{StaticResource MahApps.Brushes.Control.Background}">
 
     <Grid>
-        <Grid.RowDefinitions>
+        <!--<Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        </Grid.RowDefinitions>-->
 
-        <Grid Grid.Row="0" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <GroupBox Header="Options" Width="200">
-                <StackPanel>
-                    <mah:MetroHeader Header="Cruiser Initials">
-                        <ComboBox x:Name="_cruiserInitialsComboBox" ItemsSource="{Binding CruiserInitialsOptions}" SelectedValue="{Binding CruiserInitials}" />
-                    </mah:MetroHeader>
-                    <mah:MetroHeader Header="Cruiser Name">
-                        <TextBox x:Name="_cruiserNameTextBox" Text="{Binding CruiserName}" />
-                    </mah:MetroHeader>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0"
+              IsEnabled="{Binding ProcessedCheckCruisePath, Converter={StaticResource NotNullOrWhiteSpaceConverter}}"
+              d:IsEnabled="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+
+            
+            <StackPanel>
+                <WrapPanel Orientation="Vertical">
+                    <Label Content="Original Cruse to Compare" />
+                    <TextBox x:Name="_origCruisePathTextbox"
+                             Text="{Binding OrigCruisePath}"
+                             Width="200"
+                             Margin="4" />
+                    <Button Content="Browse" Margin="4" />
+                </WrapPanel>
+                <TextBlock Text="{Binding AnalizeStatus}"
+                           d:Text="Status..." Style="{StaticResource MahApps.Styles.TextBlock.Watermark}" />
+
+            </StackPanel>
+            
+            <GroupBox Grid.Row="1" Header="Options"
+                      Width="200">
+                <StackPanel Orientation="Vertical">
+                    <RadioButton Content="By Sale"
+                                 Margin="4"
+                                 GroupName="_reportLevelRbGroup" />
+                    <Border BorderThickness="1"
+                            BorderBrush="{StaticResource MahApps.Brushes.Control.Border}"
+                            CornerRadius="5"
+                            Padding="4">
+                        <StackPanel>
+
+                            <RadioButton x:Name="_byCruiserRb" Content="By Cruiser" GroupName="_reportLevelRbGroup" />
+                            <mah:MetroHeader Header="Cruiser Initials" Margin="0,2">
+                                <ComboBox x:Name="_cruiserInitialsComboBox"
+                                          ItemsSource="{Binding CruiserInitialsOptions}"
+                                          SelectedValue="{Binding CruiserInitials}"
+                                          IsEnabled="{Binding IsChecked, ElementName=_byCruiserRb}"/>
+                            </mah:MetroHeader>
+                            <mah:MetroHeader Header="Cruiser Name"
+                                             Margin="0,2">
+                                <TextBox x:Name="_cruiserNameTextBox"
+                                         Text="{Binding CruiserName}"
+                                         IsEnabled="{Binding IsChecked, ElementName=_byCruiserRb}"/>
+                            </mah:MetroHeader>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
             </GroupBox>
+            <StackPanel Grid.Row="2" Margin="4">
+                <Button Content="Generate Evaluation Report"
+                        Command="{Binding GenerateEvaluationReport}"
+                        Margin="4"
+                        HorizontalAlignment="Right" />
+                <Button Content="Generate Summary Report"
+                        Command="{Binding GenerateSummaryReport}"
+                        Margin="4"
+                        HorizontalAlignment="Right" />
+                
+                
+            </StackPanel>
+
+            <Border Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Background="LightGray"
+                    mah:VisibilityHelper.IsVisible="{Binding ProcessedCheckCruisePath, Converter={StaticResource IsNullOrEmptyConverter}}"
+                    d:Visibility="Hidden">
+                <TextBlock Text="Process Check Cruise First"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+            </Border>
         </Grid>
 
-        <TabControl Grid.Row="1">
-            
+        <TabControl Grid.Column="1">
+
         </TabControl>
 
     </Grid>
