@@ -8,6 +8,6 @@ namespace NatCruise.Check.Models
 {
     public class AnalysisResult
     {
-
+        public IReadOnlyList<ResultsList> Results { get; set; }
     }
 }
