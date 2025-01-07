@@ -90,7 +90,7 @@ namespace NatCruise.Check.Reports
         private static void WriteHeader(TextWriter writer, string[] textHeader)
         {
             StringBuilder sb = new StringBuilder();
-            //  write headaer line to file
+            //  write header line to file
             for (int k = 0; k < 16; k++)
             {
                 sb.Append(textHeader[k] + ",");
