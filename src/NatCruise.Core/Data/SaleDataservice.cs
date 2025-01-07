@@ -97,6 +97,11 @@ namespace NatCruise.Data
                 .Query(cruiseID).First();
         }
 
+        public IReadOnlyCollection<string> GetCruisers()
+        {
+            return Database.QueryScalar<string>("SELECT DISTINCT Initials FROM Tree WHERE CruiseID = @p1;", CruiseID).ToArray();
+        }
+
         public Sale GetSale(int saleNumber)
         {
             return Database.From<Sale>()

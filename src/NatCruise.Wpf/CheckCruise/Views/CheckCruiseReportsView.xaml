@@ -34,16 +34,28 @@
 
             
             <StackPanel>
-                <WrapPanel Orientation="Vertical">
-                    <Label Content="Original Cruse to Compare" />
-                    <TextBox x:Name="_origCruisePathTextbox"
-                             Text="{Binding OrigCruisePath}"
-                             Width="200"
-                             Margin="4" />
-                    <Button Content="Browse" Margin="4" />
-                </WrapPanel>
+                <HeaderedContentControl Header="Check Cruiser Initials" Margin="4">
+                    <ComboBox SelectedValue="{Binding CheckCruiserInitials}"
+                              ItemsSource="{Binding CheckCruiserInitialsOptions}" />
+                </HeaderedContentControl>
+
+                <Button Margin="5"
+                        Content="Configure Tolerances" />
+
+                <HeaderedContentControl Header="Original Cruse to Compare"
+                                        Margin="4">
+                    <WrapPanel Orientation="Vertical">
+                        <TextBox x:Name="_origCruisePathTextbox"
+                                 Text="{Binding OrigCruisePath}"
+                                 Width="200" />
+                        <Button Content="Browse"
+                                Margin="0,2" />
+                    </WrapPanel>
+                </HeaderedContentControl>
+
                 <TextBlock Text="{Binding AnalizeStatus}"
-                           d:Text="Status..." Style="{StaticResource MahApps.Styles.TextBlock.Watermark}" />
+                           d:Text="Status..."
+                           Style="{StaticResource MahApps.Styles.TextBlock.Watermark}" />
 
             </StackPanel>
             

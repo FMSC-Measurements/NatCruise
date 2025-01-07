@@ -32,5 +32,11 @@ namespace NatCruise.Data
         Models.Cruise GetCruise(string cruiseID);
 
         void UpdateCruise(Models.Cruise cruise);
+
+        /// <summary>
+        /// Provides a list of all the unique cruiser initials for the current sale
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyCollection<string> GetCruisers()
     }
 }
