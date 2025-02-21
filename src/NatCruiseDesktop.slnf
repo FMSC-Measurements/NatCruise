@@ -1,0 +1,13 @@
+{
+  "solution": {
+    "path": "NatCruise.sln",
+    "projects": [
+      "NatCruise.Core.Test\\NatCruise.Core.Test.csproj",
+      "NatCruise.Core\\NatCruise.Core.csproj",
+      "NatCruise.Test.Common\\NatCruise.Test.Common.shproj",
+      "NatCruise.Wpf.Controls.Test\\NatCruise.Wpf.Controls.Test.csproj",
+      "NatCruise.Wpf.Test\\NatCruise.Wpf.Test.csproj",
+      "NatCruise.Wpf\\NatCruise.Wpf.csproj"
+    ]
+  }
+}
