@@ -43,7 +43,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'false' OR $(UseCruiseDALProjRefs) == '' ">
-		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.6.5.12200" />
+		<PackageReference Include="CruiseDAL.V3.UpConvert" Version="3.6.7.12400" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -127,11 +127,11 @@
 	  <ProjectReference Include="..\NatCruise.Core\NatCruise.Core.csproj" />
 	</ItemGroup>
 
-	<Target Name="GenerateSecrets" BeforeTargets="CoreBuild">
+	<!--<Target Name="GenerateSecrets" BeforeTargets="CoreBuild">
 		<ItemGroup>
 			<TemplateFile Include="Secrets.cst" />
 		</ItemGroup>
 
 		<ProcessCodeTemplate TemplateFiles="@(TemplateFile)" />
-	</Target>
+	</Target>-->
 </Project>
