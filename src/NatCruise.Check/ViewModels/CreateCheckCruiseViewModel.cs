@@ -60,6 +60,7 @@ namespace NatCruise.Check.ViewModels
         public bool IncludeTreeMeasurments { get; set; }
 
         public IDataContextService DataContext { get; }
+        public ISaleDataservice SaleDataservice { get; }
         protected dataBaseCommands CheckCruiseDataService { get; set; }
         public INatCruiseDialogService DialogService { get; }
         public ILogger Log { get; }
@@ -74,9 +75,10 @@ namespace NatCruise.Check.ViewModels
 
         public RelayCommand CreateCheckCruiseCommand => _createCheckCruiseCommand ??= new RelayCommand(CreateCheckCruise, CanCreateCheckCruise);
 
-        public CreateCheckCruiseViewModel(IDataContextService dataContext, , INatCruiseDialogService dialogService, ILogger<CreateCheckCruiseViewModel> log)
+        public CreateCheckCruiseViewModel(IDataContextService dataContext, ISaleDataservice saleDataservice, INatCruiseDialogService dialogService, ILogger<CreateCheckCruiseViewModel> log)
         {
             DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             Log = log;
         }
@@ -116,7 +118,7 @@ namespace NatCruise.Check.ViewModels
             var currentCruisePath = database.Path;
             var currentCruiseDir = Path.GetDirectoryName(currentCruisePath);
 
-            var sale = CheckCruiseDataService.GetSale();
+            var sale = SaleDataservice.GetSale();
         }
 
         public bool CanCreateCheckCruise()

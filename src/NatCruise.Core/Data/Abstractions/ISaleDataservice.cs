@@ -37,6 +37,6 @@ namespace NatCruise.Data
         /// Provides a list of all the unique cruiser initials for the current sale
         /// </summary>
         /// <returns></returns>
-        IReadOnlyCollection<string> GetCruisers()
+        IReadOnlyCollection<string> GetCruisers();
     }
 }

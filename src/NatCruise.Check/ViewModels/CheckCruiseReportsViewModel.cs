@@ -11,6 +11,7 @@ using NatCruise.Navigation;
 using Prism.Ioc;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -137,6 +138,8 @@ namespace NatCruise.Check.ViewModels
         public IDataContextService DataContext { get; }
         public ISaleDataservice SaleDataservice { get; }
 
+        public ObservableCollection<ReportOutput> Reports { get; private set; } = new ObservableCollection<ReportOutput>();
+
         public CheckCruiseReportsViewModel(IDataContextService dataContextService, ISaleDataservice saleDataservice, INatCruiseDialogService dialogService, IContainerProvider services, ILogger<CheckCruiseReportsViewModel>? log)
         {
             DataContext = dataContextService ?? throw new ArgumentNullException(nameof(dataContextService));
@@ -238,20 +241,32 @@ namespace NatCruise.Check.ViewModels
                 ReportLevel.ByCruiser => "ByCruiser",
                 _ => throw new InvalidEnumArgumentException(nameof(ReportLevel)),
             };
-            var evaluationReportFileName = $"{sale.SaleNumber}_{sale.Name}_{timestamp}_Eval_{reportLevelStr}.rtf";
+            
 
-            var checkCruiseDir = Path.GetDirectoryName(DataContext.DatabasePath);
-
-            var evaluationReportPath = Path.Combine(checkCruiseDir, evaluationReportFileName);
-
-            File.OpenWrite
-
-            using var reportStream = new FileStream(evaluationReportPath, FileMode.Create, FileAccess.Write);
-            using var writer = new StreamWriter(reportStream);
-
+            using var writer = new StringWriter();
             evaluationReportGenerator.BuildReport(writer, ToleranceConfig, ReportLevel, CruiserName, CruiserInitials);
 
-            
+            var evaluationReportFileName = $"{sale.SaleNumber}_{sale.Name}_{timestamp}_Eval_{reportLevelStr}.rtf";
+            var checkCruiseDir = Path.GetDirectoryName(DataContext.DatabasePath);
+            var evaluationReportPath = Path.Combine(checkCruiseDir, evaluationReportFileName);
+            var report = new ReportOutput()
+            {
+                Content = writer.ToString(),
+                Path = evaluationReportPath,
+                FileName = evaluationReportFileName,
+            };
+
+            SaveReportOutput(report);
+
+        }
+
+        public void SaveReportOutput(ReportOutput reprot)
+        {
+            Log?.LogInformation("Saving Report {ReportFileName} To {ReportPath}", reprot.FileName, reprot.Path);
+
+            //var file = new FileInfo(reprot.Path);
+            using var writer = new StreamWriter(reprot.Path);
+            writer.Write(reprot.Content);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -261,6 +276,8 @@ namespace NatCruise.Check.ViewModels
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects)
+                    Reports = null;
+
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer
@@ -289,4 +306,5 @@ namespace NatCruise.Check.ViewModels
         public string FileName { get; set; }
         public string Path { get; set; }
         public string Content { get; set; }
+    }
 }

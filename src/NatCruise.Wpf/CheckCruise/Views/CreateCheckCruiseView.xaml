@@ -42,6 +42,9 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="Auto">
+                                <GridViewColumn.Header>
+                                    <Button Content="Select All" />
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox IsChecked="{Binding IsSelected}" />
