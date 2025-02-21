@@ -27,13 +27,15 @@ namespace NatCruise.Check.Reports
         public string Region { get; protected set; }
 
         public List<ResultsList> CheckResults { get; protected set; }
-        public List<TolerancesList> CruiseTolerances { get; protected set; }
+        public IList<TolerancesList> CruiseTolerances => ToleranceConfig.Tolerances; //{ get; protected set; }
         public List<LogStockDO> CheckLogs { get; protected set; }
 
         public List<TreeDO> CruiserTrees { get; protected set; }
         private List<TreeCalculatedValuesDO> CalculatedTrees { get; set; }
         private TextReportHeaders TRH;
         private int[] DefaultFieldLengths { get; set; }
+
+        public ToleranceConfig ToleranceConfig { get; set; }
 
 
         public SummaryReportBuilder(dataBaseCommands checkCruiseDataService, dataBaseCommands cruiseDataService, string applicationVersion)
@@ -47,7 +49,7 @@ namespace NatCruise.Check.Reports
 
         public void Initialize()
         {
-            CruiseTolerances = CheckCruiseDataService.getTolerances();
+            //CruiseTolerances = CheckCruiseDataService.getTolerances();
 
             CheckLogs = CruiseDataService.getLogStock();
             CruiserTrees = CruiseDataService.getTrees();
@@ -134,62 +136,61 @@ namespace NatCruise.Check.Reports
                 }   //  endif
             }   //  end foreach
 
+            var volumeConfig = ToleranceConfig.VolumeConfig;
+
             //  print volume whether or not include volume was selected
-            foreach (TolerancesList ct in CruiseTolerances)
+            if (volumeConfig.T_CUFTPGtolerance > 0 || volumeConfig.T_CUFTPGtolerance == -1)
             {
-                if (ct.T_CUFTPGtolerance > 0 || ct.T_CUFTPGtolerance == -1)
-                {
-                    //  create output for both gross and net primary product volume
-                    //  gross cuft
-                    PrintVolume(1, writer, CheckResults, ct.T_CUFTPGtolerance, markersInitials, reportLevel);
-                    //  net cuft
-                    PrintVolume(2, writer, CheckResults, ct.T_CUFTPNtolerance, markersInitials, reportLevel);
-                }   //  endif
-                if (ct.T_CUFTSGtolerance > 0 || ct.T_CUFTSGtolerance == -1)
-                {
-                    //  create output for both gross and net secondary product volume
-                    //  gross cuft
-                    PrintVolume(3, writer, CheckResults, ct.T_CUFTSGtolerance, markersInitials, reportLevel);
-                    //  net cuft
-                    PrintVolume(4, writer, CheckResults, ct.T_CUFTSNtolerance, markersInitials, reportLevel);
-                }   //  endif
-                if (ct.T_BDFTPGtolerance > 0 || ct.T_BDFTPGtolerance == -1)
-                {
-                    //  create output for both gross and net primary product volume
-                    //  gross BDFT
-                    PrintVolume(5, writer, CheckResults, ct.T_BDFTPGtolerance, markersInitials, reportLevel);
-                    //  net BDFT
-                    PrintVolume(6, writer, CheckResults, ct.T_BDFTPNtolerance, markersInitials, reportLevel);
-                }   //  endif
-                if (ct.T_BDFTSGtolerance > 0 || ct.T_BDFTSGtolerance == -1)
-                {
-                    //  create output for both gross and net secondary product volume
-                    //  gross BDFT
-                    PrintVolume(7, writer, CheckResults, ct.T_BDFTSGtolerance, markersInitials, reportLevel);
-                    //  net BDFT
-                    PrintVolume(8, writer, CheckResults, ct.T_BDFTSNtolerance, markersInitials, reportLevel);
-                }   //  endif
-                if (ct.T_CUFTPSGtolerance > 0 || ct.T_CUFTPSGtolerance == -1)
-                {
-                    //  create output for just gross CUFT which includes primary and secondary
-                    PrintVolume(9, writer, CheckResults, ct.T_CUFTPSGtolerance, markersInitials, reportLevel);
-                }   //  endif
-                if (ct.T_CUFTPSNtolerance > 0 || ct.T_CUFTPSNtolerance == -1)
-                {
-                    //  and net CUFT including primary and secondary
-                    PrintVolume(10, writer, CheckResults, ct.T_CUFTPSNtolerance, markersInitials, reportLevel);
-                }   //  endif
-                if (ct.T_BDFTPSGtolerance > 0 || ct.T_BDFTPSGtolerance == -1)
-                {
-                    //  gross BDFT including primary and secondary
-                    PrintVolume(11, writer, CheckResults, ct.T_BDFTPSGtolerance, markersInitials, reportLevel);
-                }   //  endif
-                if (ct.T_BDFTPSNtolerance > 0 || ct.T_BDFTPSNtolerance == -1)
-                {
-                    // net BDFT including primary and secondary
-                    PrintVolume(12, writer, CheckResults, ct.T_BDFTPSNtolerance, markersInitials, reportLevel);
-                }   //  endif
-            }   //  end for each loop
+                //  create output for both gross and net primary product volume
+                //  gross cuft
+                PrintVolume(1, writer, CheckResults, volumeConfig.T_CUFTPGtolerance, markersInitials, reportLevel);
+                //  net cuft
+                PrintVolume(2, writer, CheckResults, volumeConfig.T_CUFTPNtolerance, markersInitials, reportLevel);
+            }   //  endif
+            if (volumeConfig.T_CUFTSGtolerance > 0 || volumeConfig.T_CUFTSGtolerance == -1)
+            {
+                //  create output for both gross and net secondary product volume
+                //  gross cuft
+                PrintVolume(3, writer, CheckResults, volumeConfig.T_CUFTSGtolerance, markersInitials, reportLevel);
+                //  net cuft
+                PrintVolume(4, writer, CheckResults, volumeConfig.T_CUFTSNtolerance, markersInitials, reportLevel);
+            }   //  endif
+            if (volumeConfig.T_BDFTPGtolerance > 0 || volumeConfig.T_BDFTPGtolerance == -1)
+            {
+                //  create output for both gross and net primary product volume
+                //  gross BDFT
+                PrintVolume(5, writer, CheckResults, volumeConfig.T_BDFTPGtolerance, markersInitials, reportLevel);
+                //  net BDFT
+                PrintVolume(6, writer, CheckResults, volumeConfig.T_BDFTPNtolerance, markersInitials, reportLevel);
+            }   //  endif
+            if (volumeConfig.T_BDFTSGtolerance > 0 || volumeConfig.T_BDFTSGtolerance == -1)
+            {
+                //  create output for both gross and net secondary product volume
+                //  gross BDFT
+                PrintVolume(7, writer, CheckResults, volumeConfig.T_BDFTSGtolerance, markersInitials, reportLevel);
+                //  net BDFT
+                PrintVolume(8, writer, CheckResults, volumeConfig.T_BDFTSNtolerance, markersInitials, reportLevel);
+            }   //  endif
+            if (volumeConfig.T_CUFTPSGtolerance > 0 || volumeConfig.T_CUFTPSGtolerance == -1)
+            {
+                //  create output for just gross CUFT which includes primary and secondary
+                PrintVolume(9, writer, CheckResults, volumeConfig.T_CUFTPSGtolerance, markersInitials, reportLevel);
+            }   //  endif
+            if (volumeConfig.T_CUFTPSNtolerance > 0 || volumeConfig.T_CUFTPSNtolerance == -1)
+            {
+                //  and net CUFT including primary and secondary
+                PrintVolume(10, writer, CheckResults, volumeConfig.T_CUFTPSNtolerance, markersInitials, reportLevel);
+            }   //  endif
+            if (volumeConfig.T_BDFTPSGtolerance > 0 || volumeConfig.T_BDFTPSGtolerance == -1)
+            {
+                //  gross BDFT including primary and secondary
+                PrintVolume(11, writer, CheckResults, volumeConfig.T_BDFTPSGtolerance, markersInitials, reportLevel);
+            }   //  endif
+            if (volumeConfig.T_BDFTPSNtolerance > 0 || volumeConfig.T_BDFTPSNtolerance == -1)
+            {
+                // net BDFT including primary and secondary
+                PrintVolume(12, writer, CheckResults, volumeConfig.T_BDFTPSNtolerance, markersInitials, reportLevel);
+            }   //  endif
         }
 
 
