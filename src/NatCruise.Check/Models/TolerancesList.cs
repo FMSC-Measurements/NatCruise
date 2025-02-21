@@ -7,7 +7,7 @@ using System.Text;
 namespace NatCruise.Check.Models
 {
     [Table("Tolerances")]
-    public class TolerancesList
+    public class TolerancesList : ICloneable
     {
         public const string ADD_PARAM_NONE = "None";
         public const string ADD_PARAM_7PCT = "7% whichever >";
@@ -38,5 +38,10 @@ namespace NatCruise.Check.Models
         public float T_ElementAccuracy { get; set; }
         public float T_OverallAccuracy { get; set; }
         public string T_DateStamp { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

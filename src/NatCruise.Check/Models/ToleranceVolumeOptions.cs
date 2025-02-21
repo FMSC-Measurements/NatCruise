@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NatCruise.Check.Models
 {
-    public class ToleranceVolumeOptions
+    public class ToleranceVolumeOptions : ICloneable
     {
         
         public bool IncludeVolumes { get; set; }
@@ -26,8 +26,9 @@ namespace NatCruise.Check.Models
         public float T_BDFTPSGtolerance { get; set; }
         public float T_BDFTPSNtolerance { get; set; }
 
-
-
-
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }
