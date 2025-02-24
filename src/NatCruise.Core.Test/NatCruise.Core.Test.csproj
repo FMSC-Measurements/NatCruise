@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net60</TargetFramework>
+		<TargetFramework>net90</TargetFramework>
 		<RootNamespace>NatCruise.Test</RootNamespace>
 
 		<Configurations>Debug;Release</Configurations>

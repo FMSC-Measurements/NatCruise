@@ -1,6 +1,6 @@
 <Project>
 
-	<UsingTask	TaskName="ProcessCodeTemplate"
+	<!--<UsingTask	TaskName="ProcessCodeTemplate"
 				TaskFactory="CodeTaskFactory" 
 				AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
 		<ParameterGroup>
@@ -12,6 +12,6 @@
 			<Reference Include="System.Xml" />
 			<Code Source="$(MSBuildThisFileDirectory)/buildTasks/ProcessCodeTemplate.cs" />
 		</Task>
-	</UsingTask>
+	</UsingTask>-->
 	
 </Project>

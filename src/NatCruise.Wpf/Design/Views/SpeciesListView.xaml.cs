@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace NatCruise.Design.Views
 {
@@ -27,6 +28,9 @@ namespace NatCruise.Design.Views
     {
         //ComboBox _fiaCombobox;
 
+        double _filterDelay = 500;
+        DispatcherTimer _fiaFilterTimer;
+
         public SpeciesListView()
         {
             InitializeComponent();
@@ -37,7 +41,18 @@ namespace NatCruise.Design.Views
             _fiaCombobox.DropDownClosed += _fiaCombobox_DropDownClosed;
             DataObject.AddPastingHandler(_fiaCombobox, _fiaCombobox_Pasting);
 
-            
+            _fiaFilterTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(_filterDelay)
+            };
+
+            _fiaFilterTimer.Tick += _fiaFilterTimer_Tick;
+        }
+
+        private void _fiaFilterTimer_Tick(object sender, EventArgs e)
+        {
+            _fiaFilterTimer.Stop();
+            _fiaCombobox.Items.Filter = _fiaComboboxFilter;
         }
 
         private void _fiaCombobox_DropDownClosed(object sender, EventArgs e)
@@ -50,8 +65,8 @@ namespace NatCruise.Design.Views
             if (_fiaFilter == null) { return true; }
             if(item == null) { return false; }
             var itemText = item.ToString();
-            var isMatch = _fiaFilter.IsMatch(itemText);
-            return isMatch;
+            var matchIndex = itemText.IndexOf(_fiaFilter, StringComparison.OrdinalIgnoreCase);
+            return matchIndex >= 0;
         }
 
         private void _fiaCombobox_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -79,7 +94,7 @@ namespace NatCruise.Design.Views
             ApplyFilter(fullText);
         }
 
-        Regex _fiaFilter;
+        string _fiaFilter;
 
         // for getting combobox EditTextBox
         public static T GetChildOfType<T>(DependencyObject depObj) where T : DependencyObject
@@ -99,27 +114,32 @@ namespace NatCruise.Design.Views
         private void _fiaCombobox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             ComboBox cmb = (ComboBox)sender;
+            var textbox = GetChildOfType<TextBox>(cmb);
+            var textboxText = textbox.Text;
 
             cmb.IsDropDownOpen = true;
 
-            if (!string.IsNullOrEmpty(cmb.Text))
+            if (!string.IsNullOrEmpty(textboxText))
             {
-                string fullText = cmb.Text.Insert(GetChildOfType<TextBox>(cmb).CaretIndex, e.Text);
-                ApplyFilter(fullText);
+                var inputText = textboxText.Substring(0, textbox.CaretIndex);
+                inputText += e.Text;
+
+                ApplyFilter(inputText);
             }
             else
             {
                 ApplyFilter(e.Text);
             }
-
-            
         }
 
         private void ApplyFilter(string filter)
         {
+            // don't apply filter if user typing fia code
+            if(int.TryParse(filter, out int _)) { return; }
+
             if (!string.IsNullOrEmpty(filter))
             {
-                _fiaFilter = new Regex(filter, RegexOptions.None, TimeSpan.FromMilliseconds(100));
+                _fiaFilter = filter;
 
             }
             else
@@ -127,7 +147,8 @@ namespace NatCruise.Design.Views
                 _fiaFilter = null;
             }
 
-            _fiaCombobox.Items.Filter = _fiaComboboxFilter;
+           _fiaFilterTimer.Stop();
+            _fiaFilterTimer.Start();
         }
 
         private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
