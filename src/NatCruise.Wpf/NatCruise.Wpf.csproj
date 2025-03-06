@@ -15,6 +15,7 @@
     <UseWindowsForms>true</UseWindowsForms>
 		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<ApplicationIcon>Resources\cruisetree_setup.ico</ApplicationIcon>
+    <!-- https://github.com/dotnet/msbuild/issues/4704 -->
 		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 	</PropertyGroup>
 
