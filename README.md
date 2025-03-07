@@ -51,4 +51,3 @@ ViewModelBase.Load is called when the View OnNavigatedTo event is fired. This is
 
 
 
-
