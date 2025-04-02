@@ -200,7 +200,7 @@ namespace NatCruise.Wpf.ViewModels
                 var cruiseIDs = database.QueryScalar<string>("SELECT CruiseID FROM Cruise;").ToArray();
                 if (cruiseIDs.Length > 1)
                 {
-                    DialogService.ShowNotification("File contains multiple cruises. \r\nOpening files with multiple cruises is not supported yet", "Warning");
+                    DialogService.ShowNotificationAsync("File contains multiple cruises. \r\nOpening files with multiple cruises is not supported yet", "Warning").FireAndForget();
                     return;
                 }
                 var cruiseID = cruiseIDs.First();
