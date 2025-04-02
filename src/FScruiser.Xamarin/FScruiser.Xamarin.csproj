@@ -30,7 +30,7 @@
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.1.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
 		<PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.5" />
 		<PackageReference Include="Xamarin.CommunityToolkit.Markup" Version="2.0.5" />
@@ -311,11 +311,11 @@
 		</None>
 	</ItemGroup>
 
-	<Target Name="GenerateSecrets" BeforeTargets="CoreBuild">
+	<!--<Target Name="GenerateSecrets" BeforeTargets="CoreBuild">
 		<ItemGroup>
 			<TemplateFile Include="Secrets.cst" />
 		</ItemGroup>
 
 		<ProcessCodeTemplate TemplateFiles="@(TemplateFile)" />
-	</Target>
+	</Target>-->
 </Project>
