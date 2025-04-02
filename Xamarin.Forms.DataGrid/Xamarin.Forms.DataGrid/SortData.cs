@@ -45,5 +45,10 @@ namespace Xamarin.Forms.DataGrid
 				return false;
 		}
 
-	}
+        public override int GetHashCode()
+        {
+            return (Index, Order).GetHashCode();
+        }
+
+    }
 }

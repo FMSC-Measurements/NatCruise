@@ -324,17 +324,17 @@ namespace Xamarin.Forms.DataGrid
 				cell.WidthRequest = column.ComputedWidth;
 				
 				var gridLine = (View) cell.Children.FirstOrDefault((x) => x is BoxView);
+				var areGridLinesVisable = cell.Column.ColumnIndex > 0 
+					&& (GridLinesVisibility == GridLineVisibility.Both || GridLinesVisibility == GridLineVisibility.Vertical);
 
-				if (cell.Column.ColumnIndex > 0 && (GridLinesVisibility == GridLineVisibility.Both || GridLinesVisibility == GridLineVisibility.Vertical))
+
+				if(gridLine != null)
 				{
-					gridLine.IsVisible = true;
-					cell.Content.Margin = new Thickness(GridLineWidth, 0,0,0);
+					gridLine.IsVisible = areGridLinesVisable;
 				}
-				else
-				{
-					gridLine.IsVisible = false;
-					cell.Content.Margin = 0;
-				}
+
+                cell.Content.Margin = (areGridLinesVisable) ? new Thickness(GridLineWidth, 0, 0, 0)
+					: 0;
 			}
 		}
 

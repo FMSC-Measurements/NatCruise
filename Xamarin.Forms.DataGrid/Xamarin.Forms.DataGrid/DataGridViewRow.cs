@@ -138,8 +138,8 @@ namespace Xamarin.Forms.DataGrid
 
 				var r = new Rectangle(cx, cy, cw, ch);
 
-				if (c.Width != cw || c.Height != ch)
-					c.Layout(r);
+				if (!c.Width.Equals(cw) || !c.Height.Equals(ch))
+				{ c.Layout(r); }
 
 				i++;
 			}

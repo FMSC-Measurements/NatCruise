@@ -13,7 +13,11 @@ namespace Xamarin.Forms.DataGrid.Utils
 		public static object GetValueByPath(object obj, string path)
 		{
 			object result = obj;
-			var tokens = path?.Split(IndexBeginOp, PropertyOfOp).ToList();
+			if(result == null) { return null; }
+			if(string.IsNullOrEmpty(path)) { return result; }
+
+
+			var tokens = path.Split(new[] { IndexBeginOp, PropertyOfOp }).ToList();
 			foreach (var token in tokens)
 			{
 				if (result == null)

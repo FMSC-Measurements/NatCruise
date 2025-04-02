@@ -100,7 +100,7 @@ namespace Xamarin.Forms.DataGrid
 						cellView.Content.Margin = new Thickness(gridLine.WidthRequest, 0, 0, 0);
 					}
 
-					if (c.Width != cw || c.Height != ch)
+					if (!c.Width.Equals(cw) || !c.Height.Equals(ch))
 						c.Layout(r);
 				}
 			}
