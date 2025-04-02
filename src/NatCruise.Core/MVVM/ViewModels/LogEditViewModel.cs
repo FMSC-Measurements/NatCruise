@@ -44,7 +44,7 @@ namespace NatCruise.MVVM.ViewModels
             if (log != null)
             {
                 var logFieldValues = LogFieldValueDataservice.GetLogFieldValues(log.LogID).ToArray();
-                if (logFieldValues != null || logFieldValues.Length == 0)
+                if (logFieldValues == null || logFieldValues.Length == 0)
                 {
                     logFieldValues = new LogFieldValue[]
                     {

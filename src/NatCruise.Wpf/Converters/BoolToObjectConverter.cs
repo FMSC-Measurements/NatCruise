@@ -42,23 +42,10 @@ namespace NatCruise.Wpf.Converters
             throw new ArgumentException("Value is not a valid boolean", nameof(value));
         }
 
-        /// <summary>
-        /// Converts back object to <see cref="bool"/>.
-        /// </summary>
-        /// <param name="value">The value to convert.</param>
-        /// <param name="targetType">The type of the binding target property. This is not implemented.</param>
-        /// <param name="parameter">Additional parameter for the converter to handle. This is not implemented.</param>
-        /// <param name="culture">The culture to use in the converter.  This is not implemented.</param>
-        /// <returns>True if value equals <see cref="TrueObject"/>, otherwise False.</returns>
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is TObject result)
-                return result.Equals(TrueObject);
-
-            if (default(TObject) == null && value == null && TrueObject == null)
-                return true;
-
-            throw new ArgumentException($"Value is not a valid {typeof(TObject).Name}", nameof(value));
+            throw new NotImplementedException();
         }
     }
 }

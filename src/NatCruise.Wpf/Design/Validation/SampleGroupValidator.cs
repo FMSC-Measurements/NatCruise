@@ -24,7 +24,7 @@ namespace NatCruise.Design.Validation
             // allow Frequency to be 0 if BigBAF is set
             RuleFor(x => x.SamplingFrequency)
                 .Must(x => x > 0)
-                .When(x => CruiseMethods.FREQUENCY_SAMPLED_METHODS.Contains(x.CruiseMethod) && x.BigBAF == 0)
+                .When(x => CruiseMethods.FREQUENCY_SAMPLED_METHODS.Contains(x.CruiseMethod) && x.BigBAF.Equals(0.0))
                 .WithMessage("Sampling Frequency Should Not Be Zero")
                 .WithSeverity(Severity.Error);
 

@@ -288,14 +288,14 @@ namespace NatCruise.Wpf.ViewModels
 
                     if (nextFile.DesignErrors.Any())
                     {
-                        DialogService.ShowNotification("File Has Errors");
+                        DialogService.ShowNotificationAsync("File Has Errors").FireAndForget();
                         ConflictsDetected?.Invoke(this, EventArgs.Empty);
                         return;
                     }
 
                     if (nextFile.Conflicts.HasConflicts)
                     {
-                        DialogService.ShowNotification("File Has Conflicts");
+                        DialogService.ShowNotificationAsync("File Has Conflicts").FireAndForget();
                         ConflictsDetected?.Invoke(this, EventArgs.Empty);
                         return;
                     }
@@ -328,7 +328,7 @@ $@"Sync Error::::
 While Syncing File {nextFile.OriginalFile.Name}
 {e.Message}";
 
-                    DialogService.ShowNotification(message);
+                    DialogService.ShowNotificationAsync(message).FireAndForget();
 
                     LoggingService.LogException(nameof(CombineFileViewModel), message, e);
                 }
