@@ -1,6 +1,7 @@
 ﻿using CruiseDAL;
 using CruiseDAL.V3.Sync;
 using FScruiser.XF.Services;
+using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.Models;
 using NatCruise.MVVM;
@@ -102,7 +103,7 @@ namespace FScruiser.XF.ViewModels
             var srcFileExt = Path.GetExtension(cruisePath).ToLowerInvariant();
             if (string.IsNullOrEmpty(srcFileExt) || FILE_EXTENSIONS.Contains(srcFileExt) is false)
             {
-                DialogService.ShowNotification("Invalid File Type");
+                DialogService.ShowNotificationAsync("Invalid File Type").FireAndForget();
                 return;
             }
 
@@ -116,13 +117,13 @@ namespace FScruiser.XF.ViewModels
                 var dataservice = new SaleDataservice(db, (string)null, DeviceInfoService.DeviceID);
                 var cruises = dataservice.GetCruises();
 
-                if (cruises.Count() == 0)
+                if (cruises.Count == 0)
                 {
-                    DialogService.ShowNotification("File Contains No Cruises");
+                    DialogService.ShowNotificationAsync("File Contains No Cruises").FireAndForget();
                 }
 
                 Cruises = cruises;
-                if (cruises.Count() == 1)
+                if (cruises.Count == 1)
                 {
                     SelectedCruise = cruises.First();
                 }
@@ -339,12 +340,12 @@ namespace FScruiser.XF.ViewModels
                 //    //DialogService.ShowNotification()
                 //}
 
-                DialogService.ShowNotification("Done");
+                DialogService.ShowNotificationAsync("Done").FireAndForget();
                 await NavigationService.GoBackAsync();
             }
             else
             {
-                DialogService.ShowNotification("Import Failed");
+                DialogService.ShowNotificationAsync("Import Failed").FireAndForget();
             }
         }
 
@@ -355,7 +356,7 @@ namespace FScruiser.XF.ViewModels
                 SelectedCruise = null;
                 var errorStr = String.Join(Environment.NewLine, errors);
                 Log.LogEvent("Import Error", new Dictionary<string, string> { { "Message", errorStr } });
-                DialogService.ShowNotification(errorStr, "Cruise Can Not Be Imported");
+                DialogService.ShowNotificationAsync(errorStr, "Cruise Can Not Be Imported").FireAndForget();
                 return false;
             }
 
@@ -367,7 +368,9 @@ namespace FScruiser.XF.ViewModels
                 var fromConn = srcDb.OpenConnection();
                 var toConn = destDb.OpenConnection();
 
+#pragma warning disable S6966 // Awaitable method should be used
                 var transaction = toConn.BeginTransaction();
+
                 try
                 {
                     IsWorking = true;
@@ -389,6 +392,7 @@ namespace FScruiser.XF.ViewModels
                     IsWorking = false;
                     destDb.ReleaseConnection(true);
                 }
+#pragma warning restore S6966 // Awaitable method should be used
             }
         }
 

@@ -63,7 +63,7 @@ namespace FScruiser.XF.Controls
             }
 
             LayoutInformation layoutInformationCopy = _layoutInformation;
-            if (width == layoutInformationCopy.Constraint.Width && height == layoutInformationCopy.Constraint.Height)
+            if (width.Equals(layoutInformationCopy.Constraint.Width) && height.Equals(layoutInformationCopy.Constraint.Height))
             {
                 AlignOffAxis(layoutInformationCopy, width, height);
                 //ProcessExpanders(layoutInformationCopy, x, y, width, height);
@@ -285,7 +285,7 @@ namespace FScruiser.XF.Controls
 
                 if(i == lastChildIndex)
                 {
-                    var lastChildyOffset = (heightConstraint == Double.PositiveInfinity) ? yOffset
+                    var lastChildyOffset = heightConstraint.Equals(Double.PositiveInfinity) ? yOffset
                         : heightConstraint - lastChildHeight;
 
                     var bounds = new Rectangle(x, lastChildyOffset, request.Request.Width, lastChildHeight);

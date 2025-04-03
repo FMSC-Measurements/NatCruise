@@ -380,11 +380,10 @@ namespace FScruiser.XF.ViewModels
                         TreeDataservice.UpdateTreeInitials(entry.TreeID, cruiser);
                     }
                 }
-                else
-                if (method != CruiseMethods.H_PCT)
+                else if (method != CruiseMethods.H_PCT)
                 {
                     var sampleType = (isInsuranceSample) ? "Insurance Tree" : "Measure Tree";
-                    DialogService.ShowNotification("Tree #" + entry.TreeNumber.ToString(), sampleType);
+                    DialogService.ShowNotificationAsync("Tree #" + entry.TreeNumber.ToString(), sampleType).FireAndForget();
                 }
             }
         }

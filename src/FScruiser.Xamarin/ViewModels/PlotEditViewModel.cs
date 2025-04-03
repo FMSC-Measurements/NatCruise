@@ -227,7 +227,7 @@ namespace FScruiser.XF.ViewModels
             {
                 if (CanAddRemoveStrata == false)
                 {
-                    DialogService.ShowNotification("Can not remove stratum from plot with only one stratum");
+                    DialogService.ShowNotificationAsync("Can not remove stratum from plot with only one stratum").FireAndForget();
                     return;
                 }
 

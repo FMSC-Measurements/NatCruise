@@ -86,7 +86,7 @@ namespace FScruiser.XF.Controls
         {
             var visibleChildren = Children.Where(x => x.IsVisible).ToArray();
 
-            if (childWidth == 0 && visibleChildren.Any())
+            if (childWidth.Equals(0) && visibleChildren.Any())
             {
                 foreach (var child in visibleChildren)
                 {
@@ -106,7 +106,7 @@ namespace FScruiser.XF.Controls
         int GetColumnsCount(int visibleChildrenCount, double widthConstraint)
         {
             var columnsCount = visibleChildrenCount;
-            if (childWidth != 0 && !double.IsPositiveInfinity(widthConstraint))
+            if (!childWidth.Equals(0) && !double.IsPositiveInfinity(widthConstraint))
             {
                 columnsCount = Math.Clamp((int)(widthConstraint / childWidth), 1, visibleChildrenCount);
             }

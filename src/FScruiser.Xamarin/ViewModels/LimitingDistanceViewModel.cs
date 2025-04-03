@@ -498,7 +498,7 @@ namespace FScruiser.XF.ViewModels
             if (!string.IsNullOrEmpty(report))
             {
                 await Xamarin.Essentials.Clipboard.SetTextAsync(report);
-                DialogService.ShowNotification(report, "Report Copied");
+                DialogService.ShowNotificationAsync(report, "Report Copied").FireAndForget();
             }
         }
     }
