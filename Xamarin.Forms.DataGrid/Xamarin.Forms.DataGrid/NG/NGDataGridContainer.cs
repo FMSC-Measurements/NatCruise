@@ -582,7 +582,7 @@ namespace Xamarin.Forms.DataGrid
 
 		void WarmUpCache()
 		{
-			if (Width == -1 || Height == -1)
+			if (Width.Equals(-1) || Height.Equals(-1))
 				return;
 
 			//estimate double the items needed for 1 frame

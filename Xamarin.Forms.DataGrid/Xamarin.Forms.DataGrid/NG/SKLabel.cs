@@ -321,7 +321,7 @@ namespace Xamarin.Forms.DataGrid
 		protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
 		{
 
-			if (_cachedWidthConstraint != widthConstraint)
+			if (!_cachedWidthConstraint.Equals(widthConstraint))
 			{
 				_cachedWidthConstraint = widthConstraint;
 
@@ -377,7 +377,7 @@ namespace Xamarin.Forms.DataGrid
 				return;
 			
 			//measure lines if needed
-			if (Width != _cachedWidthConstraint)
+			if (!Width.Equals(_cachedWidthConstraint))
 				Measure(Width, Height);
 			
 			//clip for padding
@@ -464,7 +464,7 @@ namespace Xamarin.Forms.DataGrid
 					var wordWithSpaceWidth = wordWidth + spaceWidth;
 					var spaceWithWord = " " + word;
 
-					if ((width == 0 ? wordWidth : width + wordWithSpaceWidth) > maxWidth)
+					if ((width.Equals(0) ? wordWidth : width + wordWithSpaceWidth) > maxWidth)
 					{
 						if (width > 0)
 							result.Add(new Line() { Text = lineResult.ToString(), WidthPixels = width });

@@ -57,7 +57,7 @@ namespace NatCruise.MVVM
         //    { validated?.Invoke(model); }
         //}
 
-        protected void SetPropertyAndValidate<TModel, T>(TModel model, T value, Action<TModel, T> setter, [CallerMemberName] string propName = null)
+        protected void SetPropertyAndValidate<TModel, T>(TModel model, T value, Action<TModel, T> setter, [CallerMemberName] string propName = null) where TModel : class 
         {
             if (setter is null) { throw new ArgumentNullException(nameof(setter)); }
             if (string.IsNullOrEmpty(propName)) { throw new ArgumentException($"'{nameof(propName)}' cannot be null or empty.", nameof(propName)); }
@@ -74,7 +74,7 @@ namespace NatCruise.MVVM
             ErrorCollection.Update(results);
         }
 
-        protected void ValidateAll<TModel>(TModel model)
+        protected void ValidateAll<TModel>(TModel model) where TModel : class
         {
             if (model != null)
             {

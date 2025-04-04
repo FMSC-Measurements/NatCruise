@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using NatCruise.Async;
 
 namespace NatCruise.Wpf.FieldData.ViewModels
 {
@@ -353,7 +354,7 @@ namespace NatCruise.Wpf.FieldData.ViewModels
             {
                 if(CanAddRemoveStrata == false)
                 {
-                    DialogService.ShowNotification("Can not remove stratum from plot with only one stratum");
+                    DialogService.ShowNotificationAsync("Can not remove stratum from plot with only one stratum").FireAndForget();
                     return;
                 }
 

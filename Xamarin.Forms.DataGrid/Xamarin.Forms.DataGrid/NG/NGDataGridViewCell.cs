@@ -61,14 +61,14 @@ namespace Xamarin.Forms.DataGrid
 			double heightRequest = HeightRequest;
 			var childRequest = new SizeRequest();
 
-			if ((widthRequest == -1 || heightRequest == -1) && Children.Count > 0)
+			if ((widthRequest.Equals(-1) || heightRequest.Equals(-1)) && Children.Count > 0)
 			{
 				childRequest = ((View) Children[0]).Measure(widthConstraint, heightConstraint, MeasureFlags.IncludeMargins);
 			}
 
 			return new SizeRequest
 			{
-				Request = new Size {Width = widthRequest != -1 ? widthRequest : childRequest.Request.Width, Height = heightRequest != -1 ? heightRequest : childRequest.Request.Height},
+				Request = new Size {Width = !widthRequest.Equals(-1) ? widthRequest : childRequest.Request.Width, Height = !heightRequest.Equals(-1) ? heightRequest : childRequest.Request.Height},
 				Minimum = childRequest.Minimum
 			};
 		}

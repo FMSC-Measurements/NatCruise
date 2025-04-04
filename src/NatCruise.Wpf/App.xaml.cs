@@ -154,14 +154,17 @@ namespace NatCruise.Wpf
             var startupFilePath = StartupFilePath;
             if (startupFilePath != null)
             {
+                var mainWindowVM = base.MainWindow?.DataContext as MainWindowViewModel;
+                if (mainWindowVM == null)
+                { throw new InvalidOperationException("Main Window DataContext Is Invalid, Insure View Models are Registered"); }
+
                 try
                 {
-                    var mainWindowVM = base.MainWindow?.DataContext as MainWindowViewModel;
                     mainWindowVM.OpenFile(startupFilePath);
                 }
                 catch (Exception ex)
                 {
-                    LoggingService.LogException(nameof(App), nameof(ProcessStartupArgs), ex);
+                    Logger.LogError(ex, "Error Opening File On Startup");
                 }
             }
         }
@@ -260,7 +263,7 @@ namespace NatCruise.Wpf
                     if (await dialogService.AskYesNoAsync("Would You Like to Register V3 file types with NatCruise Desktop", "Register Cruise File Types"))
                     {
                         if (!isAppRegistered)
-                        { fileAssociationService.RegisterApp(); }
+                        { await fileAssociationService.RegisterAppAsync(); }
 
                         foreach (var unregisteredType in unregisteredTypes)
                         {
@@ -271,7 +274,7 @@ namespace NatCruise.Wpf
             }
             catch (Exception ex)
             {
-                LoggingService.LogException($"{nameof(App)}.{nameof(RegisterTypes)}", "Error Registering File Types", ex);
+                Logger.LogError(ex, "Error Registering File Types");
             }
         }
 
