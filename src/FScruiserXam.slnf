@@ -1,0 +1,13 @@
+{
+  "solution": {
+    "path": "NatCruise.sln",
+    "projects": [
+      "FScruiser.Droid\\FScruiser.Droid.csproj",
+      "FScruiser.Xamarin\\FScruiser.Xamarin.csproj",
+      "FScruiser.Xamarin.Test\\FScruiser.Xamarin.Test.csproj",
+      "NatCruise.Core\\NatCruise.Core.csproj",
+      "NatCruise.Core.Test\\NatCruise.Core.Test.csproj",
+      "NatCruise.Test.Common\\NatCruise.Test.Common.shproj",
+    ]
+  }
+}
