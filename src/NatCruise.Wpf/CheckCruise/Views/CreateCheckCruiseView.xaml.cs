@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Microsoft.Win32;
+using NatCruise.Wpf.CheckCruise.ViewModels;
+using NatCruise.Wpf.Util;
+using Prism;
+using System;
+using System.IO;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace NatCruise.Wpf.CheckCruise.Views
 {
@@ -20,9 +13,50 @@ namespace NatCruise.Wpf.CheckCruise.Views
     /// </summary>
     public partial class CreateCheckCruiseView : UserControl
     {
-        public CreateCheckCruiseView()
+        
+
+        protected CreateCheckCruiseView()
         {
             InitializeComponent();
         }
+
+        public CreateCheckCruiseView(CreateCheckCruiseViewModel viewModel)
+        {
+            InitializeComponent();
+            DataContext = viewModel;
+        }
+
+        private void _browseCheckCruisePathButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var curFilePath = _checkCruisePathTextBox.Text;
+            //string defatultPath = null;
+            //if (!string.IsNullOrEmpty(curFilePath))
+            //{
+            //    Path.
+            //}
+
+
+            var saveFileDialog = new SaveFileDialog()
+            {
+                Filter = "V3 Cruise File (.crz3)|*.*.crz3",
+                DefaultExt = ".crz3",
+                FileName = curFilePath,
+            };
+
+            if(saveFileDialog.ShowDialog(this.GetWindow()) ?? false)
+            {
+                _checkCruisePathTextBox.Text = saveFileDialog.FileName;
+            }
+        }
+
+        //public event EventHandler IsActiveChanged;
+
+        //protected override void OnInitialized(EventArgs e)
+        //{
+        //    base.OnInitialized(e);
+
+        //    var viewModel = DataContext as CreateCheckCruiseViewModel;
+
+        //}
     }
 }

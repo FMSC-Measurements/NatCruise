@@ -2,8 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using CruiseDAL;
 using Microsoft.Extensions.Logging;
-using NatCruise.Check.Data;
-using NatCruise.Check.Models;
+using NatCruise.Wpf.CheckCruise.Data;
+using NatCruise.Wpf.CheckCruise.Models;
 using NatCruise.Data;
 using NatCruise.Navigation;
 using System;
@@ -13,16 +13,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NatCruise.Models;
+using System.Windows.Input;
+using System.Data.Common;
+using NatCruise.MVVM;
 
-namespace NatCruise.Check.ViewModels
+namespace NatCruise.Wpf.CheckCruise.ViewModels
 {
-    public partial class CreateCheckCruiseViewModel : ObservableObject, IDisposable
+    public partial class CreateCheckCruiseViewModel : ViewModelBase, IDisposable
     {
         private bool _isDisposed;
 
         private IReadOnlyCollection<UnitStratumSelectionItem> _unitSelection;
         private string _checkCruisePath;
         private RelayCommand _createCheckCruiseCommand;
+        private ICommand _selectAllUnitsCommand;
 
         public partial class UnitStratumSelectionItem : ObservableObject
         {
@@ -63,53 +68,69 @@ namespace NatCruise.Check.ViewModels
         public ISaleDataservice SaleDataservice { get; }
         protected dataBaseCommands CheckCruiseDataService { get; set; }
         public INatCruiseDialogService DialogService { get; }
+        public INatCruiseNavigationService NavigationService { get; }
         public ILogger Log { get; }
 
         public string CheckCruisePath
         {
             get => _checkCruisePath;
-            set => SetProperty(ref _checkCruisePath, value);
+            set
+            {
+                SetProperty(ref _checkCruisePath, value);
+                CreateCheckCruiseCommand.NotifyCanExecuteChanged();
+            }
         }
 
-        //protected DAL V2_Database { get; set; }
+        protected DAL V2_Database { get; set; }
+
+        public ICommand SelectAllUnitsCommand => _selectAllUnitsCommand ??= new RelayCommand(SelectAllUnits);
+
+        private void SelectAllUnits()
+        {
+            foreach(var item in UnitSelection)
+            {
+                item.IsSelected = true;
+            }
+        }
 
         public RelayCommand CreateCheckCruiseCommand => _createCheckCruiseCommand ??= new RelayCommand(CreateCheckCruise, CanCreateCheckCruise);
 
-        public CreateCheckCruiseViewModel(IDataContextService dataContext, ISaleDataservice saleDataservice, INatCruiseDialogService dialogService, ILogger<CreateCheckCruiseViewModel> log)
+        public CreateCheckCruiseViewModel(IDataContextService dataContext, ISaleDataservice saleDataservice, INatCruiseDialogService dialogService, INatCruiseNavigationService navigationService, ILogger<CreateCheckCruiseViewModel> log)
         {
             DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             SaleDataservice = saleDataservice ?? throw new ArgumentNullException(nameof(saleDataservice));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NavigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             Log = log;
         }
 
-        protected void OnInitialize(IDictionary<string, object> parameters)
+        protected override void OnInitialize(IDictionary<string, object> parameters)
         {
             var database = DataContext.Database;
 
-            //var cruiseID = DataContext.CruiseID;
-            //var migrator = new DownMigrator();
-            //if(!migrator.EnsureCanMigrate(cruiseID, database, out var errors))
-            //{
-            //    DialogService.ShowNotification("Error Creating File: migration error ", string.Join(Environment.NewLine, errors));
-            //}
+            var cruiseID = DataContext.CruiseID;
+            var migrator = new DownMigrator();
+            if (!migrator.EnsureCanMigrate(cruiseID, database, out var errors))
+            {
+                DialogService.ShowNotification("Error Creating File: migration error ", string.Join(Environment.NewLine, errors));
+            }
 
-            //var v2_db = new DAL();
-            //try
-            //{
-            //    migrator.MigrateFromV3ToV2(cruiseID, database, v2_db);
+            var v2_db = new DAL();
+            try
+            {
+                migrator.MigrateFromV3ToV2(cruiseID, database, v2_db);
 
-            //}
-            //catch
-            //{
-            //    v2_db.Dispose();
-            //    V2_Database = null;
-            //    CheckCruiseDataService = null;
-            //    return;
-            //}
+            }
+            catch
+            {
+                v2_db.Dispose();
+                V2_Database = null;
+                CheckCruiseDataService = null;
+                return;
+            }
 
-            //CheckCruiseDataService = new dataBaseCommands(v2_db);
-            //V2_Database = v2_db;
+            CheckCruiseDataService = new dataBaseCommands(v2_db);
+            V2_Database = v2_db;
 
             UnitSelection = CheckCruiseDataService.GetUnitStrata()
                 .Select(x => new UnitStratumSelectionItem { Item = x })
@@ -117,8 +138,11 @@ namespace NatCruise.Check.ViewModels
 
             var currentCruisePath = database.Path;
             var currentCruiseDir = Path.GetDirectoryName(currentCruisePath);
-
             var sale = SaleDataservice.GetSale();
+            var defaultFileName = $"{sale.SaleNumber} {sale.Name} CC.crz3";
+            var defaultFilePath = Path.Combine(currentCruiseDir, defaultFileName);
+            CheckCruisePath = defaultFilePath;
+
         }
 
         public bool CanCreateCheckCruise()
@@ -187,7 +211,11 @@ namespace NatCruise.Check.ViewModels
                     IncludeLogRecords = IncludeLogRecords,
                     IncludeTreeMeasurments = IncludeTreeMeasurments,
                 };
-                checkCruiseCopier.Copy(DataContext.Database, checkCruiseDb, DataContext.CruiseID, destinationCruiseID: destinationCruiseID);
+
+
+                Copy(checkCruiseCopier, DataContext.Database, checkCruiseDb, DataContext.CruiseID, destinationCruiseID: destinationCruiseID);
+
+                //checkCruiseCopier.Copy(DataContext.Database, checkCruiseDb, DataContext.CruiseID, destinationCruiseID: destinationCruiseID);
             }
             catch (Exception e)
             {
@@ -201,8 +229,42 @@ namespace NatCruise.Check.ViewModels
             }
 
             // open check cruise
-            //DataContext.OpenDatabase(checkCruisePath);
-            //DataContext.CruiseID = destinationCruiseID;
+            DataContext.OpenDatabase(checkCruisePath);
+            DataContext.CruiseID = destinationCruiseID;
+            NavigationService.ShowCruiseLandingLayout();
+        }
+
+
+        public void Copy(CheckCruiseCopier checkCruiseCopier, CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID, string destinationCruiseID = null)
+        {
+            DbConnection source2 = source.OpenConnection();
+            try
+            {
+                DbConnection destination2 = destination.OpenConnection();
+                try
+                {
+                    destination.BeginTransaction();
+                    try
+                    {
+                        checkCruiseCopier.Copy(source2, destination2, cruiseID, destinationCruiseID);
+                        destination.CommitTransaction();
+                    }
+                    catch
+                    {
+                        destination.CommitTransaction();
+                        //destination.RollbackTransaction();
+                        throw;
+                    }
+                }
+                finally
+                {
+                    destination.ReleaseConnection();
+                }
+            }
+            finally
+            {
+                source.ReleaseConnection();
+            }
         }
 
         private void UnitSelectionItem_PropertyChanged(object sender, PropertyChangedEventArgs e)

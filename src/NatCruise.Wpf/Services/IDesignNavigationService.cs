@@ -26,5 +26,11 @@ namespace NatCruise.Wpf.Services
         Task ShowDesignChecks();
 
         Task ShowCombineFile();
+
+
+        // check cruise
+        Task ShowCreateCheckCruise();
+
+        Task ShowCheckCruiseReports();
     }
 }

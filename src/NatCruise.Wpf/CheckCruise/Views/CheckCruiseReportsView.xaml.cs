@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using NatCruise.Wpf.CheckCruise.ViewModels;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace NatCruise.Wpf.CheckCruise.Views
 {
     /// <summary>
     /// Interaction logic for CheckCruiseReportsView.xaml
     /// </summary>
-    public partial class CheckCruiseReportsView : Page
+    public partial class CheckCruiseReportsView : UserControl
     {
-        public CheckCruiseReportsView()
+        protected CheckCruiseReportsView()
         {
             InitializeComponent();
+        }
+
+        public CheckCruiseReportsView(CheckCruiseReportsViewModel viewModel)
+        {
+            InitializeComponent();
+            DataContext = viewModel;
         }
     }
 }

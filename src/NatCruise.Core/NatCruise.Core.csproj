@@ -19,9 +19,9 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'True'">
-		<ProjectReference Include="$(CruiseDALRepoDir)\CruiseDAL\src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
-		<ProjectReference Include="$(CruiseDALRepoDir)\CruiseDAL\src\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />
-		<ProjectReference Include="$(CruiseDALRepoDir)\CruiseDAL\src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
+		<ProjectReference Include="$(CruiseDALRepoDir)src\CruiseDAL.V3\CruiseDAL.V3.csproj" />
+		<ProjectReference Include="$(CruiseDALRepoDir)src\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />
+		<ProjectReference Include="$(CruiseDALRepoDir)src\CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(UseCruiseDALProjRefs) == 'false' OR $(UseCruiseDALProjRefs) == '' ">

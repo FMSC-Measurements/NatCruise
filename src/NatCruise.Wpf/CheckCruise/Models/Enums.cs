@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NatCruise.Check.Models
+namespace NatCruise.Wpf.CheckCruise.Models
 {
     public enum VolumeGroupingOption
     { None = 0, BySpecies = 1, ByProduct = 2}

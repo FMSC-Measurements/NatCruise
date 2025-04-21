@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NatCruise.Check.Reports
+namespace NatCruise.Wpf.CheckCruise.Reports
 {
     internal class EvaluationReportRTF
     {

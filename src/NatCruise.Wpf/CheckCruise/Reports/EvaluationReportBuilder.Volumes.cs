@@ -1,4 +1,4 @@
-﻿using NatCruise.Check.Models;
+﻿using NatCruise.Wpf.CheckCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NatCruise.Check.Reports
+namespace NatCruise.Wpf.CheckCruise.Reports
 {
     public partial class EvaluationReportBuilder
     {
@@ -14,25 +14,27 @@ namespace NatCruise.Check.Reports
         public PassFail DisplayVolume(TextWriter writer,
             //TolerancesList currTolerance,
             ToleranceVolumeOptions volumeToleranceConfig,
+            AnalysisResult analysisResult,
             string cruiserInitials)
         {
+            if(volumeToleranceConfig == null || !volumeToleranceConfig.IncludeVolumes) { return PassFail.Pass; }
+
             EvaluationReportRTF eRTF = new EvaluationReportRTF();
 
             PassFail compareResult = PassFail.Pass;
 
 
-
             //  get results data based on group selected
-            List<ResultsList> groupedTrees = new List<ResultsList>();
+            List<string> groupedTrees = new List<string>();
             int byWhich = 0;
             if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.BySpecies)
             {
-                groupedTrees = CheckCruiseDataService.getResultsTable("R_TreeSpecies", "");
+                groupedTrees = analysisResult.Results.Select(x => x.R_TreeSpecies).Distinct().ToList();// CheckCruiseDataService.getResultsTable("R_TreeSpecies", "");
                 byWhich = 1;
             }
             else if (volumeToleranceConfig.VolumeGroupingOption == VolumeGroupingOption.ByProduct)
             {
-                groupedTrees = CheckCruiseDataService.getResultsTable("R_TreeProduct", "");
+                groupedTrees = analysisResult.Results.Select(x => x.R_TreeProduct).Distinct().ToList();// CheckCruiseDataService.getResultsTable("R_TreeProduct", "");
                 byWhich = 2;
             }   //  endif
 
@@ -44,27 +46,19 @@ namespace NatCruise.Check.Reports
             for (int k = 0; k < 13; k++)
                 lineHold[k] = eRTF.VolumeLine[k + 27];
             List<ResultsList> currentSpeciesVolume = new List<ResultsList>();
-            foreach (ResultsList gt in groupedTrees)
+            foreach (var gt in groupedTrees)
             {
-                if (gt.R_TreeSpecies != "")
+                if (gt != "")
                 {
                     switch (byWhich)
                     {
                         case 1:
-                            eRTF.VolumeLine[27] = eRTF.VolumeLine[27].Replace("xxxxxx", gt.R_TreeSpecies).PadRight(6, ' ');
-                            currentSpeciesVolume = CheckResults.FindAll(
-                                delegate (ResultsList r)
-                                {
-                                    return r.R_TreeSpecies == gt.R_TreeSpecies && r.R_CountMeasure == "M";
-                                });
+                            eRTF.VolumeLine[27] = eRTF.VolumeLine[27].Replace("xxxxxx", gt).PadRight(6, ' ');
+                            currentSpeciesVolume = CheckResults.Where((r) => r.R_TreeSpecies == gt && r.R_CountMeasure == "M").ToList();
                             break;
                         case 2:
-                            eRTF.VolumeLine[27] = eRTF.VolumeLine[27].Replace("xxxxxx", gt.R_TreeProduct).PadRight(6, ' ');
-                            currentSpeciesVolume = CheckResults.FindAll(
-                                delegate (ResultsList r)
-                                {
-                                    return r.R_TreeProduct == gt.R_TreeProduct && r.R_CountMeasure == "M";
-                                });
+                            eRTF.VolumeLine[27] = eRTF.VolumeLine[27].Replace("xxxxxx", gt).PadRight(6, ' ');
+                            currentSpeciesVolume = CheckResults.Where((r) => r.R_TreeProduct == gt && r.R_CountMeasure == "M").ToList();
                             break;
                     }   //  endif no species code
                 }   //  end switch 

@@ -1,6 +1,8 @@
-﻿using CruiseDAL;
+﻿using CommunityToolkit.Mvvm.Input;
+using CruiseDAL;
 using CruiseDAL.UpConvert;
 using DryIoc;
+using Microsoft.Extensions.DependencyInjection;
 using NatCruise.Async;
 using NatCruise.Data;
 using NatCruise.MVVM;
@@ -21,7 +23,9 @@ using System.Windows.Input;
 
 namespace NatCruise.Wpf.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public enum CruiseType { Unknown = 0, Recon = 1, TimberSale = 2, Check = 3 }
+
+    public class MainWindowViewModel : ViewModelBase, IDisposable
     {
         private ICommand _openFileCommand;
         private ICommand _selectFileCommand;
@@ -31,6 +35,11 @@ namespace NatCruise.Wpf.ViewModels
         private ICommand _shutdownCommand;
         private ICommand _showCombineFiles;
         private DelegateCommand _showAboutCommand;
+        private bool disposedValue;
+        private IDataContextService _dataContext;
+        private CruiseType _cruiseType;
+        private RelayCommand _showCreateCheckCruise;
+        private RelayCommand _showCheckCruiseReports;
 
         public MainWindowViewModel(
             IAppService appService,
@@ -41,7 +50,8 @@ namespace NatCruise.Wpf.ViewModels
             Prism.Services.Dialogs.IDialogService prismDialogService,
             INatCruiseDialogService dialogService,
             IDeviceInfoService deviceInfo,
-            ILoggingService loggingService)
+            ILoggingService loggingService,
+            IServiceProvider services)
         {
             AppService = appService ?? throw new ArgumentNullException(nameof(appService));
             DataContext = dataserviceProvider ?? throw new ArgumentNullException(nameof(dataserviceProvider));
@@ -53,12 +63,39 @@ namespace NatCruise.Wpf.ViewModels
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
             Log = loggingService ?? throw new ArgumentNullException(nameof(loggingService));
+            Services = services ?? throw new ArgumentNullException(nameof(services));
         }
 
         public Version AppVersion { get; }
         public ILoggingService Log { get; }
+        public IServiceProvider Services { get; }
         protected IAppService AppService { get; }
-        protected IDataContextService DataContext { get; }
+        protected IDataContextService DataContext
+        {
+            get => _dataContext;
+            private set
+            {
+                if (_dataContext == value) { return; }
+                if (_dataContext != null)
+                {
+                    _dataContext.CruiseChanged -= DataContext_CruiseChanged;
+                }
+                _dataContext = value;
+                if (value != null)
+                {
+                    value.CruiseChanged += DataContext_CruiseChanged;
+                }
+            }
+        }
+
+        private void DataContext_CruiseChanged(object sender, EventArgs e)
+        {
+            //var dataContext = sender as IDataContextService;
+
+            //var filePath = dataContext.DatabasePath;
+            //CurrentFileName = Path.GetFileName(filePath);
+        }
+
         protected IDesignNavigationService NavigationService { get; }
         protected IRecentFilesDataservice RecentFilesDataservice { get; }
         public Prism.Services.Dialogs.IDialogService PrismDialogService { get; }
@@ -78,6 +115,17 @@ namespace NatCruise.Wpf.ViewModels
             }
         }
 
+        public CruiseType CruiseType
+        {
+            get => _cruiseType;
+            protected set
+            {
+                SetProperty(ref _cruiseType, value);
+                ShowCreateCheckCruise.NotifyCanExecuteChanged();
+                ShowCheckCruiseReports.NotifyCanExecuteChanged();
+            }
+        }
+
         public string Title => $"National Cruise System ({AppVersion}) {CurrentFileName?.Prepend(" - ")}";
 
         public IEnumerable<FileInfo> RecentFiles => RecentFilesDataservice?.GetRecentFiles()
@@ -93,6 +141,13 @@ namespace NatCruise.Wpf.ViewModels
         public ICommand ShutdownCommand => _shutdownCommand ??= new DelegateCommand(() => AppService.Shutdown());
 
         public ICommand ShowCombineFiles => _showCombineFiles ??= new DelegateCommand(() => NavigationService.ShowCombineFile().FireAndForget());
+
+        public RelayCommand ShowCreateCheckCruise => _showCreateCheckCruise ??= new RelayCommand(() => NavigationService.ShowCreateCheckCruise().FireAndForget(),
+            canExecute: () => CruiseType == CruiseType.TimberSale);
+
+        public RelayCommand ShowCheckCruiseReports => _showCheckCruiseReports ??= new RelayCommand(() => NavigationService.ShowCheckCruiseReports().FireAndForget(),
+            canExecute: () => CruiseType == CruiseType.Check);
+
 
         private void CreateNewFile()
         {
@@ -211,6 +266,21 @@ namespace NatCruise.Wpf.ViewModels
                 await NavigationService.ShowCruiseLandingLayout();
                 RecentFilesDataservice.AddRecentFile(filePath);
                 CurrentFileName = Path.GetFileName(filePath);
+
+                var cruiseDataService = Services.GetService<ISaleDataservice>();
+                var cruise = cruiseDataService.GetCruise();
+                var cruiseTypeCode = cruise.PurposeShortCode;
+
+
+                CruiseType = cruiseTypeCode.ToUpper() switch
+                {
+                    "RECON" => CruiseType.Recon,
+                    "TS" => CruiseType.TimberSale,
+                    "CC" or "CHECK" => CruiseType.Check,
+                    _ => CruiseType.Unknown,
+                };
+                
+
                 OnPropertyChanged(nameof(RecentFiles));
 
             }
@@ -326,6 +396,38 @@ namespace NatCruise.Wpf.ViewModels
                 return false;
             }
             return true;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // dispose managed state (managed objects)
+
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+
+                DataContext = null;
+
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~MainWindowViewModel()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

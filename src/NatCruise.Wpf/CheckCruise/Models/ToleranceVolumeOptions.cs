@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NatCruise.Check.Models
+namespace NatCruise.Wpf.CheckCruise.Models
 {
     public class ToleranceVolumeOptions : ICloneable
     {

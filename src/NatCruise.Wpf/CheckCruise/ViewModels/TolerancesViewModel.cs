@@ -1,7 +1,7 @@
-﻿using CheckCruise;
+﻿using NatCruise.Wpf.CheckCruise;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
-using NatCruise.Check.Models;
+using NatCruise.Wpf.CheckCruise.Models;
 using NatCruise.Data;
 using NatCruise.Models;
 using System;
@@ -12,7 +12,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace NatCruise.Check.ViewModels
+namespace NatCruise.Wpf.CheckCruise.ViewModels
 {
     public class TolerancesViewModel : ObservableObject
     {

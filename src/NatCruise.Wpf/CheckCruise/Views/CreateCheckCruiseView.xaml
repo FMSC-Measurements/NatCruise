@@ -38,12 +38,14 @@
                            Text="Select Cutting Units from the original cruise to include in the check cruise"
                            Margin="0,2" />
                 <ListView Grid.Row="1"
+                          ItemsSource="{Binding UnitSelection}"
                           d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="Auto">
                                 <GridViewColumn.Header>
-                                    <Button Content="Select All" />
+                                    <Button Content="Select All"
+                                            Command="{Binding SelectAllUnitsCommand}" />
                                 </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -87,15 +89,19 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Check Cruise File" VerticalAlignment="Center" />
                 <TextBox Grid.Column="1"
+                         x:Name="_checkCruisePathTextBox"
                          Text="{Binding CheckCruisePath}" Margin="4,0" />
                 <Button Grid.Column="2"
+                        x:Name="_browseCheckCruisePathButton"
                         Style="{StaticResource MahApps.Styles.Button}"
-                        Content="Browse" />
+                        Content="Browse"
+                        Click="_browseCheckCruisePathButton_Click"/>
             </Grid>
 
             <StackPanel Grid.Row="4"
                         HorizontalAlignment="Right">
                 <Button Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}"
+                        Command="{Binding CreateCheckCruiseCommand}"
                         Content="Create"
                         Margin="3,2" />
             </StackPanel>

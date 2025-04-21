@@ -1,6 +1,6 @@
 ﻿using CruiseDAL.DataObjects;
-using NatCruise.Check.Data;
-using NatCruise.Check.Models;
+using NatCruise.Wpf.CheckCruise.Data;
+using NatCruise.Wpf.CheckCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NatCruise.Check.Reports
+namespace NatCruise.Wpf.CheckCruise.Reports
 {
 
 
@@ -22,7 +22,7 @@ namespace NatCruise.Check.Reports
 
         public string SaleName { get; protected set; }
         public string Region { get; protected set; }
-        public List<ResultsList> CheckResults { get; protected set; }
+        public IReadOnlyList<ResultsList> CheckResults { get; protected set; }
         public List<TreeDO> CheckTrees { get; protected set; }
         public List<LogStockDO> CheckLogs { get; protected set; }
 
@@ -42,11 +42,12 @@ namespace NatCruise.Check.Reports
             CheckCruiserInitials = CheckCruiseDataService.getCheckCruiserInitials();
         }
 
-        public void BuildReport(TextWriter writer, ToleranceConfig toleranceConfig, ReportLevel reportLevel, string cruiserName, string cruiserInitials)
+        public void BuildReport(TextWriter writer, ToleranceConfig toleranceConfig, AnalysisResult analysisResults, ReportLevel reportLevel, string cruiserName, string cruiserInitials)
         {
             if (reportLevel == ReportLevel.BySale)
             {
-                CheckResults = CheckCruiseDataService.getResultsTable("", "");
+                
+                CheckResults = analysisResults.Results;
                 CheckTrees = CheckCruiseDataService.getTrees();
             }
             else if (reportLevel == ReportLevel.ByCruiser)
@@ -54,7 +55,7 @@ namespace NatCruise.Check.Reports
                 if (cruiserInitials == null) throw new ArgumentNullException(nameof(cruiserInitials));
                 if (cruiserName == null) throw new ArgumentNullException(nameof(cruiserName));
 
-                CheckResults = CheckCruiseDataService.getResultsTable("", cruiserInitials);
+                CheckResults = analysisResults.Results.Where(x => x.R_MarkerInitials == cruiserInitials).ToList();// CheckCruiseDataService.getResultsTable("", cruiserInitials);
 
                 CheckTrees = new List<TreeDO>();
                 var rawTrees = CheckCruiseDataService.getTrees();
@@ -100,11 +101,11 @@ namespace NatCruise.Check.Reports
             PassFail volumeComparisonResult = PassFail.Pass;
             if (reportLevel == ReportLevel.BySale)
             {
-                volumeComparisonResult = DisplayVolume(writer, toleranceConfig.VolumeConfig, "");
+                volumeComparisonResult = DisplayVolume(writer, toleranceConfig.VolumeConfig, analysisResults, "");
             }
             else if (reportLevel == ReportLevel.ByCruiser)
             {
-                volumeComparisonResult = DisplayVolume(writer, toleranceConfig.VolumeConfig, cruiserInitials);
+                volumeComparisonResult = DisplayVolume(writer, toleranceConfig.VolumeConfig, analysisResults, cruiserInitials);
             }
 
             //  printing rest of page goes here
@@ -280,12 +281,7 @@ namespace NatCruise.Check.Reports
             //  total possible is the total number of logs in the selected units.  even though only three trees may have been checked
             if (currTL.T_Element == "Log Grade" || currTL.T_Element == "Log Defect %")
             {
-                List<ResultsList> justLogs = CheckResults.FindAll(
-                    delegate (ResultsList r)
-                    {
-                        return r.R_CountMeasure == "" && r.R_LogGrade_R >= 0;
-                    });
-                totalPossible = justLogs.Count();
+                totalPossible = CheckResults.Where((r) => r.R_CountMeasure == "" && r.R_LogGrade_R >= 0).Count();
             }
             else
             {
@@ -294,8 +290,7 @@ namespace NatCruise.Check.Reports
             }   //  endif
 
             //  number incorrect
-            List<ResultsList> justIncorrect = findNumberIncorrect(currTL.T_Element, CheckResults);
-            numberIncorrect = justIncorrect.Count();
+            numberIncorrect = findNumberIncorrect(currTL.T_Element, CheckResults).Count();
 
             //  calculate total error
             totalError = numberIncorrect * currTL.T_Weight; // TODO is weighting the error at this point a bug, shouldn't wight be applied later
@@ -324,46 +319,29 @@ namespace NatCruise.Check.Reports
                         case "FIX":
                         case "PNT":
                         case "FIXCNT":
-                            //  pull strata from checkResults
-                            List<ResultsList> justStrata = CheckResults.FindAll(
-                                delegate (ResultsList rl)
-                                {
-                                    return rl.R_Stratum == sl.Code &&
-                                        (rl.R_LogNumber == "" || rl.R_LogNumber == "0");
-                                });
-                            returnTrees += justStrata.Count();
-                            break;
-
+                            {
+                                //  pull strata from checkResults
+                                returnTrees += CheckResults.Where((rl) => rl.R_Stratum == sl.Code &&
+                                            (rl.R_LogNumber == "" || rl.R_LogNumber == "0")).Count();
+                                break;
+                            }
                         case "P3P":
                         case "F3P":
                         case "PCM":
                         case "FCM":
                         case "3PPNT":
-                            //  pull strata from check cruiser trees
-                            List<ResultsList> justCounts = CheckResults.FindAll(
-                                delegate (ResultsList r)
-                                {
-                                    return r.R_Stratum == sl.Code &&
-                                        r.R_CountMeasure == "C";
-                                });
-                            returnTrees += justCounts.Count();
-                            List<ResultsList> justMeasured = CheckResults.FindAll(
-                                delegate (ResultsList r)
-                                {
-                                    return r.R_Stratum == sl.Code &&
-                                        r.R_CountMeasure == "M";
-                                });
-                            returnTrees += justMeasured.Count();
-                            break;
+                            {
+                                //  pull strata from check cruiser trees
+                                returnTrees += CheckResults.Where((r) => r.R_Stratum == sl.Code &&
+                                            r.R_CountMeasure == "C").Count();
+                                returnTrees += CheckResults.Where((r) => r.R_Stratum == sl.Code &&
+                                            r.R_CountMeasure == "M").Count();
+                                break;
+                            }
                     }   //  end switch on method
                 }   // end foreach loop
                 //  pull any out trees from check cruiser results and delete from returnTrees
-                List<ResultsList> justInOut = CheckResults.FindAll(
-                    delegate (ResultsList r)
-                    {
-                        return r.R_OutResult == 1;
-                    });
-                returnTrees -= justInOut.Count;
+                returnTrees -= CheckResults.Where((r) => r.R_OutResult == 1).Count();
             }
             else
             {
@@ -379,41 +357,28 @@ namespace NatCruise.Check.Reports
                         case "P3P":
                         case "S3P":
                             //  pull check cruiser measured trees for two-stage methods
-                            List<ResultsList> justMeasured = CheckResults.FindAll(
-                                delegate (ResultsList r)
-                                {
-                                    return r.R_Stratum == sl.Code &&
-                                        r.R_CountMeasure == "M";
-                                });
+                            List<ResultsList> justMeasured = CheckResults.Where((r) =>
+                                    r.R_Stratum == sl.Code &&
+                                    r.R_CountMeasure == "M").ToList();
                             returnTrees += justMeasured.Count();
 
                             //  now add counts for species element
                             if (currElement == "Species")
                             {
-                                List<ResultsList> justCounts = CheckResults.FindAll(
-                                    delegate (ResultsList r)
-                                    {
-                                        return r.R_Stratum == sl.Code &&
-                                            r.R_CountMeasure == "C";
-                                    });
+                                List<ResultsList> justCounts = CheckResults.Where((r) =>
+                                    r.R_Stratum == sl.Code &&
+                                    r.R_CountMeasure == "C").ToList();
+
                                 returnTrees += justCounts.Count();
                                 //  any in/out errors to be deducted?
-                                List<ResultsList> justInOut = CheckResults.FindAll(
-                                    delegate (ResultsList js)
-                                    {
-                                        return js.R_Stratum == sl.Code && js.R_OutResult == 1;
-                                    });
+                                List<ResultsList> justInOut = CheckResults.Where(js => js.R_Stratum == sl.Code && js.R_OutResult == 1).ToList();
                                 returnTrees -= justInOut.Count();
                             }   //  endif
                             break;
 
                         default:
                             //  find all check records for current stratum
-                            justStratum = CheckResults.FindAll(
-                                delegate (ResultsList cr)
-                                {
-                                    return cr.R_Stratum == sl.Code && cr.R_CountMeasure == "M";
-                                });
+                            justStratum = CheckResults.Where((cr) => cr.R_Stratum == sl.Code && cr.R_CountMeasure == "M").ToList();
                             returnTrees += justStratum.Count();
 
                             break;
@@ -424,173 +389,93 @@ namespace NatCruise.Check.Reports
             return returnTrees;
         }   //  end TrueNumberOfTrees
 
-        private static List<ResultsList> findNumberIncorrect(string currElement, List<ResultsList> checkResults)
+        private static List<ResultsList> findNumberIncorrect(string currElement, IReadOnlyList<ResultsList> checkResults)
         {
             List<ResultsList> justIncorrect = new List<ResultsList>();
             switch (currElement)
             {
                 case "Species":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_Species_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_Species_R == 1).ToList();
                     break;
 
                 case "Product":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_Product_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_Product_R == 1).ToList();
                     break;
 
                 case "LiveDead":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_LiveDead_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_LiveDead_R == 1).ToList();
                     break;
 
                 case "DBH":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_DBHOB_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_DBHOB_R == 1).ToList();
                     break;
 
                 case "Total Height":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_TotalHeight_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_TotalHeight_R == 1).ToList();
                     break;
 
                 case "Total Height <= 100 feet":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_TotHeightUnder_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_TotHeightUnder_R == 1).ToList();
                     break;
 
                 case "Total Height > 100 feet":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_TotHeightOver_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_TotHeightOver_R == 1).ToList();
                     break;
 
                 case "Merch Height Primary":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_MerchHgtPP_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_MerchHgtPP_R == 1).ToList();
                     break;
 
                 case "Merch Height Secondary":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_MerchHgtSP_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_MerchHgtSP_R == 1).ToList();
                     break;
 
                 case "Height to First Live Limb":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_HgtFLL_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_HgtFLL_R == 1).ToList();
                     break;
 
                 case "Top DIB Primary":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_TopDIBPP_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_TopDIBPP_R == 1).ToList();
                     break;
 
                 case "Seen Defect % Primary":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_SeenDefPP_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_SeenDefPP_R == 1).ToList();
                     break;
 
                 case "Seen Defect % Secondary":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_SeenDefSP_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_SeenDefSP_R == 1).ToList();
                     break;
 
                 case "Recoverable %":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_RecDef_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_RecDef_R == 1).ToList();
                     break;
 
                 case "Form class":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_FormClass_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_FormClass_R == 1).ToList();
                     break;
 
                 case "Clear Face":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_Clear_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_Clear_R == 1).ToList();
                     break;
 
                 case "Tree Grade":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_TreeGrade_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_TreeGrade_R == 1).ToList();
                     break;
 
                 case "Log Grade":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_LogGrade_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_LogGrade_R == 1).ToList();
                     break;
 
                 case "Log Defect %":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_LogSeenDef_R == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_LogSeenDef_R == 1).ToList();
                     break;
 
                 case "In/Out Trees":
-                    justIncorrect = checkResults.FindAll(
-                        delegate (ResultsList cr)
-                        {
-                            return cr.R_InResult == 1 || cr.R_OutResult == 1;
-                        });
+                    justIncorrect = checkResults.Where((cr) => cr.R_InResult == 1 || cr.R_OutResult == 1).ToList();
                     break;
-            }   //  end switch
+            }
             return justIncorrect;
-        }   // findNumberIncorrect
+        } 
 
         // TODO remove nRows since we can just get length from arrayToPrint
         public static void printLines(TextWriter writer, string[] arrayToPrint, int nRows)

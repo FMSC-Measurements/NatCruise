@@ -1,10 +1,10 @@
-﻿using NatCruise.Check.Models;
+﻿using NatCruise.Wpf.CheckCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CheckCruise
+namespace NatCruise.Wpf.CheckCruise
 {
     public class DefaultTolerances
     {
@@ -43,7 +43,8 @@ namespace CheckCruise
 
             return new ToleranceConfig()
             {
-                VolumeConfig = volumeOptions,
+                //VolumeConfig = volumeOptions,
+                Tolerances = toleranceList,
                 MinElementAccuracy = Convert.ToDouble(currentOthers[3]),
                 MinOverallAccuracy = Convert.ToDouble(currentOthers[4]),
                 ConfigVersion = currentOthers[5],

@@ -1,7 +1,7 @@
 ﻿using CruiseDAL.DataObjects;
 using Microsoft.Extensions.Logging;
-using NatCruise.Check.Data;
-using NatCruise.Check.Models;
+using NatCruise.Wpf.CheckCruise.Data;
+using NatCruise.Wpf.CheckCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace NatCruise.Check
+namespace NatCruise.Wpf.CheckCruise
 {
     public class CheckCruiseAnalyzer
     {
@@ -59,8 +59,9 @@ namespace NatCruise.Check
 
             bool areCheckingVolumes = toleranceConfig.VolumeConfig?.IncludeVolumes ?? false;
 
-            if (checkCalculatedTrees.Sum(c => c.GrossCUFTPP) == 0.0
-                && checkCalculatedTrees.Sum(c => c.GrossBDFTPP) == 0.0)
+            if ((areCheckingVolumes || currRegion == "05")
+                && !checkCalculatedTrees.Any(c => c.GrossCUFTPP > 0.0)
+                && !checkCalculatedTrees.Any(c => c.GrossBDFTPP > 0.0))
             {
                 var message = "No calculated volume detected in check cruise file!\nPlease process the check cruise file in CruiseProcessing\nand retry Check Cruise.";
                 Log?.LogWarning(message);
@@ -69,17 +70,20 @@ namespace NatCruise.Check
 
             // load data from original cruise and check it
             List<TreeDO> originalTrees = CruiseDataService.getTrees();
+            IDictionary<long, TreeDO> originalTreesLookup = originalTrees.ToDictionary(x => x.Tree_CN.Value);
             List<TreeCalculatedValuesDO> originalCalculatedTrees = CruiseDataService.getCalculatedTrees();
             List<LogStockDO> originalLogs = CruiseDataService.getLogStock();
 
-            if (originalCalculatedTrees.Sum(o => o.GrossCUFTPP) == 0.0
-                && originalCalculatedTrees.Sum(o => o.GrossBDFTPP) == 0.0)
+            if ((areCheckingVolumes || currRegion == "05")
+                && !originalCalculatedTrees.Any(o => o.GrossCUFTPP > 0.0)
+                && !originalCalculatedTrees.Any(o => o.GrossBDFTPP > 0.0))
             {
-                throw new InvalidOperationException("No calculated volume detected in cruise file!\nPlease process the cruise file in CruiseProcessing\nand retry Check Cruise.");
+                var message = "No calculated volume detected in cruise file!\nPlease process the cruise file in CruiseProcessing\nand retry Check Cruise.";
+                Log?.LogWarning(message);
+                throw new InvalidOperationException(message);
             }
 
-            var longestInitialValue = originalTrees.Select(i => i.Initials.Length).Max();
-            if (longestInitialValue > 3)
+            if (originalTrees.Any(x => x.Initials != null && x.Initials.Length > 3))
             {
                 warnings.Add("Tree with longer than three character initials found");
             }
@@ -91,7 +95,7 @@ namespace NatCruise.Check
 
             if (!checkTrees.Any(t => t.Initials == checkCruiserInitials))
             {
-                throw new InvalidOperationException("NO TREES IN THE CHECK CRUISE FILE HAVE CHECK CRUISER INITIALS!\nCannot continue with anaylsis.\n Please record check cruiser initials on checked trees.");
+                throw new InvalidOperationException("NO TREES IN THE CHECK CRUISE FILE HAVE CHECK CRUISER INITIALS!\nCannot continue with analysis.\n Please record check cruiser initials on checked trees.");
             }
 
             var initialiedTrees = checkTrees.Where(t => t.Initials == checkCruiserInitials).ToArray();
@@ -103,27 +107,30 @@ namespace NatCruise.Check
             var checkResults = InitializeResultList(initialiedTrees);
 
             //  loop through tolerance elements to compare
-            foreach (TolerancesList ct in toleranceConfig.Tolerances)
+            foreach (TolerancesList tolerance in toleranceConfig.Tolerances)
             {
+                Log?.LogDebug("Analyzing {Element}", tolerance.T_Element);
+                progress?.Report($"Analyzing {tolerance.T_Element}");
+
                 //  if current element is In/Out trees need to do analysis differently
                 //  need original trees and check trees complete for comparison
-                if (ct.T_Element == "In/Out Trees")
-                    CheckInOutTrees(ct, checkTrees, originalTrees, checkCruiserInitials, checkResults, justStrataUnits);
-                else if (ct.T_Element == "Second Height Accuracy")
+                if (tolerance.T_Element == "In/Out Trees")
+                {
+                    CheckInOutTrees(tolerance, checkTrees, originalTrees, checkCruiserInitials, checkResults, justStrataUnits);
+                }
+                else if (tolerance.T_Element == "Second Height Accuracy")
                 {
                     //  element is used for Region 8 only and based on upper stem height
                     foreach (TreeDO jc in checkMeasureTrees)
                     {
                         //  find cruiser tree for current check tree
-                        TreeDO cruiserTree = originalTrees.Find(
-                            delegate (TreeDO t)
-                            {
-                                return t.Tree_CN == jc.Tree_CN;
-                            });
-                        var nthResult = plusOrMinus(cruiserTree.UpperStemHeight, jc.UpperStemHeight, ct.T_Tolerance, ct.T_Units);
+                        if (originalTreesLookup.TryGetValue(jc.Tree_CN.Value, out var cruiserTree))
+                        {
+                            PassFail passFailResult = plusOrMinus(cruiserTree.UpperStemHeight, jc.UpperStemHeight, tolerance.T_Tolerance, tolerance.T_Units);
+                        }
                     }
                 }
-                else if (ct.T_Element == "Second Height Bias")
+                else if (tolerance.T_Element == "Second Height Bias")
                 {
                     //  element is used for Region 8 only and is based on an average height for upper tem HT
                     //  find average height for upper stem height in checked trees
@@ -133,115 +140,37 @@ namespace NatCruise.Check
                     float sumCruiserUSH = originalTrees.Sum(o => o.UpperStemHeight);
                     float checkedAverage = sumCheckedUSH / numChecked;
                     float cruiserAverage = sumCruiserUSH / numCruiser;
-                    var nthResult = plusOrMinus((float)cruiserAverage, (float)checkedAverage, ct.T_Tolerance, ct.T_Units);
+                    var nthResult = plusOrMinus((float)cruiserAverage, (float)checkedAverage, tolerance.T_Tolerance, tolerance.T_Units);
                 }
-                else
+                else if (tolerance.T_Element != "Log Grade" && tolerance.T_Element != "Log Defect %")
                 {
-                    foreach (TreeDO td in checkMeasureTrees)
+                    
+
+                    foreach (TreeDO checkTree in checkMeasureTrees)
                     {
-                        //  find cruiser tree for current check tree
-                        TreeDO cruiserTree = originalTrees.Find(
-                            delegate (TreeDO t)
-                            {
-                                return t.Tree_CN == td.Tree_CN;
-                            });
-                        if (cruiserTree != null)
+                        
+
+                        if (originalTreesLookup.TryGetValue(checkTree.Tree_CN.Value, out var cruiserTree))
                         {
-                            PassFail nthResult = 0; // pass = 0/ fail = 1
-                            switch (ct.T_Element)
+                            PassFail passFailResult = PassFail.Pass;
+
+                            switch (tolerance.T_Element)
                             {
-                                case "Species":
-                                    nthResult = straightComparison(cruiserTree.Species, td.Species);
-                                    break;
-
-                                case "Live/Dead":
-                                    nthResult = straightComparison(cruiserTree.LiveDead, td.LiveDead);
-                                    break;
-
-                                case "Product":
-                                    nthResult = straightComparison(cruiserTree.SampleGroup.PrimaryProduct, td.SampleGroup.PrimaryProduct);
-                                    break;
-
-                                case "DBH":
-                                    nthResult = DBHanalysis(td, cruiserTree, ct);
-                                    break;
-
-                                case "Total Height <= 100 feet":
-                                case "Total Height > 100 feet":
-                                case "Total Height":
-                                    nthResult = totalHeightAnalysis(td, cruiserTree, ct);
-                                    break;
-
-                                case "Merch Height Primary":
-                                    nthResult = plusOrMinus(cruiserTree.MerchHeightPrimary, td.MerchHeightPrimary, ct.T_Tolerance, ct.T_Units);
-                                    break;
-
-                                case "Merch Height Secondary":
-                                    nthResult = plusOrMinus(cruiserTree.MerchHeightSecondary, td.MerchHeightSecondary, ct.T_Tolerance, ct.T_Units);
-                                    break;
-
-                                case "Height to First Live Limb":
-                                    nthResult = plusOrMinus(cruiserTree.HeightToFirstLiveLimb, td.HeightToFirstLiveLimb, ct.T_Tolerance, ct.T_Units);
-                                    break;
-
-                                case "Top DIB Primary":
-                                    nthResult = plusOrMinus(cruiserTree.TopDIBPrimary, td.TopDIBPrimary, ct.T_Tolerance, ct.T_Units);
-                                    break;
-
-                                case "Seen Defect % Primary":
-                                    if (currRegion == "5" || currRegion == "05")
-                                    {
-                                        //  find current tree in calculated values
-                                        TreeCalculatedValuesDO oct = originalCalculatedTrees.Find(
-                                            delegate (TreeCalculatedValuesDO tcv)
-                                            {
-                                                return tcv.Tree_CN == td.Tree_CN;
-                                            });
-                                        TreeCalculatedValuesDO cct = checkCalculatedTrees.Find(
-                                            delegate (TreeCalculatedValuesDO tcv)
-                                            {
-                                                return tcv.Tree_CN == td.Tree_CN;
-                                            });
-                                        nthResult = plusOrMinus(ct.T_Tolerance, oct, cct);
-                                    }
-                                    else nthResult = plusOrMinus(cruiserTree.SeenDefectPrimary, td.SeenDefectPrimary, ct.T_Tolerance, ct.T_Units);
-                                    break;
-
-                                case "Seen Defect % Secondary":
-                                    nthResult = plusOrMinus(cruiserTree.SeenDefectSecondary, td.SeenDefectSecondary, ct.T_Tolerance, ct.T_Units);
-                                    break;
-
-                                case "Recoverable %":
-                                    nthResult = plusOrMinus(cruiserTree.RecoverablePrimary, td.RecoverablePrimary, ct.T_Tolerance, ct.T_Units);
-                                    break;
-
-                                case "Form class":
-                                    nthResult = straightComparison(cruiserTree.FormClass, td.FormClass);
-                                    break;
-
-                                case "Clear Face":
-                                    nthResult = straightComparison(cruiserTree.ClearFace, td.ClearFace);
-                                    break;
-
-                                case "Tree Grade":
-                                    nthResult = straightComparison(cruiserTree.Grade, td.Grade);
-                                    break;
-
                                 case "Log Grade":
                                     {
                                         //  find logs for current tree
                                         var checkTreeLogs = checkLogs.FindAll(
                                             delegate (LogStockDO l)
                                             {
-                                                return l.Tree_CN == td.Tree_CN;
+                                                return l.Tree_CN == checkTree.Tree_CN;
                                             });
                                         var cruiserTreeLogs = originalLogs.FindAll(
                                             delegate (LogStockDO ls)
                                             {
-                                                return ls.Tree_CN == td.Tree_CN;
+                                                return ls.Tree_CN == checkTree.Tree_CN;
                                             });
                                         if (currRegion == "10")
-                                            checkR10logs(checkTreeLogs, cruiserTreeLogs, td, ct, cruiserTree.Initials, checkResults);
+                                            checkR10logs(checkTreeLogs, cruiserTreeLogs, checkTree, tolerance, cruiserTree.Initials, checkResults);
                                         else
                                         {
                                             foreach (LogStockDO ctl in checkTreeLogs)
@@ -253,8 +182,8 @@ namespace NatCruise.Check
                                                     });
                                                 if (nthRow >= 0)
                                                 {
-                                                    nthResult = straightComparison(cruiserTreeLogs[nthRow].Grade, ctl.Grade);
-                                                    updateLogChecks(td, ctl, nthResult, 1, cruiserTree.Initials, checkResults);
+                                                    passFailResult = straightComparison(cruiserTreeLogs[nthRow].Grade, ctl.Grade);
+                                                    updateLogChecks(checkTree, ctl, passFailResult, 1, cruiserTree.Initials, checkResults);
                                                 }   //  endif
                                             }   //  end foreach loop
                                         }   //  endif
@@ -266,17 +195,17 @@ namespace NatCruise.Check
                                         var checkTreeLogs = checkLogs.FindAll(
                                             delegate (LogStockDO l)
                                             {
-                                                return l.Tree_CN == td.Tree_CN;
+                                                return l.Tree_CN == checkTree.Tree_CN;
                                             });
                                         var cruiserTreeLogs = originalLogs.FindAll(
                                             delegate (LogStockDO ls)
                                             {
-                                                return ls.Tree_CN == td.Tree_CN;
+                                                return ls.Tree_CN == checkTree.Tree_CN;
                                             });
                                         if (currRegion == "10")
-                                            checkR10logs(checkTreeLogs, cruiserTreeLogs, td, ct, cruiserTree.Initials, checkResults);
+                                            checkR10logs(checkTreeLogs, cruiserTreeLogs, checkTree, tolerance, cruiserTree.Initials, checkResults);
                                         else if (currRegion == "6" || currRegion == "06")
-                                            checkR6logs(checkTreeLogs, cruiserTreeLogs, td, ct, cruiserTree.Initials, checkResults);
+                                            checkR6logs(checkTreeLogs, cruiserTreeLogs, checkTree, tolerance, cruiserTree.Initials, checkResults);
                                         else
                                         {
                                             foreach (LogStockDO ctl in checkTreeLogs)
@@ -288,35 +217,133 @@ namespace NatCruise.Check
                                                     });
                                                 if (nthRow >= 0)
                                                 {
-                                                    nthResult = straightComparison(cruiserTreeLogs[nthRow].Grade, ctl.Grade);
-                                                    updateLogChecks(td, ctl, nthResult, 2, cruiserTree.Initials, checkResults);
+                                                    passFailResult = straightComparison(cruiserTreeLogs[nthRow].Grade, ctl.Grade);
+                                                    updateLogChecks(checkTree, ctl, passFailResult, 2, cruiserTree.Initials, checkResults);
                                                 }   //  endif
                                             }   //  end foreach loop
                                         }   //  endif
 
                                         break;
                                     }
-                            }   //  end switch
+                            }
 
                             //  update results except for log grade and log defect
                             //  already done in the separate calling routine
-                            if (ct.T_Element != "Log Grade" && ct.T_Element != "Log Defect %")
-                                SetResultValuesOrGetNewResultItem(td, ct.T_Element, nthResult, checkResults);
-                        }   // endif on cruiserTree
-                    }   //  end foreach loop on check trees
+                            SetResultValuesOrGetNewResultItem(checkTree, tolerance.T_Element, passFailResult, checkResults);
+                        }
+                    }
                 }
-            }   //  end for each loop
+                else
+                {
+                    foreach (TreeDO td in checkMeasureTrees)
+                    {
+                        if (originalTreesLookup.TryGetValue(td.Tree_CN.Value, out var cruiserTree))
+                        {
+                            PassFail passFailResult = CompareTree(tolerance, cruiserTree, td, checkLogs, currRegion, originalLogs, checkResults, originalCalculatedTrees, checkCalculatedTrees);
+                        }
+                    }
+                }
+                }   //  end for each loop
 
-            progress?.Report("Capturing volumes");
+                progress?.Report("Capturing volumes");
 
-            LoadVolume(checkMeasureTrees, checkCalculatedTrees, originalCalculatedTrees, checkResults);
+                LoadVolume(checkMeasureTrees, checkCalculatedTrees, originalCalculatedTrees, checkResults);
 
-            progress?.Report("Analysis complete");
+                progress?.Report("Analysis complete");
 
-            return new AnalysisResult()
+                return new AnalysisResult()
+                {
+                    Results = checkResults
+                };
+            }
+
+
+        private static PassFail CompareTree(TolerancesList tolerance, TreeDO cruiserTree, TreeDO checkTree, List<LogStockDO> checkLogs, string currRegion, List<LogStockDO> originalLogs, List<ResultsList> checkResults, List<TreeCalculatedValuesDO> originalCalculatedTrees, List<TreeCalculatedValuesDO> checkCalculatedTrees)
+        {
+            PassFail passFailResult = PassFail.Pass;
+            switch (tolerance.T_Element)
             {
-                Results = checkResults
-            };
+                case "Species":
+                    passFailResult = straightComparison(cruiserTree.Species, checkTree.Species);
+                    break;
+
+                case "Live/Dead":
+                    passFailResult = straightComparison(cruiserTree.LiveDead, checkTree.LiveDead);
+                    break;
+
+                case "Product":
+                    passFailResult = straightComparison(cruiserTree.SampleGroup.PrimaryProduct, checkTree.SampleGroup.PrimaryProduct);
+                    break;
+
+                case "DBH":
+                    passFailResult = DBHanalysis(checkTree, cruiserTree, tolerance);
+                    break;
+
+                case "Total Height <= 100 feet":
+                case "Total Height > 100 feet":
+                case "Total Height":
+                    passFailResult = totalHeightAnalysis(checkTree, cruiserTree, tolerance);
+                    break;
+
+                case "Merch Height Primary":
+                    passFailResult = plusOrMinus(cruiserTree.MerchHeightPrimary, checkTree.MerchHeightPrimary, tolerance.T_Tolerance, tolerance.T_Units);
+                    break;
+
+                case "Merch Height Secondary":
+                    passFailResult = plusOrMinus(cruiserTree.MerchHeightSecondary, checkTree.MerchHeightSecondary, tolerance.T_Tolerance, tolerance.T_Units);
+                    break;
+
+                case "Height to First Live Limb":
+                    passFailResult = plusOrMinus(cruiserTree.HeightToFirstLiveLimb, checkTree.HeightToFirstLiveLimb, tolerance.T_Tolerance, tolerance.T_Units);
+                    break;
+
+                case "Top DIB Primary":
+                    passFailResult = plusOrMinus(cruiserTree.TopDIBPrimary, checkTree.TopDIBPrimary, tolerance.T_Tolerance, tolerance.T_Units);
+                    break;
+
+                case "Seen Defect % Primary":
+                    if (currRegion == "5" || currRegion == "05")
+                    {
+                        //  find current tree in calculated values
+                        TreeCalculatedValuesDO oct = originalCalculatedTrees.Find(
+                            delegate (TreeCalculatedValuesDO tcv)
+                            {
+                                return tcv.Tree_CN == checkTree.Tree_CN;
+                            });
+                        TreeCalculatedValuesDO cct = checkCalculatedTrees.Find(
+                            delegate (TreeCalculatedValuesDO tcv)
+                            {
+                                return tcv.Tree_CN == checkTree.Tree_CN;
+                            });
+                        passFailResult = plusOrMinus_R5seenDefect(tolerance.T_Tolerance, oct, cct);
+                    }
+                    else passFailResult = plusOrMinus(cruiserTree.SeenDefectPrimary, checkTree.SeenDefectPrimary, tolerance.T_Tolerance, tolerance.T_Units);
+                    break;
+
+                case "Seen Defect % Secondary":
+                    passFailResult = plusOrMinus(cruiserTree.SeenDefectSecondary, checkTree.SeenDefectSecondary, tolerance.T_Tolerance, tolerance.T_Units);
+                    break;
+
+                case "Recoverable %":
+                    passFailResult = plusOrMinus(cruiserTree.RecoverablePrimary, checkTree.RecoverablePrimary, tolerance.T_Tolerance, tolerance.T_Units);
+                    break;
+
+                case "Form class":
+                    passFailResult = straightComparison(cruiserTree.FormClass, checkTree.FormClass);
+                    break;
+
+                case "Clear Face":
+                    passFailResult = straightComparison(cruiserTree.ClearFace, checkTree.ClearFace);
+                    break;
+
+                case "Tree Grade":
+                    passFailResult = straightComparison(cruiserTree.Grade, checkTree.Grade);
+                    break;
+
+
+            }   //  end switch
+
+            return passFailResult;
         }
 
         private void LoadVolume(IReadOnlyCollection<TreeDO> checkTrees, List<TreeCalculatedValuesDO> checkCalculatedTrees,
@@ -462,7 +489,6 @@ namespace NatCruise.Check
                     }   //  end switch
                 }   //  end foreach loop
             }   //  end for unique  unit
-            return;
         }
 
         private static void checkR10logs(List<LogStockDO> checkTreeLogs, List<LogStockDO> cruiserTreeLogs,
@@ -645,7 +671,7 @@ namespace NatCruise.Check
         }   //  end plusOrMinus
 
         //  overloaded plus or minus for Region 5 seen defect comparison
-        private static PassFail plusOrMinus(string itemTolerance, TreeCalculatedValuesDO cruiserTree, TreeCalculatedValuesDO checkTree)
+        private static PassFail plusOrMinus_R5seenDefect(string itemTolerance, TreeCalculatedValuesDO cruiserTree, TreeCalculatedValuesDO checkTree)
         {
             //  calculates seen defect for Region 5 for comparison
             float checkItem = 0;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NatCruise.Check.Models
+namespace NatCruise.Wpf.CheckCruise.Models
 {
     [Table("Tolerances")]
     public class TolerancesList : ICloneable

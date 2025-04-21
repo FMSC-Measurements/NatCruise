@@ -2,14 +2,14 @@
 using CruiseDAL;
 using CruiseDAL.V3.Models;
 using FMSC.ORM.Core;
-using NatCruise.Check.Models;
+using NatCruise.Wpf.CheckCruise.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 
 
-namespace NatCruise.Check.Data
+namespace NatCruise.Wpf.CheckCruise.Data
 {
 
     public class CheckCruiseCopier : DatabaseCopier
@@ -47,22 +47,25 @@ namespace NatCruise.Check.Data
                 new CopyTableConfig(nameof(Plot), action: CopyPlot), // also copies plot_strata and plotLocation
 
                 // tree and Dependant tables. TreeID values need to be changed
-                new CopyTableConfig(nameof(Tree), action: CopyTree),
+                new CopyTableConfig(nameof(Tree), action: CopyTree, canCopy: () => IncludeTreeMeasurments),
                 new CopyTableConfig(typeof(TreeMeasurment),
                         configRead: x => x.Join("Tree AS t", "USING (TreeID)").Where("t.CruiseID = @p1"),
                         configOverrides: (x) =>
                         {
                             x.Add(nameof(TreeMeasurment.TreeID), GetOverrideTreeID);
                             return x;
-                        }),
+                        },
+                        canCopy: () => IncludeTreeMeasurments
+                ),
 
                 new CopyTableConfig(typeof(TreeFieldValue),
-                configRead: x=> x.Join("Tree AS t", "USING(TreeID)").Where("t.CruiseID = @p1;"),
-                configOverrides: (x) =>
-                        {
-                            x.Add(nameof(TreeFieldValue.TreeID), GetOverrideTreeID);
-                            return x;
-                        }
+                        configRead: x=> x.Join("Tree AS t", "USING(TreeID)").Where("t.CruiseID = @p1;"),
+                        configOverrides: (x) =>
+                                {
+                                    x.Add(nameof(TreeFieldValue.TreeID), GetOverrideTreeID);
+                                    return x;
+                                },
+                        canCopy: () => IncludeTreeMeasurments
                 ),
                 new CopyTableConfig(typeof(TreeLocation),
                         configRead: x => x.Join("Tree AS t", "USING(TreeID)").Where("t.CruiseID = @p1;"),
@@ -70,7 +73,9 @@ namespace NatCruise.Check.Data
                         {
                             x.Add(nameof(TreeLocation.TreeID), GetOverrideTreeID);
                             return x;
-                        }),
+                        },
+                        canCopy: () => IncludeTreeMeasurments
+                ),
                 new CopyTableConfig(nameof(Log), action: CopyLogs),
                 new CopyTableConfig(nameof(TallyLedger), CopyTallyLedger),  // do we need TallyLedger.. maybe for processing but I don't think we need the counts. Lets keep it unless it causes an issue which I don't think it will
 
@@ -172,7 +177,7 @@ namespace NatCruise.Check.Data
 
             foreach (var unitCode in SelectedUnitCodes)
             {
-                var unit = source.From<CuttingUnit>().Where("CruiseID = @p1 && CuttingUnitCode = @p2").Query(srcCruiseID, unitCode).Single();
+                var unit = source.From<CuttingUnit>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2").Query(srcCruiseID, unitCode).Single();
 
                 destination.Insert(unit, valueOverrides: valueOverrides, option: option);
             }
@@ -208,10 +213,12 @@ namespace NatCruise.Check.Data
 
             foreach (var st in SelectedStratumCodes)
             {
-                var sg = source.From<SampleGroup>().Where("CruiseID = @p1 AND StratumCode = @p2").Query(srcCruiseID, st).Single();
-                sg.SampleGroupID = Guid.NewGuid().ToString();
-
-                destination.Insert(sg, valueOverrides: valueOverrides, option: option);
+                var sampleGroups = source.From<SampleGroup>().Where("CruiseID = @p1 AND StratumCode = @p2").Query(srcCruiseID, st).ToArray();
+                foreach (var sg in sampleGroups)
+                {
+                    sg.SampleGroupID = Guid.NewGuid().ToString();
+                    destination.Insert(sg, valueOverrides: valueOverrides, option: option);
+                }
             }
         }
 
@@ -221,10 +228,12 @@ namespace NatCruise.Check.Data
 
             foreach (var st in SelectedStratumCodes)
             {
-                var sp = source.From<SubPopulation>().Where("CruiseID = @p1 AND StratumCode = @p2").Query(srcCruiseID, st).Single();
-                sp.SubPopulationID = Guid.NewGuid().ToString();
-
-                destination.Insert(sp, valueOverrides: valueOverrides, option: option);
+                var subPopulations = source.From<SubPopulation>().Where("CruiseID = @p1 AND StratumCode = @p2").Query(srcCruiseID, st).ToArray();
+                foreach (var sp in subPopulations)
+                { 
+                    sp.SubPopulationID = Guid.NewGuid().ToString();
+                    destination.Insert(sp, valueOverrides: valueOverrides, option: option);
+                }
             }
         }
 
@@ -234,35 +243,37 @@ namespace NatCruise.Check.Data
 
             foreach (var st in SelectedStratumCodes)
             {
-                var fctp = source.From<FixCNTTallyPopulation>().Where("CruiseID = @p1 AND StratumCode = @p2").Query(srcCruiseID, st).Single();
-
-                destination.Insert(fctp, valueOverrides: valueOverrides, option: option);
+                var fixCntTallyPops = source.From<FixCNTTallyPopulation>().Where("CruiseID = @p1 AND StratumCode = @p2").Query(srcCruiseID, st).ToArray();
+                foreach(var fctp in fixCntTallyPops)
+                {
+                    destination.Insert(fctp, valueOverrides: valueOverrides, option: option);
+                }
             }
         }
 
         public void CopyPlot(DbConnection source, DbConnection destination, string srcCruiseID, string destCruiseID, OnConflictOption option)
         {
             var valueOverrides = GetValueOverrides(destCruiseID);
-            valueOverrides.Add("PlotID", (x) => GetMappedGuidValue(x).ToString());
+            //valueOverrides.Add("PlotID", (x) => GetMappedGuidValue(x).ToString());
 
             foreach (var unitCode in SelectedUnitCodes)
             {
-                var plots = source.From<Plot>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2").Query(srcCruiseID, unitCode);
+                var plots = source.From<Plot>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2").Query(srcCruiseID, unitCode).ToArray();
 
                 foreach(var plot in plots)
                 {
                     //var ogPlotID = ;
-                    //plot.PlotID = Guid.NewGuid().ToString();
+                    plot.PlotID = GetMappedGuidValue(plot.PlotID).ToString();
 
                     destination.Insert(plot, valueOverrides: valueOverrides, option: option);
 
-                    var plotStrata = source.From<Plot_Stratum>().Where("CruiseID = @p1 AND PlotNumber = @p2").Query(srcCruiseID, plot.PlotNumber);
+                    var plotStrata = source.From<Plot_Stratum>().Where("CruiseID = @p1 AND PlotNumber = @p2 AND CuttingUnitCode = @p3").Query(srcCruiseID, plot.PlotNumber, plot.CuttingUnitCode);
                     foreach(var plst in plotStrata)
                     {
                         destination.Insert(plst, valueOverrides: valueOverrides, option: option);
                     }
 
-                    var plotLocs = source.From<PlotLocation>().Where("CruiseID = @p1 AND PlotID = @p2").Query(srcCruiseID, plot.PlotID);
+                    var plotLocs = source.From<PlotLocation>().Where("PlotID = @p1").Query(plot.PlotID);
                     foreach(var p in plotLocs)
                     {
                         p.PlotID = plot.PlotID;
@@ -324,7 +335,10 @@ namespace NatCruise.Check.Data
             foreach(var tl in tallyLedgers)
             {
                 var origtreeID = tl.TreeID;
-                tl.TreeID = TreeIDMapps[origtreeID];
+                if (origtreeID != null)
+                {
+                    tl.TreeID = TreeIDMapps[origtreeID];
+                }
 
                 tl.TallyLedgerID = GetMappedGuidValue(tl.TallyLedgerID).ToString();
 

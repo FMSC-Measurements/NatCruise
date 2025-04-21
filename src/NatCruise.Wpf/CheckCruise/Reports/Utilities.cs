@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace NatCruise.Check.Reports
+namespace NatCruise.Wpf.CheckCruise.Reports
 {
     internal static class Utilities
     {

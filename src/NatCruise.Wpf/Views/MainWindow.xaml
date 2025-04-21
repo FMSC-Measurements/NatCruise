@@ -43,6 +43,10 @@
             <MenuItem Header="Tools">
                 <MenuItem Header="Combine Files"
                           Command="{Binding ShowCombineFiles}" />
+                <MenuItem Header="Create Check Cruise"
+                          Command="{Binding ShowCreateCheckCruise}" />
+                <MenuItem Header="Generate Check Cruise Reports"
+                          Command="{Binding ShowCheckCruiseReports}" />
             </MenuItem>
         </Menu>
         <Grid>

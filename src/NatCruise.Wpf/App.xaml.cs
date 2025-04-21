@@ -10,6 +10,7 @@ using NatCruise.MVVM;
 using NatCruise.Navigation;
 using NatCruise.Services;
 using NatCruise.Services.Logging;
+using NatCruise.Wpf.CheckCruise.Views;
 using NatCruise.Wpf.Data;
 using NatCruise.Wpf.FieldData.Views;
 using NatCruise.Wpf.Models;
@@ -237,6 +238,9 @@ namespace NatCruise.Wpf
             containerRegistry.RegisterForNavigation<DesignChecksView>();
             containerRegistry.RegisterForNavigation<CombineFileView>();
             containerRegistry.RegisterForNavigation<FieldDataView>();
+
+            containerRegistry.RegisterForNavigation<CheckCruiseReportsView>();
+            containerRegistry.RegisterForNavigation<CreateCheckCruiseView>();
 
             // register validators
             containerRegistry.Register<CruiseValidator>();

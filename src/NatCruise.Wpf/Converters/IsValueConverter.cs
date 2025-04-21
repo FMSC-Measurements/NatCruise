@@ -27,13 +27,16 @@ namespace NatCruise.Wpf.Converters
                 return containValue ^ Invert;
             }
 
-            var areEqual = value.Equals(Value);
+            var areEqual = (parameter != null) ? value.Equals(parameter)
+                : value.Equals(Value);
             return areEqual ^ Invert;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if(Values.Count > 0) throw new NotSupportedException();
+
+            return value?.Equals(true) == true ? parameter ?? Value : Binding.DoNothing;
         }
     }
 

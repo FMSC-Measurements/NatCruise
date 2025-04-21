@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using CruiseDAL;
 using CruiseDAL.DataObjects;
-using NatCruise.Check.Models;
+using NatCruise.Wpf.CheckCruise.Models;
 
-namespace NatCruise.Check.Data
+namespace NatCruise.Wpf.CheckCruise.Data
 {
     public class dataBaseCommands
     {
@@ -40,40 +40,40 @@ namespace NatCruise.Check.Data
             return DAL.CheckTableExists(tableName);
         }   //  end doesTableExist
 
-        public void createNewTable(string tableName)
-        {
-            //  build query for new table
-            string[] valuesList;
-            string queryString = "";
-            if (tableName == "Tolerances")
-            {
-                valuesList = createTolerancesList();
-                queryString = createNewTableQuery(tableName, valuesList);
-            }
-            else if (tableName == "Results")
-            {
-                valuesList = createResultsList();
-                queryString = createNewTableQuery(tableName, valuesList);
-            }
+        //public void createNewTable(string tableName)
+        //{
+        //    //  build query for new table
+        //    string[] valuesList;
+        //    string queryString = "";
+        //    if (tableName == "Tolerances")
+        //    {
+        //        valuesList = createTolerancesList();
+        //        queryString = createNewTableQuery(tableName, valuesList);
+        //    }
+        //    else if (tableName == "Results")
+        //    {
+        //        valuesList = createResultsList();
+        //        queryString = createNewTableQuery(tableName, valuesList);
+        //    }
 
-            DAL.Execute(queryString);
-        }   //  end createNewTable
+        //    DAL.Execute(queryString);
+        //}   //  end createNewTable
 
 
-        public string createNewTableQuery(string tableName, string[] valuesList)
-        {
-            var sb = new StringBuilder();
-            sb.Append("CREATE TABLE ");
-            sb.Append(tableName);
-            sb.Append(" (");
+        //public string createNewTableQuery(string tableName, string[] valuesList)
+        //{
+        //    var sb = new StringBuilder();
+        //    sb.Append("CREATE TABLE ");
+        //    sb.Append(tableName);
+        //    sb.Append(" (");
 
-            //  add values to string
-            foreach (string s in valuesList)
-                sb.Append(s);
-            //  add close parens and semi colon
-            sb.Append(");");
-            return sb.ToString();
-        }   //  end createNewTableQuery
+        //    //  add values to string
+        //    foreach (string s in valuesList)
+        //        sb.Append(s);
+        //    //  add close parens and semi colon
+        //    sb.Append(");");
+        //    return sb.ToString();
+        //}   //  end createNewTableQuery
 
 
         public string[] createTolerancesList()

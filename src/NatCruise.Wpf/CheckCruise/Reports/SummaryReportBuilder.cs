@@ -1,7 +1,7 @@
 ﻿using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
-using NatCruise.Check.Data;
-using NatCruise.Check.Models;
+using NatCruise.Wpf.CheckCruise.Data;
+using NatCruise.Wpf.CheckCruise.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NatCruise.Check.Reports
+namespace NatCruise.Wpf.CheckCruise.Reports
 {
     public partial class SummaryReportBuilder
     {
@@ -58,11 +58,12 @@ namespace NatCruise.Check.Reports
             Region = CruiseDataService.getRegion();
         }
 
-        public void BuildReport(TextWriter writer, string markersInitials, ReportLevel reportLevel)
+        public void BuildReport(TextWriter writer, string markersInitials, ToleranceConfig toleranceConfig, AnalysisResult analysisResults, ReportLevel reportLevel)
         {
             TRH = new TextReportHeaders();
+            ToleranceConfig = toleranceConfig;
 
-            CheckResults = CheckCruiseDataService.getResultsTable("", markersInitials);
+            CheckResults = analysisResults.Results.Where(x => x.R_MarkerInitials == markersInitials).ToList();// CheckCruiseDataService.getResultsTable("", markersInitials);
 
             TRH.TextHeader[1] = TRH.TextHeader[1].Replace("XXXX", ApplicationVersion);
             TRH.TextHeader[2] = TRH.TextHeader[2].Replace("XXXX", DateTime.Now.ToString());
